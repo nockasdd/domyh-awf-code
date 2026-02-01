@@ -12,7 +12,7 @@ category: styling
 tier: 1
 ---
 
-# Tailwind CSS Patterns — DOMYH Agent v4.3
+# Tailwind CSS Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Tailwind CSS 4 (2025-2026)
 > **Philosophy**: CSS-first configuration, utility-first styling
@@ -284,4 +284,4 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 
 ---
 
-_DOMYH Agent v4.3 • Tailwind CSS 4_
+_DOMYH Awesome Code v4.3 • Tailwind CSS 4_

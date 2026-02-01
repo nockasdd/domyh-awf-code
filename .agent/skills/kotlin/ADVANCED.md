@@ -1,6 +1,6 @@
 # Kotlin — Advanced Patterns
 
-> DOMYH Agent v4.3 — Tier 3 Reference
+> DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -536,4 +536,4 @@ class FakeUserApi : UserApi {
 
 ---
 
-_DOMYH Agent v4.3 — Kotlin Advanced Patterns — 2025-2026_
+_DOMYH Awesome Code v4.3 — Kotlin Advanced Patterns — 2025-2026_

@@ -6,7 +6,7 @@ category: backend
 tier: 1
 ---
 
-# Python Patterns — DOMYH Agent v4.3
+# Python Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Python 3.12/3.13 (2025-2026)
 > **Frameworks**: FastAPI, Django 5+
@@ -492,4 +492,4 @@ Handler: TypeAlias = Callable[[Request], Awaitable[Response]]
 
 ---
 
-_DOMYH Agent v4.3 • Python 3.12/3.13_
+_DOMYH Awesome Code v4.3 • Python 3.12/3.13_

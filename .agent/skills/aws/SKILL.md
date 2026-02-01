@@ -14,7 +14,7 @@ category: cloud
 tier: 2
 ---
 
-# AWS Development Patterns — DOMYH Agent v4.3
+# AWS Development Patterns — DOMYH Awesome Code v4.3
 
 > Comprehensive guide for AWS serverless, containers, and IaC (2025-2026)
 
@@ -656,4 +656,4 @@ aws ecs update-service --cluster MyCluster --service MyService --force-new-deplo
 
 ---
 
-_DOMYH Agent v4.3 • AWS Development Patterns • 2025-2026_
+_DOMYH Awesome Code v4.3 • AWS Development Patterns • 2025-2026_

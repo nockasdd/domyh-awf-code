@@ -145,4 +145,4 @@ Quy tắc cho các thao tác git: phát hiện, kiểm tra điều kiện tiên 
 
 ---
 
-_DOMYH Agent v4.5 • Consolidated Git Workflow • Shell-Aware_
+_DOMYH Awesome Code v4.3 • Consolidated Git Workflow • Shell-Aware_

@@ -489,4 +489,4 @@ expert_panel:
 
 ---
 
-_DOMYH Agent v4.3 • Audit Pro v5.1 • Multi-Expert Consensus + 105 Checkpoints_
+_DOMYH Awesome Code v4.3 • Audit Pro v5.1 • Multi-Expert Consensus + 105 Checkpoints_

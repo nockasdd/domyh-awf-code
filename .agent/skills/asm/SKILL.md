@@ -6,7 +6,7 @@ category: language
 tier: 2
 ---
 
-# Assembly Language Patterns — DOMYH Agent v4.3
+# Assembly Language Patterns — DOMYH Awesome Code v4.3
 
 > Comprehensive guide for x86/x64, ARM64 assembly with C++ integration
 
@@ -560,4 +560,4 @@ add_executable(myprogram
 
 ---
 
-_DOMYH Agent v4.3 • Assembly Language Skill • Comprehensive Guide_
+_DOMYH Awesome Code v4.3 • Assembly Language Skill • Comprehensive Guide_

@@ -131,4 +131,4 @@ Giữ nguyên tiếng Anh cho:
 
 ---
 
-_DOMYH Agent v4.5 • Consolidated Language Rule_
+_DOMYH Awesome Code v4.3 • Consolidated Language Rule_

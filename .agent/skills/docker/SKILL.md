@@ -7,7 +7,7 @@ category: devops
 tier: 1
 ---
 
-# Docker Patterns — DOMYH Agent v4.3
+# Docker Patterns — DOMYH Awesome Code v4.3
 
 > Docker Engine 28+ & Docker Compose v2 — 2025-2026
 
@@ -605,4 +605,4 @@ docker compose run --rm app npm test
 
 ---
 
-_DOMYH Agent v4.3 • Docker Patterns • 2025-2026_
+_DOMYH Awesome Code v4.3 • Docker Patterns • 2025-2026_

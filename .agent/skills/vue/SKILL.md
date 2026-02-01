@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# Vue Patterns — DOMYH Agent v4.3
+# Vue Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Vue 3.5/Nuxt 4 (2025-2026)
 > **Philosophy**: Progressive, Composition API, reactive
@@ -353,4 +353,4 @@ definePageMeta({
 
 ---
 
-_DOMYH Agent v4.3 • Vue 3.5/Nuxt 4_
+_DOMYH Awesome Code v4.3 • Vue 3.5/Nuxt 4_

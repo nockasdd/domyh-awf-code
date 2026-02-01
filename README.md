@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 DOMYH Agent v4.3
+# 🚀 DOMYH Awesome Code v4.3
 
 ### **The Ultimate AI Coding Assistant for Developers**
 

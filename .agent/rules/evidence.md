@@ -186,5 +186,5 @@ Có lỗi SQL Injection trong code.
 
 ---
 
-_DOMYH Agent v2.0.0 • NockDev_
+_DOMYH Awesome Code v4.3 • NockDev_
 ```

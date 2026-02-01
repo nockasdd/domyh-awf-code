@@ -1,4 +1,4 @@
-# 🎭 DOMYH Agent Personas v4.0
+# 🎭 DOMYH Awesome Code Personas v4.0
 
 > Role-based AI personas for different development tasks
 
@@ -40,4 +40,4 @@ triggers: ["/command"]
 
 ---
 
-_DOMYH Agent v4.2_
+_DOMYH Awesome Code v4.3_

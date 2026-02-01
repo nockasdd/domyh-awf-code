@@ -1,5 +1,5 @@
 # ============================================================================
-# DOMYH Agent Library - Smart Installer for Windows
+# DOMYH Awesome Code Library - Smart Installer for Windows
 # Version: 2.0.0
 # Developer: NockDev (https://github.com/nockasdd)
 # PowerShell Script
@@ -26,7 +26,7 @@ $Global:Language = "en"
 
 $Strings = @{
     "en" = @{
-        "banner_title"          = "DOMYH Agent Library"
+        "banner_title"          = "DOMYH Awesome Code Library"
         "banner_subtitle"       = "AI-Powered Development Assistant"
         "banner_by"             = "Developed by NockDev"
         "detecting_os"          = "Operating System"
@@ -53,7 +53,7 @@ $Strings = @{
         "language_selected"     = "Selected: English"
     }
     "vi" = @{
-        "banner_title"          = "DOMYH Agent Library"
+        "banner_title"          = "DOMYH Awesome Code Library"
         "banner_subtitle"       = "Trợ lý Phát triển Ứng dụng AI"
         "banner_by"             = "Phát triển bởi NockDev"
         "detecting_os"          = "Hệ điều hành"

@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# Nuxt Patterns — DOMYH Agent v4.3
+# Nuxt Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Nuxt 4 (2025-2026)
 > **Philosophy**: Full-stack Vue, hybrid rendering, DX-first
@@ -280,4 +280,4 @@ export default defineNuxtConfig({
 
 ---
 
-_DOMYH Agent v4.3 • Nuxt 4_
+_DOMYH Awesome Code v4.3 • Nuxt 4_

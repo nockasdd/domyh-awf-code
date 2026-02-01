@@ -1,6 +1,6 @@
 # AWS — Advanced Patterns
 
-# DOMYH Agent v4.3 — Tier 3 Reference
+# DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -544,4 +544,4 @@ target.scaleToTrackMetric("UtilizationScaling", {
 
 ---
 
-_DOMYH Agent v4.3 — AWS Advanced Patterns_
+_DOMYH Awesome Code v4.3 — AWS Advanced Patterns_

@@ -1,8 +1,8 @@
-# DOMYH Agent - Vietnamese Strings
+# DOMYH Awesome Code - Vietnamese Strings
 # i18n/vi.yaml v4.1
 
 app:
-  name: "DOMYH Agent"
+  name: "DOMYH Awesome Code"
   version: "4.3.0"
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"

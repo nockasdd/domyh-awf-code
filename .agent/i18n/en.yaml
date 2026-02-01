@@ -1,8 +1,8 @@
-# DOMYH Agent - English Strings
+# DOMYH Awesome Code - English Strings
 # i18n/en.yaml v4.1
 
 app:
-  name: "DOMYH Agent"
+  name: "DOMYH Awesome Code"
   version: "4.3.0"
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"

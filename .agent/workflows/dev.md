@@ -292,4 +292,4 @@ error_overlay:
 
 ---
 
-_DOMYH Agent v4.3 • Dev Pro v3.1 • HMR 2025 + Error Overlay_
+_DOMYH Awesome Code v4.3 • Dev Pro v3.1 • HMR 2025 + Error Overlay_

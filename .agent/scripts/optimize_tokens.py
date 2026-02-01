@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Agent v4.0 — Token Optimizer
+DOMYH Awesome Code v4.3 — Token Optimizer
 Analyzes and optimizes META.yaml files for token reduction.
 """
 

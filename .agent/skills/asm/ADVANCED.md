@@ -1,6 +1,6 @@
 # Assembly — Advanced Patterns
 
-# DOMYH Agent v4.3 — Tier 3 Reference
+# DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -542,4 +542,4 @@ apple_tls_access:
 
 ---
 
-_DOMYH Agent v4.3 — Advanced Assembly Reference_
+_DOMYH Awesome Code v4.3 — Advanced Assembly Reference_

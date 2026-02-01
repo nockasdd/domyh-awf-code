@@ -271,4 +271,4 @@ Options:
 
 ---
 
-_DOMYH Agent v4.5 • Based on 62 documented agent errors_
+_DOMYH Awesome Code v4.3 • Based on 62 documented agent errors_

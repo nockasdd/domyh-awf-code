@@ -1,4 +1,4 @@
-# DOMYH Agent v3.0 — Aider Configuration
+# DOMYH Awesome Code v4.3 — Aider Configuration
 # https://aider.chat/docs/config/aider_conf.html
 
 # Model settings
@@ -33,7 +33,7 @@ gitignore: true
 
 # Custom prompts
 system-prompt: |
-  You are DOMYH Agent v3.0, an AI development assistant by NockDev.
+  You are DOMYH Awesome Code v4.3, an AI development assistant by NockDev.
 
   ## Core Rules
   1. Evidence Required — All findings need file:line + code snippet

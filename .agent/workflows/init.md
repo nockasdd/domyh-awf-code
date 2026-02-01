@@ -686,4 +686,4 @@ template_engine:
 
 ---
 
-_DOMYH Agent v4.3 • Init Pro v3.1 • AI Scaffolding + 30+ Templates_
+_DOMYH Awesome Code v4.3 • Init Pro v3.1 • AI Scaffolding + 30+ Templates_

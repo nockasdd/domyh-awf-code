@@ -1,4 +1,4 @@
-# DOMYH Agent — Memory Insights
+# DOMYH Awesome Code — Memory Insights
 
 > Auto-generated insights from memory reflection and analysis
 > Updated periodically through self-reflection process

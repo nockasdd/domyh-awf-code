@@ -7,7 +7,7 @@ category: devops
 tier: 1
 ---
 
-# Kubernetes Patterns — DOMYH Agent v4.3
+# Kubernetes Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Kubernetes 1.30/1.31 (2025-2026)
 > **Runtime**: Container orchestration platform
@@ -542,4 +542,4 @@ argocd app diff myapp
 
 ---
 
-_DOMYH Agent v4.3 • Kubernetes 1.30/1.31_
+_DOMYH Awesome Code v4.3 • Kubernetes 1.30/1.31_

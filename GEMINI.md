@@ -1,4 +1,4 @@
-# GEMINI.md — DOMYH Agent v4.3
+# GEMINI.md — DOMYH Awesome Code v4.3
 
 > 🎯 **Purpose**: AI-powered development assistant
 > 👨‍💻 **Developer**: NockDev
@@ -59,4 +59,4 @@ Default: English | Switch: `/lang vi`
 
 ---
 
-_DOMYH Agent v4.3 • NockDev_
+_DOMYH Awesome Code v4.3 • NockDev_

@@ -1,4 +1,4 @@
-# 📊 IDE Compatibility Matrix — DOMYH Agent v4.0
+# 📊 IDE Compatibility Matrix — DOMYH Awesome Code v4.3
 
 > Supported AI coding assistants and their configuration files
 
@@ -65,4 +65,4 @@ All agents support:
 
 ---
 
-_DOMYH Agent v4.0 • 14 IDEs Supported_
+_DOMYH Awesome Code v4.3 • 14 IDEs Supported_

@@ -1,4 +1,4 @@
-# 📁 Skills — DOMYH Agent v4.2
+# 📁 Skills — DOMYH Awesome Code v4.3
 
 > Tech-specific patterns loaded via Progressive Disclosure
 
@@ -66,4 +66,4 @@ caps: [cap1, cap2]      # Max 3 capabilities
 
 ---
 
-_DOMYH Agent v4.2_
+_DOMYH Awesome Code v4.3_

@@ -1,4 +1,4 @@
-# DOMYH Agent — Skill Development Guide v4.2
+# DOMYH Awesome Code — Skill Development Guide v4.2
 # How to create and maintain skills
 
 # =============================================================================
@@ -93,7 +93,7 @@ workflow:
     4_write_advanced:
       action: "Create ADVANCED.md (optional but recommended)"
       sections:
-        - "# DOMYH Agent v4.2 — Tier 3 Reference"
+        - "# DOMYH Awesome Code v4.3 — Tier 3 Reference"
         - "## Overview"
         - "## Advanced Patterns"
         - "## Edge Cases"

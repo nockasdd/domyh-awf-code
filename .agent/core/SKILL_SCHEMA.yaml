@@ -1,4 +1,4 @@
-# DOMYH Agent — Skill Validation Schema v4.2
+# DOMYH Awesome Code — Skill Validation Schema v4.2
 # Defines structure requirements for skills
 
 # =============================================================================
@@ -79,10 +79,10 @@ skill_schema:
 
 advanced_schema:
   required_sections:
-    - title # # DOMYH Agent v4.2 — Tier 3 Reference
+    - title # # DOMYH Awesome Code v4.3 — Tier 3 Reference
     - overview # High-level description
     - deep_patterns # ## Advanced Patterns
-    - footer # _DOMYH Agent v4.2_
+    - footer # _DOMYH Awesome Code v4.3_
 
   optional_sections:
     - edge_cases
@@ -236,12 +236,12 @@ templates:
 
     ---
 
-    _DOMYH Agent v4.2_
+    _DOMYH Awesome Code v4.3_
 
   advanced_md: |
-    <!-- DOMYH Agent v4.2 — Tier 3 Reference -->
+    <!-- DOMYH Awesome Code v4.3 — Tier 3 Reference -->
 
-    # DOMYH Agent v4.2 — Tier 3 Reference
+    # DOMYH Awesome Code v4.3 — Tier 3 Reference
 
     ## Overview
 
@@ -263,4 +263,4 @@ templates:
 
     ---
 
-    _DOMYH Agent v4.2 — Tier 3 Reference_
+    _DOMYH Awesome Code v4.3 — Tier 3 Reference_

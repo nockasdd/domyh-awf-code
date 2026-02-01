@@ -6,7 +6,7 @@ category: language
 tier: 1
 ---
 
-# C# Development Patterns — DOMYH Agent v4.3
+# C# Development Patterns — DOMYH Awesome Code v4.3
 
 > Modern C# (C# 12/13/14) with .NET 9/10 — 2025-2026
 
@@ -617,4 +617,4 @@ builder.Services.AddHttpClient<IPaymentClient, PaymentClient>(client =>
 
 ---
 
-_DOMYH Agent v4.3 • C# Development (C# 12/13/14 • .NET 9/10) • 2025-2026_
+_DOMYH Awesome Code v4.3 • C# Development (C# 12/13/14 • .NET 9/10) • 2025-2026_

@@ -6,7 +6,7 @@ category: scripting
 tier: 1
 ---
 
-# Lua Patterns — DOMYH Agent v4.3
+# Lua Patterns — DOMYH Awesome Code v4.3
 
 > **Versions**: Lua 5.1, 5.2, 5.3, 5.4, 5.5 (Dec 2025), LuaJIT 2.1
 > **Philosophy**: Simplicity, embeddability, flexibility via metatables
@@ -489,4 +489,4 @@ end)
 
 ---
 
-_DOMYH Agent v4.3 • Lua 5.1-5.5, LuaJIT_
+_DOMYH Awesome Code v4.3 • Lua 5.1-5.5, LuaJIT_

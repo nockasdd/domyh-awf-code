@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Compact META.yaml Optimizer
-DOMYH Agent v4.0
+DOMYH Awesome Code v4.3
 
 Reduces META.yaml files to ~100 tokens each:
 - Remove comments/headers

@@ -56,4 +56,4 @@ Target: < 10,000 tokens peak
 
 ---
 
-_DOMYH Agent v4.3_
+_DOMYH Awesome Code v4.3_

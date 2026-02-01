@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# React Patterns — DOMYH Agent v4.3
+# React Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: React 19 (2025-2026)
 > **Philosophy**: Server-first, compiler-optimized, hooks-based
@@ -240,4 +240,4 @@ export function UserForm({
 
 ---
 
-_DOMYH Agent v4.3 • React 19_
+_DOMYH Awesome Code v4.3 • React 19_

@@ -13,7 +13,7 @@ category: devops
 tier: 1
 ---
 
-# CI/CD Patterns — DOMYH Agent v4.3
+# CI/CD Patterns — DOMYH Awesome Code v4.3
 
 > Comprehensive guide for GitHub Actions, GitLab CI, Azure DevOps (2025-2026)
 
@@ -742,4 +742,4 @@ jobs:
 
 ---
 
-_DOMYH Agent v4.3 • CI/CD Patterns • 2025-2026_
+_DOMYH Awesome Code v4.3 • CI/CD Patterns • 2025-2026_

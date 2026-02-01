@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Auto-regenerate embeddings when skills change.
-DOMYH Agent v4.0
+DOMYH Awesome Code v4.3
 
 Usage:
     python regenerate_embeddings.py              # Manual run

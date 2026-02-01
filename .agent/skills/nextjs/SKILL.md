@@ -7,7 +7,7 @@ category: frontend
 tier: 1
 ---
 
-# Next.js Patterns — DOMYH Agent v4.3
+# Next.js Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Next.js 15/16 (2025-2026)
 > **Runtime**: React meta-framework with App Router
@@ -475,4 +475,4 @@ export default function Error({
 
 ---
 
-_DOMYH Agent v4.3 • Next.js 15/16_
+_DOMYH Awesome Code v4.3 • Next.js 15/16_

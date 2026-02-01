@@ -1,4 +1,4 @@
-# DOMYH Agent — Session Notes
+# DOMYH Awesome Code — Session Notes
 
 > Auto-generated session context file. Updated during workflow execution.
 

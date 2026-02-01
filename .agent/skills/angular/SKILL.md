@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# Angular Patterns — DOMYH Agent v4.3
+# Angular Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Angular 19/20 (2025-2026)
 > **Philosophy**: Signals-first, standalone, zoneless-ready
@@ -266,4 +266,4 @@ export class UsersComponent {
 
 ---
 
-_DOMYH Agent v4.3 • Angular 19/20_
+_DOMYH Awesome Code v4.3 • Angular 19/20_

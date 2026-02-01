@@ -6,7 +6,7 @@ category: mobile
 tier: 1
 ---
 
-# Kotlin Patterns — DOMYH Agent v4.3
+# Kotlin Patterns — DOMYH Awesome Code v4.3
 
 > Kotlin 2.0/2.1 • KMP • Compose — 2025-2026
 
@@ -522,4 +522,4 @@ app/
 
 ---
 
-_DOMYH Agent v4.3 • Kotlin Development • 2025-2026_
+_DOMYH Awesome Code v4.3 • Kotlin Development • 2025-2026_

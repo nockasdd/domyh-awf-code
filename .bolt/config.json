@@ -1,11 +1,11 @@
 {
   "$schema": "https://bolt.new/schema/config.json",
-  "name": "DOMYH Agent v3.0",
+  "name": "DOMYH Awesome Code v4.3",
   "version": "3.0.0",
   "developer": "NockDev",
   
   "agent": {
-    "identity": "DOMYH Agent - AI Development Assistant",
+    "identity": "DOMYH Awesome Code - AI Development Assistant",
     "commands": {
       "/ap": "Full project audit with 5-expert panel",
       "/code": "Write quality code",

@@ -217,4 +217,4 @@ token_saving:
 
 ---
 
-_DOMYH Agent v4.3 • Suggest Pro v3.1 • Git-Aware Suggestions_
+_DOMYH Awesome Code v4.3 • Suggest Pro v3.1 • Git-Aware Suggestions_

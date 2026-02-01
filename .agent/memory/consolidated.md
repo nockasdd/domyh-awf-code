@@ -1,4 +1,4 @@
-# DOMYH Agent — Consolidated Memory View
+# DOMYH Awesome Code — Consolidated Memory View
 
 > Auto-generated consolidated view of all active memories
 > Optimized for minimal token usage while preserving key information

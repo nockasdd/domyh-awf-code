@@ -7,7 +7,7 @@ category: infrastructure
 tier: 1
 ---
 
-# Database Patterns — DOMYH Agent v4.3
+# Database Patterns — DOMYH Awesome Code v4.3
 
 > SQL + NoSQL Patterns — PostgreSQL 17/18, MySQL, MongoDB, Redis — 2025-2026
 
@@ -718,4 +718,4 @@ async function withLock<T>(key: string, fn: () => Promise<T>, ttlMs = 30000) {
 
 ---
 
-_DOMYH Agent v4.3 • Database Patterns • 2025-2026_
+_DOMYH Awesome Code v4.3 • Database Patterns • 2025-2026_

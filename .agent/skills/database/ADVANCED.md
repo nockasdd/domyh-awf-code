@@ -1,6 +1,6 @@
 # Database — Advanced Patterns
 
-> DOMYH Agent v4.3 — Tier 3 Reference
+> DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -462,4 +462,4 @@ ALTER TABLE orders SET (autovacuum_enabled = false);
 
 ---
 
-_DOMYH Agent v4.3 — Database Advanced Patterns — 2025-2026_
+_DOMYH Awesome Code v4.3 — Database Advanced Patterns — 2025-2026_

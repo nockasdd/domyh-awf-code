@@ -869,4 +869,4 @@ auto_api_specs:
 
 ---
 
-_DOMYH Agent v4.3 • Doc Pro v3.1 • AI-Optimized + Auto API_
+_DOMYH Awesome Code v4.3 • Doc Pro v3.1 • AI-Optimized + Auto API_

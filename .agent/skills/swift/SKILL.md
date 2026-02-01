@@ -6,7 +6,7 @@ category: mobile
 tier: 1
 ---
 
-# Swift Patterns — DOMYH Agent v4.3
+# Swift Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Swift 6/6.1 (2025-2026)
 > **Frameworks**: SwiftUI, UIKit
@@ -339,4 +339,4 @@ func fetchUser(id: Int) async throws(NetworkError) -> User {
 
 ---
 
-_DOMYH Agent v4.3 • Swift 6/6.1_
+_DOMYH Awesome Code v4.3 • Swift 6/6.1_

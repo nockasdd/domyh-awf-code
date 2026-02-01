@@ -6,7 +6,7 @@ category: language
 tier: 1
 ---
 
-# C++ Development Patterns — DOMYH Agent v4.3
+# C++ Development Patterns — DOMYH Awesome Code v4.3
 
 > Modern C++ (C++20/23/26) patterns — NOT Pure C
 
@@ -933,4 +933,4 @@ inline void sleep_ms(int ms) {
 
 ---
 
-_DOMYH Agent v4.3 • C++ Development (C++20/23/26) • 2025-2026_
+_DOMYH Awesome Code v4.3 • C++ Development (C++20/23/26) • 2025-2026_

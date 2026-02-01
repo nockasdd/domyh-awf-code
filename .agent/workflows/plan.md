@@ -589,4 +589,4 @@ token_saving:
 
 ---
 
-_DOMYH Agent v4.3 • Plan Pro v3.1 • AI-Powered Estimation_
+_DOMYH Awesome Code v4.3 • Plan Pro v3.1 • AI-Powered Estimation_

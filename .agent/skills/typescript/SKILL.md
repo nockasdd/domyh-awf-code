@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# TypeScript Patterns — DOMYH Agent v4.3
+# TypeScript Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: TypeScript 5.5/5.6 (2025-2026)
 > **Philosophy**: Type-safe, inference-first, ESM-native
@@ -303,4 +303,4 @@ const invalidUser: User = { id: "string" };
 
 ---
 
-_DOMYH Agent v4.3 • TypeScript 5.5/5.6_
+_DOMYH Awesome Code v4.3 • TypeScript 5.5/5.6_

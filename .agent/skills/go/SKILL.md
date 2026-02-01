@@ -6,7 +6,7 @@ category: backend
 tier: 1
 ---
 
-# Go Patterns — DOMYH Agent v4.3
+# Go Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Go 1.22/1.23/1.24 (2025-2026)
 > **Philosophy**: Simplicity, explicit error handling, powerful concurrency
@@ -486,4 +486,4 @@ myapp/
 
 ---
 
-_DOMYH Agent v4.3 • Go 1.22/1.23/1.24_
+_DOMYH Awesome Code v4.3 • Go 1.22/1.23/1.24_

@@ -6,7 +6,7 @@ category: frontend
 tier: 1
 ---
 
-# Svelte Patterns — DOMYH Agent v4.3
+# Svelte Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Svelte 5 / SvelteKit 2 (2025-2026)
 > **Philosophy**: Compiled, runes-based reactivity, minimal runtime
@@ -318,4 +318,4 @@ export const actions: Actions = {
 
 ---
 
-_DOMYH Agent v4.3 • Svelte 5 / SvelteKit 2_
+_DOMYH Awesome Code v4.3 • Svelte 5 / SvelteKit 2_

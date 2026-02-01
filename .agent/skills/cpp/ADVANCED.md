@@ -1,6 +1,6 @@
 # C++ — Advanced Patterns
 
-# DOMYH Agent v4.3 — Tier 3 Reference
+# DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -454,4 +454,4 @@ Repository<> prodRepo;                    // Without logging
 
 ---
 
-_DOMYH Agent v4.3 — C++ Advanced Patterns_
+_DOMYH Awesome Code v4.3 — C++ Advanced Patterns_

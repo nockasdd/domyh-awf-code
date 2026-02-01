@@ -1,4 +1,4 @@
-# 📁 Workflows — DOMYH Agent v4.3
+# 📁 Workflows — DOMYH Awesome Code v4.3
 
 > Slash commands for agent operations
 
@@ -49,4 +49,4 @@ persona: [optional]
 
 ---
 
-_DOMYH Agent v4.3 • NockDev_
+_DOMYH Awesome Code v4.3 • NockDev_

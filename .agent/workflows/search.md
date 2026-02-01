@@ -238,4 +238,4 @@ local_dependencies:
 
 ---
 
-_DOMYH Agent v4.3 • Semantic Search v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v4.3 • Semantic Search v1.1 • Hybrid Mode_

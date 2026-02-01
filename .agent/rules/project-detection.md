@@ -314,4 +314,4 @@ test_command: "ctest --output-on-failure"
 
 ---
 
-_DOMYH Agent v4.5 • Project Detection (Externalized) • Accuracy 92%+_
+_DOMYH Awesome Code v4.3 • Project Detection (Externalized) • Accuracy 92%+_

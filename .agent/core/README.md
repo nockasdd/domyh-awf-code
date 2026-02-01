@@ -1,4 +1,4 @@
-# DOMYH Agent Core v4.3
+# DOMYH Awesome Code Core v4.3
 
 Core system files (always loaded).
 
@@ -46,4 +46,4 @@ Tier 3: ADVANCED.md (~4,000 tokens) → Referenced only
 
 ---
 
-_DOMYH Agent v4.3_
+_DOMYH Awesome Code v4.3_

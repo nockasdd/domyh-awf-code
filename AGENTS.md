@@ -1,6 +1,6 @@
 # AGENTS.md — Multi-Agent Configuration
 
-# DOMYH Agent v4.0
+# DOMYH Awesome Code v4.3
 
 Multi-agent orchestration for complex development tasks.
 Compatible with: Windsurf, Continue.dev, OpenHands, GitHub Copilot Agents.
@@ -80,9 +80,9 @@ instructions: .agent/core/RULES.md
 ```yaml
 # .coderabbit.yaml
 reviews:
-  instructions: Follow DOMYH Agent rules
+  instructions: Follow DOMYH Awesome Code rules
 ```
 
 ---
 
-_DOMYH Agent v4.0 • Multi-Agent Ready_
+_DOMYH Awesome Code v4.3 • Multi-Agent Ready_

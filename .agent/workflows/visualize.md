@@ -345,4 +345,4 @@ Enter number or command:
 
 ---
 
-_DOMYH Agent v4.4 • Visualize Pro v4.0 • Multi-Platform + Component Mapping_
+_DOMYH Awesome Code v4.3 • Visualize Pro v4.0 • Multi-Platform + Component Mapping_

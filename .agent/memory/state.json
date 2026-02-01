@@ -3,7 +3,7 @@
   "last_updated": "2026-02-01T11:25:00+07:00",
   
   "project": {
-    "name": "DOMYH Agent",
+    "name": "DOMYH Awesome Code",
     "path": "e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent",
     "type": "ai-agent-library",
     "stack": ["yaml", "markdown", "python", "json"],

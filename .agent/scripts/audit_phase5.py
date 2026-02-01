@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Agent v4.0 — Phase 5 Comprehensive Audit
+DOMYH Awesome Code v4.3 — Phase 5 Comprehensive Audit
 Checks structure, scripts, configs, and token usage.
 """
 
@@ -225,7 +225,7 @@ def audit_tokens(report):
 
 def main():
     print("="*60)
-    print("DOMYH Agent v4.0 — Phase 5 Comprehensive Audit")
+    print("DOMYH Awesome Code v4.3 — Phase 5 Comprehensive Audit")
     print(f"Date: {datetime.now().isoformat()}")
     print("="*60)
     

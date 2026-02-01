@@ -6,7 +6,7 @@ category: mobile
 tier: 1
 ---
 
-# Flutter/Dart Patterns — DOMYH Agent v4.3
+# Flutter/Dart Patterns — DOMYH Awesome Code v4.3
 
 > Flutter 3.27+ & Dart 3.6 — 2025-2026
 
@@ -489,4 +489,4 @@ Future<List<ProcessedItem>> processDataInIsolate(List<RawItem> items) async {
 
 ---
 
-_DOMYH Agent v4.3 • Flutter/Dart • 2025-2026_
+_DOMYH Awesome Code v4.3 • Flutter/Dart • 2025-2026_

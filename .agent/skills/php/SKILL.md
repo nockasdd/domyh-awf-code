@@ -6,7 +6,7 @@ category: backend
 tier: 1
 ---
 
-# PHP Patterns — DOMYH Agent v4.3
+# PHP Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: PHP 8.3/8.4 (2025-2026)
 > **Frameworks**: Laravel 12, Symfony 8
@@ -485,4 +485,4 @@ vendor/bin/phpstan analyse --memory-limit=2G
 
 ---
 
-_DOMYH Agent v4.3 • PHP 8.3/8.4_
+_DOMYH Awesome Code v4.3 • PHP 8.3/8.4_

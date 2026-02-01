@@ -1,6 +1,6 @@
 # Docker — Advanced Patterns
 
-> DOMYH Agent v4.3 — Tier 3 Reference
+> DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -492,4 +492,4 @@ docker system prune -a --volumes -f
 
 ---
 
-_DOMYH Agent v4.3 — Docker Advanced Patterns — 2025-2026_
+_DOMYH Awesome Code v4.3 — Docker Advanced Patterns — 2025-2026_

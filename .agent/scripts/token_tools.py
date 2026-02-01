@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Agent v4.0 — Token Tools
+DOMYH Awesome Code v4.3 — Token Tools
 Unified tool for META.yaml analysis and optimization.
 
 Usage:
@@ -64,7 +64,7 @@ def analyze_meta_files():
 def print_analysis(results):
     """Print analysis report."""
     print("=" * 70)
-    print("META.yaml Token Analysis — DOMYH Agent v4.0")
+    print("META.yaml Token Analysis — DOMYH Awesome Code v4.3")
     print("=" * 70)
     print(f"{'Skill':<15} {'Bytes':>8} {'Tokens':>8} {'Over':>8} {'KW':>4} {'Cap':>4}")
     print("-" * 70)
@@ -154,7 +154,7 @@ def write_compact_meta(skill_dir: Path, compact: dict) -> int:
 def run_compact():
     """Compact all META.yaml files."""
     print("=" * 60)
-    print("META.yaml Compact Optimizer — DOMYH Agent v4.0")
+    print("META.yaml Compact Optimizer — DOMYH Awesome Code v4.3")
     print("=" * 60)
     
     total_before = 0
@@ -215,7 +215,7 @@ detect: [{patterns}]
 
 def main():
     parser = argparse.ArgumentParser(
-        description='DOMYH Agent Token Tools v4.0',
+        description='DOMYH Awesome Code Token Tools v4.0',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('--analyze', '-a', action='store_true', help='Analyze token usage')

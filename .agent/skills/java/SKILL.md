@@ -7,7 +7,7 @@ category: backend
 tier: 1
 ---
 
-# Java Patterns — DOMYH Agent v4.3
+# Java Patterns — DOMYH Awesome Code v4.3
 
 > Java 21/22/23 LTS — 2025-2026
 
@@ -492,4 +492,4 @@ tasks.withType<Test> {
 
 ---
 
-_DOMYH Agent v4.3 • Java Development • 2025-2026_
+_DOMYH Awesome Code v4.3 • Java Development • 2025-2026_

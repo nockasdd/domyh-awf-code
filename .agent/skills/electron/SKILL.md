@@ -6,7 +6,7 @@ category: desktop
 tier: 1
 ---
 
-# Electron Patterns — DOMYH Agent v4.3
+# Electron Patterns — DOMYH Awesome Code v4.3
 
 > **Version**: Electron 33+ (2025-2026)
 > **Philosophy**: Context isolation, secure IPC, minimal privileges
@@ -266,4 +266,4 @@ mainWindow.webContents.session.webRequest.onHeadersReceived(
 
 ---
 
-_DOMYH Agent v4.3 • Electron 33+_
+_DOMYH Awesome Code v4.3 • Electron 33+_

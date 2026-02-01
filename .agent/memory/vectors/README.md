@@ -1,4 +1,4 @@
-# 🔍 DOMYH Agent — Semantic Memory
+# 🔍 DOMYH Awesome Code — Semantic Memory
 
 > Vector-based semantic search using LanceDB
 > **Status**: Optional (Disabled by default)
@@ -126,4 +126,4 @@ When semantic search is disabled or unavailable:
 
 ---
 
-_DOMYH Agent v4.2 • Semantic Memory (Optional)_
+_DOMYH Awesome Code v4.3 • Semantic Memory (Optional)_

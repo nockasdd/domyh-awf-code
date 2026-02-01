@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Integration tests for DOMYH Agent v4.0 Semantic Selector
+Integration tests for DOMYH Awesome Code v4.3 Semantic Selector
 Tests the semantic selection and caching functionality.
 """
 
@@ -178,7 +178,7 @@ def test_skill_files():
 def main():
     """Run all integration tests."""
     print("=" * 60)
-    print("DOMYH Agent v4.0 — Integration Tests")
+    print("DOMYH Awesome Code v4.3 — Integration Tests")
     print("=" * 60)
     
     results = []

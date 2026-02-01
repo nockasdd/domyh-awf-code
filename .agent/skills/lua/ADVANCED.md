@@ -1,6 +1,6 @@
 # Lua — Advanced Patterns
 
-# DOMYH Agent v4.2 — Tier 3 Reference
+# DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -254,4 +254,4 @@ end
 
 ---
 
-_DOMYH Agent v4.2 — Tier 3 Reference_
+_DOMYH Awesome Code v4.3 — Tier 3 Reference_

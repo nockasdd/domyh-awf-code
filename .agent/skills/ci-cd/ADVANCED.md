@@ -1,6 +1,6 @@
 # CI/CD — Advanced Patterns
 
-# DOMYH Agent v4.3 — Tier 3 Reference
+# DOMYH Awesome Code v4.3 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -526,4 +526,4 @@ jobs:
 
 ---
 
-_DOMYH Agent v4.3 — CI/CD Advanced Patterns_
+_DOMYH Awesome Code v4.3 — CI/CD Advanced Patterns_

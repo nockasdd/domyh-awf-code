@@ -328,4 +328,4 @@ total_budget: 3500 # Max tokens for recap operation
 
 ---
 
-_DOMYH Agent v4.3 • Recap Pro v3.2 • Session Continuity_
+_DOMYH Awesome Code v4.3 • Recap Pro v3.2 • Session Continuity_

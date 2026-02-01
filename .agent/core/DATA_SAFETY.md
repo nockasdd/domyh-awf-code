@@ -1,4 +1,4 @@
-# DOMYH Agent Data Safety v4.3
+# DOMYH Awesome Code Data Safety v4.3
 
 > Sensitive data handling based on 2025 AI data hygiene standards
 
@@ -89,4 +89,4 @@ formats:
 
 ---
 
-_DOMYH Agent v4.3 — Data Safety Rules_
+_DOMYH Awesome Code v4.3 — Data Safety Rules_

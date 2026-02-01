@@ -1,4 +1,4 @@
-# 📄 DOMYH Agent Templates v4.3
+# 📄 DOMYH Awesome Code Templates v4.3
 
 > Output templates for agent-generated reports and plans
 
@@ -39,4 +39,4 @@ Use `{PLACEHOLDER}` format:
 
 ---
 
-_DOMYH Agent v4.3_
+_DOMYH Awesome Code v4.3_

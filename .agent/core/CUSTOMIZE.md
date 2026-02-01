@@ -1,6 +1,6 @@
 # Skills Customization Framework
 
-# DOMYH Agent v4.3
+# DOMYH Awesome Code v4.3
 
 ---
 
@@ -135,4 +135,4 @@ python scripts/semantic_selector.py --generate
 
 ---
 
-_DOMYH Agent v4.3 — Customization Framework_
+_DOMYH Awesome Code v4.3 — Customization Framework_

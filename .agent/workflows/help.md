@@ -5,7 +5,7 @@ persona: assistant
 description: "❓ Show all available commands, usage examples, and language settings"
 ---
 
-# ❓ /help — DOMYH Agent Command Reference
+# ❓ /help — DOMYH Awesome Code Command Reference
 
 > Your AI-Powered Development Assistant
 > 📚 25+ Commands • Multi-language • Context-aware
@@ -343,7 +343,7 @@ Report issues or suggestions:
 
 ```
 ┌─────────────────────────────────────────────┐
-│           DOMYH Agent v4.3 Quick Ref        │
+│           DOMYH Awesome Code v4.3 Quick Ref        │
 ├─────────────────────────────────────────────┤
 │ 💻 /code [task]    Write code               │
 │ 🐛 /debug [error]  Fix bugs                 │
@@ -431,4 +431,4 @@ smart_suggestions:
 
 ---
 
-_DOMYH Agent v4.3 • Help Pro v2.1 • Context-Aware + Smart Suggestions_
+_DOMYH Awesome Code v4.3 • Help Pro v2.1 • Context-Aware + Smart Suggestions_

@@ -1,6 +1,6 @@
 # IDE Integration Configurations
 
-# DOMYH Agent v4.2
+# DOMYH Awesome Code v4.3
 
 IDE-specific configurations for optimal agent integration.
 
@@ -23,4 +23,4 @@ Each config file contains:
 
 ---
 
-_DOMYH Agent v4.2_
+_DOMYH Awesome Code v4.3_

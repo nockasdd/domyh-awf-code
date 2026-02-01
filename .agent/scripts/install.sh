@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# DOMYH Agent Library - Smart Installer
+# DOMYH Awesome Code Library - Smart Installer
 # Version: 2.0.0
 # Developer: NockDev (https://github.com/nockasdd)
 # Supports: Linux, macOS, Windows (Git Bash/WSL)
@@ -30,7 +30,7 @@ LANGUAGE="en"
 
 # English strings
 declare -A EN
-EN[banner_title]="DOMYH Agent Library"
+EN[banner_title]="DOMYH Awesome Code Library"
 EN[banner_subtitle]="AI-Powered Development Assistant"
 EN[banner_by]="Developed by NockDev"
 EN[detecting_os]="Detected OS"
@@ -58,7 +58,7 @@ EN[version]="Version"
 
 # Vietnamese strings
 declare -A VI
-VI[banner_title]="DOMYH Agent Library"
+VI[banner_title]="DOMYH Awesome Code Library"
 VI[banner_subtitle]="Trợ lý Phát triển Ứng dụng AI"
 VI[banner_by]="Phát triển bởi NockDev"
 VI[detecting_os]="Hệ điều hành"

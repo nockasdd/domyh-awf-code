@@ -1,4 +1,4 @@
-# 🧠 DOMYH Agent Memory System
+# 🧠 DOMYH Awesome Code Memory System
 
 > Version 4.2 — 4-Layer Hierarchical Memory Architecture
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-This directory contains the persistent memory system for DOMYH Agent, enabling:
+This directory contains the persistent memory system for DOMYH Awesome Code, enabling:
 
 - **Cross-session context** — Remember work across conversations
 - **Low token footprint** — Only ~5,500 tokens total (~4.3% of limit)
@@ -145,4 +145,4 @@ JSON files should maintain schema:
 
 ---
 
-_DOMYH Agent v4.3 — Memory System_
+_DOMYH Awesome Code v4.3 — Memory System_

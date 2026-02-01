@@ -258,4 +258,4 @@ Token: 12,500 / 25,000 (50%)
 
 ---
 
-_DOMYH Agent v4.2 • Optimized for context efficiency_
+_DOMYH Awesome Code v4.3 • Optimized for context efficiency_

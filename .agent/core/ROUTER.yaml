@@ -1,5 +1,5 @@
 # Semantic Router Configuration
-# DOMYH Agent v4.2
+# DOMYH Awesome Code v4.3
 # Selects top-K relevant skills based on query similarity
 
 version: "4.3.0"
@@ -180,4 +180,4 @@ recommendations:
     project_type: 0.20
     recent_activity: 0.15
 
-# _DOMYH Agent v4.2_
+# _DOMYH Awesome Code v4.3_

@@ -1,4 +1,4 @@
-# DOMYH Agent v4.3 — Claude Code Configuration
+# DOMYH Awesome Code v4.3 — Claude Code Configuration
 
 > **Version**: 4.3.0 | **Developer**: NockDev
 > **Architecture**: Progressive Disclosure + Semantic Selection
@@ -95,4 +95,4 @@ Default: English | Switch: `/lang vi`
 
 ---
 
-_DOMYH Agent v4.3 • Progressive Disclosure Architecture_
+_DOMYH Awesome Code v4.3 • Progressive Disclosure Architecture_

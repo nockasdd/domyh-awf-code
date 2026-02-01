@@ -1,4 +1,4 @@
-# 📜 DOMYH Agent Rules System
+# 📜 DOMYH Awesome Code Rules System
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📚 **Version**: v4.4 - Architecture-Aware Implementation (AI Best Practices 2025)
@@ -138,4 +138,4 @@ Dựa trên nghiên cứu **62+ lỗi AI agent**:
 
 ---
 
-_DOMYH Agent v4.2 • NockDev_
+_DOMYH Awesome Code v4.3 • NockDev_
