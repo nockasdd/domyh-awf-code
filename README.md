@@ -5,6 +5,7 @@
 ### **The Ultimate AI Coding Assistant for Developers**
 
 [![Version](https://img.shields.io/badge/version-4.3.0-blue.svg?style=for-the-badge)](https://github.com/nockasdd/domyh-awf-code)
+[![Release](https://img.shields.io/github/v/release/nockasdd/domyh-awf-code?style=for-the-badge&color=brightgreen)](https://github.com/nockasdd/domyh-awf-code/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-33+-purple.svg?style=for-the-badge)](#-skills)
 [![Commands](https://img.shields.io/badge/commands-28-orange.svg?style=for-the-badge)](#-commands)
