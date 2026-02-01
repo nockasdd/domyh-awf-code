@@ -1,225 +1,229 @@
-﻿# ============================================================================
-# DOMYH Awesome Code Library - Smart Installer for Windows
-# Version: 2.0.0
-# Developer: NockDev (https://github.com/nockasdd)
-# PowerShell Script
-# ============================================================================
+﻿# ==============================================================================
+# DOMYH Awesome Code Library - Install Script for Windows PowerShell
+# Version: 4.3.1
+# Author: NockDev
+# ==============================================================================
 
-param(
+param (
     [switch]$Help,
     [switch]$All,
     [switch]$Project,
-    [string]$ProjectPath,
-    [string]$Lang
+    [string]$ProjectPath = "",
+    [string]$Lang = ""
 )
 
 # Script location
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$DomyhRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+$DomyhRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+if ($DomyhRoot -eq "") {
+    $DomyhRoot = Split-Path -Parent $PSScriptRoot
+}
 
-# Default language
-$Global:Language = "en"
+# Ensure we're in the correct directory
+if (-not (Test-Path "$DomyhRoot\.agent")) {
+    $DomyhRoot = Get-Location
+}
 
-# ============================================================================
-# Internationalization (i18n)
-# ============================================================================
+# ==============================================================================
+# IDE Configuration Registry (Verified 2025-2026)
+# ==============================================================================
+$IDEConfigs = @{
+    "claude"          = @{
+        Name        = "Claude Code CLI"
+        GlobalPath  = "$env:USERPROFILE\.claude"
+        ConfigFile  = "CLAUDE.md"
+        SkillsDir   = "skills"
+        Detected    = $false
+        Description = "Anthropic Claude CLI for terminal"
+    }
+    "gemini"          = @{
+        Name        = "Google Gemini CLI"
+        GlobalPath  = "$env:USERPROFILE\.gemini"
+        ConfigFile  = "GEMINI.md"
+        SkillsDir   = "skills"
+        Detected    = $false
+        Description = "Google Gemini AI in terminal"
+    }
+    "antigravity"     = @{
+        Name        = "Antigravity (Claude)"
+        GlobalPath  = "$env:USERPROFILE\.gemini\antigravity"
+        ConfigFile  = "CLAUDE.md"
+        SkillsDir   = "skills"
+        Detected    = $false
+        Description = "Claude-based agent framework"
+    }
+    "codex"           = @{
+        Name        = "OpenAI Codex CLI"
+        GlobalPath  = "$env:USERPROFILE\.codex"
+        ConfigFile  = "AGENTS.md"
+        SkillsDir   = ""
+        Detected    = $false
+        Description = "OpenAI Codex terminal agent"
+    }
+    "continue"        = @{
+        Name        = "Continue.dev"
+        GlobalPath  = "$env:USERPROFILE\.continue"
+        ConfigFile  = "config.yaml"
+        RulesDir    = "rules"
+        Detected    = $false
+        Description = "Open-source AI code assistant"
+    }
+    "augment"         = @{
+        Name        = "Augment Code"
+        GlobalPath  = "$env:USERPROFILE\.augment"
+        RulesDir    = "rules"
+        Detected    = $false
+        Description = "AI coding assistant"
+    }
+    "cursor"          = @{
+        Name        = "Cursor IDE"
+        GlobalPath  = "$env:USERPROFILE\.cursor"
+        ProjectFile = ".cursorrules"
+        Detected    = $false
+        Description = "AI-first code editor"
+    }
+    "windsurf"        = @{
+        Name         = "Windsurf IDE"
+        GlobalPath   = "$env:USERPROFILE\.windsurf"
+        ProjectFile  = ".windsurfrules"
+        GlobalMemory = "$env:USERPROFILE\.codeium\windsurf\memories"
+        Detected     = $false
+        Description  = "Codeium AI IDE"
+    }
+    "vscode"          = @{
+        Name        = "VS Code (Copilot)"
+        GlobalPath  = "$env:USERPROFILE\.vscode"
+        ProjectFile = ".github\copilot-instructions.md"
+        Detected    = $false
+        Description = "GitHub Copilot integration"
+    }
+    "vscode-insiders" = @{
+        Name        = "VS Code Insiders"
+        GlobalPath  = "$env:USERPROFILE\.vscode-insiders"
+        ProjectFile = ".github\copilot-instructions.md"
+        Detected    = $false
+        Description = "VS Code preview builds"
+    }
+    "aider"           = @{
+        Name        = "Aider"
+        GlobalPath  = "$env:USERPROFILE\.aider"
+        ConfigFile  = "aider.conf.yml"
+        Detected    = $false
+        Description = "AI pair programming CLI"
+    }
+}
 
+# ==============================================================================
+# Localization - English and Vietnamese
+# ==============================================================================
 $Strings = @{
     "en" = @{
-        "banner_title"          = "DOMYH Awesome Code Library"
-        "banner_subtitle"       = "AI-Powered Development Assistant"
-        "banner_by"             = "Developed by NockDev"
-        "detecting_os"          = "Operating System"
-        "detecting_ides"        = "Detecting installed AI IDEs..."
-        "select_language"       = "Select Language"
+        "title"                 = "DOMYH Awesome Code Library"
+        "subtitle"              = "AI-Powered Development Assistant"
+        "version"               = "Version 4.3.1"
+        "developer"             = "Developed by NockDev"
+        "select_language"       = "Select Language / Chon Ngon Ngu"
+        "english"               = "English (default)"
+        "vietnamese"            = "Tieng Viet"
+        "choose"                = "Choose / Chon"
+        "detecting"             = "Detecting installed AI IDEs..."
+        "no_ides_detected"      = "No IDEs detected"
         "menu_title"            = "Installation Options"
         "menu_all"              = "Install to ALL detected IDEs"
         "menu_select"           = "Select specific IDEs"
-        "menu_project"          = "Install to current project only"
-        "menu_details"          = "Show IDE configuration details"
-        "menu_language"         = "Change Language"
+        "menu_project"          = "Install to current project"
+        "menu_details"          = "Show IDE details"
+        "menu_language"         = "Change language"
         "menu_exit"             = "Exit"
-        "choose_option"         = "Choose option"
+        "select_option"         = "Select option"
         "installing_to"         = "Installing to"
         "installation_complete" = "Installation complete!"
-        "project_path"          = "Enter project path (or press Enter for current directory)"
         "files_created"         = "Files created"
-        "goodbye"               = "Goodbye!"
-        "invalid_option"        = "Invalid option. Please try again."
-        "no_ides_detected"      = "No AI IDEs detected. You can still install manually."
+        "configured"            = "configured"
+        "invalid_option"        = "Invalid option"
         "press_enter"           = "Press Enter to continue..."
-        "configured"            = "configured!"
-        "version"               = "Version"
-        "language_selected"     = "Selected: English"
+        "goodbye"               = "Goodbye!"
     }
     "vi" = @{
-        "banner_title"          = "DOMYH Awesome Code Library"
-        "banner_subtitle"       = "Trợ lý Phát triển Ứng dụng AI"
-        "banner_by"             = "Phát triển bởi NockDev"
-        "detecting_os"          = "Hệ điều hành"
-        "detecting_ides"        = "Đang phát hiện các AI IDE đã cài đặt..."
-        "select_language"       = "Chọn Ngôn ngữ"
-        "menu_title"            = "Tùy chọn Cài đặt"
-        "menu_all"              = "Cài đặt cho TẤT CẢ IDE đã phát hiện"
-        "menu_select"           = "Chọn IDE cụ thể"
-        "menu_project"          = "Cài đặt cho project hiện tại"
-        "menu_details"          = "Xem chi tiết cấu hình IDE"
-        "menu_language"         = "Đổi Ngôn ngữ"
-        "menu_exit"             = "Thoát"
-        "choose_option"         = "Chọn tùy chọn"
-        "installing_to"         = "Đang cài đặt cho"
-        "installation_complete" = "Cài đặt hoàn tất!"
-        "project_path"          = "Nhập đường dẫn project (hoặc Enter cho thư mục hiện tại)"
-        "files_created"         = "Các file đã tạo"
-        "goodbye"               = "Tạm biệt!"
-        "invalid_option"        = "Tùy chọn không hợp lệ. Vui lòng thử lại."
-        "no_ides_detected"      = "Không phát hiện AI IDE. Bạn vẫn có thể cài đặt thủ công."
-        "press_enter"           = "Nhấn Enter để tiếp tục..."
-        "configured"            = "đã cấu hình!"
-        "version"               = "Phiên bản"
-        "language_selected"     = "Đã chọn: Tiếng Việt"
+        "title"                 = "Thu Vien DOMYH Awesome Code"
+        "subtitle"              = "Tro Ly Phat Trien Voi AI"
+        "version"               = "Phien Ban 4.3.1"
+        "developer"             = "Phat Trien Boi NockDev"
+        "select_language"       = "Chon Ngon Ngu / Select Language"
+        "english"               = "English"
+        "vietnamese"            = "Tieng Viet (mac dinh)"
+        "choose"                = "Chon / Choose"
+        "detecting"             = "Dang phat hien cac IDE AI..."
+        "no_ides_detected"      = "Khong phat hien IDE nao"
+        "menu_title"            = "Tuy Chon Cai Dat"
+        "menu_all"              = "Cai dat cho TAT CA IDE"
+        "menu_select"           = "Chon IDE cu the"
+        "menu_project"          = "Cai dat cho du an hien tai"
+        "menu_details"          = "Xem chi tiet IDE"
+        "menu_language"         = "Doi ngon ngu"
+        "menu_exit"             = "Thoat"
+        "select_option"         = "Chon tuy chon"
+        "installing_to"         = "Dang cai dat vao"
+        "installation_complete" = "Cai dat hoan tat!"
+        "files_created"         = "Cac tep da tao"
+        "configured"            = "da cau hinh"
+        "invalid_option"        = "Tuy chon khong hop le"
+        "press_enter"           = "Nhan Enter de tiep tuc..."
+        "goodbye"               = "Tam biet!"
     }
 }
+
+$CurrentLang = "en"
 
 function Get-String {
     param([string]$Key)
-    return $Strings[$Global:Language][$Key]
+    return $Strings[$CurrentLang][$Key]
 }
 
-# ============================================================================
-# IDE Configuration
-# ============================================================================
-
-$IDEConfigs = @{
-    "claude"          = @{
-        Name     = "Claude Code CLI"
-        Path     = "$env:USERPROFILE\.claude"
-        File     = "CLAUDE.md"
-        Detected = $false
-    }
-    "cursor"          = @{
-        Name     = "Cursor IDE"
-        Path     = "$env:USERPROFILE\.cursor"
-        AppData  = "$env:APPDATA\Cursor"
-        File     = ".cursorrules"
-        Detected = $false
-    }
-    "windsurf"        = @{
-        Name     = "Windsurf IDE"
-        Path     = "$env:USERPROFILE\.windsurf"
-        File     = "AGENTS.md"
-        Detected = $false
-    }
-    "vscode"          = @{
-        Name     = "VS Code (Copilot)"
-        Path     = "$env:USERPROFILE\.vscode"
-        AppData  = "$env:APPDATA\Code"
-        File     = ".github\copilot-instructions.md"
-        Detected = $false
-    }
-    "vscode-insiders" = @{
-        Name     = "VS Code Insiders"
-        Path     = "$env:USERPROFILE\.vscode-insiders"
-        AppData  = "$env:APPDATA\Code - Insiders"
-        File     = ".github\copilot-instructions.md"
-        Detected = $false
-    }
-    "augment"         = @{
-        Name     = "Augment Code"
-        Path     = "$env:USERPROFILE\.augment"
-        File     = "rules\"
-        Detected = $false
-    }
-    "codex"           = @{
-        Name     = "OpenAI Codex CLI"
-        Path     = "$env:USERPROFILE\.codex"
-        File     = "AGENTS.md"
-        Detected = $false
-    }
-    "gemini"          = @{
-        Name     = "Google Gemini CLI"
-        Path     = "$env:USERPROFILE\.gemini"
-        File     = "GEMINI.md"
-        Detected = $false
-    }
-    "antigravity"     = @{
-        Name     = "Antigravity (Claude)"
-        Path     = "$env:USERPROFILE\.gemini\antigravity"
-        File     = "global_workflows\"
-        Detected = $false
-    }
-    "continue"        = @{
-        Name     = "Continue.dev"
-        Path     = "$env:USERPROFILE\.continue"
-        File     = "AGENTS.md"
-        Detected = $false
-    }
-}
-
-# ============================================================================
-# Functions
-# ============================================================================
-
+# ==============================================================================
+# UI Functions
+# ==============================================================================
 function Show-Banner {
     Write-Host ""
-    Write-Host "╔══════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║                    🚀 $(Get-String 'banner_title')                     ║" -ForegroundColor Cyan
-    Write-Host "║              $(Get-String 'banner_subtitle')              ║" -ForegroundColor Cyan
-    Write-Host "║                      $(Get-String 'version') 2.0.0                        ║" -ForegroundColor Cyan
-    Write-Host "║                   $(Get-String 'banner_by')                   ║" -ForegroundColor Cyan
-    Write-Host "╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
-    Write-Host ""
+    Write-Host "======================================================================" -ForegroundColor Cyan
+    Write-Host "                    $(Get-String 'title')                    " -ForegroundColor Yellow
+    Write-Host "              $(Get-String 'subtitle')              " -ForegroundColor White
+    Write-Host "                      $(Get-String 'version')                        " -ForegroundColor Gray
+    Write-Host "                   $(Get-String 'developer')                   " -ForegroundColor Gray
+    Write-Host "======================================================================" -ForegroundColor Cyan
 }
 
-function Select-Language {
+function Show-LanguageSelection {
     Write-Host ""
-    Write-Host "╔══════════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
-    Write-Host "║                   🌍 Select Language / Chọn Ngôn ngữ             ║" -ForegroundColor Magenta
-    Write-Host "╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor Magenta
+    Write-Host "======================================================================" -ForegroundColor Magenta
+    Write-Host "         $(Get-String 'select_language')         " -ForegroundColor Yellow
+    Write-Host "======================================================================" -ForegroundColor Magenta
     Write-Host ""
-    Write-Host "  1) 🇺🇸 English (default)"
-    Write-Host "  2) 🇻🇳 Tiếng Việt"
+    Write-Host "  1) [EN] $(Get-String 'english')"
+    Write-Host "  2) [VI] $(Get-String 'vietnamese')"
     Write-Host ""
-    $choice = Read-Host "Choose / Chọn (1-2)"
+    
+    $choice = Read-Host "$(Get-String 'choose') (1-2)"
     
     switch ($choice) {
-        "2" { $Global:Language = "vi" }
-        default { $Global:Language = "en" }
-    }
-    
-    # Update config.yaml
-    Update-LanguageConfig
-    
-    Write-Host ""
-    Write-Host "✅ $(Get-String 'language_selected')" -ForegroundColor Green
-}
-
-function Update-LanguageConfig {
-    $configFile = "$DomyhRoot\.agent\config.yaml"
-    if (Test-Path $configFile) {
-        $content = Get-Content $configFile -Raw
-        if ($Global:Language -eq "vi") {
-            $content = $content -replace 'default: "en"', 'default: "vi"'
-        }
-        else {
-            $content = $content -replace 'default: "vi"', 'default: "en"'
-        }
-        $content | Set-Content $configFile -Encoding UTF8
+        "1" { $script:CurrentLang = "en" }
+        "2" { $script:CurrentLang = "vi" }
+        default { $script:CurrentLang = "en" }
     }
 }
 
 function Show-Help {
     Show-Banner
+    Write-Host ""
     Write-Host "Usage: .\install.ps1 [options]" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "Options:" -ForegroundColor Yellow
+    Write-Host "Options:" -ForegroundColor Cyan
     Write-Host "  -Help           Show this help message"
     Write-Host "  -All            Install to all detected IDEs"
     Write-Host "  -Project        Install to current project"
     Write-Host "  -ProjectPath    Specify project path"
     Write-Host "  -Lang           Set language (en, vi)"
     Write-Host ""
-    Write-Host "Examples:" -ForegroundColor Yellow
+    Write-Host "Examples:" -ForegroundColor Cyan
     Write-Host "  .\install.ps1                    # Interactive mode"
     Write-Host "  .\install.ps1 -All               # Install to all IDEs"
     Write-Host "  .\install.ps1 -Project           # Install to current dir"
@@ -227,8 +231,12 @@ function Show-Help {
     Write-Host ""
 }
 
+# ==============================================================================
+# IDE Detection
+# ==============================================================================
 function Detect-IDEs {
-    Write-Host "🔍 $(Get-String 'detecting_ides')" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "[*] $(Get-String 'detecting')" -ForegroundColor Blue
     Write-Host ""
     
     $detected = @()
@@ -237,64 +245,47 @@ function Detect-IDEs {
         $config = $IDEConfigs[$key]
         $found = $false
         
-        if (Test-Path $config.Path) {
-            $found = $true
-        }
-        elseif ($config.AppData -and (Test-Path $config.AppData)) {
+        if (Test-Path $config.GlobalPath) {
             $found = $true
         }
         
         if ($found) {
             $IDEConfigs[$key].Detected = $true
             $detected += $key
-            Write-Host "  ✅ $($config.Name)" -ForegroundColor Green -NoNewline
-            Write-Host " — $($config.Path)" -ForegroundColor Gray
+            Write-Host "  [OK] $($config.Name)" -ForegroundColor Green -NoNewline
+            Write-Host " - $($config.GlobalPath)" -ForegroundColor Gray
         }
     }
     
     Write-Host ""
     
     if ($detected.Count -eq 0) {
-        Write-Host "❌ $(Get-String 'no_ides_detected')" -ForegroundColor Red
+        Write-Host "[X] $(Get-String 'no_ides_detected')" -ForegroundColor Red
     }
     
     return $detected
 }
 
-function Show-Menu {
-    Write-Host ""
-    Write-Host "════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "📋 $(Get-String 'menu_title'):" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "  1) 🌍 $(Get-String 'menu_all')"
-    Write-Host "  2) 🎯 $(Get-String 'menu_select')"
-    Write-Host "  3) 📁 $(Get-String 'menu_project')"
-    Write-Host "  4) 📖 $(Get-String 'menu_details')"
-    Write-Host "  5) 🌐 $(Get-String 'menu_language')"
-    Write-Host "  6) ❌ $(Get-String 'menu_exit')"
-    Write-Host ""
-    Write-Host "════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host ""
-    
-    return Read-Host "$(Get-String 'choose_option') (1-6)"
-}
-
+# ==============================================================================
+# Installation Functions
+# ==============================================================================
 function Install-ToIDE {
     param([string]$IDE)
     
     $config = $IDEConfigs[$IDE]
+    $path = $config.GlobalPath
     $name = $config.Name
-    $path = $config.Path
     
-    Write-Host "📦 $(Get-String 'installing_to') $name..." -ForegroundColor Blue
-    
+    # Ensure directory exists
     if (-not (Test-Path $path)) {
         New-Item -ItemType Directory -Path $path -Force | Out-Null
     }
     
     switch ($IDE) {
         "claude" {
+            # ~/.claude/CLAUDE.md
             Copy-Item "$DomyhRoot\CLAUDE.md" -Destination "$path\CLAUDE.md" -Force
+            # ~/.claude/skills/
             $skillsPath = "$path\skills"
             if (-not (Test-Path $skillsPath)) {
                 New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
@@ -302,25 +293,12 @@ function Install-ToIDE {
             if (Test-Path "$DomyhRoot\.agent\skills") {
                 Copy-Item "$DomyhRoot\.agent\skills\*" -Destination $skillsPath -Recurse -Force
             }
-        }
-        
-        "cursor" {
-            $rulesPath = "$path\rules"
-            if (-not (Test-Path $rulesPath)) {
-                New-Item -ItemType Directory -Path $rulesPath -Force | Out-Null
-            }
-            Get-ChildItem "$DomyhRoot\.agent\rules\*.md" | ForEach-Object {
-                $newName = $_.BaseName + ".mdc"
-                Copy-Item $_.FullName -Destination "$rulesPath\$newName" -Force
-            }
-        }
-        
-        { "windsurf", "codex", "continue" -contains $_ } {
-            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$path\AGENTS.md" -Force
         }
         
         "gemini" {
+            # ~/.gemini/GEMINI.md
             Copy-Item "$DomyhRoot\GEMINI.md" -Destination "$path\GEMINI.md" -Force
+            # ~/.gemini/skills/
             $skillsPath = "$path\skills"
             if (-not (Test-Path $skillsPath)) {
                 New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
@@ -330,28 +308,68 @@ function Install-ToIDE {
             }
         }
         
-        "augment" {
+        "antigravity" {
+            # ~/.gemini/antigravity/CLAUDE.md
+            Copy-Item "$DomyhRoot\CLAUDE.md" -Destination "$path\CLAUDE.md" -Force
+            # ~/.gemini/antigravity/skills/
+            $skillsPath = "$path\skills"
+            if (-not (Test-Path $skillsPath)) {
+                New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
+            }
+            if (Test-Path "$DomyhRoot\.agent\skills") {
+                Copy-Item "$DomyhRoot\.agent\skills\*" -Destination $skillsPath -Recurse -Force
+            }
+        }
+        
+        "codex" {
+            # ~/.codex/AGENTS.md
+            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$path\AGENTS.md" -Force
+        }
+        
+        "continue" {
+            # ~/.continue/rules/
             $rulesPath = "$path\rules"
             if (-not (Test-Path $rulesPath)) {
                 New-Item -ItemType Directory -Path $rulesPath -Force | Out-Null
             }
-            Copy-Item "$DomyhRoot\.agent\rules\*.md" -Destination $rulesPath -Force
+            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$rulesPath\domyh-rules.md" -Force
         }
         
-        "antigravity" {
-            $wfPath = "$path\global_workflows"
-            if (-not (Test-Path $wfPath)) {
-                New-Item -ItemType Directory -Path $wfPath -Force | Out-Null
+        "augment" {
+            # ~/.augment/rules/
+            $rulesPath = "$path\rules"
+            if (-not (Test-Path $rulesPath)) {
+                New-Item -ItemType Directory -Path $rulesPath -Force | Out-Null
             }
-            Copy-Item "$DomyhRoot\.agent\workflows\*.md" -Destination $wfPath -Force
-            
-            $skillsPath = "$path\skills"
-            if (-not (Test-Path $skillsPath)) {
-                New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
+            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$rulesPath\domyh-rules.md" -Force
+        }
+        
+        "cursor" {
+            # Project file - no global install needed
+            Write-Host "  [i] Cursor uses project-level .cursorrules file" -ForegroundColor Yellow
+        }
+        
+        "windsurf" {
+            # ~/.codeium/windsurf/memories/global_rules.md (if exists)
+            $memoriesPath = "$env:USERPROFILE\.codeium\windsurf\memories"
+            if (Test-Path $memoriesPath) {
+                Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$memoriesPath\global_rules.md" -Force
             }
-            if (Test-Path "$DomyhRoot\.agent\skills") {
-                Copy-Item "$DomyhRoot\.agent\skills\*" -Destination $skillsPath -Recurse -Force
-            }
+        }
+        
+        "vscode" {
+            # Project file - no global install needed
+            Write-Host "  [i] VS Code Copilot uses project-level .github/copilot-instructions.md" -ForegroundColor Yellow
+        }
+        
+        "vscode-insiders" {
+            # Same as vscode
+            Write-Host "  [i] VS Code Insiders uses project-level .github/copilot-instructions.md" -ForegroundColor Yellow
+        }
+        
+        "aider" {
+            # ~/.aider.conf.yml
+            Copy-Item "$DomyhRoot\.aider.conf.yml" -Destination "$env:USERPROFILE\.aider.conf.yml" -Force
         }
         
         default {
@@ -359,14 +377,14 @@ function Install-ToIDE {
         }
     }
     
-    Write-Host "  ✅ $name $(Get-String 'configured')" -ForegroundColor Green
+    Write-Host "  [OK] $name $(Get-String 'configured')" -ForegroundColor Green
 }
 
 function Install-ToAllIDEs {
     param([array]$DetectedIDEs)
     
     Write-Host ""
-    Write-Host "🚀 $(Get-String 'installing_to') all detected IDEs..." -ForegroundColor Green
+    Write-Host "[*] $(Get-String 'installing_to') all detected IDEs..." -ForegroundColor Green
     Write-Host ""
     
     foreach ($ide in $DetectedIDEs) {
@@ -374,170 +392,190 @@ function Install-ToAllIDEs {
     }
     
     Write-Host ""
-    Write-Host "✅ $(Get-String 'installation_complete')" -ForegroundColor Green
-}
-
-function Select-IDEs {
-    param([array]$DetectedIDEs)
-    
-    Write-Host ""
-    Write-Host "🎯 $(Get-String 'menu_select'):" -ForegroundColor Yellow
-    Write-Host ""
-    
-    for ($i = 0; $i -lt $DetectedIDEs.Count; $i++) {
-        $ide = $DetectedIDEs[$i]
-        $name = $IDEConfigs[$ide].Name
-        Write-Host "  $($i + 1)) $name"
-    }
-    
-    Write-Host ""
-    $selections = Read-Host "Enter choices (e.g., 1 3 5)"
-    
-    $numbers = $selections -split '\s+' | ForEach-Object { [int]$_ - 1 }
-    
-    foreach ($idx in $numbers) {
-        if ($idx -ge 0 -and $idx -lt $DetectedIDEs.Count) {
-            Install-ToIDE -IDE $DetectedIDEs[$idx]
-        }
-    }
-    
-    Write-Host ""
-    Write-Host "✅ $(Get-String 'installation_complete')" -ForegroundColor Green
+    Write-Host "[OK] $(Get-String 'installation_complete')" -ForegroundColor Green
 }
 
 function Install-ToProject {
     param([string]$Path)
     
-    if (-not $Path) {
-        $Path = Read-Host "$(Get-String 'project_path')"
-        if (-not $Path) {
-            $Path = Get-Location
-        }
+    if ($Path -eq "") {
+        $Path = Get-Location
     }
     
-    if (-not (Test-Path $Path)) {
-        Write-Host "❌ Directory does not exist: $Path" -ForegroundColor Red
-        return
+    Write-Host ""
+    Write-Host "[*] $(Get-String 'installing_to') project: $Path" -ForegroundColor Blue
+    Write-Host ""
+    
+    # Create directories
+    if (-not (Test-Path "$Path\.agent")) {
+        New-Item -ItemType Directory -Path "$Path\.agent" -Force | Out-Null
+    }
+    if (-not (Test-Path "$Path\.github")) {
+        New-Item -ItemType Directory -Path "$Path\.github" -Force | Out-Null
     }
     
-    Write-Host "📦 $(Get-String 'installing_to') project: $Path" -ForegroundColor Blue
+    # Copy .agent folder
+    Copy-Item "$DomyhRoot\.agent\*" -Destination "$Path\.agent" -Recurse -Force
     
-    Copy-Item "$DomyhRoot\.agent" -Destination $Path -Recurse -Force
+    # Copy root config files
     Copy-Item "$DomyhRoot\AGENTS.md" -Destination $Path -Force
     Copy-Item "$DomyhRoot\CLAUDE.md" -Destination $Path -Force
     Copy-Item "$DomyhRoot\GEMINI.md" -Destination $Path -Force
     Copy-Item "$DomyhRoot\.cursorrules" -Destination $Path -Force
     Copy-Item "$DomyhRoot\.windsurfrules" -Destination $Path -Force
     
-    $githubPath = "$Path\.github"
-    if (-not (Test-Path $githubPath)) {
-        New-Item -ItemType Directory -Path $githubPath -Force | Out-Null
-    }
-    Copy-Item "$DomyhRoot\.github\copilot-instructions.md" -Destination $githubPath -Force
+    # Copy Copilot instructions
+    Copy-Item "$DomyhRoot\.github\copilot-instructions.md" -Destination "$Path\.github" -Force
     
     Write-Host ""
-    Write-Host "✅ $(Get-String 'installation_complete')" -ForegroundColor Green
+    Write-Host "[OK] $(Get-String 'installation_complete')" -ForegroundColor Green
     Write-Host ""
     Write-Host "$(Get-String 'files_created'):" -ForegroundColor Yellow
-    Write-Host "  - .agent\           (Agent system)"
-    Write-Host "  - AGENTS.md         (Universal)"
-    Write-Host "  - CLAUDE.md         (Claude Code)"
-    Write-Host "  - GEMINI.md         (Gemini CLI)"
-    Write-Host "  - .cursorrules      (Cursor)"
-    Write-Host "  - .windsurfrules    (Windsurf)"
-    Write-Host "  - .github\copilot-instructions.md (Copilot)"
+    Write-Host "  - .agent\                           (Agent system)"
+    Write-Host "  - AGENTS.md                         (Universal rules)"
+    Write-Host "  - CLAUDE.md                         (Claude Code)"
+    Write-Host "  - GEMINI.md                         (Gemini CLI)"
+    Write-Host "  - .cursorrules                      (Cursor)"
+    Write-Host "  - .windsurfrules                    (Windsurf)"
+    Write-Host "  - .github\copilot-instructions.md   (GitHub Copilot)"
 }
 
 function Show-IDEDetails {
     Write-Host ""
-    Write-Host "════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "📖 IDE Configuration Details:" -ForegroundColor Yellow
+    Write-Host "======================================================================" -ForegroundColor Cyan
+    Write-Host "                    IDE Configuration Details                    " -ForegroundColor Yellow
+    Write-Host "======================================================================" -ForegroundColor Cyan
     Write-Host ""
     
-    Write-Host "1. Claude Code CLI" -ForegroundColor Blue
-    Write-Host "   Global: ~/.claude/CLAUDE.md"
-    Write-Host "   Skills: ~/.claude/skills/*/"
-    Write-Host ""
-    
-    Write-Host "2. Cursor IDE" -ForegroundColor Blue
-    Write-Host "   Global: ~/.cursor/rules/*.mdc"
-    Write-Host "   Project: .cursor/rules/*.mdc, .cursorrules"
-    Write-Host ""
-    
-    Write-Host "3. Windsurf IDE" -ForegroundColor Blue
-    Write-Host "   Project: AGENTS.md (at root)"
-    Write-Host ""
-    
-    Write-Host "4. VS Code (Copilot)" -ForegroundColor Blue
-    Write-Host "   Project: .github/copilot-instructions.md"
-    Write-Host ""
-    
-    Write-Host "5. Google Gemini CLI" -ForegroundColor Blue
-    Write-Host "   Global: ~/.gemini/GEMINI.md"
-    Write-Host "   Skills: ~/.gemini/skills/*/"
-    Write-Host ""
-    
-    Write-Host "6. Continue.dev" -ForegroundColor Blue
-    Write-Host "   Global: ~/.continue/AGENTS.md"
-    Write-Host ""
-    
-    Write-Host "════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Read-Host "$(Get-String 'press_enter')"
+    foreach ($key in $IDEConfigs.Keys | Sort-Object) {
+        $config = $IDEConfigs[$key]
+        $status = if ($config.Detected) { "[OK]" } else { "[--]" }
+        $color = if ($config.Detected) { "Green" } else { "Gray" }
+        
+        Write-Host "$status $($config.Name)" -ForegroundColor $color
+        Write-Host "    Path: $($config.GlobalPath)" -ForegroundColor Gray
+        if ($config.ConfigFile) {
+            Write-Host "    Config: $($config.ConfigFile)" -ForegroundColor Gray
+        }
+        if ($config.ProjectFile) {
+            Write-Host "    Project: $($config.ProjectFile)" -ForegroundColor Gray
+        }
+        Write-Host ""
+    }
 }
 
-# ============================================================================
-# Main
-# ============================================================================
+function Show-Menu {
+    Write-Host ""
+    Write-Host "======================================================================" -ForegroundColor Cyan
+    Write-Host "[?] $(Get-String 'menu_title'):" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  1) [GLOBAL] $(Get-String 'menu_all')"
+    Write-Host "  2) [SELECT] $(Get-String 'menu_select')"
+    Write-Host "  3) [PROJECT] $(Get-String 'menu_project')"
+    Write-Host "  4) [INFO] $(Get-String 'menu_details')"
+    Write-Host "  5) [LANG] $(Get-String 'menu_language')"
+    Write-Host "  6) [EXIT] $(Get-String 'menu_exit')"
+    Write-Host ""
+}
 
+# ==============================================================================
+# Main Entry Point
+# ==============================================================================
 if ($Help) {
     Show-Help
     exit 0
 }
 
-# Set language from param
-if ($Lang) {
-    switch ($Lang.ToLower()) {
-        "vi" { $Global:Language = "vi" }
-        default { $Global:Language = "en" }
+# Set language from parameter
+if ($Lang -ne "") {
+    $CurrentLang = $Lang.ToLower()
+    if ($CurrentLang -notin @("en", "vi")) {
+        $CurrentLang = "en"
     }
 }
-else {
-    Clear-Host
-    Select-Language
+
+# Show banner
+Show-Banner
+
+# Language selection if not specified
+if ($Lang -eq "") {
+    Show-LanguageSelection
+    Show-Banner
 }
 
-Show-Banner
-$detectedIDEs = Detect-IDEs
+# Detect IDEs
+$detected = Detect-IDEs
 
+# Handle command-line modes
 if ($All) {
-    Install-ToAllIDEs -DetectedIDEs $detectedIDEs
+    Install-ToAllIDEs -DetectedIDEs $detected
     exit 0
 }
 
 if ($Project) {
-    Install-ToProject -Path $ProjectPath
+    if ($ProjectPath -ne "") {
+        Install-ToProject -Path $ProjectPath
+    }
+    else {
+        Install-ToProject -Path (Get-Location)
+    }
     exit 0
 }
 
 # Interactive mode
-while ($true) {
-    $choice = Show-Menu
+do {
+    Show-Menu
+    $choice = Read-Host "$(Get-String 'select_option') (1-6)"
     
     switch ($choice) {
-        "1" { Install-ToAllIDEs -DetectedIDEs $detectedIDEs }
-        "2" { Select-IDEs -DetectedIDEs $detectedIDEs }
-        "3" { Install-ToProject }
-        "4" { Show-IDEDetails }
-        "5" { 
-            Select-Language
-            Show-Banner
+        "1" {
+            Install-ToAllIDEs -DetectedIDEs $detected
+            Read-Host "$(Get-String 'press_enter')"
         }
-        "6" { 
-            Write-Host "👋 $(Get-String 'goodbye')" -ForegroundColor Green
+        "2" {
+            Write-Host ""
+            Write-Host "Available IDEs:" -ForegroundColor Yellow
+            $i = 1
+            foreach ($ide in $detected) {
+                Write-Host "  $i) $($IDEConfigs[$ide].Name)"
+                $i++
+            }
+            Write-Host ""
+            $selection = Read-Host "Enter numbers (comma-separated)"
+            $indices = $selection -split "," | ForEach-Object { [int]$_.Trim() - 1 }
+            foreach ($idx in $indices) {
+                if ($idx -ge 0 -and $idx -lt $detected.Count) {
+                    Install-ToIDE -IDE $detected[$idx]
+                }
+            }
+            Read-Host "$(Get-String 'press_enter')"
+        }
+        "3" {
+            $projectPath = Read-Host "Enter project path (or press Enter for current)"
+            if ($projectPath -eq "") {
+                Install-ToProject -Path (Get-Location)
+            }
+            else {
+                Install-ToProject -Path $projectPath
+            }
+            Read-Host "$(Get-String 'press_enter')"
+        }
+        "4" {
+            Show-IDEDetails
+            Read-Host "$(Get-String 'press_enter')"
+        }
+        "5" {
+            Show-LanguageSelection
+            Show-Banner
+            $detected = Detect-IDEs
+        }
+        "6" {
+            Write-Host ""
+            Write-Host "$(Get-String 'goodbye')" -ForegroundColor Cyan
             exit 0
         }
         default {
-            Write-Host "$(Get-String 'invalid_option')" -ForegroundColor Red
+            Write-Host "[X] $(Get-String 'invalid_option')" -ForegroundColor Red
         }
     }
-}
+} while ($true)

@@ -1,232 +1,186 @@
 #!/bin/bash
-# ============================================================================
-# DOMYH Awesome Code Library - Smart Installer
-# Version: 2.0.0
-# Developer: NockDev (https://github.com/nockasdd)
-# Supports: Linux, macOS, Windows (Git Bash/WSL)
-# ============================================================================
+# ==============================================================================
+# DOMYH Awesome Code Library - Install Script for Linux/macOS/WSL
+# Version: 4.3.1
+# Author: NockDev
+# ==============================================================================
 
 set -e
 
+# Script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOMYH_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# If .agent not found, try current directory
+if [ ! -d "$DOMYH_ROOT/.agent" ]; then
+    DOMYH_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+# ==============================================================================
 # Colors
+# ==============================================================================
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-MAGENTA='\033[0;35m'
+GRAY='\033[0;37m'
 NC='\033[0m' # No Color
 
-# Script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOMYH_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+# ==============================================================================
+# Configuration
+# ==============================================================================
+VERSION="4.3.1"
+LANG_CODE="en"
 
-# Default language
-LANGUAGE="en"
+# IDE Configuration Registry (Verified 2025-2026)
+declare -A IDE_NAMES=(
+    ["claude"]="Claude Code CLI"
+    ["gemini"]="Google Gemini CLI"
+    ["antigravity"]="Antigravity (Claude)"
+    ["codex"]="OpenAI Codex CLI"
+    ["continue"]="Continue.dev"
+    ["augment"]="Augment Code"
+    ["cursor"]="Cursor IDE"
+    ["windsurf"]="Windsurf IDE"
+    ["vscode"]="VS Code (Copilot)"
+    ["aider"]="Aider"
+)
 
-# ============================================================================
-# Internationalization (i18n)
-# ============================================================================
+declare -A IDE_PATHS=(
+    ["claude"]="$HOME/.claude"
+    ["gemini"]="$HOME/.gemini"
+    ["antigravity"]="$HOME/.gemini/antigravity"
+    ["codex"]="$HOME/.codex"
+    ["continue"]="$HOME/.continue"
+    ["augment"]="$HOME/.augment"
+    ["cursor"]="$HOME/.cursor"
+    ["windsurf"]="$HOME/.windsurf"
+    ["vscode"]="$HOME/.vscode"
+    ["aider"]="$HOME/.aider"
+)
 
-# English strings
-declare -A EN
-EN[banner_title]="DOMYH Awesome Code Library"
-EN[banner_subtitle]="AI-Powered Development Assistant"
-EN[banner_by]="Developed by NockDev"
-EN[detecting_os]="Detected OS"
-EN[detecting_ides]="Detecting installed AI IDEs..."
-EN[select_language]="Select Language"
-EN[option_english]="English"
-EN[option_vietnamese]="Tiếng Việt"
-EN[menu_title]="Installation Options"
-EN[menu_all]="Install to ALL detected IDEs"
-EN[menu_select]="Select specific IDEs"
-EN[menu_project]="Install to current project only"
-EN[menu_details]="Show IDE configuration details"
-EN[menu_exit]="Exit"
-EN[choose_option]="Choose option"
-EN[installing_to]="Installing to"
-EN[installation_complete]="Installation complete!"
-EN[project_path]="Enter project path (or press Enter for current directory)"
-EN[files_created]="Files created"
-EN[goodbye]="Goodbye!"
-EN[invalid_option]="Invalid option. Please try again."
-EN[no_ides_detected]="No AI IDEs detected. You can still install manually."
-EN[press_enter]="Press Enter to continue..."
-EN[configured]="configured!"
-EN[version]="Version"
+declare -A IDE_DETECTED=()
 
-# Vietnamese strings
-declare -A VI
-VI[banner_title]="DOMYH Awesome Code Library"
-VI[banner_subtitle]="Trợ lý Phát triển Ứng dụng AI"
-VI[banner_by]="Phát triển bởi NockDev"
-VI[detecting_os]="Hệ điều hành"
-VI[detecting_ides]="Đang phát hiện các AI IDE đã cài đặt..."
-VI[select_language]="Chọn Ngôn ngữ"
-VI[option_english]="English"
-VI[option_vietnamese]="Tiếng Việt"
-VI[menu_title]="Tùy chọn Cài đặt"
-VI[menu_all]="Cài đặt cho TẤT CẢ IDE đã phát hiện"
-VI[menu_select]="Chọn IDE cụ thể"
-VI[menu_project]="Cài đặt cho project hiện tại"
-VI[menu_details]="Xem chi tiết cấu hình IDE"
-VI[menu_exit]="Thoát"
-VI[choose_option]="Chọn tùy chọn"
-VI[installing_to]="Đang cài đặt cho"
-VI[installation_complete]="Cài đặt hoàn tất!"
-VI[project_path]="Nhập đường dẫn project (hoặc Enter cho thư mục hiện tại)"
-VI[files_created]="Các file đã tạo"
-VI[goodbye]="Tạm biệt!"
-VI[invalid_option]="Tùy chọn không hợp lệ. Vui lòng thử lại."
-VI[no_ides_detected]="Không phát hiện AI IDE. Bạn vẫn có thể cài đặt thủ công."
-VI[press_enter]="Nhấn Enter để tiếp tục..."
-VI[configured]="đã cấu hình!"
-VI[version]="Phiên bản"
+# ==============================================================================
+# Localization
+# ==============================================================================
+declare -A STRINGS_EN=(
+    ["title"]="DOMYH Awesome Code Library"
+    ["subtitle"]="AI-Powered Development Assistant"
+    ["select_language"]="Select Language / Chon Ngon Ngu"
+    ["english"]="English (default)"
+    ["vietnamese"]="Tieng Viet"
+    ["detecting"]="Detecting installed AI IDEs..."
+    ["no_ides"]="No IDEs detected"
+    ["menu_title"]="Installation Options"
+    ["menu_all"]="Install to ALL detected IDEs"
+    ["menu_select"]="Select specific IDEs"
+    ["menu_project"]="Install to current project"
+    ["menu_details"]="Show IDE details"
+    ["menu_language"]="Change language"
+    ["menu_exit"]="Exit"
+    ["select_option"]="Select option"
+    ["installing_to"]="Installing to"
+    ["complete"]="Installation complete!"
+    ["files_created"]="Files created"
+    ["configured"]="configured"
+    ["invalid"]="Invalid option"
+    ["press_enter"]="Press Enter to continue..."
+    ["goodbye"]="Goodbye!"
+)
 
-# Get localized string
+declare -A STRINGS_VI=(
+    ["title"]="Thu Vien DOMYH Awesome Code"
+    ["subtitle"]="Tro Ly Phat Trien Voi AI"
+    ["select_language"]="Chon Ngon Ngu / Select Language"
+    ["english"]="English"
+    ["vietnamese"]="Tieng Viet (mac dinh)"
+    ["detecting"]="Dang phat hien cac IDE AI..."
+    ["no_ides"]="Khong phat hien IDE nao"
+    ["menu_title"]="Tuy Chon Cai Dat"
+    ["menu_all"]="Cai dat cho TAT CA IDE"
+    ["menu_select"]="Chon IDE cu the"
+    ["menu_project"]="Cai dat cho du an hien tai"
+    ["menu_details"]="Xem chi tiet IDE"
+    ["menu_language"]="Doi ngon ngu"
+    ["menu_exit"]="Thoat"
+    ["select_option"]="Chon tuy chon"
+    ["installing_to"]="Dang cai dat vao"
+    ["complete"]="Cai dat hoan tat!"
+    ["files_created"]="Cac tep da tao"
+    ["configured"]="da cau hinh"
+    ["invalid"]="Tuy chon khong hop le"
+    ["press_enter"]="Nhan Enter de tiep tuc..."
+    ["goodbye"]="Tam biet!"
+)
+
 t() {
     local key="$1"
-    if [ "$LANGUAGE" == "vi" ]; then
-        echo "${VI[$key]}"
+    if [ "$LANG_CODE" = "vi" ]; then
+        echo "${STRINGS_VI[$key]:-${STRINGS_EN[$key]}}"
     else
-        echo "${EN[$key]}"
+        echo "${STRINGS_EN[$key]}"
     fi
 }
 
-# ============================================================================
-# IDE Configuration Paths
-# ============================================================================
-
-declare -A IDE_PATHS
-declare -A IDE_NAMES
-declare -A IDE_FILES
-
-# Claude Code CLI
-IDE_NAMES["claude"]="Claude Code CLI"
-IDE_PATHS["claude"]="$HOME/.claude"
-IDE_FILES["claude"]="CLAUDE.md"
-
-# Cursor IDE  
-IDE_NAMES["cursor"]="Cursor IDE"
-IDE_PATHS["cursor"]="$HOME/.cursor"
-IDE_FILES["cursor"]=".cursorrules"
-
-# Windsurf IDE
-IDE_NAMES["windsurf"]="Windsurf IDE"
-IDE_PATHS["windsurf"]="$HOME/.windsurf"
-IDE_FILES["windsurf"]="AGENTS.md"
-
-# VS Code (Copilot)
-IDE_NAMES["vscode"]="VS Code (Copilot)"
-IDE_PATHS["vscode"]="$HOME/.vscode"
-IDE_FILES["vscode"]=".github/copilot-instructions.md"
-
-# VS Code Insiders
-IDE_NAMES["vscode-insiders"]="VS Code Insiders"
-IDE_PATHS["vscode-insiders"]="$HOME/.vscode-insiders"
-IDE_FILES["vscode-insiders"]=".github/copilot-instructions.md"
-
-# Augment Code
-IDE_NAMES["augment"]="Augment Code"
-IDE_PATHS["augment"]="$HOME/.augment"
-IDE_FILES["augment"]="rules/"
-
-# OpenAI Codex CLI
-IDE_NAMES["codex"]="OpenAI Codex CLI"
-IDE_PATHS["codex"]="$HOME/.codex"
-IDE_FILES["codex"]="AGENTS.md"
-
-# Gemini CLI
-IDE_NAMES["gemini"]="Google Gemini CLI"
-IDE_PATHS["gemini"]="$HOME/.gemini"
-IDE_FILES["gemini"]="GEMINI.md"
-
-# Antigravity (Claude Code extension)
-IDE_NAMES["antigravity"]="Antigravity (Claude)"
-IDE_PATHS["antigravity"]="$HOME/.gemini/antigravity"
-IDE_FILES["antigravity"]="global_workflows/"
-
-# Zed IDE
-IDE_NAMES["zed"]="Zed Editor"
-IDE_PATHS["zed"]="$HOME/.config/zed"
-IDE_FILES["zed"]=".zed/settings.json"
-
-# Continue.dev
-IDE_NAMES["continue"]="Continue.dev"
-IDE_PATHS["continue"]="$HOME/.continue"
-IDE_FILES["continue"]="AGENTS.md"
-
-# ============================================================================
-# Functions
-# ============================================================================
-
-print_banner() {
-    echo -e "${CYAN}"
-    echo "╔══════════════════════════════════════════════════════════════════╗"
-    echo "║                    🚀 $(t banner_title)                     ║"
-    echo "║              $(t banner_subtitle)              ║"
-    echo "║                      $(t version) 2.0.0                        ║"
-    echo "║                   $(t banner_by)                   ║"
-    echo "╚══════════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
+# ==============================================================================
+# UI Functions
+# ==============================================================================
+show_banner() {
+    echo ""
+    echo -e "${CYAN}======================================================================${NC}"
+    echo -e "${YELLOW}                    $(t title)                    ${NC}"
+    echo -e "${NC}              $(t subtitle)              ${NC}"
+    echo -e "${GRAY}                      Version $VERSION                        ${NC}"
+    echo -e "${GRAY}                   Developed by NockDev                   ${NC}"
+    echo -e "${CYAN}======================================================================${NC}"
 }
 
-select_language() {
+show_language_select() {
     echo ""
-    echo -e "${MAGENTA}╔══════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${MAGENTA}║                   🌍 Select Language / Chọn Ngôn ngữ             ║${NC}"
-    echo -e "${MAGENTA}╚══════════════════════════════════════════════════════════════════╝${NC}"
+    echo -e "${CYAN}======================================================================${NC}"
+    echo -e "${YELLOW}         $(t select_language)         ${NC}"
+    echo -e "${CYAN}======================================================================${NC}"
     echo ""
-    echo "  1) 🇺🇸 English (default)"
-    echo "  2) 🇻🇳 Tiếng Việt"
+    echo "  1) [EN] $(t english)"
+    echo "  2) [VI] $(t vietnamese)"
     echo ""
-    read -p "Choose / Chọn (1-2): " lang_choice
+    read -p "Choose / Chon (1-2): " choice
     
-    case $lang_choice in
-        2) LANGUAGE="vi" ;;
-        *) LANGUAGE="en" ;;
+    case "$choice" in
+        1) LANG_CODE="en" ;;
+        2) LANG_CODE="vi" ;;
+        *) LANG_CODE="en" ;;
     esac
-    
-    # Update config.yaml with selected language
-    update_language_config
-    
+}
+
+show_help() {
+    show_banner
     echo ""
-    if [ "$LANGUAGE" == "vi" ]; then
-        echo -e "${GREEN}✅ Đã chọn: Tiếng Việt${NC}"
-    else
-        echo -e "${GREEN}✅ Selected: English${NC}"
-    fi
+    echo -e "${YELLOW}Usage: ./install.sh [options]${NC}"
+    echo ""
+    echo -e "${CYAN}Options:${NC}"
+    echo "  -h, --help     Show this help message"
+    echo "  -a, --all      Install to all detected IDEs"
+    echo "  -p, --project  Install to current project"
+    echo "  --path PATH    Specify project path"
+    echo "  --lang LANG    Set language (en, vi)"
+    echo ""
+    echo -e "${CYAN}Examples:${NC}"
+    echo "  ./install.sh                # Interactive mode"
+    echo "  ./install.sh --all          # Install to all IDEs"
+    echo "  ./install.sh --project      # Install to current dir"
+    echo "  ./install.sh --lang vi -a   # Vietnamese, install all"
+    echo ""
 }
 
-update_language_config() {
-    # Update default language in config.yaml
-    local config_file="$DOMYH_ROOT/.agent/config.yaml"
-    if [ -f "$config_file" ]; then
-        if [ "$LANGUAGE" == "vi" ]; then
-            sed -i.bak 's/default: "en"/default: "vi"/' "$config_file" 2>/dev/null || \
-            sed -i '' 's/default: "en"/default: "vi"/' "$config_file"
-        else
-            sed -i.bak 's/default: "vi"/default: "en"/' "$config_file" 2>/dev/null || \
-            sed -i '' 's/default: "vi"/default: "en"/' "$config_file"
-        fi
-        rm -f "${config_file}.bak"
-    fi
-}
-
-detect_os() {
-    case "$(uname -s)" in
-        Linux*)     OS="Linux";;
-        Darwin*)    OS="macOS";;
-        CYGWIN*|MINGW*|MSYS*) OS="Windows";;
-        *)          OS="Unknown";;
-    esac
-    echo -e "${BLUE}📦 $(t detecting_os): ${OS}${NC}"
-}
-
+# ==============================================================================
+# IDE Detection
+# ==============================================================================
 detect_ides() {
     echo ""
-    echo -e "${YELLOW}🔍 $(t detecting_ides)${NC}"
+    echo -e "${BLUE}[*] $(t detecting)${NC}"
     echo ""
     
     DETECTED_IDES=()
@@ -236,147 +190,93 @@ detect_ides() {
         name="${IDE_NAMES[$ide]}"
         
         if [ -d "$path" ]; then
+            IDE_DETECTED[$ide]=1
             DETECTED_IDES+=("$ide")
-            echo -e "  ${GREEN}✅ $name${NC} — $path"
+            echo -e "  ${GREEN}[OK]${NC} $name ${GRAY}- $path${NC}"
         fi
     done
     
-    # Check for common project locations
     echo ""
-    echo -e "${YELLOW}📁 Checking common IDE config locations...${NC}"
-    echo ""
-    
-    # Additional checks for Windows paths via env vars
-    if [ -n "$APPDATA" ]; then
-        check_windows_ide "Cursor" "$APPDATA/Cursor"
-        check_windows_ide "VS Code" "$APPDATA/Code"
-        check_windows_ide "VS Code Insiders" "$APPDATA/Code - Insiders"
-    fi
     
     if [ ${#DETECTED_IDES[@]} -eq 0 ]; then
-        echo -e "${RED}❌ $(t no_ides_detected)${NC}"
+        echo -e "${RED}[X] $(t no_ides)${NC}"
     fi
 }
 
-check_windows_ide() {
-    local name="$1"
-    local path="$2"
-    if [ -d "$path" ]; then
-        echo -e "  ${GREEN}✅ $name (Windows)${NC} — $path"
-    fi
-}
-
-show_menu() {
-    echo ""
-    echo -e "${CYAN}════════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${YELLOW}📋 $(t menu_title):${NC}"
-    echo ""
-    echo "  1) 🌍 $(t menu_all)"
-    echo "  2) 🎯 $(t menu_select)"
-    echo "  3) 📁 $(t menu_project)"
-    echo "  4) 📖 $(t menu_details)"
-    echo "  5) 🌐 Change Language / Đổi Ngôn ngữ"
-    echo "  6) ❌ $(t menu_exit)"
-    echo ""
-    echo -e "${CYAN}════════════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    read -p "$(t choose_option) (1-6): " choice
-}
-
-install_to_all() {
-    echo ""
-    echo -e "${GREEN}🚀 $(t installing_to) all detected IDEs...${NC}"
-    echo ""
-    
-    for ide in "${DETECTED_IDES[@]}"; do
-        install_to_ide "$ide"
-    done
-    
-    echo ""
-    echo -e "${GREEN}✅ $(t installation_complete)${NC}"
-}
-
-select_ides() {
-    echo ""
-    echo -e "${YELLOW}🎯 Select IDEs to install (space-separated numbers):${NC}"
-    echo ""
-    
-    local i=1
-    for ide in "${DETECTED_IDES[@]}"; do
-        echo "  $i) ${IDE_NAMES[$ide]}"
-        ((i++))
-    done
-    
-    echo ""
-    read -p "Enter choices (e.g., 1 3 5): " -a selections
-    
-    for sel in "${selections[@]}"; do
-        local idx=$((sel - 1))
-        if [ $idx -ge 0 ] && [ $idx -lt ${#DETECTED_IDES[@]} ]; then
-            install_to_ide "${DETECTED_IDES[$idx]}"
-        fi
-    done
-    
-    echo ""
-    echo -e "${GREEN}✅ $(t installation_complete)${NC}"
-}
-
+# ==============================================================================
+# Installation Functions
+# ==============================================================================
 install_to_ide() {
     local ide="$1"
-    local name="${IDE_NAMES[$ide]}"
     local path="${IDE_PATHS[$ide]}"
-    local file="${IDE_FILES[$ide]}"
+    local name="${IDE_NAMES[$ide]}"
     
-    echo -e "${BLUE}📦 $(t installing_to) $name...${NC}"
-    
-    # Create directory if not exists
+    # Ensure directory exists
     mkdir -p "$path"
     
     case "$ide" in
         "claude")
+            # ~/.claude/CLAUDE.md
             cp "$DOMYH_ROOT/CLAUDE.md" "$path/CLAUDE.md"
+            # ~/.claude/skills/
             mkdir -p "$path/skills"
             cp -r "$DOMYH_ROOT/.agent/skills/"* "$path/skills/" 2>/dev/null || true
-            ;;
-        
-        "cursor")
-            mkdir -p "$path/rules"
-            for rule in "$DOMYH_ROOT/.agent/rules/"*.md; do
-                if [ -f "$rule" ]; then
-                    local basename=$(basename "$rule" .md)
-                    cp "$rule" "$path/rules/$basename.mdc"
-                fi
-            done
-            ;;
-        
-        "windsurf"|"codex"|"continue")
-            cp "$DOMYH_ROOT/AGENTS.md" "$path/AGENTS.md"
             ;;
         
         "gemini")
+            # ~/.gemini/GEMINI.md
             cp "$DOMYH_ROOT/GEMINI.md" "$path/GEMINI.md"
+            # ~/.gemini/skills/
             mkdir -p "$path/skills"
             cp -r "$DOMYH_ROOT/.agent/skills/"* "$path/skills/" 2>/dev/null || true
-            ;;
-        
-        "augment")
-            mkdir -p "$path/rules"
-            for rule in "$DOMYH_ROOT/.agent/rules/"*.md; do
-                if [ -f "$rule" ]; then
-                    cp "$rule" "$path/rules/"
-                fi
-            done
             ;;
         
         "antigravity")
-            mkdir -p "$path/global_workflows"
-            for wf in "$DOMYH_ROOT/.agent/workflows/"*.md; do
-                if [ -f "$wf" ]; then
-                    cp "$wf" "$path/global_workflows/"
-                fi
-            done
+            # ~/.gemini/antigravity/CLAUDE.md
+            cp "$DOMYH_ROOT/CLAUDE.md" "$path/CLAUDE.md"
+            # ~/.gemini/antigravity/skills/
             mkdir -p "$path/skills"
             cp -r "$DOMYH_ROOT/.agent/skills/"* "$path/skills/" 2>/dev/null || true
+            ;;
+        
+        "codex")
+            # ~/.codex/AGENTS.md
+            cp "$DOMYH_ROOT/AGENTS.md" "$path/AGENTS.md"
+            ;;
+        
+        "continue")
+            # ~/.continue/rules/
+            mkdir -p "$path/rules"
+            cp "$DOMYH_ROOT/AGENTS.md" "$path/rules/domyh-rules.md"
+            ;;
+        
+        "augment")
+            # ~/.augment/rules/
+            mkdir -p "$path/rules"
+            cp "$DOMYH_ROOT/AGENTS.md" "$path/rules/domyh-rules.md"
+            ;;
+        
+        "cursor")
+            # Project file - info only
+            echo -e "  ${YELLOW}[i] Cursor uses project-level .cursorrules file${NC}"
+            ;;
+        
+        "windsurf")
+            # ~/.codeium/windsurf/memories/global_rules.md (if exists)
+            local memories="$HOME/.codeium/windsurf/memories"
+            if [ -d "$memories" ]; then
+                cp "$DOMYH_ROOT/AGENTS.md" "$memories/global_rules.md"
+            fi
+            ;;
+        
+        "vscode")
+            # Project file - info only
+            echo -e "  ${YELLOW}[i] VS Code Copilot uses project-level .github/copilot-instructions.md${NC}"
+            ;;
+        
+        "aider")
+            # ~/.aider.conf.yml
+            cp "$DOMYH_ROOT/.aider.conf.yml" "$HOME/.aider.conf.yml" 2>/dev/null || true
             ;;
         
         *)
@@ -384,119 +284,220 @@ install_to_ide() {
             ;;
     esac
     
-    echo -e "  ${GREEN}✅ $name $(t configured)${NC}"
+    echo -e "  ${GREEN}[OK]${NC} $name $(t configured)"
+}
+
+install_to_all() {
+    echo ""
+    echo -e "${GREEN}[*] $(t installing_to) all detected IDEs...${NC}"
+    echo ""
+    
+    for ide in "${DETECTED_IDES[@]}"; do
+        install_to_ide "$ide"
+    done
+    
+    echo ""
+    echo -e "${GREEN}[OK] $(t complete)${NC}"
 }
 
 install_to_project() {
+    local project_path="${1:-$(pwd)}"
+    
     echo ""
-    read -p "$(t project_path): " project_path
+    echo -e "${BLUE}[*] $(t installing_to) project: $project_path${NC}"
+    echo ""
     
-    if [ -z "$project_path" ]; then
-        project_path="$(pwd)"
-    fi
-    
-    if [ ! -d "$project_path" ]; then
-        echo -e "${RED}❌ Directory does not exist: $project_path${NC}"
-        return 1
-    fi
-    
-    echo -e "${BLUE}📦 $(t installing_to) project: $project_path${NC}"
+    # Create directories
+    mkdir -p "$project_path/.agent"
+    mkdir -p "$project_path/.github"
     
     # Copy .agent folder
-    cp -r "$DOMYH_ROOT/.agent" "$project_path/"
+    cp -r "$DOMYH_ROOT/.agent/"* "$project_path/.agent/"
     
-    # Copy root files
+    # Copy root config files
     cp "$DOMYH_ROOT/AGENTS.md" "$project_path/"
     cp "$DOMYH_ROOT/CLAUDE.md" "$project_path/"
     cp "$DOMYH_ROOT/GEMINI.md" "$project_path/"
     cp "$DOMYH_ROOT/.cursorrules" "$project_path/"
     cp "$DOMYH_ROOT/.windsurfrules" "$project_path/"
     
-    # Create .github for Copilot
-    mkdir -p "$project_path/.github"
+    # Copy Copilot instructions
     cp "$DOMYH_ROOT/.github/copilot-instructions.md" "$project_path/.github/"
     
-    echo -e "${GREEN}✅ $(t installation_complete)${NC}"
     echo ""
-    echo "$(t files_created):"
-    echo "  - .agent/           (Agent system)"
-    echo "  - AGENTS.md         (Universal)"
-    echo "  - CLAUDE.md         (Claude Code)"
-    echo "  - GEMINI.md         (Gemini CLI)"
-    echo "  - .cursorrules      (Cursor)"
-    echo "  - .windsurfrules    (Windsurf)"
-    echo "  - .github/copilot-instructions.md (Copilot)"
+    echo -e "${GREEN}[OK] $(t complete)${NC}"
+    echo ""
+    echo -e "${YELLOW}$(t files_created):${NC}"
+    echo "  - .agent/                           (Agent system)"
+    echo "  - AGENTS.md                         (Universal rules)"
+    echo "  - CLAUDE.md                         (Claude Code)"
+    echo "  - GEMINI.md                         (Gemini CLI)"
+    echo "  - .cursorrules                      (Cursor)"
+    echo "  - .windsurfrules                    (Windsurf)"
+    echo "  - .github/copilot-instructions.md   (GitHub Copilot)"
 }
 
 show_ide_details() {
     echo ""
-    echo -e "${CYAN}════════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${YELLOW}📖 IDE Configuration Details:${NC}"
+    echo -e "${CYAN}======================================================================${NC}"
+    echo -e "${YELLOW}                    IDE Configuration Details                    ${NC}"
+    echo -e "${CYAN}======================================================================${NC}"
     echo ""
     
-    echo -e "${BLUE}1. Claude Code CLI${NC}"
-    echo "   Global: ~/.claude/CLAUDE.md"
-    echo "   Skills: ~/.claude/skills/*/"
-    echo ""
-    
-    echo -e "${BLUE}2. Cursor IDE${NC}"
-    echo "   Global: ~/.cursor/rules/*.mdc"
-    echo "   Project: .cursor/rules/*.mdc, .cursorrules"
-    echo ""
-    
-    echo -e "${BLUE}3. Windsurf IDE${NC}"
-    echo "   Project: AGENTS.md (at root)"
-    echo ""
-    
-    echo -e "${BLUE}4. VS Code (Copilot)${NC}"
-    echo "   Project: .github/copilot-instructions.md"
-    echo ""
-    
-    echo -e "${BLUE}5. Google Gemini CLI${NC}"
-    echo "   Global: ~/.gemini/GEMINI.md"
-    echo "   Skills: ~/.gemini/skills/*/"
-    echo ""
-    
-    echo -e "${BLUE}6. Continue.dev${NC}"
-    echo "   Global: ~/.continue/AGENTS.md"
-    echo ""
-    
-    echo -e "${CYAN}════════════════════════════════════════════════════════════════════${NC}"
-    read -p "$(t press_enter)"
-}
-
-# ============================================================================
-# Main
-# ============================================================================
-
-main() {
-    clear
-    select_language
-    print_banner
-    detect_os
-    detect_ides
-    
-    while true; do
-        show_menu
+    for ide in $(echo "${!IDE_NAMES[@]}" | tr ' ' '\n' | sort); do
+        local name="${IDE_NAMES[$ide]}"
+        local path="${IDE_PATHS[$ide]}"
         
-        case $choice in
-            1) install_to_all ;;
-            2) select_ides ;;
-            3) install_to_project ;;
-            4) show_ide_details ;;
-            5) 
-                select_language
-                print_banner
-                ;;
-            6) 
-                echo -e "${GREEN}👋 $(t goodbye)${NC}"
-                exit 0
-                ;;
-            *)
-                echo -e "${RED}$(t invalid_option)${NC}"
-                ;;
-        esac
+        if [ "${IDE_DETECTED[$ide]}" = "1" ]; then
+            echo -e "${GREEN}[OK]${NC} $name"
+        else
+            echo -e "${GRAY}[--] $name${NC}"
+        fi
+        echo -e "${GRAY}    Path: $path${NC}"
+        echo ""
     done
 }
 
-main "$@"
+show_menu() {
+    echo ""
+    echo -e "${CYAN}======================================================================${NC}"
+    echo -e "${YELLOW}[?] $(t menu_title):${NC}"
+    echo ""
+    echo "  1) [GLOBAL] $(t menu_all)"
+    echo "  2) [SELECT] $(t menu_select)"
+    echo "  3) [PROJECT] $(t menu_project)"
+    echo "  4) [INFO] $(t menu_details)"
+    echo "  5) [LANG] $(t menu_language)"
+    echo "  6) [EXIT] $(t menu_exit)"
+    echo ""
+}
+
+# ==============================================================================
+# Parse Arguments
+# ==============================================================================
+INSTALL_ALL=0
+INSTALL_PROJECT=0
+PROJECT_PATH=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -a|--all)
+            INSTALL_ALL=1
+            shift
+            ;;
+        -p|--project)
+            INSTALL_PROJECT=1
+            shift
+            ;;
+        --path)
+            PROJECT_PATH="$2"
+            shift 2
+            ;;
+        --lang)
+            LANG_CODE="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# ==============================================================================
+# Main Entry Point
+# ==============================================================================
+
+# Show banner
+show_banner
+
+# Language selection if not specified via args
+if [ -z "$LANG_CODE" ] || [ "$LANG_CODE" = "" ]; then
+    LANG_CODE="en"
+fi
+
+if [ "$INSTALL_ALL" -eq 0 ] && [ "$INSTALL_PROJECT" -eq 0 ]; then
+    show_language_select
+    show_banner
+fi
+
+# Detect IDEs
+detect_ides
+
+# Handle command-line modes
+if [ "$INSTALL_ALL" -eq 1 ]; then
+    install_to_all
+    exit 0
+fi
+
+if [ "$INSTALL_PROJECT" -eq 1 ]; then
+    if [ -n "$PROJECT_PATH" ]; then
+        install_to_project "$PROJECT_PATH"
+    else
+        install_to_project "$(pwd)"
+    fi
+    exit 0
+fi
+
+# Interactive mode
+while true; do
+    show_menu
+    read -p "$(t select_option) (1-6): " choice
+    
+    case "$choice" in
+        1)
+            install_to_all
+            read -p "$(t press_enter)"
+            ;;
+        2)
+            echo ""
+            echo -e "${YELLOW}Available IDEs:${NC}"
+            i=1
+            for ide in "${DETECTED_IDES[@]}"; do
+                echo "  $i) ${IDE_NAMES[$ide]}"
+                ((i++))
+            done
+            echo ""
+            read -p "Enter numbers (comma-separated): " selection
+            IFS=',' read -ra indices <<< "$selection"
+            for idx in "${indices[@]}"; do
+                idx=$((idx - 1))
+                if [ $idx -ge 0 ] && [ $idx -lt ${#DETECTED_IDES[@]} ]; then
+                    install_to_ide "${DETECTED_IDES[$idx]}"
+                fi
+            done
+            read -p "$(t press_enter)"
+            ;;
+        3)
+            read -p "Enter project path (or Enter for current): " project_path
+            if [ -z "$project_path" ]; then
+                install_to_project "$(pwd)"
+            else
+                install_to_project "$project_path"
+            fi
+            read -p "$(t press_enter)"
+            ;;
+        4)
+            show_ide_details
+            read -p "$(t press_enter)"
+            ;;
+        5)
+            show_language_select
+            show_banner
+            detect_ides
+            ;;
+        6)
+            echo ""
+            echo -e "${CYAN}$(t goodbye)${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}[X] $(t invalid)${NC}"
+            ;;
+    esac
+done
