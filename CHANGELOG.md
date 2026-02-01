@@ -5,6 +5,21 @@ All notable changes to DOMYH Awesome Code will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.1] - 2026-02-01
+
+### Fixed
+
+- **Install Scripts**: Rewritten for `iex` compatibility (remote execution via pipe)
+- **README Quick Start**: Fixed horizontal scrolling by separating Linux/Windows sections
+- **README Badge**: Updated workflow count from 28 to 29
+
+### Changed
+
+- Updated all version references to 4.3.1
+- Improved install script IDE detection and path handling
+
+---
+
 ## [4.3.0] - 2026-02-01
 
 ### Added

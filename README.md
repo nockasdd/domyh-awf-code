@@ -4,11 +4,11 @@
 
 ### **The Ultimate AI Coding Assistant for Developers**
 
-[![Version](https://img.shields.io/badge/version-4.3.0-blue.svg?style=for-the-badge)](https://github.com/nockasdd/domyh-awf-code)
+[![Version](https://img.shields.io/badge/version-4.3.1-blue.svg?style=for-the-badge)](https://github.com/nockasdd/domyh-awf-code)
 [![Release](https://img.shields.io/github/v/release/nockasdd/domyh-awf-code?style=for-the-badge&color=brightgreen)](https://github.com/nockasdd/domyh-awf-code/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-33+-purple.svg?style=for-the-badge)](#-skills)
-[![Commands](https://img.shields.io/badge/commands-28-orange.svg?style=for-the-badge)](#-commands)
+[![Commands](https://img.shields.io/badge/commands-29-orange.svg?style=for-the-badge)](#-commands)
 [![IDE Support](https://img.shields.io/badge/IDEs-10+-red.svg?style=for-the-badge)](#-ide-support)
 
 **Portable** • **Multi-language** • **Universal IDE Support**
@@ -48,18 +48,11 @@
 
 ### ⚡ Option 1: One-Line Install (Recommended)
 
-<table>
-<tr>
-<td width="50%">
-
 **🐧 Linux / macOS**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.sh | bash
 ```
-
-</td>
-<td width="50%">
 
 **🪟 Windows PowerShell**
 
@@ -67,17 +60,11 @@ curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent
 iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
 ```
 
-</td>
-</tr>
-</table>
-
 ### 📦 Option 2: Clone & Install
 
 ```bash
 # Clone the repository
 git clone https://github.com/nockasdd/domyh-awf-code.git
-
-# Run installer
 cd domyh-awf-code
 
 # Linux/macOS
