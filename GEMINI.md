@@ -20,6 +20,7 @@
 | `/init`     | ✨ Initialize project                  |
 | `/review`   | 👀 Code review                         |
 | `/recap`    | 📖 Session summary                     |
+| `/save`     | 💾 Save session to memory files        |
 | `/status`   | 📊 Project status                      |
 | `/help`     | ❓ Help                                |
 
