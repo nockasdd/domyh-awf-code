@@ -1,4 +1,4 @@
-# ============================================================================
+﻿# ============================================================================
 # DOMYH Awesome Code Library - Smart Installer for Windows
 # Version: 2.0.0
 # Developer: NockDev (https://github.com/nockasdd)
@@ -294,7 +294,7 @@ function Install-ToIDE {
     
     switch ($IDE) {
         "claude" {
-            Copy-Item "$DomyhRoot\root\CLAUDE.md" -Destination "$path\CLAUDE.md" -Force
+            Copy-Item "$DomyhRoot\CLAUDE.md" -Destination "$path\CLAUDE.md" -Force
             $skillsPath = "$path\skills"
             if (-not (Test-Path $skillsPath)) {
                 New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
@@ -316,11 +316,11 @@ function Install-ToIDE {
         }
         
         { "windsurf", "codex", "continue" -contains $_ } {
-            Copy-Item "$DomyhRoot\root\AGENTS.md" -Destination "$path\AGENTS.md" -Force
+            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$path\AGENTS.md" -Force
         }
         
         "gemini" {
-            Copy-Item "$DomyhRoot\root\GEMINI.md" -Destination "$path\GEMINI.md" -Force
+            Copy-Item "$DomyhRoot\GEMINI.md" -Destination "$path\GEMINI.md" -Force
             $skillsPath = "$path\skills"
             if (-not (Test-Path $skillsPath)) {
                 New-Item -ItemType Directory -Path $skillsPath -Force | Out-Null
@@ -355,7 +355,7 @@ function Install-ToIDE {
         }
         
         default {
-            Copy-Item "$DomyhRoot\root\AGENTS.md" -Destination "$path\AGENTS.md" -Force
+            Copy-Item "$DomyhRoot\AGENTS.md" -Destination "$path\AGENTS.md" -Force
         }
     }
     
@@ -423,16 +423,17 @@ function Install-ToProject {
     Write-Host "📦 $(Get-String 'installing_to') project: $Path" -ForegroundColor Blue
     
     Copy-Item "$DomyhRoot\.agent" -Destination $Path -Recurse -Force
-    Copy-Item "$DomyhRoot\root\AGENTS.md" -Destination $Path -Force
-    Copy-Item "$DomyhRoot\root\CLAUDE.md" -Destination $Path -Force
-    Copy-Item "$DomyhRoot\root\GEMINI.md" -Destination $Path -Force
-    Copy-Item "$DomyhRoot\root\.cursorrules" -Destination $Path -Force
+    Copy-Item "$DomyhRoot\AGENTS.md" -Destination $Path -Force
+    Copy-Item "$DomyhRoot\CLAUDE.md" -Destination $Path -Force
+    Copy-Item "$DomyhRoot\GEMINI.md" -Destination $Path -Force
+    Copy-Item "$DomyhRoot\.cursorrules" -Destination $Path -Force
+    Copy-Item "$DomyhRoot\.windsurfrules" -Destination $Path -Force
     
     $githubPath = "$Path\.github"
     if (-not (Test-Path $githubPath)) {
         New-Item -ItemType Directory -Path $githubPath -Force | Out-Null
     }
-    Copy-Item "$DomyhRoot\root\.github\copilot-instructions.md" -Destination $githubPath -Force
+    Copy-Item "$DomyhRoot\.github\copilot-instructions.md" -Destination $githubPath -Force
     
     Write-Host ""
     Write-Host "✅ $(Get-String 'installation_complete')" -ForegroundColor Green
@@ -443,6 +444,7 @@ function Install-ToProject {
     Write-Host "  - CLAUDE.md         (Claude Code)"
     Write-Host "  - GEMINI.md         (Gemini CLI)"
     Write-Host "  - .cursorrules      (Cursor)"
+    Write-Host "  - .windsurfrules    (Windsurf)"
     Write-Host "  - .github\copilot-instructions.md (Copilot)"
 }
 

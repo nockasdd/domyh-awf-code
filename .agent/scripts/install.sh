@@ -334,7 +334,7 @@ install_to_ide() {
     
     case "$ide" in
         "claude")
-            cp "$DOMYH_ROOT/root/CLAUDE.md" "$path/CLAUDE.md"
+            cp "$DOMYH_ROOT/CLAUDE.md" "$path/CLAUDE.md"
             mkdir -p "$path/skills"
             cp -r "$DOMYH_ROOT/.agent/skills/"* "$path/skills/" 2>/dev/null || true
             ;;
@@ -350,11 +350,11 @@ install_to_ide() {
             ;;
         
         "windsurf"|"codex"|"continue")
-            cp "$DOMYH_ROOT/root/AGENTS.md" "$path/AGENTS.md"
+            cp "$DOMYH_ROOT/AGENTS.md" "$path/AGENTS.md"
             ;;
         
         "gemini")
-            cp "$DOMYH_ROOT/root/GEMINI.md" "$path/GEMINI.md"
+            cp "$DOMYH_ROOT/GEMINI.md" "$path/GEMINI.md"
             mkdir -p "$path/skills"
             cp -r "$DOMYH_ROOT/.agent/skills/"* "$path/skills/" 2>/dev/null || true
             ;;
@@ -380,7 +380,7 @@ install_to_ide() {
             ;;
         
         *)
-            cp "$DOMYH_ROOT/root/AGENTS.md" "$path/AGENTS.md"
+            cp "$DOMYH_ROOT/AGENTS.md" "$path/AGENTS.md"
             ;;
     esac
     
@@ -406,14 +406,15 @@ install_to_project() {
     cp -r "$DOMYH_ROOT/.agent" "$project_path/"
     
     # Copy root files
-    cp "$DOMYH_ROOT/root/AGENTS.md" "$project_path/"
-    cp "$DOMYH_ROOT/root/CLAUDE.md" "$project_path/"
-    cp "$DOMYH_ROOT/root/GEMINI.md" "$project_path/"
-    cp "$DOMYH_ROOT/root/.cursorrules" "$project_path/"
+    cp "$DOMYH_ROOT/AGENTS.md" "$project_path/"
+    cp "$DOMYH_ROOT/CLAUDE.md" "$project_path/"
+    cp "$DOMYH_ROOT/GEMINI.md" "$project_path/"
+    cp "$DOMYH_ROOT/.cursorrules" "$project_path/"
+    cp "$DOMYH_ROOT/.windsurfrules" "$project_path/"
     
     # Create .github for Copilot
     mkdir -p "$project_path/.github"
-    cp "$DOMYH_ROOT/root/.github/copilot-instructions.md" "$project_path/.github/"
+    cp "$DOMYH_ROOT/.github/copilot-instructions.md" "$project_path/.github/"
     
     echo -e "${GREEN}✅ $(t installation_complete)${NC}"
     echo ""
@@ -423,6 +424,7 @@ install_to_project() {
     echo "  - CLAUDE.md         (Claude Code)"
     echo "  - GEMINI.md         (Gemini CLI)"
     echo "  - .cursorrules      (Cursor)"
+    echo "  - .windsurfrules    (Windsurf)"
     echo "  - .github/copilot-instructions.md (Copilot)"
 }
 
