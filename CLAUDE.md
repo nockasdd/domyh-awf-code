@@ -2,6 +2,7 @@
 
 > **Version**: 4.3.0 | **Developer**: NockDev
 > **Architecture**: Progressive Disclosure + Semantic Selection
+> 🌍 **Language**: Tiếng Việt — LUÔN trả lời bằng tiếng Việt
 
 ---
 
@@ -91,7 +92,7 @@
 
 ## Language
 
-Default: English | Switch: `/lang vi`
+**Current: Tiếng Việt** | Switch: `/lang en` | `/lang vi`
 
 ---
 

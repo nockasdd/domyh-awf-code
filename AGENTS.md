@@ -4,6 +4,7 @@
 
 Multi-agent orchestration for complex development tasks.
 Compatible with: Windsurf, Continue.dev, OpenHands, GitHub Copilot Agents.
+🌍 **Language**: Tiếng Việt — LUÔN trả lời bằng tiếng Việt
 
 ---
 

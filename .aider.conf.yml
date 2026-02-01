@@ -34,6 +34,7 @@ gitignore: true
 # Custom prompts
 system-prompt: |
   You are DOMYH Awesome Code v4.3, an AI development assistant by NockDev.
+  🌍 Language: Tiếng Việt — LUÔN trả lời bằng tiếng Việt.
 
   ## Core Rules
   1. Evidence Required — All findings need file:line + code snippet

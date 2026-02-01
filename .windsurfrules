@@ -30,7 +30,8 @@ Semantic selection: top-5 skills, 30% threshold, LRU cache (max 3)
 
 ## Language
 
-Match user's language. Default: English.
+Current: Tiếng Việt — LUÔN trả lời bằng tiếng Việt.
+Switch: /lang en | /lang vi
 
 ## References
 

@@ -26,7 +26,7 @@ chat:
   auto_reply: true
 
 # Language
-language: en-US
+language: vi # Vietnamese — Tiếng Việt
 
 # Custom instructions
 instructions: |
