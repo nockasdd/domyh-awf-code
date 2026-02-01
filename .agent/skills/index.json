@@ -1,0 +1,348 @@
+{
+  "version": "4.3.0",
+  "schema": "progressive-disclosure",
+  "total": 33,
+  "tiers": {
+    "T1_META": "META.yaml (~100 tokens) - Always available",
+    "T2_SKILL": "SKILL.md (~1500 tokens) - On-demand",
+    "T3_ADVANCED": "ADVANCED.md (~4000 tokens) - Referenced only"
+  },
+  "categories": {
+    "core": {
+      "description": "Always-active skills",
+      "priority": 0,
+      "skills": ["security"]
+    },
+    "language": {
+      "description": "Programming languages",
+      "priority": 1,
+      "skills": ["go", "python", "typescript", "rust", "cpp", "csharp", "java", "php", "kotlin", "swift", "lua", "asm", "c", "javascript"]
+    },
+    "framework": {
+      "description": "Frontend/Backend frameworks",
+      "priority": 2,
+      "skills": ["react", "vue", "nextjs", "flutter", "angular", "nuxt", "svelte", "tailwind"]
+    },
+    "devops": {
+      "description": "Infrastructure and deployment",
+      "priority": 3,
+      "skills": ["docker", "kubernetes", "aws", "ci-cd"]
+    },
+    "support": {
+      "description": "Cross-cutting concerns",
+      "priority": 2,
+      "skills": ["database", "testing", "coding-rules", "ui-ux-pro-max", "electron", "react-native"]
+    }
+  },
+
+  "skills": [
+    {
+      "id": "security",
+      "path": "skills/security/",
+      "category": "core",
+      "always_load_meta": true,
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "go",
+      "path": "skills/go/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "python",
+      "path": "skills/python/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "typescript",
+      "path": "skills/typescript/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "rust",
+      "path": "skills/rust/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "cpp",
+      "path": "skills/cpp/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "csharp",
+      "path": "skills/csharp/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "java",
+      "path": "skills/java/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "php",
+      "path": "skills/php/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "kotlin",
+      "path": "skills/kotlin/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "swift",
+      "path": "skills/swift/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "lua",
+      "path": "skills/lua/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "react",
+      "path": "skills/react/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "vue",
+      "path": "skills/vue/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "nextjs",
+      "path": "skills/nextjs/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "docker",
+      "path": "skills/docker/",
+      "category": "devops",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "kubernetes",
+      "path": "skills/kubernetes/",
+      "category": "devops",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "aws",
+      "path": "skills/aws/",
+      "category": "devops",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "ci-cd",
+      "path": "skills/ci-cd/",
+      "category": "devops",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "database",
+      "path": "skills/database/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "testing",
+      "path": "skills/testing/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "asm",
+      "path": "skills/asm/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md",
+        "advanced": "ADVANCED.md"
+      }
+    },
+    {
+      "id": "c",
+      "path": "skills/c/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "javascript",
+      "path": "skills/javascript/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "flutter",
+      "path": "skills/flutter/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "coding-rules",
+      "path": "skills/coding-rules/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      },
+      "data_files": ["naming-conventions.csv", "architecture-patterns.csv", "coding-rules.csv", "design-patterns.csv"]
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "path": "skills/ui-ux-pro-max/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      },
+      "data_files": ["styles.csv", "colors.csv", "typography.csv"]
+    },
+    {
+      "id": "angular",
+      "path": "skills/angular/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "nuxt",
+      "path": "skills/nuxt/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "svelte",
+      "path": "skills/svelte/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "tailwind",
+      "path": "skills/tailwind/",
+      "category": "framework",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "electron",
+      "path": "skills/electron/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "react-native",
+      "path": "skills/react-native/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    }
+  ],
+  "token_budget": {
+    "baseline": "33 × 100 = 3,300 tokens",
+    "single_activation": "+1,500 tokens average",
+    "max_active": 3,
+    "peak_estimate": "3,300 + (3 × 1,500) = 7,800 tokens"
+  }
+}
+

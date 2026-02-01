@@ -1,0 +1,64 @@
+# DOMYH Agent - Git Ignore
+# =========================
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+__pycache__/
+*.pyc
+node_modules/
+.npm/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Build outputs
+dist/
+build/
+*.exe
+*.dll
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+
+# Memory state (optional - uncomment if needed)
+# .agent/memory/*.json
+# .agent/memory/vectors/
+
+# Archive (optional - uncomment if needed)  
+# .agent/memory/archive/
+
+# Session notes (optional - uncomment if needed)
+# .agent/memory/session.md
+# .agent/memory/decisions.md

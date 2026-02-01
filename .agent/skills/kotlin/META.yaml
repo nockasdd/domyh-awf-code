@@ -1,0 +1,120 @@
+name: kotlin
+version: "4.3.0"
+category: mobile
+tier: 1
+
+description: |
+  Kotlin 2.0/2.1 with K2 compiler for Android and Multiplatform.
+  Covers Coroutines, Flow, Jetpack Compose, KMP.
+
+triggers:
+  file_patterns:
+    - "build.gradle.kts"
+    - "settings.gradle.kts"
+    - "*.kt"
+    - "*.kts"
+    - "gradle.properties"
+  keywords:
+    # Core Kotlin
+    - kotlin
+    - kotlin 2.0
+    - kotlin 2.1
+    - k2 compiler
+    - kotlinc
+    - gradle kts
+    # Language Features
+    - data class
+    - sealed class
+    - sealed interface
+    - object
+    - companion object
+    - val
+    - var
+    - suspend fun
+    - inline fun
+    - extension function
+    - null safety
+    - elvis operator
+    # Coroutines
+    - coroutine
+    - coroutinescope
+    - viewmodelscope
+    - lifecyclescope
+    - launch
+    - async
+    - await
+    - suspend
+    - dispatchers
+    - withcontext
+    # Flow
+    - flow
+    - stateflow
+    - sharedflow
+    - mutablestateflow
+    - collectasstate
+    - flowwithlifecycle
+    # Jetpack Compose
+    - compose
+    - composable
+    - remember
+    - mutablestateof
+    - derivedstateof
+    - lazycolumn
+    - lazyrow
+    - material3
+    - compose preview
+    # KMP
+    - kotlin multiplatform
+    - kmp
+    - kmm
+    - expect
+    - actual
+    - commonmain
+    - androidmain
+    - iosmain
+    # Android
+    - jetpack
+    - android
+    - viewmodel
+    - room
+    - hilt
+    - dagger
+    - retrofit
+    - ktor client
+    # Testing
+    - junit
+    - mockk
+    - turbine
+    - kotest
+  intents:
+    - kotlin code
+    - android app
+    - compose ui
+    - coroutine async
+    - multiplatform
+
+related_skills:
+  - flutter # Alternative
+  - swift # iOS native
+  - java # JVM alternative
+
+prevent_confusion_with:
+  - java: "Kotlin = null-safe, Java = nullable"
+  - swift: "Kotlin = val/var, Swift = let/var"
+  - dart: "Kotlin = sealed class, Dart = sealed class (different)"
+
+unique_apis:
+  - "data class, sealed class"
+  - "val (immutable), var (mutable)"
+  - "suspend fun for coroutines"
+  - "Flow<T>, StateFlow<T>, SharedFlow<T>"
+  - "@Composable functions"
+  - "remember, derivedStateOf"
+  - "expect/actual for KMP"
+  - "Enum.entries (Kotlin 2.0+)"
+  - "?.let, ?: elvis, !! not-null assertion"
+
+version_features:
+  kotlin20: ["K2 compiler stable", "Enum.entries"]
+  kotlin21: ["Guard conditions in when", "Compiler improvements"]
+  compose: ["remember", "derivedStateOf", "Stable annotations"]

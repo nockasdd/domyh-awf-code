@@ -1,0 +1,326 @@
+# DOMYH Agent — Context Cleanup Engine v1.0
+# Automated context management and token optimization
+
+version: "4.3.0"
+engine: context_cleanup
+
+# =============================================================================
+# CLEANUP TRIGGERS
+# =============================================================================
+
+triggers:
+  # Token-based triggers (reference TOKEN_BUDGETS.yaml as SSoT)
+  token_threshold:
+    reference: core/TOKEN_BUDGETS.yaml
+    use:
+      warning: workflow.thresholds.high_load # 8000
+      critical: workflow.thresholds.peak_usage # 12000
+      emergency: global.max_allowed # 25000 (was 12000 - aligned with SSoT)
+
+  # Time-based triggers
+  time_based:
+    idle_minutes: 30 # Cleanup if idle
+    session_hours: 4 # Cleanup after long session
+    last_cleanup_hours: 2 # Minimum between cleanups
+
+  # Event-based triggers
+  event_based:
+    on_workflow_switch: true
+    on_phase_complete: true
+    on_skill_unload: true
+    on_session_end: true
+    on_error_resolved: true
+    on_audit_complete: true
+
+# =============================================================================
+# CLEANUP ACTIONS BY TRIGGER
+# =============================================================================
+
+actions:
+  # When switching workflows
+  on_workflow_switch:
+    priority: 1
+    steps:
+      - unload_previous_workflow:
+          except: [core_context, decisions]
+
+      - summarize_completed_work:
+          max_tokens: 150
+          append_to: session.md
+
+      - reset_skill_context:
+          keep_active: 3
+          unload_dormant: true
+
+      - update_session_cache:
+          fields: [last_workflow, active_skills]
+
+    token_savings: "~2000"
+
+  # When phase completes (e.g., PLANNING → EXECUTION)
+  on_phase_complete:
+    priority: 2
+    steps:
+      - archive_phase_artifacts:
+          destination: memory/archive/phases/
+
+      - compress_phase_notes:
+          keep_summary: true
+          max_tokens: 200
+
+      - update_state:
+          fields: [current_phase, phase_history]
+
+      - log_phase_decision:
+          append_to: decisions.md
+
+    token_savings: "~1500"
+
+  # At warning threshold (8000 tokens)
+  at_warning_threshold:
+    priority: 3
+    steps:
+      - trigger_light_summarization:
+          level: light
+
+      - unload_optional_skills:
+          keep: [current_active]
+
+      - compress_session_notes:
+          target_tokens: 1500
+
+      - clear_resolved_items:
+          types: [errors, todos]
+
+    token_savings: "~2500"
+
+  # At critical threshold (10000 tokens)
+  at_critical_threshold:
+    priority: 4
+    steps:
+      - trigger_medium_summarization:
+          level: medium
+
+      - force_unload_all_skills:
+          except: [primary]
+
+      - archive_session_notes:
+          keep_summary_only: true
+
+      - compact_state_json:
+          remove_history: true
+          keep_current: true
+
+      - alert_user:
+          message: "⚠️ Context nearing limit. Running cleanup..."
+
+    token_savings: "~4000"
+
+  # Emergency threshold (12000 tokens)
+  at_emergency_threshold:
+    priority: 5
+    steps:
+      - trigger_aggressive_summarization:
+          level: aggressive
+
+      - nuclear_cleanup:
+          keep_only: [current_task, critical_errors]
+
+      - reset_session:
+          backup: true
+          create_handoff: true
+
+      - alert_user:
+          message: "🚨 Context limit reached. Session reset. Use /recap to continue."
+
+    token_savings: "~6000+"
+
+  # On session end
+  on_session_end:
+    priority: 1
+    steps:
+      - save_all_memory_layers:
+          layers: [session, state, decisions]
+
+      - create_session_summary:
+          max_tokens: 300
+          include: [completed, pending, decisions]
+
+      - archive_session:
+          path: memory/archive/sessions/
+
+      - reset_working_memory:
+          clear_all: true
+
+      - update_metrics:
+          fields: [session_duration, tokens_used, workflows_run]
+
+# =============================================================================
+# SKILL MANAGEMENT
+# =============================================================================
+
+skill_cleanup:
+  # Maximum active skills
+  max_active: 3
+
+  # Auto-unload after inactivity
+  inactivity_timeout_minutes: 5
+
+  # Priority order (keep these longer)
+  priority_skills:
+    - current_language_skill
+    - active_framework_skill
+    - debugging_skill_if_errors
+
+  # Rules for unloading
+  unload_rules:
+    - if_not_used_in: 5 minutes
+    - if_workflow_switched: true
+    - if_token_threshold_reached: true
+    - preserve_if_errors_active: true
+
+  # On unload actions
+  on_unload:
+    - log_to_session: true
+    - save_skill_state: false # Skills are stateless
+    - update_cache: true
+
+# =============================================================================
+# WORKFLOW CONTEXT MANAGEMENT
+# =============================================================================
+
+workflow_cleanup:
+  # On workflow switch
+  on_switch:
+    unload_previous: true
+    keep_decisions: true
+    keep_errors: true
+    summarize_completed: true
+
+  # Workflow-specific cleanup
+  by_workflow:
+    /ap: # Audit
+      on_complete:
+        - save_to_audit_summary: true
+        - archive_detailed_report: true
+        - keep_scores_in_state: true
+
+    /code: # Coding
+      on_complete:
+        - log_files_changed: true
+        - save_decisions: true
+        - clear_debug_context: true
+
+    /debug: # Debugging
+      on_complete:
+        - archive_error_trace: true
+        - log_resolution: true
+        - update_error_patterns: true
+
+    /deploy: # Deployment
+      on_complete:
+        - save_deployment_log: true
+        - update_state_version: true
+        - archive_pre_deploy_state: true
+
+# =============================================================================
+# ERROR CONTEXT MANAGEMENT
+# =============================================================================
+
+error_cleanup:
+  # Keep errors until resolved
+  keep_while_active: true
+
+  # On error resolved
+  on_resolved:
+    - archive_to: memory/archive/errors/
+    - log_resolution: session.md
+    - update_pattern_db: true
+
+  # Automatic cleanup
+  auto_cleanup:
+    resolved_after_hours: 2
+    orphaned_after_hours: 24
+    max_archived: 50
+
+  # What to preserve
+  preserve:
+    - error_type
+    - file_and_line
+    - resolution_summary
+
+  # What to remove
+  remove:
+    - full_stack_trace
+    - verbose_logs
+    - duplicate_instances
+
+# =============================================================================
+# MEMORY FILE CLEANUP
+# =============================================================================
+
+file_cleanup:
+  session_md:
+    max_tokens: 2000
+    on_exceed:
+      - archive_old_content
+      - keep_recent_section
+      - update_summary_section
+
+  decisions_md:
+    max_entries: 50
+    on_exceed:
+      - archive_oldest
+      - keep_in_memory: 20
+
+  state_json:
+    max_history_items: 10
+    on_exceed:
+      - trim_history
+      - keep_latest
+
+  audit_summary_json:
+    max_history_entries: 20
+    on_exceed:
+      - consolidate_old
+      - keep_summary_stats
+
+# =============================================================================
+# CLEANUP SCHEDULING
+# =============================================================================
+
+schedule:
+  # Check triggers every N interactions
+  check_interval: 5
+
+  # Force check on these events
+  force_check:
+    - after_large_operation
+    - after_file_read
+    - after_skill_load
+
+  # Background cleanup (if supported)
+  background:
+    enabled: false # Not supported in current env
+    interval_minutes: 10
+
+# =============================================================================
+# METRICS & LOGGING
+# =============================================================================
+
+metrics:
+  track:
+    - cleanup_count
+    - tokens_saved_total
+    - average_compression_ratio
+    - trigger_frequency
+
+  log:
+    file: memory/cleanup_log.json
+    keep_days: 7
+    format: json
+
+  alert_on:
+    - emergency_cleanup_triggered
+    - session_reset_forced
+    - archive_size_limit_reached

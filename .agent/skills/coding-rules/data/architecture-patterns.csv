@@ -1,0 +1,11 @@
+architecture,description,best_for,folder_structure,separation_by,testability,complexity
+Clean Architecture,Dependency inversion - domain at center,Enterprise apps with complex business logic,Domain/Application/Infrastructure/Presentation,Dependency direction,Excellent,High
+Vertical Slice,Organize by feature not layer,Feature-rich apps with independent features,Features/UserManagement Features/Orders,Business capability,Excellent,Medium
+Hexagonal (Ports & Adapters),Domain isolated by ports,Domain-driven design with multiple I/O,Domain/Adapters/Ports,Interface boundaries,Excellent,High
+Layered (Traditional),Separate by technical concern,Simple CRUD apps,Controllers/Services/Repositories/Models,Technical role,Medium,Low
+Modular Monolith,Self-contained modules,Large teams with clear domain boundaries,Modules/Users Modules/Orders (each with own layers),Bounded context,Very Good,Medium-High
+Package by Feature,Feature folders with own layers,Java/Android apps,user/ order/ payment/ (each with own layers),Feature,Good,Medium
+Feature-Sliced Design (FSD),Hierarchical feature layers,Large frontend apps 50+ pages,app/pages/widgets/features/entities/shared,Business + technical,Very Good,Medium-High
+Atomic Design,Component hierarchy,Design systems and component libraries,atoms/molecules/organisms/templates/pages,Component complexity,Good,Medium
+Domain-Driven Design (DDD),Bounded contexts,Complex business domains,Domains/User Domains/Order + Shared,Domain model,Excellent,High
+Microservices,Independent deployable services,Large scale distributed systems,service-user/ service-order/ (each standalone),Service boundary,Excellent,Very High

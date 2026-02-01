@@ -1,0 +1,112 @@
+name: flutter
+version: "4.3.0"
+category: mobile
+tier: 1
+
+description: |
+  Flutter 3.27+ and Dart 3.6 for cross-platform mobile development.
+  Covers Riverpod 3.0, BLoC, Material 3, Impeller engine.
+
+triggers:
+  file_patterns:
+    - "pubspec.yaml"
+    - "pubspec.lock"
+    - "*.dart"
+    - "lib/main.dart"
+    - "analysis_options.yaml"
+    - "build.yaml"
+    - ".dart_tool/*"
+  keywords:
+    # Core Flutter
+    - flutter
+    - dart
+    - flutter build
+    - flutter run
+    - flutter pub
+    - pubspec
+    # Widgets
+    - widget
+    - statelesswidget
+    - statefulwidget
+    - materialapp
+    - scaffold
+    - cupertino
+    # State Management
+    - riverpod
+    - bloc
+    - cubit
+    - provider
+    - getx
+    - statenotifier
+    - changenotifier
+    - notifier
+    - asyncnotifier
+    - consumerwidget
+    # UI
+    - material 3
+    - material design
+    - theme
+    - themedata
+    - colorscheme
+    - elevatedbutton
+    - textfield
+    - listview.builder
+    - gridview.builder
+    - sliverappbar
+    # Navigation
+    - navigator
+    - go_router
+    - auto_route
+    - pushnamed
+    # Async
+    - future
+    - futurebuilder
+    - stream
+    - streambuilder
+    - async await dart
+    # Code Generation
+    - freezed
+    - json_serializable
+    - build_runner
+    - retrofit
+    # Storage
+    - hive
+    - isar
+    - drift
+    - shared_preferences
+    # Testing
+    - flutter test
+    - widget test
+    - integration test
+    - golden test
+  intents:
+    - flutter app
+    - dart code
+    - mobile app
+    - cross-platform app
+    - widget build
+
+related_skills:
+  - kotlin # Android native
+  - swift # iOS native
+  - react-native # Alternative
+
+prevent_confusion_with:
+  - react-native: "Flutter = Dart, RN = JavaScript/TypeScript"
+  - kotlin: "Flutter = Dart widgets, Kotlin = @Composable"
+  - swift: "Flutter = Dart, Swift = SwiftUI"
+
+unique_apis:
+  - "StatelessWidget, StatefulWidget classes"
+  - "BuildContext, Widget tree"
+  - "pubspec.yaml for dependencies"
+  - "WidgetRef, ConsumerWidget (Riverpod)"
+  - "Bloc<Event, State>, Cubit<State>"
+  - "freezed code generation"
+  - "dart:ui, dart:io"
+  - "flutter pub get, flutter build"
+
+version_features:
+  flutter327: ["Material 3 default", "Impeller stable"]
+  dart36: ["Pub workspaces", "Digit separators"]
+  riverpod30: ["Notifier", "AsyncNotifier", "Offline persistence"]

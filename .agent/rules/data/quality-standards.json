@@ -1,0 +1,59 @@
+{
+  "version": "4.5",
+  "last_updated": "2026-02-01",
+  
+  "iso_25010": {
+    "name": "ISO 25010 Software Quality",
+    "characteristics": [
+      { "id": 1, "name": "Functional Suitability", "description": "Code does the right thing", "vi": "Chức năng" },
+      { "id": 2, "name": "Performance Efficiency", "description": "Speed, resource usage", "vi": "Hiệu năng" },
+      { "id": 3, "name": "Compatibility", "description": "Works with other systems", "vi": "Tương thích" },
+      { "id": 4, "name": "Usability", "description": "Easy to use", "vi": "Khả dụng" },
+      { "id": 5, "name": "Reliability", "description": "Stable, fault-tolerant", "vi": "Tin cậy" },
+      { "id": 6, "name": "Security", "description": "Protects data", "vi": "Bảo mật" },
+      { "id": 7, "name": "Maintainability", "description": "Easy to fix, extend", "vi": "Bảo trì" },
+      { "id": 8, "name": "Portability", "description": "Runs in multiple environments", "vi": "Di động" }
+    ]
+  },
+  
+  "cwe_top_25_2024": {
+    "name": "CWE Top 25 Most Dangerous Vulnerabilities (2024)",
+    "vulnerabilities": [
+      { "rank": 1, "id": "CWE-79", "name": "XSS", "description": "Cross-site scripting", "vi": "Chèn script độc hại" },
+      { "rank": 2, "id": "CWE-787", "name": "Out-of-bounds Write", "description": "Memory corruption" },
+      { "rank": 3, "id": "CWE-89", "name": "SQL Injection", "description": "SQL code injection", "vi": "Chèn SQL" },
+      { "rank": 4, "id": "CWE-352", "name": "CSRF", "description": "Cross-site request forgery", "vi": "Giả mạo request" },
+      { "rank": 5, "id": "CWE-22", "name": "Path Traversal", "description": "Unauthorized file access", "vi": "Truy cập file trái phép" },
+      { "rank": 6, "id": "CWE-287", "name": "Improper Auth", "description": "Authentication bypass", "vi": "Xác thực không đúng" },
+      { "rank": 7, "id": "CWE-78", "name": "OS Command Injection", "description": "System command injection" },
+      { "rank": 8, "id": "CWE-862", "name": "Missing Authorization", "description": "Access control bypass" },
+      { "rank": 9, "id": "CWE-400", "name": "Resource Consumption", "description": "DoS via resource exhaustion" },
+      { "rank": 10, "id": "CWE-200", "name": "Info Exposure", "description": "Sensitive data leak" }
+    ]
+  },
+  
+  "owasp_top_10_2021": {
+    "name": "OWASP Top 10 Web Security (2021)",
+    "categories": [
+      { "id": "A01", "name": "Broken Access Control", "description": "Authorization failures" },
+      { "id": "A02", "name": "Cryptographic Failures", "description": "Encryption issues" },
+      { "id": "A03", "name": "Injection", "description": "Code/SQL injection" },
+      { "id": "A04", "name": "Insecure Design", "description": "Design flaws" },
+      { "id": "A05", "name": "Security Misconfiguration", "description": "Bad settings" },
+      { "id": "A06", "name": "Vulnerable Components", "description": "Outdated dependencies" },
+      { "id": "A07", "name": "Auth Failures", "description": "Authentication issues" },
+      { "id": "A08", "name": "Data Integrity Failures", "description": "Tampering risks" },
+      { "id": "A09", "name": "Logging Failures", "description": "Poor audit trails" },
+      { "id": "A10", "name": "SSRF", "description": "Server-Side Request Forgery" }
+    ]
+  },
+  
+  "severity_levels": {
+    "levels": [
+      { "level": "P0", "icon": "🔴", "name": "Critical", "sla": "24h", "vi": "Nghiêm trọng" },
+      { "level": "P1", "icon": "🟠", "name": "High", "sla": "3 days", "vi": "Cao" },
+      { "level": "P2", "icon": "🟡", "name": "Medium", "sla": "1 week", "vi": "Trung bình" },
+      { "level": "P3", "icon": "🟢", "name": "Low", "sla": "2 weeks", "vi": "Thấp" }
+    ]
+  }
+}

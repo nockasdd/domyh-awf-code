@@ -1,0 +1,25 @@
+test_framework,language,detection_file,detection_pattern,run_command,file_pattern
+Jest,JavaScript/TypeScript,package.json,"jest" in devDependencies,npm test,*.test.js;*.spec.ts
+Vitest,JavaScript/TypeScript,package.json,"vitest" in devDependencies,npm test,*.test.ts;*.spec.ts
+Mocha,JavaScript,package.json,"mocha" in devDependencies,npm test,*.test.js
+Cypress,JavaScript/TypeScript,package.json,"cypress" in devDependencies,npx cypress run,*.cy.ts;*.cy.js
+Playwright,TypeScript,package.json,"@playwright/test" in devDependencies,npx playwright test,*.spec.ts
+pytest,Python,requirements.txt,pytest,pytest,test_*.py;*_test.py
+unittest,Python,*.py,import unittest,python -m unittest,test_*.py
+nose2,Python,requirements.txt,nose2,nose2,test_*.py
+xUnit,C#,*.csproj,xunit PackageReference,dotnet test,*Test.cs;*Tests.cs
+NUnit,C#,*.csproj,NUnit PackageReference,dotnet test,*Test.cs;*Tests.cs
+MSTest,C#,*.csproj,MSTest.TestFramework PackageReference,dotnet test,*Test.cs;*Tests.cs
+Google Test,C++,CMakeLists.txt,find_package(GTest),ctest --output-on-failure,*_test.cpp;*_test.cc
+Catch2,C++,CMakeLists.txt,find_package(Catch2),ctest --output-on-failure,*_test.cpp
+Boost.Test,C++,CMakeLists.txt,Boost::unit_test_framework,ctest;./test_runner,*_test.cpp
+JUnit 5,Java,pom.xml,junit-jupiter in dependency,mvn test,*Test.java;*Tests.java
+JUnit 4,Java,pom.xml,junit:junit in dependency,mvn test,*Test.java
+TestNG,Java,pom.xml,testng in dependency,mvn test,*Test.java
+Spock,Groovy/Java,build.gradle,spock-core,./gradlew test,*Spec.groovy
+Go testing,Go,*_test.go,import "testing",go test ./...,*_test.go
+Cargo test,Rust,*.rs,#[test],cargo test,*.rs
+ExUnit,Elixir,mix.exs,ExUnit.start(),mix test,*_test.exs
+RSpec,Ruby,Gemfile,gem 'rspec',bundle exec rspec,*_spec.rb
+PHPUnit,PHP,composer.json,phpunit/phpunit,./vendor/bin/phpunit,*Test.php
+flutter_test,Dart,pubspec.yaml,flutter_test in dev_dependencies,flutter test,*_test.dart

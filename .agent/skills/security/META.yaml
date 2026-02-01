@@ -1,0 +1,26 @@
+name: security
+display: Security Patterns
+category: core
+priority: 0
+desc: "Security patterns: OWASP Top 10, CWE Top 25, input validation, auth, encryption"
+keywords:
+  [
+    security,
+    vulnerability,
+    owasp,
+    cwe,
+    injection,
+    xss,
+    csrf,
+    auth,
+    encrypt,
+    sanitize,
+  ]
+detect: []
+caps:
+  [
+    Security code review,
+    Vulnerability detection,
+    OWASP compliance,
+    Input validation,
+  ]

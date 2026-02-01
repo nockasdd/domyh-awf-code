@@ -1,0 +1,53 @@
+# DOMYH Agent v3.0 — CodeRabbit Configuration
+# https://docs.coderabbit.ai/configuration
+
+# Review settings
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  path_instructions:
+    - path: "**/*.go"
+      instructions: |
+        Apply Go patterns: error wrapping, interface design, goroutine safety.
+        Check CWE-25, OWASP-10 security issues.
+    - path: "**/*.ts,**/*.tsx"
+      instructions: |
+        Apply TypeScript patterns: strict types, no any, proper error handling.
+        Check for XSS, injection vulnerabilities.
+    - path: "**/Dockerfile"
+      instructions: |
+        Check Docker best practices: multi-stage, non-root user, layer caching.
+
+# Chat settings
+chat:
+  auto_reply: true
+
+# Language
+language: en-US
+
+# Custom instructions
+instructions: |
+  You are reviewing code for a project using DOMYH Agent v3.0 standards.
+
+  ## Core Rules
+  1. All findings must include file:line and code snippet
+  2. No approval for destructive changes without safety checks
+  3. Apply ISO 25010, CWE-25, OWASP-10 standards
+
+  ## Priority Labels
+  - P0: Critical - Block merge
+  - P1: High - Request changes
+  - P2: Medium - Suggest changes
+  - P3: Low - Optional improvement
+
+# Knowledge base
+knowledge_base:
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto

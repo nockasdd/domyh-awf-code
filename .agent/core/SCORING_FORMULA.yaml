@@ -1,0 +1,103 @@
+# DOMYH Agent — Scoring Formula v4.3
+# Single Source of Truth for context priority scoring
+# Referenced by: CONTEXT_INJECTOR, CONTEXT_PRIORITY, ACTIVE_MEMORY
+
+version: "4.3.0"
+engine: scoring_formula
+
+# =============================================================================
+# CORE WEIGHTS (Single Definition)
+# =============================================================================
+
+weights:
+  recency: 0.25       # Newer content = higher priority
+  relevance: 0.40     # Semantic match with current task (highest weight)
+  importance: 0.25    # Critical > High > Medium > Low
+  frequency: 0.10     # Access count (capped at 10)
+
+# =============================================================================
+# MASTER FORMULA (Single Definition)
+# =============================================================================
+
+formula:
+  calculation: |
+    final_score = (recency * 0.25) + (relevance * 0.40) + 
+                  (importance * 0.25) + (frequency * 0.10)
+  
+  # Result range: 0.0 - 1.0
+
+# =============================================================================
+# THRESHOLDS (Single Definition)
+# =============================================================================
+
+thresholds:
+  excellent:    # 0.85 - 1.0
+    min: 0.85
+    action: always_include
+    token_budget: full
+  
+  good:         # 0.70 - 0.85
+    min: 0.70
+    action: include_if_budget
+    token_budget: full
+  
+  moderate:     # 0.50 - 0.70
+    min: 0.50
+    action: include_summarized
+    token_budget: 50%
+  
+  low:          # 0.30 - 0.50
+    min: 0.30
+    action: pointer_only
+    token_budget: minimal
+  
+  skip:         # 0.0 - 0.30
+    min: 0.0
+    action: do_not_include
+    token_budget: 0
+
+# =============================================================================
+# RECENCY SCORING
+# =============================================================================
+
+recency_scoring:
+  fresh:        { age_seconds: 3600,    score: 1.0 }  # < 1 hour
+  recent:       { age_seconds: 86400,   score: 0.8 }  # 1-24 hours
+  this_week:    { age_seconds: 604800,  score: 0.6 }  # 1-7 days
+  this_month:   { age_seconds: 2592000, score: 0.4 }  # 7-30 days
+  older:        { score: 0.2 }                        # > 30 days
+
+# =============================================================================
+# IMPORTANCE LEVELS
+# =============================================================================
+
+importance_levels:
+  critical: { score: 1.0, examples: [active_errors, security_vulns, user_corrections] }
+  high:     { score: 0.8, examples: [recent_decisions, current_context, active_warnings] }
+  medium:   { score: 0.6, examples: [project_state, recent_workflows, audit_findings] }
+  low:      { score: 0.4, examples: [historical_decisions, old_sessions, resolved_errors] }
+  minimal:  { score: 0.2, examples: [raw_logs, verbose_output, old_drafts] }
+
+# =============================================================================
+# FREQUENCY SCORING
+# =============================================================================
+
+frequency_scoring:
+  heavily_used:     { min_accesses: 20, score: 1.0 }
+  frequently_used:  { min_accesses: 10, score: 0.8 }
+  moderately_used:  { min_accesses: 5,  score: 0.6 }
+  occasionally_used:{ min_accesses: 2,  score: 0.4 }
+  rarely_used:      { min_accesses: 1,  score: 0.2 }
+  never_used:       { min_accesses: 0,  score: 0.1 }
+
+# =============================================================================
+# USAGE (How other files reference this)
+# =============================================================================
+
+usage:
+  reference: "core/SCORING_FORMULA.yaml"
+  import_pattern: |
+    # In CONTEXT_INJECTOR.yaml, CONTEXT_PRIORITY.yaml, ACTIVE_MEMORY.yaml:
+    scoring:
+      reference: core/SCORING_FORMULA.yaml
+      # Uses weights, formula, thresholds from this file

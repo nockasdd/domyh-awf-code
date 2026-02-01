@@ -1,0 +1,374 @@
+# DOMYH Agent v4.3 — Optimized Manifest
+# Token-efficient architecture with Progressive Disclosure
+# Developer: NockDev
+
+version: "4.3.0"
+name: "DOMYH Agent"
+developer: "NockDev"
+
+# =============================================================================
+# LANGUAGE & DEFAULTS
+# =============================================================================
+
+lang: en # Default: en | vi
+
+defaults:
+  evidence_required: true
+  evidence_format: "file:line"
+  auto_fix: false
+  confirm_destructive: true
+  quality_frameworks: ["ISO 25010", "CWE Top 25", "OWASP Top 10"]
+
+# =============================================================================
+# CORE FILES (Always loaded - MINIMAL tokens)
+# =============================================================================
+
+core:
+  # Rules System (v4.2 - refactored to modular files)
+  rules_dir: rules/ # 15 specialized rule files
+  rules_index: rules/README.md # Rules registry
+  # Core engines
+  router: core/ROUTER.yaml # Semantic routing config
+  flow_engine: core/FLOW_ENGINE.yaml # v4.1: Workflow chaining
+  memory_engine: core/MEMORY_ENGINE.yaml # v4.2: 4-layer memory
+  semantic_engine: core/SEMANTIC_ENGINE.yaml # v4.2: Optional vector DB
+  token_loading: core/TOKEN_LOADING.yaml # Token optimization
+  # SSoT Files (v4.3 additions)
+  token_budgets: core/TOKEN_BUDGETS.yaml # Unified token thresholds
+  memory_paths: core/MEMORY_PATHS.yaml # Memory file locations
+  scoring_formula: core/SCORING_FORMULA.yaml # Priority scoring algorithm
+  context_priority: core/CONTEXT_PRIORITY.yaml # Context injection scoring
+  memory_consolidation: core/MEMORY_CONSOLIDATION.yaml # Memory merge strategies
+  patterns: core/PATTERNS.yaml # Shared workflow patterns
+
+# =============================================================================
+# PROGRESSIVE DISCLOSURE SKILLS
+# Tier 1: META.yaml (~100 tokens) - Always loaded
+# Tier 2: SKILL.md (~2000 tokens) - On-demand
+# Tier 3: ADVANCED.md (~5000 tokens) - Referenced only
+# =============================================================================
+
+skills:
+  # Baseline: Only META.yaml loaded = 22 skills × 100 tokens = 2,200 tokens
+  # Activated: +2,000 tokens per skill
+  # Max active: 3 skills = 2,200 + 6,000 = 8,200 tokens
+
+  loading:
+    strategy: progressive # progressive | eager | lazy
+    max_active: 3 # Max skills in context at once
+    cache_ttl: 3600 # 1 hour cache
+
+  # Categories with priority (lower = higher priority)
+  categories:
+    core:
+      priority: 0
+      always_metadata: true # Always load META.yaml
+      skills: [security] # Security always active (metadata)
+
+    language:
+      priority: 1
+      skills:
+        [
+          go,
+          python,
+          typescript,
+          rust,
+          cpp,
+          csharp,
+          java,
+          php,
+          kotlin,
+          swift,
+          lua,
+        ]
+
+    framework:
+      priority: 2
+      skills: [react, vue, nextjs]
+
+    devops:
+      priority: 3
+      skills: [docker, kubernetes, aws, ci-cd]
+
+    support:
+      priority: 2
+      skills: [database, testing]
+
+# =============================================================================
+# SEMANTIC TOOL SELECTION
+# Uses embeddings to select top-K relevant skills
+# =============================================================================
+
+semantic:
+  enabled: true
+  top_k: 5 # Select top 5 most relevant
+  threshold: 0.30 # Minimum similarity score
+  embedding_model: "local" # local | openai | custom
+
+  # Scoring weights
+  weights:
+    description: 0.50
+    keywords: 0.25
+    examples: 0.15
+    patterns: 0.10
+
+# =============================================================================
+# COMMANDS (28 workflows) — v4.2: Complete Command Set
+# Token-efficient with caching and categorization
+# =============================================================================
+
+commands:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # DEVELOPMENT (6 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: code
+    file: workflows/code.md
+    icon: "💻"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [code, write, implement, viết code]
+
+  - id: dev
+    file: workflows/dev.md
+    icon: "▶️"
+    category: development
+    persona: developer
+    cache: false
+    triggers: [dev, start, run, chạy]
+
+  - id: debug
+    file: workflows/debug.md
+    icon: "🐛"
+    category: development
+    persona: debugger
+    cache: true
+    triggers: [debug, fix, error, lỗi]
+
+  - id: test
+    file: workflows/test.md
+    icon: "✅"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [test, kiểm thử]
+
+  - id: refactor
+    file: workflows/refactor.md
+    icon: "🔧"
+    category: development
+    cache: true
+    triggers: [refactor, cleanup, tái cấu trúc]
+
+  - id: generate
+    file: workflows/generate.md
+    icon: "🏗️"
+    category: development
+    cache: true
+    triggers: [generate, scaffold, tạo code]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PLANNING & DESIGN (5 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: plan
+    file: workflows/plan.md
+    icon: "📋"
+    category: planning
+    persona: architect
+    cache: true
+    triggers: [plan, design, lên kế hoạch]
+
+  - id: think
+    file: workflows/think.md
+    icon: "💡"
+    category: planning
+    persona: architect
+    cache: true
+    triggers: [think, brainstorm, idea, ý tưởng]
+
+  - id: visualize
+    file: workflows/visualize.md
+    icon: "🖼️"
+    category: planning
+    persona: designer
+    cache: true
+    triggers: [visualize, ui, mockup, thiết kế]
+
+  - id: doc
+    file: workflows/doc.md
+    icon: "📝"
+    category: planning
+    cache: true
+    triggers: [doc, document, tài liệu]
+
+  - id: init
+    file: workflows/init.md
+    icon: "✨"
+    category: planning
+    cache: false
+    triggers: [init, create, new, tạo mới]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # DEPLOYMENT & OPS (6 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: deploy
+    file: workflows/deploy.md
+    icon: "🚀"
+    category: deployment
+    cache: false
+    triggers: [deploy, release, triển khai]
+
+  - id: env
+    file: workflows/env.md
+    icon: "🔐"
+    category: deployment
+    cache: true
+    triggers: [env, environment, môi trường]
+
+  - id: monitor
+    file: workflows/monitor.md
+    icon: "📡"
+    category: deployment
+    cache: true
+    triggers: [monitor, observability, giám sát]
+
+  - id: perf
+    file: workflows/perf.md
+    icon: "⚡"
+    category: deployment
+    cache: true
+    triggers: [perf, performance, hiệu năng]
+
+  - id: revert
+    file: workflows/revert.md
+    icon: "⏪"
+    category: deployment
+    cache: false
+    triggers: [revert, rollback, undo, hoàn tác]
+
+  - id: migrate
+    file: workflows/migrate.md
+    icon: "🗃️"
+    category: deployment
+    cache: true
+    triggers: [migrate, migration, di chuyển]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # QUALITY & REVIEW (5 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: ap
+    file: workflows/ap.md
+    icon: "🔬"
+    category: quality
+    persona: auditor
+    cache: true
+    triggers: [ap, audit, kiểm tra]
+
+  - id: review
+    file: workflows/review.md
+    icon: "👀"
+    category: quality
+    cache: true
+    triggers: [review, pr, xem xét]
+
+  - id: modify
+    file: workflows/modify.md
+    icon: "🔧"
+    category: quality
+    persona: developer
+    cache: true
+    triggers: [modify, fix-project, sửa project]
+
+  - id: clean
+    file: workflows/clean.md
+    icon: "🧹"
+    category: quality
+    cache: true
+    triggers: [clean, dọn dẹp]
+
+  - id: upgrade
+    file: workflows/upgrade.md
+    icon: "📦"
+    category: quality
+    cache: true
+    triggers: [upgrade, update, cập nhật]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # UTILITY (6 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: status
+    file: workflows/status.md
+    icon: "📊"
+    category: utility
+    cache: false
+    triggers: [status, health, sức khỏe]
+
+  - id: recap
+    file: workflows/recap.md
+    icon: "📖"
+    category: utility
+    cache: false
+    triggers: [recap, summary, tóm tắt]
+
+  - id: suggest
+    file: workflows/suggest.md
+    icon: "➡️"
+    category: utility
+    cache: false
+    triggers: [suggest, next, tiếp theo]
+
+  - id: orchestrate
+    file: workflows/orchestrate.md
+    icon: "🎭"
+    category: utility
+    persona: architect
+    cache: true
+    triggers: [orchestrate, multi-agent, đa tác tử]
+
+  - id: help
+    file: workflows/help.md
+    icon: "❓"
+    category: utility
+    cache: true
+    triggers: [help, trợ giúp]
+
+# =============================================================================
+# PERSONAS (On-demand load)
+# =============================================================================
+
+personas:
+  default: developer
+  available:
+    - id: auditor
+      file: personas/auditor.md
+      experts: 5
+    - id: developer
+      file: personas/developer.md
+    - id: architect
+      file: personas/architect.md
+    - id: debugger
+      file: personas/debugger.md
+
+# =============================================================================
+# I18N
+# =============================================================================
+
+i18n:
+  supported: [en, vi]
+  files:
+    en: i18n/en.yaml
+    vi: i18n/vi.yaml
+
+# =============================================================================
+# TOKEN BUDGET (Target metrics)
+# =============================================================================
+
+token_budget:
+  idle: 2500 # Target: ~2,500 tokens at rest
+  single_skill: 5000 # Target: ~5,000 with 1 skill active
+  peak: 10000 # Target: ~10,000 max

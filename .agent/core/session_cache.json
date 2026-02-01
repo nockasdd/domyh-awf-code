@@ -1,0 +1,50 @@
+{
+  "version": "4.3.0",
+  "schema_version": "1.0.0",
+  
+  "session": {
+    "id": null,
+    "started_at": null,
+    "last_activity": null
+  },
+  
+  "cache": {
+    "active_skills": [],
+    "active_workflow": null,
+    "last_workflows": [],
+    "timestamps": {},
+    "max_skills": 3,
+    "max_workflow_history": 5
+  },
+  
+  "context": {
+    "current_task": null,
+    "task_status": null,
+    "mode": null,
+    "project_path": null
+  },
+  
+  "memory_pointers": {
+    "decisions": ".agent/memory/decisions.md",
+    "audit_summary": ".agent/memory/audit_summary.json",
+    "session_notes": ".agent/memory/session.md",
+    "state": ".agent/memory/state.json"
+  },
+  
+  "metrics": {
+    "tokens_used_estimate": 0,
+    "skills_loaded_count": 0,
+    "workflows_executed": 0,
+    "decisions_made": 0,
+    "audits_completed": 0
+  },
+  
+  "settings": {
+    "auto_save_interval_ms": 300000,
+    "auto_cleanup_threshold_tokens": 10000,
+    "persist_on_workflow_complete": true,
+    "persist_on_decision": true
+  },
+  
+  "updated_at": null
+}

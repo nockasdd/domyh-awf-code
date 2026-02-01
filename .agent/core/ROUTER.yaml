@@ -1,0 +1,183 @@
+# Semantic Router Configuration
+# DOMYH Agent v4.2
+# Selects top-K relevant skills based on query similarity
+
+version: "4.3.0"
+
+# Routing Strategy
+strategy:
+  mode: semantic # semantic | pattern | hybrid
+  fallback: pattern # Use pattern matching if semantic fails
+
+# Embedding Configuration
+embedding:
+  model: local # local = TF-IDF based, no external API
+  dimensions: 384
+  cache_enabled: true
+  cache_ttl: 3600
+
+# Selection Parameters
+selection:
+  top_k: 5 # Max skills to select
+  min_score: 0.30 # Minimum similarity threshold
+  boost_active: 0.15 # Boost recently used skills
+
+# Scoring Weights for Multi-Component Embedding
+weights:
+  description: 0.50 # Primary: skill description
+  keywords: 0.25 # Secondary: trigger keywords
+  examples: 0.15 # Usage examples in skill
+  detect_patterns: 0.10 # File detection patterns
+
+# Skill Priority Boost (added to similarity score)
+priority_boost:
+  core: 0.20 # Security, testing
+  language: 0.10 # Go, Python, etc.
+  framework: 0.05 # React, Vue, etc.
+  devops: 0.00 # Docker, K8s, etc.
+
+# Query Preprocessing
+preprocessing:
+  lowercase: true
+  remove_stopwords: true
+  stem: false # Disable for accuracy
+
+# Caching Configuration
+cache:
+  query_cache: true # Cache query embeddings
+  skill_cache: true # Cache skill embeddings
+  cache_size: 1000 # Max cached queries
+  ttl: 3600 # 1 hour TTL
+
+# Fallback Pattern Matching
+patterns:
+  enabled: true # Enable as fallback
+  file_based: true # Use file detection
+  keyword_based: true # Use trigger keywords
+
+logging:
+  enabled: false # Disable for production
+  log_selections: false
+  log_scores: false
+
+# =============================================================================
+# AUTO-SUGGEST CONFIGURATION (v4.1)
+# =============================================================================
+
+auto_suggest:
+  enabled: true
+  trigger: session_start # session_start | on_demand | always
+  display_top: 3 # Show top 3 relevant skills
+  format: compact # compact | detailed
+  show_reason: true # Show why skill was suggested
+
+# =============================================================================
+# CONTEXT-AWARE ROUTING (v4.1)
+# =============================================================================
+
+context_routing:
+  # Detect from currently open files
+  file_patterns: true
+
+  # Detect from recent git commits
+  git_history: true
+  git_history_depth: 5 # Last 5 commits
+
+  # Detect from error messages in terminal
+  error_context: true
+
+  # Detect from project structure
+  project_structure: true
+
+  # Weight for context signals
+  context_weights:
+    open_files: 0.40
+    git_history: 0.25
+    error_context: 0.20
+    project_structure: 0.15
+
+# =============================================================================
+# WORKFLOW ROUTING (v4.1)
+# =============================================================================
+
+workflow_routing:
+  # Route to appropriate workflow based on intent
+  enabled: true
+
+  # Intent → Workflow mapping
+  intents:
+    fix_project: modify
+    new_project: init
+    debug_error: debug
+    write_code: code
+    review_code: review
+    run_tests: test
+    deploy_app: deploy
+
+# =============================================================================
+# LIBRARY REGISTRY INTEGRATION (v4.2)
+# =============================================================================
+
+library_registry:
+  enabled: true
+  source: "core/LIBRARY_REGISTRY.yaml"
+  lazy_load: true # Only load relevant language
+
+  # Auto-suggest libraries based on detected intent
+  auto_suggest_libs:
+    on_new_file: true
+    on_import_error: true
+    on_feature_request: true
+
+  # Library selection criteria
+  selection:
+    prefer: tier_1
+    max_suggestions: 3
+    show_install_command: true
+
+# =============================================================================
+# INTENT DETECTION INTEGRATION (v4.2)
+# =============================================================================
+
+intent_detection:
+  enabled: true
+  source: "core/INTENT_DETECTION.yaml"
+
+  # Ask clarifying questions when confidence < threshold
+  clarify:
+    enabled: true
+    threshold: 0.7
+    max_questions: 2
+
+  # Apply coding style based on language
+  coding_style:
+    source: "core/CODING_STYLES.yaml"
+    apply_to_generation: true
+    check_in_review: true
+
+# =============================================================================
+# SMART RECOMMENDATION ENGINE (v4.2)
+# =============================================================================
+
+recommendations:
+  # When to trigger recommendations
+  triggers:
+    - new_project
+    - new_file
+    - feature_request
+    - error_context
+
+  # Recommendation format
+  format: |
+    📦 **Recommended**: {library}
+    💡 **Why**: {reason}
+    📋 **Install**: `{install_cmd}`
+
+  # Combine multiple signals
+  signal_weights:
+    user_request: 0.40
+    file_context: 0.25
+    project_type: 0.20
+    recent_activity: 0.15
+
+# _DOMYH Agent v4.2_

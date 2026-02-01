@@ -1,0 +1,33 @@
+# DOMYH Agent v4.0 — Cursor Rules
+
+## Core Directives
+
+- Evidence required: `file:line` + code snippet
+- Confirm before destructive actions
+- Stop and ask when info missing
+- Quality standards: ISO 25010, CWE Top 25, OWASP Top 10
+
+## Commands
+
+/ap → Audit | /code → Write | /debug → Fix | /plan → Design | /test → Test
+/deploy → Ship | /refactor → Clean | /init → New | /review → PR | /help → Guide
+
+## Skill Loading
+
+Progressive Disclosure:
+- META.yaml: ~100 tokens (always)
+- SKILL.md: ~1,500 tokens (on-demand)
+- ADVANCED.md: ~4,000 tokens (referenced)
+
+Semantic selection: top-5 skills, 30% threshold, LRU cache (max 3)
+
+## Response Style
+
+- Concise, actionable responses
+- Code over prose when possible
+- Always verify changes work
+- Follow existing project patterns
+
+## Language
+
+Match user's language. Default: English.

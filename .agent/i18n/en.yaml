@@ -1,0 +1,126 @@
+# DOMYH Agent - English Strings
+# i18n/en.yaml v4.1
+
+app:
+  name: "DOMYH Agent"
+  version: "4.3.0"
+  tagline: "AI-Powered Development Assistant"
+  developer: "NockDev"
+
+commands:
+  # Core (6) - High usage
+  ap:
+    name: "Full Audit"
+    desc: "Comprehensive code audit with 5-expert panel covering security, performance, architecture, testing, and best practices"
+  code:
+    name: "Write Code"
+    desc: "Write production-ready code following best practices with proper error handling, types, and documentation"
+  debug:
+    name: "Debug"
+    desc: "Systematic debugging with root cause analysis: reproduce → isolate → analyze → fix → verify"
+  plan:
+    name: "Plan"
+    desc: "Feature planning and technical design with impact analysis, task breakdown, and effort estimation"
+  test:
+    name: "Test"
+    desc: "Run existing tests and write new test cases with proper coverage for unit, integration, and e2e"
+  modify:
+    name: "Modify Project"
+    desc: "Fix and improve existing project: detect stack → analyze issues → plan fixes → execute → verify"
+
+  # Secondary (4) - Medium usage
+  deploy:
+    name: "Deploy"
+    desc: "Production deployment with safety checks, staging verification, and rollback strategy"
+  refactor:
+    name: "Refactor"
+    desc: "Improve code structure and maintainability without changing functionality"
+  init:
+    name: "Init"
+    desc: "Initialize new project with intelligent scaffolding, P0-P6 phases, and progress tracking"
+  review:
+    name: "Review"
+    desc: "Code review for PRs and changes with security, performance, and maintainability checks"
+
+  # Extended (8) - P1/P2
+  migrate:
+    name: "Migrate"
+    desc: "Database migrations with schema changes, data migration, and rollback support"
+  doc:
+    name: "Doc"
+    desc: "Generate comprehensive documentation including API docs, README, and code comments"
+  generate:
+    name: "Generate"
+    desc: "Code generation for boilerplate, CRUD operations, and repetitive patterns"
+  perf:
+    name: "Perf"
+    desc: "Performance profiling to identify bottlenecks, memory leaks, and optimization opportunities"
+  upgrade:
+    name: "Upgrade"
+    desc: "Update dependencies with compatibility checks and breaking change migration"
+  clean:
+    name: "Clean"
+    desc: "Code cleanup: remove dead code, fix linting issues, and improve formatting"
+  monitor:
+    name: "Monitor"
+    desc: "Setup observability with logging, metrics, tracing, and alerting"
+  env:
+    name: "Env"
+    desc: "Environment management: configure variables, secrets, and multi-environment setup"
+
+  # Utility (3) - Low token
+  recap:
+    name: "Recap"
+    desc: "Session summary: what was done, files changed, and next steps"
+  status:
+    name: "Status"
+    desc: "Project status: health checks, pending tasks, and current state"
+  help:
+    name: "Help"
+    desc: "Show available commands, usage examples, and documentation links"
+
+personas:
+  auditor:
+    name: "Audit Committee"
+    desc: "5-expert panel for comprehensive review"
+  developer:
+    name: "Senior Developer"
+    desc: "Quality-focused code implementation"
+  architect:
+    name: "Solution Architect"
+    desc: "Design decisions and system architecture"
+  debugger:
+    name: "Debug Detective"
+    desc: "Root cause analysis and systematic fixing"
+  tester:
+    name: "QA Engineer"
+    desc: "Test strategy and quality assurance"
+  devops:
+    name: "DevOps Engineer"
+    desc: "Infrastructure and deployment"
+  documenter:
+    name: "Technical Writer"
+    desc: "Documentation and knowledge transfer"
+
+messages:
+  stop_required: "⛔ STOP — Confirmation required"
+  scope_contract: "🎯 Please select scope"
+  installation_complete: "✅ Installation complete!"
+  goodbye: "Goodbye!"
+  skills_suggested: "💡 Suggested skills based on your context"
+  flow_detected: "🔄 Detected workflow pattern"
+  resume_available: "📂 Previous session found. Resume?"
+
+priority:
+  p0: "Critical - Fix immediately"
+  p1: "High - Before deployment"
+  p2: "Medium - This sprint"
+  p3: "Low - Nice to have"
+
+flows:
+  new_project: "Create complete project from scratch"
+  fix_project: "Audit and fix issues in existing project"
+  feature_development: "Plan and implement a new feature"
+  bug_fix: "Debug and fix a specific issue"
+  code_review: "Full review before merging"
+  deployment: "Deploy with safety checks"

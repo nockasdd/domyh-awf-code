@@ -1,0 +1,10 @@
+language,model,primitive,runtime,scheduling,memory,channel_type,best_for,learning_curve
+Go,CSP (goroutines),goroutine + channel,Built-in,Pre-emptive,GC + stackful,mpsc (first-class),I/O-bound + network services,Low
+Rust,Async/Await,Future + task,External (Tokio/async-std),Cooperative,Ownership + stackless,tokio::sync::mpsc,CPU-bound + high-perf,High
+C++,Threads + C++20 coroutines,std::thread + co_await,Manual,Pre-emptive (threads) / Coop (coro),Manual + RAII,std::mutex/condition_var,Low-latency + game engines,High
+Java,Threads + Virtual Threads (21+),Thread + VirtualThread,JVM managed,Pre-emptive,GC,BlockingQueue/CompletableFuture,Enterprise + microservices,Medium
+C#,Async/Await + TPL,Task + async,CLR managed,Pre-emptive,GC,Channel<T> (System.Threading.Channels),Enterprise + web services,Medium
+Python,asyncio + threading,coroutine + Thread,Event loop,Cooperative (async) + GIL (threads),GC + refcount,asyncio.Queue,I/O-bound + scripting,Low
+Node.js,Event loop,Promise + async/await,libuv,Cooperative,V8 GC,N/A (callbacks/promises),Real-time + streaming,Low
+Kotlin,Coroutines,suspend fun + Channel,Dispatchers,Cooperative,JVM GC,Channel<T>,Android + server,Medium
+Swift,Structured concurrency,Task + actor,Runtime,Cooperative,ARC,AsyncStream,iOS/macOS + server,Medium

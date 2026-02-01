@@ -1,0 +1,61 @@
+{
+  "version": "1.1.0",
+  "last_updated": "2026-02-01T11:25:00+07:00",
+  
+  "project": {
+    "name": "DOMYH Agent",
+    "path": "e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent",
+    "type": "ai-agent-library",
+    "stack": ["yaml", "markdown", "python", "json"],
+    "initialized_at": "2026-02-01T11:17:00+07:00"
+  },
+  
+  "skills": {
+    "frequently_used": [],
+    "last_active": [],
+    "preferences": {}
+  },
+  
+  "workflows": {
+    "last_executed": "/ap",
+    "execution_count": {
+      "ap": 1
+    },
+    "favorites": []
+  },
+  
+  "audit": {
+    "last_score": 8.2,
+    "last_date": "2026-02-01",
+    "_note": "Full history in audit_summary.json"
+  },
+  
+  "context": {
+    "current_branch": null,
+    "current_phase": "audit_complete",
+    "pending_tasks": [
+      "Fix version consistency (P2-001)",
+      "Update README counts (P2-002, P2-004)",
+      "Add missing core registrations (P2-003)"
+    ],
+    "blockers": []
+  },
+  
+  "preferences": {
+    "language": "vi",
+    "verbosity": "normal",
+    "auto_fix": false,
+    "confirm_destructive": true
+  },
+  
+  "flags": {
+    "has_unfinished_work": true,
+    "needs_review": false,
+    "has_critical_issues": false
+  },
+  
+  "memory": {
+    "last_sync": "2026-02-01T11:25:00+07:00",
+    "metrics_ref": "metrics.json"
+  }
+}

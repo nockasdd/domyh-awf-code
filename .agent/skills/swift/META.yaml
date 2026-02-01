@@ -1,0 +1,89 @@
+name: swift
+version: "4.3.0"
+category: mobile
+tier: 1
+
+description: |
+  Apple platform development patterns for Swift 6/6.1.
+  Covers SwiftUI, async/await, actors, SwiftData.
+
+triggers:
+  file_patterns:
+    - "Package.swift"
+    - "*.swift"
+    - "*.xcodeproj"
+    - "*.xcworkspace"
+  keywords:
+    # Core
+    - swift
+    - swift 6
+    - swiftlang
+    - package.swift
+    - swift package manager
+    - spm
+    # SwiftUI
+    - swiftui
+    - swiftui view
+    - @State
+    - @Binding
+    - @Observable
+    - @ObservedObject
+    - @Environment
+    - @Query
+    - NavigationStack
+    - NavigationPath
+    # Concurrency
+    - async await swift
+    - actor swift
+    - @MainActor
+    - Task swift
+    - TaskGroup
+    - Sendable
+    - structured concurrency
+    # Data
+    - SwiftData
+    - @Model
+    - Core Data
+    - Codable
+    - JSONDecoder
+    # Combine
+    - Combine
+    - Publisher
+    - Subscriber
+    - @Published
+    # UIKit
+    - UIKit
+    - UIViewController
+    - UIView
+    # Architecture
+    - TCA
+    - composable architecture
+    - MVVM swift
+    - coordinator pattern
+    # Tools
+    - Xcode
+    - SwiftLint
+    - Vapor
+    - Kingfisher
+    - Alamofire
+    # Platforms
+    - iOS
+    - macOS
+    - watchOS
+    - tvOS
+    - visionOS
+  intents:
+    - build ios app
+    - swiftui component
+    - swift async
+    - swift actor
+    - ios development
+
+related_skills:
+  - flutter
+  - kotlin
+
+prevent_confusion_with:
+  - kotlin: "Swift is for Apple, Kotlin for Android"
+  - javascript: "Swift uses var/let differently than JS"
+  - rust: "Swift has ARC, Rust has ownership"

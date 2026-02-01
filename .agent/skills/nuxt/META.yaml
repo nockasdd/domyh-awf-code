@@ -1,0 +1,100 @@
+name: nuxt
+version: "4.3.0"
+category: frontend
+tier: 1
+
+description: |
+  Full-stack Vue framework for Nuxt 4.
+  Covers app/ directory, data fetching, server routes, hybrid rendering.
+
+triggers:
+  file_patterns:
+    - "nuxt.config.ts"
+    - "nuxt.config.js"
+    - ".nuxtrc"
+    - "app.vue"
+    - "pages/**/*.vue"
+    - "server/api/**/*.ts"
+  keywords:
+    # Core
+    - nuxt
+    - nuxt 4
+    - nuxt.js
+    - nuxtjs
+    - nuxt config
+    # Data Fetching
+    - useFetch
+    - useAsyncData
+    - useLazyFetch
+    - useLazyAsyncData
+    - $fetch
+    # Routing
+    - definePageMeta
+    - navigateTo
+    - useRoute nuxt
+    - useRouter nuxt
+    # Server
+    - defineEventHandler
+    - createError
+    - getRouterParam
+    - cachedEventHandler
+    - nitro
+    - h3
+    # Middleware
+    - defineNuxtRouteMiddleware
+    - nuxt middleware
+    # Composables
+    - useState
+    - useRuntimeConfig
+    - useSeoMeta
+    - useHead
+    # Config
+    - defineNuxtConfig
+    - routeRules
+    - hybrid rendering
+    - ssr nuxt
+    - ssg nuxt
+    # Components
+    - NuxtLink
+    - NuxtPage
+    - NuxtLayout
+    - ClientOnly
+    # Server Components
+    - .server.vue
+    - component islands
+    # Tools
+    - volar nuxt
+    - nuxtr
+    - nuxt devtools
+  intents:
+    - nuxt project
+    - nuxt api route
+    - nuxt middleware
+    - nuxt data fetching
+    - full stack vue
+
+related_skills:
+  - vue
+  - typescript
+
+prevent_confusion_with:
+  - nextjs: "Nuxt is for Vue, Next.js for React"
+  - vue: "Nuxt adds SSR/routing to Vue"
+
+# Nuxt-specific APIs NOT in other frameworks
+unique_apis:
+  - "useFetch(), useAsyncData(), useLazyFetch()"
+  - "defineEventHandler(), createError()"
+  - "definePageMeta(), defineNuxtConfig"
+  - "defineNuxtRouteMiddleware()"
+  - "navigateTo(), abortNavigation()"
+  - "useState(), useRuntimeConfig()"
+  - "useSeoMeta(), useHead()"
+  - "getRouterParam(), getQuery()"
+  - "cachedEventHandler(), routeRules"
+  - "NuxtLink, NuxtPage, NuxtLayout, ClientOnly"
+  - ".server.vue (component islands)"
+
+version_features:
+  nuxt3: ["Nitro server", "Hybrid rendering", "Component islands"]
+  nuxt4: ["app/ directory", "Enhanced useFetch", "New shared/ directory"]

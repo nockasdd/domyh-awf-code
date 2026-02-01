@@ -1,0 +1,80 @@
+name: php
+version: "4.3.0"
+category: backend
+tier: 1
+
+description: |
+  Modern PHP development patterns for PHP 8.3/8.4.
+  Covers Laravel 12, Symfony 8, Property Hooks, strict types.
+
+triggers:
+  file_patterns:
+    - "composer.json"
+    - "*.php"
+    - "artisan"
+    - "symfony.lock"
+  keywords:
+    # Core
+    - php
+    - php 8
+    - php 8.3
+    - php 8.4
+    - composer
+    - autoload
+    # Laravel
+    - laravel
+    - artisan
+    - eloquent
+    - blade
+    - livewire
+    - inertia
+    - laravel octane
+    - laravel pulse
+    # Symfony
+    - symfony
+    - doctrine
+    - twig
+    - symfony console
+    # Features
+    - property hooks
+    - asymmetric visibility
+    - readonly class
+    - enum php
+    - match expression
+    - constructor promotion
+    - attributes php
+    - strict_types
+    # ORM
+    - eloquent model
+    - eloquent relation
+    - query builder
+    - migration php
+    # Testing
+    - phpunit
+    - pest php
+    - pest test
+    # Quality
+    - phpstan
+    - rector
+    - pint
+    - larastan
+    - psalm
+    # Patterns
+    - service container
+    - dependency injection
+    - middleware php
+    - form request
+  intents:
+    - create laravel app
+    - php migration
+    - eloquent query
+    - laravel api
+    - symfony project
+
+related_skills:
+  - database
+  - docker
+
+prevent_confusion_with:
+  - python: "PHP uses $variable, Python uses variable"
+  - javascript: "PHP is server-side, don't confuse with Node.js"

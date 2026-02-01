@@ -1,0 +1,126 @@
+# DOMYH Agent - Vietnamese Strings
+# i18n/vi.yaml v4.1
+
+app:
+  name: "DOMYH Agent"
+  version: "4.3.0"
+  tagline: "Trợ lý Phát triển Ứng dụng AI"
+  developer: "NockDev"
+
+commands:
+  # Core (6) - Sử dụng nhiều
+  ap:
+    name: "Kiểm tra Toàn diện"
+    desc: "Kiểm tra code toàn diện với hội đồng 5 chuyên gia: bảo mật, hiệu năng, kiến trúc, testing, và best practices"
+  code:
+    name: "Viết Code"
+    desc: "Viết code production-ready theo best practices với xử lý lỗi, types, và documentation đầy đủ"
+  debug:
+    name: "Sửa Lỗi"
+    desc: "Debug có hệ thống với phân tích nguyên nhân: tái tạo → cô lập → phân tích → sửa → xác nhận"
+  plan:
+    name: "Lên Kế Hoạch"
+    desc: "Thiết kế và lên kế hoạch tính năng với phân tích tác động, chia nhỏ tasks, và ước lượng effort"
+  test:
+    name: "Chạy Tests"
+    desc: "Chạy tests hiện có và viết test cases mới với coverage unit, integration, và e2e"
+  modify:
+    name: "Sửa Project"
+    desc: "Sửa và cải thiện project có sẵn: detect stack → phân tích issues → lên kế hoạch → thực thi → xác nhận"
+
+  # Secondary (4) - Sử dụng trung bình
+  deploy:
+    name: "Deploy"
+    desc: "Deploy production với kiểm tra an toàn, xác nhận staging, và chiến lược rollback"
+  refactor:
+    name: "Tái Cấu Trúc"
+    desc: "Cải thiện cấu trúc code và khả năng bảo trì mà không thay đổi chức năng"
+  init:
+    name: "Khởi Tạo"
+    desc: "Tạo dự án mới với scaffolding thông minh, phases P0-P6, và theo dõi tiến độ"
+  review:
+    name: "Review Code"
+    desc: "Review code cho PRs và thay đổi với kiểm tra bảo mật, hiệu năng, và khả năng bảo trì"
+
+  # Extended (8) - P1/P2
+  migrate:
+    name: "Migrations"
+    desc: "Database migrations với thay đổi schema, chuyển đổi dữ liệu, và hỗ trợ rollback"
+  doc:
+    name: "Tài Liệu"
+    desc: "Tạo tài liệu toàn diện bao gồm API docs, README, và code comments"
+  generate:
+    name: "Sinh Code"
+    desc: "Sinh code tự động cho boilerplate, CRUD operations, và patterns lặp lại"
+  perf:
+    name: "Hiệu Năng"
+    desc: "Phân tích hiệu năng để tìm bottlenecks, memory leaks, và cơ hội tối ưu"
+  upgrade:
+    name: "Nâng Cấp"
+    desc: "Cập nhật dependencies với kiểm tra tương thích và migration breaking changes"
+  clean:
+    name: "Dọn Dẹp"
+    desc: "Dọn dẹp code: xóa dead code, sửa linting issues, và cải thiện formatting"
+  monitor:
+    name: "Giám Sát"
+    desc: "Thiết lập observability với logging, metrics, tracing, và alerting"
+  env:
+    name: "Môi Trường"
+    desc: "Quản lý môi trường: cấu hình variables, secrets, và setup multi-environment"
+
+  # Utility (3) - Token thấp
+  recap:
+    name: "Tóm Tắt"
+    desc: "Tóm tắt phiên: những gì đã làm, files thay đổi, và bước tiếp theo"
+  status:
+    name: "Trạng Thái"
+    desc: "Trạng thái dự án: kiểm tra sức khỏe, tasks đang chờ, và tình trạng hiện tại"
+  help:
+    name: "Trợ Giúp"
+    desc: "Hiển thị commands có sẵn, ví dụ sử dụng, và links tài liệu"
+
+personas:
+  auditor:
+    name: "Hội Đồng Kiểm Tra"
+    desc: "5 chuyên gia kiểm tra toàn diện"
+  developer:
+    name: "Lập Trình Viên Senior"
+    desc: "Triển khai code chất lượng cao"
+  architect:
+    name: "Kiến Trúc Sư"
+    desc: "Quyết định thiết kế và kiến trúc hệ thống"
+  debugger:
+    name: "Thám Tử Debug"
+    desc: "Phân tích nguyên nhân và sửa có hệ thống"
+  tester:
+    name: "Kỹ Sư QA"
+    desc: "Chiến lược test và đảm bảo chất lượng"
+  devops:
+    name: "Kỹ Sư DevOps"
+    desc: "Infrastructure và deployment"
+  documenter:
+    name: "Technical Writer"
+    desc: "Tài liệu và chuyển giao kiến thức"
+
+messages:
+  stop_required: "⛔ DỪNG — Cần xác nhận"
+  scope_contract: "🎯 Vui lòng chọn phạm vi"
+  installation_complete: "✅ Cài đặt hoàn tất!"
+  goodbye: "Tạm biệt!"
+  skills_suggested: "💡 Skills được đề xuất dựa trên ngữ cảnh của bạn"
+  flow_detected: "🔄 Phát hiện workflow pattern"
+  resume_available: "📂 Tìm thấy phiên trước. Tiếp tục?"
+
+priority:
+  p0: "Nghiêm trọng - Sửa ngay lập tức"
+  p1: "Cao - Trước khi deploy"
+  p2: "Trung bình - Sprint này"
+  p3: "Thấp - Có thì tốt"
+
+flows:
+  new_project: "Tạo dự án hoàn chỉnh từ đầu"
+  fix_project: "Kiểm tra và sửa lỗi project có sẵn"
+  feature_development: "Lên kế hoạch và triển khai tính năng mới"
+  bug_fix: "Debug và sửa lỗi cụ thể"
+  code_review: "Review toàn diện trước khi merge"
+  deployment: "Deploy với kiểm tra an toàn"

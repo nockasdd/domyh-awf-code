@@ -1,0 +1,29 @@
+{
+  "name": "DOMYH Agent v4.0",
+  "version": "4.0.0",
+  
+  "cursor": {
+    "agent_mode": true,
+    "composer_integration": true
+  },
+
+  "activation": {
+    "triggers": ["@domyh", "/ap", "/code", "/debug", "/init", "/migrate"],
+    "auto_context": true
+  },
+
+  "skills": {
+    "loading": "progressive",
+    "max_active": 3
+  },
+
+  "token_budget": {
+    "baseline": 1773,
+    "per_skill": 1500
+  },
+
+  "rules": {
+    "include_path": "../core/RULES.md",
+    "stop_path": "../core/STOP.md"
+  }
+}

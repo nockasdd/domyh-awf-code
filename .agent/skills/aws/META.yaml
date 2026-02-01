@@ -1,0 +1,91 @@
+name: aws
+display: AWS Cloud Development
+category: cloud
+priority: 1
+version: "4.3.0"
+desc: "AWS serverless, containers, IaC patterns for Lambda, DynamoDB, S3, ECS, CDK, SAM (2025-2026)"
+keywords:
+  # Core services
+  - aws
+  - amazon web services
+  - lambda
+  - dynamodb
+  - s3
+  - api gateway
+  - ecs
+  - fargate
+  - rds
+  - aurora
+  - sqs
+  - sns
+  - eventbridge
+  - step functions
+
+  # IaC
+  - cdk
+  - aws cdk
+  - sam
+  - serverless
+  - cloudformation
+  - terraform aws
+
+  # SDK
+  - aws-sdk
+  - boto3
+  - sdk v3
+
+  # Patterns
+  - serverless
+  - event-driven
+  - microservices
+  - fan-out
+  - single-table design
+
+  # Operations
+  - cloudwatch
+  - x-ray
+  - secrets manager
+  - parameter store
+  - iam
+  - vpc
+
+  # Cost
+  - graviton
+  - fargate spot
+  - savings plans
+  - cost optimization
+
+detect:
+  files:
+    - "serverless.yml"
+    - "serverless.ts"
+    - "sam.yaml"
+    - "template.yaml"
+    - "samconfig.toml"
+    - "cdk.json"
+    - "cdk.out/"
+  patterns:
+    - "@aws-sdk/client-"
+    - "import boto3"
+    - "aws-cdk-lib"
+    - "APIGatewayProxyHandler"
+    - "aws_lambda_powertools"
+
+caps:
+  - Lambda function patterns (TypeScript/Python)
+  - DynamoDB single-table design
+  - S3 presigned URLs and events
+  - API Gateway REST/HTTP APIs
+  - Event-driven (EventBridge, SQS, SNS, Step Functions)
+  - ECS/Fargate container patterns
+  - CDK infrastructure as code
+  - SAM serverless templates
+  - Security (IAM, Secrets Manager, VPC)
+  - Cost optimization (Graviton, Spot, Savings Plans)
+  - Lambda Powertools observability
+
+related:
+  - typescript
+  - nodejs-best-practices
+  - docker-expert
+  - security

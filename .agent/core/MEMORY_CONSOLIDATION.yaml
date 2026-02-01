@@ -1,0 +1,348 @@
+# DOMYH Agent — Memory Consolidation Engine v1.0
+# Auto-consolidate, merge, and optimize memory storage
+# Reduce token usage by 30%+ through intelligent compression
+
+version: "4.3.0"
+engine: memory_consolidation
+
+# =============================================================================
+# CONSOLIDATION OVERVIEW
+# =============================================================================
+
+overview:
+  purpose: "Automatically merge, compress, and organize memories"
+  goal: "Reduce memory token usage by 30% while preserving information"
+  inspiration: "Human memory consolidation during sleep"
+
+# =============================================================================
+# CONSOLIDATION TRIGGERS
+# =============================================================================
+
+triggers:
+  # Time-based
+  scheduled:
+    session_end:
+      enabled: true
+      delay: 0 # Immediate on session end
+
+    periodic:
+      enabled: true
+      interval: 3600 # Every hour during active session
+
+  # Count-based
+  threshold:
+    memory_count:
+      threshold: 50
+      action: consolidate_similar
+
+    decision_count:
+      threshold: 20
+      action: merge_decisions
+
+    error_count:
+      threshold: 30
+      action: consolidate_errors
+
+    session_count:
+      threshold: 10
+      action: archive_old_sessions
+
+  # Size-based
+  size:
+    total_tokens:
+      threshold: 5000
+      action: aggressive_consolidation
+
+    single_file_tokens:
+      threshold: 2000
+      action: split_and_summarize
+
+  # Explicit
+  command:
+    trigger: "/mem consolidate"
+    options:
+      - "--aggressive" # Maximum compression
+      - "--preserve" # Minimal consolidation
+      - "--category=X" # Target specific category
+
+# =============================================================================
+# CONSOLIDATION STRATEGIES
+# =============================================================================
+
+strategies:
+  # Strategy 1: Merge Similar Memories
+  merge_similar:
+    method: semantic_similarity
+
+    # Algorithm specification (v4.3 - added concrete implementation)
+    algorithm:
+      type: cosine_similarity
+      embedding_model: text-embedding-3-small # or local TF-IDF
+      fallback: tfidf_vectorizer # If no API available
+      implementation: |
+        # Cosine similarity formula:
+        # cos(θ) = (A · B) / (||A|| × ||B||)
+        # Where A and B are embedding vectors
+
+    threshold: 0.85
+
+    process:
+      1: compute_pairwise_similarity
+      2: identify_similar_clusters
+      3: merge_clusters_into_single_memory
+      4: preserve_unique_details
+      5: update_references
+
+    merge_rules:
+      keep: most_recent
+      combine: unique_details
+      discard: redundant_phrases
+
+    example:
+      before:
+        - "User prefers short responses"
+        - "User wants concise answers"
+        - "User likes brief explanations"
+      after:
+        - "User prefers concise, brief responses"
+
+  # Strategy 2: Collapse Temporal Sequences
+  collapse_sequences:
+    method: temporal_proximity
+    threshold_minutes: 5
+
+    process:
+      1: identify_sequential_memories
+      2: group_by_time_window
+      3: create_summary_for_group
+      4: archive_originals
+
+    example:
+      before:
+        - "10:01 - Started auth implementation"
+        - "10:02 - Created auth service"
+        - "10:03 - Added JWT validation"
+        - "10:04 - Fixed token expiry"
+      after:
+        - "10:01-10:04 - Implemented auth service with JWT (4 steps)"
+
+  # Strategy 3: Build Topic Hierarchies
+  build_hierarchies:
+    method: topic_clustering
+    levels: [category, topic, detail]
+
+    process:
+      1: extract_topics_from_memories
+      2: cluster_by_topic_similarity
+      3: create_hierarchy_structure
+      4: summarize_at_each_level
+
+    example:
+      flat:
+        - "PostgreSQL is the database"
+        - "Using pgx/v5 driver"
+        - "Connection pooling enabled"
+        - "Migrations use Atlas"
+      hierarchical:
+        category: Database
+        topic: PostgreSQL Setup
+        details:
+          - driver: pgx/v5
+          - pooling: enabled
+          - migrations: Atlas
+
+  # Strategy 4: Extract Patterns
+  extract_patterns:
+    method: frequency_analysis
+    min_occurrences: 3
+
+    process:
+      1: identify_repeated_elements
+      2: extract_as_pattern
+      3: replace_instances_with_reference
+      4: store_pattern_separately
+
+    example:
+      instances:
+        - "Fixed error by adding null check"
+        - "Resolved issue with null check"
+        - "Added null check to fix bug"
+      pattern:
+        name: "Null Check Fix Pattern"
+        solution: "Add null check before access"
+        instances: 3
+
+  # Strategy 5: Semantic Compression
+  semantic_compression:
+    method: key_information_extraction
+    target_reduction: 50%
+
+    techniques:
+      remove_redundancy:
+        - duplicate_phrases
+        - filler_words
+        - restated_information
+
+      preserve_essentials:
+        - key_entities
+        - relationships
+        - decisions
+        - outcomes
+
+      compress_details:
+        - verbose_explanations → bullet_points
+        - long_descriptions → key_phrases
+        - full_examples → pattern_references
+
+    example:
+      before: |
+        We decided to use PostgreSQL as our primary database because 
+        it offers strong consistency, ACID compliance, and excellent 
+        support for complex queries. We also considered MongoDB but 
+        decided against it due to our need for relational data.
+      after: |
+        Decision: PostgreSQL (not MongoDB)
+        Reasons: ACID, consistency, relational needs
+
+# =============================================================================
+# CONSOLIDATION PROCESS
+# =============================================================================
+
+process:
+  # Phase 1: Analysis
+  analyze:
+    collect_memories: all_active
+    compute_similarities: pairwise
+    identify_clusters: agglomerative
+    estimate_reduction: tokens
+
+  # Phase 2: Plan
+  plan:
+    select_strategy: based_on_analysis
+    prioritize_targets: by_token_savings
+    create_backup: always
+    estimate_time: based_on_size
+
+  # Phase 3: Execute
+  execute:
+    apply_strategies: in_order
+    validate_each_step: true
+    rollback_on_error: true
+
+  # Phase 4: Verify
+  verify:
+    compare_information_coverage: true
+    check_reference_integrity: true
+    validate_token_reduction: true
+
+  # Phase 5: Update
+  update:
+    update_active_memories: true
+    update_indexes: true
+    update_embeddings: if_changed
+    log_consolidation: true
+
+# =============================================================================
+# OUTPUT FILES
+# =============================================================================
+
+output:
+  # Consolidated view
+  consolidated_memory:
+    path: memory/consolidated.md
+    format: markdown
+    max_tokens: 2000
+
+  # Consolidation log
+  consolidation_log:
+    path: memory/consolidation_log.json
+    include:
+      - timestamp
+      - strategy_used
+      - tokens_before
+      - tokens_after
+      - reduction_percent
+      - items_merged
+
+  # Archive of originals
+  archive:
+    path: memory/archive/consolidation/
+    naming: "{date}_{strategy}.json"
+    retention: 30_days
+
+# =============================================================================
+# SAFETY MEASURES
+# =============================================================================
+
+safety:
+  # Always backup before consolidation
+  backup:
+    enabled: true
+    location: memory/archive/safety_backups/
+    retention: 7_days
+
+  # Protected content
+  never_consolidate:
+    - user_corrections
+    - security_findings
+    - active_errors
+    - current_session
+
+  # Require confirmation for
+  confirm_required:
+    aggressive_consolidation: true
+    large_batch_merge: true
+    cross_category_merge: true
+
+  # Rollback capability
+  rollback:
+    enabled: true
+    max_rollback_depth: 5
+    command: "/mem rollback {consolidation_id}"
+
+# =============================================================================
+# METRICS
+# =============================================================================
+
+metrics:
+  track:
+    - total_consolidations
+    - tokens_saved
+    - compression_ratio
+    - information_preserved
+    - rollback_count
+
+  output:
+    path: memory/metrics.json
+    update: after_each_consolidation
+
+  alerts:
+    low_information_preservation:
+      threshold: 0.9
+      action: require_review
+
+    high_rollback_rate:
+      threshold: 0.1
+      action: adjust_thresholds
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  # Memory engine
+  memory_engine:
+    notify_on_consolidation: true
+    update_pointers: true
+
+  # Context loader
+  context_loader:
+    invalidate_cache_on_consolidation: true
+
+  # Active memory
+  active_memory:
+    trigger_reflection_after: true
+
+  # Semantic engine
+  semantic_engine:
+    reindex_after_consolidation: true

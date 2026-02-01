@@ -1,0 +1,126 @@
+# Build Systems Detection Data v4.5
+# Externalized from project-detection.md
+
+version: "4.3.0"
+last_updated: "2026-02-01"
+
+# Root file patterns for project detection
+root_patterns:
+  visual_studio:
+    - "*.sln"
+    - "*.slnx"
+    - "*.csproj"
+    - "*.vcxproj"
+  cmake:
+    - "CMakeLists.txt"
+    - "CMakePresets.json"
+  node:
+    - "package.json"
+  java:
+    - "pom.xml"
+    - "build.gradle"
+    - "build.gradle.kts"
+  rust:
+    - "Cargo.toml"
+  go:
+    - "go.mod"
+  python:
+    - "pyproject.toml"
+    - "setup.py"
+    - "requirements.txt"
+  make:
+    - "Makefile"
+    - "GNUmakefile"
+
+# Visual Studio ecosystem indicators
+visual_studio:
+  slnx: "VS2026 XML-based solution"
+  sln: "Legacy solution file"
+  platform_toolset:
+    v145: "VS2026 (MSVC 14.50)"
+    v143: "VS2022"
+    v142: "VS2019"
+  target_framework:
+    net10.0: ".NET 10 LTS"
+    net9.0: ".NET 9"
+    net8.0: ".NET 8 LTS"
+
+# CMake indicators
+cmake:
+  version_4.0: "CMake 4.0 (breaking changes)"
+  version_3.x: "CMake 3.x"
+  qt6: "Qt 6 framework"
+  gtest: "Google Test"
+
+# Node.js ecosystem
+node:
+  bun.lockb: "Bun runtime"
+  deno.json: "Deno 2 runtime"
+  yarn.lock: "Yarn"
+  pnpm-lock.yaml: "pnpm"
+  frameworks:
+    react: "React"
+    vue: "Vue.js"
+    angular: "Angular"
+  test_frameworks:
+    jest: "Jest"
+    vitest: "Vitest"
+    mocha: "Mocha"
+
+# Monorepo indicators
+monorepo:
+  npm_workspaces: "package.json contains workspaces"
+  lerna: "lerna.json exists"
+  nx: "nx.json exists"
+  turborepo: "turbo.json exists"
+
+# Test file patterns
+test_patterns:
+  python:
+    - "test_*.py"
+    - "*_test.py"
+  csharp:
+    - "*Test.cs"
+    - "*Tests.cs"
+  cpp:
+    - "*_test.cpp"
+    - "*_test.cc"
+  java:
+    - "*Test.java"
+    - "*Tests.java"
+  javascript:
+    - "*.test.js"
+    - "*.spec.ts"
+
+# Build commands
+build_commands:
+  msbuild:
+    build: "msbuild {solution}.sln /p:Configuration={config} /p:Platform={platform}"
+    clean: "msbuild {solution}.sln /t:Clean"
+    defaults:
+      config: "Release"
+      platform: "x64"
+  cmake:
+    configure: "cmake -B build -DCMAKE_BUILD_TYPE={config}"
+    build: "cmake --build build --config {config} -j{jobs}"
+    test: "ctest --test-dir build --output-on-failure"
+  npm:
+    install: "npm install"
+    build: "npm run build"
+    test: "npm test"
+  dotnet:
+    restore: "dotnet restore"
+    build: "dotnet build --configuration Release"
+    test: "dotnet test"
+
+# Token cost reference
+token_costs:
+  naive_scan: "20,000-50,000+"
+  five_phase_scan: "2,400-4,900"
+  savings: "85-90%"
+  phase_breakdown:
+    root: "500-1,000"
+    config: "200-500"
+    deps: "1,000-2,000"
+    source: "500-1,000"
+    tests: "200-400"

@@ -1,0 +1,48 @@
+# DOMYH Agent v3.0 — Aider Configuration
+# https://aider.chat/docs/config/aider_conf.html
+
+# Model settings
+model: claude-3-5-sonnet-20241022
+edit-format: diff
+
+# Code style
+auto-commits: false
+dirty-commits: false
+attribute-author: false
+attribute-committer: false
+
+# Behavior
+stream: true
+pretty: true
+show-diffs: true
+auto-lint: true
+auto-test: false
+
+# Context
+map-tokens: 1024
+map-refresh: auto
+
+# Read-only files (agent config)
+read:
+  - .agent/manifest.yaml
+  - .agent/core/RULES.md
+  - .agent/core/STOP.md
+
+# Git settings
+gitignore: true
+
+# Custom prompts
+system-prompt: |
+  You are DOMYH Agent v3.0, an AI development assistant by NockDev.
+
+  ## Core Rules
+  1. Evidence Required — All findings need file:line + code snippet
+  2. Safety First — No delete/deploy without confirmation
+  3. Stop on Ambiguity — Ask when unclear
+
+  ## Commands
+  /ap — Full audit | /code — Write code | /debug — Fix bugs
+  /plan — Design | /test — Tests | /deploy — Production
+
+  ## Quality
+  Apply ISO 25010, CWE-25, OWASP-10 standards.

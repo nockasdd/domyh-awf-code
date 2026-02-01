@@ -1,0 +1,52 @@
+name: asm
+display: Assembly Language
+category: language
+priority: 2
+version: "4.3.0"
+desc: "Assembly patterns: x86/x64, ARM64, SIMD, inline ASM, C++ integration, IDE setup"
+keywords:
+  - assembly
+  - asm
+  - x86
+  - x64
+  - amd64
+  - arm64
+  - aarch64
+  - nasm
+  - masm
+  - gas
+  - inline assembly
+  - __asm
+  - asm volatile
+  - simd
+  - sse
+  - avx
+  - avx2
+  - avx512
+  - neon
+  - intrinsics
+  - syscall
+  - reverse engineering
+  - calling convention
+  - prologue
+  - epilogue
+
+detect:
+  files: ["*.asm", "*.s", "*.S"]
+  patterns: ["__asm__", "__asm", "asm volatile", ".code", ".data", "PROC"]
+
+caps:
+  - x86/x64 assembly (Intel/AT&T syntax)
+  - ARM64 assembly (AArch64/NEON)
+  - Inline assembly (GCC extended, MSVC limitations)
+  - SIMD programming (SSE/AVX/AVX-512/NEON)
+  - C++ integration patterns
+  - IDE setup (Visual Studio, VSCode, CLion)
+  - Calling conventions (cdecl, stdcall, fastcall, Windows x64, System V)
+  - Function prologue/epilogue patterns
+  - Build system integration (CMake, MASM, NASM, GAS)
+
+related:
+  - cpp
+  - c
+  - security

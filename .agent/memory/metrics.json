@@ -1,0 +1,48 @@
+{
+  "version": "1.1.0",
+  "created_at": null,
+  "last_updated": null,
+  
+  "retention": {
+    "max_sessions": 100,
+    "max_score_trend": 50,
+    "archive_path": "archive/"
+  },
+  
+  "sessions": {
+    "total": 0,
+    "average_duration_minutes": 0,
+    "average_tokens_used": 0
+  },
+  
+  "memory": {
+    "total_saves": 0,
+    "total_loads": 0,
+    "compression_events": 0,
+    "archive_events": 0
+  },
+  
+  "workflows": {
+    "total_executed": 0,
+    "by_type": {},
+    "most_used": null
+  },
+  
+  "decisions": {
+    "total_logged": 0,
+    "by_category": {}
+  },
+  
+  "audits": {
+    "total_completed": 0,
+    "average_score": 0,
+    "score_trend": []
+  },
+  
+  "cleanup": {
+    "light_triggers": 0,
+    "medium_triggers": 0,
+    "aggressive_triggers": 0,
+    "emergency_triggers": 0
+  }
+}

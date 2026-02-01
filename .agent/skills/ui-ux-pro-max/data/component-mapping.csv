@@ -1,0 +1,31 @@
+component,category,library_score,headless_score,custom_score,a11y_priority,mapping_strategy,common_libs,token_cost_saved
+Button,Core,4,5,3,HIGH,Headless (Radix) + Tailwind,shadcn/Radix/MUI/Chakra,85%
+Input,Core,4,5,3,HIGH,Headless + validation,React Hook Form + shadcn,80%
+Modal/Dialog,Core,3,5,2,HIGH,Headless (Radix Dialog),Radix Dialog/Headless UI,90%
+Select/Dropdown,Core,3,5,2,HIGH,Headless (Radix Select),Radix Select/React Select,90%
+Checkbox,Core,4,5,3,HIGH,Headless (Radix Checkbox),Radix/shadcn,85%
+Radio,Core,4,5,3,HIGH,Headless (Radix Radio),Radix/shadcn,85%
+Switch/Toggle,Core,4,5,3,HIGH,Headless (Radix Switch),Radix/shadcn,85%
+Card,Layout,3,2,5,LOW,Custom with tokens,Custom/shadcn,70%
+Avatar,Display,4,3,4,LOW,Custom or library,shadcn/MUI,75%
+Badge,Display,3,2,5,LOW,Custom utility class,Custom/shadcn,90%
+Tooltip,Overlay,4,4,3,LOW,Headless or library,Radix Tooltip,80%
+Toast/Notification,Feedback,4,4,3,LOW,Sonner or library,Sonner/react-hot-toast,80%
+Tabs,Navigation,3,5,3,HIGH,Headless (Radix Tabs),Radix Tabs,85%
+Accordion,Navigation,3,5,3,HIGH,Headless (Radix Accordion),Radix Accordion,85%
+Menu/Context,Navigation,3,5,2,HIGH,Headless (Radix Menu),Radix Menu,90%
+Table,Data,5,2,3,MEDIUM,Library (TanStack Table),TanStack Table/AG Grid,70%
+Form,Composite,4,4,3,HIGH,React Hook Form + inputs,RHF + Zod + shadcn,75%
+DatePicker,Input,5,2,1,HIGH,Library specialized,react-day-picker/date-fns,90%
+ColorPicker,Input,5,2,2,MEDIUM,Library specialized,react-colorful,85%
+RichTextEditor,Input,5,1,1,MEDIUM,Library specialized,TipTap/Slate,95%
+Carousel,Media,4,3,2,MEDIUM,Library (Embla),Embla Carousel,80%
+Progress,Feedback,4,4,3,MEDIUM,Library or headless,Radix Progress,80%
+Slider,Input,3,5,2,HIGH,Headless (Radix Slider),Radix Slider,85%
+Skeleton,Loading,4,3,4,LOW,Custom or library,shadcn,80%
+Sidebar,Layout,3,3,4,MEDIUM,Custom with headless,Custom + Radix,60%
+Header/Navbar,Layout,2,2,5,MEDIUM,Custom component,Custom,50%
+Footer,Layout,2,1,5,LOW,Custom component,Custom,50%
+Pagination,Navigation,4,3,3,MEDIUM,Library + custom UI,Custom/shadcn,75%
+Breadcrumb,Navigation,4,4,3,MEDIUM,Custom or library,shadcn,80%
+Stepper/Wizard,Composite,4,3,3,MEDIUM,Custom + state machine,Custom/React Step,60%

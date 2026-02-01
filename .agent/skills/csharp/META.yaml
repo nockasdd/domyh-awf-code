@@ -1,0 +1,128 @@
+name: csharp
+display: C#/.NET Development
+category: language
+priority: 1
+version: "4.3.0"
+desc: "Modern C# (C# 12/13/14) with .NET 9/10 - async/await, LINQ, EF Core, ASP.NET Core, Blazor, DI patterns"
+
+keywords:
+  # Language
+  - c#
+  - csharp
+  - dotnet
+  - .net
+  - .net core
+  - .net 8
+  - .net 9
+  - .net 10
+
+  # Language Features
+  - async/await
+  - linq
+  - pattern matching
+  - records
+  - nullable reference
+  - primary constructor
+  - collection expressions
+  - params collections
+
+  # Frameworks
+  - asp.net core
+  - asp.net
+  - blazor
+  - maui
+  - minimal api
+  - web api
+  - mvc
+  - razor
+  - signalr
+
+  # Data Access
+  - entity framework
+  - ef core
+  - dapper
+  - linq to sql
+  - dbcontext
+  - migrations
+
+  # Libraries
+  - system.text.json
+  - newtonsoft
+  - serilog
+  - automapper
+  - mediatr
+  - fluentvalidation
+  - polly
+  - hangfire
+  - quartz
+
+  # Testing
+  - xunit
+  - nunit
+  - mstest
+  - moq
+  - nsubstitute
+  - fluentassertions
+
+  # UI
+  - mudblazor
+  - blazorise
+  - radzen
+
+  # Build/Package
+  - nuget
+  - msbuild
+  - dotnet cli
+  - csproj
+  - solution
+
+  # IDEs
+  - visual studio
+  - rider
+  - vs code csharp
+
+detect:
+  files:
+    - "*.cs"
+    - "*.csproj"
+    - "*.sln"
+    - "global.json"
+    - "Directory.Build.props"
+    - "Directory.Build.targets"
+    - "*.razor"
+    - "appsettings.json"
+    - "appsettings.*.json"
+  patterns:
+    - "using System"
+    - "namespace "
+    - "public class"
+    - "async Task"
+    - ".Select("
+    - ".Where("
+    - "[ApiController]"
+
+  # Negative patterns
+  not_patterns:
+    - ".cpp, .hpp files" # → C++
+    - ".java files" # → Java
+
+caps:
+  - C# 12/13/14 language features
+  - .NET 9/10 BCL APIs
+  - Async/await patterns
+  - LINQ query and method syntax
+  - Entity Framework Core
+  - ASP.NET Core (Minimal API, Controllers)
+  - Blazor (Server, WebAssembly)
+  - Dependency Injection
+  - System.Text.Json serialization
+  - Source generators
+  - Records and pattern matching
+  - Primary constructors
+  - Collection expressions
+
+related:
+  - typescript
+  - database
+  - docker
+  - ci-cd

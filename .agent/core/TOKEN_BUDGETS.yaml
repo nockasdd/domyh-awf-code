@@ -1,0 +1,157 @@
+# DOMYH Agent — Token Budgets v4.3
+# Single Source of Truth for all token budget definitions
+# Centralizes 49 max_tokens declarations across 10 config files
+
+version: "4.3.0"
+engine: token_budgets
+
+# =============================================================================
+# GLOBAL LIMITS
+# =============================================================================
+
+global:
+  context_window: 128000 # Claude 3.5 Sonnet
+  max_allowed: 25000 # Self-imposed limit per session
+  memory_budget: 5500 # Total memory allocation
+  memory_with_jit: 4000 # With JIT optimization (36% savings)
+
+# =============================================================================
+# MEMORY LAYERS (From MEMORY_ENGINE)
+# =============================================================================
+
+memory_layers:
+  layer_1_working: 500 # Always in context
+  layer_2_session: 2000 # Loaded on demand
+  layer_3_state: 500 # Structured JSON
+  layer_4_semantic: 2500 # Optional vector DB
+
+# =============================================================================
+# WORKFLOW LOADING (From TOKEN_LOADING)
+# =============================================================================
+
+workflow:
+  sections:
+    core: 500 # frontmatter, flow_diagram, commands_table
+    phase_content: 800 # Loaded when phase activates
+    reference: 2000 # language_specific, templates, examples
+
+  thresholds:
+    low_memory: 2500 # Warning threshold
+    medium_load: 5000 # Active workflow
+    high_load: 8000 # Multiple workflows
+    peak_usage: 12000 # Maximum before unload
+
+# =============================================================================
+# CONTENT INJECTION (From CONTEXT_INJECTOR)
+# =============================================================================
+
+injection:
+  priority:
+    task_context: 300 # Current task info
+    errors: 200 # Active error messages
+    decisions: 300 # Recent decisions
+    similar_issues: 400 # Related past issues
+    warnings: 150 # Active warnings
+    preferences: 200 # User preferences
+
+  layers:
+    session: 150 # Session notes
+    state: 200 # Project state
+    decisions: 250 # Decisions log
+    audit: 300 # Audit summary
+    patterns: 150 # Code patterns
+
+# =============================================================================
+# CONTEXT LOADING (From CONTEXT_LOADER)
+# =============================================================================
+
+context_loading:
+  workflow:
+    skeleton: 500 # Always loaded
+    details: 400 # On phase entry
+    examples: 300 # On-demand
+    templates: 200 # Reference only
+    language: 500 # Language-specific
+
+  memory:
+    recent: 200 # Recent context pointer
+
+  skill_queries:
+    code: 1000
+    debug: 800
+    audit: 300
+    deploy: 600
+
+# =============================================================================
+# SKILLS (From SKILL_SCHEMA)
+# =============================================================================
+
+skills:
+  tier_1_meta: 100 # META.yaml - always loaded
+  tier_2_skill: 1500 # SKILL.md - on-demand
+  tier_3_advanced: 4000 # ADVANCED.md - referenced only
+
+# =============================================================================
+# SUMMARIZATION (From SUMMARIZATION_ENGINE)
+# =============================================================================
+
+summarization:
+  brief: 200 # 1-liner summaries
+  compact: 500 # Key details
+  detailed: 300 # Full context
+
+# =============================================================================
+# CLEANUP (From CLEANUP_ENGINE)
+# =============================================================================
+
+cleanup:
+  session_summary: 150
+  error_summary: 200
+  phase_summary: 300
+  full_cleanup_budget: 2000
+
+# =============================================================================
+# SEMANTIC (From SEMANTIC_ENGINE)
+# =============================================================================
+
+semantic:
+  model_limit: 8000 # Embedding model limit
+  layer_budget: 2500 # Layer 4 allocation
+
+# =============================================================================
+# CONSOLIDATION (From MEMORY_CONSOLIDATION)
+# =============================================================================
+
+consolidation:
+  output_max: 2000 # Consolidated memory view
+
+# =============================================================================
+# QUEUE PROCESSING (From CONTEXT_PRIORITY)
+# =============================================================================
+
+queue:
+  processing_max: 2000 # Max tokens for priority queue
+
+# =============================================================================
+# ACTIVE MEMORY (From ACTIVE_MEMORY)
+# =============================================================================
+
+active_memory:
+  reflection_budget: 300 # Memory reflection output
+
+# =============================================================================
+# USAGE REFERENCE
+# =============================================================================
+
+usage:
+  reference: "core/TOKEN_BUDGETS.yaml"
+  import_examples:
+    - "TOKEN_LOADING.yaml → workflow.sections.core"
+    - "CONTEXT_INJECTOR.yaml → injection.priority.*"
+    - "MEMORY_ENGINE.yaml → memory_layers.*"
+    - "SKILL_SCHEMA.yaml → skills.*"
+
+  notes:
+    - "All values in tokens (approximate)"
+    - "Values can be adjusted per project needs"
+    - "JIT loading reduces actual usage by ~36%"

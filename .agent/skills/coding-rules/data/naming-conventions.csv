@@ -1,0 +1,24 @@
+language,style_guide,classes,interfaces,functions_methods,variables_local,constants,private_members,enums_values,namespaces_packages,files,source
+C++,Google Style Guide,PascalCase,IPascalCase,PascalCase,snake_case,kPascalCase,snake_case_,kPascalCase,snake_case,snake_case.cpp,google.github.io/styleguide
+C#,Microsoft Conventions,PascalCase,IPascalCase,PascalCase,camelCase,PascalCase,_camelCase,PascalCase,PascalCase,PascalCase.cs,learn.microsoft.com
+Java,Google Java Style,PascalCase,PascalCase,camelCase,camelCase,UPPER_SNAKE_CASE,camelCase,UPPER_SNAKE_CASE,lowercase.dot,PascalCase.java,google.github.io/styleguide
+Python,PEP 8,PascalCase,PascalCase,snake_case,snake_case,UPPER_SNAKE_CASE,_snake_case,UPPER_SNAKE_CASE,lowercase,snake_case.py,peps.python.org/pep-0008
+Go,Effective Go,PascalCase (exported),PascalCase,PascalCase/camelCase (export),camelCase,PascalCase/camelCase (export),camelCase,PascalCase,lowercase,snake_case.go,go.dev/doc/effective_go
+Rust,Rust API Guidelines,PascalCase,PascalCase (trait),snake_case,snake_case,SCREAMING_SNAKE_CASE,snake_case,PascalCase,snake_case,snake_case.rs,rust-lang.github.io/api-guidelines
+TypeScript,TS Best Practices,PascalCase,PascalCase (no I prefix),camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase or #private,UPPER_SNAKE_CASE,camelCase,kebab-case.ts,ts.dev
+JavaScript,Airbnb/Google,PascalCase,N/A,camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase,UPPER_SNAKE_CASE,camelCase,kebab-case.js,airbnb.io/javascript
+Swift,Swift API Guidelines,PascalCase,PascalCase,camelCase,camelCase,camelCase,camelCase,camelCase,PascalCase,PascalCase.swift,swift.org/documentation/api-design
+Kotlin,Kotlin Conventions,PascalCase,PascalCase,camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase,PascalCase,lowercase,PascalCase.kt,kotlinlang.org/docs/coding-conventions
+PHP,PSR-12,PascalCase,PascalCase + Interface suffix,camelCase,camelCase,$UPPER_SNAKE_CASE,camelCase (no underscore),PascalCase,PascalCase,PascalCase.php,php-fig.org/psr/psr-12
+Ruby,Ruby Style Guide,PascalCase,N/A (duck typing),snake_case,snake_case,SCREAMING_SNAKE_CASE,@snake_case,SCREAMING_SNAKE_CASE,PascalCase,snake_case.rb,rubystyle.guide
+Dart,Dart Effective,PascalCase,N/A (no keyword),camelCase,camelCase,camelCase,_camelCase,camelCase,lowercase,snake_case.dart,dart.dev/effective-dart
+Elixir,Elixir Style Guide,PascalCase,N/A (no interfaces),snake_case,snake_case,UPPER_SNAKE_CASE,_snake_case,snake_case,snake_case,snake_case.ex,hexdocs.pm
+Scala,Scala Style Guide,PascalCase,PascalCase,camelCase,camelCase,PascalCase or UPPER,camelCase,PascalCase,lowercase,PascalCase.scala,scala-lang.org/style
+C,Linux Kernel Style,N/A (structs only),N/A,snake_case,snake_case,UPPER_SNAKE_CASE,static + snake_case,UPPER_SNAKE_CASE,N/A,snake_case.c,kernel.org/doc/html/latest
+Lua,Lua Style Guide,PascalCase,N/A,snake_case or camelCase,snake_case,UPPER_SNAKE_CASE,_snake_case,UPPER_SNAKE_CASE,lowercase,snake_case.lua,lua-users.org/wiki/LuaStyleGuide
+Assembly,x86 NASM/MASM,N/A,N/A,snake_case,snake_case,UPPER_SNAKE_CASE,N/A,UPPER_SNAKE_CASE,N/A,snake_case.asm,nasm.us
+Vue,Vue Style Guide,PascalCase,N/A,camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase,UPPER_SNAKE_CASE,kebab-case,PascalCase.vue,vuejs.org/style-guide
+React,React/Airbnb,PascalCase,N/A,camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase,UPPER_SNAKE_CASE,kebab-case,PascalCase.jsx,airbnb.io/javascript/react
+Next.js,Next.js Conventions,PascalCase,N/A,camelCase,camelCase,UPPER_SNAKE_CASE,_camelCase,UPPER_SNAKE_CASE,kebab-case,page.tsx or kebab-case,nextjs.org/docs
+Zig,Zig Style Guide,PascalCase,N/A,camelCase (TitleCase if returns type),snake_case,snake_case,snake_case,PascalCase,snake_case,snake_case.zig,ziglang.org/documentation
+Nim,Nim Style Guide,PascalCase,N/A,camelCase,camelCase,PascalCase,camelCase,PascalCase,camelCase,snake_case.nim,nim-lang.org/docs/nep1

@@ -1,0 +1,252 @@
+# Architecture Registry — DOMYH Agent v4.2
+# Token-optimized reference for /init
+
+# FORMAT: skill: {arch: [pattern|⭐best], type: [app|lib|api|cli|web|mobile]}
+
+registry:
+  # === LANGUAGES ===
+
+  go:
+    archs:
+      - { id: standard, dir: "cmd/,internal/,pkg/", best: true }
+      - { id: clean, dir: "domain/,usecase/,delivery/" }
+      - { id: hexagonal, dir: "core/,ports/,adapters/" }
+      - { id: ddd, dir: "domain/,application/,infra/" }
+    types: [api, cli, lib]
+    default: standard
+
+  python:
+    archs:
+      - { id: src, dir: "src/,tests/", best: true }
+      - { id: flat, dir: "app/,tests/" }
+      - { id: django, dir: "apps/,templates/" }
+      - { id: fastapi, dir: "app/routers/,models/,schemas/" }
+    types: [api, cli, lib, web]
+    default: src
+
+  typescript:
+    archs:
+      - { id: src, dir: "src/,dist/", best: true }
+      - { id: feature, dir: "features/,shared/" }
+      - { id: modular, dir: "modules/,common/" }
+    types: [api, cli, lib, web]
+    default: src
+
+  rust:
+    archs:
+      - { id: cargo, dir: "src/,tests/", best: true }
+      - { id: workspace, dir: "crates/,common/" }
+      - { id: binary, dir: "src/bin/,lib/" }
+    types: [cli, lib, api]
+    default: cargo
+
+  cpp:
+    archs:
+      - { id: cmake, dir: "src/,include/,tests/", best: true }
+      - { id: single, dir: "src/" }
+      - { id: library, dir: "include/,src/,examples/" }
+    types: [lib, cli, app]
+    default: cmake
+
+  csharp:
+    archs:
+      - { id: clean, dir: "Domain/,Application/,Infra/,API/", best: true }
+      - { id: mvvm, dir: "Models/,Views/,ViewModels/" }
+      - { id: mvc, dir: "Controllers/,Models/,Views/" }
+      - { id: minimal, dir: "single file" }
+      - { id: feature, dir: "Features/{name}/" }
+    types: [api, web, desktop, mobile]
+    default: clean
+
+  java:
+    archs:
+      - { id: maven, dir: "src/main/java/,src/test/", best: true }
+      - { id: gradle, dir: "app/,lib/" }
+      - { id: spring, dir: "controller/,service/,repository/" }
+      - { id: clean, dir: "domain/,application/,infra/" }
+    types: [api, lib, web]
+    default: maven
+
+  kotlin:
+    archs:
+      - { id: android, dir: "app/,buildSrc/", best: true }
+      - { id: multiplatform, dir: "shared/,android/,ios/" }
+      - { id: ktor, dir: "routes/,plugins/" }
+      - { id: compose, dir: "ui/,data/,domain/" }
+    types: [mobile, api, lib]
+    default: android
+
+  swift:
+    archs:
+      - { id: swiftpm, dir: "Sources/,Tests/", best: true }
+      - { id: ios, dir: "App/,Views/,Models/" }
+      - { id: mvvm, dir: "Views/,ViewModels/,Services/" }
+      - { id: tca, dir: "Features/,Core/" }
+    types: [mobile, cli, lib]
+    default: swiftpm
+
+  php:
+    archs:
+      - { id: laravel, dir: "app/,routes/,resources/", best: true }
+      - { id: symfony, dir: "src/,config/,templates/" }
+      - { id: psr4, dir: "src/,public/,vendor/" }
+      - { id: wordpress, dir: "themes/,plugins/" }
+    types: [web, api, cli]
+    default: laravel
+
+  lua:
+    archs:
+      - { id: standard, dir: "src/,spec/", best: true }
+      - { id: love2d, dir: "main.lua,conf.lua" }
+      - { id: neovim, dir: "lua/,plugin/" }
+    types: [script, game, plugin]
+    default: standard
+
+  # === FRAMEWORKS ===
+
+  react:
+    archs:
+      - { id: vite, dir: "src/,public/", best: true }
+      - { id: feature, dir: "features/,shared/" }
+      - { id: atomic, dir: "atoms/,molecules/,organisms/" }
+    types: [web, lib]
+    default: vite
+
+  vue:
+    archs:
+      - { id: vite, dir: "src/,public/", best: true }
+      - { id: nuxt, dir: "pages/,composables/,server/" }
+      - { id: pinia, dir: "stores/,views/" }
+    types: [web, ssr]
+    default: vite
+
+  nextjs:
+    archs:
+      - { id: app, dir: "app/,components/,lib/", best: true }
+      - { id: pages, dir: "pages/,components/,lib/" }
+      - { id: fullstack, dir: "app/,prisma/,lib/" }
+    types: [web, ssr, fullstack]
+    default: app
+
+  # === DEVOPS ===
+
+  docker:
+    archs:
+      - { id: multistage, file: "multi-stage Dockerfile", best: true }
+      - { id: single, file: "simple Dockerfile" }
+      - { id: compose, file: "docker-compose.yml" }
+    types: [container]
+    default: multistage
+
+  kubernetes:
+    archs:
+      - { id: helm, dir: "charts/,values/", best: true }
+      - { id: kustomize, dir: "base/,overlays/" }
+      - { id: manifest, dir: "k8s/" }
+      - { id: gitops, dir: "argocd/,flux/" }
+    types: [orchestration]
+    default: helm
+
+  aws:
+    archs:
+      - { id: cdk, dir: "lib/,bin/", best: true }
+      - { id: sam, dir: "template.yaml,functions/" }
+      - { id: terraform, dir: "modules/,envs/" }
+    types: [infra]
+    default: cdk
+
+  ci-cd:
+    archs:
+      - { id: github, file: ".github/workflows/", best: true }
+      - { id: gitlab, file: ".gitlab-ci.yml" }
+      - { id: jenkins, file: "Jenkinsfile" }
+    types: [pipeline]
+    default: github
+
+  # === SUPPORT ===
+
+  database:
+    archs:
+      - { id: migration, dir: "migrations/,seeds/", best: true }
+      - { id: orm, dir: "models/,repositories/" }
+      - { id: raw, dir: "sql/,scripts/" }
+    types: [schema]
+    default: migration
+
+  testing:
+    archs:
+      - { id: colocated, dir: "*.test.ts next to src", best: true }
+      - { id: separate, dir: "tests/,__tests__/" }
+      - { id: e2e, dir: "e2e/,playwright/" }
+    types: [unit, integration, e2e]
+    default: colocated
+
+  security:
+    archs:
+      - { id: owasp, file: "security-headers,CSP,CORS" }
+      - { id: hardened, file: "container-security,secrets" }
+    types: [audit]
+    default: owasp
+
+  # === ASM ===
+  asm:
+    archs:
+      - { id: flat, dir: "src/,include/", best: true }
+      - { id: project, dir: "asm/,data/,inc/" }
+    types: [binary, lib]
+    default: flat
+
+# ============================================
+# CROSS-CUTTING PATTERNS (P1/P2 Additions)
+# ============================================
+
+patterns:
+  # MONOREPO (P1)
+  monorepo:
+    tools:
+      - { id: turborepo, cmd: "npx create-turbo@latest", best: true }
+      - { id: nx, cmd: "npx create-nx-workspace" }
+      - { id: pnpm, cmd: "pnpm init", config: "pnpm-workspace.yaml" }
+      - { id: lerna, cmd: "npx lerna init", note: "legacy" }
+    structure: "apps/,packages/,libs/"
+
+  # ENVIRONMENT (P1)
+  environment:
+    files: [".env", ".env.example", ".env.local", ".env.production"]
+    secrets: ["vault", "aws-secrets", "doppler", "infisical"]
+    validation: ["dotenv", "envalid", "zod"]
+
+  # DEPENDENCY INJECTION (P2)
+  di:
+    csharp: ["Microsoft.DI", "Autofac", "Ninject"]
+    java: ["Spring", "Guice", "Dagger"]
+    kotlin: ["Hilt", "Koin", "Kodein"]
+    typescript: ["tsyringe", "inversify", "typedi"]
+    python: ["dependency-injector", "injector"]
+    go: ["wire", "fx", "dig"]
+
+  # OBSERVABILITY (P2)
+  observability:
+    logging: ["slog", "zap", "winston", "pino"]
+    tracing: ["otel", "jaeger", "zipkin"]
+    metrics: ["prometheus", "grafana", "datadog"]
+    apm: ["sentry", "newrelic", "elastic-apm"]
+
+  # API GATEWAY (P2)
+  api_gateway:
+    patterns: ["kong", "traefik", "nginx", "envoy"]
+    auth: ["oauth2", "jwt", "apikey"]
+    features: ["rate-limit", "circuit-breaker", "retry"]
+
+  # LINTING (P3)
+  linting:
+    go: "golangci-lint"
+    python: "ruff"
+    typescript: "eslint+prettier"
+    rust: "clippy"
+    csharp: "dotnet-format"
+
+  # GIT HOOKS (P3)
+  git_hooks:
+    tools: ["husky", "pre-commit", "lefthook"]
+    checks: ["lint", "test", "typecheck", "commit-msg"]

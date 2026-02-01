@@ -1,0 +1,79 @@
+# DOMYH Agent — Memory Paths v4.3
+# Single Source of Truth for all memory file paths
+# Eliminates 16 duplicate path definitions across config files
+
+version: "4.3.0"
+engine: memory_paths
+
+# =============================================================================
+# CORE MEMORY PATHS
+# =============================================================================
+
+paths:
+  # Layer 1: Working Memory (always in context)
+  working:
+    session_cache: core/session_cache.json
+
+  # Layer 2: Session Memory
+  session:
+    notes: memory/session.md
+
+  # Layer 3: State Memory
+  state:
+    decisions: memory/decisions.md
+    project_state: memory/state.json
+    audit_summary: memory/audit_summary.json
+
+  # Layer 4: Semantic Memory
+  semantic:
+    vectors: memory/vectors/
+
+  # Active Memory
+  active:
+    memories: memory/active_memories.json
+    insights: memory/insights.md
+    consolidated: memory/consolidated.md
+
+# =============================================================================
+# ARCHIVE PATHS
+# =============================================================================
+
+archive:
+  base: memory/archive/
+  subdirs:
+    sessions: memory/archive/sessions/
+    errors: memory/archive/errors/
+    decisions: memory/archive/decisions/
+    audits: memory/archive/audits/
+    phases: memory/archive/phases/
+    vectors: memory/archive/vectors/
+    consolidation: memory/archive/consolidation/
+    forgotten: memory/archive/forgotten/
+
+# =============================================================================
+# LOG PATHS
+# =============================================================================
+
+logs:
+  cleanup: memory/cleanup_log.json
+  metrics: memory/metrics.json
+  consolidation: memory/consolidation_log.json
+
+# =============================================================================
+# USAGE (How other files reference this)
+# =============================================================================
+
+usage:
+  reference: "core/MEMORY_PATHS.yaml"
+  import_pattern: |
+    # In other config files:
+    paths:
+      reference: core/MEMORY_PATHS.yaml
+      # Use: paths.session.notes, paths.archive.sessions, etc.
+
+  examples:
+    - "MEMORY_ENGINE.yaml → archive.base"
+    - "CONTEXT_INJECTOR.yaml → paths.session.notes"
+    - "CLEANUP_ENGINE.yaml → archive.sessions"
+    - "SUMMARIZATION_ENGINE.yaml → archive.sessions"
+    - "SEMANTIC_ENGINE.yaml → paths.semantic.vectors"

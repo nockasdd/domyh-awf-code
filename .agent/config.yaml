@@ -1,0 +1,234 @@
+# Skills Customization Configuration
+# DOMYH Agent v4.2 - Enhanced with AI Agent Error Research
+
+# =============================================================================
+# PROJECT-LEVEL SKILL CONFIGURATION
+# =============================================================================
+
+# Override default skill behavior for this project
+project:
+  name: auto
+
+# =============================================================================
+# INTERNATIONALIZATION (v4.3)
+# =============================================================================
+
+i18n:
+  default: "en" # English default
+  fallback: "en" # Fallback if key missing
+  strings_path: "./i18n/" # Translation files location
+
+# =============================================================================
+# SKILL LOADING
+# =============================================================================
+
+skills:
+  # Loading strategy: progressive | eager | lazy
+  loading: progressive
+
+  # Maximum skills active at once
+  max_active: 3
+
+  # Cache TTL in seconds
+  cache_ttl: 3600
+
+  # Always preload these skills (T2)
+  preload:
+    - security
+
+  # Disable specific skills for this project
+  disabled: []
+
+  # Priority overrides (lower = higher priority)
+  priority_override:
+    # my-skill: 0
+
+  # v4.1: Auto-suggest configuration
+  auto_suggest:
+    enabled: true
+    display_top: 3
+    show_on_session_start: true
+
+# =============================================================================
+# CUSTOM SKILLS
+# =============================================================================
+
+custom:
+  # Path to custom skills (relative to .agent/)
+  path: ./custom-skills/
+
+  # Auto-load custom skills
+  auto_load: true
+
+  # Generate embeddings on startup
+  auto_embed: false
+
+# =============================================================================
+# DETECTION RULES
+# =============================================================================
+
+detection:
+  # Detect based on file extensions
+  file_based: true
+
+  # Detect based on content patterns
+  pattern_based: true
+
+  # Minimum confidence for auto-activation
+  min_confidence: 0.30
+
+  # Boost for recently used skills
+  recency_boost: 0.15
+
+# =============================================================================
+# CONTEXT SETTINGS
+# =============================================================================
+
+context:
+  # Maximum tokens for T1 baseline
+  t1_budget: 1773
+
+  # Maximum tokens per T2 skill
+  t2_budget: 1500
+
+  # Maximum total context
+  max_context: 6273
+
+  # Include project README in context
+  include_readme: false
+
+# =============================================================================
+# TOKEN MANAGEMENT (v4.1)
+# Dynamic unloading to keep context lean
+# =============================================================================
+
+token_management:
+  # Enable dynamic skill unloading
+  dynamic_unload: true
+
+  # Unload inactive skills after N seconds
+  unload_after_idle: 300 # 5 minutes
+
+  # Unload skill when switching to different workflow
+  unload_on_switch: true
+
+  # Skills to never unload
+  keep_core:
+    - security
+
+  # Warning threshold (% of max_context)
+  warning_threshold: 0.80
+
+  # Critical threshold - force unload
+  critical_threshold: 0.95
+
+# =============================================================================
+# CONTEXT CLEANUP (v4.1)
+# Automatic context hygiene
+# =============================================================================
+
+context_cleanup:
+  # Enable cleanup
+  enabled: true
+
+  # Maximum interactions to keep in history
+  max_history: 10
+
+  # Summarize older interactions instead of keeping full
+  summarize_old: true
+
+  # Auto-cleanup on workflow switch
+  cleanup_on_switch: true
+
+  # Patterns to auto-remove from context
+  auto_remove:
+    - large_file_contents # Remove full file views after processing
+    - stack_traces # Remove after debugging
+    - build_logs # Remove successful build logs
+
+# =============================================================================
+# PROJECT TRACKING (v4.1)
+# =============================================================================
+
+project_tracking:
+  # Enable .domyh/project.json tracking
+  enabled: true
+
+  # Auto-save state after each phase
+  auto_save: true
+
+  # State file location
+  state_file: .domyh/project.json
+
+  # Schema validation
+  schema: project.schema.json
+
+# =============================================================================
+# RULES ENGINE (v4.2) - Based on AI Agent Error Research
+# Prevents 62+ documented agent failures
+# =============================================================================
+
+rules_engine:
+  # Enable rules system
+  enabled: true
+
+  # Core rules (always applied)
+  core_rules:
+    - prompt-injection-guard # Priority 0 - Security
+    - context-management # Priority 1 - Token optimization
+    - terminal-safety # Priority 2 - Command execution
+    - edit-verification # Priority 2 - Code changes
+    - safety # Priority 1 - Dangerous actions
+    - stop-conditions # Priority 2 - When to pause
+    - quality # Priority 3 - Code standards
+    - evidence # Priority 3 - Citations
+
+  # Rules by category
+  categories:
+    security:
+      - prompt-injection-guard
+      - safety
+    execution:
+      - terminal-safety
+      - edit-verification
+    optimization:
+      - context-management
+    workflow:
+      - stop-conditions
+      - evidence
+      - quality
+
+  # Terminal safety thresholds
+  terminal:
+    command_timeout_seconds: 60
+    max_output_wait_seconds: 180
+    failed_command_retry_limit: 2
+    dangerous_commands_require_confirm: true
+
+  # Context management thresholds
+  context:
+    warning_tokens: 15000
+    critical_tokens: 20000
+    max_tokens: 25000
+    auto_summarize_after_interactions: 10
+    cleanup_on_workflow_switch: true
+
+  # Edit verification requirements
+  editing:
+    require_diff_evidence: true
+    require_syntax_check: true
+    scope_limit_enabled: true
+    protected_file_patterns:
+      - ".env*"
+      - "*.key"
+      - "*.pem"
+      - "id_rsa*"
+      - "credentials.*"
+      - "secrets.*"
+
+  # Prompt injection protection
+  security:
+    block_external_commands: true
+    sanitize_user_content: true
+    mask_secrets_in_output: true
+    block_yolo_mode: true

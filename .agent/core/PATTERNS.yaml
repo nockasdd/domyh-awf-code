@@ -1,0 +1,319 @@
+# DOMYH Agent — Shared Patterns Library
+# Version: 4.3
+# Purpose: Reduce token duplication across workflows
+
+# =============================================================================
+# PHASE FLOW PATTERNS
+# =============================================================================
+
+phase_flows:
+  # Standard 5-phase flow (most common)
+  standard_5:
+    phases: [DETECT, ANALYZE, EXECUTE, VERIFY, REPORT]
+    icons: ["🔍", "📊", "⚡", "✅", "📋"]
+    stop_points: [ANALYZE, EXECUTE]
+
+  # Planning flow
+  planning_5:
+    phases: [UNDERSTAND, ANALYZE, DESIGN, BREAKDOWN, VALIDATE]
+    icons: ["🎯", "📊", "✏️", "📋", "✅"]
+    stop_points: [DESIGN, VALIDATE]
+
+  # Audit flow
+  audit_4:
+    phases: [DISCOVER, ANALYZE, REPORT, RECOMMEND]
+    icons: ["🔍", "📊", "📋", "💡"]
+    stop_points: [REPORT]
+
+  # Quick flow (utility commands)
+  quick_3:
+    phases: [COLLECT, PROCESS, OUTPUT]
+    icons: ["📥", "⚙️", "📤"]
+    stop_points: []
+
+# =============================================================================
+# STACK DETECTION PATTERNS
+# =============================================================================
+
+stack_detection:
+  # Node.js/TypeScript
+  nodejs:
+    files: ["package.json", "tsconfig.json", "node_modules"]
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
+    package_managers: ["npm", "yarn", "pnpm", "bun"]
+
+  # Go
+  golang:
+    files: ["go.mod", "go.sum", "main.go"]
+    extensions: [".go"]
+    commands: ["go"]
+
+  # Python
+  python:
+    files: ["requirements.txt", "pyproject.toml", "setup.py", "Pipfile"]
+    extensions: [".py"]
+    package_managers: ["pip", "poetry", "pipenv", "uv"]
+
+  # Rust
+  rust:
+    files: ["Cargo.toml", "Cargo.lock"]
+    extensions: [".rs"]
+    commands: ["cargo"]
+
+  # Java
+  java:
+    files: ["pom.xml", "build.gradle", "build.gradle.kts"]
+    extensions: [".java", ".kt"]
+    build_tools: ["maven", "gradle"]
+
+  # .NET
+  dotnet:
+    files: ["*.csproj", "*.sln", "*.fsproj"]
+    extensions: [".cs", ".fs"]
+    commands: ["dotnet"]
+
+  # PHP
+  php:
+    files: ["composer.json", "composer.lock"]
+    extensions: [".php"]
+    commands: ["composer"]
+
+  # Ruby
+  ruby:
+    files: ["Gemfile", "Gemfile.lock", "*.gemspec"]
+    extensions: [".rb"]
+    commands: ["bundle", "gem"]
+
+# =============================================================================
+# STOP CONDITIONS
+# =============================================================================
+
+stop_conditions:
+  # Always stop
+  critical:
+    - "Before destructive operations (delete, drop, reset)"
+    - "Before production changes"
+    - "Before committing sensitive changes"
+    - "When user approval explicitly required"
+
+  # Stop for confirmation
+  confirm:
+    - "Breaking changes detected"
+    - "Security implications found"
+    - "Multiple solutions available"
+    - "Scope exceeds initial request"
+
+  # Ask for clarification
+  clarify:
+    - "Ambiguous requirements"
+    - "Missing information"
+    - "Conflicting constraints"
+
+# =============================================================================
+# VERIFICATION PATTERNS
+# =============================================================================
+
+verification:
+  # Code verification
+  code:
+    - "Syntax check (compile/lint)"
+    - "Type check"
+    - "Unit tests pass"
+    - "No security issues"
+
+  # Build verification
+  build:
+    - "Clean build succeeds"
+    - "No warnings (or acceptable)"
+    - "Output artifacts generated"
+
+  # Deployment verification
+  deploy:
+    - "Health check passes"
+    - "Smoke tests pass"
+    - "Logs clean"
+    - "Metrics normal"
+
+# =============================================================================
+# OUTPUT FORMATS
+# =============================================================================
+
+output_formats:
+  # Summary table
+  summary_table:
+    columns: ["Category", "Status", "Details"]
+    status_icons:
+      pass: "✅"
+      warn: "🟡"
+      fail: "🔴"
+      skip: "⏭️"
+
+  # Action items
+  action_items:
+    format: "| Priority | Action | Owner |"
+    priorities:
+      - "🔴 Critical"
+      - "🟠 High"
+      - "🟡 Medium"
+      - "🔵 Low"
+
+  # Progress indicator
+  progress:
+    format: "████████░░ 80%"
+    symbols:
+      filled: "█"
+      empty: "░"
+
+# =============================================================================
+# TOKEN SAVING RULES
+# =============================================================================
+
+token_saving:
+  rules:
+    - "Use tables over prose"
+    - "Use YAML over JSON"
+    - "Reference patterns, don't inline"
+    - "Summarize, don't repeat"
+    - "Focus on current phase only"
+    - "Unload completed context"
+
+  # Reference TOKEN_BUDGETS.yaml as SSoT (v4.3 cleanup)
+  thresholds:
+    reference: core/TOKEN_BUDGETS.yaml
+    use:
+      warning: workflow.thresholds.high_load # 8000
+      critical: workflow.thresholds.peak_usage # 12000
+      max: global.max_allowed # 25000
+
+  actions:
+    at_warning: "Summarize older interactions"
+    at_critical: "Unload non-essential skills"
+    at_max: "Request context cleanup"
+
+# =============================================================================
+# EVIDENCE REQUIREMENTS
+# =============================================================================
+
+evidence:
+  format: "file:line"
+
+  required_for:
+    - "Bug reports"
+    - "Security findings"
+    - "Performance issues"
+    - "Code changes"
+
+  includes:
+    - "File path"
+    - "Line number(s)"
+    - "Code snippet"
+    - "Explanation"
+
+# =============================================================================
+# COMMON COMMANDS BY STACK
+# =============================================================================
+
+commands:
+  test:
+    nodejs: "npm test"
+    golang: "go test ./..."
+    python: "pytest"
+    rust: "cargo test"
+    java_maven: "mvn test"
+    java_gradle: "./gradlew test"
+    dotnet: "dotnet test"
+    php: "composer test"
+    ruby: "bundle exec rspec"
+
+  build:
+    nodejs: "npm run build"
+    golang: "go build"
+    python: "python -m build"
+    rust: "cargo build"
+    java_maven: "mvn package"
+    java_gradle: "./gradlew build"
+    dotnet: "dotnet build"
+    php: "composer build"
+    ruby: "bundle exec rake build"
+
+  lint:
+    nodejs: "npm run lint"
+    golang: "golangci-lint run"
+    python: "ruff check ."
+    rust: "cargo clippy"
+    java: "mvn checkstyle:check"
+    dotnet: "dotnet format --verify-no-changes"
+    php: "composer lint"
+    ruby: "bundle exec rubocop"
+
+  format:
+    nodejs: "prettier --write ."
+    golang: "gofmt -w ."
+    python: "black ."
+    rust: "cargo fmt"
+    java: "mvn spotless:apply"
+    dotnet: "dotnet format"
+    php: "composer format"
+    ruby: "bundle exec rubocop -a"
+
+# =============================================================================
+# UTILITY DIRECTORY PATTERNS (Code Deduplication)
+# =============================================================================
+
+utility_directories:
+  # Standard locations to search before adding new utils
+  nodejs:
+    search_order:
+      - "src/lib/"
+      - "src/utils/"
+      - "src/helpers/"
+      - "lib/"
+      - "utils/"
+    create_in: "src/utils/"
+
+  golang:
+    search_order:
+      - "pkg/"
+      - "internal/utils/"
+      - "internal/helpers/"
+      - "internal/common/"
+    create_in: "pkg/"
+
+  python:
+    search_order:
+      - "src/utils/"
+      - "utils/"
+      - "common/"
+      - "helpers/"
+    create_in: "src/utils/"
+
+  java:
+    search_order:
+      - "src/main/java/**/utils/"
+      - "src/main/java/**/common/"
+      - "src/main/java/**/helpers/"
+    create_in: "src/main/java/{package}/utils/"
+
+  csharp:
+    search_order:
+      - "Common/"
+      - "Utilities/"
+      - "Helpers/"
+      - "Shared/"
+    create_in: "Common/"
+
+  php:
+    search_order:
+      - "src/Utils/"
+      - "app/Helpers/"
+      - "lib/"
+    create_in: "src/Utils/"
+
+  # Common utility categories
+  categories:
+    string: ["format", "parse", "truncate", "slugify"]
+    validation: ["validate", "isValid", "check", "assert"]
+    http: ["request", "response", "header", "url"]
+    crypto: ["hash", "encrypt", "decrypt", "random"]
+    file: ["read", "write", "path", "ensure"]
+    date: ["format", "parse", "diff", "add"]

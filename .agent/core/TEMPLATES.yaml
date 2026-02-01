@@ -1,0 +1,149 @@
+# DOMYH Agent — External Templates Registry
+# Version: 4.3
+# Purpose: Reduce inline templates in workflows
+
+# =============================================================================
+# DOCKER TEMPLATES
+# =============================================================================
+
+docker:
+  # Basic docker-compose for development
+  compose_dev:
+    path: templates/docker/docker-compose.dev.yaml
+    description: "Development docker-compose with hot reload"
+
+  # Production docker-compose
+  compose_prod:
+    path: templates/docker/docker-compose.prod.yaml
+    description: "Production docker-compose with health checks"
+
+  # Observability stack
+  compose_observability:
+    path: templates/docker/docker-compose.observability.yaml
+    description: "Prometheus + Grafana + Loki + Tempo stack"
+
+# =============================================================================
+# CI/CD TEMPLATES
+# =============================================================================
+
+cicd:
+  # GitHub Actions
+  github:
+    ci: templates/cicd/github/ci.yaml
+    deploy: templates/cicd/github/deploy.yaml
+    release: templates/cicd/github/release.yaml
+
+  # GitLab CI
+  gitlab:
+    ci: templates/cicd/gitlab/.gitlab-ci.yml
+
+  # Azure DevOps
+  azure:
+    pipeline: templates/cicd/azure/azure-pipelines.yml
+
+# =============================================================================
+# DATABASE MIGRATION TEMPLATES
+# =============================================================================
+
+database:
+  # Migration tools
+  atlas:
+    config: templates/db/atlas.hcl
+    migration: templates/db/migrations/
+
+  prisma:
+    schema: templates/db/prisma/schema.prisma
+
+  goose:
+    config: templates/db/goose/dbconf.yml
+
+  # Seed data
+  seeds:
+    path: templates/db/seeds/
+    formats: [sql, json, yaml]
+
+# =============================================================================
+# API DOCUMENTATION TEMPLATES
+# =============================================================================
+
+api:
+  # OpenAPI/Swagger
+  openapi:
+    base: templates/api/openapi.yaml
+    components: templates/api/components/
+
+  # AsyncAPI
+  asyncapi:
+    base: templates/api/asyncapi.yaml
+
+  # GraphQL
+  graphql:
+    schema: templates/api/schema.graphql
+
+# =============================================================================
+# ENVIRONMENT TEMPLATES
+# =============================================================================
+
+environment:
+  # .env templates by environment
+  local: templates/env/.env.local.template
+  development: templates/env/.env.development.template
+  staging: templates/env/.env.staging.template
+  production: templates/env/.env.production.template
+
+  # Common variables
+  common: templates/env/.env.common
+
+# =============================================================================
+# MONITORING TEMPLATES
+# =============================================================================
+
+monitoring:
+  # Prometheus
+  prometheus:
+    config: templates/monitoring/prometheus/prometheus.yml
+    rules: templates/monitoring/prometheus/rules/
+
+  # Grafana
+  grafana:
+    dashboards: templates/monitoring/grafana/dashboards/
+    datasources: templates/monitoring/grafana/datasources/
+
+  # AlertManager
+  alertmanager:
+    config: templates/monitoring/alertmanager/alertmanager.yml
+
+# =============================================================================
+# CODE TEMPLATES
+# =============================================================================
+
+code:
+  # By language
+  golang:
+    service: templates/code/go/service.go.tmpl
+    handler: templates/code/go/handler.go.tmpl
+    repository: templates/code/go/repository.go.tmpl
+    test: templates/code/go/test.go.tmpl
+
+  typescript:
+    component: templates/code/ts/component.tsx.tmpl
+    hook: templates/code/ts/hook.ts.tmpl
+    service: templates/code/ts/service.ts.tmpl
+    test: templates/code/ts/test.ts.tmpl
+
+  python:
+    fastapi_route: templates/code/python/route.py.tmpl
+    model: templates/code/python/model.py.tmpl
+    test: templates/code/python/test.py.tmpl
+
+# =============================================================================
+# USAGE IN WORKFLOWS
+# =============================================================================
+
+# Instead of inline templates in workflows, reference like:
+#
+# ```yaml
+# template: $ref:docker.compose_observability
+# ```
+#
+# The agent will load from: templates/docker/docker-compose.observability.yaml

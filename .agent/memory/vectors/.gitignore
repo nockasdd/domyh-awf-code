@@ -1,0 +1,11 @@
+# Ignore LanceDB database files
+*.lance/
+*.lance
+domyh_memory.lance/
+
+# Ignore backup files
+*.bak
+*.backup
+
+# Keep README
+!README.md

@@ -1,0 +1,89 @@
+name: kubernetes
+version: "4.3.0"
+category: devops
+tier: 1
+
+description: |
+  Container orchestration platform patterns for Kubernetes 1.30/1.31.
+  Covers deployments, services, Helm 3, ArgoCD GitOps, scaling, security.
+
+triggers:
+  file_patterns:
+    - "*.yaml"
+    - "helm/"
+    - "Chart.yaml"
+    - "values.yaml"
+    - "kustomization.yaml"
+  keywords:
+    # Core
+    - kubernetes
+    - k8s
+    - kubectl
+    - pod
+    - deployment
+    - service
+    - ingress
+    - configmap
+    - secret
+    # Helm
+    - helm
+    - helm chart
+    - values.yaml
+    - Chart.yaml
+    - helm install
+    - helm upgrade
+    # ArgoCD/GitOps
+    - argocd
+    - argo cd
+    - gitops
+    - flux
+    - applicationset
+    # Scaling
+    - hpa
+    - autoscaling
+    - horizontal pod autoscaler
+    - vpa
+    - vertical pod autoscaler
+    # Networking
+    - network policy
+    - ingress controller
+    - nginx ingress
+    - traefik
+    - service mesh
+    - istio
+    # Security
+    - rbac
+    - role binding
+    - service account
+    - pod security
+    - security context
+    # Tools
+    - k9s
+    - lens
+    - kubectx
+    - kubens
+    - kustomize
+    # Operations
+    - rollout
+    - deployment strategy
+    - rolling update
+    - blue green
+    - canary
+    - pod disruption budget
+    - pdb
+  intents:
+    - deploy to kubernetes
+    - create helm chart
+    - scale deployment
+    - configure ingress
+    - setup argocd
+    - kubernetes security
+
+related_skills:
+  - docker
+  - aws
+  - ci-cd
+
+prevent_confusion_with:
+  - docker: "K8s orchestrates containers, Docker builds them"
+  - aws-serverless: "K8s for container orchestration, not Lambda"

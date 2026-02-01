@@ -1,0 +1,51 @@
+platform,theme,role,color_name,hex,rgb,usage,contrast_ratio
+windows,dark,background,Mica Base,#202020,"32,32,32",Window background with depth,N/A
+windows,dark,background,Acrylic,#2D2D2D,"45,45,45",Flyouts and overlays,N/A
+windows,dark,surface,Card Base,#2D2D2D,"45,45,45",Card and panel backgrounds,N/A
+windows,dark,surface,Card Hover,#383838,"56,56,56",Elevated surface states,N/A
+windows,dark,text,Primary Text,#FFFFFF,"255,255,255",Headlines and primary content,15.8:1
+windows,dark,text,Secondary Text,#C5C5C5,"197,197,197",Supporting text and labels,11.5:1
+windows,dark,accent,Accent Primary,#60CDFF,"96,205,255",Primary actions and links,8.2:1
+windows,dark,accent,Accent Hover,#98D9FF,"152,217,255",Hovered accent elements,6.1:1
+windows,dark,border,Subtle Border,#454545,"69,69,69",Dividers and separators,N/A
+windows,dark,border,Control Border,#6B6B6B,"107,107,107",Input field borders,N/A
+windows,light,background,Mica Base,#F3F3F3,"243,243,243",Window background with depth,N/A
+windows,light,background,Acrylic,#FCFCFC,"252,252,252",Flyouts and overlays,N/A
+windows,light,surface,Card Base,#FFFFFF,"255,255,255",Card and panel backgrounds,N/A
+windows,light,surface,Card Hover,#F5F5F5,"245,245,245",Elevated surface states,N/A
+windows,light,text,Primary Text,#1A1A1A,"26,26,26",Headlines and primary content,17.4:1
+windows,light,text,Secondary Text,#5C5C5C,"92,92,92",Supporting text and labels,7.6:1
+windows,light,accent,Accent Primary,#005FB8,"0,95,184",Primary actions and links,5.9:1
+windows,light,accent,Accent Hover,#0066CC,"0,102,204",Hovered accent elements,5.4:1
+windows,light,border,Subtle Border,#E0E0E0,"224,224,224",Dividers and separators,N/A
+windows,light,border,Control Border,#C4C4C4,"196,196,196",Input field borders,N/A
+macos,dark,background,Window,#1E1E1E,"30,30,30",Window background,N/A
+macos,dark,background,Vibrancy,#252525,"37,37,37",Sidebar and overlays,N/A
+macos,dark,surface,Card,#2C2C2C,"44,44,44",Card backgrounds,N/A
+macos,dark,text,Label,#FFFFFF,"255,255,255",Primary labels,16.1:1
+macos,dark,text,Secondary Label,#EBEBF599,"235,235,245, 0.6",Secondary text,8.2:1
+macos,dark,accent,System Blue,#007AFF,"0,122,255",Default accent color,5.2:1
+macos,dark,accent,System Green,#30D158,"48,209,88",Success states,7.1:1
+macos,dark,accent,System Red,#FF453A,"255,69,58",Error and destructive,4.8:1
+macos,light,background,Window,#ECECEC,"236,236,236",Window background,N/A
+macos,light,background,Vibrancy,#F5F5F5,"245,245,245",Sidebar and overlays,N/A
+macos,light,surface,Card,#FFFFFF,"255,255,255",Card backgrounds,N/A
+macos,light,text,Label,#000000,"0,0,0",Primary labels,21:1
+macos,light,text,Secondary Label,#3C3C4399,"60,60,67, 0.6",Secondary text,5.8:1
+macos,light,accent,System Blue,#007AFF,"0,122,255",Default accent color,4.5:1
+linux,dark,background,GnomeWindow,#1E1E1E,"30,30,30",libadwaita background,N/A
+linux,dark,surface,GnomeSurface,#303030,"48,48,48",Card and elevated surfaces,N/A
+linux,dark,text,GnomeForeground,#FFFFFF,"255,255,255",Text on dark,15.1:1
+linux,dark,accent,GnomeAccent,#3584E4,"53,132,228",GNOME blue accent,5.8:1
+linux,light,background,GnomeWindow,#FAFAFA,"250,250,250",libadwaita background,N/A
+linux,light,surface,GnomeSurface,#FFFFFF,"255,255,255",Card and elevated surfaces,N/A
+linux,light,text,GnomeForeground,#1E1E1E,"30,30,30",Text on light,15.1:1
+linux,light,accent,GnomeAccent,#1C71D8,"28,113,216",GNOME blue accent,5.1:1
+qt,dark,background,Material Dark,#121212,"18,18,18",Material Design dark,N/A
+qt,dark,surface,Material Surface,#1E1E1E,"30,30,30",Elevated surfaces,N/A
+qt,dark,text,Material OnBackground,#E4E4E4,"228,228,228",Primary text,14.2:1
+qt,dark,accent,Material Primary,#BB86FC,"187,134,252",Primary color,6.1:1
+qt,light,background,Material Light,#FFFFFF,"255,255,255",Material Design light,N/A
+qt,light,surface,Material Surface,#FAFAFA,"250,250,250",Elevated surfaces,N/A
+qt,light,text,Material OnBackground,#121212,"18,18,18",Primary text,17.8:1
+qt,light,accent,Material Primary,#6200EE,"98,0,238",Primary color,7.1:1

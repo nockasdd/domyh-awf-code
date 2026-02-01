@@ -1,0 +1,38 @@
+language,build_system,primary_file,secondary_files,version_indicator,build_command,clean_command,test_command
+C++,Visual Studio 2026,*.slnx,*.vcxproj;*.vcxproj.filters,PlatformToolset=v145 (VS2026),msbuild {sln} /p:Configuration=Release /p:Platform=x64,msbuild {sln} /t:Clean,
+C++,Visual Studio 2022,*.sln,*.vcxproj;*.vcxproj.filters,PlatformToolset=v143 (VS2022),msbuild {sln} /p:Configuration=Release /p:Platform=x64,msbuild {sln} /t:Clean,
+C++,CMake 4.0,CMakeLists.txt,CMakeCache.txt;CMakePresets.json,cmake_minimum_required(VERSION 4.0),cmake --build build --config Release -j8,cmake --build build --target clean,ctest --test-dir build --output-on-failure
+C++,CMake 3.x,CMakeLists.txt,CMakeCache.txt;CMakePresets.json,cmake_minimum_required(VERSION 3.x),cmake --build build --config Release,cmake --build build --target clean,ctest --test-dir build --output-on-failure
+C++,Make,Makefile,GNUmakefile,N/A,make,make clean,make test
+C++,Ninja,build.ninja,CMakeLists.txt,ninja version,ninja -C build,ninja -C build clean,ninja -C build test
+C#,MSBuild .NET 10,*.csproj,*.slnx,<TargetFramework>net10.0</TargetFramework>,dotnet build -c Release,dotnet clean,dotnet test
+C#,MSBuild .NET 9,*.csproj,*.sln,<TargetFramework>net9.0</TargetFramework>,dotnet build -c Release,dotnet clean,dotnet test
+C#,MSBuild (SDK-style),*.csproj,*.sln,Sdk="Microsoft.NET.Sdk",dotnet build -c Release,dotnet clean,dotnet test
+C#,MSBuild (Legacy),*.csproj,*.sln;packages.config,ToolsVersion="4.0",msbuild {csproj} /p:Configuration=Release,msbuild {csproj} /t:Clean,
+Java,Maven,pom.xml,pom.xml (parent),<modelVersion>4.0.0</modelVersion>,mvn package -DskipTests,mvn clean,mvn test
+Java,Gradle,build.gradle,settings.gradle;gradle.properties,id 'java',./gradlew build,./gradlew clean,./gradlew test
+Kotlin,Gradle,build.gradle.kts,settings.gradle.kts,id 'kotlin',./gradlew build,./gradlew clean,./gradlew test
+JavaScript,npm,package.json,package-lock.json,N/A,npm run build,rm -rf node_modules dist,npm test
+JavaScript,Yarn,package.json,yarn.lock,N/A,yarn build,rm -rf node_modules dist,yarn test
+JavaScript,pnpm,package.json,pnpm-lock.yaml,N/A,pnpm build,rm -rf node_modules dist,pnpm test
+JavaScript,Bun,package.json,bun.lockb,N/A,bun run build,rm -rf node_modules dist,bun test
+JavaScript,Deno,deno.json,deno.lock,N/A,deno task build,rm -rf .deno,deno test
+TypeScript,npm,package.json,tsconfig.json,typescript in devDependencies,npm run build,rm -rf node_modules dist,npm test
+TypeScript,Bun,package.json,bun.lockb;tsconfig.json,typescript in devDependencies,bun run build,rm -rf node_modules dist,bun test
+TypeScript,Deno,deno.json,deno.lock,N/A,deno task build,rm -rf .deno,deno test
+Python,pip,requirements.txt,setup.py;pyproject.toml,N/A,pip install -r requirements.txt,rm -rf __pycache__,pytest
+Python,Poetry,pyproject.toml,poetry.lock,[tool.poetry],poetry install && poetry build,rm -rf dist,poetry run pytest
+Python,uv,pyproject.toml,uv.lock,[tool.uv],uv sync && uv build,rm -rf dist,uv run pytest
+Rust,Cargo,Cargo.toml,Cargo.lock,[package],cargo build --release,cargo clean,cargo test
+Go,go mod,go.mod,go.sum,module path,go build ./...,go clean,go test ./...
+Dart,pub,pubspec.yaml,pubspec.lock,sdk: flutter,flutter build,flutter clean,flutter test
+Swift,SwiftPM,Package.swift,Package.resolved,// swift-tools-version:5.9,swift build -c release,swift package clean,swift test
+Swift,Xcode,*.xcodeproj,*.xcworkspace,N/A,xcodebuild -scheme {scheme} -configuration Release,xcodebuild clean,xcodebuild test
+Ruby,Bundler,Gemfile,Gemfile.lock,source 'https://rubygems.org',bundle install,rm -rf vendor/bundle,bundle exec rspec
+PHP,Composer,composer.json,composer.lock,N/A,composer install,rm -rf vendor,./vendor/bin/phpunit
+Elixir,Mix,mix.exs,mix.lock,def project do,mix compile,mix clean,mix test
+Scala,sbt,build.sbt,project/build.properties,scalaVersion :=,sbt compile,sbt clean,sbt test
+Lua,LuaRocks,*.rockspec,N/A,rockspec_format,luarocks build,luarocks remove,busted
+Assembly,Make,Makefile,N/A,N/A,make,make clean,
+C,Make,Makefile,N/A,N/A,make,make clean,make test
+C,CMake,CMakeLists.txt,CMakeCache.txt,project(... LANGUAGES C),cmake --build build,cmake --build build --target clean,ctest

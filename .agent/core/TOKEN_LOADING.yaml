@@ -1,0 +1,197 @@
+# DOMYH Agent — Token Loading Strategy v4.2
+# Optimizes workflow loading for minimal token consumption
+
+# =============================================================================
+# LOADING CONFIGURATION
+# =============================================================================
+
+version: "4.3.0"
+strategy: lazy_sections
+
+# Section-based lazy loading
+# Instead of loading entire workflow files, load sections on-demand
+
+sections:
+  # Always loaded (minimal tokens)
+  core:
+    includes:
+      - frontmatter
+      - flow_diagram
+      - commands_table
+    max_tokens: 500
+
+  # Loaded when phase activates
+  phase_content:
+    trigger: "on_phase_start"
+    max_tokens: 800
+
+  # Loaded only when needed
+  reference:
+    includes:
+      - language_specific
+      - templates
+      - examples
+    trigger: "on_request"
+    max_tokens: 2000
+
+# =============================================================================
+# WORKFLOW OPTIMIZATION REGISTRY
+# =============================================================================
+
+optimized_workflows:
+  # Large workflows (>20KB) - use section loading
+  generate:
+    strategy: section_loading
+    core_sections: [flow, commands]
+    deferred: [templates_by_language, examples]
+
+  monitor:
+    strategy: section_loading
+    core_sections: [flow, commands, pillars]
+    deferred: [docker_compose, alertmanager, grafana]
+
+  env:
+    strategy: section_loading
+    core_sections: [flow, commands]
+    deferred: [templates, language_configs]
+
+  doc:
+    strategy: section_loading
+    core_sections: [flow, commands, types]
+    deferred: [templates, examples]
+
+  migrate:
+    strategy: section_loading
+    core_sections: [flow, commands]
+    deferred: [tool_configs, examples]
+
+  modify:
+    strategy: section_loading
+    core_sections: [flow, commands]
+    deferred: [language_patterns, modernization]
+
+  # Medium workflows (10-20KB) - full load OK
+  debug: { strategy: full_load }
+  deploy: { strategy: full_load }
+  clean: { strategy: full_load }
+  init: { strategy: full_load }
+  perf: { strategy: full_load }
+  code: { strategy: full_load }
+  plan: { strategy: full_load }
+
+  # Small workflows (<10KB) - always full load
+  ap: { strategy: full_load }
+  help: { strategy: full_load }
+  refactor: { strategy: full_load }
+  test: { strategy: full_load }
+  upgrade: { strategy: full_load }
+  orchestrate: { strategy: full_load }
+  review: { strategy: full_load }
+  status: { strategy: full_load }
+  suggest: { strategy: full_load }
+  think: { strategy: full_load }
+  visualize: { strategy: full_load }
+  dev: { strategy: full_load }
+  revert: { strategy: full_load }
+  recap: { strategy: full_load }
+
+# =============================================================================
+# TOKEN BUDGET ENFORCEMENT
+# =============================================================================
+
+budgets:
+  idle:
+    max_tokens: 2500
+    includes: [core_rules, t1_metadata]
+
+  single_workflow:
+    max_tokens: 5000
+    includes: [idle, workflow_core]
+
+  workflow_plus_skills:
+    max_tokens: 8000
+    includes: [single_workflow, up_to_3_skills]
+
+  peak:
+    max_tokens: 12000
+    includes: [workflow_plus_skills, deferred_sections]
+    warning_at: 10000
+
+# =============================================================================
+# CLEANUP TRIGGERS
+# =============================================================================
+
+cleanup:
+  # Auto-cleanup triggers
+  triggers:
+    - on_workflow_switch
+    - on_phase_complete
+    - at_token_threshold
+
+  # What to clean
+  actions:
+    on_workflow_switch:
+      - unload_previous_workflow
+      - unload_unused_skills
+      - summarize_history
+
+    on_phase_complete:
+      - unload_phase_specific_content
+      - keep_only_outputs
+
+    at_token_threshold:
+      threshold: 10000
+      actions:
+        - aggressive_summarization
+        - unload_all_deferred
+        - keep_core_only
+
+# =============================================================================
+# CACHING
+# =============================================================================
+
+cache:
+  enabled: true
+
+  # Cache frequently used workflows
+  preload_on_session:
+    - help # Users often start with help
+    - code # Most common workflow
+
+  # Cache TTL by workflow type
+  ttl:
+    development: 3600 # 1 hour
+    planning: 3600
+    deployment: 1800 # 30 min (changes more often)
+    quality: 3600
+    utility: 7200 # 2 hours (rarely changes)
+
+# =============================================================================
+# MEMORY ENGINE INTEGRATION
+# =============================================================================
+
+memory:
+  enabled: true
+  config_file: core/MEMORY_ENGINE.yaml
+
+  # Layer token budgets (must fit within peak budget)
+  layer_budgets:
+    working: 500
+    session: 2000
+    state: 500
+    semantic: 2500 # Only if enabled
+
+  # Auto-load on session start
+  auto_load:
+    - state.json
+    - session.md
+
+  # Sync with token budgets
+  sync:
+    respect_cleanup_triggers: true
+    include_in_token_count: true
+
+  # Memory files location
+  storage:
+    base_dir: memory/
+    session_cache: core/session_cache.json

@@ -1,0 +1,114 @@
+name: tailwind
+version: "4.3.0"
+category: styling
+tier: 1
+
+description: |
+  Utility-first CSS framework for Tailwind CSS 4.
+  Covers CSS-first config, @theme, @utility, design tokens.
+
+triggers:
+  file_patterns:
+    - "tailwind.config.js"
+    - "tailwind.config.ts"
+    - "*.css"
+  keywords:
+    # Core
+    - tailwind
+    - tailwindcss
+    - tailwind css
+    - tailwind 4
+    - tailwind v4
+    # Config
+    - "@theme"
+    - "@utility"
+    - "@import tailwindcss"
+    - "@tailwind"
+    - tailwind config
+    # Utilities
+    - utility class
+    - utility first
+    - jit mode
+    # Responsive
+    - sm:
+    - md:
+    - lg:
+    - xl:
+    - 2xl:
+    # States
+    - hover:
+    - focus:
+    - active:
+    - disabled:
+    - dark:
+    # Layout
+    - flex
+    - grid
+    - container
+    # Spacing
+    - p-
+    - m-
+    - gap-
+    - space-
+    # Typography
+    - text-
+    - font-
+    - leading-
+    # Colors
+    - bg-
+    - text-
+    - border-
+    # Effects
+    - shadow-
+    - opacity-
+    - rounded-
+    # Container Queries
+    - "@container"
+    - "@lg:"
+    - "@md:"
+    # Design Tokens
+    - css variables tailwind
+    - design system tailwind
+    # Tools
+    - tailwind intellisense
+    - prettier tailwind
+    - tailwind merge
+  intents:
+    - tailwind styling
+    - utility classes
+    - tailwind component
+    - tailwind design system
+    - css utilities
+
+related_skills:
+  - react
+  - vue
+  - nextjs
+
+prevent_confusion_with:
+  - css: "Tailwind is utility-first CSS"
+  - sass: "Tailwind v4 replaces preprocessors"
+  - bootstrap: "Tailwind is utility-first, Bootstrap is component-based"
+
+# Tailwind-specific APIs NOT in other CSS frameworks
+unique_apis:
+  - "@theme { } (CSS-first config)"
+  - "@utility (custom utilities)"
+  - "@import 'tailwindcss'"
+  - "@source (content configuration)"
+  - "@apply (sparingly)"
+  - "@container, @lg:, @md: (container queries)"
+  - "dark: (dark mode variant)"
+  - "hover:, focus:, active:, disabled:"
+  - "sm:, md:, lg:, xl:, 2xl: (responsive)"
+  - "tailwind.config.js/ts (v3 legacy)"
+
+version_features:
+  tailwind3: ["JIT mode", "Arbitrary values", "First-party plugins"]
+  tailwind4:
+    [
+      "@theme CSS config",
+      "@utility",
+      "Container queries native",
+      "Zero-config mode",
+    ]

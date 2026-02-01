@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "last_updated": null,
+  "memories": [],
+  "categories": {
+    "preferences": [],
+    "decisions": [],
+    "patterns": [],
+    "corrections": [],
+    "contexts": [],
+    "insights": []
+  },
+  "stats": {
+    "total_count": 0,
+    "by_category": {},
+    "by_importance": {},
+    "average_weight": 0
+  },
+  "schema": {
+    "id": "uuid",
+    "content": "string",
+    "category": "enum(preferences,decisions,patterns,corrections,contexts,insights)",
+    "weight": "float (0.0-2.0)",
+    "importance": "enum(critical,high,medium,low,minimal)",
+    "created_at": "timestamp",
+    "updated_at": "timestamp",
+    "accessed_count": "int",
+    "last_accessed": "timestamp",
+    "links": "array[uuid]",
+    "keywords": "array[string]",
+    "source": "string",
+    "confidence": "float (0.0-1.0)",
+    "reviewed": "boolean"
+  }
+}

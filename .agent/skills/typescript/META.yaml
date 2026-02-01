@@ -1,0 +1,90 @@
+name: typescript
+version: "4.3.0"
+category: frontend
+tier: 1
+
+description: |
+  Type-safe JavaScript development for TypeScript 5.5/5.6.
+  Covers type patterns, ESM, decorators, advanced inference.
+
+triggers:
+  file_patterns:
+    - "tsconfig.json"
+    - "*.ts"
+    - "*.tsx"
+    - "*.mts"
+    - "*.cts"
+  keywords:
+    # Core
+    - typescript
+    - ts
+    - tsconfig
+    - tsc
+    - typescript 5
+    - typescript 5.5
+    - typescript 5.6
+    # Types
+    - interface typescript
+    - type typescript
+    - generic typescript
+    - utility type
+    - discriminated union
+    - type predicate
+    - type guard
+    - type inference
+    - branded type
+    - literal type
+    - template literal type
+    # Modules
+    - esm
+    - ecmascript module
+    - import type
+    - export type
+    # Features
+    - decorator typescript
+    - enum typescript
+    - namespace
+    - as const
+    - satisfies
+    - using
+    # Strict Mode
+    - strict mode
+    - noUncheckedIndexedAccess
+    - strictNullChecks
+    - no any
+    - unknown type
+    # Build
+    - tsc build
+    - incremental
+    - project references
+    - tsup
+    - tsx
+    # Validation
+    - zod
+    - valibot
+    - effect schema
+    # Tools
+    - biome
+    - eslint typescript
+    - prettier
+    - ts-node
+    # Runtimes
+    - bun
+    - deno
+    - node typescript
+  intents:
+    - typescript project
+    - type definition
+    - typescript interface
+    - typescript config
+    - typescript strict
+
+related_skills:
+  - react
+  - nextjs
+  - nodejs-best-practices
+
+prevent_confusion_with:
+  - javascript: "TypeScript has types, JS doesn't"
+  - java: "TypeScript compiles to JS, runs in browser/Node"
+  - csharp: "TypeScript uses structural typing, C# nominal"

@@ -1,0 +1,28 @@
+platform,technology,technique,description,performance_rating,example_code,avoid
+cpp,DirectX 12,Batch Rendering,Combine multiple draw calls into single batch,5,"commandList->DrawIndexedInstanced(count, instances, 0, 0, 0);",Individual draw calls per object
+cpp,DirectX 12,Instancing,GPU draws same geometry with different transforms,5,"D3D12_INPUT_ELEMENT_DESC with D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA",Unique buffers for identical meshes
+cpp,DirectX 12,Swap Chain,Double/triple buffering for smooth frame display,5,"IDXGISwapChain4, Present1() with DXGI_SWAP_EFFECT_FLIP_DISCARD",Single buffer rendering
+cpp,DirectX 12,Frustum Culling,Skip rendering objects outside camera view,4,"BoundingFrustum::Contains(boundingBox) != ContainmentType::Disjoint",Render all objects unconditionally
+cpp,DirectX 12,Occlusion Culling,Skip hidden objects using GPU queries,4,"ID3D12QueryHeap TYPE_OCCLUSION, BeginQuery/EndQuery",Render occluded geometry
+cpp,Direct2D,Hardware Accelerated 2D,GPU-accelerated 2D graphics for UI,5,"ID2D1RenderTarget, D2D1CreateFactory with D2D1_FACTORY_TYPE_MULTI_THREADED",GDI+ for performance-critical paths
+cpp,Direct2D,Geometry Batching,Combine paths into single geometry,4,"ID2D1GeometryGroup, CreateGeometryGroup()",Individual DrawGeometry calls
+csharp,WPF,RenderTransform Animation,Animate GPU-friendly transform properties,5,"<DoubleAnimation Storyboard.TargetProperty='(UIElement.RenderTransform).(ScaleTransform.ScaleX)' To='1.2'/>",Animate Width/Height properties
+csharp,WPF,Opacity Animation,Fade using GPU compositing,5,"<DoubleAnimation Storyboard.TargetProperty='Opacity' From='0' To='1' Duration='0:0:0.3'/>",Visibility toggle without fade
+csharp,WPF,EasingFunction,Natural motion curves for animations,4,"<DoubleAnimation.EasingFunction><CubicEase EasingMode='EaseOut'/></DoubleAnimation.EasingFunction>",Linear animations only
+csharp,WPF,BitmapCache,Cache static content as bitmap,4,"<Canvas CacheMode='BitmapCache'/>",Re-render static content each frame
+csharp,WPF,VirtualizingPanel,Virtualize long lists only render visible,5,"<ListView VirtualizingStackPanel.VirtualizationMode='Recycling'/>",ItemsControl without virtualization
+csharp,WinUI 3,Composition API,Low-level animation with compositor,5,"ElementCompositionPreview.GetElementVisual(element).StartAnimation('Opacity', animation);",WPF-style Storyboard animations
+csharp,WinUI 3,Implicit Animations,Auto-animate property changes,4,"Visual.ImplicitAnimations = CreateImplicitAnimations();",Manual animation triggering
+csharp,WinUI 3,Expression Animations,Data-driven animations,4,"ExpressionAnimation: 'this.Target.Offset.X + tracker.Position.X'",Hardcoded animation values
+qt,Qt Animation,QPropertyAnimation,Animate any Q_PROPERTY,4,"QPropertyAnimation* anim = new QPropertyAnimation(btn, 'geometry'); anim->setDuration(300);",Timer-based manual interpolation
+qt,Qt Animation,QEasingCurve,Built-in easing functions,4,"anim->setEasingCurve(QEasingCurve::InOutQuad);",Linear interpolation only
+qt,Qt Animation,QParallelAnimationGroup,Run animations simultaneously,4,"QParallelAnimationGroup* group = new QParallelAnimationGroup; group->addAnimation(anim1);",Sequential animations for parallel motion
+qt,QML Animation,Behavior on,Auto-animate property changes in QML,5,"Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }",Manual State transitions
+qt,QML Animation,States and Transitions,Declarative state machine,4,"states: [State { name: 'pressed' ... }] transitions: [Transition { ... }]",Imperative show/hide logic
+avalonia,Avalonia,Transitions,XAML-defined transitions,4,"<Style.Animations><Animation Duration='0:0:0.3'><DoubleAnimationUsingKeyFrames .../></Animation></Style.Animations>",Direct property changes
+python,PyQt,QPropertyAnimation,Same as Qt C++ animation,4,"anim = QPropertyAnimation(widget, b'geometry'); anim.setDuration(300)",Thread-based animation
+python,Flet,animate_ properties,Built-in implicit animations,4,"container.animate_opacity = 300; container.opacity = 1",Manual Timer updates
+electron,CSS,requestAnimationFrame,60fps browser animation loop,4,"requestAnimationFrame(timestamp => { element.style.transform = `translateX(${x}px)`; });",setInterval for animations
+electron,CSS,CSS Transitions,Declarative CSS animations,5,"transition: transform 0.3s ease-out;",JavaScript style manipulation
+electron,Framer Motion,Motion components,React animation library in Electron,5,"<motion.div animate={{ x: 100, opacity: 1 }} transition={{ duration: 0.3 }}/>",CSS animations in React
+tauri,CSS,Native + CSS hybrid,Use native window effects + CSS animations,5,"tauri-plugin-vibrancy for Mica; CSS for UI animations",Heavy CSS-only approaches

@@ -1,0 +1,266 @@
+# DOMYH Agent — Skill Validation Schema v4.2
+# Defines structure requirements for skills
+
+# =============================================================================
+# META.yaml SCHEMA
+# =============================================================================
+
+meta_schema:
+  required_fields:
+    - name # lowercase, hyphen-separated
+    - display # Human-readable name
+    - category # core | language | framework | devops | support
+    - priority # 0-5 (lower = higher)
+    - desc # Max 80 characters
+    - keywords # Array, 5-10 items
+    - detect # Array, file patterns
+    - caps # Array, 2-4 capabilities
+
+  constraints:
+    name:
+      pattern: "^[a-z][a-z0-9-]*$"
+      max_length: 20
+
+    desc:
+      max_length: 80
+
+    keywords:
+      min_items: 5
+      max_items: 10
+
+    detect:
+      min_items: 1
+      max_items: 5
+
+    caps:
+      min_items: 2
+      max_items: 4
+
+    category:
+      enum: [core, language, framework, devops, support]
+
+    priority:
+      min: 0
+      max: 5
+
+  target_size:
+    max_bytes: 500
+    max_tokens: 100
+
+# =============================================================================
+# SKILL.md SCHEMA
+# =============================================================================
+
+skill_schema:
+  required_sections:
+    - frontmatter # name, detect
+    - title # # Skill Name
+    - patterns # ## Core Patterns OR ## Patterns
+    - checklist # ## Checklist
+
+  optional_sections:
+    - project_structure
+    - examples
+    - best_practices
+    - common_mistakes
+
+  constraints:
+    frontmatter:
+      required: [name, detect]
+
+  target_size:
+    max_lines: 150
+    max_bytes: 5000
+    max_tokens: 1500
+
+# =============================================================================
+# ADVANCED.md SCHEMA
+# =============================================================================
+
+advanced_schema:
+  required_sections:
+    - title # # DOMYH Agent v4.2 — Tier 3 Reference
+    - overview # High-level description
+    - deep_patterns # ## Advanced Patterns
+    - footer # _DOMYH Agent v4.2_
+
+  optional_sections:
+    - edge_cases
+    - performance
+    - security
+    - troubleshooting
+    - references
+
+  target_size:
+    max_lines: 300
+    max_bytes: 15000
+    max_tokens: 4000
+
+# =============================================================================
+# VALIDATION TESTS
+# =============================================================================
+
+tests:
+  meta_yaml:
+    - name: "Required fields present"
+      check: all_required_fields_present
+
+    - name: "Name format valid"
+      check: name_matches_pattern
+
+    - name: "Description length"
+      check: desc_under_80_chars
+
+    - name: "Category valid"
+      check: category_in_enum
+
+    - name: "Keywords count"
+      check: keywords_5_to_10
+
+    - name: "Size limit"
+      check: file_under_500_bytes
+
+  skill_md:
+    - name: "Frontmatter present"
+      check: has_frontmatter
+
+    - name: "Title present"
+      check: has_h1_title
+
+    - name: "Patterns section"
+      check: has_patterns_section
+
+    - name: "Checklist present"
+      check: has_checklist_section
+
+    - name: "Size limit"
+      check: file_under_5000_bytes
+
+  advanced_md:
+    - name: "Title format"
+      check: title_matches_v42
+
+    - name: "Footer present"
+      check: has_footer
+
+    - name: "Size limit"
+      check: file_under_15000_bytes
+
+  directory:
+    - name: "All required files"
+      check: has_meta_and_skill
+
+    - name: "No orphan files"
+      check: no_unknown_files
+
+    - name: "Registered in index"
+      check: in_index_json
+
+# =============================================================================
+# VALIDATION COMMANDS
+# =============================================================================
+
+commands:
+  validate_all:
+    description: "Validate all skills"
+    script: |
+      for skill in skills/*/; do
+        validate_skill "$skill"
+      done
+
+  validate_skill:
+    description: "Validate single skill"
+    args: [skill_path]
+    script: |
+      check_meta "$skill_path/META.yaml"
+      check_skill "$skill_path/SKILL.md"
+      if [ -f "$skill_path/ADVANCED.md" ]; then
+        check_advanced "$skill_path/ADVANCED.md"
+      fi
+
+  generate_report:
+    description: "Generate validation report"
+    output: "validation_report.md"
+
+# =============================================================================
+# SKILL TEMPLATE
+# =============================================================================
+
+templates:
+  meta_yaml: |
+    name: skill-id
+    display: Skill Name
+    category: language
+    priority: 1
+    desc: "Brief description under 80 chars"
+    keywords:
+      - keyword1
+      - keyword2
+      - keyword3
+      - keyword4
+      - keyword5
+    detect: ["*.ext", "config.file"]
+    caps:
+      - Capability 1
+      - Capability 2
+      - Capability 3
+
+  skill_md: |
+    ---
+    name: skill-id
+    detect: ["*.ext"]
+    ---
+
+    # Skill Name Patterns
+
+    ## Project Structure
+
+    ```
+    src/
+    └── ...
+    ```
+
+    ## Core Patterns
+
+    ### Pattern Name
+
+    ```language
+    // Code example
+    ```
+
+    ## Checklist
+
+    - [ ] Check 1
+    - [ ] Check 2
+    - [ ] Check 3
+
+    ---
+
+    _DOMYH Agent v4.2_
+
+  advanced_md: |
+    <!-- DOMYH Agent v4.2 — Tier 3 Reference -->
+
+    # DOMYH Agent v4.2 — Tier 3 Reference
+
+    ## Overview
+
+    Advanced patterns and edge cases for [Skill Name].
+
+    ## Advanced Patterns
+
+    ### Pattern 1
+
+    ...
+
+    ## Edge Cases
+
+    ...
+
+    ## Troubleshooting
+
+    ...
+
+    ---
+
+    _DOMYH Agent v4.2 — Tier 3 Reference_

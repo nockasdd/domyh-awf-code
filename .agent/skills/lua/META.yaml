@@ -1,0 +1,200 @@
+name: lua
+version: "4.3.0"
+category: scripting
+tier: 1
+
+description: |
+  Lua scripting language for game development, embedded systems, configuration.
+  Covers Lua 5.1-5.5, LuaJIT, FFI, metatables, coroutines.
+
+triggers:
+  file_patterns:
+    # Pure Lua
+    - "*.lua"
+    - ".luarc.json"
+    - ".luacheckrc"
+    # Love2D
+    - "main.lua"
+    - "conf.lua"
+    # Defold
+    - "*.script"
+    - "*.gui_script"
+    - "*.render_script"
+    - "game.project"
+    # Roblox
+    - "*.server.lua"
+    - "*.client.lua"
+    - "*.module.lua"
+    # LuaRocks
+    - "*.rockspec"
+  keywords:
+    # Core Lua
+    - lua
+    - lua script
+    - lua 5.1
+    - lua 5.2
+    - lua 5.3
+    - lua 5.4
+    - lua 5.5
+    - luajit
+    - luau
+    # Language Features
+    - metatable
+    - setmetatable
+    - getmetatable
+    - __index
+    - __newindex
+    - __call
+    - __tostring
+    - __add
+    - __gc
+    - rawget
+    - rawset
+    - rawlen
+    - rawequal
+    # Tables
+    - table.insert
+    - table.remove
+    - table.concat
+    - table.sort
+    - table.create
+    - pairs
+    - ipairs
+    - next
+    # Coroutines
+    - coroutine
+    - coroutine.create
+    - coroutine.resume
+    - coroutine.yield
+    - coroutine.status
+    - coroutine.close
+    - coroutine.wrap
+    # Error Handling
+    - pcall
+    - xpcall
+    - error
+    - assert
+    - debug.traceback
+    # I/O
+    - io.open
+    - io.read
+    - io.write
+    - io.close
+    # String
+    - string.match
+    - string.gsub
+    - string.find
+    - string.format
+    - string.sub
+    # Math
+    - math.random
+    - math.floor
+    - math.ceil
+    - math.sin
+    - math.cos
+    # Lua 5.4+ Features
+    - <const>
+    - <close>
+    - to-be-closed
+    # LuaJIT FFI
+    - ffi
+    - ffi.cdef
+    - ffi.new
+    - ffi.load
+    - ffi.C
+    # Frameworks
+    - love2d
+    - löve
+    - love.load
+    - love.update
+    - love.draw
+    - love.keypressed
+    - defold
+    - roblox
+    - luau
+    - solar2d
+    - corona sdk
+    - openresty
+    - lapis
+    # C Bindings
+    - sol2
+    - sol3
+    - luabridge
+    - tolua
+    # Utilities
+    - penlight
+    - luafilesystem
+    - lpeg
+    - serpent
+    - luasocket
+    # OOP
+    - middleclass
+    - classic
+    # IDE
+    - zerobrane
+    - luaLS
+    - emmylua
+    # Testing
+    - busted
+    - luaunit
+  intents:
+    - lua game
+    - lua script
+    - lua module
+    - lua table
+    - lua coroutine
+    - lua ffi
+    - lua metatable
+    - love2d game
+    - roblox script
+    - defold script
+
+related_skills:
+  - cpp # FFI, bindings
+  - c # FFI, embeddings
+
+prevent_confusion_with:
+  - python: "Lua uses tables, Python uses dicts/lists"
+  - javascript: "Lua 1-indexed, JS 0-indexed"
+  - ruby: "Lua metatables vs Ruby method_missing"
+  - julia: "Different languages despite similar names"
+
+# Framework Detection
+framework_detection:
+  love2d:
+    files: ["main.lua", "conf.lua"]
+    code_patterns: ["love.", "love.graphics", "love.audio"]
+  defold:
+    files: ["game.project", "*.script"]
+    code_patterns: ["go.", "msg.", "gui.", "hash("]
+  roblox:
+    files: ["*.server.lua", "*.client.lua"]
+    code_patterns: ["game:GetService", "Players", "Workspace"]
+  openresty:
+    files: ["nginx.conf"]
+    code_patterns: ["ngx.", "ngx.say", "ngx.req"]
+
+# Lua-specific APIs NOT in other languages
+unique_apis:
+  - "metatables (__index, __newindex, __call)"
+  - "coroutines (yield, resume, wrap)"
+  - "pcall/xpcall for error handling"
+  - "pairs/ipairs iteration"
+  - "<const> and <close> (Lua 5.4+)"
+  - "global keyword (Lua 5.5)"
+  - "table.create (Lua 5.5)"
+  - "ffi.cdef for C declarations (LuaJIT)"
+  - "1-based indexing"
+  - "nil as absence of value"
+  - "# operator for length"
+  - ".. for string concatenation"
+  - ": syntax for methods"
+
+# Version-specific features
+version_features:
+  lua51: ["basic coroutines", "metatables", "modules"]
+  lua52: ["goto", "bitwise ops", "rawlen"]
+  lua53: ["integers", "utf8 support", "bitwise operators"]
+  lua54: ["const", "to-be-closed", "generational GC"]
+  lua55: ["global keyword", "table.create", "read-only loop vars"]
+  luajit: ["FFI", "traces", "JIT compilation", "bit library"]

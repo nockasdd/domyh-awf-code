@@ -1,0 +1,48 @@
+framework,language,detection_file,detection_pattern,category,confidence
+React,JavaScript/TypeScript,package.json,"react" in dependencies,frontend,100
+Vue.js,JavaScript/TypeScript,package.json,"vue" in dependencies,frontend,100
+Angular,TypeScript,package.json,"@angular/core" in dependencies,frontend,100
+Svelte,JavaScript/TypeScript,package.json,"svelte" in dependencies,frontend,100
+Next.js,TypeScript,package.json,"next" in dependencies,fullstack,100
+Nuxt.js,Vue,package.json,"nuxt" in dependencies,fullstack,100
+Express.js,JavaScript/TypeScript,package.json,"express" in dependencies,backend,100
+NestJS,TypeScript,package.json,"@nestjs/core" in dependencies,backend,100
+Fastify,JavaScript/TypeScript,package.json,"fastify" in dependencies,backend,100
+Spring Boot,Java,pom.xml,spring-boot-starter in artifactId,backend,100
+Spring Boot,Java,build.gradle,org.springframework.boot plugin,backend,100
+Quarkus,Java,pom.xml,quarkus-bom in dependencies,backend,100
+Django,Python,requirements.txt,Django==,backend,100
+Django,Python,*.py,import django,backend,80
+Flask,Python,requirements.txt,Flask==,backend,100
+FastAPI,Python,requirements.txt,fastapi,backend,100
+Rails,Ruby,Gemfile,gem 'rails',fullstack,100
+Laravel,PHP,composer.json,laravel/framework,fullstack,100
+ASP.NET Core,C#,*.csproj,Sdk="Microsoft.NET.Sdk.Web",backend,100
+WPF,C#,*.csproj,<UseWPF>true</UseWPF>,desktop,100
+WinForms,C#,*.csproj,<UseWindowsForms>true</UseWindowsForms>,desktop,100
+MAUI,C#,*.csproj,<UseMaui>true</UseMaui>,mobile,100
+Blazor,C#,*.csproj,Sdk="Microsoft.NET.Sdk.BlazorWebAssembly",frontend,100
+Qt,C++,CMakeLists.txt,find_package(Qt,desktop,100
+Boost,C++,CMakeLists.txt,find_package(Boost,library,100
+POCO,C++,CMakeLists.txt,find_package(Poco,library,100
+wxWidgets,C++,CMakeLists.txt,find_package(wxWidgets,desktop,100
+GTK,C/C++,CMakeLists.txt,find_package(GTK,desktop,100
+Flutter,Dart,pubspec.yaml,flutter:,mobile,100
+React Native,TypeScript,package.json,react-native in dependencies,mobile,100
+Expo,TypeScript,package.json,expo in dependencies,mobile,100
+SwiftUI,Swift,*.swift,import SwiftUI,mobile,90
+UIKit,Swift,*.swift,import UIKit,mobile,90
+Jetpack Compose,Kotlin,build.gradle.kts,androidx.compose,mobile,100
+Android SDK,Java/Kotlin,build.gradle,com.android.application,mobile,100
+Electron,TypeScript,package.json,electron in dependencies,desktop,100
+Tauri,Rust,Cargo.toml,tauri in dependencies,desktop,100
+Phoenix,Elixir,mix.exs,:phoenix in deps,fullstack,100
+Gin,Go,go.mod,github.com/gin-gonic/gin,backend,100
+Echo,Go,go.mod,github.com/labstack/echo,backend,100
+Fiber,Go,go.mod,github.com/gofiber/fiber,backend,100
+Actix,Rust,Cargo.toml,actix-web in dependencies,backend,100
+Rocket,Rust,Cargo.toml,rocket in dependencies,backend,100
+Axum,Rust,Cargo.toml,axum in dependencies,backend,100
+Tokio,Rust,Cargo.toml,tokio in dependencies,runtime,100
+gRPC,Multiple,CMakeLists.txt,find_package(gRPC,rpc,100
+gRPC,Multiple,package.json,@grpc/grpc-js,rpc,100

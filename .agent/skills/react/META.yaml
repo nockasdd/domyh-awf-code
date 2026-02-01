@@ -1,0 +1,87 @@
+name: react
+version: "4.3.0"
+category: frontend
+tier: 1
+
+description: |
+  React UI library patterns for React 19.
+  Covers React Compiler, hooks, Zustand, TanStack Query.
+
+triggers:
+  file_patterns:
+    - "package.json"
+    - "*.jsx"
+    - "*.tsx"
+    - "vite.config.ts"
+  keywords:
+    # Core
+    - react
+    - react 19
+    - jsx
+    - tsx
+    - react dom
+    # Compiler
+    - react compiler
+    - auto memoization
+    # Hooks
+    - usestate
+    - useeffect
+    - usecontext
+    - usereducer
+    - usememo
+    - usecallback
+    - useref
+    - use hook
+    - useoptimistic
+    - useactionstate
+    - useformstatus
+    # Components
+    - functional component
+    - client component
+    - suspense
+    - error boundary
+    - react.lazy
+    # State
+    - zustand
+    - jotai
+    - recoil
+    - redux
+    - context api
+    # Server State
+    - react query
+    - tanstack query
+    - swr
+    # Forms
+    - react hook form
+    - formik
+    - zod validation
+    # UI
+    - shadcn
+    - radix ui
+    - chakra
+    - mantine
+    - material ui
+    - mui
+    # Testing
+    - react testing library
+    - vitest
+    - jest react
+    # Build
+    - vite
+    - webpack
+    - create react app
+  intents:
+    - create react app
+    - react component
+    - react state management
+    - react form
+    - react testing
+
+related_skills:
+  - typescript
+  - tailwind-patterns
+  - nextjs
+
+prevent_confusion_with:
+  - nextjs: "React is library, Next.js adds SSR/routing"
+  - vue: "React uses JSX, Vue uses templates"

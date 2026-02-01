@@ -1,0 +1,142 @@
+name: cpp
+version: "4.3.0"
+category: language
+tier: 1
+
+description: |
+  Modern C++ (C++20/23/26) development patterns.
+  Covers concepts, ranges, coroutines, modules, smart pointers.
+
+triggers:
+  file_patterns:
+    - "CMakeLists.txt"
+    - "CMakePresets.json"
+    - "*.cpp"
+    - "*.cxx"
+    - "*.cc"
+    - "*.hpp"
+    - "*.hxx"
+    - "*.h"
+    - "*.cppm"
+    - "vcpkg.json"
+    - "conanfile.txt"
+    - "conanfile.py"
+  keywords:
+    # Core C++
+    - c++
+    - cpp
+    - c++20
+    - c++23
+    - c++26
+    - modern c++
+    # Compilers
+    - gcc
+    - g++
+    - clang
+    - clang++
+    - msvc
+    - visual c++
+    # STL
+    - std::vector
+    - std::string
+    - std::map
+    - std::unordered_map
+    - std::shared_ptr
+    - std::unique_ptr
+    - std::optional
+    - std::variant
+    - std::expected
+    - std::format
+    - std::print
+    - std::span
+    # Modern Features
+    - concepts
+    - ranges
+    - coroutines
+    - modules
+    - constexpr
+    - consteval
+    - auto
+    - template
+    - lambda
+    - structured binding
+    # Memory
+    - smart pointer
+    - make_unique
+    - make_shared
+    - move semantics
+    - rvalue reference
+    - noexcept
+    # Build
+    - cmake
+    - cmake presets
+    - vcpkg
+    - conan
+    - ninja
+    - msbuild
+    # Concurrency
+    - std::thread
+    - std::jthread
+    - std::atomic
+    - std::mutex
+    - std::async
+    - std::future
+    # OOP
+    - class
+    - namespace
+    - virtual
+    - override
+    - final
+    - inheritance
+    # Headers
+    -  #include
+    - pimpl
+    - forward declaration
+    - precompiled header
+  intents:
+    - c++ code
+    - cpp project
+    - cmake build
+    - modern c++
+
+related_skills:
+  - c # Pure C
+  - rust # Systems alternative
+
+prevent_confusion_with:
+  - c: "C++ = classes/templates, C = no classes"
+  - rust: "C++ = manual memory, Rust = ownership"
+  - java: "C++ = pointers/templates, Java = GC/generics"
+
+unique_apis:
+  - "std::unique_ptr, std::shared_ptr, std::weak_ptr"
+  - "std::vector, std::map, std::unordered_map"
+  - "std::optional, std::variant, std::expected"
+  - "std::format, std::print (C++23)"
+  - "std::ranges::, std::views::"
+  - "concept, requires clause"
+  - "co_await, co_yield, co_return"
+  - "export module (C++20 modules)"
+  - "template<typename T>"
+  - "namespace::"
+
+# C++ vs C differentiation
+cpp_only_patterns:
+  - "class "
+  - "namespace "
+  - "template<"
+  - "std::"
+  - "#include <iostream>"
+  - "#include <vector>"
+  - "#include <string>"
+  - "#include <memory>"
+  - "auto "
+  - "new/delete"
+  - "virtual"
+  - "override"
+
+version_features:
+  cpp17: ["structured bindings", "std::optional", "if constexpr"]
+  cpp20: ["concepts", "ranges", "coroutines", "modules", "std::format"]
+  cpp23: ["std::expected", "std::print", "import std"]
+  cpp26: ["reflection", "contracts", "std::execution"]
