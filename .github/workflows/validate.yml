@@ -1,0 +1,108 @@
+name: Validate Agent
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate YAML files
+        run: |
+          pip install pyyaml
+          python -c "
+          import yaml
+          import glob
+          import sys
+
+          errors = []
+          for f in glob.glob('.agent/**/*.yaml', recursive=True):
+              try:
+                  with open(f) as file:
+                      yaml.safe_load(file)
+                  print(f'✅ {f}')
+              except Exception as e:
+                  errors.append(f'{f}: {e}')
+                  print(f'❌ {f}: {e}')
+
+          if errors:
+              sys.exit(1)
+          print('All YAML files valid!')
+          "
+
+      - name: Validate JSON files
+        run: |
+          python -c "
+          import json
+          import glob
+          import sys
+
+          errors = []
+          for f in glob.glob('.agent/**/*.json', recursive=True):
+              try:
+                  with open(f) as file:
+                      json.load(file)
+                  print(f'✅ {f}')
+              except Exception as e:
+                  errors.append(f'{f}: {e}')
+                  print(f'❌ {f}: {e}')
+
+          if errors:
+              sys.exit(1)
+          print('All JSON files valid!')
+          "
+
+      - name: Check required files exist
+        run: |
+          required_files=(
+            ".agent/manifest.yaml"
+            ".agent/config.yaml"
+            ".agent/skills/index.json"
+            "README.md"
+            "CLAUDE.md"
+            "GEMINI.md"
+          )
+
+          for file in "${required_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file missing"
+              exit 1
+            fi
+          done
+
+      - name: Version consistency check
+        run: |
+          python -c "
+          import yaml
+          import json
+
+          # Load manifest version
+          with open('.agent/manifest.yaml') as f:
+              manifest = yaml.safe_load(f)
+          version = manifest.get('version', '')
+          print(f'Manifest version: {version}')
+
+          # Check index.json
+          with open('.agent/skills/index.json') as f:
+              index = json.load(f)
+          index_version = index.get('version', '')
+          print(f'Index version: {index_version}')
+
+          if not index_version.startswith(version.rsplit('.', 1)[0]):
+              print('⚠️  Version mismatch detected')
+          else:
+              print('✅ Versions consistent')
+          "

@@ -1,23 +1,298 @@
+<div align="center">
+
 # 🚀 DOMYH Agent v4.3
 
-> **Complete AI Agent Library for Developers**
-> Portable • Multi-language • Universal IDE Support
->
-> _Developed by [NockDev](https://github.com/nockdev)_
+### **The Ultimate AI Coding Assistant for Developers**
 
-<p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-commands">Commands</a> •
-  <a href="#-skills">Skills</a> •
-  <a href="#-ide-support">IDE Support</a> •
-  <a href="#vietnamese">Tiếng Việt</a>
-</p>
+[![Version](https://img.shields.io/badge/version-4.3.0-blue.svg?style=for-the-badge)](https://github.com/nockasdd/domyh-awf-code)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Skills](https://img.shields.io/badge/skills-33+-purple.svg?style=for-the-badge)](#-skills)
+[![Commands](https://img.shields.io/badge/commands-28-orange.svg?style=for-the-badge)](#-commands)
+[![IDE Support](https://img.shields.io/badge/IDEs-10+-red.svg?style=for-the-badge)](#-ide-support)
+
+**Portable** • **Multi-language** • **Universal IDE Support**
+
+[Quick Start](#-quick-start) •
+[Commands](#-commands) •
+[Skills](#-skills) •
+[IDE Support](#-ide-support) •
+[Tiếng Việt](#-tiếng-việt)
 
 ---
 
-## 📦 Quick Start
+<img src="https://raw.githubusercontent.com/github/explore/main/topics/artificial-intelligence/artificial-intelligence.png" width="120" alt="AI">
 
-### Option 1: One-Line Install (Recommended)
+</div>
+
+---
+
+## 📖 Table of Contents
+
+- [🚀 Quick Start](#-quick-start)
+- [🎯 Commands](#-commands)
+  - [Development](#-development)
+  - [Planning & Design](#-planning--design)
+  - [Deployment & Ops](#-deployment--ops)
+  - [Quality & Review](#-quality--review)
+  - [Utility](#-utility)
+- [🧠 Skills (33+)](#-skills)
+- [💻 IDE Support](#-ide-support)
+- [📁 Project Structure](#-project-structure)
+- [🇻🇳 Tiếng Việt](#-tiếng-việt)
+- [📜 License](#-license)
+
+---
+
+## 🚀 Quick Start
+
+### ⚡ Option 1: One-Line Install (Recommended)
+
+<table>
+<tr>
+<td width="50%">
+
+**🐧 Linux / macOS**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.sh | bash
+```
+
+</td>
+<td width="50%">
+
+**🪟 Windows PowerShell**
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
+```
+
+</td>
+</tr>
+</table>
+
+### 📦 Option 2: Clone & Install
+
+```bash
+# Clone the repository
+git clone https://github.com/nockasdd/domyh-awf-code.git
+
+# Run installer
+cd domyh-awf-code
+
+# Linux/macOS
+./.agent/scripts/install.sh
+
+# Windows PowerShell
+.\.agent\scripts\install.ps1
+```
+
+### 📋 Option 3: Manual Installation
+
+```bash
+# Copy to your project
+cp -r domyh-awf-code/.agent /path/to/your/project/
+cp domyh-awf-code/{CLAUDE.md,GEMINI.md,AGENTS.md,.cursorrules} /path/to/your/project/
+```
+
+> 💡 **During installation**, you'll be prompted to choose:
+>
+> - **Language**: English (default) or Vietnamese
+> - **Target IDE**: Claude Code, Cursor, Windsurf, Gemini CLI, etc.
+
+---
+
+## 🎯 Commands
+
+<details open>
+<summary><h3>💻 Development</h3></summary>
+
+| Command     | Description                                                                |
+| :---------- | :------------------------------------------------------------------------- |
+| `/code`     | 💻 Write production-ready code with proper error handling, types, and docs |
+| `/dev`      | ▶️ Start development server: detect stack, run dev commands, validate      |
+| `/debug`    | 🐛 Systematic debugging: reproduce → isolate → analyze → fix → verify      |
+| `/test`     | ✅ Run tests and write new test cases with proper coverage                 |
+| `/refactor` | 🔧 Refactoring: identify smells → plan → apply → verify tests pass         |
+| `/generate` | 🏗️ Generate: models, APIs, components, services from templates             |
+
+</details>
+
+<details>
+<summary><h3>📋 Planning & Design</h3></summary>
+
+| Command      | Description                                                             |
+| :----------- | :---------------------------------------------------------------------- |
+| `/plan`      | 📋 Feature planning with impact analysis, task breakdown, estimation    |
+| `/think`     | 💡 Brainstorming: explore ideas, research solutions, evaluate options   |
+| `/visualize` | 🖼️ UI/UX: mockups, wireframes, component design, prototyping            |
+| `/doc`       | 📝 Documentation: API docs, README, code comments, changelogs           |
+| `/init`      | ✨ Initialize project with scaffolding, P0-P6 phases, progress tracking |
+
+</details>
+
+<details>
+<summary><h3>🚀 Deployment & Ops</h3></summary>
+
+| Command    | Description                                                  |
+| :--------- | :----------------------------------------------------------- |
+| `/deploy`  | 🚀 Deploy with pre-checks, rollback plan, post-verification  |
+| `/env`     | 🔐 Environment: create, sync, validate .env, encrypt secrets |
+| `/monitor` | 📡 Observability: logging, tracing, metrics, alerting        |
+| `/perf`    | ⚡ Performance: CPU, memory, benchmarks, optimization        |
+| `/revert`  | ⏪ Rollback: git, deployment, database                       |
+| `/migrate` | 🗃️ Migrations: create, run, rollback, seed with safety       |
+
+</details>
+
+<details>
+<summary><h3>🔍 Quality & Review</h3></summary>
+
+| Command    | Description                                                                      |
+| :--------- | :------------------------------------------------------------------------------- |
+| `/ap`      | 🔬 **Audit Pro**: 5-expert panel (security, perf, arch, testing, best practices) |
+| `/review`  | 👀 Code review for PRs: logic, quality, security, tests                          |
+| `/modify`  | 🔧 Fix project: detect stack → analyze → plan → execute → verify                 |
+| `/clean`   | 🧹 Cleanup: dead code, imports, unused dependencies                              |
+| `/upgrade` | 📦 Dependencies: check outdated, safe updates, breaking changes                  |
+
+</details>
+
+<details>
+<summary><h3>🛠️ Utility</h3></summary>
+
+| Command        | Description                                               |
+| :------------- | :-------------------------------------------------------- |
+| `/status`      | 📊 Health: build, tests, coverage, lint, recent activity  |
+| `/recap`       | 📖 Summary: completed tasks, files, decisions, next steps |
+| `/suggest`     | ➡️ Smart suggestions based on project state               |
+| `/orchestrate` | 🎭 Multi-Agent: coordinate tasks, delegate to specialists |
+| `/help`        | ❓ All commands, examples, and language settings          |
+
+</details>
+
+---
+
+## 🧠 Skills
+
+<div align="center">
+
+### **33+ Specialized Skills with Progressive Disclosure**
+
+</div>
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+### 💬 Languages (14)
+
+| Skill                                                                                                    | Version |
+| :------------------------------------------------------------------------------------------------------- | :------ |
+| ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)                         | 1.23+   |
+| ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)             | 3.13    |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) | 5.x     |
+| ![Rust](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust&logoColor=white)                   | 2024    |
+| ![C++](https://img.shields.io/badge/C++-00599C?style=flat&logo=cplusplus&logoColor=white)                | C++26   |
+| ![C#](https://img.shields.io/badge/C%23-239120?style=flat&logo=csharp&logoColor=white)                   | 14      |
+| ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)                | 21+     |
+| ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white)                      | 8.4     |
+| ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white)             | 2.x     |
+| ![Swift](https://img.shields.io/badge/Swift-F05138?style=flat&logo=swift&logoColor=white)                | 6       |
+| ![Assembly](https://img.shields.io/badge/Assembly-654FF0?style=flat&logo=assemblyscript&logoColor=white) | x86/ARM |
+| ![C](https://img.shields.io/badge/C-A8B9CC?style=flat&logo=c&logoColor=black)                            | C23     |
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) | ES2024  |
+| ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=flat&logo=lua&logoColor=white)                      | 5.5     |
+
+</td>
+<td width="33%" valign="top">
+
+### 🖼️ Frameworks (8)
+
+| Skill                                                                                                 | Version |
+| :---------------------------------------------------------------------------------------------------- | :------ |
+| ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)             | 19      |
+| ![Vue](https://img.shields.io/badge/Vue-4FC08D?style=flat&logo=vuedotjs&logoColor=white)              | 3.5     |
+| ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white)     | 16      |
+| ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)       | 19/20   |
+| ![Nuxt](https://img.shields.io/badge/Nuxt-00DC82?style=flat&logo=nuxtdotjs&logoColor=white)           | 4       |
+| ![Svelte](https://img.shields.io/badge/Svelte-FF3E00?style=flat&logo=svelte&logoColor=white)          | 5       |
+| ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white)       | 3.x     |
+| ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?style=flat&logo=tailwindcss&logoColor=white) | 4       |
+
+</td>
+<td width="33%" valign="top">
+
+### ⚙️ DevOps & Support (11)
+
+| Skill                                                                                                | Type          |
+| :--------------------------------------------------------------------------------------------------- | :------------ |
+| ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)         | Containers    |
+| ![Kubernetes](https://img.shields.io/badge/K8s-326CE5?style=flat&logo=kubernetes&logoColor=white)    | Orchestration |
+| ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazonwebservices&logoColor=white)    | Cloud         |
+| ![CI/CD](https://img.shields.io/badge/CI%2FCD-2088FF?style=flat&logo=githubactions&logoColor=white)  | Automation    |
+| ![Database](https://img.shields.io/badge/Database-4479A1?style=flat&logo=postgresql&logoColor=white) | Data Layer    |
+| ![Testing](https://img.shields.io/badge/Testing-14B8A6?style=flat&logo=vitest&logoColor=white)       | Quality       |
+| ![Security](https://img.shields.io/badge/Security-D32F2F?style=flat&logo=owasp&logoColor=white)      | Core          |
+| ![Coding Rules](https://img.shields.io/badge/Rules-6366F1?style=flat&logo=prettier&logoColor=white)  | Standards     |
+| ![UI/UX](https://img.shields.io/badge/UI%2FUX-FF69B4?style=flat&logo=figma&logoColor=white)          | Design        |
+| ![Electron](https://img.shields.io/badge/Electron-47848F?style=flat&logo=electron&logoColor=white)   | Desktop       |
+| ![React Native](https://img.shields.io/badge/RN-61DAFB?style=flat&logo=react&logoColor=black)        | Mobile        |
+
+</td>
+</tr>
+</table>
+
+---
+
+## 💻 IDE Support
+
+<div align="center">
+
+|                                                     IDE                                                      |        Config File        | Status |
+| :----------------------------------------------------------------------------------------------------------: | :-----------------------: | :----: |
+|         ![Claude](https://img.shields.io/badge/Claude_Code-CC785C?style=flat-square&logoColor=white)         |        `CLAUDE.md`        |   ✅   |
+|   ![Gemini](https://img.shields.io/badge/Gemini_CLI-4285F4?style=flat-square&logo=google&logoColor=white)    |        `GEMINI.md`        |   ✅   |
+|           ![Cursor](https://img.shields.io/badge/Cursor-000000?style=flat-square&logoColor=white)            |      `.cursorrules`       |   ✅   |
+|         ![Windsurf](https://img.shields.io/badge/Windsurf-00D4FF?style=flat-square&logoColor=white)          |     `.windsurfrules`      |   ✅   |
+| ![Copilot](https://img.shields.io/badge/GitHub_Copilot-000000?style=flat-square&logo=github&logoColor=white) | `copilot-instructions.md` |   ✅   |
+|        ![OpenHands](https://img.shields.io/badge/OpenHands-5D3FD3?style=flat-square&logoColor=white)         |        `AGENTS.md`        |   ✅   |
+|            ![Aider](https://img.shields.io/badge/Aider-FF6B6B?style=flat-square&logoColor=white)             |     `.aider.conf.yml`     |   ✅   |
+|             ![Bolt](https://img.shields.io/badge/Bolt-FFD700?style=flat-square&logoColor=black)              |    `.bolt/config.json`    |   ✅   |
+|       ![CodeRabbit](https://img.shields.io/badge/CodeRabbit-FF4081?style=flat-square&logoColor=white)        |    `.coderabbit.yaml`     |   ✅   |
+|       ![Cody](https://img.shields.io/badge/Sourcegraph_Cody-FF5733?style=flat-square&logoColor=white)        | `.sourcegraph/cody.json`  |   ✅   |
+
+</div>
+
+---
+
+## 📁 Project Structure
+
+```
+domyh-awf-code/
+├── 📄 CLAUDE.md          # Claude Code config
+├── 📄 GEMINI.md          # Gemini CLI config
+├── 📄 AGENTS.md          # OpenHands config
+├── 📄 .cursorrules       # Cursor config
+├── 📁 .agent/
+│   ├── 📄 manifest.yaml  # Agent configuration
+│   ├── 📁 core/          # Engine configs (Router, Memory, Cache)
+│   ├── 📁 rules/         # 17 modular rule files
+│   ├── 📁 skills/        # 33 skill directories
+│   ├── 📁 workflows/     # 29 command workflows
+│   ├── 📁 i18n/          # en.yaml, vi.yaml
+│   ├── 📁 memory/        # Persistent state
+│   └── 📁 scripts/       # Install & utility scripts
+└── 📄 LICENSE            # MIT License
+```
+
+---
+
+## 🇻🇳 Tiếng Việt
+
+<details>
+<summary><b>📖 Xem hướng dẫn tiếng Việt</b></summary>
+
+### Cài Đặt Nhanh
 
 ```bash
 # Linux/macOS
@@ -27,277 +302,36 @@ curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent
 iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
 ```
 
-### Option 2: Clone & Install
+### Các Lệnh Chính
 
-```bash
-# Clone repository
-git clone https://github.com/nockasdd/domyh-awf-code.git
+| Lệnh      | Mô tả                              |
+| :-------- | :--------------------------------- |
+| `/code`   | 💻 Viết code production-ready      |
+| `/debug`  | 🐛 Debug có hệ thống               |
+| `/plan`   | 📋 Lên kế hoạch tính năng          |
+| `/ap`     | 🔬 Audit chuyên sâu (5 chuyên gia) |
+| `/deploy` | 🚀 Deploy lên production           |
+| `/help`   | ❓ Xem tất cả lệnh                 |
 
-# Linux/macOS
-./domyh-awf-code/.agent/scripts/install.sh
+### Ngôn Ngữ Hỗ Trợ
 
-# Windows PowerShell
-.\domyh-awf-code\.agent\scripts\install.ps1
-```
+Agent hỗ trợ **33+ skills** bao gồm: Go, Python, TypeScript, Rust, C++, C#, Java, PHP, React, Vue, Next.js, Docker, Kubernetes, AWS, và nhiều hơn nữa.
 
-During installation, you'll be prompted to choose:
-
-- **Language**: English (default) or Vietnamese
-- **Target IDE**: Claude Code, Cursor, Windsurf, Gemini CLI, etc.
-
-### Option 3: Project-Specific Installation
-
-```bash
-# Copy the agent folder into your project root
-cp -r domyh-awf-code/.agent /path/to/your/project/
-cp domyh-awf-code/*.md /path/to/your/project/
-cp domyh-awf-code/.cursorrules /path/to/your/project/
-```
+</details>
 
 ---
 
-## 🎯 Commands
+## 📜 License
 
-### 🔧 Development
-
-| Command     | Description                                                                         |
-| ----------- | ----------------------------------------------------------------------------------- |
-| `/code`     | 💻 Write production-ready code with proper error handling, types, and documentation |
-| `/dev`      | ▶️ Start development server: detect stack, run dev commands, validate output        |
-| `/debug`    | 🐛 Systematic debugging: reproduce → isolate → analyze → fix → verify               |
-| `/test`     | ✅ Run existing tests and write new test cases with proper coverage                 |
-| `/refactor` | 🔧 Code refactoring: identify smells → plan changes → apply → verify tests pass     |
-| `/generate` | 🏗️ Code generation: models, APIs, components, services, and tests from templates    |
-
-### 📋 Planning & Design
-
-| Command      | Description                                                                                 |
-| ------------ | ------------------------------------------------------------------------------------------- |
-| `/plan`      | 📋 Feature planning with impact analysis, task breakdown, and effort estimation             |
-| `/think`     | 💡 Brainstorming: explore ideas, research solutions, evaluate options                       |
-| `/visualize` | 🖼️ UI/UX Design: mockups, wireframes, component design, visual prototyping                  |
-| `/doc`       | 📝 Generate documentation: API docs, README, code comments, and changelogs                  |
-| `/init`      | ✨ Initialize new project with intelligent scaffolding, P0-P6 phases, and progress tracking |
-
-### 🚀 Deployment & Ops
-
-| Command    | Description                                                                         |
-| ---------- | ----------------------------------------------------------------------------------- |
-| `/deploy`  | 🚀 Deploy to production with pre-checks, rollback plan, and post-verification       |
-| `/env`     | 🔐 Environment management: create, sync, validate .env files and encrypt secrets    |
-| `/monitor` | 📡 Setup observability: logging, tracing, metrics, and alerting configuration       |
-| `/perf`    | ⚡ Performance profiling: CPU, memory, benchmarks, and optimization recommendations |
-| `/revert`  | ⏪ Revert changes: git rollback, deployment rollback, database rollback             |
-| `/migrate` | 🗃️ Database migrations: create, run, rollback, and seed with safety checks          |
-
-### 🔍 Quality & Review
-
-| Command    | Description                                                                                                   |
-| ---------- | ------------------------------------------------------------------------------------------------------------- |
-| `/ap`      | 🔬 Comprehensive code audit with 5-expert panel: security, performance, architecture, testing, best practices |
-| `/review`  | 👀 Code review for PRs: logic, quality, security, and tests verification                                      |
-| `/modify`  | 🔧 Fix existing project: detect stack → analyze issues → plan → execute → verify                              |
-| `/clean`   | 🧹 Code cleanup: remove dead code, organize imports, remove unused dependencies                               |
-| `/upgrade` | 📦 Update dependencies: check outdated, apply safe updates, review breaking changes                           |
-
-### 🛠️ Utility
-
-| Command        | Description                                                                      |
-| -------------- | -------------------------------------------------------------------------------- |
-| `/status`      | 📊 Project health: build, tests, coverage, lint metrics, and recent activity     |
-| `/recap`       | 📖 Session summary: completed tasks, changed files, decisions, and next steps    |
-| `/suggest`     | ➡️ Smart suggestions: context-aware next steps based on project state            |
-| `/orchestrate` | 🎭 Multi-Agent Orchestration: coordinate parallel tasks, delegate to specialists |
-| `/help`        | ❓ Show all available commands, usage examples, and language settings            |
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🧠 Skills
+<div align="center">
 
-**33 auto-detected tech-specific skills** organized by category:
+**Made with ❤️ by [NockDev](https://github.com/nockdev)**
 
-### Languages (12)
+[![GitHub Stars](https://img.shields.io/github/stars/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code)
+[![GitHub Forks](https://img.shields.io/github/forks/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code/fork)
 
-| Skill      | Description                            |
-| ---------- | -------------------------------------- |
-| Go         | Go 1.22/1.23 with generics, iterators  |
-| Python     | Python 3.12+ with type hints           |
-| TypeScript | TypeScript 5.5+                        |
-| Rust       | Ownership, Tokio, Axum                 |
-| C++        | C++20/23/26, concepts, ranges          |
-| C          | ISO C23, memory safety                 |
-| C#         | .NET 8/9, LINQ                         |
-| Java       | Java 21+ with records, virtual threads |
-| PHP        | PHP 8.3/8.4, Laravel 12                |
-| Lua        | Lua 5.4/5.5, LuaJIT, FFI               |
-| Kotlin     | Kotlin 2.0, K2 compiler, KMP           |
-| Swift      | Swift 6, SwiftUI, Concurrency          |
-
-### Frontend (8)
-
-| Skill         | Description                  |
-| ------------- | ---------------------------- |
-| React         | React 19, Server Components  |
-| Vue           | Vue 3.5, Composition API     |
-| Next.js       | App Router, RSC, Turbopack   |
-| Nuxt          | Nuxt 4, useFetch, routeRules |
-| Angular       | Angular 19/20, signals       |
-| Svelte        | Svelte 5, runes              |
-| Tailwind      | Tailwind CSS 4, @theme       |
-| UI/UX Pro Max | 50+ styles, 21 palettes      |
-
-### Mobile & Desktop (4)
-
-| Skill        | Description                    |
-| ------------ | ------------------------------ |
-| Flutter      | Flutter 3.27, Riverpod 3.0     |
-| React Native | New Architecture, Fabric       |
-| Electron     | Context isolation, IPC         |
-| Swift        | SwiftUI, iOS/macOS development |
-
-### DevOps & Infrastructure (5)
-
-| Skill      | Description                    |
-| ---------- | ------------------------------ |
-| Docker     | BuildKit, rootless, Compose v2 |
-| Kubernetes | K8s 1.30/1.31, Helm 3          |
-| AWS        | Serverless, Lambda, ECS        |
-| CI/CD      | GitHub Actions, GitLab CI      |
-| Security   | OWASP, CWE Top 25              |
-
-### Core (4)
-
-| Skill        | Description                      |
-| ------------ | -------------------------------- |
-| Database     | PostgreSQL, MySQL, MongoDB       |
-| Testing      | Jest, Vitest, pytest, Go testing |
-| Coding Rules | 23 languages, naming conventions |
-| ASM          | x86, ARM assembly                |
-
----
-
-## 🌍 IDE Support
-
-| IDE            | Config File                        | Status |
-| -------------- | ---------------------------------- | ------ |
-| Claude Code    | `CLAUDE.md`, `~/.claude/`          | ✅     |
-| Cursor         | `.cursorrules`, `~/.cursor/rules/` | ✅     |
-| Windsurf       | `AGENTS.md`                        | ✅     |
-| GitHub Copilot | `.github/copilot-instructions.md`  | ✅     |
-| Gemini CLI     | `GEMINI.md`, `~/.gemini/`          | ✅     |
-| Antigravity    | `~/.gemini/antigravity/`           | ✅     |
-| Continue.dev   | `~/.continue/AGENTS.md`            | ✅     |
-| JetBrains AI   | `AGENTS.md`                        | ✅     |
-| Augment Code   | `~/.augment/rules/`                | ✅     |
-| OpenAI Codex   | `~/.codex/AGENTS.md`               | ✅     |
-
----
-
-## 📁 Structure
-
-```
-domyh-agent/
-├── README.md                     # This file
-├── LICENSE                       # MIT
-│
-├── root/                         # IDE config files
-│   ├── AGENTS.md                 # Universal
-│   ├── CLAUDE.md                 # Claude Code
-│   ├── GEMINI.md                 # Gemini CLI
-│   └── .cursorrules              # Cursor
-│
-└── .agent/                       # Agent system
-    ├── manifest.yaml             # Core manifest
-    ├── config.yaml               # Configuration
-    ├── workflows/                # 29 commands
-    ├── skills/                   # 33 skills
-    ├── rules/                    # Universal rules
-    ├── personas/                 # 7 personalities
-    ├── i18n/                     # Localization (en, vi)
-    └── scripts/                  # Install & utility scripts
-```
-
----
-
-## 📄 License
-
-MIT © 2026 [NockDev](https://github.com/nockdev)
-
----
-
-<a name="vietnamese"></a>
-
-# 🇻🇳 Tiếng Việt
-
-> **Thư viện Agent AI hoàn chỉnh cho Developer**
-
-## Cài Đặt Nhanh
-
-```bash
-# Linux/macOS
-./domyh-agent/.agent/scripts/install.sh
-
-# Windows PowerShell
-.\domyh-agent\.agent\scripts\install.ps1
-```
-
-Khi cài đặt, bạn sẽ được chọn:
-
-- **Ngôn ngữ**: Vietnamese (Tiếng Việt)
-- **IDE đích**: Claude Code, Cursor, Gemini CLI, etc.
-
-## 🔧 Nhóm Development
-
-| Lệnh        | Mô tả                                                                       |
-| ----------- | --------------------------------------------------------------------------- |
-| `/code`     | 💻 Viết code production-ready với xử lý lỗi, types, và documentation đầy đủ |
-| `/dev`      | ▶️ Chạy dev server: detect stack, hot reload                                |
-| `/debug`    | 🐛 Debug có hệ thống: tái tạo → cô lập → phân tích → sửa → xác nhận         |
-| `/test`     | ✅ Chạy tests hiện có và viết test cases mới với coverage đầy đủ            |
-| `/refactor` | 🔧 Tái cấu trúc code: code smells → plan → apply → verify                   |
-| `/generate` | 🏗️ Sinh code từ templates                                                   |
-
-## 📋 Nhóm Planning & Design
-
-| Lệnh         | Mô tả                                                                |
-| ------------ | -------------------------------------------------------------------- |
-| `/plan`      | 📋 Lên kế hoạch tính năng với phân tích tác động và ước lượng effort |
-| `/think`     | 💡 Brainstorming: khám phá ý tưởng, đánh giá lựa chọn                |
-| `/visualize` | 🖼️ Thiết kế UI/UX: mockups, wireframes                               |
-| `/doc`       | 📝 Tạo tài liệu                                                      |
-| `/init`      | ✨ Tạo dự án mới với scaffolding thông minh                          |
-
-## 🚀 Nhóm Deployment & Ops
-
-| Lệnh       | Mô tả                                         |
-| ---------- | --------------------------------------------- |
-| `/deploy`  | 🚀 Deploy production với kiểm tra và rollback |
-| `/env`     | 🔐 Quản lý môi trường                         |
-| `/monitor` | 📡 Thiết lập observability                    |
-| `/perf`    | ⚡ Phân tích hiệu năng                        |
-| `/revert`  | ⏪ Rollback: git, deployment, database        |
-| `/migrate` | 🗃️ Database migrations                        |
-
-## 🔍 Nhóm Quality & Review
-
-| Lệnh       | Mô tả                                       |
-| ---------- | ------------------------------------------- |
-| `/ap`      | 🔬 Kiểm tra code toàn diện với 5 chuyên gia |
-| `/review`  | 👀 Review code cho PRs                      |
-| `/modify`  | 🔧 Sửa project có sẵn                       |
-| `/clean`   | 🧹 Dọn dẹp code                             |
-| `/upgrade` | 📦 Cập nhật dependencies                    |
-
-## 🛠️ Nhóm Utility
-
-| Lệnh           | Mô tả                              |
-| -------------- | ---------------------------------- |
-| `/status`      | 📊 Sức khỏe project                |
-| `/recap`       | 📖 Tóm tắt phiên                   |
-| `/suggest`     | ➡️ Gợi ý bước tiếp theo thông minh |
-| `/orchestrate` | 🎭 Điều phối đa tác tử             |
-| `/help`        | ❓ Trợ giúp                        |
-
----
-
-_DOMYH Agent v4.3 • Made with ❤️ by NockDev_
+</div>
