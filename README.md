@@ -17,14 +17,27 @@
 
 ## 📦 Quick Start
 
-### Option 1: Global Installation (Recommended)
+### Option 1: One-Line Install (Recommended)
 
 ```bash
 # Linux/macOS
-./domyh-agent/.agent/scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.sh | bash
 
 # Windows PowerShell
-.\domyh-agent\.agent\scripts\install.ps1
+iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
+```
+
+### Option 2: Clone & Install
+
+```bash
+# Clone repository
+git clone https://github.com/nockasdd/domyh-awf-code.git
+
+# Linux/macOS
+./domyh-awf-code/.agent/scripts/install.sh
+
+# Windows PowerShell
+.\domyh-awf-code\.agent\scripts\install.ps1
 ```
 
 During installation, you'll be prompted to choose:
@@ -32,12 +45,13 @@ During installation, you'll be prompted to choose:
 - **Language**: English (default) or Vietnamese
 - **Target IDE**: Claude Code, Cursor, Windsurf, Gemini CLI, etc.
 
-### Option 2: Project-Specific Installation
+### Option 3: Project-Specific Installation
 
 ```bash
 # Copy the agent folder into your project root
-cp -r domyh-agent/.agent /path/to/your/project/
-cp domyh-agent/root/* /path/to/your/project/
+cp -r domyh-awf-code/.agent /path/to/your/project/
+cp domyh-awf-code/*.md /path/to/your/project/
+cp domyh-awf-code/.cursorrules /path/to/your/project/
 ```
 
 ---
