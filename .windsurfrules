@@ -1,4 +1,4 @@
-# DOMYH Agent v4.3 — Cursor Rules
+# DOMYH Agent v4.3 — Windsurf Rules
 
 ## Core Directives
 
@@ -31,3 +31,10 @@ Semantic selection: top-5 skills, 30% threshold, LRU cache (max 3)
 ## Language
 
 Match user's language. Default: English.
+
+## References
+
+See `.agent/` for full configuration:
+- `manifest.yaml` - Agent config
+- `skills/` - 33 specialized skills
+- `workflows/` - 29 command handlers
