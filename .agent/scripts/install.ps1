@@ -1,7 +1,7 @@
 # ============================================================================
 # DOMYH Agent Library - Smart Installer for Windows
 # Version: 2.0.0
-# Developer: NockDev (https://github.com/nockdev)
+# Developer: NockDev (https://github.com/nockasdd)
 # PowerShell Script
 # ============================================================================
 

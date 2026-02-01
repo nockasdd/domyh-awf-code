@@ -330,7 +330,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-**Made with ❤️ by [NockDev](https://github.com/nockdev)**
+**Made with ❤️ by [NockDev](https://github.com/nockasdd)**
 
 [![GitHub Stars](https://img.shields.io/github/stars/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code)
 [![GitHub Forks](https://img.shields.io/github/forks/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code/fork)

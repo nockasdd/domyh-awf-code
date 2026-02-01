@@ -2,7 +2,7 @@
 # ============================================================================
 # DOMYH Agent Library - Smart Installer
 # Version: 2.0.0
-# Developer: NockDev (https://github.com/nockdev)
+# Developer: NockDev (https://github.com/nockasdd)
 # Supports: Linux, macOS, Windows (Git Bash/WSL)
 # ============================================================================
 

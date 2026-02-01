@@ -3,7 +3,7 @@
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📚 **Version**: v4.4 - Architecture-Aware Implementation (AI Best Practices 2025)
 >
-> _Powered by [NockDev](https://github.com/nockdev)_
+> _Powered by [NockDev](https://github.com/nockasdd)_
 
 ## Overview
 
