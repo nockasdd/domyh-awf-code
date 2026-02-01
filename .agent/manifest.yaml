@@ -10,7 +10,7 @@ developer: "NockDev"
 # LANGUAGE & DEFAULTS
 # =============================================================================
 
-lang: en # Default: en | vi
+lang: vi # Default: en | vi — Currently: Tiếng Việt
 
 defaults:
   evidence_required: true

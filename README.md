@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/nockasdd/domyh-awf-code?style=for-the-badge&color=brightgreen)](https://github.com/nockasdd/domyh-awf-code/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-33+-purple.svg?style=for-the-badge)](#-skills)
-[![Commands](https://img.shields.io/badge/commands-30-orange.svg?style=for-the-badge)](#-commands)
+[![Commands](https://img.shields.io/badge/commands-31-orange.svg?style=for-the-badge)](#-commands)
 [![IDE Support](https://img.shields.io/badge/IDEs-10+-red.svg?style=for-the-badge)](#-ide-support)
 
 **Portable** • **Multi-language** • **Universal IDE Support**

@@ -14,7 +14,7 @@ project:
 # =============================================================================
 
 i18n:
-  default: "en" # English default
+  default: "vi" # Vietnamese — synced from state.json
   fallback: "en" # Fallback if key missing
   strings_path: "./i18n/" # Translation files location
 

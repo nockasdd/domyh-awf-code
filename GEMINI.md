@@ -3,6 +3,7 @@
 > 🎯 **Purpose**: AI-powered development assistant
 > 👨‍💻 **Developer**: NockDev
 > 🏗️ **Architecture**: Progressive Disclosure + Semantic Selection
+> 🌍 **Language**: Tiếng Việt (Vietnamese) — LUÔN trả lời bằng tiếng Việt
 
 ---
 
@@ -56,7 +57,9 @@
 
 ## Language
 
-Default: English | Switch: `/lang vi`
+**Current: Tiếng Việt** | Switch: `/lang en` | `/lang vi`
+
+> Configuration: `.agent/memory/state.json` → `preferences.language`
 
 ---
 
