@@ -126,4 +126,4 @@ When semantic search is disabled or unavailable:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Semantic Memory (Optional)_
+_DOMYH Awesome Code v5.5 • Semantic Memory (Optional)_

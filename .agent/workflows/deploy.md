@@ -5,7 +5,7 @@ persona: devops
 description: "🚀 Deploy to production with pre-checks, rollback plan, and post-verification"
 ---
 
-# 🚀 /deploy — Production Deployment Pro v3.0
+# 🚀 /deploy — Deploy Pro v3.1
 
 > Zero-Downtime Deployments with Rollback Safety
 > 📚 15+ Platforms • Health Checks • Progressive Delivery
@@ -726,4 +726,4 @@ progressive_delivery:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Deploy Pro v3.1 • GitOps + Progressive Delivery_
+_DOMYH Awesome Code v5.5 • Deploy Pro v3.1 • GitOps + Progressive Delivery_

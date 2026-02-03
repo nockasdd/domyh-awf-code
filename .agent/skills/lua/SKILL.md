@@ -1,14 +1,14 @@
 ---
 name: lua
 detect: ["*.lua", ".luarc.json", "init.lua", "conf.lua", "main.lua"]
-version: "4.3.0"
+version: "6.0.0"
 category: scripting
 tier: 1
 ---
 
-# Lua Patterns — DOMYH Awesome Code v4.3
+# Lua Patterns — DOMYH Awesome Code v5.5
 
-> **Versions**: Lua 5.1, 5.2, 5.3, 5.4, 5.5 (Dec 2025), LuaJIT 2.1
+> **Versions**: Lua 5.1, v5.5, 5.3, 5.4, 5.5 (Dec 2025), LuaJIT 2.1
 > **Philosophy**: Simplicity, embeddability, flexibility via metatables
 
 ---
@@ -35,7 +35,7 @@ end
 if table.create then
     print("Lua 5.5+")
 elseif rawlen then
-    print("Lua 5.2+")
+    print("Lua v5.5+")
 end
 ```
 
@@ -489,4 +489,4 @@ end)
 
 ---
 
-_DOMYH Awesome Code v4.3 • Lua 5.1-5.5, LuaJIT_
+_DOMYH Awesome Code v6.0.0 • Lua 5.1-5.5, LuaJIT_

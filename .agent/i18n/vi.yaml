@@ -1,83 +1,195 @@
+# =============================================================================
 # DOMYH Awesome Code - Vietnamese Strings
-# i18n/vi.yaml v4.1
+# i18n/vi.yaml v5.5 — Enhanced i18n System
+# =============================================================================
+# NOTE: Version được sync từ core/VERSION.yaml
+# Sử dụng: Agent đọc language từ state.json → load file i18n tương ứng
+# =============================================================================
 
 app:
   name: "DOMYH Awesome Code"
-  version: "4.3.0"
+  version: "5.5.0" # Sync từ VERSION.yaml
+  version_short: "v5.5"
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"
+  language_name: "Tiếng Việt"
+  language_code: "vi"
+
+# =============================================================================
+# AGENT BEHAVIOR INSTRUCTIONS
+# Đây là những instructions quan trọng agent PHẢI tuân theo khi dùng tiếng Việt
+# =============================================================================
+
+agent_instructions:
+  primary_language: "vi"
+  response_language: |
+    Bạn PHẢI trả lời bằng Tiếng Việt trong mọi trường hợp.
+    Sử dụng tiếng Anh cho: code, technical terms, và proper nouns.
+
+  tone: "professional_friendly" # formal | professional_friendly | casual
+  honorifics:
+    user_to_agent: "em" # Agent tự xưng là "em"
+    agent_to_user: "anh/chị" # Gọi user là "anh" hoặc "chị"
+    neutral: "bạn" # Khi không rõ gender
+
+  formatting:
+    use_emoji: true
+    use_boxes: true # Sử dụng box ━━━━
+    code_comments: "english" # Comments trong code vẫn tiếng Anh
+
+# =============================================================================
+# COMMANDS - Mô tả chi tiết cho mỗi command
+# =============================================================================
 
 commands:
-  # Core (6) - Sử dụng nhiều
+  # Development (6)
   ap:
     name: "Kiểm tra Toàn diện"
-    desc: "Kiểm tra code toàn diện với hội đồng 5 chuyên gia: bảo mật, hiệu năng, kiến trúc, testing, và best practices"
+    short: "Audit"
+    desc: "Kiểm tra code toàn diện với hội đồng 5 chuyên gia"
+    help: "Sử dụng: /ap [scope] — scope: full | quick | security"
   code:
     name: "Viết Code"
-    desc: "Viết code production-ready theo best practices với xử lý lỗi, types, và documentation đầy đủ"
+    short: "Code"
+    desc: "Viết code production-ready với Auto Test Loop"
+    help: "Sử dụng: /code [mô tả] — Options: --test, --no-test, --plan"
   debug:
     name: "Sửa Lỗi"
-    desc: "Debug có hệ thống với phân tích nguyên nhân: tái tạo → cô lập → phân tích → sửa → xác nhận"
+    short: "Debug"
+    desc: "Debug có hệ thống với Root Cause Tracing"
+    help: "Sử dụng: /debug [mô tả lỗi hoặc error message]"
   plan:
     name: "Lên Kế Hoạch"
-    desc: "Thiết kế và lên kế hoạch tính năng với phân tích tác động, chia nhỏ tasks, và ước lượng effort"
+    short: "Plan"
+    desc: "Thiết kế tính năng với Deep Interview"
+    help: "Sử dụng: /plan [feature] — Options: full, quick, tech, risk"
   test:
     name: "Chạy Tests"
-    desc: "Chạy tests hiện có và viết test cases mới với coverage unit, integration, và e2e"
+    short: "Test"
+    desc: "Chạy tests và viết test cases mới"
+    help: "Sử dụng: /test [scope] — scope: unit | integration | e2e | all"
   modify:
     name: "Sửa Project"
-    desc: "Sửa và cải thiện project có sẵn: detect stack → phân tích issues → lên kế hoạch → thực thi → xác nhận"
+    short: "Modify"
+    desc: "Sửa và cải thiện project có sẵn"
+    help: "Sử dụng: /modify [mô tả vấn đề cần sửa]"
 
-  # Secondary (4) - Sử dụng trung bình
-  deploy:
-    name: "Deploy"
-    desc: "Deploy production với kiểm tra an toàn, xác nhận staging, và chiến lược rollback"
-  refactor:
-    name: "Tái Cấu Trúc"
-    desc: "Cải thiện cấu trúc code và khả năng bảo trì mà không thay đổi chức năng"
+  # Planning (5)
+  think:
+    name: "Brainstorm"
+    short: "Think"
+    desc: "Brainstorming Pro với 6 methods, 5 tiers"
+    help: "Sử dụng: /think [topic] — Methods: 6hats, swot, scamper, starbursting"
   init:
     name: "Khởi Tạo"
-    desc: "Tạo dự án mới với scaffolding thông minh, phases P0-P6, và theo dõi tiến độ"
-  review:
-    name: "Review Code"
-    desc: "Review code cho PRs và thay đổi với kiểm tra bảo mật, hiệu năng, và khả năng bảo trì"
-
-  # Extended (8) - P1/P2
-  migrate:
-    name: "Migrations"
-    desc: "Database migrations với thay đổi schema, chuyển đổi dữ liệu, và hỗ trợ rollback"
+    short: "Init"
+    desc: "Tạo dự án mới với scaffolding thông minh"
+    help: "Sử dụng: /init [loại project] — e.g., nextjs, golang, flutter"
   doc:
     name: "Tài Liệu"
-    desc: "Tạo tài liệu toàn diện bao gồm API docs, README, và code comments"
+    short: "Doc"
+    desc: "Tạo documentation toàn diện"
+    help: "Sử dụng: /doc [type] — type: api | readme | changelog | all"
+  visualize:
+    name: "Thiết Kế UI"
+    short: "Visualize"
+    desc: "Tạo mockups và wireframes"
+    help: "Sử dụng: /visualize [mô tả UI] — style: glassmorphism, minimalist, etc."
   generate:
     name: "Sinh Code"
-    desc: "Sinh code tự động cho boilerplate, CRUD operations, và patterns lặp lại"
-  perf:
-    name: "Hiệu Năng"
-    desc: "Phân tích hiệu năng để tìm bottlenecks, memory leaks, và cơ hội tối ưu"
-  upgrade:
-    name: "Nâng Cấp"
-    desc: "Cập nhật dependencies với kiểm tra tương thích và migration breaking changes"
-  clean:
-    name: "Dọn Dẹp"
-    desc: "Dọn dẹp code: xóa dead code, sửa linting issues, và cải thiện formatting"
-  monitor:
-    name: "Giám Sát"
-    desc: "Thiết lập observability với logging, metrics, tracing, và alerting"
+    short: "Generate"
+    desc: "Sinh code tự động từ templates"
+    help: "Sử dụng: /generate [type] — type: crud | api | model | component"
+
+  # Deployment (6)
+  deploy:
+    name: "Deploy"
+    short: "Deploy"
+    desc: "Deploy production với pre-checks"
+    help: "Sử dụng: /deploy [env] — env: staging | production"
   env:
     name: "Môi Trường"
-    desc: "Quản lý môi trường: cấu hình variables, secrets, và setup multi-environment"
+    short: "Env"
+    desc: "Quản lý environment variables và secrets"
+    help: "Sử dụng: /env [action] — action: check | sync | diff"
+  migrate:
+    name: "Migrations"
+    short: "Migrate"
+    desc: "Database migrations với zero-downtime"
+    help: "Sử dụng: /migrate [action] — action: create | run | rollback"
+  monitor:
+    name: "Giám Sát"
+    short: "Monitor"
+    desc: "Setup observability và alerting"
+    help: "Sử dụng: /monitor [setup] — setup: logging | metrics | tracing"
+  perf:
+    name: "Hiệu Năng"
+    short: "Perf"
+    desc: "Profiling và tối ưu hiệu năng"
+    help: "Sử dụng: /perf [scope] — scope: cpu | memory | network | all"
+  revert:
+    name: "Rollback"
+    short: "Revert"
+    desc: "Hoàn tác thay đổi với safety checks"
+    help: "Sử dụng: /revert [target] — target: commit | deploy | migration"
 
-  # Utility (3) - Token thấp
-  recap:
-    name: "Tóm Tắt"
-    desc: "Tóm tắt phiên: những gì đã làm, files thay đổi, và bước tiếp theo"
+  # Quality (5)
+  review:
+    name: "Review Code"
+    short: "Review"
+    desc: "Review PRs với security và performance checks"
+    help: "Sử dụng: /review [pr_link hoặc file_path]"
+  refactor:
+    name: "Tái Cấu Trúc"
+    short: "Refactor"
+    desc: "Cải thiện code structure mà không đổi behavior"
+    help: "Sử dụng: /refactor [scope] — scope: file | module | pattern"
+  clean:
+    name: "Dọn Dẹp"
+    short: "Clean"
+    desc: "Xóa dead code và unused dependencies"
+    help: "Sử dụng: /clean [type] — type: code | deps | all"
+  upgrade:
+    name: "Nâng Cấp"
+    short: "Upgrade"
+    desc: "Update dependencies với compatibility checks"
+    help: "Sử dụng: /upgrade [scope] — scope: minor | major | security"
+
+  # Utility (6)
   status:
     name: "Trạng Thái"
-    desc: "Trạng thái dự án: kiểm tra sức khỏe, tasks đang chờ, và tình trạng hiện tại"
+    short: "Status"
+    desc: "Kiểm tra sức khỏe project"
+    help: "Sử dụng: /status"
+  recap:
+    name: "Tóm Tắt"
+    short: "Recap"
+    desc: "Tóm tắt phiên làm việc"
+    help: "Sử dụng: /recap"
+  suggest:
+    name: "Gợi Ý"
+    short: "Suggest"
+    desc: "Gợi ý bước tiếp theo dựa trên context"
+    help: "Sử dụng: /suggest"
+  save:
+    name: "Lưu"
+    short: "Save"
+    desc: "Lưu session vào memory files"
+    help: "Sử dụng: /save"
+  lang:
+    name: "Ngôn Ngữ"
+    short: "Lang"
+    desc: "Chuyển đổi ngôn ngữ agent"
+    help: "Sử dụng: /lang [code] — code: vi | en"
   help:
     name: "Trợ Giúp"
-    desc: "Hiển thị commands có sẵn, ví dụ sử dụng, và links tài liệu"
+    short: "Help"
+    desc: "Hiển thị commands có sẵn"
+    help: "Sử dụng: /help [command]"
+
+# =============================================================================
+# PERSONAS
+# =============================================================================
 
 personas:
   auditor:
@@ -88,34 +200,88 @@ personas:
     desc: "Triển khai code chất lượng cao"
   architect:
     name: "Kiến Trúc Sư"
-    desc: "Quyết định thiết kế và kiến trúc hệ thống"
+    desc: "Quyết định thiết kế hệ thống"
   debugger:
     name: "Thám Tử Debug"
-    desc: "Phân tích nguyên nhân và sửa có hệ thống"
+    desc: "Phân tích nguyên nhân gốc"
   tester:
     name: "Kỹ Sư QA"
-    desc: "Chiến lược test và đảm bảo chất lượng"
+    desc: "Đảm bảo chất lượng"
   devops:
     name: "Kỹ Sư DevOps"
     desc: "Infrastructure và deployment"
   documenter:
     name: "Technical Writer"
-    desc: "Tài liệu và chuyển giao kiến thức"
+    desc: "Tài liệu và knowledge transfer"
+
+# =============================================================================
+# UI MESSAGES — Các thông báo phổ biến
+# =============================================================================
 
 messages:
-  stop_required: "⛔ DỪNG — Cần xác nhận"
+  # Stop conditions
+  stop_required: "⛔ DỪNG — Cần xác nhận trước khi tiếp tục"
+  stop_unclear: "⛔ DỪNG — Yêu cầu chưa rõ ràng, cần làm rõ"
+  stop_destructive: "⛔ DỪNG — Hành động nguy hiểm, cần xác nhận"
+
+  # Confirmations
+  confirm_proceed: "Tiếp tục? (y/n)"
+  confirm_yes: "Đã xác nhận, tiếp tục..."
+  confirm_no: "Đã hủy."
+
+  # Progress
+  progress_started: "🚀 Bắt đầu..."
+  progress_working: "⏳ Đang xử lý..."
+  progress_complete: "✅ Hoàn thành!"
+  progress_failed: "❌ Thất bại"
+
+  # Deep Interview (v5.5)
+  interview_start: "🎯 DEEP INTERVIEW"
+  interview_question_what: "Feature này xử lý/quản lý cái gì chính xác?"
+  interview_question_who: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
+  interview_question_priority: "Nếu chỉ làm 1 việc duy nhất, đó là gì?"
+  interview_skip: "→ Đủ context, bỏ qua interview"
+  interview_complete: "→ Đủ context, tiến hành lên kế hoạch..."
+
+  # Auto Test Loop (v5.5)
+  test_loop_start: "🧪 AUTO TEST LOOP"
+  test_loop_retry: "🔄 Retry {n}/3 — Đang thử cách khác..."
+  test_loop_pass: "✅ Tests passed!"
+  test_loop_fail_options: |
+    😅 Em đã thử 3 cách nhưng test vẫn fail.
+
+    Anh muốn:
+    1️⃣ Em thử cách khác (đơn giản hơn)
+    2️⃣ Bỏ qua test này, làm tiếp
+    3️⃣ Gọi /debug để phân tích sâu
+    4️⃣ Rollback về trước khi sửa
+
+  # Step Confirmation (v5.5)
+  step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ ĐÃ XONG: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  step_next: "→ Tiếp task tiếp? (y/điều chỉnh/dừng)"
+
+  # Misc
   scope_contract: "🎯 Vui lòng chọn phạm vi"
   installation_complete: "✅ Cài đặt hoàn tất!"
-  goodbye: "Tạm biệt!"
-  skills_suggested: "💡 Skills được đề xuất dựa trên ngữ cảnh của bạn"
+  goodbye: "Tạm biệt! 👋"
+  skills_suggested: "💡 Skills được đề xuất dựa trên ngữ cảnh"
   flow_detected: "🔄 Phát hiện workflow pattern"
   resume_available: "📂 Tìm thấy phiên trước. Tiếp tục?"
+  language_switched: "🌍 Đã chuyển sang: Tiếng Việt"
+
+# =============================================================================
+# PRIORITY LABELS
+# =============================================================================
 
 priority:
-  p0: "Nghiêm trọng - Sửa ngay lập tức"
-  p1: "Cao - Trước khi deploy"
-  p2: "Trung bình - Sprint này"
-  p3: "Thấp - Có thì tốt"
+  p0: "🔴 Nghiêm trọng — Sửa ngay lập tức"
+  p1: "🟠 Cao — Phải sửa trước khi deploy"
+  p2: "🟡 Trung bình — Sửa trong sprint này"
+  p3: "🟢 Thấp — Có thì tốt"
+
+# =============================================================================
+# WORKFLOW FLOWS
+# =============================================================================
 
 flows:
   new_project: "Tạo dự án hoàn chỉnh từ đầu"
@@ -124,3 +290,16 @@ flows:
   bug_fix: "Debug và sửa lỗi cụ thể"
   code_review: "Review toàn diện trước khi merge"
   deployment: "Deploy với kiểm tra an toàn"
+
+# =============================================================================
+# ERROR MESSAGES
+# =============================================================================
+
+errors:
+  file_not_found: "❌ Không tìm thấy file: {path}"
+  command_failed: "❌ Lỗi khi chạy lệnh: {command}"
+  test_failed: "❌ Test thất bại: {test_name}"
+  build_failed: "❌ Build thất bại"
+  permission_denied: "❌ Không có quyền truy cập"
+  invalid_input: "❌ Input không hợp lệ"
+  timeout: "❌ Quá thời gian chờ"

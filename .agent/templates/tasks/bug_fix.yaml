@@ -1,0 +1,121 @@
+# Bug Fix Task Template
+
+> Structured template for bug fixing tasks
+
+---
+
+## Schema
+
+```yaml
+task_type: bug_fix
+version: "6.0.0"
+
+# Required fields
+symptom: string              # What's the visible problem
+reproduction_steps: list     # How to reproduce
+expected_behavior: string    # What should happen
+
+# Optional fields
+actual_behavior: string      # What actually happens
+investigation_areas: list    # Where to look
+error_messages: list         # Any error messages
+logs: string                 # Relevant log entries
+priority: enum               # [P0, P1, P2, P3]
+```
+
+---
+
+## Example Task
+
+```yaml
+task:
+  type: bug_fix
+  
+  symptom: |
+    Users cannot complete checkout when cart has more than 10 items.
+    The page freezes and eventually shows "Request Timeout".
+  
+  reproduction_steps:
+    - Log in as any user
+    - Add 11 or more items to cart
+    - Navigate to checkout
+    - Click "Complete Purchase"
+    - Observe page freeze
+  
+  expected_behavior: |
+    Checkout should complete successfully regardless of cart size.
+    User should see confirmation page within 5 seconds.
+  
+  actual_behavior: |
+    Page freezes for ~30 seconds, then shows timeout error.
+    Order is not created in database.
+  
+  error_messages:
+    - "Request Timeout: 30000ms exceeded"
+    - "[Gateway] Connection timeout: checkout-service"
+  
+  logs: |
+    2026-02-03 10:15:23 [ERROR] checkout: N+1 query detected
+    2026-02-03 10:15:45 [ERROR] gateway: upstream timeout
+  
+  investigation_areas:
+    - src/services/checkout.service.ts (line 145-180)
+    - src/repositories/cart.repository.ts (getCartItems)
+    - Database query performance
+  
+  priority: P0
+  
+  context:
+    frequency: "Always with 11+ items"
+    environment: "Production"
+    affected_users: "~15% of checkouts"
+    recent_changes:
+      - "2 days ago: Added inventory validation"
+```
+
+---
+
+## Usage in Prompts
+
+```markdown
+## Task: Bug Fix
+
+**Symptom:**
+{{task.symptom}}
+
+**Reproduction Steps:**
+{{#task.reproduction_steps}}
+{{@index}}. {{.}}
+{{/task.reproduction_steps}}
+
+**Expected Behavior:**
+{{task.expected_behavior}}
+
+**Actual Behavior:**
+{{task.actual_behavior}}
+
+**Error Messages:**
+{{#task.error_messages}}
+- `{{.}}`
+{{/task.error_messages}}
+
+**Investigation Areas:**
+{{#task.investigation_areas}}
+- {{.}}
+{{/task.investigation_areas}}
+
+**Priority:** {{task.priority}}
+```
+
+---
+
+## Workflow Integration
+
+This task type triggers:
+- **Persona:** Debugger
+- **Chain:** debug (1_reproduce → 2_isolate → 3_analyze → 4_fix → 5_verify)
+- **Reflection:** Post-fix error_analysis
+
+---
+
+_DOMYH Awesome Code v6.0 • Bug Fix Task Template_

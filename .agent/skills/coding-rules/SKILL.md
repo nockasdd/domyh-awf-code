@@ -140,4 +140,4 @@ python .agent/skills/coding-rules/scripts/search.py "observer csharp" --domain p
 
 ---
 
-_DOMYH Awesome Code v4.3 • Awesome Coding Rules • 15 Languages • 10 Architectures • 32+ Rules_
+_DOMYH Awesome Code v6.0.0 • Awesome Coding Rules • 23 Languages • 10 Architectures • 70+ Rules_

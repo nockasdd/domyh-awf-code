@@ -1,105 +1,44 @@
 name: docker
-version: "4.3.0"
+version: "6.0.0"
+display: Docker
 category: devops
 tier: 1
+priority: 1
 
 description: |
-  Docker containerization for Docker Engine 28+ and Compose v2.
-  Covers multi-stage builds, BuildKit, security, rootless containers.
+  Container orchestration with Docker 28+ and Compose V3.
+  Covers multi-stage builds, security, networking, volumes.
 
 triggers:
   file_patterns:
     - "Dockerfile"
-    - "Dockerfile.*"
     - "docker-compose.yml"
-    - "docker-compose.yaml"
-    - "compose.yml"
-    - "compose.yaml"
     - ".dockerignore"
   keywords:
-    # Core Docker
+    # Core
     - docker
     - dockerfile
-    - docker build
-    - docker run
-    - docker compose
-    - docker-compose
     - container
-    - containerization
-    # Dockerfile instructions
-    - FROM
-    - RUN
-    - COPY
-    - CMD
-    - ENTRYPOINT
-    - WORKDIR
-    - EXPOSE
-    - ENV
-    - ARG
-    - HEALTHCHECK
-    - USER
-    - VOLUME
-    # Multi-stage
-    - multi-stage build
-    - multi-stage
-    - build stage
-    - AS builder
-    # BuildKit
-    - buildkit
-    - mount cache
-    - mount secret
-    - mount type
-    - docker buildx
-    # Security
-    - rootless
-    - non-root user
-    - distroless
-    - scratch image
-    - alpine
-    - docker scout
-    - trivy
-    - container security
-    - cap_drop
-    - read_only
     # Compose
-    - compose profiles
-    - depends_on
-    - healthcheck
-    - service
-    - volumes
-    - networks
-    # Registry
-    - docker push
-    - docker pull
-    - docker tag
-    - container registry
-    - ECR
-    - GCR
-    - ACR
-    # Tools
-    - podman
-    - containerd
-    - nerdctl
+    - docker-compose
+    - compose
+    # Features
+    - multi-stage
+    - buildx
+    - buildkit
   intents:
-    - containerize app
-    - docker image
-    - compose service
-    - container build
-    - docker deploy
+    - docker build
+    - container setup
+    - dockerfile
 
 related_skills:
-  - kubernetes # Orchestration
-  - ci-cd # Build pipelines
+  - kubernetes
+  - ci-cd
+  - go
 
-prevent_confusion_with:
-  - kubernetes: "Docker = single host, K8s = orchestration"
-  - podman: "Podman is Docker-compatible alternative"
-
-unique_apis:
-  - "Dockerfile syntax (FROM, RUN, COPY, CMD)"
-  - "docker-compose.yml structure"
-  - "BuildKit cache mounts (--mount=type=cache)"
-  - "BuildKit secret mounts (--mount=type=secret)"
-  - "Multi-stage build (FROM ... AS ...)"
-  - "HEALTHCHECK instruction"
-  - "docker compose profiles"
+caps:
+  - Docker 28+
+  - Multi-stage builds
+  - BuildKit
+  - Docker Compose V3
+  - Security best practices

@@ -5,7 +5,7 @@ persona: developer
 description: "🔧 Code refactoring: identify smells → plan changes → apply → verify tests pass"
 ---
 
-# 🔧 /refactor — Refactoring Pro v3.0
+# 🔧 /refactor — Refactor Pro v3.1
 
 > Safe, Incremental Code Improvement
 > 📚 30+ Languages • Code Smells • Patterns
@@ -431,4 +431,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Refactor Pro v3.1 • AI-Assisted Refactoring_
+_DOMYH Awesome Code v5.5 • Refactor Pro v3.1 • AI-Assisted Refactoring_

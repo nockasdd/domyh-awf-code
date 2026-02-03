@@ -1,0 +1,11 @@
+{
+  "version": "6.0.0",
+  "description": "Learned error patterns for prevention",
+  "patterns": [],
+  "statistics": {
+    "total_errors": 0,
+    "prevented": 0,
+    "by_type": {}
+  },
+  "last_updated": "2026-02-03T15:12:00+07:00"
+}

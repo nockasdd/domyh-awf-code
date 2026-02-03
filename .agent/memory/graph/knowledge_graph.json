@@ -1,0 +1,12 @@
+{
+  "version": "6.0.0",
+  "description": "Knowledge graph entities and relationships",
+  "entities": {},
+  "relationships": [],
+  "statistics": {
+    "entity_count": 0,
+    "relationship_count": 0,
+    "by_type": {}
+  },
+  "last_updated": "2026-02-03T15:12:00+07:00"
+}

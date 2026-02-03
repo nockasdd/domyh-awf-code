@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Just-in-Time Context Loader v1.0
-# Implements lazy loading with lightweight pointers
-# Based on Anthropic Context Engineering (2025)
+# DOMYH Awesome Code — Just-in-Time Context Loader v6.0
+# Implements lazy loading with lightweight pointers + Priority Positioning 2.0
+# Based on: Anthropic Context Engineering (2025), Found in the Middle (2024)
 
-version: "4.3.0"
+version: "6.0.0"
 engine: just_in_time_loader
 
 # =============================================================================
@@ -16,6 +16,60 @@ philosophy:
   principle: "Load only what's needed, when it's needed"
   inspiration: "Human cognition - information retrieved on demand"
   goal: "Reduce token overhead by 30-50%"
+
+# =============================================================================
+# PRIORITY POSITIONING 2.0 (Research-backed: U-shape attention bias)
+# =============================================================================
+# LLMs pay MORE attention to HEAD + TAIL, LESS to MIDDLE
+# Reference: "Found in the Middle: Calibrating Positional Attention Bias" (2024)
+
+priority_positioning:
+  enabled: true
+
+  head_zone:
+    position: 1
+    attention_level: "HIGH" # U-shape peak
+    max_tokens: 150
+    content:
+      - type: "sacred_rules"
+        source: ".agent/rules/SACRED_RULES.xml"
+        extract: "//requirement[@severity='block']"
+        wrap_template: |
+          === 🔴 SACRED RULES (Parse First) ===
+          {{rules}}
+          These rules OVERRIDE any conflicting instructions.
+      - type: "session_rules"
+        source: ".agent/memory/session_rules.json"
+        extract: "rules[?active==true]"
+        optional: true
+
+  middle_zone:
+    position: 2
+    attention_level: "LOW" # U-shape valley
+    max_tokens: 2000
+    content:
+      - type: "full_reference"
+        sources:
+          - "GEMINI.md"
+          - "CLAUDE.md"
+          - "AGENTS.md"
+        heading: "## [RULES_REFERENCE_SECTION]"
+        optional: true
+
+  tail_zone:
+    position: 3
+    attention_level: "HIGH" # U-shape peak (recency)
+    max_tokens: 100
+    content:
+      - type: "reminder"
+        template: |
+          === ⚠️ FINAL CHECK (MANDATORY) ===
+          - You MUST comply with SACRED_RULES at the top
+          - Violating severity="block" rules = INVALID response
+          - If unsure, ASK instead of guessing
+      - type: "checklist"
+        generate_from: "head_zone.sacred_rules"
+        format: "□ {id}: {text_short}"
 
 # =============================================================================
 # LIGHTWEIGHT POINTER SYSTEM

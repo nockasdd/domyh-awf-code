@@ -1,12 +1,12 @@
 ---
 name: vue
 detect: ["*.vue", "package.json:vue", "nuxt.config.ts", "vite.config.ts"]
-version: "4.3.0"
+version: "6.0.0"
 category: frontend
 tier: 1
 ---
 
-# Vue Patterns — DOMYH Awesome Code v4.3
+# Vue Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Vue 3.5/Nuxt 4 (2025-2026)
 > **Philosophy**: Progressive, Composition API, reactive
@@ -353,4 +353,4 @@ definePageMeta({
 
 ---
 
-_DOMYH Awesome Code v4.3 • Vue 3.5/Nuxt 4_
+_DOMYH Awesome Code v6.0.0 • Vue 3.5/Nuxt 4_

@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v4.3 — Command Registry
+# DOMYH Awesome Code v5.5 — Command Registry
 
 > 20 slash commands for development workflow
 
@@ -49,4 +49,4 @@ User Input → Parse → Load Workflow → Activate Skills → Execute
 
 ---
 
-_DOMYH Awesome Code v4.3_
+_DOMYH Awesome Code v5.5_

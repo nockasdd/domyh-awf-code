@@ -1,4 +1,18 @@
-# DOMYH Awesome Code v4.3 — Cursor Rules
+# DOMYH Awesome Code v6.0 — Cursor Rules
+
+<!-- === 🔴 SACRED RULES (Parse First) === -->
+<!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
+
+**RULE_ID: LANG_001** | CLASS: MANDATORY | LABEL: BLOCK_ON_VIOLATION
+- MUST respond in Vietnamese (vi-VN). Violation = INVALID response.
+
+**RULE_ID: MCP_001** | CLASS: REQUIRED_ACTION | LABEL: HARD_CONSTRAINT
+- MUST use MCP tools. NEVER use browser tool (SECURITY CONSTRAINT).
+
+**RULE_ID: EXEC_002** | CLASS: SAFETY | LABEL: BLOCK_ON_VIOLATION
+- MUST confirm before destructive actions (rm -rf, DROP TABLE, etc.)
+
+---
 
 ## Core Directives
 
@@ -15,6 +29,7 @@
 ## Skill Loading
 
 Progressive Disclosure:
+
 - META.yaml: ~100 tokens (always)
 - SKILL.md: ~1,500 tokens (on-demand)
 - ADVANCED.md: ~4,000 tokens (referenced)
@@ -32,3 +47,20 @@ Semantic selection: top-5 skills, 30% threshold, LRU cache (max 3)
 
 Current: Tiếng Việt — LUÔN trả lời bằng tiếng Việt.
 Switch: /lang en | /lang vi
+
+---
+
+<!-- === ⚠️ FINAL CHECK (MANDATORY) === -->
+
+## ⚠️ Rule Reminder (Parse Last)
+
+Before responding, verify:
+- [ ] **LANG_001**: Answer is in Vietnamese
+- [ ] **MCP_001**: All tools are MCP (no browser)
+- [ ] **EXEC_002**: Destructive actions have confirmation
+
+> If any fails, FIX response before returning.
+
+---
+
+_DOMYH Awesome Code v6.0 • Universal Rule Loading Framework_

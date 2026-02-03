@@ -1,6 +1,6 @@
 # Java — Advanced Patterns
 
-> DOMYH Awesome Code v4.3 — Tier 3 Reference
+> DOMYH Awesome Code v5.5 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -447,4 +447,4 @@ class UserRepositoryIntegrationTest {
 
 ---
 
-_DOMYH Awesome Code v4.3 — Java Advanced Patterns — 2025-2026_
+_DOMYH Awesome Code v6.0.0 — Java Advanced Patterns — 2025-2026_

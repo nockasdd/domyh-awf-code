@@ -1,0 +1,45 @@
+---
+description: DOMYH Testing Skills for test files
+globs: **/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/test/**/*,**/tests/**/*,**/__tests__/**/*
+alwaysApply: false
+---
+
+# Testing Skills
+
+## Test Structure (AAA Pattern)
+```typescript
+test('should do something', () => {
+  // Arrange
+  const input = createInput()
+  
+  // Act
+  const result = doSomething(input)
+  
+  // Assert
+  expect(result).toBe(expected)
+})
+```
+
+## Unit Tests
+- Test one unit in isolation
+- Mock external dependencies
+- Fast execution (< 100ms each)
+- Clear naming: should_behavior_when_condition
+
+## Integration Tests
+- Test component interactions
+- Use test database/containers
+- Clean state between tests
+- Focus on critical paths
+
+## E2E Tests
+- User journey scenarios
+- Visual regression
+- Performance benchmarks
+- Cross-browser validation
+
+## Mocking Best Practices
+- Mock at boundaries (APIs, DB)
+- Prefer fakes over mocks when possible
+- Verify important interactions
+- Avoid over-mocking (test implementation)

@@ -8,12 +8,12 @@ detect:
     "azure-pipelines.yml",
     "bitbucket-pipelines.yml",
   ]
-version: "4.3.0"
+version: "6.0.0"
 category: devops
 tier: 1
 ---
 
-# CI/CD Patterns — DOMYH Awesome Code v4.3
+# CI/CD Patterns — DOMYH Awesome Code v5.5
 
 > Comprehensive guide for GitHub Actions, GitLab CI, Azure DevOps (2025-2026)
 
@@ -742,4 +742,4 @@ jobs:
 
 ---
 
-_DOMYH Awesome Code v4.3 • CI/CD Patterns • 2025-2026_
+_DOMYH Awesome Code v6.0.0 • CI/CD Patterns • 2025-2026_

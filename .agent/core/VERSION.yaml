@@ -1,0 +1,163 @@
+# =============================================================================
+# VERSION.yaml — Single Source of Truth for System VERSION
+# =============================================================================
+# IMPORTANT: File này CHỈ quản lý VERSION
+# - Project identity → BRANDING.yaml
+# - Language settings → BRANDING.yaml
+# Khi update version, CHỈ cần sửa file này
+# =============================================================================
+
+# =============================================================================
+# CORE SYSTEM VERSION
+# =============================================================================
+
+system:
+  version: "6.0.0"
+  version_short: "v6.0" # Dùng cho footer: "_DOMYH Awesome Code v6.0_"
+  codename: "Agentic Personas"
+  release_date: "2026-02-03"
+
+  # Identity comes from BRANDING.yaml
+  _identity_ref: "core/BRANDING.yaml"
+
+# =============================================================================
+# COMPONENT VERSIONS (sub-versions for individual modules)
+# =============================================================================
+
+components:
+  # === CORE WORKFLOWS (High usage) ===
+  ap_pro: "5.1" # Audit Pro - Multi-Expert Consensus
+  code_pro: "3.2" # Code Pro - Auto Test Loop + Security-First
+  debug_pro: "3.3" # Debug Pro - Root Cause Tracing + Defense-in-Depth
+  plan_pro: "3.2" # Plan Pro - Deep Interview + Auto Phase Generation
+  test_pro: "3.2" # Test Pro - TDD Iron Law + AI Testing
+  modify_pro: "3.1" # Modify Pro - AI-Driven Modernization
+
+  # === SECONDARY WORKFLOWS ===
+  deploy_pro: "3.1" # Deploy Pro - GitOps + Progressive Delivery
+  refactor_pro: "3.1" # Refactor Pro - AI-Assisted Refactoring
+  review_pro: "3.1" # Review Pro - AI-Assisted Reviews
+  init_pro: "3.1" # Init Pro - AI Scaffolding + 30+ Templates
+
+  # === EXTENDED WORKFLOWS ===
+  migrate_pro: "3.1" # Migrate Pro - Zero-Downtime CDC
+  doc_pro: "3.1" # Doc Pro - AI-Optimized + Auto API
+  generate_pro: "3.1" # Generate Pro - Multi-Modal + Quality Gates
+  perf_pro: "3.1" # Perf Pro - Agent-Aware Profiling
+  upgrade_pro: "3.1" # Upgrade Pro - Security-First Updates
+  clean_pro: "2.2" # Clean Pro - Dead Code Removal
+  monitor_pro: "3.1" # Monitor Pro - AI-Powered Observability
+  env_pro: "3.1" # Env Pro - Vault + Multi-Env Sync
+
+  # === UTILITY WORKFLOWS ===
+  recap_pro: "3.2" # Recap Pro - Session Continuity
+  status_pro: "3.1" # Status Pro - Full Health Dashboard
+  help_pro: "2.1" # Help Pro - Context-Aware + Smart Suggestions
+  suggest_pro: "3.1" # Suggest Pro - Git-Aware Suggestions
+  dev_pro: "3.1" # Dev Pro - HMR 2025 + Error Overlay
+  revert_pro: "3.1" # Revert Pro - Safe Rollback + Feature Flags
+  orchestrate_pro: "3.1" # Orchestrate Pro - Fault-Tolerant Multi-Agent
+  save_pro: "1.0" # Save Pro - Session Persistence
+  lang_pro: "1.0" # Lang Pro - i18n Switching
+  search_pro: "1.1" # Search Pro - Semantic Memory Search
+
+  # === SPECIALIZED WORKFLOWS ===
+  think_pro: "4.0" # Think Pro - 6 Methods + 5 Tiers + Multi-Mode
+  visualize_pro: "4.0" # Visualize Pro - Multi-Platform + Component Mapping
+  sync_version_pro: "1.0" # Sync Version - SSoT Architecture
+
+  # Default for unlisted
+  default_workflow_version: "3.1"
+
+  # === SKILLS ===
+  ui_ux_pro: "5.0" # UI/UX Pro Max
+  web_perf: "5.0" # Web Performance
+
+  # Default for unlisted
+  default_skill_version: "v5.5"
+
+# =============================================================================
+# VERSION HISTORY
+# =============================================================================
+
+changelog:
+  "6.0.0":
+    date: "2026-02-03"
+    codename: "Agentic Personas"
+    changes:
+      - "11 personas with CrewAI/Anthropic/LangGraph patterns"
+      - "3-tier constitutional rule hierarchy"
+      - "4 modular rules (reflection, context, evidence, stop)"
+      - "13 prompt chain templates (review/debug/implement)"
+      - "4 task templates (code/bug/audit/refactor)"
+      - "Persona routing in ROUTER.yaml"
+      - "32 new files, comprehensive v6.0 upgrade"
+
+  "5.5.0":
+    date: "2026-02-03"
+    codename: "Multi-IDE Milestone"
+    changes:
+      - "51 skills milestone achieved"
+      - "14 IDEs supported with verified formats"
+      - "CLI commands: install, validate, doctor"
+      - "Decoupled Adapter Architecture"
+      - "Strategic Profiles system (minimal/standard/full)"
+      - "GitHub Actions CI/CD workflow"
+
+  "v5.5.0":
+    date: "2026-02-03"
+    codename: "Deep Interview"
+    changes:
+      - "Deep Interview (PHASE 0) trong /plan"
+      - "Auto Test Loop (3 retries) trong /code"
+      - "On-demand phase folder creation"
+      - "Centralized VERSION.yaml + BRANDING.yaml"
+      - "Enhanced i18n system (vi.yaml 270+ lines)"
+      - "Batch sync 80+ files to v5.5"
+
+  "5.1.0":
+    date: "2026-02-01"
+    codename: "Root Cause"
+    changes:
+      - "Debug Pro với Root Cause Tracing"
+      - "Engineering Iron Laws"
+      - "External Skills Registry"
+
+  "5.0.0":
+    date: "2026-01-28"
+    codename: "Pro Max"
+    changes:
+      - "UI/UX Pro Max skill"
+      - "Web Performance skill"
+      - "Test Pro với AI Testing"
+
+  "4.3.0":
+    date: "2026-01-15"
+    codename: "Skills Era"
+    changes:
+      - "21 core skills"
+      - "Progressive Disclosure architecture"
+      - "Semantic skill selection"
+
+# =============================================================================
+# FOOTER TEMPLATE
+# =============================================================================
+
+# Format: _DOMYH Awesome Code v5.5 • Plan Pro v3.2 • Deep Interview_
+footer_template: "_DOMYH Awesome Code {version_short} • {component_name} v{component_version} • {component_tagline}_"
+
+# =============================================================================
+# SYNC TARGETS
+# =============================================================================
+# See BRANDING.yaml for full sync_targets list
+
+sync_on_version_update:
+  - ".agent/manifest.yaml → version"
+  - ".agent/config.yaml → header comment"
+  - ".agent/memory/state.json → system.version"
+  - ".agent/i18n/vi.yaml → app.version"
+  - ".agent/i18n/en.yaml → app.version"
+  - "GEMINI.md → header + footer"
+  - ".agent/workflows/*.md → footer"
+  - ".agent/skills/*/SKILL.md → footer"
+  - ".agent/templates/*.md → footer"

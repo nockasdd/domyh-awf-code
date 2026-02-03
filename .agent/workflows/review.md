@@ -5,7 +5,7 @@ persona: developer
 description: "👀 Code review for PRs: logic, quality, security, and tests verification"
 ---
 
-# 👀 /review — Code Review Pro v3.0
+# 👀 /review — Review Pro v3.1
 
 > Comprehensive Code Review
 > 📚 5 Categories • Actionable Feedback • Best Practices
@@ -363,4 +363,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Review Pro v3.1 • AI-Assisted Reviews_
+_DOMYH Awesome Code v5.5 • Review Pro v3.1 • AI-Assisted Reviews_

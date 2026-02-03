@@ -300,7 +300,7 @@ Cross-platform tokens available in `design-tokens.csv`:
 - **Typography**: xs-3xl sizes, font weights
 - **Animation**: fast(150ms), normal(250ms), slow(350ms)
 
-### Multi-Platform Support v4.0 (NEW)
+### Multi-Platform Support v5.5 (NEW)
 
 | Platform | Frameworks                   | Output         | Detection            |
 | -------- | ---------------------------- | -------------- | -------------------- |
@@ -469,3 +469,76 @@ Before delivering UI code, verify these items:
 - [ ] Form inputs have labels
 - [ ] Color is not the only indicator
 - [ ] `prefers-reduced-motion` respected
+
+---
+
+## 🎨 Design Thinking — Anthropic Guidelines
+
+> **Source**: Anthropic Frontend Design Guidelines
+> **Philosophy**: Create DISTINCTIVE interfaces, not generic AI aesthetics
+
+### Before Coding — BOLD Aesthetic Direction (REQUIRED)
+
+| Question            | Why It Matters                                                            |
+| ------------------- | ------------------------------------------------------------------------- |
+| **Purpose**         | What problem does this interface solve?                                   |
+| **Tone**            | Pick an EXTREME (brutally minimal, maximalist chaos, retro-futuristic...) |
+| **Constraints**     | What CAN'T you do? (branding, technical, accessibility)                   |
+| **Differentiation** | What makes this UNFORGETTABLE?                                            |
+
+### Frontend Aesthetics Rules
+
+```yaml
+typography:
+  # NEVER use generic fonts
+  avoid: [Arial, Helvetica, system-default, Inter (overused)]
+  choose: "Distinctive, characterful fonts that elevate design"
+  rule: "Pair display font + refined body font"
+
+color:
+  # COMMIT to cohesive aesthetic
+  use_css_variables: true
+  rule: "Dominant colors with SHARP accents outperform timid palettes"
+  avoid: "Evenly-distributed, wishy-washy colors"
+
+motion:
+  # ONE orchestrated experience
+  page_load: "Staggered reveals, choreographed entrance"
+  micro: "Purposeful hover states, smooth transitions"
+  implementation: "CSS-only preferred; Motion library for React"
+
+spatial_composition:
+  # BREATHE! Empty space is a feature
+  rule: "Generous whitespace, asymmetry, overlapping planes"
+  avoid: "Cramped layouts, center-everything defaults"
+
+backgrounds:
+  # Create ATMOSPHERE
+  options: ["gradient meshes", "noise textures", "depth patterns"]
+  avoid: "Plain white backgrounds (boring)"
+```
+
+### 🚫 NEVER Use (Anti-Patterns)
+
+| Anti-Pattern             | Why It Fails           |
+| ------------------------ | ---------------------- |
+| System fonts everywhere  | Looks like a prototype |
+| Generic purple gradients | "AI aesthetic" cliché  |
+| Cookie-cutter layouts    | Forgettable            |
+| No motion or personality | Dead interface         |
+| White background only    | No atmosphere          |
+
+### Design Excellence Checklist
+
+```yaml
+before_ship:
+  - "Does this look like a DISTINCTIVE brand, not generic template?"
+  - "Would a designer be proud of this?"
+  - "Does the typography have PERSONALITY?"
+  - "Is there a cohesive color story?"
+  - "Do animations feel INTENTIONAL?"
+```
+
+---
+
+_DOMYH Awesome Code v6.0.0 • UI/UX Pro Max_

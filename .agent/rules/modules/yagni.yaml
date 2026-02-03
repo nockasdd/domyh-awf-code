@@ -1,0 +1,167 @@
+# YAGNI Enforcement Rule v6.0
+# Modular rule for You Aren't Gonna Need It principle
+
+---
+name: yagni-enforcement
+version: "6.0.0"
+rule_id: "MOD-YAG-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Enforce YAGNI (You Aren't Gonna Need It) principle to prevent over-engineering.
+  Only implement what is explicitly requested.
+
+category: "engineering"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["developer", "planner", "architect"]
+  workflows: ["/code", "/plan", "/refactor"]
+
+# =============================================================================
+# CORE PRINCIPLE
+# =============================================================================
+
+core_principle:
+  name: "YAGNI - You Aren't Gonna Need It"
+  description: |
+    Don't implement features or abstractions until they are actually needed.
+    Premature optimization and over-engineering waste time and add complexity.
+
+# =============================================================================
+# DETECTION TRIGGERS
+# =============================================================================
+
+triggers:
+  phrases_to_watch:
+    - "we might need"
+    - "in the future"
+    - "just in case"
+    - "it would be nice to"
+    - "for extensibility"
+    - "for flexibility"
+    - "potential use case"
+
+  patterns_to_avoid:
+    - description: "Creating interfaces/abstractions for single implementations"
+      example: "IUserService when only UserService exists"
+
+    - description: "Adding unused parameters"
+      example: "options: Options = {} that's never used"
+
+    - description: "Building plugin systems for internal tools"
+      example: "Dynamic loading when static import works"
+
+    - description: "Creating configuration for values that never change"
+      example: "Config file for hardcoded constants"
+
+# =============================================================================
+# ACCEPTABLE PREPARATIONS
+# =============================================================================
+
+acceptable:
+  always_ok:
+    - "Proper error handling"
+    - "Basic security measures"
+    - "Standard logging"
+    - "Type definitions"
+    - "Unit tests"
+
+  conditionally_ok:
+    - condition: "If explicitly requested"
+      examples: ["API versioning", "Multi-tenant support"]
+
+    - condition: "If required by framework"
+      examples: ["Interface implementation", "Dependency injection"]
+
+    - condition: "If standard practice in ecosystem"
+      examples: ["DTOs", "Repository pattern in heavy ORM usage"]
+
+# =============================================================================
+# DECISION FRAMEWORK
+# =============================================================================
+
+decision_framework:
+  ask_before_implementing:
+    - "Is this explicitly requested?"
+    - "Is this required to complete the task?"
+    - "Does the immediate use case need this?"
+    - "Can this be added later if needed?"
+
+  if_all_no:
+    action: "Don't implement"
+    template: |
+      💡 Noticing opportunity for {feature}.
+      Should I add this now or keep it simple for current needs?
+
+# =============================================================================
+# REFACTORING EXCEPTIONS
+# =============================================================================
+
+refactoring_exceptions:
+  when_ok_to_abstract:
+    - "Clear duplication (3+ occurrences)"
+    - "Performance bottleneck proven by profiling"
+    - "Security vulnerability"
+    - "User explicitly requests"
+
+  not_ok:
+    - "Theoretical future need"
+    - "Best practice without context"
+    - "Making code more 'elegant'"
+
+# =============================================================================
+# OUTPUT TEMPLATES
+# =============================================================================
+
+templates:
+  minimal_implementation: |
+    ✅ Implemented: {feature}
+
+    Kept simple because:
+    - Meets current requirements
+    - Can be extended later if needed
+    - Avoids unnecessary complexity
+
+  abstraction_question: |
+    💡 YAGNI Check
+
+    I could add {abstraction} for {reason}.
+
+    Current implementation works and is simpler.
+    Add this now? (yes/no/later):
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Only implementing what's requested?"
+  - "No speculative features?"
+  - "Abstractions have concrete use cases?"
+  - "Can be simplified further?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2 # Execution tier
+  related_modules:
+    - quality
+    - stop-conditions
+
+  reflection:
+    enabled: true
+    check_before: "implementation"
+    question: "Am I adding more than what's needed?"
+
+---
+_DOMYH Awesome Code v6.0 • YAGNI Enforcement Rule_

@@ -4,7 +4,7 @@ trigger: ["/status", "health", "trạng thái"]
 description: "📊 Project health: build, tests, coverage, lint metrics, and recent activity"
 ---
 
-# 📊 /status — Project Health Pro v3.0
+# 📊 /status — Status Pro v3.1
 
 > Complete Project Health Dashboard
 > 📚 Multi-stack • Auto-detect • Actionable
@@ -333,4 +333,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Status Pro v3.1 • Full Health Dashboard_
+_DOMYH Awesome Code v5.5 • Status Pro v3.1 • Full Health Dashboard_

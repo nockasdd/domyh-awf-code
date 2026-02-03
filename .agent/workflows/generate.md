@@ -5,7 +5,7 @@ persona: developer
 description: "🏗️ Code generation: models, APIs, components, services, and tests from templates"
 ---
 
-# 🏗️ /generate — Code Generation Pro v3.0
+# 🏗️ /generate — Generate Pro v3.1
 
 > AI-Powered Scaffolding & Templates
 > 📚 30+ Languages • CRUD • Components • APIs
@@ -789,4 +789,4 @@ generation_quality:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Generate Pro v3.1 • Multi-Modal + Quality Gates_
+_DOMYH Awesome Code v5.5 • Generate Pro v3.1 • Multi-Modal + Quality Gates_

@@ -6,7 +6,7 @@ persona: developer
 description: "🔧 Fix existing project: detect stack → analyze issues → plan → execute → verify"
 ---
 
-# 🔧 /modify — Project Modification Pro v3.0
+# 🔧 /modify — Modify Pro v3.1
 
 > AI-Powered Legacy Modernization & Issue Resolution
 > 📚 30+ Languages • Technical Debt • Automated Analysis
@@ -724,4 +724,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Modify Pro v3.1 • AI-Driven Modernization_
+_DOMYH Awesome Code v5.5 • Modify Pro v3.1 • AI-Driven Modernization_

@@ -1,0 +1,414 @@
+# =============================================================================
+# DOMYH Awesome Code v6.0
+# MCP Tools - Model Context Protocol Integration
+# =============================================================================
+
+version: "6.0.0"
+
+# =============================================================================
+# OVERVIEW
+# Standard protocol for tool integration (Anthropic MCP)
+# =============================================================================
+
+description: |
+  Model Context Protocol (MCP) is an open standard for connecting AI systems
+  with external tools and data sources. This file defines MCP-compliant
+  tool schemas for the DOMYH agent.
+
+  Benefits:
+  - Standard protocol (Anthropic, OpenAI, Google)
+  - Easy tool discovery
+  - Cross-platform compatibility
+  - Third-party integrations
+
+# =============================================================================
+# SERVER CONFIGURATION
+# =============================================================================
+
+server:
+  name: "domyh-agent"
+  version: "6.0.0"
+
+  transport:
+    - "stdio"
+    - "sse"
+
+  capabilities:
+    resources: true
+    tools: true
+    prompts: true
+    logging: true
+
+# =============================================================================
+# TOOL DEFINITIONS (MCP Schema)
+# =============================================================================
+
+tools:
+  # ---------------------------------------------------------------------------
+  # MEMORY TOOLS
+  # ---------------------------------------------------------------------------
+
+  memory_remember:
+    name: "memory_remember"
+    description: "Store important information in persistent memory"
+    inputSchema:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+          description: "Information to remember"
+        category:
+          type: "string"
+          enum: ["fact", "preference", "decision", "learning", "error"]
+          description: "Type of information"
+        importance:
+          type: "number"
+          minimum: 0
+          maximum: 1
+          description: "Importance score (0-1)"
+        tags:
+          type: "array"
+          items:
+            type: "string"
+          description: "Tags for categorization"
+      required: ["content", "category"]
+
+  memory_search:
+    name: "memory_search"
+    description: "Search through stored memories"
+    inputSchema:
+      type: "object"
+      properties:
+        query:
+          type: "string"
+          description: "Search query"
+        category:
+          type: "string"
+          enum: ["all", "fact", "preference", "decision", "learning", "error"]
+        limit:
+          type: "integer"
+          default: 5
+        threshold:
+          type: "number"
+          default: 0.7
+      required: ["query"]
+
+  memory_update:
+    name: "memory_update"
+    description: "Update existing memory entry"
+    inputSchema:
+      type: "object"
+      properties:
+        memory_id:
+          type: "string"
+          description: "ID of memory to update"
+        new_content:
+          type: "string"
+          description: "Updated content"
+        reason:
+          type: "string"
+          description: "Why updating"
+      required: ["memory_id", "new_content"]
+
+  memory_forget:
+    name: "memory_forget"
+    description: "Mark memory as outdated/irrelevant"
+    inputSchema:
+      type: "object"
+      properties:
+        memory_id:
+          type: "string"
+          description: "ID of memory to forget"
+        reason:
+          type: "string"
+          description: "Why forgetting"
+      required: ["memory_id"]
+
+  # ---------------------------------------------------------------------------
+  # CORE MEMORY TOOLS (Letta-style)
+  # ---------------------------------------------------------------------------
+
+  core_memory_read:
+    name: "core_memory_read"
+    description: "Read from core memory blocks (persona, user, project)"
+    inputSchema:
+      type: "object"
+      properties:
+        block:
+          type: "string"
+          enum: ["persona", "user", "project", "rules"]
+          description: "Which block to read"
+      required: ["block"]
+
+  core_memory_append:
+    name: "core_memory_append"
+    description: "Append to a core memory block"
+    inputSchema:
+      type: "object"
+      properties:
+        block:
+          type: "string"
+          enum: ["persona", "user", "project", "rules"]
+        content:
+          type: "string"
+          description: "Content to append"
+      required: ["block", "content"]
+
+  core_memory_replace:
+    name: "core_memory_replace"
+    description: "Replace content in a core memory block"
+    inputSchema:
+      type: "object"
+      properties:
+        block:
+          type: "string"
+          enum: ["persona", "user", "project", "rules"]
+        old_content:
+          type: "string"
+          description: "Text to find"
+        new_content:
+          type: "string"
+          description: "Replacement text"
+      required: ["block", "old_content", "new_content"]
+
+  # ---------------------------------------------------------------------------
+  # GRAPH MEMORY TOOLS
+  # ---------------------------------------------------------------------------
+
+  graph_add_entity:
+    name: "graph_add_entity"
+    description: "Add an entity to the knowledge graph"
+    inputSchema:
+      type: "object"
+      properties:
+        entity_type:
+          type: "string"
+          enum: ["file", "function", "class", "decision", "error", "learning"]
+        properties:
+          type: "object"
+          description: "Entity properties"
+      required: ["entity_type", "properties"]
+
+  graph_add_relationship:
+    name: "graph_add_relationship"
+    description: "Create a relationship between entities"
+    inputSchema:
+      type: "object"
+      properties:
+        from_entity:
+          type: "string"
+        to_entity:
+          type: "string"
+        relationship_type:
+          type: "string"
+          enum:
+            [
+              "IMPORTS",
+              "CALLS",
+              "DEPENDS_ON",
+              "CAUSED_BY",
+              "SOLVED_BY",
+              "RELATED_TO",
+            ]
+        properties:
+          type: "object"
+      required: ["from_entity", "to_entity", "relationship_type"]
+
+  graph_query:
+    name: "graph_query"
+    description: "Query the knowledge graph"
+    inputSchema:
+      type: "object"
+      properties:
+        query_type:
+          type: "string"
+          enum:
+            [
+              "related_code",
+              "error_solutions",
+              "decision_context",
+              "impact_analysis",
+            ]
+        parameters:
+          type: "object"
+      required: ["query_type", "parameters"]
+
+  # ---------------------------------------------------------------------------
+  # REFLECTION TOOLS
+  # ---------------------------------------------------------------------------
+
+  reflect:
+    name: "reflect"
+    description: "Generate a reflection on recent execution"
+    inputSchema:
+      type: "object"
+      properties:
+        context:
+          type: "string"
+          description: "What to reflect on"
+        outcome:
+          type: "string"
+          enum: ["success", "failure", "partial"]
+        details:
+          type: "string"
+          description: "Additional details"
+      required: ["context", "outcome"]
+
+  get_reflections:
+    name: "get_reflections"
+    description: "Retrieve past reflections"
+    inputSchema:
+      type: "object"
+      properties:
+        query:
+          type: "string"
+          description: "Search query"
+        limit:
+          type: "integer"
+          default: 5
+      required: ["query"]
+
+  # ---------------------------------------------------------------------------
+  # SKILL TOOLS
+  # ---------------------------------------------------------------------------
+
+  load_skill:
+    name: "load_skill"
+    description: "Load a skill's full documentation"
+    inputSchema:
+      type: "object"
+      properties:
+        skill_name:
+          type: "string"
+          description: "Name of skill to load"
+        tier:
+          type: "string"
+          enum: ["T1", "T2", "T3"]
+          default: "T2"
+      required: ["skill_name"]
+
+  search_skills:
+    name: "search_skills"
+    description: "Search for relevant skills"
+    inputSchema:
+      type: "object"
+      properties:
+        query:
+          type: "string"
+          description: "Search query"
+        top_k:
+          type: "integer"
+          default: 5
+        min_score:
+          type: "number"
+          default: 0.3
+      required: ["query"]
+
+  # ---------------------------------------------------------------------------
+  # WORKFLOW TOOLS
+  # ---------------------------------------------------------------------------
+
+  start_workflow:
+    name: "start_workflow"
+    description: "Start a predefined workflow"
+    inputSchema:
+      type: "object"
+      properties:
+        workflow:
+          type: "string"
+          description: "Workflow name (e.g., /code, /debug)"
+        parameters:
+          type: "object"
+          description: "Workflow parameters"
+      required: ["workflow"]
+
+  checkpoint:
+    name: "checkpoint"
+    description: "Save current execution state"
+    inputSchema:
+      type: "object"
+      properties:
+        description:
+          type: "string"
+          description: "Checkpoint description"
+      required: ["description"]
+
+  resume:
+    name: "resume"
+    description: "Resume from a checkpoint"
+    inputSchema:
+      type: "object"
+      properties:
+        checkpoint_id:
+          type: "string"
+          description: "Checkpoint to resume from"
+      required: ["checkpoint_id"]
+
+# =============================================================================
+# RESOURCES (MCP)
+# Data sources the agent can access
+# =============================================================================
+
+resources:
+  memory_state:
+    uri: "memory://state"
+    name: "Memory State"
+    description: "Current memory state"
+    mimeType: "application/json"
+
+  session_history:
+    uri: "memory://session"
+    name: "Session History"
+    description: "Current session conversation"
+    mimeType: "text/markdown"
+
+  project_context:
+    uri: "project://context"
+    name: "Project Context"
+    description: "Current project information"
+    mimeType: "application/json"
+
+  skill_index:
+    uri: "skills://index"
+    name: "Skill Index"
+    description: "Available skills"
+    mimeType: "application/json"
+
+# =============================================================================
+# PROMPTS (MCP)
+# Reusable prompt templates
+# =============================================================================
+
+prompts:
+  code_review:
+    name: "Code Review"
+    description: "Review code for quality and issues"
+    arguments:
+      - name: "code"
+        description: "Code to review"
+        required: true
+      - name: "language"
+        description: "Programming language"
+        required: false
+
+  debug_analysis:
+    name: "Debug Analysis"
+    description: "Analyze an error or bug"
+    arguments:
+      - name: "error"
+        description: "Error message or description"
+        required: true
+      - name: "context"
+        description: "Relevant code context"
+        required: false
+
+  refactor_suggestion:
+    name: "Refactor Suggestion"
+    description: "Suggest refactoring improvements"
+    arguments:
+      - name: "code"
+        description: "Code to refactor"
+        required: true
+      - name: "goal"
+        description: "Refactoring goal"
+        required: false

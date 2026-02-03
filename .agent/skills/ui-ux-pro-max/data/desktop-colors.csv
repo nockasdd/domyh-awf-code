@@ -24,7 +24,7 @@ macos,dark,background,Vibrancy,#252525,"37,37,37",Sidebar and overlays,N/A
 macos,dark,surface,Card,#2C2C2C,"44,44,44",Card backgrounds,N/A
 macos,dark,text,Label,#FFFFFF,"255,255,255",Primary labels,16.1:1
 macos,dark,text,Secondary Label,#EBEBF599,"235,235,245, 0.6",Secondary text,8.2:1
-macos,dark,accent,System Blue,#007AFF,"0,122,255",Default accent color,5.2:1
+macos,dark,accent,System Blue,#007AFF,"0,122,255",Default accent color,v5.5:1
 macos,dark,accent,System Green,#30D158,"48,209,88",Success states,7.1:1
 macos,dark,accent,System Red,#FF453A,"255,69,58",Error and destructive,4.8:1
 macos,light,background,Window,#ECECEC,"236,236,236",Window background,N/A

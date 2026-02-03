@@ -5,7 +5,7 @@ persona: developer
 description: "📦 Update dependencies: check outdated, apply safe updates, review breaking changes"
 ---
 
-# 📦 /upgrade — Dependency Upgrade Pro v3.0
+# 📦 /upgrade — Upgrade Pro v3.1
 
 > Safe Dependency Management
 > 📚 30+ Languages • Security First • Staged Rollout
@@ -397,4 +397,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Upgrade Pro v3.1 • Security-First Updates_
+_DOMYH Awesome Code v5.5 • Upgrade Pro v3.1 • Security-First Updates_

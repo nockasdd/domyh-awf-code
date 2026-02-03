@@ -1,12 +1,12 @@
 ---
 name: flutter
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
-version: "4.3.0"
+version: "6.0.0"
 category: mobile
 tier: 1
 ---
 
-# Flutter/Dart Patterns — DOMYH Awesome Code v4.3
+# Flutter/Dart Patterns — DOMYH Awesome Code v5.5
 
 > Flutter 3.27+ & Dart 3.6 — 2025-2026
 
@@ -489,4 +489,4 @@ Future<List<ProcessedItem>> processDataInIsolate(List<RawItem> items) async {
 
 ---
 
-_DOMYH Awesome Code v4.3 • Flutter/Dart • 2025-2026_
+_DOMYH Awesome Code v6.0.0 • Flutter/Dart • 2025-2026_

@@ -5,7 +5,7 @@ persona: debugger
 description: "🐛 Systematic debugging: reproduce → isolate → analyze → fix → verify"
 ---
 
-# 🐛 /debug — Systematic Debugging Pro v3.0
+# 🐛 /debug — Debug Pro v3.3
 
 > AI-Powered Debugging with Observability & Tracing
 > 📚 30+ Languages • Root Cause Analysis • Failure Repository
@@ -63,6 +63,65 @@ User: /debug [error|issue]
 │ ▸ Run full test suite                   │
 │ ▸ Show before/after evidence            │
 └─────────────────────────────────────────┘
+```
+
+---
+
+## 🔬 SYSTEMATIC DEBUGGING — THE IRON LAW
+
+> **Source**: Superpowers Systematic Debugging
+> **Philosophy**: NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
+
+### The Four Phases (MANDATORY)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚠️  STOP! Before ANY fix attempt, complete all 4 phases:      │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 1: ROOT CAUSE INVESTIGATION                             │
+│  ├── Read error messages CAREFULLY (every word)                │
+│  ├── Reproduce CONSISTENTLY                                    │
+│  ├── Check recent changes (git log -5)                         │
+│  ├── Gather evidence in multi-component systems                │
+│  └── Trace data flow end-to-end                                │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 2: PATTERN ANALYSIS                                     │
+│  ├── Find WORKING examples of similar code                     │
+│  ├── Compare against references                                │
+│  └── Identify EXACT differences                                │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 3: HYPOTHESIS & TESTING                                 │
+│  ├── Form SINGLE hypothesis                                    │
+│  ├── Test with MINIMAL change                                  │
+│  └── Verify BEFORE continuing                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 4: IMPLEMENTATION                                       │
+│  ├── Create FAILING test case first                            │
+│  ├── Implement SINGLE fix                                      │
+│  ├── Verify fix works                                          │
+│  └── If 3+ fixes failed → QUESTION ARCHITECTURE                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 🚨 Red Flags — STOP Immediately
+
+| Red Flag                           | What to Do                          |
+| ---------------------------------- | ----------------------------------- |
+| "Let me try this quick fix..."     | STOP. You haven't found root cause. |
+| "It might be this..." (guessing)   | STOP. Gather more evidence.         |
+| "I'll just change this and see..." | STOP. Form hypothesis first.        |
+| "This fix should work..."          | STOP. Create failing test first.    |
+| 3+ failed fixes                    | STOP. Question the architecture.    |
+
+### Common Rationalizations (IGNORE THESE)
+
+```yaml
+# These are EXCUSES, not reasons:
+- "It's obvious what the problem is"     → Obvious bugs don't exist
+- "I'll be quick"                        → Quick fixes create more bugs
+- "It worked before"                     → Something changed
+- "The error message is misleading"      → Error messages are usually right
+- "It must be a library bug"             → It's almost never the library
 ```
 
 ---
@@ -709,6 +768,190 @@ failure_repository:
 
 ---
 
+## 🔍 ROOT CAUSE TRACING
+
+> **Source**: Superpowers Systematic Debugging
+> **Principle**: Trace backward through call chain to find original trigger
+
+### When to Use
+
+- Error happens deep in execution (not at entry point)
+- Stack trace shows long call chain
+- Unclear where invalid data originated
+- Need to find which test/code triggers the problem
+
+### The Tracing Process
+
+```
+1. OBSERVE THE SYMPTOM
+   Error: git init failed in /Users/project/packages/core
+
+2. FIND IMMEDIATE CAUSE
+   await execFileAsync('git', ['init'], { cwd: projectDir });
+
+3. ASK: WHAT CALLED THIS?
+   WorktreeManager.createSessionWorktree(projectDir, sessionId)
+     → called by Session.initializeWorkspace()
+     → called by Session.create()
+     → called by test at Project.create()
+
+4. KEEP TRACING UP
+   What value was passed?
+   projectDir = '' (empty string!)
+   → Empty string as cwd resolves to process.cwd()
+   → That's the source code directory!
+
+5. FIND ORIGINAL TRIGGER
+   Where did empty string come from?
+   const context = setupCoreTest(); // Returns { tempDir: '' }
+   Project.create('name', context.tempDir); // Accessed before beforeEach!
+```
+
+### Adding Stack Traces for Investigation
+
+```typescript
+// Before the problematic operation
+async function gitInit(directory: string) {
+  const stack = new Error().stack;
+  console.error("DEBUG git init:", {
+    directory,
+    cwd: process.cwd(),
+    nodeEnv: process.env.NODE_ENV,
+    stack,
+  });
+
+  await execFileAsync("git", ["init"], { cwd: directory });
+}
+```
+
+**Critical**: Use `console.error()` in tests (not logger - may not show)
+
+**Run and capture**:
+
+```bash
+npm test 2>&1 | grep 'DEBUG git init'
+```
+
+### Key Principle
+
+```
+NEVER fix just where the error appears.
+Trace back to find the original trigger.
+
+Found immediate cause
+    ↓
+Can trace one level up? → YES → Trace backwards
+    ↓
+Is this the source? → NO → Keep tracing
+    ↓
+Is this the source? → YES → Fix at source
+    ↓
+Add validation at each layer
+    ↓
+Bug impossible
+```
+
+---
+
+## 🛡️ DEFENSE-IN-DEPTH VALIDATION
+
+> **Source**: Superpowers Systematic Debugging
+> **Principle**: Validate at EVERY layer data passes through
+
+### Why Multiple Layers?
+
+- Single validation: "We fixed the bug"
+- Multiple layers: **"We made the bug impossible"**
+
+Different layers catch different cases:
+
+- Entry validation catches most bugs
+- Business logic catches edge cases
+- Environment guards prevent context-specific dangers
+- Debug logging helps when other layers fail
+
+### The Four Layers
+
+#### Layer 1: Entry Point Validation
+
+**Purpose**: Reject obviously invalid input at API boundary
+
+```typescript
+function createProject(name: string, workingDirectory: string) {
+  if (!workingDirectory || workingDirectory.trim() === "") {
+    throw new Error("workingDirectory cannot be empty");
+  }
+  if (!existsSync(workingDirectory)) {
+    throw new Error(`workingDirectory does not exist: ${workingDirectory}`);
+  }
+  if (!statSync(workingDirectory).isDirectory()) {
+    throw new Error(`workingDirectory is not a directory: ${workingDirectory}`);
+  }
+  // ... proceed
+}
+```
+
+#### Layer 2: Business Logic Validation
+
+**Purpose**: Ensure data makes sense for this operation
+
+```typescript
+function initializeWorkspace(projectDir: string, sessionId: string) {
+  if (!projectDir) {
+    throw new Error("projectDir required for workspace initialization");
+  }
+  // ... proceed
+}
+```
+
+#### Layer 3: Environment Guards
+
+**Purpose**: Prevent dangerous operations in specific contexts
+
+```typescript
+async function gitInit(directory: string) {
+  // In tests, refuse git init outside temp directories
+  if (process.env.NODE_ENV === "test") {
+    const normalized = normalize(resolve(directory));
+    const tmpDir = normalize(resolve(tmpdir()));
+
+    if (!normalized.startsWith(tmpDir)) {
+      throw new Error(
+        `Refusing git init outside temp dir during tests: ${directory}`,
+      );
+    }
+  }
+  // ... proceed
+}
+```
+
+#### Layer 4: Debug Instrumentation
+
+**Purpose**: Capture context for forensics
+
+```typescript
+async function gitInit(directory: string) {
+  const stack = new Error().stack;
+  logger.debug("About to git init", {
+    directory,
+    cwd: process.cwd(),
+    stack,
+  });
+  // ... proceed
+}
+```
+
+### Applying the Pattern
+
+When you find a bug:
+
+1. **Trace the data flow** - Where does bad value originate? Where used?
+2. **Map all checkpoints** - List every point data passes through
+3. **Add validation at each layer** - Entry, business, environment, debug
+4. **Test each layer** - Try to bypass layer 1, verify layer 2 catches it
+
+---
+
 ## 🔧 SUB-COMMANDS (Updated)
 
 | Command                  | Description               |
@@ -724,4 +967,4 @@ failure_repository:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Debug Pro v3.1 • AI Root Cause + Failure Repository_
+_DOMYH Awesome Code v5.5 • Debug Pro v3.3 • Root Cause Tracing + Defense-in-Depth_

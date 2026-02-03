@@ -1,8 +1,8 @@
 # Semantic Router Configuration
-# DOMYH Awesome Code v4.3
-# Selects top-K relevant skills based on query similarity
+# DOMYH Awesome Code v6.0
+# Selects top-K relevant skills AND routes to appropriate personas
 
-version: "4.3.0"
+version: "6.0.0"
 
 # Routing Strategy
 strategy:
@@ -180,4 +180,111 @@ recommendations:
     project_type: 0.20
     recent_activity: 0.15
 
-# _DOMYH Awesome Code v4.3_
+# _DOMYH Awesome Code v6.0_
+
+# =============================================================================
+# PERSONA ROUTING (v6.0)
+# =============================================================================
+
+persona_routing:
+  enabled: true
+
+  # Default persona for general tasks
+  default: developer
+
+  # Command-based routing (explicit triggers)
+  command_triggers:
+    "/code": developer
+    "/refactor": developer
+    "/plan": planner
+    "/design": architect
+    "/debug": debugger
+    "/investigate": debugger
+    "/test": tester
+    "/coverage": tester
+    "/deploy": devops
+    "/monitor": devops
+    "/env": devops
+    "/infra": devops
+    "/doc": documenter
+    "/readme": documenter
+    "/ap": auditor
+    "/audit": auditor
+    "/security": security
+    "/scan": security
+    "/research": researcher
+    "/find": researcher
+
+  # Intent-based routing (inferred from request)
+  intent_triggers:
+    implement_feature: developer
+    fix_bug: debugger
+    review_code: auditor
+    design_architecture: architect
+    write_tests: tester
+    deploy_application: devops
+    document_code: documenter
+    security_check: security
+    research_topic: researcher
+    complex_multi_step: orchestrator
+
+  # Persona collaboration rules
+  collaboration:
+    orchestrator:
+      can_delegate: ["planner", "developer", "tester", "researcher"]
+      auto_activate_for:
+        - "tasks requiring multiple personas"
+        - "complex multi-step tasks"
+        - "tasks with unclear owner"
+
+    developer:
+      can_delegate: ["tester", "debugger"]
+      reports_to: ["architect"]
+
+    architect:
+      supervises: ["developer", "devops"]
+      consulted_by: ["*"]
+
+    debugger:
+      can_delegate: ["tester"]
+      reports_to: ["developer"]
+
+    security:
+      can_delegate: []
+      consulted_by: ["auditor", "developer"]
+
+  # Handoff conditions (when to switch personas)
+  handoff:
+    developer_to_tester: "code_complete"
+    debugger_to_developer: "root_cause_found"
+    planner_to_developer: "plan_approved"
+    auditor_to_developer: "findings_reported"
+    security_to_developer: "vulnerabilities_found"
+
+# =============================================================================
+# CONSTITUTIONAL RULES LOADING (v6.0)
+# =============================================================================
+
+constitutional:
+  enabled: true
+  tiers:
+    - source: "rules/constitutional/tier-0-core.yaml"
+      always_load: true
+    - source: "rules/constitutional/tier-1-safety.yaml"
+      always_load: true
+    - source: "rules/constitutional/tier-2-execution.yaml"
+      always_load: false # Load based on persona
+
+  modules:
+    reflection:
+      source: "rules/modules/reflection.yaml"
+      for_personas: ["*"]
+    context_management:
+      source: "rules/modules/context-management.yaml"
+      for_personas: ["*"]
+    evidence:
+      source: "rules/modules/evidence.yaml"
+      for_personas: ["auditor", "debugger", "security", "researcher"]
+    stop_conditions:
+      source: "rules/modules/stop-conditions.yaml"
+      for_personas: ["*"]

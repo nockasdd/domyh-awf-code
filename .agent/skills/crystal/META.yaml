@@ -1,0 +1,28 @@
+name: crystal
+version: "6.0.0"
+category: language
+tier: 3
+
+description: |
+  Crystal development patterns for Crystal 1.10+.
+  Ruby-like syntax with static typing, compiled to native.
+
+triggers:
+  file_patterns:
+    - "*.cr"
+    - "shard.yml"
+    - "shard.lock"
+  keywords:
+    - crystal
+    - crystal lang
+    - shards
+    - kemal
+    - lucky framework
+  intents:
+    - crystal project
+    - ruby but compiled
+    - crystal api
+
+related_skills:
+  - ruby
+  - go

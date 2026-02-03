@@ -2,17 +2,17 @@
 name: think
 trigger: ["/think", "brainstorm", "idea", "ý tưởng"]
 persona: architect
-description: "💡 Brainstorming Pro v4.0: 6 methods, 5 tiers, multi-mode reasoning"
+description: "💡 Think Pro v5.5: 6 methods, 5 tiers, multi-mode reasoning"
 ---
 
-# 💡 /think — Brainstorming Pro v4.0
+# 💡 /think — Think Pro v5.5
 
 > Advanced Ideation with Structured Methods & Reasoning Architectures
 > 📚 6 Methods • 5 Tiers • Multi-Mode • Token-Optimized
 
 ---
 
-## 🔄 THINK FLOW v4.0
+## 🔄 THINK FLOW v5.5
 
 ```
 User: /think [command] [topic]
@@ -609,4 +609,4 @@ code_handoff:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Think Pro v4.0 • 6 Methods + 5 Tiers + Multi-Mode_
+_DOMYH Awesome Code v5.5 • Think Pro v5.5 • 6 Methods + 5 Tiers + Multi-Mode_

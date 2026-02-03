@@ -1,12 +1,12 @@
 ---
 name: go
 detect: ["go.mod", "go.sum", "*.go", "go.work"]
-version: "4.3.0"
+version: "6.0.0"
 category: backend
 tier: 1
 ---
 
-# Go Patterns — DOMYH Awesome Code v4.3
+# Go Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Go 1.22/1.23/1.24 (2025-2026)
 > **Philosophy**: Simplicity, explicit error handling, powerful concurrency
@@ -486,4 +486,4 @@ myapp/
 
 ---
 
-_DOMYH Awesome Code v4.3 • Go 1.22/1.23/1.24_
+_DOMYH Awesome Code v6.0.0 • Go 1.22/1.23/1.24_

@@ -1,147 +1,53 @@
 name: ci-cd
+version: "6.0.0"
 display: CI/CD Pipelines
 category: devops
+tier: 1
 priority: 1
-version: "4.3.0"
-desc: "CI/CD pipeline patterns for GitHub Actions, GitLab CI, Azure DevOps, Jenkins (2025-2026)"
-keywords:
-  # General CI/CD
-  - ci/cd
-  - ci cd
-  - continuous integration
-  - continuous delivery
-  - continuous deployment
-  - pipeline
-  - automation
-  - devops
 
-  # GitHub Actions
-  - github actions
-  - github workflow
-  - actions/checkout
-  - actions/setup-node
-  - actions/cache
-  - workflow_call
-  - workflow_dispatch
-  - composite action
-  - reusable workflow
-  - matrix build
-  - ghcr.io
+description: |
+  CI/CD pipeline patterns for GitHub Actions, GitLab CI, Azure DevOps, Jenkins.
+  Covers automation, deployment strategies, security scanning.
 
-  # GitLab CI
-  - gitlab ci
-  - gitlab-ci.yml
-  - gitlab runner
-  - gitlab pipeline
-  - kaniko
-  - gitlab artifacts
-  - gitlab cache
-
-  # Azure DevOps
-  - azure devops
-  - azure pipelines
-  - azure-pipelines.yml
-  - azure stages
-  - azure deployment
-  - azure key vault
-
-  # Jenkins
-  - jenkins
-  - jenkinsfile
-  - jenkins pipeline
-  - jenkins agent
-
-  # CircleCI
-  - circleci
-  - circle ci
-
-  # Deployment
-  - deploy
-  - deployment
-  - environment
-  - staging
-  - production
-  - rollback
-  - blue-green
-  - canary
-  - argocd
-  - flagger
-
-  # Docker/Container
-  - docker build
-  - docker push
-  - container registry
-  - buildx
-  - buildkit
-
-  # Security
-  - oidc
-  - secrets
-  - secret scanning
-  - dependabot
-  - trivy
-  - codeql
-  - sast
-  - dast
-  - gitleaks
-  - semgrep
-
-  # Caching
-  - cache dependencies
-  - npm cache
-  - pip cache
-  - gradle cache
-  - docker layer cache
-
-  # Artifacts
-  - artifacts
-  - upload-artifact
-  - download-artifact
-  - build artifacts
-  - coverage report
-
-  # Testing
-  - test coverage
-  - codecov
-  - junit
-  - cobertura
-
-detect:
-  files:
+triggers:
+  file_patterns:
     - ".github/workflows/*.yml"
-    - ".github/workflows/*.yaml"
     - ".gitlab-ci.yml"
-    - ".gitlab-ci.yaml"
     - "azure-pipelines.yml"
-    - ".azure-pipelines/*.yml"
     - "Jenkinsfile"
     - ".circleci/config.yml"
-    - "bitbucket-pipelines.yml"
-  patterns:
-    - "on:"
-    - "jobs:"
-    - "stages:"
-    - "steps:"
-    - "runs-on:"
-    - "uses:"
-    - "script:"
+  keywords:
+    # General
+    - ci/cd
+    - continuous integration
+    - pipeline
+    - devops
+    # Platforms
+    - github actions
+    - gitlab ci
+    - azure devops
+    - jenkins
+    # Deployment
+    - deploy
+    - staging
+    - production
+    - canary
+    - blue-green
+  intents:
+    - setup ci cd
+    - create pipeline
+    - github workflow
+    - deploy automation
 
-caps:
-  - GitHub Actions (matrix, reusable, composite, OIDC)
-  - GitLab CI (stages, artifacts, Kaniko, rules)
-  - Azure DevOps (multi-stage, environments, Key Vault)
-  - Jenkins (Declarative, Scripted pipelines)
-  - Docker multi-platform builds
-  - OIDC authentication (AWS, Azure, GCP)
-  - Caching strategies (npm, pip, gradle, docker)
-  - Artifacts management
-  - Security scanning (SAST, DAST, container)
-  - Progressive deployment (canary, blue-green)
-  - Environment protection and approvals
-  - Test coverage reporting
-
-related:
+related_skills:
   - docker
   - kubernetes
   - security
-  - testing
+
+caps:
+  - GitHub Actions (matrix, reusable, OIDC)
+  - GitLab CI (stages, artifacts)
+  - Azure DevOps (multi-stage)
+  - Jenkins (Declarative pipelines)
+  - Security scanning (SAST, DAST)
+  - Progressive deployment

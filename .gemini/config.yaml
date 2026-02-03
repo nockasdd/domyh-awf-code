@@ -1,0 +1,11 @@
+codeReview:
+  enabled: true
+  styleGuide: "styleguide.md"
+
+ignore:
+  - "node_modules/**"
+  - "dist/**"
+  - "build/**"
+  - ".git/**"
+  - "*.min.js"
+  - "*.bundle.js"

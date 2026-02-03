@@ -1,12 +1,12 @@
 ---
 name: svelte
 detect: ["svelte.config.js", "*.svelte", "+page.svelte", "+layout.svelte"]
-version: "4.3.0"
+version: "6.0.0"
 category: frontend
 tier: 1
 ---
 
-# Svelte Patterns — DOMYH Awesome Code v4.3
+# Svelte Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Svelte 5 / SvelteKit 2 (2025-2026)
 > **Philosophy**: Compiled, runes-based reactivity, minimal runtime
@@ -318,4 +318,4 @@ export const actions: Actions = {
 
 ---
 
-_DOMYH Awesome Code v4.3 • Svelte 5 / SvelteKit 2_
+_DOMYH Awesome Code v6.0.0 • Svelte 5 / SvelteKit 2_

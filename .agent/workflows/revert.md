@@ -5,7 +5,7 @@ persona: developer
 description: "⏪ Revert changes: git rollback, deployment rollback, database rollback"
 ---
 
-# ⏪ /revert — Rollback Pro v3.0
+# ⏪ /revert — Revert Pro v3.1
 
 > Safe Reversal of Changes
 > 📚 Git • Deployment • Database
@@ -352,4 +352,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Revert Pro v3.1 • Safe Rollback + Feature Flags_
+_DOMYH Awesome Code v5.5 • Revert Pro v3.1 • Safe Rollback + Feature Flags_

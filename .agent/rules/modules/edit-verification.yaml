@@ -1,0 +1,189 @@
+# Edit Verification Rule v6.0
+# Modular rule for code edit verification
+
+---
+name: edit-verification
+version: "6.0.0"
+rule_id: "MOD-EDV-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Mandatory verification after code edits to prevent silent failures.
+  Based on documented agent edit failures (CVE Research 2025).
+
+category: "verification"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["developer", "debugger", "devops"]
+  workflows: ["/code", "/debug", "/refactor", "/modify"]
+
+# =============================================================================
+# CORE PRINCIPLES
+# =============================================================================
+
+principles:
+  verify_after_edit:
+    description: "Always verify changes after editing"
+    implementation:
+      - "Display diff evidence"
+      - "Show lines changed"
+      - "Run syntax check"
+
+  scope_containment:
+    description: "Only edit what's requested"
+    implementation:
+      - "Don't refactor unrelated code"
+      - "Don't auto-format entire file"
+      - "Don't change coding style"
+
+  deletion_prevention:
+    description: "Prevent accidental code deletion"
+    implementation:
+      - "Verify file integrity after edits"
+      - "Watch for 100+ line deletions"
+      - "Use git diff to confirm changes"
+
+# =============================================================================
+# VERIFICATION GATES
+# =============================================================================
+
+gates:
+  gate_1_confirmation:
+    name: "Edit Confirmation"
+    action: |
+      Display after any edit:
+      - File path
+      - Lines added/removed
+      - Status (applied/failed)
+      - Verification command
+    template: |
+      📝 EDIT APPLIED
+
+      File: {file_path}
+      Lines Changed: +{added}, -{removed}
+      Status: ✅ Applied
+
+      Verify: git diff HEAD -- {file_path}
+
+  gate_2_syntax:
+    name: "Syntax Check"
+    commands:
+      typescript: "npx tsc --noEmit"
+      go: "go build ./..."
+      python: "python -m py_compile {file}"
+      rust: "cargo check"
+      java: "javac {file}"
+    on_failure: "Stop and report syntax error"
+
+  gate_3_tests:
+    name: "Test Run (if applicable)"
+    condition: "If related tests exist"
+    commands:
+      typescript: 'npm test -- --testPathPattern="{pattern}"'
+      go: "go test ./{package}/..."
+      python: "pytest {test_file}"
+    on_failure: "Report test failure with details"
+
+# =============================================================================
+# SCOPE RULES
+# =============================================================================
+
+scope:
+  allowed:
+    - "Files mentioned in request"
+    - "Directly related files (imports, types)"
+    - "Test files for edited code"
+
+  forbidden:
+    - "Unrelated code refactoring"
+    - "Auto-formatting entire files"
+    - "Changing coding style conventions"
+    - "Editing files outside project"
+
+  violation_template: |
+    ⚠️ SCOPE EXPANSION DETECTED
+
+    Request: {original_request}
+    I also want to:
+    - {additional_change_1}
+    - {additional_change_2}
+
+    This expands the scope. Continue? (y/n):
+
+# =============================================================================
+# PROTECTED PATTERNS
+# =============================================================================
+
+protected:
+  files:
+    - ".env*" # Environment secrets
+    - "*.key" # Keys
+    - "*.pem" # Certificates
+    - "id_rsa*" # SSH keys
+    - "credentials.*" # Auth files
+    - "secrets.*" # Secret files
+
+  sections:
+    marker: "@protected - do not modify"
+    end_marker: "@end-protected"
+    action: "Skip editing protected sections"
+
+# =============================================================================
+# PATCH STRATEGY
+# =============================================================================
+
+patch:
+  rules:
+    - "Apply small hunks, not entire files"
+    - "Commit frequently"
+    - "Pull/rebase before patching"
+    - "If patch fails, regenerate don't force"
+
+  on_failure: |
+    ❌ PATCH FAILED
+
+    File has changed since context was loaded.
+    Conflict in: {file} (line {start}-{end})
+
+    Options:
+    1️⃣ Pull latest and regenerate patch
+    2️⃣ Show manual merge steps
+    3️⃣ Abort and review changes
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Displayed diff evidence?"
+  - "Lines added/removed correct?"
+  - "Syntax check passed?"
+  - "No unintended deletions?"
+  - "Within requested scope?"
+  - "Tests still pass?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2 # Execution tier
+  related_modules:
+    - stop-conditions
+    - evidence
+
+  reflection:
+    enabled: true
+    check_after: "edit"
+    question: "Did I verify this edit properly?"
+
+---
+_DOMYH Awesome Code v6.0 • Edit Verification Rule_

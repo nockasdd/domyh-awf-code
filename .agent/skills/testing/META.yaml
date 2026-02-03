@@ -1,6 +1,8 @@
 name: testing
+version: "6.0.0"
 display: Testing
 category: support
+tier: 1
 priority: 2
 desc: "Testing patterns: unit tests, integration tests, mocking, TDD, coverage, e2e"
 keywords:
@@ -24,3 +26,4 @@ caps:
     Mocking strategies,
     Test-driven development,
   ]
+data_files: [frameworks.csv, patterns.csv]

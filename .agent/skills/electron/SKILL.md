@@ -1,12 +1,12 @@
 ---
 name: electron
 detect: ["electron.vite.config.ts", "main.ts:electron", "preload.ts"]
-version: "4.3.0"
+version: "6.0.0"
 category: desktop
 tier: 1
 ---
 
-# Electron Patterns — DOMYH Awesome Code v4.3
+# Electron Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Electron 33+ (2025-2026)
 > **Philosophy**: Context isolation, secure IPC, minimal privileges
@@ -266,4 +266,4 @@ mainWindow.webContents.session.webRequest.onHeadersReceived(
 
 ---
 
-_DOMYH Awesome Code v4.3 • Electron 33+_
+_DOMYH Awesome Code v6.0.0 • Electron 33+_

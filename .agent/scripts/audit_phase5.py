@@ -82,9 +82,9 @@ def audit_structure(report):
 
 
 def audit_scripts(report):
-    """Audit 5.2: Script functionality."""
+    """Audit v5.5: Script functionality."""
     print("\n" + "="*60)
-    print("🔧 5.2 Script Audit")
+    print("🔧 v5.5 Script Audit")
     print("="*60)
     
     scripts_dir = BASE_DIR / "scripts"

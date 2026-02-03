@@ -1,43 +1,180 @@
-# 🎭 DOMYH Awesome Code Personas v4.0
+# 🎭 Personas System v6.0
 
-> Role-based AI personas for different development tasks
+> AI agent personas with identity, memory, and collaboration
 
-## Available Personas (7)
+---
 
-| Persona    | Role            | Triggers                        |
-| ---------- | --------------- | ------------------------------- |
-| auditor    | 5-expert panel  | `/ap`                           |
-| developer  | Code craftsman  | `/code`, `/refactor`, `/review` |
-| architect  | System design   | `/plan`, `/design`              |
-| debugger   | Bug hunter      | `/debug`                        |
-| tester     | Test specialist | `/test`                         |
-| devops     | CI/CD expert    | `/deploy`, `/monitor`, `/env`   |
-| documenter | Doc writer      | `/doc`, `/generate`             |
+## Overview
 
-## Persona Structure
+Personas define specialized agent roles with distinct:
+
+- **Identity** — Role, goal, and backstory
+- **Traits** — Behavioral characteristics
+- **Memory** — Integration with memory system
+- **Tools** — Permitted tool usage
+- **Collaboration** — Multi-agent coordination
+
+---
+
+## Available Personas
+
+| Persona          | Role                             | Triggers             | Version |
+| ---------------- | -------------------------------- | -------------------- | ------- |
+| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.0.0   |
+| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.0.0   |
+| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.0.0   |
+| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.0.0   |
+| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.0.0   |
+| **security**     | Security Specialist              | `/security`, `/scan` | 6.0.0   |
+| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 4.5.0   |
+| **debugger**     | Bug Hunter                       | `/debug`             | 4.5.0   |
+| **tester**       | Quality Assurance                | `/test`              | 4.5.0   |
+| **devops**       | Infrastructure Engineer          | `/deploy`            | 4.5.0   |
+| **documenter**   | Technical Writer                 | `/doc`               | 4.5.0   |
+
+---
+
+## v6.0 Schema
+
+All personas follow the enhanced schema:
 
 ```yaml
 ---
-name: persona
-version: "4.3.0"
-role: "One-line role"
-token_budget: 300
-triggers: ["/command"]
+name: [persona_name]
+version: "6.0.0"
+persona_id: "[prefix]-001"
+
+# Core Identity (CrewAI Pattern)
+identity:
+  role: "One-line role"
+  goal: "Primary objective"
+  backstory: |
+    Multi-line background that shapes behavior...
+
+# Behavioral Traits (Anthropic Pattern)
+traits:
+  communication_style: "direct but supportive"
+  detail_level: "thorough with explanations"
+  decision_making: "evidence-based"
+  error_handling: "proactive"
+
+# Cognitive Capabilities
+capabilities:
+  reasoning: true
+  reflection: true
+  planning: true
+  multimodal: false
+
+# Memory Integration (Letta Pattern)
+memory:
+  use_core_memory: true
+  core_blocks: ["persona", "user", "project"]
+  short_term: "conversation_history"
+  long_term: "patterns/successes.json"
+
+# Tool Permissions
+tools:
+  allowed: [list]
+  restricted: [list]
+  requires_approval: [list]
+
+# Collaboration (LangGraph Pattern)
+collaboration:
+  can_delegate_to: [personas]
+  reports_to: [personas]
+  handoff_conditions:
+    "condition": "target_persona"
+
+# Triggers & Rules
+triggers: ["/command1", "/command2"]
+enforces: [rule1, rule2]
+
+# Output Configuration
+output:
+  format: "structured_markdown"
+  template: "path/to/template.md"
 ---
 ```
 
-## Token Budgets
+---
 
-| Persona    | Budget | Priority |
-| ---------- | ------ | -------- |
-| auditor    | 400    | High     |
-| developer  | 300    | High     |
-| architect  | 300    | Medium   |
-| debugger   | 350    | High     |
-| tester     | 300    | Medium   |
-| devops     | 300    | Medium   |
-| documenter | 250    | Low      |
+## Key Concepts
+
+### Identity (CrewAI Pattern)
+
+- **Role**: What the persona does
+- **Goal**: What they're trying to achieve
+- **Backstory**: Background that shapes behavior
+
+### Memory Integration (Letta Pattern)
+
+- Personas access core memory blocks
+- Learn from successes and errors
+- Build patterns over time
+
+### Collaboration (LangGraph Pattern)
+
+- Personas can delegate to others
+- Handoff conditions trigger transitions
+- Orchestrator coordinates complex tasks
 
 ---
 
-_DOMYH Awesome Code v4.3_
+## Directory Structure
+
+```
+.agent/personas/
+├── README.md           # This file
+├── schemas/
+│   └── persona.schema.yaml  # Schema definition
+├── developer.md        # Enhanced v6.0
+├── architect.md        # Enhanced v6.0
+├── planner.md          # NEW v6.0
+├── researcher.md       # NEW v6.0
+├── orchestrator.md     # NEW v6.0
+├── security.md         # NEW v6.0
+├── auditor.md
+├── debugger.md
+├── tester.md
+├── devops.md
+└── documenter.md
+```
+
+---
+
+## Usage
+
+### Direct Trigger
+
+```
+/code implement user authentication
+```
+
+### Agent Auto-Selection
+
+The router automatically selects the appropriate persona based on:
+
+1. Command triggers
+2. Intent classification
+3. Task complexity
+
+### Multi-Agent Flow
+
+For complex tasks, the orchestrator coordinates:
+
+```
+User Request → Orchestrator → [Planner → Developer → Tester] → Result
+```
+
+---
+
+## Best Practices
+
+1. **Let personas use their strengths** — Don't ask developer for architecture decisions
+2. **Trust the orchestrator** — For multi-domain tasks, let it coordinate
+3. **Check persona memory** — Patterns in `patterns/` improve over time
+4. **Customize traits** — Adjust communication style in `state.json`
+
+---
+
+_DOMYH Awesome Code v6.0 • Personas System_

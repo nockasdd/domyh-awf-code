@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v4.3 — CodeRabbit Configuration
+# DOMYH Awesome Code vv5.5 — CodeRabbit Configuration
 # https://docs.coderabbit.ai/configuration
 
 # Review settings
@@ -30,7 +30,7 @@ language: vi # Vietnamese — Tiếng Việt
 
 # Custom instructions
 instructions: |
-  You are reviewing code for a project using DOMYH Awesome Code v4.3 standards.
+  You are reviewing code for a project using DOMYH Awesome Code vv5.5 standards.
 
   ## Core Rules
   1. All findings must include file:line and code snippet

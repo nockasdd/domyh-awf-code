@@ -1,0 +1,196 @@
+# Stop Conditions Rule v6.0
+# Modular rule for knowing when to pause and ask
+
+---
+name: stop-conditions
+version: "6.0.0"
+rule_id: "MOD-STP-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Rules for identifying conditions that require pausing and consulting
+  the user before proceeding. Critical for safety and alignment.
+
+category: "safety"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["*"]
+  workflows: ["*"]
+
+# =============================================================================
+# STOP CONDITIONS
+# =============================================================================
+
+conditions:
+  # ==========================================================================
+  # CRITICAL STOPS (Always stop, no exceptions)
+  # ==========================================================================
+
+  critical:
+    destructive_actions:
+      trigger: "About to delete files, drop tables, or remove data"
+      action: "STOP and confirm"
+      message: |
+        ⛔ **Destructive Action Required**
+
+        I'm about to: {action}
+        This will: {impact}
+
+        Proceed? (yes/no)
+
+    security_sensitive:
+      trigger: "About to modify auth, permissions, or security config"
+      action: "STOP and confirm"
+      message: |
+        🔒 **Security Change Detected**
+
+        Changing: {what}
+        Impact: {impact}
+
+        Please confirm this is intended.
+
+    production_actions:
+      trigger: "Any action targeting production environment"
+      action: "STOP and confirm"
+      message: |
+        🚀 **Production Action**
+
+        Action: {action}
+        Environment: PRODUCTION
+
+        This affects live users. Confirm? (yes/no)
+
+  # ==========================================================================
+  # HIGH PRIORITY STOPS (Stop in most cases)
+  # ==========================================================================
+
+  high:
+    scope_expansion:
+      trigger: "Task requires changes outside original scope"
+      action: "STOP and confirm scope expansion"
+      message: |
+        📏 **Scope Expansion**
+
+        Original scope: {original}
+        New requirement: {expanded}
+
+        Should I expand the scope?
+
+    ambiguous_request:
+      trigger: "Request has multiple valid interpretations"
+      action: "STOP and clarify"
+      message: |
+        ❓ **Clarification Needed**
+
+        I could interpret this as:
+        1. {interpretation_1}
+        2. {interpretation_2}
+
+        Which do you mean?
+
+    missing_information:
+      trigger: "Cannot proceed without information I don't have"
+      action: "STOP and ask"
+      message: |
+        📋 **Information Needed**
+
+        To proceed, I need to know: {what}
+
+    large_change:
+      trigger: "Change affects > 100 lines or > 5 files"
+      action: "STOP and confirm plan"
+      threshold:
+        lines: 100
+        files: 5
+      message: |
+        📦 **Large Change**
+
+        This will modify: {files} files, ~{lines} lines
+
+        Review plan before proceeding?
+
+  # ==========================================================================
+  # MEDIUM PRIORITY STOPS (Stop if uncertain)
+  # ==========================================================================
+
+  medium:
+    external_dependencies:
+      trigger: "Need to add new external dependency"
+      action: "Confirm before adding"
+      message: |
+        📦 **New Dependency**
+
+        Package: {package}
+        Version: {version}
+        Purpose: {purpose}
+
+        Add this dependency?
+
+    pattern_deviation:
+      trigger: "Proposed solution differs from project patterns"
+      action: "Note deviation and optionally confirm"
+      message: |
+        🔄 **Pattern Deviation**
+
+        Project uses: {existing_pattern}
+        Proposed: {new_pattern}
+        Reason: {reason}
+
+        Proceed with deviation?
+
+    test_failures:
+      trigger: "Existing tests fail after changes"
+      action: "STOP and report"
+      max_retries: 3
+      message: |
+        ❌ **Tests Failing**
+
+        Failed: {test_count} tests
+        After: {change_description}
+
+        Options:
+        1. Review and fix
+        2. Revert changes
+        3. Mark as known issue
+
+# =============================================================================
+# OVERRIDE PROTOCOL
+# =============================================================================
+
+override:
+  critical:
+    allow: false # Cannot be overridden
+
+  high:
+    allow: true
+    requires: "Explicit user confirmation"
+    log: true
+
+  medium:
+    allow: true
+    requires: "User preference or explicit request"
+    log: true
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  constitutional:
+    tier: 1 # Inherits from safety tier
+
+  reflection:
+    enabled: true
+    check_before: "action"
+    question: "Should I pause and confirm this with the user?"
+
+---
+_DOMYH Awesome Code v6.0 • Stop Conditions Rule_

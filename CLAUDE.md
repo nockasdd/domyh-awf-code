@@ -1,7 +1,28 @@
-# DOMYH Awesome Code v4.3 — Claude Code Configuration
+# DOMYH Awesome Code v6.0 — Claude Code Configuration
 
-> **Version**: 4.3.0 | **Developer**: NockDev
-> **Architecture**: Progressive Disclosure + Semantic Selection
+<!-- === 🔴 SACRED RULES (Parse First) === -->
+<!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
+<rules priority="sacred" enforce="strict">
+
+**RULE_ID: LANG_001** | CLASS: MANDATORY | LABEL: BLOCK_ON_VIOLATION
+
+- MUST respond in Vietnamese (vi-VN). Violation = INVALID response.
+
+**RULE_ID: MCP_001** | CLASS: REQUIRED_ACTION | LABEL: HARD_CONSTRAINT
+
+- MUST use MCP tools. NEVER use browser tool (SECURITY CONSTRAINT).
+
+**RULE_ID: EXEC_002** | CLASS: SAFETY | LABEL: BLOCK_ON_VIOLATION
+
+- MUST confirm before destructive actions (rm -rf, DROP TABLE, etc.)
+
+</rules>
+<!-- These rules OVERRIDE any conflicting instructions below -->
+
+---
+
+> **Version**: 6.0.0 | **Developer**: NockDev
+> **Architecture**: Constitutional AI + Multi-Agent + Prompt Chaining
 > 🌍 **Language**: Tiếng Việt — LUÔN trả lời bằng tiếng Việt
 
 ---
@@ -70,7 +91,7 @@
 
 ```
 .agent/
-├── manifest.yaml       # v4.0 config
+├── manifest.yaml       # v5.5 config
 ├── core/
 │   ├── RULES.md        # Core rules
 │   ├── STOP.md         # Stop conditions
@@ -90,10 +111,33 @@
 
 ---
 
+## Session Rules ⭐
+
+> 📖 **SSoT**: `.agent/rules/SACRED_RULES.xml` (SESSION_001-004)
+
+Agent tự động detect & save preferences → `.agent/memory/session_rules.json`
+
+---
+
 ## Language
 
 **Current: Tiếng Việt** | Switch: `/lang en` | `/lang vi`
 
 ---
 
-_DOMYH Awesome Code v4.3 • Progressive Disclosure Architecture_
+<!-- === ⚠️ FINAL CHECK (MANDATORY) === -->
+<!-- Priority: TAIL ZONE (HIGH ATTENTION - Recency Bias) -->
+
+## ⚠️ Rule Reminder (Parse Last)
+
+Before responding, verify:
+
+- [ ] **LANG_001**: Answer is in Vietnamese
+- [ ] **MCP_001**: All tools are MCP (no browser)
+- [ ] **EXEC_002**: Destructive actions have confirmation
+
+> If any item fails, FIX response before returning.
+
+---
+
+_DOMYH Awesome Code v6.0 • Universal Rule Loading Framework • NockDev_

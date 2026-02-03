@@ -5,7 +5,7 @@ persona: developer
 description: "✅ Run existing tests and write new test cases with proper coverage"
 ---
 
-# ✅ /test — Testing Pro v3.0
+# ✅ /test — Test Pro v3.2
 
 > Complete Testing Workflow
 > 📚 30+ Languages • TDD • Coverage Analysis
@@ -55,6 +55,80 @@ User: /test [target]
 │ ▸ Re-run all tests                      │
 │ ▸ Confirm coverage improved             │
 └─────────────────────────────────────────┘
+```
+
+---
+
+## 🔴🟢🔵 TDD — THE IRON LAW
+
+> **Source**: Superpowers Test-Driven Development
+> **Philosophy**: NO PRODUCTION CODE WITHOUT FAILING TEST FIRST
+
+### The Iron Law
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚠️  STOP! If you didn't watch the test fail, you DON'T know   │
+│       if it tests the right thing!                              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Red-Green-Refactor Cycle (MANDATORY)
+
+```
+   ┌──────────────┐
+   │   🔴 RED      │
+   │ Write test   │──────┐
+   │ (must fail)  │      │
+   └──────────────┘      │
+         │               │
+         ▼               │
+   ┌──────────────┐      │
+   │ VERIFY FAIL  │      │
+   │ (watch it!)  │      │
+   └──────────────┘      │
+         │               │
+         ▼               │
+   ┌──────────────┐      │
+   │  🟢 GREEN    │      │
+   │ Minimal code │      │
+   │ (to pass)    │      │
+   └──────────────┘      │
+         │               │
+         ▼               │
+   ┌──────────────┐      │
+   │ VERIFY PASS  │      │
+   │ (all green!) │      │
+   └──────────────┘      │
+         │               │
+         ▼               │
+   ┌──────────────┐      │
+   │ 🔵 REFACTOR  │      │
+   │ Clean up     │      │
+   │ (stay green) │      │
+   └──────────────┘      │
+         │               │
+         └───────────────┘
+```
+
+### Common Rationalizations (IGNORE THESE)
+
+| Excuse                    | Reality                                  |
+| ------------------------- | ---------------------------------------- |
+| "Too simple to test"      | Simple code breaks. Test takes 30s.      |
+| "I'll test after"         | Tests passing immediately prove nothing. |
+| "Already manually tested" | Ad-hoc ≠ systematic.                     |
+| "The test is obvious"     | Until you watch it fail, you don't know. |
+| "Just a quick fix"        | Quick fixes create more bugs.            |
+
+### TDD Verification Checklist
+
+```yaml
+before_merge:
+  - "Every new function has a test?"
+  - "Watched each test fail first?"
+  - "All tests pass, output pristine?"
+  - "No skipped/commented tests?"
 ```
 
 ---
@@ -467,4 +541,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Test Pro v3.1 • TDD + AI Testing_
+_DOMYH Awesome Code v5.5 • Test Pro v3.2 • TDD Iron Law + AI Testing_

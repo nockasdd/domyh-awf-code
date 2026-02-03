@@ -1,0 +1,110 @@
+# Code Implementation Task Template
+
+> Structured template for code implementation tasks
+
+---
+
+## Schema
+
+```yaml
+task_type: code_implementation
+version: "6.0.0"
+
+# Required fields
+description: string       # What to build
+expected_output: string   # What success looks like
+
+# Optional fields
+constraints: list         # Limitations or requirements
+success_criteria: list    # Acceptance criteria
+priority: enum            # [P0, P1, P2, P3]
+estimated_effort: string  # [small, medium, large]
+```
+
+---
+
+## Example Task
+
+```yaml
+task:
+  type: code_implementation
+  
+  description: |
+    Implement a JWT authentication service for the API.
+    Should support login, logout, and token refresh.
+  
+  expected_output: |
+    A working auth service with:
+    - AuthService class with login/logout/refresh methods
+    - JWT token generation and validation
+    - Secure password hashing
+    - Unit tests with 80%+ coverage
+  
+  constraints:
+    - Use bcrypt for password hashing
+    - JWT expiry: 24 hours
+    - Must work with existing User model
+    - No breaking changes to existing API
+  
+  success_criteria:
+    - Login returns valid JWT on correct credentials
+    - Invalid credentials return 401
+    - Expired tokens are rejected
+    - Refresh generates new valid token
+    - All tests pass
+    
+  priority: P1
+  estimated_effort: medium
+  
+  files:
+    create:
+      - src/services/auth.service.ts
+      - src/types/auth.types.ts
+      - tests/auth.test.ts
+    modify:
+      - src/handlers/user.handler.ts
+      
+  dependencies:
+    - jsonwebtoken
+    - bcrypt
+```
+
+---
+
+## Usage in Prompts
+
+```markdown
+## Task: Code Implementation
+
+**Description:**
+{{task.description}}
+
+**Expected Output:**
+{{task.expected_output}}
+
+**Constraints:**
+{{#task.constraints}}
+- {{.}}
+{{/task.constraints}}
+
+**Success Criteria:**
+{{#task.success_criteria}}
+- [ ] {{.}}
+{{/task.success_criteria}}
+
+**Priority:** {{task.priority}}
+**Effort:** {{task.estimated_effort}}
+```
+
+---
+
+## Workflow Integration
+
+This task type triggers:
+- **Persona:** Developer
+- **Chain:** implement (1_plan → 2_implement → 3_test → 4_review)
+- **Reflection:** Pre-output critic check
+
+---
+
+_DOMYH Awesome Code v6.0 • Code Implementation Task Template_

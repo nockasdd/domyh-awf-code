@@ -1,12 +1,12 @@
 ---
 name: python
 detect: ["pyproject.toml", "requirements.txt", "*.py", "Pipfile", "setup.py"]
-version: "4.3.0"
+version: "6.0.0"
 category: backend
 tier: 1
 ---
 
-# Python Patterns — DOMYH Awesome Code v4.3
+# Python Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Python 3.12/3.13 (2025-2026)
 > **Frameworks**: FastAPI, Django 5+
@@ -492,4 +492,4 @@ Handler: TypeAlias = Callable[[Request], Awaitable[Response]]
 
 ---
 
-_DOMYH Awesome Code v4.3 • Python 3.12/3.13_
+_DOMYH Awesome Code v6.0.0 • Python 3.12/3.13_

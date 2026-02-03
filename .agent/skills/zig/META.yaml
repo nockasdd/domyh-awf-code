@@ -1,0 +1,50 @@
+name: zig
+version: "6.0.0"
+category: systems
+tier: 2
+
+description: |
+  Zig development patterns for Zig 0.13+.
+  Covers systems programming, comptime, C interop, WebAssembly.
+
+triggers:
+  file_patterns:
+    - "*.zig"
+    - "build.zig"
+    - "build.zig.zon"
+  keywords:
+    # Core
+    - zig
+    - zig lang
+    - zig 0.13
+    - ziglang
+    # Features
+    - comptime
+    - allocator
+    - error union
+    - optional
+    # Ecosystem
+    - bun runtime
+    - tigerbeetle
+    - mach engine
+    # Use cases
+    - c interop
+    - ffi
+    - wasm zig
+    - webassembly
+    - embedded zig
+    - kernel module
+  intents:
+    - create zig project
+    - zig c interop
+    - zig wasm
+    - systems programming zig
+
+related_skills:
+  - c
+  - rust
+  - cpp
+
+prevent_confusion_with:
+  - rust: "Zig has no borrow checker, explicit allocators"
+  - c: "Zig has safety checks, no macros"

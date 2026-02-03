@@ -5,14 +5,14 @@ persona: designer
 description: "🖼️ UI/UX Design: mockups, wireframes, component design, visual prototyping"
 ---
 
-# 🖼️ /visualize — UI Design Pro v4.0
+# 🖼️ /visualize — Visualize Pro v5.5
 
 > Multi-Platform Visual Design & Code Generation
 > 📚 Web • Desktop • Mobile • 16 Frameworks • Component Mapping
 
 ---
 
-## 🔄 VISUALIZE FLOW v4.0
+## 🔄 VISUALIZE FLOW v5.5
 
 ```
 User: /visualize [platform] [description]
@@ -162,7 +162,7 @@ component_mapping:
 
 ---
 
-## 📊 DESIGN SPECIFICATION v4.0
+## 📊 DESIGN SPECIFICATION v5.5
 
 ```markdown
 🖼️ DESIGN: {Component/Page Name}
@@ -206,6 +206,7 @@ import { Button, Card } from '@/components';
 
 export function Page() {
 return (
+
 <div className="container">
 <Header />
 <FilterBar />
@@ -314,7 +315,7 @@ image_generation:
 
 ---
 
-## ⚙️ TOKEN OPTIMIZATION v4.0
+## ⚙️ TOKEN OPTIMIZATION v5.5
 
 ```yaml
 token_saving:
@@ -345,4 +346,4 @@ Enter number or command:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Visualize Pro v4.0 • Multi-Platform + Component Mapping_
+_DOMYH Awesome Code v5.5 • Visualize Pro v5.5 • Multi-Platform + Component Mapping_

@@ -1,52 +1,273 @@
-# DOMYH Awesome Code — External Templates Registry
-# Version: 4.3
-# Purpose: Reduce inline templates in workflows
+# DOMYH Awesome Code — Templates Registry v6.0
+# Version: 6.0.0
+# Purpose: Comprehensive template system for prompts, tasks, outputs, and infrastructure
 
 # =============================================================================
-# DOCKER TEMPLATES
+# SYSTEM PROMPT TEMPLATES (NEW in v6.0)
+# =============================================================================
+
+prompts:
+  # Base persona template (composable)
+  persona_base:
+    path: .agent/templates/prompts/persona_base.md
+    description: "Core system prompt template for persona instantiation"
+    placeholders:
+      - "{{PERSONA_NAME}}"
+      - "{{PERSONA_ROLE}}"
+      - "{{PERSONA_GOAL}}"
+      - "{{PERSONA_BACKSTORY}}"
+      - "{{TRAITS}}"
+      - "{{ALLOWED_TOOLS}}"
+      - "{{RESTRICTED_TOOLS}}"
+      - "{{CURRENT_PROJECT}}"
+      - "{{ACTIVE_RULES}}"
+    compose_with:
+      - context_block
+      - guardrails_block
+      - tools_block
+
+  # Context injection template
+  context_block:
+    path: .agent/templates/prompts/context_block.md
+    description: "Dynamic project context injection"
+    placeholders:
+      - "{{ACTIVE_FILES}}"
+      - "{{RECENT_CHANGES}}"
+      - "{{PROJECT_STRUCTURE}}"
+      - "{{CURRENT_BRANCH}}"
+
+  # Guardrails template
+  guardrails_block:
+    path: .agent/templates/prompts/guardrails_block.md
+    description: "Safety guardrails from constitutional rules"
+    include_rules:
+      - .agent/rules/constitutional/tier-0-core.yaml
+      - .agent/rules/constitutional/tier-1-safety.yaml
+
+  # Tools instruction template
+  tools_block:
+    path: .agent/templates/prompts/tools_block.md
+    description: "Tool usage instructions"
+
+# =============================================================================
+# REFLECTION TEMPLATES (NEW in v6.0)
+# =============================================================================
+
+reflection:
+  # Self-critique before output
+  critic:
+    path: .agent/templates/reflection/critic.md
+    description: "Self-critique template based on Reflexion pattern"
+    use_before: ["code_output", "recommendations", "architecture"]
+
+  # Error analysis for learning
+  error_analysis:
+    path: .agent/templates/reflection/error_analysis.md
+    description: "Analyze failures and extract patterns"
+    triggers: ["user_correction", "task_failure"]
+    storage: ".agent/memory/patterns/errors.json"
+
+  # Success reinforcement
+  success_analysis:
+    path: .agent/templates/reflection/success_analysis.md
+    description: "Analyze successes and reinforce patterns"
+    triggers: ["user_satisfaction", "task_complete"]
+    storage: ".agent/memory/patterns/successes.json"
+
+# =============================================================================
+# TASK TEMPLATES (NEW in v6.0)
+# =============================================================================
+
+tasks:
+  # Code implementation task
+  code_implementation:
+    path: .agent/templates/tasks/code_implementation.yaml
+    description: "Template for code implementation tasks"
+    schema:
+      description: string
+      expected_output: string
+      constraints: list
+      success_criteria: list
+
+  # Bug fix task
+  bug_fix:
+    path: .agent/templates/tasks/bug_fix.yaml
+    description: "Template for bug fixing tasks"
+    schema:
+      symptom: string
+      reproduction_steps: list
+      expected_behavior: string
+      investigation_areas: list
+
+  # Audit task
+  audit:
+    path: .agent/templates/tasks/audit.yaml
+    description: "Template for audit tasks"
+    schema:
+      scope: string
+      experts: list
+      checklist: reference
+      output_format: reference
+
+  # Refactoring task
+  refactor:
+    path: .agent/templates/tasks/refactor.yaml
+    description: "Template for refactoring tasks"
+    schema:
+      target: string
+      pattern: string
+      constraints: list
+
+# =============================================================================
+# OUTPUT TEMPLATES (ENHANCED in v6.0)
+# =============================================================================
+
+output:
+  # Implementation result
+  implementation:
+    path: .agent/templates/output/implementation.md
+    description: "Structured implementation output"
+    sections:
+      - plan
+      - changes_made
+      - files_modified
+      - test_results
+      - next_steps
+
+  # Finding report
+  finding:
+    path: .agent/templates/output/finding.md
+    description: "Security/quality finding format"
+    schema:
+      severity: "enum[P0, P1, P2, P3]"
+      title: string
+      file: string
+      line: number
+      evidence: code_block
+      recommendation: string
+      confidence: "enum[high, medium, low]"
+
+  # Architecture proposal
+  architecture:
+    path: .agent/templates/output/architecture.md
+    description: "Architecture decision format"
+    sections:
+      - context
+      - options_analysis
+      - recommendation
+      - diagram
+      - adr
+
+  # JSON structured output
+  json_structured:
+    path: .agent/templates/output/structured.json.tmpl
+    description: "Machine-readable JSON output"
+    validate_schema: true
+
+# =============================================================================
+# PROMPT CHAINS (NEW in v6.0)
+# =============================================================================
+
+chains:
+  # Code review chain
+  code_review:
+    description: "Multi-step code review process"
+    steps:
+      - name: understand
+        template: .agent/templates/chains/review/1_understand.md
+        output_key: understanding
+      - name: analyze
+        template: .agent/templates/chains/review/2_analyze.md
+        input_from: understanding
+        output_key: analysis
+      - name: recommend
+        template: .agent/templates/chains/review/3_recommend.md
+        input_from: analysis
+        output_key: recommendations
+      - name: summarize
+        template: .agent/templates/chains/review/4_summarize.md
+        input_from: recommendations
+
+  # Debugging chain
+  debug:
+    description: "Systematic debugging process"
+    steps:
+      - name: reproduce
+        template: .agent/templates/chains/debug/1_reproduce.md
+        output_key: reproduction
+      - name: isolate
+        template: .agent/templates/chains/debug/2_isolate.md
+        input_from: reproduction
+        output_key: isolation
+      - name: analyze
+        template: .agent/templates/chains/debug/3_analyze.md
+        input_from: isolation
+        output_key: root_cause
+      - name: fix
+        template: .agent/templates/chains/debug/4_fix.md
+        input_from: root_cause
+        output_key: fix
+      - name: verify
+        template: .agent/templates/chains/debug/5_verify.md
+        input_from: fix
+
+  # Implementation chain
+  implement:
+    description: "Structured implementation process"
+    steps:
+      - name: plan
+        template: .agent/templates/chains/implement/1_plan.md
+        output_key: plan
+      - name: implement
+        template: .agent/templates/chains/implement/2_implement.md
+        input_from: plan
+        output_key: code
+      - name: test
+        template: .agent/templates/chains/implement/3_test.md
+        input_from: code
+        output_key: tests
+      - name: review
+        template: .agent/templates/chains/implement/4_review.md
+        input_from: [code, tests]
+
+# =============================================================================
+# DOCKER TEMPLATES (Existing)
 # =============================================================================
 
 docker:
-  # Basic docker-compose for development
   compose_dev:
     path: templates/docker/docker-compose.dev.yaml
     description: "Development docker-compose with hot reload"
 
-  # Production docker-compose
   compose_prod:
     path: templates/docker/docker-compose.prod.yaml
     description: "Production docker-compose with health checks"
 
-  # Observability stack
   compose_observability:
     path: templates/docker/docker-compose.observability.yaml
     description: "Prometheus + Grafana + Loki + Tempo stack"
 
 # =============================================================================
-# CI/CD TEMPLATES
+# CI/CD TEMPLATES (Existing)
 # =============================================================================
 
 cicd:
-  # GitHub Actions
   github:
     ci: templates/cicd/github/ci.yaml
     deploy: templates/cicd/github/deploy.yaml
     release: templates/cicd/github/release.yaml
 
-  # GitLab CI
   gitlab:
     ci: templates/cicd/gitlab/.gitlab-ci.yml
 
-  # Azure DevOps
   azure:
     pipeline: templates/cicd/azure/azure-pipelines.yml
 
 # =============================================================================
-# DATABASE MIGRATION TEMPLATES
+# DATABASE MIGRATION TEMPLATES (Existing)
 # =============================================================================
 
 database:
-  # Migration tools
   atlas:
     config: templates/db/atlas.hcl
     migration: templates/db/migrations/
@@ -57,68 +278,57 @@ database:
   goose:
     config: templates/db/goose/dbconf.yml
 
-  # Seed data
   seeds:
     path: templates/db/seeds/
     formats: [sql, json, yaml]
 
 # =============================================================================
-# API DOCUMENTATION TEMPLATES
+# API DOCUMENTATION TEMPLATES (Existing)
 # =============================================================================
 
 api:
-  # OpenAPI/Swagger
   openapi:
     base: templates/api/openapi.yaml
     components: templates/api/components/
 
-  # AsyncAPI
   asyncapi:
     base: templates/api/asyncapi.yaml
 
-  # GraphQL
   graphql:
     schema: templates/api/schema.graphql
 
 # =============================================================================
-# ENVIRONMENT TEMPLATES
+# ENVIRONMENT TEMPLATES (Existing)
 # =============================================================================
 
 environment:
-  # .env templates by environment
   local: templates/env/.env.local.template
   development: templates/env/.env.development.template
   staging: templates/env/.env.staging.template
   production: templates/env/.env.production.template
-
-  # Common variables
   common: templates/env/.env.common
 
 # =============================================================================
-# MONITORING TEMPLATES
+# MONITORING TEMPLATES (Existing)
 # =============================================================================
 
 monitoring:
-  # Prometheus
   prometheus:
     config: templates/monitoring/prometheus/prometheus.yml
     rules: templates/monitoring/prometheus/rules/
 
-  # Grafana
   grafana:
     dashboards: templates/monitoring/grafana/dashboards/
     datasources: templates/monitoring/grafana/datasources/
 
-  # AlertManager
   alertmanager:
     config: templates/monitoring/alertmanager/alertmanager.yml
 
 # =============================================================================
-# CODE TEMPLATES
+# CODE TEMPLATES (Existing)
 # =============================================================================
 
 code:
-  # By language
   golang:
     service: templates/code/go/service.go.tmpl
     handler: templates/code/go/handler.go.tmpl
@@ -137,13 +347,18 @@ code:
     test: templates/code/python/test.py.tmpl
 
 # =============================================================================
-# USAGE IN WORKFLOWS
+# USAGE REFERENCE
 # =============================================================================
 
-# Instead of inline templates in workflows, reference like:
+# Reference templates in workflows:
+#   template: $ref:prompts.persona_base
+#   template: $ref:reflection.critic
+#   template: $ref:chains.code_review
 #
-# ```yaml
-# template: $ref:docker.compose_observability
-# ```
+# Compose templates:
+#   base: $ref:prompts.persona_base
+#   with: [prompts.context_block, prompts.guardrails_block]
 #
-# The agent will load from: templates/docker/docker-compose.observability.yaml
+# Chain execution:
+#   chain: $ref:chains.debug
+#   input: { symptom: "...", steps: [...] }

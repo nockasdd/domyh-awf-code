@@ -1,0 +1,52 @@
+name: elixir
+version: "6.0.0"
+category: functional
+tier: 2
+
+description: |
+  Elixir development patterns for Elixir 1.16+.
+  Covers Phoenix, LiveView, OTP, GenServer, concurrency.
+
+triggers:
+  file_patterns:
+    - "*.ex"
+    - "*.exs"
+    - "mix.exs"
+    - "mix.lock"
+  keywords:
+    # Core
+    - elixir
+    - elixir lang
+    - mix
+    - hex
+    - iex
+    # OTP
+    - otp
+    - genserver
+    - supervisor
+    - agent
+    - ets
+    - mnesia
+    # Phoenix
+    - phoenix
+    - phoenix liveview
+    - liveview
+    - ecto
+    - plug
+    # Testing
+    - exunit
+    - mox
+  intents:
+    - create elixir project
+    - phoenix app
+    - liveview app
+    - genserver
+
+related_skills:
+  - erlang
+  - phoenix
+  - rust
+
+prevent_confusion_with:
+  - ruby: "Elixir uses pattern matching, Ruby uses OOP"
+  - erlang: "Elixir has modern syntax, runs on BEAM"

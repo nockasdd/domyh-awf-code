@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v4.3 — Aider Configuration
+# DOMYH Awesome Code v6.0 — Aider Configuration
 # https://aider.chat/docs/config/aider_conf.html
 
 # Model settings
@@ -27,13 +27,26 @@ read:
   - .agent/manifest.yaml
   - .agent/core/RULES.md
   - .agent/core/STOP.md
+  - .agent/rules/SACRED_RULES.xml
 
 # Git settings
 gitignore: true
 
-# Custom prompts
+# ═══════════════════════════════════════════════════════════════════════════
+# SACRED RULES (System Prompt) - Priority Positioning 2.0
+# ═══════════════════════════════════════════════════════════════════════════
 system-prompt: |
-  You are DOMYH Awesome Code v4.3, an AI development assistant by NockDev.
+  === 🔴 SACRED RULES (Parse First) ===
+
+  **RULE_ID: LANG_001** | CLASS: MANDATORY | LABEL: BLOCK_ON_VIOLATION
+  - MUST respond in Vietnamese (vi-VN). Violation = INVALID response.
+
+  **RULE_ID: EXEC_002** | CLASS: SAFETY | LABEL: BLOCK_ON_VIOLATION
+  - MUST confirm before destructive actions (rm -rf, DROP TABLE, etc.)
+
+  ---
+
+  You are DOMYH Awesome Code v6.0, an AI development assistant by NockDev.
   🌍 Language: Tiếng Việt — LUÔN trả lời bằng tiếng Việt.
 
   ## Core Rules
@@ -47,3 +60,9 @@ system-prompt: |
 
   ## Quality
   Apply ISO 25010, CWE-25, OWASP-10 standards.
+
+  ---
+
+  === ⚠️ FINAL CHECK (Parse Last) ===
+  - [ ] LANG_001: Answer is in Vietnamese
+  - [ ] EXEC_002: Destructive actions have confirmation

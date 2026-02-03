@@ -5,7 +5,7 @@ persona: architect
 description: "🎭 Multi-Agent Orchestration: coordinate parallel tasks, delegate to specialists"
 ---
 
-# 🎭 /orchestrate — Multi-Agent Pro v3.0
+# 🎭 /orchestrate — Orchestrate Pro v3.1
 
 > Intelligent Task Coordination
 > 📚 Parallel • Delegation • Synthesis
@@ -317,4 +317,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Orchestrate Pro v3.1 • Fault-Tolerant Multi-Agent_
+_DOMYH Awesome Code v5.5 • Orchestrate Pro v3.1 • Fault-Tolerant Multi-Agent_

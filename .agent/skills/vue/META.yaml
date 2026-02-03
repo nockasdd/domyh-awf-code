@@ -1,111 +1,43 @@
 name: vue
-version: "4.3.0"
+version: "6.0.0"
+display: Vue.js
 category: frontend
 tier: 1
+priority: 1
 
 description: |
-  Vue.js development patterns for Vue 3.5 and Nuxt 4.
-  Covers Composition API, Pinia, composables, SSR.
+  Vue.js 3 with Composition API and Vapor Mode preview.
+  Covers Pinia, VueUse, Vue Router, Nuxt.
 
 triggers:
   file_patterns:
     - "*.vue"
-    - "package.json"
     - "nuxt.config.ts"
     - "vite.config.ts"
   keywords:
     # Core
     - vue
     - vue 3
-    - vue 3.5
-    - vuejs
-    - vue.js
-    # Composition API
     - composition api
-    - script setup
-    - defineProps
-    - defineEmits
-    - defineExpose
-    - withDefaults
-    # Reactivity
-    - ref vue
-    - reactive
-    - computed vue
-    - watch
-    - watchEffect
-    - shallowRef
-    - toRef
-    - toRefs
-    # Components
-    - vue component
-    - single file component
-    - sfc
-    - template vue
     # State
     - pinia
-    - defineStore
-    - storeToRefs
-    - vuex
-    # Nuxt
-    - nuxt
-    - nuxt 4
-    - useFetch
-    - useAsyncData
-    - definePageMeta
-    - defineNuxtConfig
-    - nuxt middleware
-    - server api nuxt
+    - ref
+    - reactive
     # Router
     - vue router
-    - useRoute
-    - useRouter
-    - navigation guard
-    # Composables
-    - composable
-    - vueuse
-    - useAuth
-    - useForm
-    # UI
-    - vuetify
-    - primevue
-    - naive ui
-    - element plus
-    - radix vue
-    # Tools
-    - volar
-    - vite vue
-    - vitest
-    - vue devtools
   intents:
     - vue component
-    - vue project
-    - nuxt app
-    - vue state management
-    - vue composable
+    - vue app
+    - pinia store
 
 related_skills:
+  - nuxt
   - typescript
-  - react
-  - nextjs
+  - tailwind
 
-prevent_confusion_with:
-  - react: "Vue uses templates, React uses JSX"
-  - angular: "Vue is progressive, Angular is opinionated"
-  - svelte: "Vue has virtual DOM, Svelte compiles"
-
-# Vue-specific APIs NOT in other frameworks
-unique_apis:
-  - "ref(), reactive(), computed() (Reactivity)"
-  - "watch(), watchEffect()"
-  - "defineProps(), defineEmits(), defineExpose()"
-  - "<script setup> syntax"
-  - "Pinia defineStore()"
-  - "v-model, v-bind, v-on, v-if, v-for"
-  - "provide/inject"
-  - "Teleport, Suspense"
-  - "<template> SFC syntax"
-  - "useTemplateRef() (Vue 3.5)"
-
-version_features:
-  vue34: ["Memo component", "Reactive props", "defineModel"]
-  vue35: ["useTemplateRef", "Reactive destructure", "useId"]
+caps:
+  - Vue 3 Composition API
+  - Pinia state management
+  - VueUse composables
+  - Vue Router 4
+  - Vapor Mode

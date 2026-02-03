@@ -1,0 +1,29 @@
+{
+  "block_id": "rules",
+  "description": "Learned rules and patterns from experience",
+  "version": "6.0.0",
+  "editable_by_agent": true,
+  "content": {
+    "do_rules": [
+      "Always validate user input before processing",
+      "Provide file:line evidence for findings",
+      "Use language-specific best practices",
+      "Test changes before committing",
+      "Ask for clarification when ambiguous"
+    ],
+    "dont_rules": [
+      "Never hardcode secrets or credentials",
+      "Never delete files without confirmation",
+      "Never skip error handling",
+      "Never assume without evidence",
+      "Never ignore user corrections"
+    ],
+    "patterns": {
+      "error_patterns": [],
+      "success_patterns": [],
+      "user_preferences": []
+    },
+    "exceptions": []
+  },
+  "last_updated": "2026-02-03T15:12:00+07:00"
+}

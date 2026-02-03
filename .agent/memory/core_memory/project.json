@@ -1,0 +1,25 @@
+{
+  "block_id": "project",
+  "description": "Current project context",
+  "version": "6.0.0",
+  "editable_by_agent": true,
+  "content": {
+    "current_project": {
+      "name": null,
+      "type": null,
+      "language": null,
+      "framework": null,
+      "build_system": null
+    },
+    "context": {
+      "current_task": null,
+      "current_file": null,
+      "recent_files": [],
+      "environment": {}
+    },
+    "decisions": [],
+    "todos": [],
+    "blockers": []
+  },
+  "last_updated": "2026-02-03T15:12:00+07:00"
+}

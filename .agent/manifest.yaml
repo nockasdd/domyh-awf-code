@@ -1,8 +1,12 @@
-# DOMYH Awesome Code v4.3 — Optimized Manifest
+# =============================================================================
+# DOMYH Awesome Code v6.0 — Optimized Manifest
+# =============================================================================
 # Token-efficient architecture with Progressive Disclosure
 # Developer: NockDev
+# NOTE: Sync version from core/VERSION.yaml
+# =============================================================================
 
-version: "4.3.1"
+version: "v6.0.0"
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 

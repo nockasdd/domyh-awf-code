@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Skills & Flow Architecture v4.2
+# DOMYH Awesome Code — Skills & Flow Architecture v5.5
 # Complete documentation of how IDE Agent uses skills
 
 # =============================================================================
@@ -6,8 +6,8 @@
 # =============================================================================
 
 overview:
-  total_skills: 27
-  total_workflows: 28
+  total_skills: 51
+  total_workflows: 30
   flow_engine_flows: 6
   supported_ides: 7
 
@@ -238,8 +238,10 @@ categories:
         go,
         python,
         typescript,
+        javascript,
         rust,
         cpp,
+        c,
         csharp,
         java,
         php,
@@ -252,7 +254,7 @@ categories:
 
   framework:
     priority: 2
-    skills: [react, vue, nextjs]
+    skills: [react, vue, nextjs, flutter, angular, nuxt, svelte, tailwind]
     behavior: "Detected from package.json or imports"
 
   devops:
@@ -262,7 +264,8 @@ categories:
 
   support:
     priority: 2
-    skills: [database, testing]
+    skills:
+      [database, testing, coding-rules, ui-ux-pro-max, electron, react-native]
     behavior: "Cross-cutting, activated by context"
 
 # =============================================================================

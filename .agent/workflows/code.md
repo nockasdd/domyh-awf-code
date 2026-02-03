@@ -5,10 +5,10 @@ persona: developer
 description: "💻 Write production-ready code with proper error handling, types, and documentation"
 ---
 
-# 💻 /code — Code Generation Pro v3.0
+# 💻 /code — Code Pro v3.2
 
 > Intelligent code generation with language-specific patterns
-> 📚 30+ Languages • Token-optimized • Production-ready
+> 📚 30+ Languages • Auto Test Loop • Token-optimized
 
 ---
 
@@ -44,10 +44,11 @@ User: /code [request]
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 4: VERIFY                         │
-│ ▸ Syntax check                          │
-│ ▸ Build/compile test                    │
-│ ▸ Show diff evidence                    │
+│ PHASE 4: AUTO TEST LOOP ⭐ (AWF v5.5)   │
+│ ▸ Syntax + Build check                  │
+│ ▸ Run related tests automatically       │
+│ ▸ If FAIL → Fix Loop (max 3 retries)    │
+│ ▸ If still FAIL → Ask user options      │
 └─────────────────────────────────────────┘
     │
     ▼
@@ -243,6 +244,34 @@ bun:
   error: "try-catch"
   struct: "src/, bun.lockb"
   tests: "bun:test"
+
+angular:
+  patterns: ["Signals", "RxJS", "Dependency Injection"]
+  style: "Angular Style Guide"
+  error: "ErrorHandler service"
+  struct: "src/app/ components/ services/"
+  tests: "Jasmine, Karma, Playwright"
+
+nuxt:
+  patterns: ["Auto-imports", "Server Routes", "Nitro"]
+  style: "prettier"
+  error: "error.vue, createError()"
+  struct: "pages/ composables/ server/"
+  tests: "Vitest, Nuxt Test Utils"
+
+electron:
+  patterns: ["Main/Renderer", "IPC", "Preload"]
+  style: "prettier"
+  error: "try-catch, Dialog.showErrorBox"
+  struct: "main/ renderer/ preload/"
+  tests: "Playwright, Spectron"
+
+tailwind:
+  patterns: ["Utility-first", "JIT", "Dark mode"]
+  style: "prettier-plugin-tailwindcss"
+  error: "N/A (CSS framework)"
+  struct: "tailwind.config.js, global.css"
+  tests: "Visual regression"
 ```
 
 ### Mobile
@@ -467,9 +496,111 @@ token_saving:
 
 ---
 
-## 📋 PHASE 4: VERIFY
+## 📋 PHASE 4: AUTO TEST LOOP ⭐ (AWF v5.5)
 
-### Verification Commands by Language:
+> **Mục đích**: Tự động chạy test và fix lỗi theo pattern TDD
+> **Default**: ON cho PRODUCTION/ENTERPRISE, OFF cho MVP
+
+### Configuration
+
+```yaml
+auto_test_config:
+  quality_levels:
+    mvp: false # Speed priority
+    production: true # Quality standard
+    enterprise: true # Full coverage
+
+  max_retries: 3
+  test_scope: "related" # affected | related | all
+```
+
+### 4.1 Verification Flow
+
+```yaml
+verification_steps:
+  1_syntax:
+    check: "Syntax + Type check"
+    fail_action: "Auto-fix obvious issues"
+
+  2_build:
+    check: "Build/compile"
+    fail_action: "Fix compilation errors"
+
+  3_test:
+    check: "Run related tests"
+    fail_action: "Enter Fix Loop"
+```
+
+### 4.2 Auto Fix Loop
+
+```
+Test FAIL
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│ FIX LOOP (retry 1/3)                    │
+│ ▸ Analyze test error                    │
+│ ▸ Apply targeted fix                    │
+│ ▸ Re-run affected tests                 │
+└─────────────────────────────────────────┘
+    │
+    ├── PASS → Continue to PHASE 5
+    │
+    └── FAIL → Retry (max 3 lần)
+              │
+              └── Still FAIL → Ask User
+```
+
+### 4.3 Khi Fix Loop Thất Bại
+
+```markdown
+😅 Em đã thử 3 cách nhưng test vẫn fail.
+
+🔍 **Lỗi:** {Mô tả lỗi ngắn gọn}
+
+Anh muốn:
+1️⃣ Em thử cách khác (đơn giản hơn)
+2️⃣ Bỏ qua test này, làm tiếp (không khuyến khích)
+3️⃣ Gọi /debug để phân tích sâu
+4️⃣ Rollback về trước khi sửa
+```
+
+### 4.4 Test Skip Rules
+
+```yaml
+skip_test_if:
+  - "Không có test file tương ứng"
+  - "User gọi /code --no-test"
+  - "quality_level: mvp"
+  - "Thay đổi chỉ là docs/comments"
+```
+
+### 4.5 Step Confirmation Protocol
+
+```markdown
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ ĐÃ XONG: {Tên task}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 Đã làm:
+
+- {Mô tả ngắn những gì đã code}
+
+📁 Files:
+
+- src/services/auth.ts (mới)
+  ~ src/handlers/user.ts (sửa)
+
+🧪 Tests: ✅ 5/5 passed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Tiến độ: ████████░░ 80% (4/5 tasks)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+→ Tiếp task tiếp? (y/điều chỉnh/dừng)
+```
+
+### Verification Commands by Language
 
 ```yaml
 build_check:
@@ -497,7 +628,7 @@ test_check:
   csharp: "dotnet test"
 ```
 
-### Verification Output:
+### Verification Output
 
 ```
 ✅ VERIFICATION COMPLETE
@@ -505,6 +636,7 @@ test_check:
 Build: ✅ Passed
 Lint: ✅ 0 errors, 0 warnings
 Types: ✅ No issues
+Tests: ✅ 5/5 passed (Auto Test Loop)
 
 Files Changed:
 ├── [+] src/services/auth.service.ts (45 lines)
@@ -670,4 +802,4 @@ security_generation:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Code Pro v3.1 • AI Quality + Security-First_
+_DOMYH Awesome Code Pro v3.2 • Code Pro v3.2 • Auto Test Loop + Security-First_

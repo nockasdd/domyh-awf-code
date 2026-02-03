@@ -2,12 +2,12 @@
 name: kubernetes
 detect:
   ["*.yaml:kind", "helm/", "kustomization.yaml", "Chart.yaml", "values.yaml"]
-version: "4.3.0"
+version: "6.0.0"
 category: devops
 tier: 1
 ---
 
-# Kubernetes Patterns — DOMYH Awesome Code v4.3
+# Kubernetes Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Kubernetes 1.30/1.31 (2025-2026)
 > **Runtime**: Container orchestration platform
@@ -542,4 +542,4 @@ argocd app diff myapp
 
 ---
 
-_DOMYH Awesome Code v4.3 • Kubernetes 1.30/1.31_
+_DOMYH Awesome Code v6.0.0 • Kubernetes 1.30/1.31_

@@ -1,20 +1,20 @@
 name: go
-version: "4.3.0"
+version: "6.0.0"
+display: Go
 category: backend
 tier: 1
+priority: 1
 
 description: |
-  Go programming language for Go 1.22/1.23/1.24.
-  Covers generics, iterators, slog, net/http, concurrency, error handling.
+  Go programming for Go 1.22/1.23/1.24.
+  Covers generics, iterators, slog, concurrency, error handling.
 
 triggers:
   file_patterns:
     - "go.mod"
     - "go.sum"
-    - "go.work"
     - "*.go"
-    - "cmd/**/*.go"
-    - "internal/**/*.go"
+    - "go.work"
   keywords:
     # Core
     - go
@@ -22,131 +22,41 @@ triggers:
     - go 1.22
     - go 1.23
     - go 1.24
-    - go programming
-    # Package Management
+    # Tools
     - go mod
-    - go.mod
-    - go get
-    - go install
-    - go work
-    # Build & Run
     - go build
-    - go run
     - go test
-    - go vet
     - gofmt
-    - goimports
     - staticcheck
-    # Generics
+    # Features
     - generics go
-    - type parameter
-    - comparable
-    - any
-    - constraints
-    # Iterators (Go 1.23)
-    - iter.Seq
-    - iter.Seq2
-    - range over func
-    - yield
-    - slices.Collect
-    # Standard Library
-    - net/http
-    - http.ServeMux
-    - http.Handler
-    - http.HandleFunc
-    - PathValue
-    - context.Context
-    - context.WithTimeout
-    - context.WithCancel
-    - slog
-    - log/slog
-    - slog.Logger
-    - slog.Info
-    - slog.Error
-    - encoding/json
-    - json.Marshal
-    - json.Unmarshal
-    - io.Reader
-    - io.Writer
-    - sync.WaitGroup
-    - sync.Mutex
-    - sync.RWMutex
-    - sync.Map
-    - sync.Pool
-    - errgroup
-    - errors.Is
-    - errors.As
-    - errors.New
-    - fmt.Errorf
-    - "%w"
-    # Testing
-    - testing.T
-    - t.Run
-    - t.Parallel
-    - t.Context
-    - testify
-    - go test -race
-    - go test -cover
-    # Concurrency
     - goroutine
     - channel
-    - go func
-    - select
-    - chan
-    - <-chan
-    - close(chan)
-    # Web Frameworks
+    - slog
+    - errgroup
+    # Frameworks
     - gin
-    - gin-gonic
     - echo
     - fiber
     - chi
-    - fasthttp
-    # Database
-    - sqlc
-    - gorm
-    - sqlx
-    - pgx
-    - database/sql
-    # CLI
-    - cobra
-    - viper
-    # IDE
-    - gopls
-    - goland
-    - delve
-    - dlv
-    - go extension
   intents:
-    - go project
-    - golang api
-    - go concurrency
-    - go error handling
-    - go generics
-    - go testing
-    - go http server
+    - go api
     - go microservice
+    - go cli
+    - go http server
+    - go concurrency
 
 related_skills:
-  - kubernetes
   - docker
+  - kubernetes
+
+caps:
+  - Microservices
+  - CLI tools
+  - HTTP servers
+  - Concurrent systems
+  - Cloud-native apps
 
 prevent_confusion_with:
-  - rust: "Go uses gc, Rust has ownership"
-  - java: "Go has goroutines, Java has threads"
-  - python: "Go is compiled, Python is interpreted"
-  - nodejs: "Go has goroutines, Node.js has event loop"
-
-# Go-specific APIs NOT in other languages
-unique_apis:
-  - "goroutine (go func)"
-  - "channel (chan, <-, select)"
-  - "defer"
-  - "panic/recover"
-  - "iota"
-  - "interface{}/any"
-  - "context.Context"
-  - "errors.Is/As with %w"
-  - "range over func (Go 1.23)"
-  - "iter.Seq/Seq2"
-  - "slog structured logging"
+  rust: "Go has GC, Rust has ownership"
+  java: "Go simple syntax, Java verbose"

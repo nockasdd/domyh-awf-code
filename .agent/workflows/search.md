@@ -4,7 +4,7 @@ trigger: ["/search", "/find", "/recall", "tìm kiếm"]
 description: "🔍 Semantic search across memory and audit history"
 ---
 
-# 🔍 /search — Semantic Memory Search v1.0
+# 🔍 /search — Search Pro v1.1
 
 > AI-powered semantic search across your project memory
 > 📚 Requires: Semantic Memory enabled
@@ -238,4 +238,4 @@ local_dependencies:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Semantic Search v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v5.5 • Semantic Search Pro v1.1 • Hybrid Mode_

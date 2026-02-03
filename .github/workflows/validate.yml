@@ -106,3 +106,76 @@ jobs:
           else:
               print('✅ Versions consistent')
           "
+
+      - name: Validate skill structure
+        run: |
+          python -c "
+          import os
+          import sys
+
+          errors = []
+          skills_dir = '.agent/skills'
+
+          for skill in os.listdir(skills_dir):
+              skill_path = os.path.join(skills_dir, skill)
+              if os.path.isdir(skill_path):
+                  skill_md = os.path.join(skill_path, 'SKILL.md')
+                  if os.path.exists(skill_md):
+                      print(f'✅ {skill}/SKILL.md')
+                  else:
+                      errors.append(f'{skill}: Missing SKILL.md')
+                      print(f'❌ {skill}: Missing SKILL.md')
+
+          if errors:
+              print(f'\n⚠️  {len(errors)} skills missing SKILL.md')
+          else:
+              print('\nAll skills have valid structure!')
+          "
+
+      - name: Check markdown files
+        run: |
+          python -c "
+          import glob
+
+          warnings = []
+          for f in glob.glob('**/*.md', recursive=True):
+              if 'node_modules' in f:
+                  continue
+              try:
+                  with open(f, encoding='utf-8', errors='ignore') as file:
+                      content = file.read()
+                      if content and not content.endswith('\n'):
+                          warnings.append(f'{f}: missing final newline')
+                  print(f'✅ {f}')
+              except Exception as e:
+                  print(f'❌ {f}: {e}')
+
+          if warnings:
+              print(f'\n⚠️  {len(warnings)} warnings (non-blocking)')
+              for w in warnings[:5]:
+                  print(f'  - {w}')
+          print('\nMarkdown check complete!')
+          "
+
+  test-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install CLI dependencies
+        working-directory: domyh-awf-cli
+        run: npm ci
+
+      - name: Build CLI
+        working-directory: domyh-awf-cli
+        run: npm run build
+
+      - name: Run CLI tests
+        working-directory: domyh-awf-cli
+        run: npm test

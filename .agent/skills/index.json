@@ -1,7 +1,14 @@
 {
-  "version": "4.3.0",
+  "version": "6.0.0",
+  "changelog": [
+    "51 total skills - 17 new language skills added",
+    "New: nim, crystal, clojure, fsharp, ocaml (functional), solidity (blockchain)",
+    "Categories: functional (6), runtime (2), systems (2), scientific (2), blockchain (1)",
+    "Ruby includes ADVANCED.md with metaprogramming patterns",
+    "TIOBE Top 20 coverage: 100%"
+  ],
   "schema": "progressive-disclosure",
-  "total": 33,
+  "total": 51,
   "tiers": {
     "T1_META": "META.yaml (~100 tokens) - Always available",
     "T2_SKILL": "SKILL.md (~1500 tokens) - On-demand",
@@ -16,7 +23,37 @@
     "language": {
       "description": "Programming languages",
       "priority": 1,
-      "skills": ["go", "python", "typescript", "rust", "cpp", "csharp", "java", "php", "kotlin", "swift", "lua", "asm", "c", "javascript"]
+      "skills": ["go", "python", "typescript", "rust", "cpp", "csharp", "java", "php", "kotlin", "swift", "lua", "asm", "c", "javascript", "ruby", "perl", "nim", "crystal"]
+    },
+    "functional": {
+      "description": "Functional programming languages",
+      "priority": 1,
+      "skills": ["haskell", "elixir", "scala", "clojure", "fsharp", "ocaml"]
+    },
+    "runtime": {
+      "description": "JavaScript/TypeScript runtimes",
+      "priority": 1,
+      "skills": ["deno", "bun"]
+    },
+    "systems": {
+      "description": "Systems programming",
+      "priority": 1,
+      "skills": ["zig", "nim"]
+    },
+    "blockchain": {
+      "description": "Blockchain and smart contracts",
+      "priority": 2,
+      "skills": ["solidity"]
+    },
+    "scientific": {
+      "description": "Scientific computing",
+      "priority": 2,
+      "skills": ["r", "julia"]
+    },
+    "database": {
+      "description": "Database and SQL",
+      "priority": 2,
+      "skills": ["sql"]
     },
     "framework": {
       "description": "Frontend/Backend frameworks",
@@ -31,7 +68,7 @@
     "support": {
       "description": "Cross-cutting concerns",
       "priority": 2,
-      "skills": ["database", "testing", "coding-rules", "ui-ux-pro-max", "electron", "react-native"]
+      "skills": ["database", "testing", "coding-rules", "ui-ux-pro-max", "electron", "react-native", "web-perf"]
     }
   },
 
@@ -336,13 +373,178 @@
         "meta": "META.yaml",
         "skill": "SKILL.md"
       }
+    },
+    {
+      "id": "web-perf",
+      "path": "skills/web-perf/",
+      "category": "support",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "ruby",
+      "path": "skills/ruby/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md",
+        "advanced": "ADVANCED.md"
+      }
+    },
+    {
+      "id": "r",
+      "path": "skills/r/",
+      "category": "scientific",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "sql",
+      "path": "skills/sql/",
+      "category": "database",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "zig",
+      "path": "skills/zig/",
+      "category": "systems",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "deno",
+      "path": "skills/deno/",
+      "category": "runtime",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "bun",
+      "path": "skills/bun/",
+      "category": "runtime",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "haskell",
+      "path": "skills/haskell/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "elixir",
+      "path": "skills/elixir/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "scala",
+      "path": "skills/scala/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "perl",
+      "path": "skills/perl/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "julia",
+      "path": "skills/julia/",
+      "category": "scientific",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "nim",
+      "path": "skills/nim/",
+      "category": "systems",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "crystal",
+      "path": "skills/crystal/",
+      "category": "language",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "clojure",
+      "path": "skills/clojure/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "fsharp",
+      "path": "skills/fsharp/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "ocaml",
+      "path": "skills/ocaml/",
+      "category": "functional",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
+    },
+    {
+      "id": "solidity",
+      "path": "skills/solidity/",
+      "category": "blockchain",
+      "files": {
+        "meta": "META.yaml",
+        "skill": "SKILL.md"
+      }
     }
   ],
   "token_budget": {
-    "baseline": "33 × 100 = 3,300 tokens",
+    "baseline": "51 × 100 = 5,100 tokens (T1 META)",
+    "expanded_content": "+577 lines from external skills",
     "single_activation": "+1,500 tokens average",
     "max_active": 3,
-    "peak_estimate": "3,300 + (3 × 1,500) = 7,800 tokens"
+    "peak_estimate": "5,100 + (3 × 1,500) = 9,600 tokens"
   }
 }
+
 

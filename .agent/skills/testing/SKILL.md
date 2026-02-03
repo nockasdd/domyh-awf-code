@@ -8,10 +8,19 @@ detect:
     "vitest.config.*",
     "playwright.config.*",
   ]
-version: "4.3"
+version: "6.0.0"
 ---
 
-# Testing Patterns (2025)
+# Testing Patterns (2026)
+
+> Comprehensive testing skill with data-driven references. Check `data/` for lookup tables.
+
+## 📦 Data Files
+
+| File             | Content                                         | Records |
+| ---------------- | ----------------------------------------------- | ------- |
+| `frameworks.csv` | Testing frameworks across 12 languages          | 20      |
+| `patterns.csv`   | Testing patterns, best practices, anti-patterns | 15      |
 
 ## 📦 Testing Frameworks
 
@@ -142,4 +151,85 @@ vi.mock("./api", () => ({
 
 ---
 
-_DOMYH Awesome Code v4.3_
+## 🌐 Browser Testing (Playwright Advanced)
+
+> **Source**: Anthropic Webapp Testing
+> **Purpose**: Test local web applications with reconnaissance-then-action pattern
+
+### Decision Tree
+
+```
+User task → Is it static HTML?
+    ├─ Yes → Read HTML file directly to identify selectors
+    │         └─ Write Playwright script using selectors
+    │
+    └─ No (dynamic webapp) → Is the server already running?
+        ├─ No → Use helper script + write Playwright script
+        │
+        └─ Yes → Reconnaissance-then-action:
+            1. Navigate and wait for networkidle
+            2. Take screenshot or inspect DOM
+            3. Identify selectors from rendered state
+            4. Execute actions with discovered selectors
+```
+
+### Reconnaissance Pattern
+
+```typescript
+import { test, expect } from "@playwright/test";
+
+test("dynamic content test", async ({ page }) => {
+  // Always wait for networkidle on dynamic apps
+  await page.goto("http://localhost:3000");
+  await page.waitForLoadState("networkidle"); // CRITICAL
+
+  // Option 1: Screenshot for visual inspection
+  await page.screenshot({ path: "/tmp/inspect.png", fullPage: true });
+
+  // Option 2: Inspect rendered DOM
+  const content = await page.content();
+  const buttons = await page.locator("button").all();
+
+  // Then execute actions with discovered selectors
+  await page.click('button:has-text("Submit")');
+});
+```
+
+### Common Pitfalls
+
+| ❌ Don't                             | ✅ Do                                   |
+| ------------------------------------ | --------------------------------------- |
+| Inspect DOM before waiting           | Wait for `networkidle` first            |
+| Use static selectors on dynamic apps | Discover selectors from rendered state  |
+| Skip screenshot debugging            | Use screenshots for visual confirmation |
+
+### Multi-Server Testing
+
+```typescript
+// Testing with backend + frontend
+test.describe("Full stack test", () => {
+  test.beforeAll(async () => {
+    // Servers managed externally or via fixtures
+  });
+
+  test("API integration", async ({ page }) => {
+    await page.goto("http://localhost:5173");
+    await page.waitForLoadState("networkidle");
+
+    // Verify frontend connects to backend
+    await expect(page.locator('[data-testid="user-list"]')).not.toBeEmpty();
+  });
+});
+```
+
+### Best Practices
+
+- Use `sync_playwright()` for synchronous scripts
+- Always close the browser when done
+- Use descriptive selectors: `text=`, `role=`, CSS selectors, or IDs
+- Add appropriate waits: `page.wait_for_selector()` or timeouts
+- Launch chromium in headless mode: `headless=True`
+
+---
+
+_DOMYH Awesome Code v6.0 — Testing Patterns (Data-Driven)_

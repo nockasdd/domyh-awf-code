@@ -1,12 +1,12 @@
 ---
 name: javascript
 detect: ["*.js", "*.mjs", "*.cjs", ".eslintrc*", "package.json"]
-version: "4.3.0"
+version: "6.0.0"
 category: web
 tier: 1
 ---
 
-# JavaScript Patterns — DOMYH Awesome Code v4.3
+# JavaScript Patterns — DOMYH Awesome Code v5.5
 
 > ES2025/ES2026 • Node.js 22 LTS • Bun • Deno — 2025-2026
 
@@ -452,4 +452,4 @@ src/
 
 ---
 
-_DOMYH Awesome Code v4.3 • JavaScript Development • 2025-2026_
+_DOMYH Awesome Code v6.0.0 • JavaScript Development • 2025-2026_

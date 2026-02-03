@@ -1,6 +1,6 @@
 # Assembly — Advanced Patterns
 
-# DOMYH Awesome Code v4.3 — Tier 3 Reference
+# DOMYH Awesome Code v5.5 — Tier 3 Reference
 
 ## Table of Contents
 
@@ -527,6 +527,43 @@ sve_add:
     ret
 ```
 
+### SVE2 (Scalable Vector Extension 2)
+
+```yaml
+enhancements:
+  - Extended fixed-point DSP instructions
+  - Bit manipulation and permutations
+  - Cryptographic acceleration
+  - Complex number operations
+
+platforms:
+  Graviton 3: SVE (256-bit)
+  Graviton 4: SVE2 (256-bit)
+  Neoverse V3: SVE2 (Armv9.2-A)
+
+intrinsics:
+  header: <arm_sve.h>
+  prefix: sv* (e.g., svadd_f32_m)
+```
+
+### SVE2 Intrinsics Example
+
+```c
+#include <arm_sve.h>
+
+// Vector length agnostic addition
+void sve2_vector_add(float* a, float* b, float* c, size_t n) {
+    svbool_t pg = svptrue_b32();
+    for (size_t i = 0; i < n; i += svcntw()) {
+        pg = svwhilelt_b32(i, n);
+        svfloat32_t va = svld1_f32(pg, &a[i]);
+        svfloat32_t vb = svld1_f32(pg, &b[i]);
+        svfloat32_t vc = svadd_f32_m(pg, va, vb);
+        svst1_f32(pg, &c[i], vc);
+    }
+}
+```
+
 ### Apple Silicon Specifics
 
 ```asm
@@ -542,4 +579,172 @@ apple_tls_access:
 
 ---
 
-_DOMYH Awesome Code v4.3 — Advanced Assembly Reference_
+## x86 Protected Mode Switching
+
+### Real Mode → Protected Mode
+
+```asm
+; Switch from 16-bit real mode to 32-bit protected mode
+bits 16
+switch_to_pm:
+    cli                       ; Disable interrupts
+    lgdt [gdt_descriptor]     ; Load GDT
+
+    mov eax, cr0
+    or eax, 1                 ; Set PE bit
+    mov cr0, eax
+
+    jmp CODE_SEG:pm_start     ; Far jump to flush pipeline
+
+bits 32
+pm_start:
+    mov ax, DATA_SEG
+    mov ds, ax
+    mov ss, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    ; Now in protected mode
+```
+
+### GDT Structure
+
+```asm
+gdt_start:
+gdt_null:
+    dq 0x0                    ; Null descriptor
+
+gdt_code:
+    dw 0xFFFF                 ; Limit (0-15)
+    dw 0x0000                 ; Base (0-15)
+    db 0x00                   ; Base (16-23)
+    db 10011010b              ; Access: P,DPL=0,S=1,E=1,DC=0,RW=1,A=0
+    db 11001111b              ; Flags + Limit (16-19)
+    db 0x00                   ; Base (24-31)
+
+gdt_data:
+    dw 0xFFFF
+    dw 0x0000
+    db 0x00
+    db 10010010b              ; Access: P,DPL=0,S=1,E=0,DC=0,RW=1,A=0
+    db 11001111b
+    db 0x00
+
+gdt_end:
+
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1
+    dd gdt_start
+```
+
+---
+
+## RISC-V Advanced Patterns
+
+### Atomic Operations
+
+```asm
+# Load-Reserved / Store-Conditional
+atomic_add:
+    lr.w a2, (a0)            # Load-reserved word
+    add a2, a2, a1           # Add value
+    sc.w a3, a2, (a0)        # Store-conditional
+    bnez a3, atomic_add      # Retry if failed
+    ret
+```
+
+### Vector Extension (RVV)
+
+```asm
+# RISC-V Vector (RVV) example
+vector_add:
+    vsetvli t0, a2, e32, m1  # Set vector length
+loop:
+    vle32.v v0, (a0)         # Load vector from a
+    vle32.v v1, (a1)         # Load vector from b
+    vadd.vv v2, v0, v1       # Vector add
+    vse32.v v2, (a0)         # Store result
+    add a0, a0, t0           # Advance pointer
+    add a1, a1, t0
+    sub a2, a2, t0           # Decrement count
+    bnez a2, loop
+    ret
+```
+
+---
+
+## Ghidra & IDA Pro (2025 Updates)
+
+### Ghidra 11+
+
+```yaml
+features:
+  - Multi-binary analysis (parallel)
+  - Python 3 + Java scripting
+  - Decompiler improvements
+  - AI-assisted analysis (plugins)
+
+scripting:
+  language: Python (Jython) or Java
+  location: Window → Script Manager
+```
+
+### IDA Pro 9.0
+
+```yaml
+features:
+  - Unified 32/64-bit support
+  - Improved decompiler accuracy
+  - Headless IDAPython
+  - Cloud-based collaboration
+
+new_in_9:
+  - Faster analysis engine
+  - Enhanced type recovery
+  - Better C++ vtable handling
+```
+
+### AI-Assisted Reverse Engineering
+
+```yaml
+tools:
+  DecompAI: "LLM-based function naming/commenting"
+  MCP Plugins: "Model Context Protocol for IDA/Ghidra"
+  BinDiff: "Binary comparison and diffing"
+
+workflow: 1. Initial analysis in Ghidra (free)
+  2. Complex binaries in IDA Pro
+  3. AI plugins for naming/documentation
+  4. Cross-reference with debug symbols
+```
+
+---
+
+## DOS Interrupt Reference
+
+### Common DOS Interrupts (INT 21h)
+
+| AH  | Function      | Input         | Output    |
+| --- | ------------- | ------------- | --------- |
+| 01h | Char input    | -             | AL=char   |
+| 02h | Char output   | DL=char       | -         |
+| 09h | String output | DX=addr$      | -         |
+| 3Ch | Create file   | CX=attr,DX=fn | AX=handle |
+| 3Dh | Open file     | AL=mode,DX=fn | AX=handle |
+| 3Eh | Close file    | BX=handle     | -         |
+| 3Fh | Read file     | BX,CX,DX      | AX=bytes  |
+| 40h | Write file    | BX,CX,DX      | AX=bytes  |
+| 4Ch | Exit program  | AL=code       | -         |
+
+### BIOS Interrupts
+
+| Int | Function          | Example                |
+| --- | ----------------- | ---------------------- |
+| 10h | Video services    | Set mode, write char   |
+| 13h | Disk services     | Read/write sectors     |
+| 16h | Keyboard services | Read key, check status |
+| 19h | Bootstrap         | Reboot system          |
+
+---
+
+_DOMYH Awesome Code v6.0.0 — Advanced Assembly Reference_

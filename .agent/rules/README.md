@@ -1,141 +1,219 @@
-# 📜 DOMYH Awesome Code Rules System
+# 📜 Rules System v6.0.0
 
-> 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
-> 📚 **Version**: v4.4 - Architecture-Aware Implementation (AI Best Practices 2025)
->
-> _Powered by [NockDev](https://github.com/nockasdd)_
+> Constitutional hierarchy with modular composition  
+> _DOMYH Awesome Code v6.0 • Agentic Personas_
+
+---
 
 ## Overview
 
-Universal rules that prevent common AI agent failures and optimize performance.
+The rules system uses a **constitutional hierarchy** with three tiers:
 
-## Rules (21 files)
+- **Tier 0: Core** — Immutable principles (cannot be overridden)
+- **Tier 1: Safety** — Critical safety (limited override with approval)
+- **Tier 2: Execution** — Quality guidelines (context-dependent)
 
-### 🔴 Priority 0 - Security Critical
-
-| File                        | Description                                        |
-| --------------------------- | -------------------------------------------------- |
-| `prompt-injection-guard.md` | Prevent CVE-2025-53773 attacks, secrets protection |
-
-### 🟠 Priority 1 - Core Safety
-
-| File                    | Description                                  |
-| ----------------------- | -------------------------------------------- |
-| `context-management.md` | Token optimization, prevent context overflow |
-| `safety.md`             | Dangerous action prevention                  |
-| `language.md`           | Language output configuration                |
-| `project-detection.md`  | **NEW** 5-phase scan, build system detection |
-
-### 🟡 Priority 2 - Execution
-
-| File                                   | Description                                      |
-| -------------------------------------- | ------------------------------------------------ |
-| `terminal-safety.md`                   | Command timeout, anti-loop, environment checks   |
-| `edit-verification.md`                 | Verify edits, prevent code deletion              |
-| `stop-conditions.md`                   | When agent must stop and ask                     |
-| `evidence.md`                          | Evidence requirements for findings               |
-| `pre-check-validation.md`              | 4-step flow before adding code                   |
-| `yagni-enforcement.md`                 | Block unnecessary features                       |
-| `incremental-changes.md`               | Small batches, test after each step              |
-| `code-deduplication.md`                | Prevent duplicate utils/helpers                  |
-| `logic-duplication-check.md`           | Verify logic before reporting missing            |
-| `git-prerequisite-check.md`            | Git status check before operations               |
-| `git-detection.md`                     | Detect git repository and branch                 |
-| `architecture-aware-implementation.md` | **NEW** 5-phase validation before creating files |
-| `online-research.md`                   | Decision matrix for web search                   |
-
-### 🟢 Priority 3 - Quality
-
-| File            | Description                         |
-| --------------- | ----------------------------------- |
-| `quality.md`    | ISO 25010, CWE Top 25, OWASP Top 10 |
-| `vietnamese.md` | Vietnamese language support         |
-
-## Priority Levels
-
-| Level | Icon | Description       | When Applied   |
-| ----- | ---- | ----------------- | -------------- |
-| P0    | 🔴   | Security Critical | Always first   |
-| P1    | 🟠   | Core Safety       | Every action   |
-| P2    | 🟡   | Execution         | Commands/edits |
-| P3    | 🟢   | Quality           | Analysis/audit |
-
-## New in v4.2
-
-Based on research of **62+ documented AI agent failures**:
-
-### Terminal Safety (Prevents 12 failure types)
-
-- Command timeout (60s default)
-- Anti-loop detection (2 retries max)
-- Environment verification
-- Shell integration conflict detection
-
-### Context Management (Prevents 8 failure types)
-
-- Token warning at 15k
-- Critical threshold at 20k
-- Auto-summarize every 10 interactions
-- Cleanup on workflow switch
-
-### Edit Verification (Prevents 14 failure types)
-
-- Mandatory diff evidence
-- Syntax check after edits
-- Scope limit enforcement
-- Code deletion detection
-
-### Prompt Injection Guard (CVE-2025-53773)
-
-- Block external commands
-- Sanitize user content
-- Mask secrets in output
-- Block "YOLO mode" activation
+Additional **modular rules** can be composed for specific use cases.
 
 ---
 
-# Tiếng Việt
+## Constitutional Hierarchy
 
-> 🇻🇳 Phiên bản Tiếng Việt
+### Tier 0: Core Principles (Immutable)
 
-## Tổng Quan
+**Always apply, no override possible**
 
-Các quy tắc để ngăn chặn lỗi AI agent và tối ưu hiệu suất.
+| Rule   | Description                                          |
+| ------ | ---------------------------------------------------- |
+| C0-001 | **Do No Harm** — Never cause physical/financial harm |
+| C0-002 | **Truthfulness** — Never fabricate information       |
+| C0-003 | **User Sovereignty** — User has ultimate control     |
+| C0-004 | **Transparency** — Be open about capabilities        |
+| C0-005 | **Privacy** — Protect sensitive information          |
 
-## Các Quy Tắc (11 files)
+📁 Source: `constitutional/tier-0-core.yaml`
 
-### 🔴 Priority 0 - Bảo mật Critical
+### Tier 1: Safety (Override with Approval)
 
-| File                        | Mô tả                               |
-| --------------------------- | ----------------------------------- |
-| `prompt-injection-guard.md` | Ngăn CVE-2025-53773, bảo vệ secrets |
+| Rule   | Description                                                 |
+| ------ | ----------------------------------------------------------- |
+| C1-001 | **Destructive Action Prevention** — Confirm before deleting |
+| C1-002 | **Scope Containment** — Stay within agreed scope            |
+| C1-003 | **Command Execution Safety** — Verify dangerous commands    |
+| C1-004 | **Information Boundaries** — Respect context boundaries     |
+| C1-005 | **Error Recovery** — Fail safely, preserve state            |
 
-### 🟠 Priority 1 - An toàn Core
+📁 Source: `constitutional/tier-1-safety.yaml`
 
-| File                    | Mô tả                               |
-| ----------------------- | ----------------------------------- |
-| `context-management.md` | Tối ưu token, ngăn context overflow |
-| `safety.md`             | Ngăn hành động nguy hiểm            |
-| `language.md`           | Cấu hình ngôn ngữ                   |
+### Tier 2: Execution Quality (Context-Dependent)
 
-### 🟡 Priority 2 - Thực thi
+| Rule   | Description                                                |
+| ------ | ---------------------------------------------------------- |
+| C2-001 | **Evidence-Based Claims** — Support claims with evidence   |
+| C2-002 | **Self-Critique** — Review before delivering               |
+| C2-003 | **Planning Before Action** — Plan non-trivial tasks        |
+| C2-004 | **Incremental Verification** — Verify changes step-by-step |
+| C2-005 | **Clear Communication** — Communicate appropriately        |
+| C2-006 | **Context Management** — Manage tokens efficiently         |
 
-| File                   | Mô tả                                    |
-| ---------------------- | ---------------------------------------- |
-| `terminal-safety.md`   | Timeout, chống loop, kiểm tra môi trường |
-| `edit-verification.md` | Verify edits, ngăn xóa code              |
-| `stop-conditions.md`   | Khi nào agent phải dừng                  |
-| `evidence.md`          | Yêu cầu bằng chứng                       |
-
-### Mới trong v4.2
-
-Dựa trên nghiên cứu **62+ lỗi AI agent**:
-
-- **Terminal Safety**: Timeout 60s, anti-loop 2 retries
-- **Context Management**: Warning 15k, critical 20k tokens
-- **Edit Verification**: Diff evidence bắt buộc
-- **Prompt Injection Guard**: CVE-2025-53773 protection
+📁 Source: `constitutional/tier-2-execution.yaml`
 
 ---
 
-_DOMYH Awesome Code v4.3 • NockDev_
+## Modular Rules (v6.0)
+
+Composable rule modules for specific use cases:
+
+| Module                    | Purpose                   | Personas            |
+| ------------------------- | ------------------------- | ------------------- |
+| `reflection.yaml`         | Self-improvement patterns | All                 |
+| `context-management.yaml` | Token efficiency          | All                 |
+| `evidence.yaml`           | Evidence requirements     | Auditor, Debugger   |
+| `stop-conditions.yaml`    | When to pause             | All                 |
+| `edit-verification.yaml`  | Code edit verification    | Developer, Debugger |
+| `terminal-safety.yaml`    | Terminal command safety   | Developer, DevOps   |
+| `git-workflow.yaml`       | Git operations            | Developer, DevOps   |
+| `quality.yaml`            | Code quality standards    | Developer, Tester   |
+| `language.yaml`           | Language/i18n rules       | All                 |
+| `yagni.yaml`              | YAGNI enforcement         | Developer, Planner  |
+| `online-research.yaml`    | Web research guidelines   | Researcher          |
+
+📁 Location: `modules/*.yaml`
+
+---
+
+## Directory Structure
+
+```
+.agent/rules/
+├── README.md                    # This file
+├── constitutional/              # v6.0 Constitutional hierarchy
+│   ├── tier-0-core.yaml         # Immutable principles
+│   ├── tier-1-safety.yaml       # Safety rules
+│   └── tier-2-execution.yaml    # Quality guidelines
+├── modules/                     # v6.0 Modular rules
+│   ├── reflection.yaml          # Self-improvement
+│   ├── context-management.yaml  # Token efficiency
+│   ├── evidence.yaml            # Evidence requirements
+│   ├── stop-conditions.yaml     # When to pause
+│   ├── edit-verification.yaml   # Code edit verification
+│   ├── terminal-safety.yaml     # Terminal safety
+│   ├── git-workflow.yaml        # Git operations
+│   ├── quality.yaml             # Code quality
+│   ├── language.yaml            # Language/i18n
+│   ├── yagni.yaml               # YAGNI enforcement
+│   └── online-research.yaml     # Web research
+├── data/                        # Supporting data files
+└── [legacy .md files]           # Old rules (to be deprecated)
+```
+
+---
+
+## Rule Application
+
+### Priority Order
+
+```
+Tier 0 (Core) > Tier 1 (Safety) > Tier 2 (Execution) > Modular Rules
+```
+
+### Loading by Persona
+
+| Persona    | Always Load  | Additional Modules              |
+| ---------- | ------------ | ------------------------------- |
+| Developer  | Tier 0, 1, 2 | edit-verification, quality, git |
+| Debugger   | Tier 0, 1, 2 | edit-verification, evidence     |
+| Auditor    | Tier 0, 1, 2 | evidence                        |
+| Tester     | Tier 0, 1, 2 | quality                         |
+| DevOps     | Tier 0, 1, 2 | terminal-safety, git            |
+| Researcher | Tier 0, 1, 2 | online-research                 |
+| All        | Tier 0, 1, 2 | reflection, context             |
+
+### Override Behavior
+
+1. **Tier 0**: Cannot be overridden
+2. **Tier 1**: Requires explicit user approval
+3. **Tier 2**: Context-dependent, can be adjusted
+4. **Modules**: Loaded based on persona/workflow
+
+---
+
+## Reflection Pattern
+
+All rules support reflection via `modules/reflection.yaml`:
+
+```yaml
+reflection:
+  enabled: true
+  triggers:
+    - "before_action" # Pre-check
+    - "after_action" # Post-check
+    - "on_error" # Error analysis
+
+  questions:
+    - "Did I follow the constitutional rules?"
+    - "Could this cause harm?"
+    - "Is this within scope?"
+```
+
+---
+
+## Rule Schema
+
+Each modular rule follows this schema:
+
+```yaml
+name: rule-name
+version: "6.0.0"
+rule_id: "MOD-XXX-001"
+
+description: |
+  What this rule does
+
+category: "safety|verification|quality|workflow"
+
+context:
+  always_apply: true|false
+  personas: ["list", "of", "personas"]
+  workflows: ["list", "of", "workflows"]
+
+# Rule-specific sections...
+
+integration:
+  tier: 0|1|2
+  related_modules: ["list"]
+```
+
+---
+
+## Migration from Legacy Rules
+
+Legacy `.md` rules are being migrated to modular `.yaml` format:
+
+| Legacy File             | Migrated To                      | Status  |
+| ----------------------- | -------------------------------- | ------- |
+| `edit-verification.md`  | `modules/edit-verification.yaml` | ✅ Done |
+| `terminal-safety.md`    | `modules/terminal-safety.yaml`   | ✅ Done |
+| `git-workflow.md`       | `modules/git-workflow.yaml`      | ✅ Done |
+| `quality.md`            | `modules/quality.yaml`           | ✅ Done |
+| `language.md`           | `modules/language.yaml`          | ✅ Done |
+| `yagni-enforcement.md`  | `modules/yagni.yaml`             | ✅ Done |
+| `online-research.md`    | `modules/online-research.yaml`   | ✅ Done |
+| `context-management.md` | Merged into Tier 2               | ✅ Done |
+| `evidence.md`           | Merged into Tier 2               | ✅ Done |
+| `stop-conditions.md`    | Merged into Tier 1               | ✅ Done |
+
+---
+
+## Checklist
+
+Before any action, verify:
+
+- [ ] Tier 0 principles respected?
+- [ ] Safety rules followed?
+- [ ] Execution quality maintained?
+- [ ] Relevant modules applied?
+
+---
+
+_DOMYH Awesome Code v6.0.0 • Constitutional Rules System • Agentic Personas_

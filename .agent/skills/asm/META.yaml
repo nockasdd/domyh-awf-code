@@ -2,34 +2,67 @@ name: asm
 display: Assembly Language
 category: language
 priority: 2
-version: "4.3.0"
+version: "6.0.0"
 desc: "Assembly patterns: x86/x64, ARM64, SIMD, inline ASM, C++ integration, IDE setup"
 keywords:
+  # Assemblers (Modern + Legacy)
   - assembly
   - asm
+  - nasm
+  - masm
+  - gas
+  - fasm
+  - tasm
+  - yasm
+  - a86
+  - hla
+  # Architectures
   - x86
   - x64
   - amd64
   - arm64
   - aarch64
-  - nasm
-  - masm
-  - gas
-  - inline assembly
-  - __asm
-  - asm volatile
+  - risc-v
+  - rv64
+  - rv32
+  # Legacy CPUs
+  - 8086
+  - 8088
+  - 80386
+  - 80486
+  - i386
+  - i486
+  # SIMD (Modern + Legacy)
   - simd
   - sse
   - avx
   - avx2
   - avx512
+  - avx10
+  - amx
   - neon
+  - sve
+  - sve2
+  - mmx
+  # Inline ASM
+  - inline assembly
+  - __asm
+  - asm volatile
   - intrinsics
+  # OS/Mode
   - syscall
-  - reverse engineering
+  - dos
+  - real mode
+  - protected mode
   - calling convention
   - prologue
   - epilogue
+  # Tools
+  - dosbox
+  - ghidra
+  - ida
+  - reverse engineering
+  - turbo debugger
 
 detect:
   files: ["*.asm", "*.s", "*.S"]

@@ -1,0 +1,177 @@
+# Quality Rule v6.0
+# Modular rule for code quality standards
+
+---
+name: quality
+version: "6.0.0"
+rule_id: "MOD-QLT-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Code quality standards and best practices for all generated code.
+
+category: "quality"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["developer", "debugger", "tester", "auditor"]
+  workflows: ["/code", "/refactor", "/review"]
+
+# =============================================================================
+# CODE QUALITY PRINCIPLES
+# =============================================================================
+
+principles:
+  naming:
+    description: "Use clear, descriptive names"
+    rules:
+      - "Variables describe content (userEmail, not e)"
+      - "Functions describe action (validateUser, not check)"
+      - "Constants in UPPER_SNAKE_CASE"
+      - "Classes in PascalCase"
+
+  error_handling:
+    description: "Always handle errors properly"
+    rules:
+      - "Never swallow errors silently"
+      - "Provide meaningful error messages"
+      - "Log errors with context"
+      - "Use appropriate error types"
+
+  type_safety:
+    description: "Use types effectively"
+    rules:
+      - "Avoid 'any' type without reason"
+      - "Define proper interfaces"
+      - "Use generics where appropriate"
+      - "Document complex types"
+
+  documentation:
+    description: "Document the 'why', not the 'what'"
+    rules:
+      - "Comment on non-obvious logic"
+      - "Explain business rules"
+      - "Skip obvious comments"
+      - "Keep comments updated"
+
+  dry_principle:
+    description: "Don't Repeat Yourself"
+    rules:
+      - "Extract repeated logic"
+      - "Use shared utilities"
+      - "Avoid copy-paste code"
+      - "Create reusable components"
+
+# =============================================================================
+# FUNCTION GUIDELINES
+# =============================================================================
+
+functions:
+  size_limits:
+    max_lines: 50
+    max_parameters: 4
+    max_nesting: 3
+
+  rules:
+    - "Single responsibility principle"
+    - "Pure functions where possible"
+    - "Early returns for guard clauses"
+    - "Avoid side effects"
+
+# =============================================================================
+# ANTI-PATTERNS
+# =============================================================================
+
+anti_patterns:
+  never_do:
+    - pattern: "Magic numbers/strings"
+      fix: "Use named constants"
+    - pattern: "Catch-all error handling"
+      fix: "Handle specific errors"
+    - pattern: "Overly clever one-liners"
+      fix: "Readable multi-line code"
+    - pattern: "Deep nesting (>3 levels)"
+      fix: "Early returns or extraction"
+    - pattern: "God functions (>50 lines)"
+      fix: "Break into smaller functions"
+    - pattern: "Hardcoded secrets"
+      fix: "Use environment variables"
+
+# =============================================================================
+# SECURITY DEFAULTS
+# =============================================================================
+
+security_defaults:
+  input_validation:
+    - "Validate all user input"
+    - "Sanitize before use"
+    - "Type coercion checks"
+
+  output_encoding:
+    - "Context-aware encoding"
+    - "XSS prevention"
+    - "SQL parameterization"
+
+  error_handling:
+    - "Non-revealing errors"
+    - "Structured logging"
+    - "No stack traces in prod"
+
+  secrets:
+    - "Environment variables only"
+    - "No hardcoded secrets"
+    - "Rotation support"
+
+# =============================================================================
+# TESTING REQUIREMENTS
+# =============================================================================
+
+testing:
+  minimum_coverage: 80
+  required_test_types:
+    - unit: "All public functions"
+    - integration: "API endpoints"
+    - edge_cases: "Boundary conditions"
+
+  test_quality:
+    - "Meaningful test names"
+    - "Arrange-Act-Assert pattern"
+    - "One assertion per test (preferable)"
+    - "No test interdependencies"
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Clear naming?"
+  - "Error handling complete?"
+  - "Types defined?"
+  - "No anti-patterns?"
+  - "Security considered?"
+  - "Tests added?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2 # Execution tier
+  related_modules:
+    - edit-verification
+    - evidence
+
+  reflection:
+    enabled: true
+    check_before: "output"
+    question: "Does this code meet quality standards?"
+
+---
+_DOMYH Awesome Code v6.0 • Quality Rule_

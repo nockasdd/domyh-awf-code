@@ -2,7 +2,7 @@ name: java
 display: Java Development
 category: backend
 priority: 1
-version: "4.3.0"
+version: "6.0.0"
 desc: "Java 21/22/23 LTS - Virtual Threads, Records, Pattern Matching, Spring Boot"
 
 keywords:

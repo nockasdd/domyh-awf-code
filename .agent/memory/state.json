@@ -1,6 +1,13 @@
 {
-  "version": "1.1.0",
-  "last_updated": "2026-02-01T11:25:00+07:00",
+  "version": "1.2.0",
+  "last_updated": "2026-02-03T00:50:00+07:00",
+  
+  "system": {
+    "name": "DOMYH Awesome Code",
+    "version": "v5.5.0",
+    "version_short": "v5.5",
+    "_note": "Sync from core/VERSION.yaml"
+  },
   
   "project": {
     "name": "DOMYH Awesome Code",
@@ -42,7 +49,23 @@
     "language": "vi",
     "verbosity": "normal",
     "auto_fix": false,
-    "confirm_destructive": true
+    "confirm_destructive": true,
+    "auto_test": {
+      "mvp": false,
+      "production": true,
+      "enterprise": true
+    }
+  },
+
+  "phase_progress": {
+    "active_plan": null,
+    "current_phase": null,
+    "total_phases": 0,
+    "completed_phases": 0,
+    "tasks": {
+      "total": 0,
+      "completed": 0
+    }
   },
   
   "flags": {

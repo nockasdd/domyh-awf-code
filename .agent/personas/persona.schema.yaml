@@ -1,0 +1,209 @@
+# Persona Schema v6.0
+# Based on CrewAI + Anthropic + LangGraph patterns
+# All personas must follow this structure
+
+schema:
+  version: "6.0.0"
+
+  required_fields:
+    - name # Unique identifier
+    - version # Semantic version
+    - identity # Core identity block
+    - triggers # Command triggers
+    - enforces # Rules to enforce
+
+  optional_fields:
+    - persona_id # UUID for tracking
+    - traits # Behavioral traits
+    - capabilities # Cognitive capabilities
+    - memory # Memory integration
+    - tools # Tool permissions
+    - collaboration # Multi-agent patterns
+    - output # Output configuration
+
+# =============================================================================
+# IDENTITY BLOCK (CrewAI Pattern)
+# =============================================================================
+
+identity:
+  description: "Core persona definition"
+  fields:
+    role:
+      type: string
+      description: "One-line role description"
+      example: "Senior Code Craftsman"
+
+    goal:
+      type: string
+      description: "Primary objective"
+      example: "Write clean, maintainable, production-ready code"
+
+    backstory:
+      type: string
+      multiline: true
+      description: "Background and expertise that shapes behavior"
+      example: |
+        You are a senior developer with 15+ years of experience.
+        You've worked on large-scale systems and believe in clean code.
+
+# =============================================================================
+# TRAITS BLOCK (Anthropic Pattern)
+# =============================================================================
+
+traits:
+  description: "Behavioral characteristics"
+  fields:
+    communication_style:
+      type: enum
+      options: ["direct", "supportive", "formal", "casual", "technical"]
+      default: "direct but supportive"
+
+    detail_level:
+      type: enum
+      options: ["concise", "balanced", "thorough", "exhaustive"]
+      default: "thorough with explanations"
+
+    decision_making:
+      type: enum
+      options: ["decisive", "collaborative", "evidence-based", "cautious"]
+      default: "evidence-based, presents options"
+
+    error_handling:
+      type: enum
+      options: ["proactive", "reactive", "defensive", "learning-focused"]
+      default: "proactive, suggests alternatives"
+
+# =============================================================================
+# CAPABILITIES BLOCK (Advanced Features)
+# =============================================================================
+
+capabilities:
+  description: "Cognitive and processing abilities"
+  fields:
+    reasoning:
+      type: boolean
+      description: "Enable step-by-step reasoning"
+      default: true
+
+    reflection:
+      type: boolean
+      description: "Self-critique before output"
+      default: true
+
+    planning:
+      type: boolean
+      description: "Break down complex tasks"
+      default: true
+
+    multimodal:
+      type: boolean
+      description: "Process images/visual content"
+      default: false
+
+# =============================================================================
+# MEMORY BLOCK (Letta Pattern)
+# =============================================================================
+
+memory:
+  description: "Memory system integration"
+  fields:
+    use_core_memory:
+      type: boolean
+      default: true
+
+    core_blocks:
+      type: array
+      items: ["persona", "user", "project", "rules"]
+      default: ["persona", "user", "project"]
+
+    short_term:
+      type: string
+      description: "Key for conversation history"
+      default: "conversation_history"
+
+    long_term:
+      type: string
+      description: "Path to pattern storage"
+      default: "patterns/successes.json"
+
+# =============================================================================
+# TOOLS BLOCK (Permission System)
+# =============================================================================
+
+tools:
+  description: "Tool access control"
+  fields:
+    allowed:
+      type: array
+      description: "Tools persona can use freely"
+
+    restricted:
+      type: array
+      description: "Tools persona cannot use"
+
+    requires_approval:
+      type: array
+      description: "Tools requiring user confirmation"
+
+# =============================================================================
+# COLLABORATION BLOCK (LangGraph Pattern)
+# =============================================================================
+
+collaboration:
+  description: "Multi-agent coordination"
+  fields:
+    can_delegate_to:
+      type: array
+      description: "Personas this one can delegate tasks to"
+
+    reports_to:
+      type: array
+      description: "Personas that supervise this one"
+
+    handoff_conditions:
+      type: object
+      description: "Conditions triggering handoff to other personas"
+      example:
+        "test_coverage < 80%": "tester"
+        "bug_detected": "debugger"
+
+# =============================================================================
+# OUTPUT BLOCK
+# =============================================================================
+
+output:
+  description: "Output formatting configuration"
+  fields:
+    format:
+      type: enum
+      options: ["structured_markdown", "json", "plain_text", "code_only"]
+      default: "structured_markdown"
+
+    template:
+      type: string
+      description: "Path to output template"
+
+    include_reasoning:
+      type: boolean
+      default: true
+
+    max_tokens:
+      type: integer
+      default: 4000
+
+# =============================================================================
+# VALIDATION RULES
+# =============================================================================
+
+validation:
+  - field: "identity.role"
+    rule: "max_length: 50"
+
+  - field: "identity.backstory"
+    rule: "max_length: 500"
+
+  - field: "triggers"
+    rule: "must_start_with: '/'"
+
+  - field: "enforces"
+    rule: "must_exist_in: rules/"

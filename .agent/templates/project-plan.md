@@ -1,4 +1,4 @@
-# Project Plan Template — DOMYH Awesome Code v4.3
+# Project Plan Template — DOMYH Awesome Code v5.5
 
 # Used by /init to generate executable implementation plan
 

@@ -211,4 +211,4 @@ Agent PHẢI phát hiện shell TRƯỚC khi tạo bất kỳ lệnh terminal n�
 
 ---
 
-_DOMYH Awesome Code v4.3 • Shell-Aware Commands_
+_DOMYH Awesome Code v5.5 • Shell-Aware Commands_

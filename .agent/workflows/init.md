@@ -5,7 +5,7 @@ persona: architect
 description: "✨ Initialize project with intelligent scaffolding, P0-P6 phases, and progress tracking"
 ---
 
-# ✨ /init — Project Initialization Pro v3.0
+# ✨ /init — Init Pro v3.1
 
 > Intelligent Project Scaffolding
 > 📚 30+ Templates • P0-P6 Phases • Auto-Detection
@@ -686,4 +686,4 @@ template_engine:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Init Pro v3.1 • AI Scaffolding + 30+ Templates_
+_DOMYH Awesome Code v5.5 • Init Pro v3.1 • AI Scaffolding + 30+ Templates_

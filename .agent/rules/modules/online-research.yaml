@@ -1,0 +1,184 @@
+# Online Research Rule v6.0
+# Modular rule for web research and external sources
+
+---
+name: online-research
+version: "6.0.0"
+rule_id: "MOD-RES-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Guidelines for conducting online research and using external sources.
+  Emphasizes source quality, citation, and information verification.
+
+category: "research"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: false
+  personas: ["researcher", "developer", "architect"]
+  workflows: ["/find", "/debug", "/code"]
+  trigger: "When external information is needed"
+
+# =============================================================================
+# SOURCE HIERARCHY
+# =============================================================================
+
+source_hierarchy:
+  tier_1_primary:
+    description: "Always prefer these sources"
+    sources:
+      - "Official documentation"
+      - "GitHub repositories (official)"
+      - "Language/framework guides"
+      - "RFCs and specifications"
+    trust_level: "high"
+
+  tier_2_secondary:
+    description: "Use with verification"
+    sources:
+      - "Stack Overflow (high-voted)"
+      - "MDN Web Docs"
+      - "Framework blog posts"
+      - "Conference talks"
+    trust_level: "medium"
+
+  tier_3_tertiary:
+    description: "Cross-reference required"
+    sources:
+      - "Tutorial blogs"
+      - "Medium articles"
+      - "Forum posts"
+      - "AI-generated content"
+    trust_level: "low"
+
+# =============================================================================
+# RESEARCH WORKFLOW
+# =============================================================================
+
+workflow:
+  1_identify_need:
+    action: "Determine what information is needed"
+    questions:
+      - "What specific question needs answering?"
+      - "Can this be answered from local context?"
+      - "Is external research necessary?"
+
+  2_search_strategy:
+    action: "Plan search approach"
+    strategies:
+      - "Start with official docs"
+      - "Use specific error messages"
+      - "Include version numbers"
+      - "Target relevant platforms"
+
+  3_evaluate_sources:
+    action: "Assess source quality"
+    criteria:
+      - "Publication date (prefer recent)"
+      - "Author credibility"
+      - "Community validation"
+      - "Version compatibility"
+
+  4_synthesize:
+    action: "Combine and verify information"
+    rules:
+      - "Cross-reference multiple sources"
+      - "Test code before recommending"
+      - "Note version differences"
+
+  5_cite:
+    action: "Provide attribution"
+    format: "Source: [Title](URL) - {date}"
+
+# =============================================================================
+# CITATION REQUIREMENTS
+# =============================================================================
+
+citation:
+  always_cite:
+    - "Direct quotes"
+    - "Code snippets from external sources"
+    - "Specific techniques or patterns"
+    - "Statistics or benchmarks"
+
+  format:
+    inline: "[Source](URL)"
+    block: |
+      📚 Source: {title}
+      🔗 {url}
+      📅 {date}
+      ✅ Verified: {yes/no}
+
+# =============================================================================
+# VERIFICATION RULES
+# =============================================================================
+
+verification:
+  code_snippets:
+    action: "Test before recommending"
+    steps:
+      - "Check syntax is valid"
+      - "Verify against current version"
+      - "Test in similar environment"
+
+  claims:
+    action: "Cross-reference"
+    minimum_sources: 2
+    exceptions: ["Official documentation"]
+
+  outdated_check:
+    max_age_years: 2
+    warning: |
+      ⚠️ This information is from {year}.
+      Best practices may have changed.
+
+# =============================================================================
+# OUTPUT FORMAT
+# =============================================================================
+
+output:
+  research_summary: |
+    🔍 RESEARCH SUMMARY
+
+    Question: {question}
+
+    Findings:
+    - {finding_1}
+    - {finding_2}
+
+    Sources:
+    1. [Source 1](URL) - {reliability}
+    2. [Source 2](URL) - {reliability}
+
+    Confidence: {high/medium/low}
+    Recommendation: {action}
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Used highest quality sources available?"
+  - "Cross-referenced information?"
+  - "Cited all external sources?"
+  - "Verified code examples work?"
+  - "Noted version/date relevance?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2 # Execution tier
+  related_modules:
+    - evidence
+
+---
+_DOMYH Awesome Code v6.0 • Online Research Rule_

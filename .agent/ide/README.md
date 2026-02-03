@@ -1,26 +1,47 @@
-# IDE Integration Configurations
+# DOMYH Awesome Code — IDE Configurations
 
-# DOMYH Awesome Code v4.3
+> Version 5.5.0 | Progressive Disclosure Architecture
 
-IDE-specific configurations for optimal agent integration.
+## Supported AI Coding Assistants
 
-## Supported IDEs
+| IDE                        | Config File  | Description             |
+| -------------------------- | ------------ | ----------------------- |
+| [Claude Code](claude.json) | CLAUDE.md    | Claude Code integration |
+| [Cursor](cursor.json)      | .cursorrules | Cursor AI integration   |
+| [Gemini CLI](gemini.json)  | GEMINI.md    | Gemini CLI integration  |
 
-| IDE         | Config File | Status |
-| ----------- | ----------- | ------ |
-| Claude Code | claude.json | ✅     |
-| Gemini CLI  | gemini.json | ✅     |
-| Cursor      | cursor.json | ✅     |
+## Configuration Structure
 
-## Usage
+Each IDE config contains:
 
-Each config file contains:
+```json
+{
+  "name": "DOMYH Awesome Code v5.5",
+  "version": "v5.5.0",
 
-- Agent activation triggers
-- Skill loading preferences
-- Token budget (baseline: 1773)
-- IDE-specific optimizations
+  "activation": {
+    /* Trigger commands */
+  },
+  "skills": {
+    /* Progressive loading */
+  },
+  "token_budget": {
+    /* Token limits */
+  }
+}
+```
+
+## Session Rules
+
+Session rules are **automatically handled** by the agent reading `GEMINI.md`:
+
+1. Agent reads `## Session Rules (v6.0)` section in GEMINI.md
+2. Agent detects trigger phrases in user messages
+3. Agent saves preferences to `.agent/memory/session_rules.json`
+4. Agent loads rules via CONTEXT_LOADER.yaml at start of each response
+
+**No external scripts needed** — agent self-executes based on instructions.
 
 ---
 
-_DOMYH Awesome Code v4.3_
+_DOMYH Awesome Code v5.5 • NockDev_

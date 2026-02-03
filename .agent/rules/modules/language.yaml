@@ -1,0 +1,155 @@
+# Language Rule v6.0
+# Modular rule for language and i18n
+
+---
+name: language
+version: "6.0.0"
+rule_id: "MOD-LNG-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Language and internationalization rules for agent responses.
+  Default language: Tiếng Việt (Vietnamese)
+
+category: "communication"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["*"]
+  workflows: ["*"]
+
+# =============================================================================
+# CORE LANGUAGE SETTINGS
+# =============================================================================
+
+settings:
+  default_language: "vi"
+  supported: ["vi", "en"]
+  fallback: "en"
+
+  switch_commands:
+    vietnamese: "/lang vi"
+    english: "/lang en"
+
+# =============================================================================
+# RESPONSE RULES
+# =============================================================================
+
+response_rules:
+  vietnamese:
+    always_use:
+      - "Explanations and descriptions"
+      - "Error messages"
+      - "Questions to user"
+      - "Status updates"
+      - "Confirmations"
+
+    keep_english:
+      - "Code samples"
+      - "Technical terms"
+      - "File names and paths"
+      - "Commands"
+      - "Variable names"
+
+    examples:
+      greeting: "Chào bạn! Em có thể giúp gì?"
+      confirmation: "Em đã hoàn thành task này."
+      question: "Bạn có muốn tiếp tục không?"
+      error: "Có lỗi xảy ra: {error}"
+
+  english:
+    always_use:
+      - "All responses"
+      - "Technical explanations"
+
+    examples:
+      greeting: "Hello! How can I help?"
+      confirmation: "I've completed this task."
+      question: "Would you like to continue?"
+
+# =============================================================================
+# TONE GUIDELINES
+# =============================================================================
+
+tone:
+  characteristics:
+    - "Professional but friendly"
+    - "Clear and concise"
+    - "Helpful and supportive"
+    - "Acknowledge mistakes openly"
+
+  avoid:
+    - "Overly formal language"
+    - "Excessive apologies"
+    - "Unnecessary filler words"
+    - "Ambiguous statements"
+
+# =============================================================================
+# TECHNICAL TERM HANDLING
+# =============================================================================
+
+technical_terms:
+  keep_in_english:
+    - "API, REST, GraphQL"
+    - "JWT, OAuth, CORS"
+    - "Docker, Kubernetes"
+    - "Git, commit, push"
+    - "Build, deploy, test"
+    - "Frontend, backend"
+    - "Framework, library"
+
+  translate_when_explaining:
+    api: "giao diện lập trình ứng dụng"
+    bug: "lỗi"
+    feature: "tính năng"
+    refactor: "tái cấu trúc"
+    deploy: "triển khai"
+
+# =============================================================================
+# FORMAT LOCALIZATION
+# =============================================================================
+
+localization:
+  date_format:
+    vi: "DD/MM/YYYY"
+    en: "YYYY-MM-DD"
+
+  number_format:
+    vi: "1.000.000"
+    en: "1,000,000"
+
+  emoji_usage:
+    enabled: true
+    categories:
+      status: ["✅", "❌", "⚠️", "🔄", "⏳"]
+      files: ["📁", "📄", "📝"]
+      actions: ["🚀", "🔧", "🐛", "💻"]
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Response in correct language?"
+  - "Technical terms kept in English?"
+  - "Tone is appropriate?"
+  - "Clear and concise?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2 # Execution tier
+  config_source: ".agent/memory/state.json"
+  config_path: "preferences.language"
+
+---
+_DOMYH Awesome Code v6.0 • Language Rule_

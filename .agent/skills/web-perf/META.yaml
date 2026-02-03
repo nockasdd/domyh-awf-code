@@ -1,0 +1,54 @@
+name: web-perf
+version: "6.0.0"
+category: support
+tier: 1
+
+description: |
+  Core Web Vitals audit and web performance optimization.
+  Chrome DevTools MCP integration for systematic profiling.
+
+triggers:
+  file_patterns:
+    - "*.html"
+    - "lighthouse.json"
+    - "web-vitals.*"
+  keywords:
+    # Core Web Vitals
+    - web performance
+    - core web vitals
+    - lighthouse
+    - page speed
+    - performance audit
+    # Metrics
+    - lcp
+    - fcp
+    - cls
+    - ttfb
+    - inp
+    - tbt
+    - speed index
+    # Issues
+    - render blocking
+    - layout shift
+    - slow loading
+    - first paint
+    - largest contentful paint
+    # Tools
+    - chrome devtools
+    - performance profiling
+    - network waterfall
+    - bundle size
+  intents:
+    - audit performance
+    - optimize page load
+    - reduce bundle size
+    - fix core web vitals
+    - improve lighthouse score
+
+related_skills:
+  - react
+  - nextjs
+  - ui-ux-pro-max
+
+prevent_confusion_with:
+  - testing: "web-perf audits performance, testing verifies correctness"

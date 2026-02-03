@@ -1,0 +1,21 @@
+name,language,type,install,test_command,assertion_style,mocking,coverage,docs_url
+Jest,javascript,unit,"npm i -D jest","npm test","expect(x).toBe(y)","jest.fn(), jest.mock()","--coverage",https://jestjs.io
+Vitest,typescript,unit,"npm i -D vitest","npm test","expect(x).toBe(y)","vi.fn(), vi.mock()","--coverage",https://vitest.dev
+Mocha,javascript,unit,"npm i -D mocha chai","npm test","expect(x).to.equal(y)","sinon.stub()","nyc",https://mochajs.org
+Playwright,typescript,e2e,"npm i -D @playwright/test","npx playwright test","expect(locator).toHaveText()","page.route()","--reporter=html",https://playwright.dev
+Cypress,javascript,e2e,"npm i -D cypress","npx cypress run","cy.get().should('have.text')","cy.intercept()","--reporter mochawesome",https://cypress.io
+Testing Library,javascript,component,"npm i -D @testing-library/react","npm test","expect(screen.getByText()).toBeInTheDocument()","jest.mock()","jest --coverage",https://testing-library.com
+pytest,python,unit,"pip install pytest","pytest","assert x == y","pytest-mock, monkeypatch","pytest --cov",https://pytest.org
+unittest,python,unit,builtin,"python -m unittest","self.assertEqual(x, y)","unittest.mock.patch()","coverage run",https://docs.python.org/3/library/unittest.html
+Go testing,go,unit,builtin,"go test ./...","if got != want { t.Errorf() }","gomock, testify/mock","go test -cover",https://golang.org/pkg/testing/
+testify,go,unit,"go get github.com/stretchr/testify","go test ./...","assert.Equal(t, expected, actual)","testify/mock","go test -coverprofile",https://github.com/stretchr/testify
+xUnit,csharp,unit,"dotnet add package xunit","dotnet test","Assert.Equal(expected, actual)","Moq, NSubstitute","coverlet",https://xunit.net
+NUnit,csharp,unit,"dotnet add package NUnit","dotnet test","Assert.That(actual, Is.EqualTo(expected))","Moq","coverlet",https://nunit.org
+JUnit 5,java,unit,"Maven/Gradle dependency","mvn test","assertEquals(expected, actual)","Mockito","JaCoCo",https://junit.org/junit5/
+cargo test,rust,unit,builtin,"cargo test","assert_eq!(expected, actual)","mockall crate","cargo tarpaulin",https://doc.rust-lang.org/book/ch11-00-testing.html
+RSpec,ruby,unit,"gem install rspec","rspec","expect(x).to eq(y)","rspec-mocks","simplecov",https://rspec.info
+PHPUnit,php,unit,"composer require phpunit/phpunit","./vendor/bin/phpunit","$this->assertEquals($expected, $actual)","Mockery, Prophecy","--coverage-html",https://phpunit.de
+ExUnit,elixir,unit,builtin,"mix test","assert x == y","Mox","mix test --cover",https://hexdocs.pm/ex_unit
+Kotest,kotlin,unit,"Gradle dependency","./gradlew test","x shouldBe y","MockK","Kover",https://kotest.io
+XCTest,swift,unit,builtin,"swift test","XCTAssertEqual(x, y)","protocol-based","--enable-code-coverage",https://developer.apple.com/documentation/xctest
+Flutter Test,dart,unit,"flutter pub add test","flutter test","expect(x, equals(y))","mockito","flutter test --coverage",https://docs.flutter.dev/testing

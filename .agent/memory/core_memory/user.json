@@ -1,0 +1,24 @@
+{
+  "block_id": "user",
+  "description": "User preferences and information learned over time",
+  "version": "6.0.0",
+  "editable_by_agent": true,
+  "content": {
+    "preferences": {
+      "language": "vi",
+      "communication_style": "concise",
+      "code_style": {
+        "prefer_types": true,
+        "prefer_documentation": true,
+        "prefer_tests": true
+      },
+      "frameworks": [],
+      "avoided_patterns": []
+    },
+    "skills_used": {},
+    "project_history": [],
+    "corrections": [],
+    "positive_feedback": []
+  },
+  "last_updated": "2026-02-03T15:12:00+07:00"
+}

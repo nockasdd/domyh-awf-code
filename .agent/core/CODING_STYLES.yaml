@@ -1,5 +1,14 @@
-# DOMYH Awesome Code — Language Coding Styles v4.2
-# Idiomatic patterns for each programming language
+# DOMYH Awesome Code — Language Coding Styles v5.5
+# ⚠️ DEPRECATED: This file is kept for reference only
+#
+# SSoT (Single Source of Truth) for language patterns:
+#   1. /code workflow (workflows/code.md) - Line 94-400
+#   2. coding-rules skill (skills/coding-rules/data/)
+#
+# This file contains 6 languages. For 30+ languages, see:
+#   - workflows/code.md → LANGUAGE REGISTRY section
+#   - skills/coding-rules/data/naming-conventions.csv
+#
 # Token-optimized: Load only active language
 
 # =============================================================================

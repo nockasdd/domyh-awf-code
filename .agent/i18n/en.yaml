@@ -1,83 +1,195 @@
+# =============================================================================
 # DOMYH Awesome Code - English Strings
-# i18n/en.yaml v4.1
+# i18n/en.yaml v5.5 — Enhanced i18n System
+# =============================================================================
+# NOTE: Version synced from core/VERSION.yaml
+# Usage: Agent reads language from state.json → loads corresponding i18n file
+# =============================================================================
 
 app:
   name: "DOMYH Awesome Code"
-  version: "4.3.0"
+  version: "5.5.0" # Sync from VERSION.yaml
+  version_short: "v5.5"
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
+  language_name: "English"
+  language_code: "en"
+
+# =============================================================================
+# AGENT BEHAVIOR INSTRUCTIONS
+# Important instructions agent MUST follow when using English
+# =============================================================================
+
+agent_instructions:
+  primary_language: "en"
+  response_language: |
+    You MUST respond in English for all interactions.
+    Use technical terms and proper nouns as-is.
+
+  tone: "professional_friendly" # formal | professional_friendly | casual
+  honorifics:
+    user_to_agent: "I" # Agent refers to self as "I"
+    agent_to_user: "you" # Refers to user as "you"
+    neutral: "you"
+
+  formatting:
+    use_emoji: true
+    use_boxes: true # Use box characters ━━━━
+    code_comments: "english"
+
+# =============================================================================
+# COMMANDS - Detailed descriptions for each command
+# =============================================================================
 
 commands:
-  # Core (6) - High usage
+  # Development (6)
   ap:
     name: "Full Audit"
-    desc: "Comprehensive code audit with 5-expert panel covering security, performance, architecture, testing, and best practices"
+    short: "Audit"
+    desc: "Comprehensive code audit with 5-expert panel"
+    help: "Usage: /ap [scope] — scope: full | quick | security"
   code:
     name: "Write Code"
-    desc: "Write production-ready code following best practices with proper error handling, types, and documentation"
+    short: "Code"
+    desc: "Write production-ready code with Auto Test Loop"
+    help: "Usage: /code [description] — Options: --test, --no-test, --plan"
   debug:
     name: "Debug"
-    desc: "Systematic debugging with root cause analysis: reproduce → isolate → analyze → fix → verify"
+    short: "Debug"
+    desc: "Systematic debugging with Root Cause Tracing"
+    help: "Usage: /debug [error description or message]"
   plan:
     name: "Plan"
-    desc: "Feature planning and technical design with impact analysis, task breakdown, and effort estimation"
+    short: "Plan"
+    desc: "Feature design with Deep Interview"
+    help: "Usage: /plan [feature] — Options: full, quick, tech, risk"
   test:
     name: "Test"
-    desc: "Run existing tests and write new test cases with proper coverage for unit, integration, and e2e"
+    short: "Test"
+    desc: "Run tests and write new test cases"
+    help: "Usage: /test [scope] — scope: unit | integration | e2e | all"
   modify:
     name: "Modify Project"
-    desc: "Fix and improve existing project: detect stack → analyze issues → plan fixes → execute → verify"
+    short: "Modify"
+    desc: "Fix and improve existing project"
+    help: "Usage: /modify [description of issue to fix]"
 
-  # Secondary (4) - Medium usage
-  deploy:
-    name: "Deploy"
-    desc: "Production deployment with safety checks, staging verification, and rollback strategy"
-  refactor:
-    name: "Refactor"
-    desc: "Improve code structure and maintainability without changing functionality"
+  # Planning (5)
+  think:
+    name: "Brainstorm"
+    short: "Think"
+    desc: "Brainstorming Pro with 6 methods, 5 tiers"
+    help: "Usage: /think [topic] — Methods: 6hats, swot, scamper, starbursting"
   init:
     name: "Init"
-    desc: "Initialize new project with intelligent scaffolding, P0-P6 phases, and progress tracking"
-  review:
-    name: "Review"
-    desc: "Code review for PRs and changes with security, performance, and maintainability checks"
-
-  # Extended (8) - P1/P2
-  migrate:
-    name: "Migrate"
-    desc: "Database migrations with schema changes, data migration, and rollback support"
+    short: "Init"
+    desc: "Initialize new project with smart scaffolding"
+    help: "Usage: /init [project type] — e.g., nextjs, golang, flutter"
   doc:
     name: "Doc"
-    desc: "Generate comprehensive documentation including API docs, README, and code comments"
+    short: "Doc"
+    desc: "Generate comprehensive documentation"
+    help: "Usage: /doc [type] — type: api | readme | changelog | all"
+  visualize:
+    name: "Visualize"
+    short: "Visualize"
+    desc: "Create mockups and wireframes"
+    help: "Usage: /visualize [UI description] — style: glassmorphism, minimalist, etc."
   generate:
     name: "Generate"
-    desc: "Code generation for boilerplate, CRUD operations, and repetitive patterns"
-  perf:
-    name: "Perf"
-    desc: "Performance profiling to identify bottlenecks, memory leaks, and optimization opportunities"
-  upgrade:
-    name: "Upgrade"
-    desc: "Update dependencies with compatibility checks and breaking change migration"
-  clean:
-    name: "Clean"
-    desc: "Code cleanup: remove dead code, fix linting issues, and improve formatting"
-  monitor:
-    name: "Monitor"
-    desc: "Setup observability with logging, metrics, tracing, and alerting"
+    short: "Generate"
+    desc: "Auto-generate code from templates"
+    help: "Usage: /generate [type] — type: crud | api | model | component"
+
+  # Deployment (6)
+  deploy:
+    name: "Deploy"
+    short: "Deploy"
+    desc: "Production deployment with pre-checks"
+    help: "Usage: /deploy [env] — env: staging | production"
   env:
     name: "Env"
-    desc: "Environment management: configure variables, secrets, and multi-environment setup"
+    short: "Env"
+    desc: "Manage environment variables and secrets"
+    help: "Usage: /env [action] — action: check | sync | diff"
+  migrate:
+    name: "Migrate"
+    short: "Migrate"
+    desc: "Database migrations with zero-downtime"
+    help: "Usage: /migrate [action] — action: create | run | rollback"
+  monitor:
+    name: "Monitor"
+    short: "Monitor"
+    desc: "Setup observability and alerting"
+    help: "Usage: /monitor [setup] — setup: logging | metrics | tracing"
+  perf:
+    name: "Perf"
+    short: "Perf"
+    desc: "Profiling and performance optimization"
+    help: "Usage: /perf [scope] — scope: cpu | memory | network | all"
+  revert:
+    name: "Revert"
+    short: "Revert"
+    desc: "Rollback changes with safety checks"
+    help: "Usage: /revert [target] — target: commit | deploy | migration"
 
-  # Utility (3) - Low token
-  recap:
-    name: "Recap"
-    desc: "Session summary: what was done, files changed, and next steps"
+  # Quality (5)
+  review:
+    name: "Review"
+    short: "Review"
+    desc: "Review PRs with security and performance checks"
+    help: "Usage: /review [pr_link or file_path]"
+  refactor:
+    name: "Refactor"
+    short: "Refactor"
+    desc: "Improve code structure without changing behavior"
+    help: "Usage: /refactor [scope] — scope: file | module | pattern"
+  clean:
+    name: "Clean"
+    short: "Clean"
+    desc: "Remove dead code and unused dependencies"
+    help: "Usage: /clean [type] — type: code | deps | all"
+  upgrade:
+    name: "Upgrade"
+    short: "Upgrade"
+    desc: "Update dependencies with compatibility checks"
+    help: "Usage: /upgrade [scope] — scope: minor | major | security"
+
+  # Utility (6)
   status:
     name: "Status"
-    desc: "Project status: health checks, pending tasks, and current state"
+    short: "Status"
+    desc: "Check project health"
+    help: "Usage: /status"
+  recap:
+    name: "Recap"
+    short: "Recap"
+    desc: "Session summary"
+    help: "Usage: /recap"
+  suggest:
+    name: "Suggest"
+    short: "Suggest"
+    desc: "Suggest next steps based on context"
+    help: "Usage: /suggest"
+  save:
+    name: "Save"
+    short: "Save"
+    desc: "Save session to memory files"
+    help: "Usage: /save"
+  lang:
+    name: "Language"
+    short: "Lang"
+    desc: "Switch agent language"
+    help: "Usage: /lang [code] — code: vi | en"
   help:
     name: "Help"
-    desc: "Show available commands, usage examples, and documentation links"
+    short: "Help"
+    desc: "Show available commands"
+    help: "Usage: /help [command]"
+
+# =============================================================================
+# PERSONAS
+# =============================================================================
 
 personas:
   auditor:
@@ -91,10 +203,10 @@ personas:
     desc: "Design decisions and system architecture"
   debugger:
     name: "Debug Detective"
-    desc: "Root cause analysis and systematic fixing"
+    desc: "Root cause analysis"
   tester:
     name: "QA Engineer"
-    desc: "Test strategy and quality assurance"
+    desc: "Quality assurance"
   devops:
     name: "DevOps Engineer"
     desc: "Infrastructure and deployment"
@@ -102,20 +214,74 @@ personas:
     name: "Technical Writer"
     desc: "Documentation and knowledge transfer"
 
+# =============================================================================
+# UI MESSAGES — Common messages
+# =============================================================================
+
 messages:
-  stop_required: "⛔ STOP — Confirmation required"
+  # Stop conditions
+  stop_required: "⛔ STOP — Confirmation required before proceeding"
+  stop_unclear: "⛔ STOP — Request unclear, clarification needed"
+  stop_destructive: "⛔ STOP — Destructive action, confirmation required"
+
+  # Confirmations
+  confirm_proceed: "Proceed? (y/n)"
+  confirm_yes: "Confirmed, proceeding..."
+  confirm_no: "Cancelled."
+
+  # Progress
+  progress_started: "🚀 Starting..."
+  progress_working: "⏳ Working..."
+  progress_complete: "✅ Complete!"
+  progress_failed: "❌ Failed"
+
+  # Deep Interview (v5.5)
+  interview_start: "🎯 DEEP INTERVIEW"
+  interview_question_what: "What exactly does this feature handle/manage?"
+  interview_question_who: "Who uses it? □ Solo | □ Team (2-10) | □ Public"
+  interview_question_priority: "If you could only do one thing, what would it be?"
+  interview_skip: "→ Sufficient context, skipping interview"
+  interview_complete: "→ Context gathered, proceeding with planning..."
+
+  # Auto Test Loop (v5.5)
+  test_loop_start: "🧪 AUTO TEST LOOP"
+  test_loop_retry: "🔄 Retry {n}/3 — Trying different approach..."
+  test_loop_pass: "✅ Tests passed!"
+  test_loop_fail_options: |
+    😅 I've tried 3 approaches but tests still fail.
+
+    What would you like me to do?
+    1️⃣ Try a different (simpler) approach
+    2️⃣ Skip this test, continue
+    3️⃣ Run /debug for deep analysis
+    4️⃣ Rollback to before the fix
+
+  # Step Confirmation (v5.5)
+  step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ DONE: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  step_next: "→ Continue to next task? (y/adjust/stop)"
+
+  # Misc
   scope_contract: "🎯 Please select scope"
   installation_complete: "✅ Installation complete!"
-  goodbye: "Goodbye!"
+  goodbye: "Goodbye! 👋"
   skills_suggested: "💡 Suggested skills based on your context"
   flow_detected: "🔄 Detected workflow pattern"
   resume_available: "📂 Previous session found. Resume?"
+  language_switched: "🌍 Switched to: English"
+
+# =============================================================================
+# PRIORITY LABELS
+# =============================================================================
 
 priority:
-  p0: "Critical - Fix immediately"
-  p1: "High - Before deployment"
-  p2: "Medium - This sprint"
-  p3: "Low - Nice to have"
+  p0: "🔴 Critical — Fix immediately"
+  p1: "🟠 High — Fix before deployment"
+  p2: "🟡 Medium — Fix this sprint"
+  p3: "🟢 Low — Nice to have"
+
+# =============================================================================
+# WORKFLOW FLOWS
+# =============================================================================
 
 flows:
   new_project: "Create complete project from scratch"
@@ -124,3 +290,16 @@ flows:
   bug_fix: "Debug and fix a specific issue"
   code_review: "Full review before merging"
   deployment: "Deploy with safety checks"
+
+# =============================================================================
+# ERROR MESSAGES
+# =============================================================================
+
+errors:
+  file_not_found: "❌ File not found: {path}"
+  command_failed: "❌ Command failed: {command}"
+  test_failed: "❌ Test failed: {test_name}"
+  build_failed: "❌ Build failed"
+  permission_denied: "❌ Permission denied"
+  invalid_input: "❌ Invalid input"
+  timeout: "❌ Timeout"

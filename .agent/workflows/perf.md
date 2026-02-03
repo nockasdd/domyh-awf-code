@@ -5,7 +5,7 @@ persona: developer
 description: "⚡ Performance profiling: CPU, memory, benchmarks, and optimization recommendations"
 ---
 
-# ⚡ /perf — Performance Pro v3.0
+# ⚡ /perf — Perf Pro v3.1
 
 > Complete Performance Analysis & Optimization
 > 📚 30+ Languages • CPU/Memory • Load Testing
@@ -633,4 +633,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Perf Pro v3.1 • Agent-Aware Profiling_
+_DOMYH Awesome Code v5.5 • Perf Pro v3.1 • Agent-Aware Profiling_

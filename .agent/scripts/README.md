@@ -1,4 +1,4 @@
-# 🔧 Scripts — DOMYH Awesome Code v4.3
+# 🔧 Scripts — DOMYH Awesome Code v5.5
 
 > Utility scripts for agent management and optimization
 
@@ -135,4 +135,4 @@ chmod +x .agent/scripts/*.sh
 
 ---
 
-_DOMYH Awesome Code v4.3 • Scripts v2.0.0_
+_DOMYH Awesome Code v5.5 • Scripts v2.0.0_

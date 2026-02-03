@@ -1,7 +1,9 @@
 name: c
-version: "4.3.0"
+version: "6.0.0"
+display: C
 category: language
 tier: 1
+priority: 1
 
 description: |
   Pure C (ISO C23) development patterns.
@@ -13,115 +15,42 @@ triggers:
     - "*.h"
     - "Makefile"
     - "GNUmakefile"
-    - "makefile"
-    - "CMakeLists.txt"
   keywords:
-    # Core C
+    # Core
     - c language
     - pure c
     - c23
-    - c17
     - c11
-    - c99
     - ansi c
-    - iso c
     # Headers
     - stdio.h
     - stdlib.h
     - string.h
-    - stdint.h
-    - stdbool.h
-    - stddef.h
-    - errno.h
-    - assert.h
     # Memory
     - malloc
-    - calloc
-    - realloc
     - free
-    - memcpy
-    - memmove
-    - memset
-    # I/O
-    - printf
-    - scanf
-    - fopen
-    - fclose
-    - fread
-    - fwrite
-    - fgets
-    - fprintf
-    - snprintf
-    # String
-    - strlen
-    - strcpy
-    - strncpy
-    - strcmp
-    - strcat
-    - strdup
-    # C23 Features
-    - nullptr
-    - constexpr
-    - ckd_add
-    - ckd_sub
-    - memset_explicit
-    # Pointers
     - pointer
-    - dereference
-    - address of
-    - null pointer
     # Build
     - makefile
     - gcc
     - clang
-    - cc
-    - ld
-    # Debug
-    - valgrind
-    - addresssanitizer
-    - fsanitize
-    # Platform
-    - posix
-    - pthread
-    - winsock
   intents:
     - c code
     - c program
     - c memory
     - c pointer
-    - c string
 
 related_skills:
-  - cpp # C++ extension
-  - asm # Low-level
+  - cpp
+  - asm
+
+caps:
+  - Pure C programming
+  - Memory management
+  - POSIX APIs
+  - Embedded systems
+  - C23 features
 
 prevent_confusion_with:
-  - cpp: "C = no classes/templates, C++ = classes/templates/std::"
-  - rust: "C = manual memory, Rust = ownership"
-  - go: "C = pointers/malloc, Go = GC"
-
-unique_apis:
-  - "malloc, calloc, realloc, free"
-  - "printf, scanf, fprintf, snprintf"
-  - "fopen, fclose, fread, fwrite"
-  - "strlen, strcpy, strncpy, strcmp"
-  - "memcpy, memmove, memset"
-  - "errno, perror, strerror"
-  - "pthread_* (POSIX threads)"
-  - "nullptr, constexpr (C23)"
-
-# C vs C++ differentiation (CRITICAL)
-c_only_patterns:
-  - "No std:: prefix"
-  - "No class keyword"
-  - "No namespace"
-  - "No template<"
-  - "No new/delete operators"
-  - ".c file extension"
-  - "#include <stdio.h> without <iostream>"
-
-version_features:
-  c99: ["Variable-length arrays", "inline functions"]
-  c11: ["Threads", "static_assert", "_Generic"]
-  c17: ["Bug fixes"]
-  c23: ["nullptr", "constexpr", "ckd_* checked math", "[[attributes]]"]
+  cpp: "C = no classes/templates, C++ = classes"
+  rust: "C = manual memory, Rust = ownership"

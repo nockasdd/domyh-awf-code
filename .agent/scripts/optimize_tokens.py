@@ -79,7 +79,7 @@ def print_analysis(results):
 
 def generate_compact_template():
     """Generate compact META.yaml template."""
-    template = '''# {skill_name} — DOMYH v4.0
+    template = '''# {skill_name} — DOMYH v5.5
 name: {id}
 display_name: {display}
 category: {category}

@@ -54,4 +54,4 @@ triggers: ["/doc", "/generate"]
 
 ---
 
-_DOMYH Awesome Code v4.3_
+_DOMYH Awesome Code v5.5_

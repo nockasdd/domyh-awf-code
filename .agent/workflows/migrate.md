@@ -5,7 +5,7 @@ persona: developer
 description: "🗃️ Database migrations: create, run, rollback, and seed with safety checks"
 ---
 
-# 🗃️ /migrate — Database Migration Pro v3.0
+# 🗃️ /migrate — Migrate Pro v3.1
 
 > Safe Schema Evolution & Data Migrations
 > 📚 20+ Tools • Zero-Downtime • Rollback Safety
@@ -756,4 +756,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Migrate Pro v3.1 • Zero-Downtime CDC_
+_DOMYH Awesome Code v5.5 • Migrate Pro v3.1 • Zero-Downtime CDC_

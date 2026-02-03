@@ -1,6 +1,8 @@
 name: coding-rules
+version: "6.0.0"
 display: Awesome Coding Rules
 category: support
+tier: 1
 priority: 2
 desc: "Multi-language naming conventions, architecture patterns, design patterns, coding standards"
 keywords:

@@ -5,7 +5,7 @@ persona: technical_writer
 description: "📝 Generate documentation: API docs, README, code comments, and changelogs"
 ---
 
-# 📝 /doc — Documentation Pro v3.0
+# 📝 /doc — Doc Pro v3.1
 
 > AI-Powered Documentation Generation
 > 📚 30+ Languages • Docs-as-Code • Auto-API Specs
@@ -869,4 +869,4 @@ auto_api_specs:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Doc Pro v3.1 • AI-Optimized + Auto API_
+_DOMYH Awesome Code v5.5 • Doc Pro v3.1 • AI-Optimized + Auto API_

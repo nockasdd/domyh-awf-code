@@ -189,7 +189,7 @@ def run_compact():
 
 def print_template():
     """Print compact META.yaml template."""
-    template = '''# {skill_name} — DOMYH v4.0
+    template = '''# {skill_name} — DOMYH v5.5
 name: {id}
 display_name: {display}
 category: {category}
@@ -215,7 +215,7 @@ detect: [{patterns}]
 
 def main():
     parser = argparse.ArgumentParser(
-        description='DOMYH Awesome Code Token Tools v4.0',
+        description='DOMYH Awesome Code Token Tools v5.5',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('--analyze', '-a', action='store_true', help='Analyze token usage')

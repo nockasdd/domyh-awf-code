@@ -1,0 +1,41 @@
+---
+description: DOMYH Frontend Skills for React/Vue/Angular/Svelte projects
+globs: src/**/*.tsx,src/**/*.jsx,src/**/*.vue,src/**/*.svelte,components/**/*
+alwaysApply: false
+---
+
+# Frontend Development Skills
+
+## React Patterns
+- Prefer functional components with hooks
+- Use React.memo for expensive renders
+- Extract custom hooks for reusable logic
+- Error boundaries for graceful failures
+
+## Component Structure
+```
+function Component({ prop }: Props) {
+  // 1. Hooks first
+  const [state, setState] = useState()
+  const ref = useRef()
+  
+  // 2. Effects
+  useEffect(() => {}, [])
+  
+  // 3. Handlers
+  const handleClick = () => {}
+  
+  // 4. Render
+  return <div />
+}
+```
+
+## State Management
+- Local state: useState/useReducer
+- Shared: Context for small, Zustand/Redux for complex
+- Server state: TanStack Query/SWR
+
+## Testing
+- React Testing Library for behavior
+- Vitest for fast unit tests
+- Playwright for E2E

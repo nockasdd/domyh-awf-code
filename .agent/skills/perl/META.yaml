@@ -1,0 +1,33 @@
+name: perl
+version: "6.0.0"
+category: scripting
+tier: 3
+
+description: |
+  Perl 5.40+ development patterns.
+  Covers text processing, regex, system admin, CPAN modules.
+
+triggers:
+  file_patterns:
+    - "*.pl"
+    - "*.pm"
+    - "Makefile.PL"
+    - "cpanfile"
+  keywords:
+    - perl
+    - perl script
+    - cpan
+    - regex perl
+    - moose
+    - mojolicious
+    - dancer
+    - catalyst
+  intents:
+    - perl script
+    - text processing
+    - perl regex
+    - cpan module
+
+related_skills:
+  - python
+  - ruby

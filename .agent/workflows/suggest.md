@@ -5,7 +5,7 @@ persona: assistant
 description: "➡️ Smart suggestions: context-aware next steps based on project state"
 ---
 
-# ➡️ /suggest — Smart Suggestions Pro v3.0
+# ➡️ /suggest — Suggest Pro v3.1
 
 > Context-Aware Next Steps
 > 📚 Auto-detect • Prioritized • Actionable
@@ -217,4 +217,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Suggest Pro v3.1 • Git-Aware Suggestions_
+_DOMYH Awesome Code v5.5 • Suggest Pro v3.1 • Git-Aware Suggestions_

@@ -1,5 +1,5 @@
 name: kubernetes
-version: "4.3.0"
+version: "6.0.0"
 category: devops
 tier: 1
 

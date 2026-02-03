@@ -2,12 +2,12 @@
 name: nextjs
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
-version: "4.3.0"
+version: "6.0.0"
 category: frontend
 tier: 1
 ---
 
-# Next.js Patterns — DOMYH Awesome Code v4.3
+# Next.js Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Next.js 15/16 (2025-2026)
 > **Runtime**: React meta-framework with App Router
@@ -475,4 +475,4 @@ export default function Error({
 
 ---
 
-_DOMYH Awesome Code v4.3 • Next.js 15/16_
+_DOMYH Awesome Code v6.0.0 • Next.js 15/16_

@@ -1,4 +1,4 @@
-# Session Cache v4.3
+# Session Cache v5.5
 
 ## Caching Strategy
 
@@ -56,4 +56,4 @@ Target: < 10,000 tokens peak
 
 ---
 
-_DOMYH Awesome Code v4.3_
+_DOMYH Awesome Code v5.5_

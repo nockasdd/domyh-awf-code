@@ -5,7 +5,7 @@ persona: developer
 description: "▶️ Start development server: detect stack, run dev commands, validate output"
 ---
 
-# ▶️ /dev — Development Server Pro v3.0
+# ▶️ /dev — Dev Pro v3.1
 
 > Intelligent Development Runner
 > 📚 30+ Languages • Auto-detect • Hot Reload
@@ -292,4 +292,4 @@ error_overlay:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Dev Pro v3.1 • HMR 2025 + Error Overlay_
+_DOMYH Awesome Code v5.5 • Dev Pro v3.1 • HMR 2025 + Error Overlay_

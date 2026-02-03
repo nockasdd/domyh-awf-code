@@ -1,0 +1,69 @@
+pattern,category,description,when_to_use,example_structure,anti_pattern,languages
+AAA Pattern,Structure,"Arrange-Act-Assert: setup, execute, verify","All unit tests","// Arrange
+const calculator = new Calculator();
+// Act
+const result = calculator.add(2, 3);
+// Assert
+expect(result).toBe(5);","Mixing arrange/act/assert throughout test",all
+Given-When-Then,BDD,"Given precondition, When action, Then outcome","Behavior-driven tests, acceptance tests","describe('Calculator', () => {
+  it('should add two numbers', () => {
+    // Given
+    const calc = new Calculator();
+    // When
+    const sum = calc.add(2, 3);
+    // Then
+    expect(sum).toBe(5);
+  });
+});","No clear separation of phases",all
+Test Double Types,Mocking,"Dummy, Stub, Spy, Mock, Fake - know the difference","When isolating units from dependencies","Dummy: placeholder, never called
+Stub: returns canned answers
+Spy: records calls, allows verification
+Mock: verifies expectations
+Fake: working implementation (in-memory DB)","Over-mocking (testing implementation not behavior)",all
+Factory Pattern,Data,"Create test data with sensible defaults","Many tests need similar objects","const userFactory = (overrides = {}) => ({
+  id: 'user-123',
+  name: 'Test User',
+  email: 'test@example.com',
+  ...overrides,
+});","Duplicating test data setup in each test",all
+Builder Pattern,Data,"Fluent API for complex test objects","Complex objects with many optional fields","const user = new UserBuilder()
+  .withName('John')
+  .withEmail('john@test.com')
+  .withRole('admin')
+  .build();","Long constructor calls with many nulls",all
+Test Isolation,Principle,"Each test runs independently, no shared state","Always","beforeEach(() => {
+  db = createFreshDatabase();
+});
+afterEach(() => {
+  db.cleanup();
+});","Tests depending on order or shared state",all
+Single Assertion,Principle,"One logical assertion per test (can be multiple expects)","Unit tests","it('should return user name', () => {
+  expect(user.getFullName()).toBe('John Doe');
+});","10+ assertions in one test making failures unclear",all
+Parameterized Tests,Technique,"Same test logic with different inputs","Testing edge cases, boundaries","test.each([
+  [1, 1, 2],
+  [0, 0, 0],
+  [-1, 1, 0],
+])('add(%i, %i) = %i', (a, b, expected) => {
+  expect(add(a, b)).toBe(expected);
+});","Copy-paste tests for different inputs",all
+Snapshot Testing,Technique,"Compare output against stored snapshot","UI components, API responses","expect(component).toMatchSnapshot();","Snapshots for logic/business rules",javascript,typescript
+Test Pyramid,Strategy,"Many unit, fewer integration, fewest E2E","Overall test strategy","Unit: 70%
+Integration: 20%
+E2E: 10%","Inverted pyramid (too many E2E, few unit)",all
+Integration Test,Type,"Test component interactions with real dependencies","API routes, DB queries, service orchestration","it('creates user in database', async () => {
+  const response = await request(app)
+    .post('/users')
+    .send({ name: 'Test' });
+  expect(response.status).toBe(201);
+  const user = await db.users.findOne({ name: 'Test' });
+  expect(user).toBeDefined();
+});","Mocking everything in integration tests",all
+Contract Testing,Type,"Verify API contracts between services","Microservices, API consumers/providers","Pact, Spring Cloud Contract","Trusting API documentation alone",all
+Mutation Testing,Coverage,"Inject bugs to verify tests catch them","High-confidence critical paths","Stryker (JS), PIT (Java), mutmut (Python)","100% line coverage but weak assertions",all
+Flaky Test Fix,Debugging,"Identify and fix non-deterministic tests","Tests that fail randomly","- Remove time dependencies
+- Don't rely on order
+- Wait for async properly
+- Isolate external services","Retrying until pass, @Ignore annotation",all
+Test Naming,Convention,"Descriptive names that document behavior","All tests","'should return 404 when user not found'
+'throws ValidationError for empty email'","'test1', 'testAdd', cryptic names",all

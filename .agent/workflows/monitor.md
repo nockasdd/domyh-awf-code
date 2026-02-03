@@ -5,7 +5,7 @@ persona: developer
 description: "📡 Setup observability: logging, tracing, metrics, and alerting configuration"
 ---
 
-# 📡 /monitor — Observability Pro v3.0
+# 📡 /monitor — Monitor Pro v3.1
 
 > Complete Observability Stack Setup
 > 📚 30+ Languages • OpenTelemetry • 3 Pillars
@@ -742,4 +742,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Monitor Pro v3.1 • AI-Powered Observability_
+_DOMYH Awesome Code v5.5 • Monitor Pro v3.1 • AI-Powered Observability_

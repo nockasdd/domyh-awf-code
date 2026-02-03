@@ -1,0 +1,157 @@
+# Refactor Task Template
+
+> Structured template for refactoring tasks
+
+---
+
+## Schema
+
+```yaml
+task_type: refactor
+version: "6.0.0"
+
+# Required fields
+target: string            # What to refactor
+pattern: string           # Refactoring pattern/goal
+
+# Optional fields
+constraints: list         # What must be preserved
+scope: string             # Scope of refactoring
+test_requirements: list   # Testing requirements
+breaking_changes: boolean # Are breaking changes allowed
+```
+
+---
+
+## Example Task
+
+```yaml
+task:
+  type: refactor
+  
+  target: |
+    User authentication module in `src/auth/`.
+    Currently a 500-line monolithic service.
+  
+  pattern: |
+    Extract into Clean Architecture layers:
+    - Domain: User entity, AuthToken value object
+    - Application: AuthService, TokenService
+    - Infrastructure: BCryptHasher, JWTProvider
+  
+  constraints:
+    - All existing tests must pass
+    - Public API must remain unchanged
+    - Password hashing algorithm unchanged
+    - No data migration required
+  
+  scope: |
+    Files to refactor:
+    - src/auth/auth.service.ts → Split into multiple
+    - src/auth/user.model.ts → Move to domain
+    
+    Files to create:
+    - src/domain/user/user.entity.ts
+    - src/domain/auth/auth-token.ts
+    - src/application/services/auth.service.ts
+    - src/infrastructure/hashers/bcrypt.hasher.ts
+  
+  test_requirements:
+    - Existing integration tests must pass
+    - Add unit tests for new services
+    - Maintain 85%+ coverage
+  
+  breaking_changes: false
+  
+  priority: P2
+  
+  motivation:
+    - Current code is hard to test
+    - Business logic mixed with infrastructure
+    - Difficult to swap JWT provider
+```
+
+---
+
+## Usage in Prompts
+
+```markdown
+## Task: Refactor
+
+**Target:**
+{{task.target}}
+
+**Pattern:**
+{{task.pattern}}
+
+**Constraints:**
+{{#task.constraints}}
+- ⚠️ {{.}}
+{{/task.constraints}}
+
+**Scope:**
+{{task.scope}}
+
+**Test Requirements:**
+{{#task.test_requirements}}
+- [ ] {{.}}
+{{/task.test_requirements}}
+
+**Breaking Changes Allowed:** {{task.breaking_changes}}
+
+**Priority:** {{task.priority}}
+```
+
+---
+
+## Workflow Integration
+
+This task type triggers:
+- **Persona:** Developer (with Architect consultation for pattern validation)
+- **Workflow:** 
+  1. Architect validates pattern choice
+  2. Developer implements incrementally
+  3. Tester verifies no regressions
+- **Reflection:** Pre-output critic check for pattern adherence
+
+---
+
+## Common Refactoring Patterns
+
+### Extract Class
+Split large class into focused classes.
+
+### Extract Method
+Break up long methods.
+
+### Move to Layer
+Move code to appropriate architecture layer.
+
+### Replace Conditional with Polymorphism
+Use inheritance instead of if/switch.
+
+### Introduce Design Pattern
+Apply Factory, Strategy, Repository, etc.
+
+---
+
+## Safety Checklist
+
+Before refactoring:
+- [ ] Tests exist and pass
+- [ ] Understand current behavior
+- [ ] Identify all callers
+
+During refactoring:
+- [ ] Small incremental changes
+- [ ] Run tests after each change
+- [ ] Keep behavior identical
+
+After refactoring:
+- [ ] All tests still pass
+- [ ] Coverage maintained
+- [ ] No new warnings
+
+---
+
+_DOMYH Awesome Code v6.0 • Refactor Task Template_

@@ -1,12 +1,12 @@
 ---
 name: angular
 detect: ["angular.json", "*.component.ts", "@angular/core"]
-version: "4.3.0"
+version: "6.0.0"
 category: frontend
 tier: 1
 ---
 
-# Angular Patterns — DOMYH Awesome Code v4.3
+# Angular Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: Angular 19/20 (2025-2026)
 > **Philosophy**: Signals-first, standalone, zoneless-ready
@@ -266,4 +266,4 @@ export class UsersComponent {
 
 ---
 
-_DOMYH Awesome Code v4.3 • Angular 19/20_
+_DOMYH Awesome Code v6.0.0 • Angular 19/20_

@@ -2,7 +2,7 @@ name: aws
 display: AWS Cloud Development
 category: cloud
 priority: 1
-version: "4.3.0"
+version: "6.0.0"
 desc: "AWS serverless, containers, IaC patterns for Lambda, DynamoDB, S3, ECS, CDK, SAM (2025-2026)"
 keywords:
   # Core services

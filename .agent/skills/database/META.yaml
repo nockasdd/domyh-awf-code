@@ -1,133 +1,53 @@
 name: database
+version: "6.0.0"
 display: Database Patterns
 category: infrastructure
+tier: 1
 priority: 1
-version: "4.3.0"
-desc: "SQL/NoSQL database patterns - PostgreSQL 17/18, MySQL, MongoDB, Redis, ORMs (Prisma, Drizzle)"
 
-keywords:
-  # General
-  - database
-  - db
-  - sql
-  - nosql
-  - query
-  - schema
-  - migration
+description: |
+  SQL/NoSQL database patterns - PostgreSQL 17/18, MySQL, MongoDB, Redis.
+  Covers ORMs (Prisma, Drizzle, TypeORM), query optimization, migrations.
 
-  # PostgreSQL
-  - postgresql
-  - postgres
-  - pg
-  - psql
-  - jsonb
-  - plpgsql
-  - pg_dump
-  - pg_restore
-
-  # MySQL
-  - mysql
-  - mariadb
-
-  # MongoDB
-  - mongodb
-  - mongo
-  - mongoose
-  - document database
-  - nosql
-
-  # Redis
-  - redis
-  - cache
-  - caching
-  - in-memory
-  - pub/sub
-  - session store
-
-  # ORMs
-  - orm
-  - prisma
-  - drizzle
-  - typeorm
-  - sequelize
-  - sqlalchemy
-  - gorm
-  - sqlc
-  - kysely
-
-  # Operations
-  - index
-  - indexing
-  - transaction
-  - acid
-  - migration
-  - backup
-  - restore
-  - replication
-  - sharding
-
-  # Performance
-  - query optimization
-  - explain analyze
-  - connection pooling
-  - pgbouncer
-
-  # Data Types
-  - jsonb
-  - uuid
-  - timestamp
-  - varchar
-  - text
-  - integer
-  - numeric
-
-  # Joins
-  - join
-  - left join
-  - inner join
-  - foreign key
-  - primary key
-
-  # Tools
-  - pgadmin
-  - dbeaver
-  - tableplus
-  - prisma studio
-  - mongodb compass
-  - redisinsight
-
-detect:
-  files:
+triggers:
+  file_patterns:
     - "*.sql"
     - "schema.prisma"
-    - "drizzle/"
     - "migrations/"
     - "*.db"
-    - "*.sqlite"
-    - "docker-compose.yml"
-  patterns:
-    - "SELECT"
-    - "INSERT INTO"
-    - "CREATE TABLE"
-    - "db.collection"
-    - "redis.get"
+  keywords:
+    # General
+    - database
+    - sql
+    - nosql
+    - query
+    - migration
+    # Engines
+    - postgresql
+    - mysql
+    - mongodb
+    - redis
+    # ORMs
+    - prisma
+    - drizzle
+    - typeorm
+    - sqlalchemy
+  intents:
+    - database query
+    - sql migration
+    - orm setup
+    - query optimization
 
-caps:
-  - PostgreSQL 17/18 features (AIO, Skip Scan, UUIDv7)
-  - MySQL optimization patterns
-  - MongoDB document patterns
-  - Redis caching and pub/sub
-  - ORM comparison (Prisma 7, Drizzle, TypeORM)
-  - Query optimization with EXPLAIN ANALYZE
-  - Indexing strategies (B-tree, GIN, BRIN)
-  - Transaction and locking patterns
-  - Connection pooling (PgBouncer)
-  - Migration management
-  - Polyglot persistence architecture
-
-related:
-  - csharp
+related_skills:
   - typescript
   - python
   - go
   - docker
+
+caps:
+  - PostgreSQL 17/18
+  - MongoDB patterns
+  - Redis caching
+  - ORM comparison
+  - Query optimization
+  - Connection pooling

@@ -1,4 +1,4 @@
-# 📁 Skills — DOMYH Awesome Code v4.3
+# 📁 Skills — DOMYH Awesome Code v5.5
 
 > Tech-specific patterns loaded via Progressive Disclosure
 
@@ -37,7 +37,7 @@
 
 ---
 
-## META.yaml Schema (v4.0)
+## META.yaml Schema (v5.5)
 
 ```yaml
 name: skill-id          # lowercase, hyphen-separated
@@ -66,4 +66,4 @@ caps: [cap1, cap2]      # Max 3 capabilities
 
 ---
 
-_DOMYH Awesome Code v4.3_
+_DOMYH Awesome Code v5.5_

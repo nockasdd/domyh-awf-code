@@ -1,0 +1,37 @@
+name: scala
+version: "6.0.0"
+category: functional
+tier: 2
+
+description: |
+  Scala 3 development patterns.
+  Covers functional programming, Akka, ZIO, Cats Effect.
+
+triggers:
+  file_patterns:
+    - "*.scala"
+    - "*.sc"
+    - "build.sbt"
+    - "project/*.scala"
+  keywords:
+    - scala
+    - scala 3
+    - sbt
+    - akka
+    - zio
+    - cats effect
+    - play framework
+    - spark scala
+  intents:
+    - create scala project
+    - scala api
+    - akka actors
+    - zio application
+
+related_skills:
+  - java
+  - kotlin
+  - haskell
+
+prevent_confusion_with:
+  - kotlin: "Scala is more FP-focused, Kotlin is more pragmatic"

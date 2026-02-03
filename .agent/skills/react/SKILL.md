@@ -1,12 +1,12 @@
 ---
 name: react
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
-version: "4.3.0"
+version: "6.0.0"
 category: frontend
 tier: 1
 ---
 
-# React Patterns — DOMYH Awesome Code v4.3
+# React Patterns — DOMYH Awesome Code v5.5
 
 > **Version**: React 19 (2025-2026)
 > **Philosophy**: Server-first, compiler-optimized, hooks-based
@@ -240,4 +240,24 @@ export function UserForm({
 
 ---
 
-_DOMYH Awesome Code v4.3 • React 19_
+## 📚 External References — Performance Rules
+
+> **Source**: Vercel React Best Practices (57 rules)
+> **Rules**: 57 detailed optimization rules across 8 categories
+
+For advanced performance optimization, see [ADVANCED.md](./ADVANCED.md#vercel-performance-rules):
+
+| Priority | Category                   | Impact   | Prefix         |
+| -------- | -------------------------- | -------- | -------------- |
+| 1        | Eliminating Waterfalls     | CRITICAL | `async-`       |
+| 2        | Bundle Size Optimization   | CRITICAL | `bundle-`      |
+| 3        | Server-Side Performance    | HIGH     | `server-`      |
+| 4        | Client-Side Data Fetching  | HIGH     | `client-`      |
+| 5        | Re-render Optimization     | MEDIUM   | `rerender-`    |
+| 6        | Third-Party Optimization   | MEDIUM   | `third-party-` |
+| 7        | Image & Media Optimization | MEDIUM   | `media-`       |
+| 8        | Advanced Patterns          | LOW      | `advanced-`    |
+
+---
+
+_DOMYH Awesome Code v6.0.0 • React 19_

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Awesome Code v4.3 — Semantic Skill Selector
+DOMYH Awesome Code v5.5 — Semantic Skill Selector
 Generates TF-IDF embeddings for skill selection without external APIs.
 
 Usage:

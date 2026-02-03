@@ -5,7 +5,7 @@ persona: architect
 description: "📋 Feature planning with impact analysis, task breakdown, and effort estimation"
 ---
 
-# 📋 /plan — Feature Planning Pro v3.0
+# 📋 /plan — Plan Pro v3.2
 
 > Outcome-Focused Feature Planning
 > 📚 OKRs • Impact Analysis • Agile Estimation
@@ -16,6 +16,14 @@ description: "📋 Feature planning with impact analysis, task breakdown, and ef
 
 ```
 User: /plan [feature description]
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│ PHASE 0: DEEP INTERVIEW ⭐ (AWF v5.5)   │
+│ ▸ 3 Câu Hỏi Vàng (nếu cần)              │
+│ ▸ Xác định scope & priority             │
+│ ⛔ SKIP nếu user đã cung cấp đủ context │
+└─────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────┐
@@ -62,13 +70,63 @@ User: /plan [feature description]
 
 ## 🎯 COMMANDS
 
-| Command           | Description      | Focus         |
-| ----------------- | ---------------- | ------------- |
-| `/plan [feature]` | Full planning    | Complete flow |
-| `/plan quick`     | Quick estimate   | Time-boxed    |
-| `/plan tech`      | Technical design | Architecture  |
-| `/plan breakdown` | Task list only   | Estimation    |
-| `/plan risk`      | Risk analysis    | Risks focus   |
+| Command           | Description          | Focus           |
+| ----------------- | -------------------- | --------------- |
+| `/plan [feature]` | Full planning        | Complete flow   |
+| `/plan full`      | Full + Phase Folders | Auto-tạo plans/ |
+| `/plan quick`     | Quick estimate       | Time-boxed      |
+| `/plan tech`      | Technical design     | Architecture    |
+| `/plan breakdown` | Task list only       | Estimation      |
+| `/plan risk`      | Risk analysis        | Risks focus     |
+
+---
+
+## 📋 PHASE 0: DEEP INTERVIEW ⭐ (AWF v5.5)
+
+> **Mục đích**: Thu thập đủ context TRƯỚC khi đề xuất giải pháp
+> **Skip nếu**: User đã cung cấp đủ thông tin trong request
+
+### 3 Câu Hỏi Vàng
+
+```yaml
+golden_questions:
+  1_what:
+    question: "Feature này xử lý/quản lý cái gì chính xác?"
+    purpose: "Xác định domain và scope"
+    skip_if: "Request đã rõ ràng (e.g., 'thêm auth JWT')"
+
+  2_who:
+    question: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
+    purpose: "Xác định scale và security level"
+    skip_if: "Context đã có (existing project)"
+
+  3_priority:
+    question: "Nếu chỉ làm 1 việc duy nhất, đó là gì?"
+    purpose: "Xác định MVP scope"
+    skip_if: "Request đã specific"
+```
+
+### Output Template
+
+```markdown
+🎯 DEEP INTERVIEW SUMMARY
+
+Feature: {tên feature}
+Target: □ Solo | □ Team | □ Public
+MVP Priority: {1 việc quan trọng nhất}
+
+→ Đủ context, tiến hành PHASE 1...
+```
+
+### Skip Conditions
+
+```yaml
+auto_skip:
+  - "Request đã có đủ What/Who/Priority"
+  - "Existing project có context rõ ràng"
+  - "User gọi /plan quick (skip interview)"
+  - "Follow-up từ /think đã có brief"
+```
 
 ---
 
@@ -561,6 +619,75 @@ auto_breakdown:
 
 ---
 
+## 📁 PHASE 6: AUTO PHASE GENERATION ⭐ (AWF v5.5)
+
+> **Trigger**: `/plan full [feature]`
+> **Mục đích**: Tự động tạo folder và phase files theo complexity
+
+### On-Demand Folder Creation
+
+```yaml
+on_plan_full:
+  step_1: "Detect project root (.git hoặc package.json)"
+  step_2: "IF plans/ chưa tồn tại → Create plans/"
+  step_3: "Create plans/[YYMMDD]-[feature-name]/"
+  step_4: "Generate phase files based on complexity"
+  step_5: "Update state.json phase_progress"
+```
+
+### Complexity Detection
+
+```yaml
+complexity_rules:
+  simple:
+    tasks: "< 5"
+    phases: 1-2
+    example: "Add a button, fix a bug"
+
+  medium:
+    tasks: "5-15"
+    phases: 3-4
+    example: "New API endpoint, refactor module"
+
+  complex:
+    tasks: "15+"
+    phases: 5+
+    example: "New feature system, major refactor"
+```
+
+### Output Structure (On-Demand)
+
+```
+plans/                              # Tạo lần đầu /plan full
+└── 260203-user-authentication/     # Tạo theo feature
+    ├── plan.md                     # Overview + Progress bar
+    ├── phase-01-setup.md           # Bootstrap
+    ├── phase-02-core.md            # Core logic
+    └── phase-03-testing.md         # Testing (nếu medium+)
+```
+
+### Progress Bar (state.json)
+
+```json
+{
+  "phase_progress": {
+    "active_plan": "plans/260203-user-authentication",
+    "current_phase": "phase-02-core",
+    "total_phases": 3,
+    "completed_phases": 1,
+    "tasks": { "total": 8, "completed": 3 }
+  }
+}
+```
+
+### Display Format (~15 tokens)
+
+```
+📊 ████████░░░░ 67% (2/3 phases, 5/8 tasks)
+```
+
+---
+
 ## ⚙️ TOKEN OPTIMIZATION
 
 ```yaml
@@ -581,12 +708,14 @@ token_saving:
 
 | Phase      | Rules                |
 | ---------- | -------------------- |
+| Interview  | `stop-conditions`    |
 | Understand | `stop-conditions`    |
 | Analyze    | `context-management` |
 | Design     | `edit-verification`  |
 | Breakdown  | `evidence`           |
 | Validate   | `stop-conditions`    |
+| Generate   | `on-demand`          |
 
 ---
 
-_DOMYH Awesome Code v4.3 • Plan Pro v3.1 • AI-Powered Estimation_
+_DOMYH Awesome Code v5.5 • Plan Pro v3.2 • Deep Interview + Auto Phase Generation_

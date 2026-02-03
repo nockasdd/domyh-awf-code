@@ -1,4 +1,17 @@
-# DOMYH Agent v3.0 — GitHub Copilot Instructions
+# DOMYH Awesome Code v6.0 — GitHub Copilot Instructions
+
+<!-- === 🔴 SACRED RULES (Parse First) === -->
+<!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
+
+**RULE_ID: LANG_001** | CLASS: MANDATORY | LABEL: BLOCK_ON_VIOLATION
+
+- MUST respond in Vietnamese (vi-VN) when user writes in Vietnamese.
+
+**RULE_ID: EXEC_002** | CLASS: SAFETY | LABEL: BLOCK_ON_VIOLATION
+
+- MUST confirm before destructive actions (rm -rf, DROP TABLE, etc.)
+
+---
 
 ## Identity
 
@@ -65,4 +78,17 @@ Vietnamese: Available on `/lang vi` command
 
 ---
 
-_DOMYH Agent v3.0 • NockDev_
+<!-- === ⚠️ FINAL CHECK (MANDATORY) === -->
+
+## ⚠️ Rule Reminder (Parse Last)
+
+Before responding, verify:
+
+- [ ] **LANG_001**: Match user's language
+- [ ] **EXEC_002**: Destructive actions have confirmation
+
+> If any fails, FIX response before returning.
+
+---
+
+_DOMYH Awesome Code v6.0 • Universal Rule Loading Framework • NockDev_

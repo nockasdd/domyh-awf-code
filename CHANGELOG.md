@@ -2,78 +2,73 @@
 
 All notable changes to DOMYH Awesome Code will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.3.1] - 2026-02-01
+## [v5.5.0] - 2026-02-03
+
+### Added
+
+- **NPM Package Distribution** - `@domyh/cli` now available on npm
+  - `domyh init` - Initialize DOMYH in any project
+  - `domyh add <skills>` - Add specific skills
+  - `domyh list` - List available skills and workflows
+  - `domyh info` - Show project detection results
+  - `domyh update` - Update to latest version
+  - `domyh run <workflow>` - Run workflow info
+
+- **Agent Skills Compatibility** - Compatible with [agentskills.io](https://agentskills.io/) specification
+  - Works with `npx skills add nockdev/domyh-skills`
+  - SKILL.md files now have YAML frontmatter
+  - Progressive disclosure architecture
+
+- **Project Detection** - Automatic stack detection
+  - Detects React, Vue, Angular, Next.js, Nuxt, Go, Python, Rust, etc.
+  - Recommends skills based on detected stack
+  - Works with package.json, go.mod, pyproject.toml, Cargo.toml, etc.
+
+- **Centralized Versioning** - VERSION.yaml as Single Source of Truth
+  - All 28 workflow component versions tracked
+  - `/sync-version` workflow for batch updates
+
+### Changed
+
+- Standardized all workflow headers to consistent format (e.g., `# 🔬 /ap — Audit Pro v5.1`)
+- Updated skill count from 33 to 34
+- Updated workflow count from 29 to 31
 
 ### Fixed
 
-- **Install Scripts**: Rewritten for `iex` compatibility (remote execution via pipe)
-- **README Quick Start**: Fixed horizontal scrolling by separating Linux/Windows sections
-- **README Badge**: Updated workflow count from 28 to 29
+- Version drift across 17 IDE/Agent configuration files
+- Badge versions in README.md
+- Inconsistent version references in .cursorrules, .windsurfrules, etc.
+
+## [5.1.0] - 2026-01-31
+
+### Added
+
+- Multi-IDE compatibility (14 IDEs supported)
+- Audit Pro v5.1 with 5-Expert Panel
+- Think Pro v5.5 with multi-mode reasoning
 
 ### Changed
 
-- Updated all version references to 4.3.1
-- Improved install script IDE detection and path handling
+- Improved Progressive Disclosure architecture
+- Enhanced project detection patterns
+
+## [5.0.0] - 2026-01-28
+
+### Added
+
+- Version 5.0 major release
+- BRANDING.yaml for centralized branding
+- International language support (Tiếng Việt primary)
+
+### Changed
+
+- Complete skill system overhaul
+- New workflow architecture
 
 ---
 
-## [4.3.0] - 2026-02-01
-
-### Added
-
-- **Intelligent Memory System** with JIT Context Loading (36% token savings)
-- **SSoT Configuration Files**: `SCORING_FORMULA.yaml`, `MEMORY_PATHS.yaml`, `TOKEN_BUDGETS.yaml`
-- **GitHub Actions CI/CD** for automated validation
-- **CHANGELOG.md** for version tracking
-
-### Changed
-
-- Synchronized all file versions to 4.3.0
-- Improved token budget management with centralized configuration
-- Enhanced 4-layer memory architecture
-
-### Fixed
-
-- Version mismatch between IDE configs and manifest
-- Documentation consistency across all files
-
-## [4.2.0] - 2026-01-15
-
-### Added
-
-- 4-layer Memory Architecture (Working, Session, State, Semantic)
-- Rules Engine with 16 comprehensive rules
-- Library Registry with curated packages per language
-- Intent Detection for smarter routing
-
-### Changed
-
-- Upgraded to Progressive Disclosure v2 (T1/T2/T3 tiers)
-- Improved semantic routing with TF-IDF embeddings
-
-## [4.1.0] - 2026-01-01
-
-### Added
-
-- Flow Engine for workflow chaining
-- Token Loading optimization
-- Context cleanup triggers
-- Auto-suggest skills on session start
-
-## [4.0.0] - 2025-12-15
-
-### Added
-
-- Initial public release
-- 22 tech skills (11 languages, 3 frameworks, 4 devops, 4 support)
-- 28 workflow commands
-- 7 IDE configurations
-- Progressive Disclosure architecture
-- Semantic skill selection
-
----
-
-_DOMYH Awesome Code • Made with ❤️ by NockDev_
+_DOMYH Awesome Code v5.5 • NockDev_

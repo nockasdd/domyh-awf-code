@@ -1,4 +1,4 @@
-# 📊 IDE Compatibility Matrix — DOMYH Awesome Code v4.3
+# 📊 IDE Compatibility Matrix — DOMYH Awesome Code v5.5
 
 > Supported AI coding assistants and their configuration files
 
@@ -45,7 +45,7 @@ root/
     └── codewhisperer.json         # AWS CodeWhisperer
 ```
 
-## 20 Commands (v4.0)
+## 31 Commands (v5.5)
 
 All agents support:
 
@@ -65,4 +65,4 @@ All agents support:
 
 ---
 
-_DOMYH Awesome Code v4.3 • 14 IDEs Supported_
+_DOMYH Awesome Code v5.5 • 14 IDEs Supported_

@@ -5,7 +5,7 @@ persona: developer
 description: "🧹 Code cleanup: remove dead code, organize imports, remove unused dependencies"
 ---
 
-# 🧹 /clean — Code Cleanup Pro v2.0
+# 🧹 /clean — Clean Pro v2.2
 
 > Intelligent code hygiene with safety gates
 > 📚 Auto-detect stack, preview before changes
@@ -944,4 +944,4 @@ audit_reset:
 
 ---
 
-_DOMYH Awesome Code v4.3 • Clean Pro v2.2 • Dead Code + Dependency + Memory Cleanup_
+_DOMYH Awesome Code v5.5 • Clean Pro v2.2 • Dead Code + Dependency + Memory Cleanup_

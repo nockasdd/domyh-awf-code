@@ -4,7 +4,7 @@ trigger: ["/recap", "summary", "tóm tắt"]
 description: "📖 Session summary: completed tasks, changed files, decisions, and next steps"
 ---
 
-# 📖 /recap — Session Recap Pro v3.0
+# 📖 /recap — Recap Pro v3.2
 
 > Intelligent Session Summary
 > 📚 Auto-collect • Git-aware • Actionable
@@ -328,4 +328,4 @@ total_budget: 3500 # Max tokens for recap operation
 
 ---
 
-_DOMYH Awesome Code v4.3 • Recap Pro v3.2 • Session Continuity_
+_DOMYH Awesome Code v5.5 • Recap Pro v3.2 • Session Continuity_
