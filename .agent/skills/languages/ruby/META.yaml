@@ -1,0 +1,65 @@
+name: ruby
+version: "6.1.2"
+category: scripting
+tier: 1
+
+description: |
+  Ruby development patterns for Ruby 3.3/3.4.
+  Covers Rails 8, Hotwire, RSpec, Sorbet type checking.
+
+triggers:
+  file_patterns:
+    - "Gemfile"
+    - "*.rb"
+    - "*.gemspec"
+    - "Rakefile"
+    - "config.ru"
+  keywords:
+    # Core
+    - ruby
+    - ruby 3.3
+    - ruby 3.4
+    - gem
+    - bundler
+    - rbenv
+    - rvm
+    # Rails
+    - rails
+    - rails 8
+    - ruby on rails
+    - activerecord
+    - actionpack
+    - turbo
+    - hotwire
+    - stimulus
+    # Testing
+    - rspec
+    - minitest
+    - capybara
+    - factory_bot
+    # Type
+    - sorbet
+    - rbs
+    - steep
+    # Web
+    - sinatra
+    - hanami
+    - rack
+    # Background
+    - sidekiq
+    - resque
+    - good_job
+  intents:
+    - create rails app
+    - ruby api
+    - rails migration
+    - rspec test
+
+related_skills:
+  - database
+  - docker
+  - testing
+
+prevent_confusion_with:
+  - python: "Ruby uses end keyword, Python uses indentation"
+  - javascript: "Ruby uses do/end blocks, JS uses {}"

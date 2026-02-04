@@ -726,4 +726,4 @@ progressive_delivery:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Deploy Pro v3.1 • GitOps + Progressive Delivery_
+_DOMYH Awesome Code v6.1.2 • Deploy Pro v3.1 • GitOps + Progressive Delivery_

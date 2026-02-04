@@ -1,0 +1,37 @@
+{
+  "name": "DOMYH Awesome Code",
+  "version": "6.1.2",
+  "description": "AI-powered development assistant with 51 skills and 31 workflows",
+  
+  "settings": {
+    "language": "vi",
+    "autoApprove": false,
+    "confirmDestructive": true,
+    "evidenceRequired": true
+  },
+  
+  "rules": {
+    "primary": ".codex/.codex-rules.md",
+    "fallback": ["AGENTS.md", "GEMINI.md", "CLAUDE.md"]
+  },
+  
+  "skills": {
+    "directory": ".agent/skills/",
+    "autoLoad": ["security"],
+    "maxActive": 5
+  },
+  
+  "workflows": {
+    "directory": ".agent/workflows/",
+    "prefix": "/"
+  },
+  
+  "memory": {
+    "sessionFile": ".agent/memory/session.md",
+    "stateFile": ".agent/memory/state.json"
+  },
+  
+  "quality": {
+    "frameworks": ["ISO 25010", "CWE Top 25", "OWASP Top 10"]
+  }
+}

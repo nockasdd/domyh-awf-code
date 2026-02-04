@@ -1,7 +1,7 @@
 # 🔧 Modular Rule: Reflection Integration
 
 > Self-improvement through reflection patterns
-> Version: 6.0.0
+> Version: 6.1.2
 
 ---
 
@@ -16,7 +16,7 @@ enabling learning from both successes and failures.
 
 ```yaml
 name: reflection
-version: "6.0.0"
+version: "6.1.2"
 category: improvement
 priority: 2
 
@@ -206,4 +206,4 @@ metrics:
 
 ---
 
-# DOMYH Awesome Code v6.0 • Reflection Module
+# DOMYH Awesome Code v6.1.2 • Reflection Module

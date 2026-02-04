@@ -5,14 +5,14 @@ persona: designer
 description: "🖼️ UI/UX Design: mockups, wireframes, component design, visual prototyping"
 ---
 
-# 🖼️ /visualize — Visualize Pro v5.5
+# 🖼️ /visualize — Visualize Pro v6.1.2
 
 > Multi-Platform Visual Design & Code Generation
 > 📚 Web • Desktop • Mobile • 16 Frameworks • Component Mapping
 
 ---
 
-## 🔄 VISUALIZE FLOW v5.5
+## 🔄 VISUALIZE FLOW v6.1.2
 
 ```
 User: /visualize [platform] [description]
@@ -162,7 +162,7 @@ component_mapping:
 
 ---
 
-## 📊 DESIGN SPECIFICATION v5.5
+## 📊 DESIGN SPECIFICATION v6.1.2
 
 ```markdown
 🖼️ DESIGN: {Component/Page Name}
@@ -315,7 +315,7 @@ image_generation:
 
 ---
 
-## ⚙️ TOKEN OPTIMIZATION v5.5
+## ⚙️ TOKEN OPTIMIZATION v6.1.2
 
 ```yaml
 token_saving:
@@ -346,4 +346,4 @@ Enter number or command:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Visualize Pro v5.5 • Multi-Platform + Component Mapping_
+_DOMYH Awesome Code v6.1.2 • Visualize Pro v6.1.2 • Multi-Platform + Component Mapping_

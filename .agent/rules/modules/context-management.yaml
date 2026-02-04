@@ -3,7 +3,7 @@
 
 ---
 name: context-management
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-CTX-001"
 
 # =============================================================================
@@ -119,4 +119,4 @@ integration:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Context Management Rule_
+_DOMYH Awesome Code v6.1.2 • Context Management Rule_

@@ -1,6 +1,6 @@
 # AGENTS.md — Multi-Agent Configuration
 
-# DOMYH Awesome Code v6.0
+# DOMYH Awesome Code v6.1.2
 
 <!-- === 🔴 SACRED RULES (Parse First) === -->
 <!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
@@ -117,4 +117,4 @@ Before responding, verify:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Universal Rule Loading Framework • Multi-Agent Ready_
+_DOMYH Awesome Code v6.1.2 • Universal Rule Loading Framework • Multi-Agent Ready_

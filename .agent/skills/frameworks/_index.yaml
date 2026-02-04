@@ -1,0 +1,13 @@
+# frameworks/_index.yaml — Framework Skills Index
+category: frameworks
+description: "Frontend/Backend frameworks"
+count: 8
+skills:
+  - { id: react, has_advanced: true }
+  - { id: vue, has_advanced: true }
+  - { id: angular, has_advanced: false }
+  - { id: svelte, has_advanced: false }
+  - { id: nextjs, has_advanced: true }
+  - { id: nuxt, has_advanced: false }
+  - { id: flutter, has_advanced: true }
+  - { id: react-native, has_advanced: false }

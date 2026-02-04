@@ -1,0 +1,83 @@
+name: electron
+version: "6.1.2"
+category: desktop
+tier: 1
+
+description: |
+  Cross-platform desktop framework for Electron 33+.
+  Covers context isolation, IPC, security best practices.
+
+triggers:
+  file_patterns:
+    - "electron-builder.json"
+    - "electron-builder.yml"
+    - "electron.vite.config.ts"
+    - "**/main.ts"
+    - "**/preload.ts"
+  keywords:
+    # Core
+    - electron
+    - electron 33
+    - electronjs
+    - electron app
+    # Main Process
+    - BrowserWindow
+    - app.on
+    - app.whenReady
+    - Menu
+    - Tray
+    - dialog
+    - shell
+    - nativeImage
+    # Preload
+    - contextBridge
+    - exposeInMainWorld
+    - preload script
+    # IPC
+    - ipcMain
+    - ipcRenderer
+    - ipcMain.handle
+    - ipcRenderer.invoke
+    - ipcMain.on
+    - ipcRenderer.send
+    # Security
+    - contextIsolation
+    - nodeIntegration
+    - sandbox
+    - webSecurity
+    - Content-Security-Policy
+    # Auto Update
+    - autoUpdater
+    - electron-updater
+    # Build
+    - electron-builder
+    - electron-vite
+    - electron-forge
+    # WebContents
+    - webContents
+    - loadFile
+    - loadURL
+    # Native
+    - native module
+    - node-gyp
+    - prebuild
+    # Platform
+    - cross-platform desktop
+    - windows app
+    - macos app
+    - linux app
+  intents:
+    - electron app
+    - desktop app
+    - electron security
+    - electron ipc
+    - electron build
+
+related_skills:
+  - react
+  - vue
+  - typescript
+
+prevent_confusion_with:
+  - react-native: "Electron is for desktop, RN is for mobile"
+  - nodejs: "Electron embeds Node.js for desktop apps"

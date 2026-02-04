@@ -1,0 +1,369 @@
+{
+  "entities": {
+    "domyh-awf-cli/bin/cli.js": {
+      "id": "domyh-awf-cli/bin/cli.js",
+      "name": "cli",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\bin\\cli.js",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".js",
+        "path": "domyh-awf-cli\\bin\\cli.js"
+      }
+    },
+    "domyh-awf-cli/src/adapters/base.test.ts": {
+      "id": "domyh-awf-cli/src/adapters/base.test.ts",
+      "name": "base.test",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\base.test.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\base.test.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/base.ts": {
+      "id": "domyh-awf-cli/src/adapters/base.ts",
+      "name": "base",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\base.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\base.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/cline.ts": {
+      "id": "domyh-awf-cli/src/adapters/cline.ts",
+      "name": "cline",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\cline.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\cline.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/continue.ts": {
+      "id": "domyh-awf-cli/src/adapters/continue.ts",
+      "name": "continue",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\continue.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\continue.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/copilot.ts": {
+      "id": "domyh-awf-cli/src/adapters/copilot.ts",
+      "name": "copilot",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\copilot.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\copilot.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/cursor.test.ts": {
+      "id": "domyh-awf-cli/src/adapters/cursor.test.ts",
+      "name": "cursor.test",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\cursor.test.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\cursor.test.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/cursor.ts": {
+      "id": "domyh-awf-cli/src/adapters/cursor.ts",
+      "name": "cursor",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\cursor.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\cursor.ts"
+      }
+    },
+    "domyh-awf-cli/src/adapters/index.ts": {
+      "id": "domyh-awf-cli/src/adapters/index.ts",
+      "name": "index",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\adapters\\index.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\adapters\\index.ts"
+      }
+    },
+    "domyh-awf-cli/src/cli.test.ts": {
+      "id": "domyh-awf-cli/src/cli.test.ts",
+      "name": "cli.test",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\cli.test.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\cli.test.ts"
+      }
+    },
+    "domyh-awf-cli/src/cli.ts": {
+      "id": "domyh-awf-cli/src/cli.ts",
+      "name": "cli",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\cli.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\cli.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/add.ts": {
+      "id": "domyh-awf-cli/src/commands/add.ts",
+      "name": "add",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\add.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\add.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/doctor.ts": {
+      "id": "domyh-awf-cli/src/commands/doctor.ts",
+      "name": "doctor",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\doctor.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\doctor.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/hsa.ts": {
+      "id": "domyh-awf-cli/src/commands/hsa.ts",
+      "name": "hsa",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\hsa.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\hsa.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/info.ts": {
+      "id": "domyh-awf-cli/src/commands/info.ts",
+      "name": "info",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\info.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\info.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/init.test.ts": {
+      "id": "domyh-awf-cli/src/commands/init.test.ts",
+      "name": "init.test",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\init.test.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\init.test.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/init.ts": {
+      "id": "domyh-awf-cli/src/commands/init.ts",
+      "name": "init",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\init.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\init.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/install.ts": {
+      "id": "domyh-awf-cli/src/commands/install.ts",
+      "name": "install",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\install.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\install.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/list.ts": {
+      "id": "domyh-awf-cli/src/commands/list.ts",
+      "name": "list",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\list.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\list.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/run.ts": {
+      "id": "domyh-awf-cli/src/commands/run.ts",
+      "name": "run",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\run.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\run.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/update.ts": {
+      "id": "domyh-awf-cli/src/commands/update.ts",
+      "name": "update",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\update.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\update.ts"
+      }
+    },
+    "domyh-awf-cli/src/commands/validate.ts": {
+      "id": "domyh-awf-cli/src/commands/validate.ts",
+      "name": "validate",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\commands\\validate.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\commands\\validate.ts"
+      }
+    },
+    "domyh-awf-cli/src/i18n/en.ts": {
+      "id": "domyh-awf-cli/src/i18n/en.ts",
+      "name": "en",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\i18n\\en.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\i18n\\en.ts"
+      }
+    },
+    "domyh-awf-cli/src/i18n/index.ts": {
+      "id": "domyh-awf-cli/src/i18n/index.ts",
+      "name": "index",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\i18n\\index.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\i18n\\index.ts"
+      }
+    },
+    "domyh-awf-cli/src/i18n/vi.ts": {
+      "id": "domyh-awf-cli/src/i18n/vi.ts",
+      "name": "vi",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\i18n\\vi.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\i18n\\vi.ts"
+      }
+    },
+    "domyh-awf-cli/src/index.ts": {
+      "id": "domyh-awf-cli/src/index.ts",
+      "name": "index",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\index.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\index.ts"
+      }
+    },
+    "domyh-awf-cli/src/types/schema.ts": {
+      "id": "domyh-awf-cli/src/types/schema.ts",
+      "name": "schema",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\types\\schema.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\types\\schema.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/agents.ts": {
+      "id": "domyh-awf-cli/src/utils/agents.ts",
+      "name": "agents",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\agents.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\agents.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/copy.ts": {
+      "id": "domyh-awf-cli/src/utils/copy.ts",
+      "name": "copy",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\copy.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\copy.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/detect.test.ts": {
+      "id": "domyh-awf-cli/src/utils/detect.test.ts",
+      "name": "detect.test",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\detect.test.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\detect.test.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/detect.ts": {
+      "id": "domyh-awf-cli/src/utils/detect.ts",
+      "name": "detect",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\detect.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\detect.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/skills.ts": {
+      "id": "domyh-awf-cli/src/utils/skills.ts",
+      "name": "skills",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\skills.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\skills.ts"
+      }
+    },
+    "domyh-awf-cli/src/utils/workflows.ts": {
+      "id": "domyh-awf-cli/src/utils/workflows.ts",
+      "name": "workflows",
+      "entity_type": "file",
+      "description": "File: domyh-awf-cli\\src\\utils\\workflows.ts",
+      "content_hash": "",
+      "metadata": {
+        "extension": ".ts",
+        "path": "domyh-awf-cli\\src\\utils\\workflows.ts"
+      }
+    }
+  },
+  "relations": [],
+  "communities": {}
+}

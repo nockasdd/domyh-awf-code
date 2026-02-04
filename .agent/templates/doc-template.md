@@ -1,6 +1,6 @@
 ---
 name: doc-template
-version: "4.3.0"
+version: "6.1.2"
 type: wizard
 triggers: ["/doc", "/generate"]
 ---
@@ -54,4 +54,4 @@ triggers: ["/doc", "/generate"]
 
 ---
 
-_DOMYH Awesome Code v5.5_
+_DOMYH Awesome Code v6.1_

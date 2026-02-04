@@ -1,0 +1,43 @@
+name: vue
+version: "6.1.2"
+display: Vue.js
+category: frontend
+tier: 1
+priority: 1
+
+description: |
+  Vue.js 3 with Composition API and Vapor Mode preview.
+  Covers Pinia, VueUse, Vue Router, Nuxt.
+
+triggers:
+  file_patterns:
+    - "*.vue"
+    - "nuxt.config.ts"
+    - "vite.config.ts"
+  keywords:
+    # Core
+    - vue
+    - vue 3
+    - composition api
+    # State
+    - pinia
+    - ref
+    - reactive
+    # Router
+    - vue router
+  intents:
+    - vue component
+    - vue app
+    - pinia store
+
+related_skills:
+  - nuxt
+  - typescript
+  - tailwind
+
+caps:
+  - Vue 3 Composition API
+  - Pinia state management
+  - VueUse composables
+  - Vue Router 4
+  - Vapor Mode

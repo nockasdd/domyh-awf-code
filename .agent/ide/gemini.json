@@ -1,6 +1,6 @@
 {
-  "name": "DOMYH Awesome Code v5.5",
-  "version": "v5.5.0",
+  "name": "DOMYH Awesome Code v6.1.2",
+  "version": "v6.1.2",
   
   "gemini": {
     "model_preference": "gemini-2.0-flash",
@@ -9,7 +9,7 @@
   },
 
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/init", "/migrate"],
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/init", "/migrate", "/hsa"],
     "workspace_detection": true
   },
 
@@ -23,5 +23,23 @@
     "baseline": 1773,
     "per_skill": 1500,
     "max_peak": 9273
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v5.0 Context Management - Intelligent context retrieval",
+      "command": "node",
+      "args": [".agent/mcp/hsa-server/dist/index.js"],
+      "auto_start": true,
+      "env": {
+        "HSA_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  },
+
+  "hsa": {
+    "enabled": true,
+    "auto_detect_stack": true,
+    "tools": ["hsa_get_context", "hsa_detect_stack", "hsa_check_changes", "hsa_prefetch", "hsa_status"]
   }
 }

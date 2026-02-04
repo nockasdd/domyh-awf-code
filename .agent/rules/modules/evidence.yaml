@@ -3,7 +3,7 @@
 
 ---
 name: evidence
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-EVD-001"
 
 # =============================================================================
@@ -173,4 +173,4 @@ integration:
       - "Are code snippets from the actual file?"
 
 ---
-_DOMYH Awesome Code v6.0 • Evidence Rule_
+_DOMYH Awesome Code v6.1.2 • Evidence Rule_

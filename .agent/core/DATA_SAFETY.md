@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Data Safety v5.5
+# DOMYH Awesome Code Data Safety v6.1.2
 
 > Sensitive data handling based on 2025 AI data hygiene standards
 
@@ -89,4 +89,4 @@ formats:
 
 ---
 
-_DOMYH Awesome Code v5.5 — Data Safety Rules_
+_DOMYH Awesome Code v6.1.2 — Data Safety Rules_

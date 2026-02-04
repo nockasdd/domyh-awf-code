@@ -1,0 +1,62 @@
+name: go
+version: "6.1.2"
+display: Go
+category: backend
+tier: 1
+priority: 1
+
+description: |
+  Go programming for Go 1.22/1.23/1.24.
+  Covers generics, iterators, slog, concurrency, error handling.
+
+triggers:
+  file_patterns:
+    - "go.mod"
+    - "go.sum"
+    - "*.go"
+    - "go.work"
+  keywords:
+    # Core
+    - go
+    - golang
+    - go 1.22
+    - go 1.23
+    - go 1.24
+    # Tools
+    - go mod
+    - go build
+    - go test
+    - gofmt
+    - staticcheck
+    # Features
+    - generics go
+    - goroutine
+    - channel
+    - slog
+    - errgroup
+    # Frameworks
+    - gin
+    - echo
+    - fiber
+    - chi
+  intents:
+    - go api
+    - go microservice
+    - go cli
+    - go http server
+    - go concurrency
+
+related_skills:
+  - docker
+  - kubernetes
+
+caps:
+  - Microservices
+  - CLI tools
+  - HTTP servers
+  - Concurrent systems
+  - Cloud-native apps
+
+prevent_confusion_with:
+  rust: "Go has GC, Rust has ownership"
+  java: "Go simple syntax, Java verbose"

@@ -1,6 +1,6 @@
 ---
 name: tester
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "tst-001"
 
 # =============================================================================
@@ -241,4 +241,4 @@ output_template: |
   - [ ] Line 72: edge case for null input
 ---
 
-# DOMYH Awesome Code v6.0 • Tester Persona
+# DOMYH Awesome Code v6.1.2 • Tester Persona

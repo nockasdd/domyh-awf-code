@@ -1,0 +1,45 @@
+name: deno
+version: "6.1.2"
+category: runtime
+tier: 2
+
+description: |
+  Deno 2 development patterns.
+  Covers TypeScript-first, permissions, Fresh framework, npm compat.
+
+triggers:
+  file_patterns:
+    - "deno.json"
+    - "deno.jsonc"
+    - "deno.lock"
+    - "mod.ts"
+    - "deps.ts"
+  keywords:
+    # Core
+    - deno
+    - deno 2
+    - deno deploy
+    # Features
+    - url import
+    - permissions deno
+    - deno compile
+    # Framework
+    - fresh framework
+    - oak deno
+    - hono deno
+    # Testing
+    - deno test
+    - deno bench
+  intents:
+    - create deno project
+    - deno api
+    - fresh app
+    - deno deploy
+
+related_skills:
+  - typescript
+  - javascript
+
+prevent_confusion_with:
+  - nodejs: "Deno uses URL imports, Node uses npm"
+  - bun: "Deno is security-first, Bun is speed-first"

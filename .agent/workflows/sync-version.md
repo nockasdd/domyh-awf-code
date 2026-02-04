@@ -31,8 +31,8 @@ description: "🔄 Sync version across all files from VERSION.yaml SSoT"
 ```yaml
 # .agent/core/VERSION.yaml
 system:
-  version: "v5.5.0"
-  version_short: "v5.5"
+  version: "v6.1.2"
+  version_short: "v6.1.2"
 
 components:
   plan_pro: "3.2"
@@ -57,7 +57,7 @@ components:
 $files = Get-ChildItem -Path ".agent" -Recurse -Include "*.md"
 foreach ($file in $files) {
     (Get-Content $file.FullName -Raw) `
-        -replace 'DOMYH Awesome Code v\d+\.\d+', 'DOMYH Awesome Code v5.5' `
+        -replace 'DOMYH Awesome Code v\d+\.\d+', 'DOMYH Awesome Code v6.1.2' `
         -replace '(Plan|Code|Debug|Test|Audit) Pro v\d+\.\d+', '$1 Pro v{version}' |
         Set-Content $file.FullName -NoNewline
 }
@@ -80,7 +80,7 @@ foreach ($file in $files) {
 
 ### Skills → Default Version
 
-All skills use `system.version_short` (v5.5) in headers/footers.
+All skills use `system.version_short` (v6.1.2) in headers/footers.
 
 ---
 
@@ -95,7 +95,7 @@ All skills use `system.version_short` (v5.5) in headers/footers.
 
 # After
 
-# 🔬 /ap — Audit Pro v5.1
+# 🔬 /ap — Audit Pro v6.1.2
 ```
 
 ### Rule 2: Footers Use System + Component Version
@@ -103,11 +103,11 @@ All skills use `system.version_short` (v5.5) in headers/footers.
 ```markdown
 # Before
 
-_DOMYH Awesome Code v4.3 • Audit Pro v5.0 • Multi-Expert Consensus_
+_DOMYH Awesome Code v6.1.2 • Audit Pro v5.0 • Multi-Expert Consensus_
 
 # After
 
-_DOMYH Awesome Code v5.5 • Audit Pro v5.1 • Multi-Expert Consensus_
+_DOMYH Awesome Code v6.1.2 • Audit Pro v6.1.2 • Multi-Expert Consensus_
 ```
 
 ### Rule 3: Skills Use System Version Only
@@ -115,15 +115,15 @@ _DOMYH Awesome Code v5.5 • Audit Pro v5.1 • Multi-Expert Consensus_
 ```markdown
 # Before
 
-# React — DOMYH Awesome Code v4.3
+# React — DOMYH Awesome Code v6.1.2
 
 # After
 
-# React — DOMYH Awesome Code v5.5
+# React — DOMYH Awesome Code v6.1.2
 
 # Footer unchanged (tech-specific)
 
-_DOMYH Awesome Code v5.5 • React 19_
+_DOMYH Awesome Code v6.1.2 • React 19_
 ```
 
 ---
@@ -133,16 +133,16 @@ _DOMYH Awesome Code v5.5 • React 19_
 ### Windows PowerShell
 
 ```powershell
-# Sync SYSTEM version (v5.5) - ALWAYS DO THIS FIRST
+# Sync SYSTEM version (v6.1.2) - ALWAYS DO THIS FIRST
 Get-ChildItem -Path ".agent" -Recurse -Include "*.md","*.yaml" | ForEach-Object {
-    (Get-Content $_.FullName -Raw) -replace 'DOMYH Awesome Code v\d+\.\d+', 'DOMYH Awesome Code v5.5' |
+    (Get-Content $_.FullName -Raw) -replace 'DOMYH Awesome Code v\d+\.\d+', 'DOMYH Awesome Code v6.1.2' |
     Set-Content $_.FullName -NoNewline
 }
 
 # Then sync specific component versions:
-# Audit Pro v5.1
+# Audit Pro v6.1.2
 Get-ChildItem -Path ".agent\workflows\ap.md" | ForEach-Object {
-    (Get-Content $_.FullName -Raw) -replace 'Audit Pro v\d+\.\d+', 'Audit Pro v5.1' |
+    (Get-Content $_.FullName -Raw) -replace 'Audit Pro v\d+\.\d+', 'Audit Pro v6.1.2' |
     Set-Content $_.FullName -NoNewline
 }
 ```
@@ -151,10 +151,10 @@ Get-ChildItem -Path ".agent\workflows\ap.md" | ForEach-Object {
 
 ```bash
 # Sync SYSTEM version
-find .agent -name "*.md" -exec sed -i 's/DOMYH Awesome Code v[0-9]*\.[0-9]*/DOMYH Awesome Code v5.5/g' {} +
+find .agent -name "*.md" -exec sed -i 's/DOMYH Awesome Code v[0-9]*\.[0-9]*/DOMYH Awesome Code v6.1.2/g' {} +
 
 # Sync Audit Pro
-sed -i 's/Audit Pro v[0-9]*\.[0-9]*/Audit Pro v5.1/g' .agent/workflows/ap.md
+sed -i 's/Audit Pro v[0-9]*\.[0-9]*/Audit Pro v6.1.2/g' .agent/workflows/ap.md
 ```
 
 ---
@@ -178,16 +178,16 @@ Khi update version, chạy các lệnh sau theo thứ tự:
 # 1. Update VERSION.yaml manually (SSoT)
 # 2. Run system-wide sync
 Get-ChildItem -Path ".agent" -Recurse -Include "*.md","*.yaml" | ForEach-Object {
-    (Get-Content $_.FullName -Raw) -replace 'DOMYH Awesome Code v[0-9]+\.[0-9]+', 'DOMYH Awesome Code v5.5' |
+    (Get-Content $_.FullName -Raw) -replace 'DOMYH Awesome Code v[0-9]+\.[0-9]+', 'DOMYH Awesome Code v6.1.2' |
     Set-Content $_.FullName -NoNewline
 }
 
 # 3. Verify
 $count = (Get-ChildItem -Path ".agent" -Recurse -Include "*.md","*.yaml" |
-    Select-String "DOMYH Awesome Code v5.5" | Measure-Object).Count
-Write-Host "Updated $count references to v5.5"
+    Select-String "DOMYH Awesome Code v6.1.2" | Measure-Object).Count
+Write-Host "Updated $count references to v6.1.2"
 ```
 
 ---
 
-_DOMYH Awesome Code v5.5 • Version Sync • SSoT Architecture_
+_DOMYH Awesome Code v6.1.2 • Version Sync • SSoT Architecture_

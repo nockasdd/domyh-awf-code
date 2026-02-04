@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v6.0 — Claude Code Configuration
+# DOMYH Awesome Code v6.1.2 — Claude Code Configuration
 
 <!-- === 🔴 SACRED RULES (Parse First) === -->
 <!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
@@ -21,7 +21,7 @@
 
 ---
 
-> **Version**: 6.0.0 | **Developer**: NockDev
+> **Version**: 6.1.2 | **Developer**: NockDev
 > **Architecture**: Constitutional AI + Multi-Agent + Prompt Chaining
 > 🌍 **Language**: Tiếng Việt — LUÔN trả lời bằng tiếng Việt
 
@@ -91,7 +91,7 @@
 
 ```
 .agent/
-├── manifest.yaml       # v5.5 config
+├── manifest.yaml       # v6.1.2 config
 ├── core/
 │   ├── RULES.md        # Core rules
 │   ├── STOP.md         # Stop conditions
@@ -140,4 +140,4 @@ Before responding, verify:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Universal Rule Loading Framework • NockDev_
+_DOMYH Awesome Code v6.1.2 • Universal Rule Loading Framework • NockDev_

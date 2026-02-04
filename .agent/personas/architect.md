@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "arch-001"
 
 # =============================================================================
@@ -180,4 +180,4 @@ output_template: |
   - Consequences: [impact]
 ---
 
-# DOMYH Awesome Code v6.0 • Architect Persona
+# DOMYH Awesome Code v6.1.2 • Architect Persona

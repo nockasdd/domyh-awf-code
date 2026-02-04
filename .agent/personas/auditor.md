@@ -1,6 +1,6 @@
 ---
 name: auditor
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "aud-001"
 
 # =============================================================================
@@ -216,4 +216,4 @@ output_template: |
   **Reference:** [OWASP/CWE if applicable]
 ---
 
-# DOMYH Awesome Code v6.0 • Auditor Persona
+# DOMYH Awesome Code v6.1.2 • Auditor Persona

@@ -1,4 +1,4 @@
-# 📊 IDE Compatibility Matrix — DOMYH Awesome Code v5.5
+# 📊 IDE Compatibility Matrix — DOMYH Awesome Code v6.1.2
 
 > Supported AI coding assistants and their configuration files
 
@@ -8,6 +8,7 @@
 | --------------------- | --------------------------------- | ------ | --------------- |
 | **Claude Code**       | `CLAUDE.md`                       | ✅     | Primary         |
 | **Gemini CLI**        | `GEMINI.md`                       | ✅     | Primary         |
+| **OpenAI Codex**      | `.codex/.codex-rules.md`          | ✅     | NEW! CLI        |
 | **Cursor**            | `.cursorrules`                    | ✅     | MDC format      |
 | **GitHub Copilot**    | `.github/copilot-instructions.md` | ✅     | Workspace       |
 | **Windsurf**          | `AGENTS.md`                       | ✅     | Universal       |
@@ -31,6 +32,9 @@ root/
 ├── .cursorrules                   # Cursor
 ├── .aider.conf.yml                # Aider
 ├── .coderabbit.yaml               # CodeRabbit
+├── .codex/                        # OpenAI Codex CLI (NEW!)
+│   ├── .codex-rules.md            # Main instructions
+│   └── config.json                # Settings
 ├── .github/
 │   └── copilot-instructions.md    # GitHub Copilot
 ├── .bolt/
@@ -45,7 +49,7 @@ root/
     └── codewhisperer.json         # AWS CodeWhisperer
 ```
 
-## 31 Commands (v5.5)
+## 31 Commands (v6.1.2)
 
 All agents support:
 
@@ -55,14 +59,14 @@ All agents support:
 
 ## Feature Support
 
-| Feature        | Claude | Gemini | Cursor | Copilot | Cody |
-| -------------- | ------ | ------ | ------ | ------- | ---- |
-| Slash commands | ✅     | ✅     | ✅     | ✅      | ✅   |
-| Custom prompts | ✅     | ✅     | ✅     | ✅      | ✅   |
-| File context   | ✅     | ✅     | ✅     | ✅      | ✅   |
-| Skill loading  | ✅     | ✅     | ⚠️     | ⚠️      | ⚠️   |
-| Multi-language | ✅     | ✅     | ✅     | ✅      | ✅   |
+| Feature        | Claude | Gemini | Codex | Cursor | Copilot | Cody |
+| -------------- | ------ | ------ | ----- | ------ | ------- | ---- |
+| Slash commands | ✅     | ✅     | ✅    | ✅     | ✅      | ✅   |
+| Custom prompts | ✅     | ✅     | ✅    | ✅     | ✅      | ✅   |
+| File context   | ✅     | ✅     | ✅    | ✅     | ✅      | ✅   |
+| Skill loading  | ✅     | ✅     | ✅    | ⚠️     | ⚠️      | ⚠️   |
+| Multi-language | ✅     | ✅     | ✅    | ✅     | ✅      | ✅   |
 
 ---
 
-_DOMYH Awesome Code v5.5 • 14 IDEs Supported_
+_DOMYH Awesome Code v6.1.2 • 15 IDEs Supported_

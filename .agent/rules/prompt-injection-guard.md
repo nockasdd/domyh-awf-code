@@ -257,4 +257,4 @@ Agent KHÔNG được:
 
 ---
 
-_DOMYH Awesome Code v5.5 • CVE-2025-53773 Protected_
+_DOMYH Awesome Code v6.1.2 • CVE-2025-53773 Protected_

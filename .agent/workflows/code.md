@@ -44,7 +44,7 @@ User: /code [request]
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 4: AUTO TEST LOOP ⭐ (AWF v5.5)   │
+│ PHASE 4: AUTO TEST LOOP ⭐ (AWF v6.1.2)   │
 │ ▸ Syntax + Build check                  │
 │ ▸ Run related tests automatically       │
 │ ▸ If FAIL → Fix Loop (max 3 retries)    │
@@ -496,7 +496,7 @@ token_saving:
 
 ---
 
-## 📋 PHASE 4: AUTO TEST LOOP ⭐ (AWF v5.5)
+## 📋 PHASE 4: AUTO TEST LOOP ⭐ (AWF v6.1.2)
 
 > **Mục đích**: Tự động chạy test và fix lỗi theo pattern TDD
 > **Default**: ON cho PRODUCTION/ENTERPRISE, OFF cho MVP

@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Core v5.5
+# DOMYH Awesome Code Core v6.1.2
 
 Core system files (always loaded).
 
@@ -88,4 +88,4 @@ Tier 3: ADVANCED.md (~4,000 tokens) → Referenced only
 
 ---
 
-_DOMYH Awesome Code v5.5_
+_DOMYH Awesome Code v6.1_

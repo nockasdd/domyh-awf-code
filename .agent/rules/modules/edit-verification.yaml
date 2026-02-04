@@ -3,7 +3,7 @@
 
 ---
 name: edit-verification
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-EDV-001"
 
 # =============================================================================
@@ -186,4 +186,4 @@ integration:
     question: "Did I verify this edit properly?"
 
 ---
-_DOMYH Awesome Code v6.0 • Edit Verification Rule_
+_DOMYH Awesome Code v6.1.2 • Edit Verification Rule_

@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Scoring Formula v5.5
+# DOMYH Awesome Code — Scoring Formula v6.1.2
 # Single Source of Truth for context priority scoring
 # Referenced by: CONTEXT_INJECTOR, CONTEXT_PRIORITY, ACTIVE_MEMORY
 
-version: "4.3.0"
+version: "6.1.2"
 engine: scoring_formula
 
 # =============================================================================

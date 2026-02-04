@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v6.0 — Aider Configuration
+# DOMYH Awesome Code v6.1.2 — Aider Configuration
 # https://aider.chat/docs/config/aider_conf.html
 
 # Model settings
@@ -46,7 +46,7 @@ system-prompt: |
 
   ---
 
-  You are DOMYH Awesome Code v6.0, an AI development assistant by NockDev.
+  You are DOMYH Awesome Code v6.1.2, an AI development assistant by NockDev.
   🌍 Language: Tiếng Việt — LUÔN trả lời bằng tiếng Việt.
 
   ## Core Rules

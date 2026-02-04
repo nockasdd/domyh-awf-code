@@ -1,5 +1,5 @@
 # Skills Customization Configuration
-# DOMYH Awesome Code v5.5 - Deep Interview + Auto Test Loop
+# DOMYH Awesome Code v6.1.2 - Deep Interview + Auto Test Loop
 # NOTE: Sync version from core/VERSION.yaml
 
 # =============================================================================
@@ -11,7 +11,7 @@ project:
   name: auto
 
 # =============================================================================
-# INTERNATIONALIZATION (v4.3)
+# INTERNATIONALIZATION (v6.1.2)
 # =============================================================================
 
 i18n:
@@ -44,7 +44,7 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v4.1: Auto-suggest configuration
+  # v6.1.2: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3
@@ -99,7 +99,7 @@ context:
   include_readme: false
 
 # =============================================================================
-# TOKEN MANAGEMENT (v4.1)
+# TOKEN MANAGEMENT (v6.1.2)
 # Dynamic unloading to keep context lean
 # =============================================================================
 
@@ -124,7 +124,7 @@ token_management:
   critical_threshold: 0.95
 
 # =============================================================================
-# CONTEXT CLEANUP (v4.1)
+# CONTEXT CLEANUP (v6.1.2)
 # Automatic context hygiene
 # =============================================================================
 
@@ -148,7 +148,7 @@ context_cleanup:
     - build_logs # Remove successful build logs
 
 # =============================================================================
-# PROJECT TRACKING (v4.1)
+# PROJECT TRACKING (v6.1.2)
 # =============================================================================
 
 project_tracking:
@@ -165,7 +165,7 @@ project_tracking:
   schema: project.schema.json
 
 # =============================================================================
-# RULES ENGINE (v4.2) - Based on AI Agent Error Research
+# RULES ENGINE () - Based on AI Agent Error Research
 # Prevents 62+ documented agent failures
 # =============================================================================
 

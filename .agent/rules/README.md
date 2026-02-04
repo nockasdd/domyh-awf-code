@@ -1,7 +1,11 @@
-# 📜 Rules System v6.0.0
+---
+trigger: always_on
+---
+
+# 📜 Rules System
 
 > Constitutional hierarchy with modular composition  
-> _DOMYH Awesome Code v6.0 • Agentic Personas_
+> _DOMYH Awesome Code v6.1.2 • Agentic Personas_
 
 ---
 
@@ -60,7 +64,7 @@ Additional **modular rules** can be composed for specific use cases.
 
 ---
 
-## Modular Rules (v6.0)
+## Modular Rules
 
 Composable rule modules for specific use cases:
 
@@ -164,7 +168,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-XXX-001"
 
 description: |
@@ -216,4 +220,4 @@ Before any action, verify:
 
 ---
 
-_DOMYH Awesome Code v6.0.0 • Constitutional Rules System • Agentic Personas_
+_DOMYH Awesome Code v6.1.2 • Constitutional Rules System • Agentic Personas_

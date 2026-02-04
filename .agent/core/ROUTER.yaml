@@ -1,8 +1,8 @@
 # Semantic Router Configuration
-# DOMYH Awesome Code v6.0
+# DOMYH Awesome Code v6.1.2
 # Selects top-K relevant skills AND routes to appropriate personas
 
-version: "6.0.0"
+version: "6.1.2"
 
 # Routing Strategy
 strategy:
@@ -61,7 +61,7 @@ logging:
   log_scores: false
 
 # =============================================================================
-# AUTO-SUGGEST CONFIGURATION (v4.1)
+# AUTO-SUGGEST CONFIGURATION (v6.1.2)
 # =============================================================================
 
 auto_suggest:
@@ -72,7 +72,7 @@ auto_suggest:
   show_reason: true # Show why skill was suggested
 
 # =============================================================================
-# CONTEXT-AWARE ROUTING (v4.1)
+# CONTEXT-AWARE ROUTING (v6.1.2)
 # =============================================================================
 
 context_routing:
@@ -97,7 +97,7 @@ context_routing:
     project_structure: 0.15
 
 # =============================================================================
-# WORKFLOW ROUTING (v4.1)
+# WORKFLOW ROUTING (v6.1.2)
 # =============================================================================
 
 workflow_routing:
@@ -115,7 +115,7 @@ workflow_routing:
     deploy_app: deploy
 
 # =============================================================================
-# LIBRARY REGISTRY INTEGRATION (v4.2)
+# LIBRARY REGISTRY INTEGRATION ()
 # =============================================================================
 
 library_registry:
@@ -136,7 +136,7 @@ library_registry:
     show_install_command: true
 
 # =============================================================================
-# INTENT DETECTION INTEGRATION (v4.2)
+# INTENT DETECTION INTEGRATION ()
 # =============================================================================
 
 intent_detection:
@@ -156,7 +156,7 @@ intent_detection:
     check_in_review: true
 
 # =============================================================================
-# SMART RECOMMENDATION ENGINE (v4.2)
+# SMART RECOMMENDATION ENGINE ()
 # =============================================================================
 
 recommendations:
@@ -180,7 +180,7 @@ recommendations:
     project_type: 0.20
     recent_activity: 0.15
 
-# _DOMYH Awesome Code v6.0_
+# _DOMYH Awesome Code v6.1_
 
 # =============================================================================
 # PERSONA ROUTING (v6.0)

@@ -1,0 +1,43 @@
+{
+  "name": "DOMYH Awesome Code v6.1.2",
+  "version": "6.1.2",
+  
+  "windsurf": {
+    "cascade_enabled": true,
+    "flows_enabled": true
+  },
+
+  "activation": {
+    "triggers": ["@domyh", "/code", "/debug", "/plan"],
+    "auto_context": true
+  },
+
+  "skills": {
+    "loading": "progressive",
+    "max_active": 3
+  },
+
+  "token_budget": {
+    "baseline": 1500,
+    "per_skill": 1000
+  },
+
+  "config_files": {
+    "rules": ".windsurfrules"
+  },
+
+  "session_engine": {
+    "enabled": true,
+    "version": "2.0.0",
+    "auto_detect_preferences": true,
+    "config_file": ".windsurfrules",
+    "context_injection": {
+      "enabled": true,
+      "format": "plain"
+    },
+    "cross_ide_sync": {
+      "enabled": true,
+      "targets": ["claude", "cursor", "gemini"]
+    }
+  }
+}

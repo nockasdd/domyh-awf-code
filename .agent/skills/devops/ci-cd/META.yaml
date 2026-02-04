@@ -1,0 +1,53 @@
+name: ci-cd
+version: "6.1.2"
+display: CI/CD Pipelines
+category: devops
+tier: 1
+priority: 1
+
+description: |
+  CI/CD pipeline patterns for GitHub Actions, GitLab CI, Azure DevOps, Jenkins.
+  Covers automation, deployment strategies, security scanning.
+
+triggers:
+  file_patterns:
+    - ".github/workflows/*.yml"
+    - ".gitlab-ci.yml"
+    - "azure-pipelines.yml"
+    - "Jenkinsfile"
+    - ".circleci/config.yml"
+  keywords:
+    # General
+    - ci/cd
+    - continuous integration
+    - pipeline
+    - devops
+    # Platforms
+    - github actions
+    - gitlab ci
+    - azure devops
+    - jenkins
+    # Deployment
+    - deploy
+    - staging
+    - production
+    - canary
+    - blue-green
+  intents:
+    - setup ci cd
+    - create pipeline
+    - github workflow
+    - deploy automation
+
+related_skills:
+  - docker
+  - kubernetes
+  - security
+
+caps:
+  - GitHub Actions (matrix, reusable, OIDC)
+  - GitLab CI (stages, artifacts)
+  - Azure DevOps (multi-stage)
+  - Jenkins (Declarative pipelines)
+  - Security scanning (SAST, DAST)
+  - Progressive deployment

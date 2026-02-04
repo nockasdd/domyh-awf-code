@@ -1,0 +1,35 @@
+name: solidity
+version: "6.1.2"
+category: blockchain
+tier: 2
+
+description: |
+  Solidity smart contract patterns for Solidity 0.8+.
+  Ethereum, EVM-compatible chains, DeFi, NFTs.
+
+triggers:
+  file_patterns:
+    - "*.sol"
+    - "hardhat.config.js"
+    - "hardhat.config.ts"
+    - "foundry.toml"
+    - "truffle-config.js"
+  keywords:
+    - solidity
+    - ethereum
+    - smart contract
+    - hardhat
+    - foundry
+    - erc20
+    - erc721
+    - defi
+    - web3
+  intents:
+    - smart contract
+    - ethereum contract
+    - nft contract
+    - defi protocol
+
+related_skills:
+  - typescript
+  - javascript

@@ -151,7 +151,7 @@ All responses will now be in English.
 
 ---
 
-_DOMYH Awesome Code v5.5 • Language Switching • Enhanced i18n System_
+_DOMYH Awesome Code v6.1.2 • Language Switching • Enhanced i18n System_
 
 > **Note**: Tất cả strings nằm trong `.agent/i18n/vi.yaml` hoặc `.agent/i18n/en.yaml`
 > Version sync từ `.agent/core/VERSION.yaml`

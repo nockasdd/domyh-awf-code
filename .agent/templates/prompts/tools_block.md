@@ -134,4 +134,4 @@ tools:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Tools Block Template_
+_DOMYH Awesome Code v6.1.2 • Tools Block Template_

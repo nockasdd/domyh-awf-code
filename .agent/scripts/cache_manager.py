@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Awesome Code v4.3 — LRU Cache Manager
+DOMYH Awesome Code v6.1.2 — LRU Cache Manager
 Manages session-level skill caching with LRU eviction.
 
 Usage:

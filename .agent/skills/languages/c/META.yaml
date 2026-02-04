@@ -1,0 +1,56 @@
+name: c
+version: "6.1.2"
+display: C
+category: language
+tier: 1
+priority: 1
+
+description: |
+  Pure C (ISO C23) development patterns.
+  Covers memory management, string safety, POSIX, Windows APIs.
+
+triggers:
+  file_patterns:
+    - "*.c"
+    - "*.h"
+    - "Makefile"
+    - "GNUmakefile"
+  keywords:
+    # Core
+    - c language
+    - pure c
+    - c23
+    - c11
+    - ansi c
+    # Headers
+    - stdio.h
+    - stdlib.h
+    - string.h
+    # Memory
+    - malloc
+    - free
+    - pointer
+    # Build
+    - makefile
+    - gcc
+    - clang
+  intents:
+    - c code
+    - c program
+    - c memory
+    - c pointer
+
+related_skills:
+  - cpp
+  - asm
+
+caps:
+  - Pure C programming
+  - Memory management
+  - POSIX APIs
+  - Embedded systems
+  - C23 features
+
+prevent_confusion_with:
+  cpp: "C = no classes/templates, C++ = classes"
+  rust: "C = manual memory, Rust = ownership"

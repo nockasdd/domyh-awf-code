@@ -1,4 +1,4 @@
-# GEMINI.md — DOMYH Awesome Code v6.0
+# GEMINI.md — DOMYH Awesome Code v6.1.2
 
 > 🎯 **Purpose**: AI-powered development assistant with agentic personas
 > 👨‍💻 **Developer**: NockDev
@@ -122,4 +122,41 @@ Agent tự động:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Agentic Personas • Session Rules • NockDev_
+## HSA v5.0 Context Management ⭐
+
+> 🧠 **MCP Tools**: Intelligent context via `domyh-hsa` server
+
+### Available Tools
+
+| Tool                | Purpose            | Khi nào dùng             |
+| ------------------- | ------------------ | ------------------------ |
+| `hsa_get_context`   | Lấy context tối ưu | Trước phân tích phức tạp |
+| `hsa_detect_stack`  | Detect tech stack  | Đầu session              |
+| `hsa_check_changes` | Check file changes | Sau khi user edit        |
+| `hsa_prefetch`      | Prefetch dự đoán   | Navigation               |
+| `hsa_status`        | Engine status      | Debug                    |
+
+### Auto Workflow
+
+1. **Session Start**: Gọi `hsa_detect_stack` để hiểu project
+2. **Before Analysis**: Gọi `hsa_get_context` cho files liên quan
+3. **After File Edit**: Gọi `hsa_check_changes` để update
+
+### Manual Trigger
+
+User có thể dùng `/hsa` để:
+
+- `/hsa status` — Xem engine status
+- `/hsa stack` — Detect tech stack
+
+### CLI
+
+```bash
+dawf hsa start    # Khởi động MCP server
+dawf hsa stop     # Dừng server
+dawf hsa status   # Check trạng thái
+```
+
+---
+
+_DOMYH Awesome Code v6.1.2 • Agentic Personas • HSA v5.0 • Session Rules • NockDev_

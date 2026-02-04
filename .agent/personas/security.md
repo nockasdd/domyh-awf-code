@@ -1,6 +1,6 @@
 ---
 name: security
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "sec-001"
 
 # =============================================================================
@@ -206,4 +206,4 @@ output_template: |
   2. [Secondary fix]
 ---
 
-# DOMYH Awesome Code v6.0 • Security Persona
+# DOMYH Awesome Code v6.1.2 • Security Persona

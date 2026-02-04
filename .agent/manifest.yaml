@@ -1,12 +1,12 @@
 # =============================================================================
-# DOMYH Awesome Code v6.0 — Optimized Manifest
+# DOMYH Awesome Code v6.1.2 — Optimized Manifest
 # =============================================================================
 # Token-efficient architecture with Progressive Disclosure
 # Developer: NockDev
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: "v6.0.0"
+version: "v6.1.2"
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -28,16 +28,16 @@ defaults:
 # =============================================================================
 
 core:
-  # Rules System (v4.2 - refactored to modular files)
+  # Rules System ( - refactored to modular files)
   rules_dir: rules/ # 15 specialized rule files
   rules_index: rules/README.md # Rules registry
   # Core engines
   router: core/ROUTER.yaml # Semantic routing config
-  flow_engine: core/FLOW_ENGINE.yaml # v4.1: Workflow chaining
-  memory_engine: core/MEMORY_ENGINE.yaml # v4.2: 4-layer memory
-  semantic_engine: core/SEMANTIC_ENGINE.yaml # v4.2: Optional vector DB
+  flow_engine: core/FLOW_ENGINE.yaml # v6.1.2: Workflow chaining
+  memory_engine: core/MEMORY_ENGINE.yaml # : 4-layer memory
+  semantic_engine: core/SEMANTIC_ENGINE.yaml # : Optional vector DB
   token_loading: core/TOKEN_LOADING.yaml # Token optimization
-  # SSoT Files (v4.3 additions)
+  # SSoT Files (v6.1.2 additions)
   token_budgets: core/TOKEN_BUDGETS.yaml # Unified token thresholds
   memory_paths: core/MEMORY_PATHS.yaml # Memory file locations
   scoring_formula: core/SCORING_FORMULA.yaml # Priority scoring algorithm
@@ -117,7 +117,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (28 workflows) — v4.2: Complete Command Set
+# COMMANDS (28 workflows) — : Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 

@@ -6,7 +6,7 @@ category: quality
 version: "4.5"
 ---
 
-# ✅ Validation Framework v4.5
+# ✅ Validation Framework v6.1.2
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📝 **Note**: Consolidates `pre-check-validation.md` + `architecture-aware-implementation.md`
@@ -186,4 +186,4 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validati
 
 ---
 
-_DOMYH Awesome Code v5.5 • Consolidated Validation Framework_
+_DOMYH Awesome Code v6.1.2 • Consolidated Validation Framework_

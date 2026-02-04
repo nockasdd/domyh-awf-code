@@ -5,7 +5,7 @@ All notable changes to DOMYH Awesome Code will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v5.5.0] - 2026-02-03
+## [v6.1.2] - 2026-02-03
 
 ### Added
 
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Standardized all workflow headers to consistent format (e.g., `# 🔬 /ap — Audit Pro v5.1`)
+- Standardized all workflow headers to consistent format (e.g., `# 🔬 /ap — Audit Pro v6.1.2`)
 - Updated skill count from 33 to 34
 - Updated workflow count from 29 to 31
 
@@ -48,8 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Multi-IDE compatibility (14 IDEs supported)
-- Audit Pro v5.1 with 5-Expert Panel
-- Think Pro v5.5 with multi-mode reasoning
+- Audit Pro v6.1.2 with 5-Expert Panel
+- Think Pro v6.1.2 with multi-mode reasoning
 
 ### Changed
 
@@ -71,4 +71,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-_DOMYH Awesome Code v5.5 • NockDev_
+_DOMYH Awesome Code v6.1.2 • NockDev_

@@ -1,550 +1,140 @@
 {
-  "version": "6.0.0",
+  "version": "7.0.0",
   "changelog": [
-    "51 total skills - 17 new language skills added",
-    "New: nim, crystal, clojure, fsharp, ocaml (functional), solidity (blockchain)",
-    "Categories: functional (6), runtime (2), systems (2), scientific (2), blockchain (1)",
-    "Ruby includes ADVANCED.md with metaprogramming patterns",
-    "TIOBE Top 20 coverage: 100%"
+    "v7.0.0: Hierarchical skill organization with category folders",
+    "New structure: languages/, frameworks/, devops/, core/, cross-cutting/",
+    "51 total skills organized into 5 categories",
+    "Smart routing via _router.yaml",
+    "Token savings: 90% baseline reduction (5,100 → 500)"
   ],
-  "schema": "progressive-disclosure",
+  "schema": "hierarchical",
   "total": 51,
+
   "tiers": {
     "T1_META": "META.yaml (~100 tokens) - Always available",
     "T2_SKILL": "SKILL.md (~1500 tokens) - On-demand",
     "T3_ADVANCED": "ADVANCED.md (~4000 tokens) - Referenced only"
   },
+
   "categories": {
     "core": {
-      "description": "Always-active skills",
+      "description": "Security rules - always active",
+      "path": "skills/core/",
       "priority": 0,
+      "always_load": true,
+      "count": 1,
       "skills": ["security"]
     },
-    "language": {
+    "languages": {
       "description": "Programming languages",
+      "path": "skills/languages/",
       "priority": 1,
-      "skills": ["go", "python", "typescript", "rust", "cpp", "csharp", "java", "php", "kotlin", "swift", "lua", "asm", "c", "javascript", "ruby", "perl", "nim", "crystal"]
+      "count": 28,
+      "skills": [
+        "python", "go", "typescript", "javascript", "rust", "cpp", "c",
+        "java", "kotlin", "csharp", "ruby", "php", "swift", "perl", "lua",
+        "asm", "nim", "crystal", "zig", "haskell", "elixir", "scala",
+        "clojure", "fsharp", "ocaml", "r", "julia", "solidity"
+      ]
     },
-    "functional": {
-      "description": "Functional programming languages",
-      "priority": 1,
-      "skills": ["haskell", "elixir", "scala", "clojure", "fsharp", "ocaml"]
-    },
-    "runtime": {
-      "description": "JavaScript/TypeScript runtimes",
-      "priority": 1,
-      "skills": ["deno", "bun"]
-    },
-    "systems": {
-      "description": "Systems programming",
-      "priority": 1,
-      "skills": ["zig", "nim"]
-    },
-    "blockchain": {
-      "description": "Blockchain and smart contracts",
-      "priority": 2,
-      "skills": ["solidity"]
-    },
-    "scientific": {
-      "description": "Scientific computing",
-      "priority": 2,
-      "skills": ["r", "julia"]
-    },
-    "database": {
-      "description": "Database and SQL",
-      "priority": 2,
-      "skills": ["sql"]
-    },
-    "framework": {
+    "frameworks": {
       "description": "Frontend/Backend frameworks",
+      "path": "skills/frameworks/",
       "priority": 2,
-      "skills": ["react", "vue", "nextjs", "flutter", "angular", "nuxt", "svelte", "tailwind"]
+      "count": 8,
+      "skills": ["react", "vue", "angular", "svelte", "nextjs", "nuxt", "flutter", "react-native"]
     },
     "devops": {
       "description": "Infrastructure and deployment",
+      "path": "skills/devops/",
       "priority": 3,
+      "count": 4,
       "skills": ["docker", "kubernetes", "aws", "ci-cd"]
     },
-    "support": {
-      "description": "Cross-cutting concerns",
-      "priority": 2,
-      "skills": ["database", "testing", "coding-rules", "ui-ux-pro-max", "electron", "react-native", "web-perf"]
+    "cross-cutting": {
+      "description": "Cross-cutting concerns and utilities",
+      "path": "skills/cross-cutting/",
+      "priority": 4,
+      "count": 10,
+      "skills": ["testing", "database", "sql", "tailwind", "electron", "coding-rules", "ui-ux-pro-max", "web-perf", "deno", "bun"]
     }
   },
 
   "skills": [
-    {
-      "id": "security",
-      "path": "skills/security/",
-      "category": "core",
-      "always_load_meta": true,
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "go",
-      "path": "skills/go/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "python",
-      "path": "skills/python/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "typescript",
-      "path": "skills/typescript/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "rust",
-      "path": "skills/rust/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "cpp",
-      "path": "skills/cpp/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "csharp",
-      "path": "skills/csharp/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "java",
-      "path": "skills/java/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "php",
-      "path": "skills/php/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "kotlin",
-      "path": "skills/kotlin/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "swift",
-      "path": "skills/swift/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "lua",
-      "path": "skills/lua/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "react",
-      "path": "skills/react/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "vue",
-      "path": "skills/vue/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "nextjs",
-      "path": "skills/nextjs/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "docker",
-      "path": "skills/docker/",
-      "category": "devops",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "kubernetes",
-      "path": "skills/kubernetes/",
-      "category": "devops",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "aws",
-      "path": "skills/aws/",
-      "category": "devops",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "ci-cd",
-      "path": "skills/ci-cd/",
-      "category": "devops",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "database",
-      "path": "skills/database/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "testing",
-      "path": "skills/testing/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "asm",
-      "path": "skills/asm/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md",
-        "advanced": "ADVANCED.md"
-      }
-    },
-    {
-      "id": "c",
-      "path": "skills/c/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "javascript",
-      "path": "skills/javascript/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "flutter",
-      "path": "skills/flutter/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "coding-rules",
-      "path": "skills/coding-rules/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      },
-      "data_files": ["naming-conventions.csv", "architecture-patterns.csv", "coding-rules.csv", "design-patterns.csv"]
-    },
-    {
-      "id": "ui-ux-pro-max",
-      "path": "skills/ui-ux-pro-max/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      },
-      "data_files": ["styles.csv", "colors.csv", "typography.csv"]
-    },
-    {
-      "id": "angular",
-      "path": "skills/angular/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "nuxt",
-      "path": "skills/nuxt/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "svelte",
-      "path": "skills/svelte/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "tailwind",
-      "path": "skills/tailwind/",
-      "category": "framework",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "electron",
-      "path": "skills/electron/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "react-native",
-      "path": "skills/react-native/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "web-perf",
-      "path": "skills/web-perf/",
-      "category": "support",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "ruby",
-      "path": "skills/ruby/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md",
-        "advanced": "ADVANCED.md"
-      }
-    },
-    {
-      "id": "r",
-      "path": "skills/r/",
-      "category": "scientific",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "sql",
-      "path": "skills/sql/",
-      "category": "database",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "zig",
-      "path": "skills/zig/",
-      "category": "systems",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "deno",
-      "path": "skills/deno/",
-      "category": "runtime",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "bun",
-      "path": "skills/bun/",
-      "category": "runtime",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "haskell",
-      "path": "skills/haskell/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "elixir",
-      "path": "skills/elixir/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "scala",
-      "path": "skills/scala/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "perl",
-      "path": "skills/perl/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "julia",
-      "path": "skills/julia/",
-      "category": "scientific",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "nim",
-      "path": "skills/nim/",
-      "category": "systems",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "crystal",
-      "path": "skills/crystal/",
-      "category": "language",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "clojure",
-      "path": "skills/clojure/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "fsharp",
-      "path": "skills/fsharp/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "ocaml",
-      "path": "skills/ocaml/",
-      "category": "functional",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    },
-    {
-      "id": "solidity",
-      "path": "skills/solidity/",
-      "category": "blockchain",
-      "files": {
-        "meta": "META.yaml",
-        "skill": "SKILL.md"
-      }
-    }
+    {"id": "security", "path": "skills/core/security/", "category": "core", "always_load_meta": true},
+    
+    {"id": "python", "path": "skills/languages/python/", "category": "languages"},
+    {"id": "go", "path": "skills/languages/go/", "category": "languages"},
+    {"id": "typescript", "path": "skills/languages/typescript/", "category": "languages"},
+    {"id": "javascript", "path": "skills/languages/javascript/", "category": "languages"},
+    {"id": "rust", "path": "skills/languages/rust/", "category": "languages"},
+    {"id": "cpp", "path": "skills/languages/cpp/", "category": "languages"},
+    {"id": "c", "path": "skills/languages/c/", "category": "languages"},
+    {"id": "java", "path": "skills/languages/java/", "category": "languages"},
+    {"id": "kotlin", "path": "skills/languages/kotlin/", "category": "languages"},
+    {"id": "csharp", "path": "skills/languages/csharp/", "category": "languages"},
+    {"id": "ruby", "path": "skills/languages/ruby/", "category": "languages"},
+    {"id": "php", "path": "skills/languages/php/", "category": "languages"},
+    {"id": "swift", "path": "skills/languages/swift/", "category": "languages"},
+    {"id": "perl", "path": "skills/languages/perl/", "category": "languages"},
+    {"id": "lua", "path": "skills/languages/lua/", "category": "languages"},
+    {"id": "asm", "path": "skills/languages/asm/", "category": "languages"},
+    {"id": "nim", "path": "skills/languages/nim/", "category": "languages"},
+    {"id": "crystal", "path": "skills/languages/crystal/", "category": "languages"},
+    {"id": "zig", "path": "skills/languages/zig/", "category": "languages"},
+    {"id": "haskell", "path": "skills/languages/haskell/", "category": "languages"},
+    {"id": "elixir", "path": "skills/languages/elixir/", "category": "languages"},
+    {"id": "scala", "path": "skills/languages/scala/", "category": "languages"},
+    {"id": "clojure", "path": "skills/languages/clojure/", "category": "languages"},
+    {"id": "fsharp", "path": "skills/languages/fsharp/", "category": "languages"},
+    {"id": "ocaml", "path": "skills/languages/ocaml/", "category": "languages"},
+    {"id": "r", "path": "skills/languages/r/", "category": "languages"},
+    {"id": "julia", "path": "skills/languages/julia/", "category": "languages"},
+    {"id": "solidity", "path": "skills/languages/solidity/", "category": "languages"},
+    
+    {"id": "react", "path": "skills/frameworks/react/", "category": "frameworks"},
+    {"id": "vue", "path": "skills/frameworks/vue/", "category": "frameworks"},
+    {"id": "angular", "path": "skills/frameworks/angular/", "category": "frameworks"},
+    {"id": "svelte", "path": "skills/frameworks/svelte/", "category": "frameworks"},
+    {"id": "nextjs", "path": "skills/frameworks/nextjs/", "category": "frameworks"},
+    {"id": "nuxt", "path": "skills/frameworks/nuxt/", "category": "frameworks"},
+    {"id": "flutter", "path": "skills/frameworks/flutter/", "category": "frameworks"},
+    {"id": "react-native", "path": "skills/frameworks/react-native/", "category": "frameworks"},
+    
+    {"id": "docker", "path": "skills/devops/docker/", "category": "devops"},
+    {"id": "kubernetes", "path": "skills/devops/kubernetes/", "category": "devops"},
+    {"id": "aws", "path": "skills/devops/aws/", "category": "devops"},
+    {"id": "ci-cd", "path": "skills/devops/ci-cd/", "category": "devops"},
+    
+    {"id": "testing", "path": "skills/cross-cutting/testing/", "category": "cross-cutting"},
+    {"id": "database", "path": "skills/cross-cutting/database/", "category": "cross-cutting"},
+    {"id": "sql", "path": "skills/cross-cutting/sql/", "category": "cross-cutting"},
+    {"id": "tailwind", "path": "skills/cross-cutting/tailwind/", "category": "cross-cutting"},
+    {"id": "electron", "path": "skills/cross-cutting/electron/", "category": "cross-cutting"},
+    {"id": "coding-rules", "path": "skills/cross-cutting/coding-rules/", "category": "cross-cutting"},
+    {"id": "ui-ux-pro-max", "path": "skills/cross-cutting/ui-ux-pro-max/", "category": "cross-cutting"},
+    {"id": "web-perf", "path": "skills/cross-cutting/web-perf/", "category": "cross-cutting"},
+    {"id": "deno", "path": "skills/cross-cutting/deno/", "category": "cross-cutting"},
+    {"id": "bun", "path": "skills/cross-cutting/bun/", "category": "cross-cutting"}
   ],
+
+  "aliases": {
+    "_comment": "Backward compatibility: flat skill names → hierarchical paths",
+    "python": "languages/python",
+    "go": "languages/go",
+    "typescript": "languages/typescript",
+    "react": "frameworks/react",
+    "vue": "frameworks/vue",
+    "docker": "devops/docker",
+    "security": "core/security",
+    "testing": "cross-cutting/testing"
+  },
+
   "token_budget": {
-    "baseline": "51 × 100 = 5,100 tokens (T1 META)",
-    "expanded_content": "+577 lines from external skills",
-    "single_activation": "+1,500 tokens average",
-    "max_active": 3,
-    "peak_estimate": "5,100 + (3 × 1,500) = 9,600 tokens"
+    "router_baseline": "500 tokens (router + core META)",
+    "per_detected_skill": "100 tokens (META only)",
+    "per_active_skill": "1,500 tokens (SKILL.md)",
+    "max_active": 5,
+    "peak_estimate": "500 + (5 × 1,500) = 8,000 tokens"
   }
 }
-
-

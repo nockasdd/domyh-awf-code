@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Awesome Code v5.5 — Validation Utility
+DOMYH Awesome Code v6.1.2 — Validation Utility
 Validates agent structure, checks for missing files, and verifies configurations.
 """
 
@@ -22,7 +22,7 @@ def print_err(msg): print(f"{Colors.RED}✗{Colors.RESET} {msg}")
 def print_warn(msg): print(f"{Colors.YELLOW}⚠{Colors.RESET} {msg}")
 def print_info(msg): print(f"{Colors.BLUE}ℹ{Colors.RESET} {msg}")
 
-# Required structure (v4.3 - modular rules)
+# Required structure (v6.1.2 - modular rules)
 REQUIRED_FILES = {
     "core": [
         ".agent/manifest.yaml",
@@ -133,7 +133,7 @@ def validate_manifest(base_path: Path) -> bool:
 def main():
     """Main validation entry point."""
     print(f"\n{Colors.BLUE}═══════════════════════════════════════════{Colors.RESET}")
-    print(f"{Colors.BLUE}  DOMYH Awesome Code v5.5 — Validation Utility{Colors.RESET}")
+    print(f"{Colors.BLUE}  DOMYH Awesome Code v6.1.2 — Validation Utility{Colors.RESET}")
     print(f"{Colors.BLUE}═══════════════════════════════════════════{Colors.RESET}\n")
     
     # Find base path

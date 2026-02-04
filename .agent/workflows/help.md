@@ -343,7 +343,7 @@ Report issues or suggestions:
 
 ```
 ┌─────────────────────────────────────────────┐
-│           DOMYH Awesome Code v5.5 Quick Ref        │
+│           DOMYH Awesome Code v6.1.2 Quick Ref        │
 ├─────────────────────────────────────────────┤
 │ 💻 /code [task]    Write code               │
 │ 🐛 /debug [error]  Fix bugs                 │
@@ -431,4 +431,4 @@ smart_suggestions:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Help Pro v2.1 • Context-Aware + Smart Suggestions_
+_DOMYH Awesome Code v6.1.2 • Help Pro v2.1 • Context-Aware + Smart Suggestions_

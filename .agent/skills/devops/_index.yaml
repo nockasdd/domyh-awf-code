@@ -1,0 +1,9 @@
+# devops/_index.yaml — DevOps Skills Index
+category: devops
+description: "Infrastructure and deployment"
+count: 4
+skills:
+  - { id: docker, has_advanced: true }
+  - { id: kubernetes, has_advanced: true }
+  - { id: aws, has_advanced: true }
+  - { id: ci-cd, has_advanced: true }

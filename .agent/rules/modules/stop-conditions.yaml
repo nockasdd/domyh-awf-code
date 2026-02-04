@@ -3,7 +3,7 @@
 
 ---
 name: stop-conditions
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-STP-001"
 
 # =============================================================================
@@ -193,4 +193,4 @@ integration:
     question: "Should I pause and confirm this with the user?"
 
 ---
-_DOMYH Awesome Code v6.0 • Stop Conditions Rule_
+_DOMYH Awesome Code v6.1.2 • Stop Conditions Rule_

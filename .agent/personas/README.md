@@ -20,12 +20,12 @@ Personas define specialized agent roles with distinct:
 
 | Persona          | Role                             | Triggers             | Version |
 | ---------------- | -------------------------------- | -------------------- | ------- |
-| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.0.0   |
-| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.0.0   |
-| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.0.0   |
-| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.0.0   |
-| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.0.0   |
-| **security**     | Security Specialist              | `/security`, `/scan` | 6.0.0   |
+| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.1.2   |
+| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.1.2   |
+| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.1.2   |
+| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.1.2   |
+| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.1.2   |
+| **security**     | Security Specialist              | `/security`, `/scan` | 6.1.2   |
 | **auditor**      | 5-Expert Audit Panel             | `/ap`                | 4.5.0   |
 | **debugger**     | Bug Hunter                       | `/debug`             | 4.5.0   |
 | **tester**       | Quality Assurance                | `/test`              | 4.5.0   |
@@ -41,7 +41,7 @@ All personas follow the enhanced schema:
 ```yaml
 ---
 name: [persona_name]
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "[prefix]-001"
 
 # Core Identity (CrewAI Pattern)
@@ -177,4 +177,4 @@ User Request → Orchestrator → [Planner → Developer → Tester] → Result
 
 ---
 
-_DOMYH Awesome Code v6.0 • Personas System_
+_DOMYH Awesome Code v6.1.2 • Personas System_

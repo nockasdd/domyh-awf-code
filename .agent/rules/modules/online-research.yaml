@@ -3,7 +3,7 @@
 
 ---
 name: online-research
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-RES-001"
 
 # =============================================================================
@@ -181,4 +181,4 @@ integration:
     - evidence
 
 ---
-_DOMYH Awesome Code v6.0 • Online Research Rule_
+_DOMYH Awesome Code v6.1.2 • Online Research Rule_

@@ -1,0 +1,120 @@
+# =============================================================================
+# _router.yaml — Smart Skill Router v1.0
+# =============================================================================
+# Single Source of Truth for skill loading strategy
+# Integrates with HSA v5.0 project detector for optimal token usage
+# =============================================================================
+
+version: "1.0.0"
+engine: "hsa"
+schema: "hierarchical"
+
+# =============================================================================
+# LOADING STRATEGY
+# =============================================================================
+
+strategy:
+  # Always loaded (minimal footprint)
+  baseline:
+    always_load:
+      - category: "core"
+        skill: "security"
+        file: "META.yaml"
+    max_tokens: 100
+
+  # Load on project detection
+  on_detect:
+    source: "project_detector"
+    load_file: "META.yaml"
+    max_skills: 5
+    cache_ttl: 300 # 5 minutes
+
+  # Load on user request/workflow
+  on_request:
+    triggers:
+      - "user query contains skill keywords"
+      - "workflow requires skill"
+      - "command references skill"
+    load_file: "SKILL.md"
+    max_tokens: 1500
+
+  # Never preload
+  never_preload:
+    - "ADVANCED.md" # Reference only when explicitly needed
+
+# =============================================================================
+# CATEGORY ROUTING
+# =============================================================================
+
+routing:
+  languages:
+    path: "skills/languages/"
+    detect_by:
+      - "extension" # .py → python, .go → go
+      - "build_system" # go.mod → go, Cargo.toml → rust
+    priority: 1
+    count: 24
+
+  frameworks:
+    path: "skills/frameworks/"
+    detect_by:
+      - "dependency" # react in package.json
+      - "special_file" # next.config.js → nextjs
+    priority: 2
+    count: 8
+
+  devops:
+    path: "skills/devops/"
+    detect_by:
+      - "special_file" # Dockerfile, k8s/
+      - "directory" # .github/workflows/
+    priority: 3
+    count: 4
+
+  core:
+    path: "skills/core/"
+    always_load: true
+    priority: 0
+    count: 1
+
+  cross-cutting:
+    path: "skills/cross-cutting/"
+    detect_by:
+      - "dependency"
+      - "extension"
+    priority: 4
+    count: 10
+
+# =============================================================================
+# SKILL RESOLUTION
+# =============================================================================
+
+resolution:
+  # Support both flat and hierarchical paths
+  backward_compat: true
+
+  # e.g., "python" → "languages/python"
+  aliases:
+    python: "languages/python"
+    go: "languages/go"
+    typescript: "languages/typescript"
+    react: "frameworks/react"
+    vue: "frameworks/vue"
+    docker: "devops/docker"
+    security: "core/security"
+    testing: "cross-cutting/testing"
+
+# =============================================================================
+# TOKEN BUDGET
+# =============================================================================
+
+token_budget:
+  baseline: 500 # Router + core/security META
+  per_detected: 100 # Each detected skill META
+  per_active: 1500 # Each active skill SKILL.md
+  max_total: 6000 # Cap for skill tokens
+
+
+# =============================================================================
+# _DOMYH Awesome Code v7.0 • Hierarchical Skill Router_
+# =============================================================================

@@ -1,6 +1,6 @@
 ---
 name: developer
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "dev-001"
 
 # =============================================================================
@@ -177,4 +177,4 @@ output_template: |
   - [ ] Documentation updated
 ---
 
-# DOMYH Awesome Code v6.0 • Developer Persona
+# DOMYH Awesome Code v6.1.2 • Developer Persona

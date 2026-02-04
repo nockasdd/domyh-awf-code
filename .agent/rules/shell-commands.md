@@ -1,12 +1,8 @@
 ---
-name: shell-commands
-priority: 0
-always_apply: true
-category: execution
-version: "4.5"
+trigger: always_on
 ---
 
-# 🖥️ Shell-Aware Commands v4.5
+# 🖥️ Shell-Aware Commands
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📚 **Based on**: Microsoft PowerShell Docs, POSIX Shell Standards
@@ -211,4 +207,4 @@ Agent PHẢI phát hiện shell TRƯỚC khi tạo bất kỳ lệnh terminal n�
 
 ---
 
-_DOMYH Awesome Code v5.5 • Shell-Aware Commands_
+_DOMYH Awesome Code v6.1.2 • Shell-Aware Commands_

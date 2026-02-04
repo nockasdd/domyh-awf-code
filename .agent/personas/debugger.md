@@ -1,6 +1,6 @@
 ---
 name: debugger
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "dbg-001"
 
 # =============================================================================
@@ -204,4 +204,4 @@ output_template: |
   - [ ] Related areas checked
 ---
 
-# DOMYH Awesome Code v6.0 • Debugger Persona
+# DOMYH Awesome Code v6.1.2 • Debugger Persona

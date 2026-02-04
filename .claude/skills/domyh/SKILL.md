@@ -1,6 +1,6 @@
 ---
 name: domyh
-description: DOMYH Awesome Code v5.5 - AI coding assistant with 51 skills
+description: DOMYH Awesome Code v6.1.2 - AI coding assistant with 51 skills
 ---
 
 # DOMYH Skill

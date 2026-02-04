@@ -1,5 +1,8 @@
 ---
-description: 💾 Save current session state to memory files
+name: save
+trigger: ["/save", "lưu", "persist", "save session"]
+persona: Developer
+description: "💾 Save current session state to memory files"
 ---
 
 # 💾 /save — Session Memory Persistence
@@ -176,4 +179,4 @@ These workflows automatically trigger save:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Memory Persistence • File-based Transparency_
+_DOMYH Awesome Code v6.1.2 • Memory Persistence • File-based Transparency_

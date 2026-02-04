@@ -2,7 +2,7 @@
 description: "🔬 DOMYH AUDIT  Kiểm tra chuyên sâu toàn bộ hệ thống"
 ---
 
-# 🔬 /ap — Audit Pro v5.1
+# 🔬 /ap — Audit Pro v6.1.2
 
 > Comprehensive 5-Expert Panel Audit System
 > 📚 Based on: ISO 25010, CWE Top 25, OWASP Top 10
@@ -423,7 +423,7 @@ Enter number or describe:
 
 ---
 
-## 👥 MULTI-EXPERT CONSENSUS (v5.1)
+## 👥 MULTI-EXPERT CONSENSUS (v6.1.2)
 
 ```yaml
 expert_panel:
@@ -489,4 +489,4 @@ expert_panel:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Audit Pro v5.1 • Multi-Expert Consensus + 105 Checkpoints_
+_DOMYH Awesome Code v6.1.2 • Audit Pro v6.1.2 • Multi-Expert Consensus + 105 Checkpoints_

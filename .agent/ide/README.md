@@ -1,6 +1,6 @@
 # DOMYH Awesome Code — IDE Configurations
 
-> Version 5.5.0 | Progressive Disclosure Architecture
+> Version 6.1.2 | Progressive Disclosure Architecture
 
 ## Supported AI Coding Assistants
 
@@ -16,8 +16,8 @@ Each IDE config contains:
 
 ```json
 {
-  "name": "DOMYH Awesome Code v5.5",
-  "version": "v5.5.0",
+  "name": "DOMYH Awesome Code v6.1.2",
+  "version": "v6.1.2",
 
   "activation": {
     /* Trigger commands */
@@ -44,4 +44,4 @@ Session rules are **automatically handled** by the agent reading `GEMINI.md`:
 
 ---
 
-_DOMYH Awesome Code v5.5 • NockDev_
+_DOMYH Awesome Code v6.1.2 • NockDev_

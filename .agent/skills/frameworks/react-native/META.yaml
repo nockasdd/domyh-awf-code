@@ -1,0 +1,94 @@
+name: react-native
+version: "6.1.2"
+category: mobile
+tier: 1
+
+description: |
+  Cross-platform mobile framework for React Native 0.76+.
+  Covers New Architecture, Fabric, Turbo Modules, Expo.
+
+triggers:
+  file_patterns:
+    - "metro.config.js"
+    - "app.json"
+    - "react-native.config.js"
+    - "*.tsx:react-native"
+    - "android/"
+    - "ios/"
+  keywords:
+    # Core
+    - react native
+    - react-native
+    - rn
+    - react native 0.76
+    # New Architecture
+    - new architecture
+    - Fabric
+    - Turbo Modules
+    - JSI
+    - Hermes
+    - Codegen
+    # Components
+    - View
+    - Text
+    - Image
+    - ScrollView
+    - FlatList
+    - FlashList
+    - Pressable
+    - TouchableOpacity
+    # Navigation
+    - react navigation
+    - Stack.Navigator
+    - Tab.Navigator
+    - NavigationContainer
+    - expo router
+    # State
+    - useState react native
+    - zustand rn
+    - redux toolkit rn
+    # Expo
+    - expo
+    - expo go
+    - eas build
+    - expo-camera
+    - expo-notifications
+    - expo-router
+    - expo-updates
+    # Animation
+    - react-native-reanimated
+    - Animated
+    - useAnimatedStyle
+    - withSpring
+    # Styling
+    - StyleSheet
+    - StyleSheet.create
+    - nativewind
+    # Platform
+    - Platform.OS
+    - ios
+    - android
+    # Build
+    - metro bundler
+    - npx react-native run-ios
+    - npx react-native run-android
+    # Native Modules
+    - native module
+    - native component
+    - react-native-gesture-handler
+  intents:
+    - react native app
+    - mobile app
+    - ios android
+    - expo project
+    - cross platform mobile
+
+related_skills:
+  - react
+  - typescript
+  - swift
+  - kotlin
+
+prevent_confusion_with:
+  - react: "React Native is for mobile, React is for web"
+  - flutter: "RN uses JavaScript, Flutter uses Dart"

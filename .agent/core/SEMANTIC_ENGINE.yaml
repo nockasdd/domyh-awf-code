@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Semantic Memory Engine v5.5
+# DOMYH Awesome Code — Semantic Memory Engine v6.1.2
 # Optional vector-based memory with LanceDB
 # Enable by setting: enabled: true
 
-version: "4.3.0"
+version: "6.1.2"
 engine: semantic_memory
 status: optional # User must opt-in
 

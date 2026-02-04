@@ -1,0 +1,7 @@
+# core/_index.yaml — Core Skills Index (Always Loaded)
+category: core
+description: "Security rules - always active"
+always_load: true
+count: 1
+skills:
+  - { id: security, has_advanced: true }

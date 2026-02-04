@@ -1,0 +1,28 @@
+name: nim
+version: "6.1.2"
+category: systems
+tier: 3
+
+description: |
+  Nim development patterns for Nim 2.0+.
+  Covers systems programming, metaprogramming, C/JS compilation.
+
+triggers:
+  file_patterns:
+    - "*.nim"
+    - "*.nimble"
+    - "nim.cfg"
+  keywords:
+    - nim
+    - nim lang
+    - nimble
+    - nim compile
+  intents:
+    - nim project
+    - compile to c
+    - nim systems
+
+related_skills:
+  - python
+  - rust
+  - zig

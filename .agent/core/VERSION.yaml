@@ -12,9 +12,9 @@
 # =============================================================================
 
 system:
-  version: "6.0.0"
-  version_short: "v6.0" # Dùng cho footer: "_DOMYH Awesome Code v6.0_"
-  codename: "Agentic Personas"
+  version: "6.1.2"
+  version_short: "v6.1.2" # Dùng cho footer: "_DOMYH Awesome Code v6.1_"
+  codename: "Context Mesh"
   release_date: "2026-02-03"
 
   # Identity comes from BRANDING.yaml
@@ -74,14 +74,27 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: "v5.5"
+  default_skill_version: "v6.1.2"
 
 # =============================================================================
 # VERSION HISTORY
 # =============================================================================
 
 changelog:
-  "6.0.0":
+  "6.1.2":
+    date: "2026-02-03"
+    codename: "Context Mesh"
+    changes:
+      - "HSA v5.0: Hierarchical Skills Architecture"
+      - "5-layer context architecture (Sink→Profile→HiRAG→JIT→History)"
+      - "Merkle Tree incremental indexing (11x speedup)"
+      - "HiRAG 3-level context retrieval (global+bridge+local)"
+      - "Adaptive token budget management"
+      - "Proactive prefetching with trajectory prediction"
+      - "Mark-and-sweep context garbage collection"
+      - "Scoring-based stack detection"
+
+  "6.1.2":
     date: "2026-02-03"
     codename: "Agentic Personas"
     changes:
@@ -93,7 +106,7 @@ changelog:
       - "Persona routing in ROUTER.yaml"
       - "32 new files, comprehensive v6.0 upgrade"
 
-  "5.5.0":
+  "6.1.2":
     date: "2026-02-03"
     codename: "Multi-IDE Milestone"
     changes:
@@ -104,7 +117,7 @@ changelog:
       - "Strategic Profiles system (minimal/standard/full)"
       - "GitHub Actions CI/CD workflow"
 
-  "v5.5.0":
+  "v6.1.2":
     date: "2026-02-03"
     codename: "Deep Interview"
     changes:
@@ -113,7 +126,7 @@ changelog:
       - "On-demand phase folder creation"
       - "Centralized VERSION.yaml + BRANDING.yaml"
       - "Enhanced i18n system (vi.yaml 270+ lines)"
-      - "Batch sync 80+ files to v5.5"
+      - "Batch sync 80+ files to v6.1.2"
 
   "5.1.0":
     date: "2026-02-01"
@@ -131,7 +144,7 @@ changelog:
       - "Web Performance skill"
       - "Test Pro với AI Testing"
 
-  "4.3.0":
+  "6.1.2":
     date: "2026-01-15"
     codename: "Skills Era"
     changes:
@@ -143,7 +156,7 @@ changelog:
 # FOOTER TEMPLATE
 # =============================================================================
 
-# Format: _DOMYH Awesome Code v5.5 • Plan Pro v3.2 • Deep Interview_
+# Format: _DOMYH Awesome Code v6.1.2 • Plan Pro v3.2 • Deep Interview_
 footer_template: "_DOMYH Awesome Code {version_short} • {component_name} v{component_version} • {component_tagline}_"
 
 # =============================================================================

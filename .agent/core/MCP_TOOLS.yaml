@@ -1,9 +1,9 @@
 # =============================================================================
-# DOMYH Awesome Code v6.0
+# DOMYH Awesome Code v6.1.2
 # MCP Tools - Model Context Protocol Integration
 # =============================================================================
 
-version: "6.0.0"
+version: "6.1.2"
 
 # =============================================================================
 # OVERVIEW
@@ -27,7 +27,7 @@ description: |
 
 server:
   name: "domyh-agent"
-  version: "6.0.0"
+  version: "6.1.2"
 
   transport:
     - "stdio"

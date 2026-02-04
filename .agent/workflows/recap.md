@@ -131,7 +131,7 @@ Session ID: {id}
 
 ```yaml
 sources:
-  # Memory layers (NEW in v4.2)
+  # Memory layers (NEW in )
   memory:
     session: memory/session.md
     state: memory/state.json
@@ -328,4 +328,4 @@ total_budget: 3500 # Max tokens for recap operation
 
 ---
 
-_DOMYH Awesome Code v5.5 • Recap Pro v3.2 • Session Continuity_
+_DOMYH Awesome Code v6.1.2 • Recap Pro v3.2 • Session Continuity_

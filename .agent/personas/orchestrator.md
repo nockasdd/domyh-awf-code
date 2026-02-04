@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "orch-001"
 
 # =============================================================================
@@ -234,4 +234,4 @@ output_template: |
   [Combined output from all personas]
 ---
 
-# DOMYH Awesome Code v6.0 • Orchestrator Persona
+# DOMYH Awesome Code v6.1.2 • Orchestrator Persona

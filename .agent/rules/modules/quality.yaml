@@ -3,7 +3,7 @@
 
 ---
 name: quality
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-QLT-001"
 
 # =============================================================================
@@ -174,4 +174,4 @@ integration:
     question: "Does this code meet quality standards?"
 
 ---
-_DOMYH Awesome Code v6.0 • Quality Rule_
+_DOMYH Awesome Code v6.1.2 • Quality Rule_

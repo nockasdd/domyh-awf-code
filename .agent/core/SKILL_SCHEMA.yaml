@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Skill Validation Schema v5.5
+# DOMYH Awesome Code — Skill Validation Schema v6.1.2
 # Defines structure requirements for skills
 
 # =============================================================================
@@ -79,10 +79,10 @@ skill_schema:
 
 advanced_schema:
   required_sections:
-    - title # # DOMYH Awesome Code v5.5 — Tier 3 Reference
+    - title # # DOMYH Awesome Code v6.1.2 — Tier 3 Reference
     - overview # High-level description
     - deep_patterns # ## Advanced Patterns
-    - footer # _DOMYH Awesome Code v5.5_
+    - footer # _DOMYH Awesome Code v6.1_
 
   optional_sections:
     - edge_cases
@@ -236,12 +236,12 @@ templates:
 
     ---
 
-    _DOMYH Awesome Code v5.5_
+    _DOMYH Awesome Code v6.1_
 
   advanced_md: |
-    <!-- DOMYH Awesome Code v5.5 — Tier 3 Reference -->
+    <!-- DOMYH Awesome Code v6.1.2 — Tier 3 Reference -->
 
-    # DOMYH Awesome Code v5.5 — Tier 3 Reference
+    # DOMYH Awesome Code v6.1.2 — Tier 3 Reference
 
     ## Overview
 
@@ -263,4 +263,4 @@ templates:
 
     ---
 
-    _DOMYH Awesome Code v5.5 — Tier 3 Reference_
+    _DOMYH Awesome Code v6.1.2 — Tier 3 Reference_

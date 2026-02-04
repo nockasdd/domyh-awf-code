@@ -1,0 +1,25 @@
+{
+  "name": "codex",
+  "displayName": "OpenAI Codex CLI",
+  "description": "Configuration template for OpenAI Codex CLI integration",
+  "version": "1.0.0",
+  "configFiles": [
+    {
+      "path": ".codex/.codex-rules.md",
+      "type": "markdown",
+      "description": "Main instructions file for Codex"
+    },
+    {
+      "path": ".codex/config.json",
+      "type": "json",
+      "description": "Codex configuration settings"
+    }
+  ],
+  "features": {
+    "customInstructions": true,
+    "contextFiles": true,
+    "skillLoading": true,
+    "workflowSupport": true
+  },
+  "documentation": "https://platform.openai.com/docs/codex"
+}

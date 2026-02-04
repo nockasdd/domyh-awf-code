@@ -238,4 +238,4 @@ local_dependencies:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Semantic Search Pro v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v6.1.2 • Semantic Search Pro v1.1 • Hybrid Mode_

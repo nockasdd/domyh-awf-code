@@ -8,7 +8,7 @@
 
 ```yaml
 task_type: code_implementation
-version: "6.0.0"
+version: "6.1.2"
 
 # Required fields
 description: string       # What to build
@@ -107,4 +107,4 @@ This task type triggers:
 
 ---
 
-_DOMYH Awesome Code v6.0 • Code Implementation Task Template_
+_DOMYH Awesome Code v6.1.2 • Code Implementation Task Template_

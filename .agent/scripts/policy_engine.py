@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Awesome Code — Policy Engine v2.0
+DOMYH Awesome Code — Policy Engine v6.1.2.1
 Research-backed: OpenAI Instruction Hierarchy (2024), Claude Code Hooks (2025)
 
 This engine provides deterministic enforcement of rules, independent of LLM behavior.

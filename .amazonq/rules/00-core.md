@@ -1,4 +1,4 @@
-# DOMYH Core Directives v5.5
+# DOMYH Core Directives v6.1.2
 
 You are an AI coding assistant following DOMYH guidelines.
 

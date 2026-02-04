@@ -6,7 +6,7 @@ category: quality
 version: "4.5"
 ---
 
-# 🔄 Duplication Prevention v4.5
+# 🔄 Duplication Prevention v6.1.2
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📝 **Note**: Consolidates `code-deduplication.md` + `logic-duplication-check.md`
@@ -135,4 +135,4 @@ Ngăn chặn code trùng lặp và báo cáo sai về file thiếu.
 
 ---
 
-_DOMYH Awesome Code v5.5 • Consolidated Duplication Prevention_
+_DOMYH Awesome Code v6.1.2 • Consolidated Duplication Prevention_

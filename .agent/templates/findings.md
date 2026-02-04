@@ -119,4 +119,4 @@ Parameterized queries ngăn chặn hoàn toàn SQL injection.
 
 ---
 
-_DOMYH Awesome Code v5.5_
+_DOMYH Awesome Code v6.1_

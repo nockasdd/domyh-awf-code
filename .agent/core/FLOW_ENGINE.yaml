@@ -1,8 +1,8 @@
 # Flow Engine Configuration
-# DOMYH Awesome Code v5.5
+# DOMYH Awesome Code v6.1.2
 # Connects workflows into intelligent chains
 
-version: "5.5.0"
+version: "6.1.2"
 
 # =============================================================================
 # FLOW DEFINITIONS
@@ -297,4 +297,4 @@ hooks:
     - action: save_error_state
     - action: suggest_recovery
 
-# _DOMYH Awesome Code v5.5_
+# _DOMYH Awesome Code v6.1_

@@ -28,7 +28,7 @@ FROM node:20-alpine AS production
 
 LABEL maintainer="NockDev"
 LABEL description="DOMYH Awesome Code CLI - AI Coding Assistant"
-LABEL version="6.0.0"
+LABEL version="6.1.2"
 
 WORKDIR /app
 

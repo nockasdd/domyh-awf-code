@@ -107,4 +107,4 @@ If critique reveals issues:
 
 ---
 
-# DOMYH Awesome Code v6.0 • Reflection Template
+# DOMYH Awesome Code v6.1.2 • Reflection Template

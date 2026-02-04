@@ -3,7 +3,7 @@
 
 ---
 name: language
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-LNG-001"
 
 # =============================================================================
@@ -152,4 +152,4 @@ integration:
   config_path: "preferences.language"
 
 ---
-_DOMYH Awesome Code v6.0 • Language Rule_
+_DOMYH Awesome Code v6.1.2 • Language Rule_

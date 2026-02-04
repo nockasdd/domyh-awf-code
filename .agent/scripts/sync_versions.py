@@ -25,7 +25,7 @@ from dataclasses import dataclass
 class BrandConfig:
     """Brand configuration loaded from manifest.yaml"""
     name: str = "DOMYH Awesome Code"
-    version: str = "4.3.0"
+    version: str = "6.1.2"
     short_version: str = "4.3"
     author: str = "NockDev"
     

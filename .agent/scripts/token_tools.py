@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DOMYH Awesome Code v4.3 — Token Tools
+DOMYH Awesome Code v6.1.2 — Token Tools
 Unified tool for META.yaml analysis and optimization.
 
 Usage:
@@ -64,7 +64,7 @@ def analyze_meta_files():
 def print_analysis(results):
     """Print analysis report."""
     print("=" * 70)
-    print("META.yaml Token Analysis — DOMYH Awesome Code v4.3")
+    print("META.yaml Token Analysis — DOMYH Awesome Code v6.1.2")
     print("=" * 70)
     print(f"{'Skill':<15} {'Bytes':>8} {'Tokens':>8} {'Over':>8} {'KW':>4} {'Cap':>4}")
     print("-" * 70)
@@ -154,7 +154,7 @@ def write_compact_meta(skill_dir: Path, compact: dict) -> int:
 def run_compact():
     """Compact all META.yaml files."""
     print("=" * 60)
-    print("META.yaml Compact Optimizer — DOMYH Awesome Code v4.3")
+    print("META.yaml Compact Optimizer — DOMYH Awesome Code v6.1.2")
     print("=" * 60)
     
     total_before = 0
@@ -189,7 +189,7 @@ def run_compact():
 
 def print_template():
     """Print compact META.yaml template."""
-    template = '''# {skill_name} — DOMYH v5.5
+    template = '''# {skill_name} — DOMYH v6.1.2
 name: {id}
 display_name: {display}
 category: {category}
@@ -215,7 +215,7 @@ detect: [{patterns}]
 
 def main():
     parser = argparse.ArgumentParser(
-        description='DOMYH Awesome Code Token Tools v5.5',
+        description='DOMYH Awesome Code Token Tools v6.1.2',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('--analyze', '-a', action='store_true', help='Analyze token usage')

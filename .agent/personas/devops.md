@@ -1,6 +1,6 @@
 ---
 name: devops
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "ops-001"
 
 # =============================================================================
@@ -262,4 +262,4 @@ output_template: |
   - [ ] Smoke tests passing
 ---
 
-# DOMYH Awesome Code v6.0 • DevOps Persona
+# DOMYH Awesome Code v6.1.2 • DevOps Persona

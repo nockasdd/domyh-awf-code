@@ -1,0 +1,53 @@
+name: database
+version: "6.1.2"
+display: Database Patterns
+category: infrastructure
+tier: 1
+priority: 1
+
+description: |
+  SQL/NoSQL database patterns - PostgreSQL 17/18, MySQL, MongoDB, Redis.
+  Covers ORMs (Prisma, Drizzle, TypeORM), query optimization, migrations.
+
+triggers:
+  file_patterns:
+    - "*.sql"
+    - "schema.prisma"
+    - "migrations/"
+    - "*.db"
+  keywords:
+    # General
+    - database
+    - sql
+    - nosql
+    - query
+    - migration
+    # Engines
+    - postgresql
+    - mysql
+    - mongodb
+    - redis
+    # ORMs
+    - prisma
+    - drizzle
+    - typeorm
+    - sqlalchemy
+  intents:
+    - database query
+    - sql migration
+    - orm setup
+    - query optimization
+
+related_skills:
+  - typescript
+  - python
+  - go
+  - docker
+
+caps:
+  - PostgreSQL 17/18
+  - MongoDB patterns
+  - Redis caching
+  - ORM comparison
+  - Query optimization
+  - Connection pooling

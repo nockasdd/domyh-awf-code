@@ -1,6 +1,6 @@
 ---
 name: planner
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "plan-001"
 
 # =============================================================================
@@ -165,4 +165,4 @@ output_template: |
   - 🚫 [Blocker 1]
 ---
 
-# DOMYH Awesome Code v6.0 • Planner Persona
+# DOMYH Awesome Code v6.1.2 • Planner Persona

@@ -1,6 +1,6 @@
 ---
 name: migrate-plan
-version: "4.3.0"
+version: "6.1.2"
 type: plan
 triggers: ["/migrate"]
 ---
@@ -47,4 +47,4 @@ triggers: ["/migrate"]
 
 ---
 
-_DOMYH Awesome Code v5.5_
+_DOMYH Awesome Code v6.1_

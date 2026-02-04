@@ -1,6 +1,6 @@
 ---
 name: researcher
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "res-001"
 
 # =============================================================================
@@ -188,4 +188,4 @@ output_template: |
   - [Any limitations or uncertainties]
 ---
 
-# DOMYH Awesome Code v6.0 • Researcher Persona
+# DOMYH Awesome Code v6.1.2 • Researcher Persona

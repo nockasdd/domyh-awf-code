@@ -1,6 +1,6 @@
 # 🧠 DOMYH Awesome Code Memory System
 
-> Version 5.5 — 4-Layer Hierarchical Memory Architecture
+> Version 6.1.2 — 4-Layer Hierarchical Memory Architecture
 
 ---
 
@@ -145,4 +145,4 @@ JSON files should maintain schema:
 
 ---
 
-_DOMYH Awesome Code v5.5 — Memory System_
+_DOMYH Awesome Code v6.1.2 — Memory System_

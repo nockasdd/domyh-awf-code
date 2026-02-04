@@ -19,7 +19,7 @@ User: /plan [feature description]
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 0: DEEP INTERVIEW ⭐ (AWF v5.5)   │
+│ PHASE 0: DEEP INTERVIEW ⭐ (AWF v6.1.2)   │
 │ ▸ 3 Câu Hỏi Vàng (nếu cần)              │
 │ ▸ Xác định scope & priority             │
 │ ⛔ SKIP nếu user đã cung cấp đủ context │
@@ -81,7 +81,7 @@ User: /plan [feature description]
 
 ---
 
-## 📋 PHASE 0: DEEP INTERVIEW ⭐ (AWF v5.5)
+## 📋 PHASE 0: DEEP INTERVIEW ⭐ (AWF v6.1.2)
 
 > **Mục đích**: Thu thập đủ context TRƯỚC khi đề xuất giải pháp
 > **Skip nếu**: User đã cung cấp đủ thông tin trong request
@@ -619,7 +619,7 @@ auto_breakdown:
 
 ---
 
-## 📁 PHASE 6: AUTO PHASE GENERATION ⭐ (AWF v5.5)
+## 📁 PHASE 6: AUTO PHASE GENERATION ⭐ (AWF v6.1.2)
 
 > **Trigger**: `/plan full [feature]`
 > **Mục đích**: Tự động tạo folder và phase files theo complexity
@@ -718,4 +718,4 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Plan Pro v3.2 • Deep Interview + Auto Phase Generation_
+_DOMYH Awesome Code v6.1.2 • Plan Pro v3.2 • Deep Interview + Auto Phase Generation_

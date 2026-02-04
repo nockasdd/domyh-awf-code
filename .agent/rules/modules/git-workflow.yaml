@@ -3,7 +3,7 @@
 
 ---
 name: git-workflow
-version: "6.0.0"
+version: "6.1.2"
 rule_id: "MOD-GIT-001"
 
 # =============================================================================
@@ -162,4 +162,4 @@ integration:
     enabled: false
 
 ---
-_DOMYH Awesome Code v6.0 • Git Workflow Rule_
+_DOMYH Awesome Code v6.1.2 • Git Workflow Rule_

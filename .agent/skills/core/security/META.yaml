@@ -1,0 +1,29 @@
+name: security
+version: "6.1.2"
+display: Security Patterns
+category: core
+tier: 1
+priority: 0
+desc: "Security patterns: OWASP Top 10, CWE Top 25, input validation, auth, encryption"
+keywords:
+  [
+    security,
+    vulnerability,
+    owasp,
+    cwe,
+    injection,
+    xss,
+    csrf,
+    auth,
+    encrypt,
+    sanitize,
+  ]
+detect: []
+caps:
+  [
+    Security code review,
+    Vulnerability detection,
+    OWASP compliance,
+    Input validation,
+  ]
+data_files: [owasp-top10.csv, cwe-top25.csv, auth-patterns.csv]

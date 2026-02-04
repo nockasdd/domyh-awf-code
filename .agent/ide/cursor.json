@@ -1,6 +1,6 @@
 {
-  "name": "DOMYH Awesome Code v5.5",
-  "version": "v5.5.0",
+  "name": "DOMYH Awesome Code v6.1.2",
+  "version": "v6.1.2",
   
   "cursor": {
     "agent_mode": true,
@@ -8,7 +8,7 @@
   },
 
   "activation": {
-    "triggers": ["@domyh", "/ap", "/code", "/debug", "/init", "/migrate"],
+    "triggers": ["@domyh", "/ap", "/code", "/debug", "/init", "/migrate", "/hsa"],
     "auto_context": true
   },
 
@@ -25,5 +25,14 @@
   "rules": {
     "include_path": "../core/RULES.md",
     "stop_path": "../core/STOP.md"
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v5.0 Context Management",
+      "command": "node",
+      "args": [".agent/mcp/hsa-server/dist/index.js"],
+      "auto_start": true
+    }
   }
 }

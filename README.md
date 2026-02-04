@@ -1,15 +1,14 @@
 <div align="center">
 
-# 🚀 DOMYH Awesome Code v6.0
+# 🚀 DOMYH Awesome Code v6.1.2
 
 ### **The Ultimate AI Coding Assistant for Developers**
 
-[![Version](https://img.shields.io/badge/version-6.0.0-blue.svg?style=for-the-badge)](https://github.com/nockasdd/domyh-awf-code)
-[![Release](https://img.shields.io/github/v/release/nockasdd/domyh-awf-code?style=for-the-badge&color=brightgreen)](https://github.com/nockasdd/domyh-awf-code/releases)
+[![npm version](https://img.shields.io/npm/v/domyh-awf?style=for-the-badge&color=blue)](https://www.npmjs.com/package/domyh-awf)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-51+-purple.svg?style=for-the-badge)](#-skills)
-[![Commands](https://img.shields.io/badge/commands-31-orange.svg?style=for-the-badge)](#-commands)
-[![IDE Support](https://img.shields.io/badge/IDEs-14+-red.svg?style=for-the-badge)](#-ide-support)
+[![Workflows](https://img.shields.io/badge/workflows-31-orange.svg?style=for-the-badge)](#-commands)
+[![IDEs](https://img.shields.io/badge/IDEs-22+-red.svg?style=for-the-badge)](#-ide-support)
 
 **Portable** • **Multi-language** • **Universal IDE Support**
 
@@ -31,11 +30,6 @@
 
 - [🚀 Quick Start](#-quick-start)
 - [🎯 Commands](#-commands)
-  - [Development](#-development)
-  - [Planning & Design](#-planning--design)
-  - [Deployment & Ops](#-deployment--ops)
-  - [Quality & Review](#-quality--review)
-  - [Utility](#-utility)
 - [🧠 Skills (51+)](#-skills)
 - [💻 IDE Support](#-ide-support)
 - [📁 Project Structure](#-project-structure)
@@ -46,66 +40,45 @@
 
 ## 🚀 Quick Start
 
-### 📦 Option 1: npm (Recommended)
+### 📦 npm (Recommended)
 
 ```bash
 # Install globally
-npm install -g @domyh/cli
+npm install -g domyh-awf
 
 # Initialize in your project
-domyh init
+dawf init
 
 # Or use npx without installing
-npx @domyh/cli init
+npx domyh-awf init
 ```
 
-### 🔗 Option 2: Agent Skills CLI
+### ⚡ Quick Install
 
 ```bash
-# If you use Vercel's skills CLI
-npx skills add nockdev/domyh-skills
+# Quick install with Vietnamese
+dawf init --lang vi -y
+
+# Install for specific IDE (auto MCP setup)
+dawf install --ide cursor
 ```
 
-### ⚡ Option 3: One-Line Install
-
-**🐧 Linux / macOS**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.sh | bash
-```
-
-**🪟 Windows PowerShell**
-
-```powershell
-iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
-```
-
-### 📋 Option 4: Manual Installation
+### 📋 Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/nockasdd/domyh-awf-code.git
-cd domyh-awf-code
+git clone https://github.com/nockasdd/domyh-awesome-code.git
+cd domyh-awesome-code
 
-# Linux/macOS
-./.agent/scripts/install.sh
-
-# Windows PowerShell
-.\.agent\scripts\install.ps1
-```
-
-### 📋 Option 5: Copy to Project
-
-```bash
 # Copy to your project
-cp -r domyh-awf-code/.agent /path/to/your/project/
-cp domyh-awf-code/{CLAUDE.md,GEMINI.md,AGENTS.md,.cursorrules} /path/to/your/project/
+cp -r .agent /path/to/your/project/
+cp {CLAUDE.md,GEMINI.md,AGENTS.md,.cursorrules} /path/to/your/project/
 ```
 
 > 💡 **During installation**, you'll be prompted to choose:
 >
 > - **Language**: English (default) or Vietnamese
-> - **Target IDE**: Claude Code, Cursor, Windsurf, Gemini CLI, etc.
+> - **Target IDE**: Claude Code, Cursor, Gemini CLI, etc.
 
 ---
 
@@ -256,18 +229,23 @@ cp domyh-awf-code/{CLAUDE.md,GEMINI.md,AGENTS.md,.cursorrules} /path/to/your/pro
 
 <div align="center">
 
-|                                                     IDE                                                      |        Config File        | Status |
-| :----------------------------------------------------------------------------------------------------------: | :-----------------------: | :----: |
-|         ![Claude](https://img.shields.io/badge/Claude_Code-CC785C?style=flat-square&logoColor=white)         |        `CLAUDE.md`        |   ✅   |
-|   ![Gemini](https://img.shields.io/badge/Gemini_CLI-4285F4?style=flat-square&logo=google&logoColor=white)    |        `GEMINI.md`        |   ✅   |
-|           ![Cursor](https://img.shields.io/badge/Cursor-000000?style=flat-square&logoColor=white)            |      `.cursorrules`       |   ✅   |
-|         ![Windsurf](https://img.shields.io/badge/Windsurf-00D4FF?style=flat-square&logoColor=white)          |     `.windsurfrules`      |   ✅   |
-| ![Copilot](https://img.shields.io/badge/GitHub_Copilot-000000?style=flat-square&logo=github&logoColor=white) | `copilot-instructions.md` |   ✅   |
-|        ![OpenHands](https://img.shields.io/badge/OpenHands-5D3FD3?style=flat-square&logoColor=white)         |        `AGENTS.md`        |   ✅   |
-|            ![Aider](https://img.shields.io/badge/Aider-FF6B6B?style=flat-square&logoColor=white)             |     `.aider.conf.yml`     |   ✅   |
-|             ![Bolt](https://img.shields.io/badge/Bolt-FFD700?style=flat-square&logoColor=black)              |    `.bolt/config.json`    |   ✅   |
-|       ![CodeRabbit](https://img.shields.io/badge/CodeRabbit-FF4081?style=flat-square&logoColor=white)        |    `.coderabbit.yaml`     |   ✅   |
-|       ![Cody](https://img.shields.io/badge/Sourcegraph_Cody-FF5733?style=flat-square&logoColor=white)        | `.sourcegraph/cody.json`  |   ✅   |
+### 22 Supported IDEs & AI Agents
+
+| Tier  | IDE                                                                                                             |        Config File        | Status |
+| :---: | :-------------------------------------------------------------------------------------------------------------- | :-----------------------: | :----: |
+| **1** | ![Claude](https://img.shields.io/badge/Claude_Code-CC785C?style=flat-square&logoColor=white)                    |        `CLAUDE.md`        |   ✅   |
+| **1** | ![Gemini](https://img.shields.io/badge/Gemini_CLI-4285F4?style=flat-square&logo=google&logoColor=white)         |        `GEMINI.md`        |   ✅   |
+| **1** | ![Cursor](https://img.shields.io/badge/Cursor-000000?style=flat-square&logoColor=white)                         |      `.cursorrules`       |   ✅   |
+| **1** | ![Windsurf](https://img.shields.io/badge/Windsurf-00D4FF?style=flat-square&logoColor=white)                     |     `.windsurfrules`      |   ✅   |
+| **1** | ![Copilot](https://img.shields.io/badge/GitHub_Copilot-000000?style=flat-square&logo=github&logoColor=white)    | `copilot-instructions.md` |   ✅   |
+| **1** | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white) |   `.vscode/ai-rules.md`   |   ✅   |
+| **2** | ![Cline](https://img.shields.io/badge/Cline-5D3FD3?style=flat-square&logoColor=white)                           |   `.clinerules/core.md`   |   ✅   |
+| **2** | ![JetBrains](https://img.shields.io/badge/JetBrains_AI-000000?style=flat-square&logo=jetbrains&logoColor=white) |    `.idea/ai-rules.md`    |   ✅   |
+| **2** | ![Amazon Q](https://img.shields.io/badge/Amazon_Q-FF9900?style=flat-square&logo=amazon&logoColor=white)         |    `.amazonq/rules.md`    |   ✅   |
+| **2** | ![Codex](https://img.shields.io/badge/Codex-412991?style=flat-square&logoColor=white)                           |   `.codex/config.json`    |   ✅   |
+| **2** | ![Aider](https://img.shields.io/badge/Aider-FF6B6B?style=flat-square&logoColor=white)                           |     `.aider.conf.yml`     |   ✅   |
+| **2** | ![CodeRabbit](https://img.shields.io/badge/CodeRabbit-FF4081?style=flat-square&logoColor=white)                 |    `.coderabbit.yaml`     |   ✅   |
+| **2** | ![Cody](https://img.shields.io/badge/Sourcegraph_Cody-FF5733?style=flat-square&logoColor=white)                 | `.sourcegraph/cody.json`  |   ✅   |
 
 </div>
 
@@ -276,7 +254,7 @@ cp domyh-awf-code/{CLAUDE.md,GEMINI.md,AGENTS.md,.cursorrules} /path/to/your/pro
 ## 📁 Project Structure
 
 ```
-domyh-awf-code/
+domyh-awesome-code/
 ├── 📄 CLAUDE.md          # Claude Code config
 ├── 📄 GEMINI.md          # Gemini CLI config
 ├── 📄 AGENTS.md          # OpenHands config
@@ -285,11 +263,12 @@ domyh-awf-code/
 │   ├── 📄 manifest.yaml  # Agent configuration
 │   ├── 📁 core/          # Engine configs (Router, Memory, Cache)
 │   ├── 📁 rules/         # 17 modular rule files
-│   ├── 📁 skills/        # 34 skill directories
+│   ├── 📁 skills/        # 51 skill directories
 │   ├── 📁 workflows/     # 31 command workflows
+│   ├── 📁 mcp/           # HSA v5.0 MCP server (auto-built)
 │   ├── 📁 i18n/          # en.yaml, vi.yaml
-│   ├── 📁 memory/        # Persistent state
-│   └── 📁 scripts/       # Install & utility scripts
+│   └── 📁 memory/        # Persistent state
+├── 📁 domyh-awf-cli/     # CLI package (npm)
 └── 📄 LICENSE            # MIT License
 ```
 
@@ -303,11 +282,14 @@ domyh-awf-code/
 ### Cài Đặt Nhanh
 
 ```bash
-# Linux/macOS
-curl -fsSL https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.sh | bash
+# Cài đặt global
+npm install -g domyh-awf
 
-# Windows PowerShell
-iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/scripts/install.ps1 | iex
+# Khởi tạo project
+dawf init --lang vi -y
+
+# Cài đặt cho Cursor
+dawf install --ide cursor
 ```
 
 ### Các Lệnh Chính
@@ -323,7 +305,7 @@ iwr -useb https://raw.githubusercontent.com/nockasdd/domyh-awf-code/main/.agent/
 
 ### Ngôn Ngữ Hỗ Trợ
 
-Agent hỗ trợ **34+ skills** bao gồm: Go, Python, TypeScript, Rust, C++, C#, Java, PHP, React, Vue, Next.js, Docker, Kubernetes, AWS, và nhiều hơn nữa.
+Agent hỗ trợ **51+ skills** bao gồm: Go, Python, TypeScript, Rust, C++, C#, Java, PHP, React, Vue, Next.js, Docker, Kubernetes, AWS, và nhiều hơn nữa.
 
 </details>
 
@@ -339,7 +321,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Made with ❤️ by [NockDev](https://github.com/nockasdd)**
 
-[![GitHub Stars](https://img.shields.io/github/stars/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code)
-[![GitHub Forks](https://img.shields.io/github/forks/nockasdd/domyh-awf-code?style=social)](https://github.com/nockasdd/domyh-awf-code/fork)
+[![GitHub Stars](https://img.shields.io/github/stars/nockasdd/domyh-awesome-code?style=social)](https://github.com/nockasdd/domyh-awesome-code)
+[![GitHub Forks](https://img.shields.io/github/forks/nockasdd/domyh-awesome-code?style=social)](https://github.com/nockasdd/domyh-awesome-code/fork)
+
+**DOMYH Awesome Code v6.1.2** • 51 Skills • 31 Workflows • 22 IDEs
 
 </div>

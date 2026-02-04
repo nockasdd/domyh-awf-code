@@ -1,6 +1,6 @@
 ---
 name: debug-report
-version: "4.3.0"
+version: "6.1.2"
 type: report
 triggers: ["/debug"]
 ---
@@ -47,4 +47,4 @@ triggers: ["/debug"]
 
 ---
 
-_DOMYH Awesome Code v5.5_
+_DOMYH Awesome Code v6.1_

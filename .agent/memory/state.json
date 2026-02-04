@@ -4,8 +4,8 @@
   
   "system": {
     "name": "DOMYH Awesome Code",
-    "version": "v5.5.0",
-    "version_short": "v5.5",
+    "version": "v6.1.2",
+    "version_short": "v6.1.2",
     "_note": "Sync from core/VERSION.yaml"
   },
   
@@ -32,8 +32,8 @@
   },
   
   "audit": {
-    "last_score": 8.8,
-    "last_date": "2026-02-01",
+    "last_score": 9.2,
+    "last_date": "2026-02-04",
     "_note": "Full history in audit_summary.json"
   },
   

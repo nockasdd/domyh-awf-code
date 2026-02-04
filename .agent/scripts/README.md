@@ -1,15 +1,31 @@
-# 🔧 Scripts — DOMYH Awesome Code v5.5
+# 🔧 Scripts — DOMYH Awesome Code v6.1.2
 
 > Utility scripts for agent management and optimization
 
 ---
 
+## 📦 HSA Module (New!)
+
+The **HSA** (Hierarchical Skills Architecture) is a unified context management engine:
+
+```python
+from hsa import HSAEngine, get_context
+
+# Quick API
+context = get_context(query_files=["main.py"], max_tokens=8000)
+print(f"Tier: {context.tier_name}")
+```
+
+📖 See [hsa/README.md](hsa/README.md) for full documentation.
+
+---
+
 ## 🚀 Installation Scripts
 
-| Script        | Platform    | Usage            |
-| ------------- | ----------- | ---------------- |
-| `install.sh`  | Linux/macOS | `./install.sh`   |
-| `install.ps1` | Windows     | `.\\install.ps1` |
+| Script        | Platform    | Usage           |
+| ------------- | ----------- | --------------- |
+| `install.sh`  | Linux/macOS | `./install.sh`  |
+| `install.ps1` | Windows     | `.\install.ps1` |
 
 ### Quick Install
 
@@ -30,18 +46,15 @@
 
 ## 🛠️ Utility Scripts
 
-| Script                     | Purpose                   | Usage                                    |
-| -------------------------- | ------------------------- | ---------------------------------------- |
-| `validate_agent.py`        | Validate agent structure  | `python validate_agent.py [-v]`          |
-| `semantic_selector.py`     | Generate/test embeddings  | `python semantic_selector.py --generate` |
-| `cache_manager.py`         | Manage skill cache        | `python cache_manager.py --status`       |
-| `token_tools.py`           | Token optimization        | `python token_tools.py --analyze`        |
-| `compact_meta.py`          | Compact META.yaml files   | `python compact_meta.py`                 |
-| `optimize_tokens.py`       | Optimize token usage      | `python optimize_tokens.py`              |
-| `regenerate_embeddings.py` | Regenerate all embeddings | `python regenerate_embeddings.py`        |
-| `sync_versions.py`         | Sync version numbers      | `python sync_versions.py`                |
-| `audit_phase5.py`          | Audit Phase 5 (memory)    | `python audit_phase5.py`                 |
-| `test_integration.py`      | Integration tests         | `python test_integration.py`             |
+| Script                 | Purpose                  | Usage                                    |
+| ---------------------- | ------------------------ | ---------------------------------------- |
+| `validate_agent.py`    | Validate agent structure | `python validate_agent.py [-v]`          |
+| `semantic_selector.py` | Generate/test embeddings | `python semantic_selector.py --generate` |
+| `cache_manager.py`     | Manage skill cache       | `python cache_manager.py --status`       |
+| `token_tools.py`       | Token optimization       | `python token_tools.py --analyze`        |
+| `sync_versions.py`     | Sync version numbers     | `python sync_versions.py`                |
+| `test_integration.py`  | Integration tests        | `python test_integration.py`             |
+| `policy_engine.py`     | Policy enforcement       | `python policy_engine.py`                |
 
 ---
 
@@ -135,4 +148,4 @@ chmod +x .agent/scripts/*.sh
 
 ---
 
-_DOMYH Awesome Code v5.5 • Scripts v2.0.0_
+_DOMYH Awesome Code v6.1.2 • Scripts v6.1.2.1_

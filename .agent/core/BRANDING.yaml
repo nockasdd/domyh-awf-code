@@ -19,7 +19,7 @@ identity:
   organization: "DOMYH"
 
   # Repository và docs
-  repository: "https://github.com/nockasdd/domyh-awesome-code-agent"
+  repository: "https://github.com/nockasdd/domyh-awf-code"
   documentation: "https://domyh.dev/docs"
 
   # License

@@ -1,0 +1,33 @@
+# languages/_index.yaml — Language Skills Index
+category: languages
+description: "Programming languages"
+count: 28
+skills:
+  - { id: python, has_advanced: true }
+  - { id: go, has_advanced: true }
+  - { id: typescript, has_advanced: true }
+  - { id: javascript, has_advanced: true }
+  - { id: rust, has_advanced: true }
+  - { id: cpp, has_advanced: true }
+  - { id: c, has_advanced: true }
+  - { id: java, has_advanced: true }
+  - { id: kotlin, has_advanced: true }
+  - { id: csharp, has_advanced: true }
+  - { id: ruby, has_advanced: true }
+  - { id: php, has_advanced: true }
+  - { id: swift, has_advanced: true }
+  - { id: perl, has_advanced: false }
+  - { id: lua, has_advanced: true }
+  - { id: asm, has_advanced: true }
+  - { id: nim, has_advanced: false }
+  - { id: crystal, has_advanced: false }
+  - { id: zig, has_advanced: false }
+  - { id: haskell, has_advanced: false }
+  - { id: elixir, has_advanced: false }
+  - { id: scala, has_advanced: false }
+  - { id: clojure, has_advanced: false }
+  - { id: fsharp, has_advanced: false }
+  - { id: ocaml, has_advanced: false }
+  - { id: r, has_advanced: false }
+  - { id: julia, has_advanced: false }
+  - { id: solidity, has_advanced: false }

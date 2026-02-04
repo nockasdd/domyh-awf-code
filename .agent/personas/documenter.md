@@ -1,6 +1,6 @@
 ---
 name: documenter
-version: "6.0.0"
+version: "6.1.2"
 persona_id: "doc-001"
 
 # =============================================================================
@@ -256,4 +256,4 @@ output_template: |
   - [Link to API reference]
 ---
 
-# DOMYH Awesome Code v6.0 • Documenter Persona
+# DOMYH Awesome Code v6.1.2 • Documenter Persona

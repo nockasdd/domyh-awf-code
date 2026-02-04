@@ -791,4 +791,4 @@ multi_env_sync:
 
 ---
 
-_DOMYH Awesome Code v5.5 • Env Pro v3.1 • Vault + Multi-Env Sync_
+_DOMYH Awesome Code v6.1.2 • Env Pro v3.1 • Vault + Multi-Env Sync_
