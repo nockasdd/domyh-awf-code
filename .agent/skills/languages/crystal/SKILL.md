@@ -1,7 +1,7 @@
 ---
 name: crystal
 detect: ["*.cr", "shard.yml", "shard.lock"]
-version: "6.2.2"
+version: "6.2.3"
 category: language
 tier: 3
 ---

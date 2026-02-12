@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: landing
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-05"
   migrated_from: landing.yaml
   patterns_count: 27

@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.2.2"
-  version_short: "v6.2.2" # Dùng cho footer: "_DOMYH Awesome Code "
+  version: "6.2.3"
+  version_short: "v6.2.3" # Dùng cho footer: "_DOMYH Awesome Code "
   codename: "Ecosystem Expansion"
   release_date: "2026-02-12"
 
@@ -74,7 +74,7 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: "v6.2.2"
+  default_skill_version: "v6.2.3"
 
 # =============================================================================
 # VERSION HISTORY
@@ -91,7 +91,7 @@ changelog:
       - "5 data enrichments: ADR, E2E, OWASP LLM Top 10, Modern APIs, Passkeys"
       - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
 
-  "6.2.2":
+  "6.2.3":
     date: "2026-02-05"
     codename: "Context Mesh"
     changes:

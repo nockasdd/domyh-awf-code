@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "arch-001"
 
 # =============================================================================
@@ -65,7 +65,7 @@ tools:
     - generate_image # For diagrams
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - replace_file_content # Architects don't code
     - run_command

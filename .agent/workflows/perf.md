@@ -16,7 +16,7 @@ skills: { required: [], contextual: [auto] }
 2. **PROFILE** — CPU/memory profiling, flamegraphs
 3. **ANALYZE** — Identify hotspots, bottlenecks
 4. **OPTIMIZE** — Apply fixes, verify improvement
-5. **REPORT** — Before/after comparison
+5. **REPORT** — Before/after comparison. Save to `.domyh/perf/benchmark_YYYY-MM-DD.md`
 
 ---
 

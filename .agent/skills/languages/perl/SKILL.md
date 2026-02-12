@@ -1,7 +1,7 @@
 ---
 name: perl
 detect: ["*.pl", "*.pm", "Makefile.PL", "cpanfile"]
-version: "6.2.2"
+version: "6.2.3"
 category: scripting
 tier: 3
 ---

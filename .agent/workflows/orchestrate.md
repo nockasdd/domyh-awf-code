@@ -13,8 +13,8 @@ skills: { required: [], contextual: [] }
 ## ORCHESTRATE FLOW
 
 1. **DECOMPOSE** — Break complex task into sub-tasks, identify dependencies, build DAG (Directed Acyclic Graph). Show: `[Step 1/5] Decomposing into 4 parallel tasks...`
-2. **ASSIGN** — Map sub-tasks to specialist personas, define interfaces between agents
-3. **PLAN** — Define execution order, checkpoints, rollback points → ⛔ STOP for user approval. Show task DAG visualization
+2. **ASSIGN** — Map sub-tasks to specialist personas, define interfaces between agents. Use `hsa_prepare_handoff` per sub-task for context injection
+3. **PLAN** — Define execution order, checkpoints, rollback points. Use `hsa_filter_tools` per sub-agent to reduce prompt bloat → ⛔ STOP for user approval. Show task DAG visualization
 4. **EXECUTE** — Run parallel tasks, monitor progress, handle failures. Show: `[Task 2/4] Backend API ████████░░ 80%`
 5. **SYNTHESIZE** — Merge results, resolve conflicts, verify integration. Run cross-task tests
 

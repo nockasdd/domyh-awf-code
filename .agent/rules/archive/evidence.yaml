@@ -3,7 +3,7 @@
 
 ---
 name: evidence
-version: "6.2.2"
+version: "6.2.3"
 rule_id: "MOD-EVD-001"
 
 # =============================================================================
@@ -168,9 +168,9 @@ integration:
     hsa_get_context:
       purpose: "Gather code context as evidence for findings"
       usage: "hsa_get_context files=[target] → retrieve relevant code snippets"
-    hsa_search_patterns:
+    hsa_search_skills:
       purpose: "Find best-practice patterns to validate claims"
-      usage: "hsa_search_patterns query=[topic] → cross-reference against 730+ patterns"
+      usage: "hsa_search_skills query=[topic] → cross-reference against skill knowledge"
 
   reflection:
     enabled: true

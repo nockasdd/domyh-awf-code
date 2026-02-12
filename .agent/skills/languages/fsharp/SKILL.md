@@ -1,7 +1,7 @@
 ---
 name: fsharp
 detect: ["*.fs", "*.fsx", "*.fsproj"]
-version: "6.2.2"
+version: "6.2.3"
 category: functional
 tier: 3
 ---

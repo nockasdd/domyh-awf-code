@@ -1,7 +1,7 @@
 metadata:
   skill: security
   domain: typescript_security
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-05"
   migrated_from: typescript-security.yaml
   patterns_count: 25

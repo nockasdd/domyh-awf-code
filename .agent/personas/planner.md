@@ -1,6 +1,6 @@
 ---
 name: planner
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "plan-001"
 
 # =============================================================================
@@ -62,7 +62,7 @@ tools:
     - search_web
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - replace_file_content # Planners don't code
     - run_command

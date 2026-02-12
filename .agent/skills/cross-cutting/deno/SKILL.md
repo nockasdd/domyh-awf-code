@@ -1,7 +1,7 @@
 ---
 name: deno
 detect: ["deno.json", "deno.jsonc", "deno.lock", "mod.ts", "deps.ts"]
-version: "6.2.2"
+version: "6.2.3"
 category: runtime
 tier: 2
 ---

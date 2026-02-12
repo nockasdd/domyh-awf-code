@@ -1,6 +1,6 @@
 ---
 name: security
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "sec-001"
 
 # =============================================================================
@@ -68,7 +68,7 @@ tools:
     - read_url_content
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - run_command # Security risk
     - delete_file

@@ -18,7 +18,12 @@
     "hsa_check_changes - File change tracking",
     "hsa_prefetch - Predictive prefetch",
     "hsa_status - Engine health",
-    "hsa_prepare_handoff - Sub-agent context handoff",
-    "hsa_filter_tools - Task-specific tool filtering"
+    "hsa_get_snapshot - Project snapshot (tree + symbols + env)",
+    "hsa_export - Structured engine data export",
+    "hsa_get_repo_map - PageRank-ranked repository map",
+    "hsa_search_skills - Skill pattern search (BM25)",
+    "hsa_detect_environment - System runtime & tool detection",
+    "hsa_prepare_handoff - Sub-agent context packet",
+    "hsa_filter_tools - Task-type tool catalog pruning"
   ]
 }

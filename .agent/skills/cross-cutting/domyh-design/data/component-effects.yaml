@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: component_effects
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-12"
   description: "Per-component animation effect patterns — CSS, Tailwind, and JS approaches"
   patterns_count: 52

@@ -37,15 +37,22 @@ Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter 
 META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive)
 Skills location: `~/.gemini/antigravity/skills/` (global) or `.agent/skills/` (project)
 
-## MCP Tools (HSA v1.0.1)
+## MCP Tools (HSA v1.0.2)
 
-| Tool                   | Purpose                                |
-| ---------------------- | -------------------------------------- |
-| `hsa_get_context`      | Intelligent code context               |
-| `hsa_detect_stack`     | Tech stack detection                   |
-| `hsa_get_agent_config` | Commands/personas/rules/skills details |
-| `hsa_check_changes`    | File change tracking                   |
-| `hsa_prefetch`         | Predictive prefetch                    |
-| `hsa_status`           | Engine health                          |
+| Tool                     | Purpose                                 |
+| ------------------------ | --------------------------------------- |
+| `hsa_get_context`        | Intelligent code context                |
+| `hsa_detect_stack`       | Tech stack detection                    |
+| `hsa_get_agent_config`   | Commands/personas/rules/skills details  |
+| `hsa_check_changes`      | File change tracking                    |
+| `hsa_prefetch`           | Predictive prefetch                     |
+| `hsa_status`             | Engine health                           |
+| `hsa_get_snapshot`       | Project snapshot (tree + symbols + env) |
+| `hsa_export`             | Structured engine data export           |
+| `hsa_get_repo_map`       | PageRank-ranked repository map          |
+| `hsa_search_skills`      | Skill pattern search (BM25)             |
+| `hsa_detect_environment` | System runtime & tool detection         |
+| `hsa_prepare_handoff`    | Sub-agent context packet                |
+| `hsa_filter_tools`       | Task-type tool catalog pruning          |
 
 _DOMYH Awesome Code · SLIM Config v2 · NockDev_

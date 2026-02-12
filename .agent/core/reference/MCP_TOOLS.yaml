@@ -3,7 +3,7 @@
 # MCP Tools - Model Context Protocol Integration
 # =============================================================================
 
-version: "6.2.2"
+version: "6.2.3"
 
 # =============================================================================
 # OVERVIEW
@@ -27,7 +27,7 @@ description: |
 
 server:
   name: "domyh-agent"
-  version: "6.2.2"
+  version: "6.2.3"
 
   transport:
     - "stdio"

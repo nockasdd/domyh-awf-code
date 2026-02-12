@@ -16,7 +16,7 @@ skills:
 
 ## DEPLOYMENT FLOW
 
-1. **PRE-FLIGHT** (Auto) — Detect stack via HSA (`hsa_detect_stack`), load deploy context (`hsa_get_context`). Run pre-flight checklist:
+1. **PRE-FLIGHT** (Auto) — Detect stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), load deploy context (`hsa_get_context`). Run pre-flight checklist:
    - [ ] Tests pass (`npm test` / `go test ./...`)
    - [ ] Security scan (no P0 vulnerabilities)
    - [ ] Dependencies up to date (no critical outdated)
@@ -67,7 +67,7 @@ pre_flight:
 ```yaml
 # Prevent concurrent deployments
 deploy_lock:
-  file: ".deploy.lock"
+  file: ".domyh/deploy.lock"
   content: |
     deployer: [user/agent]
     started: [ISO timestamp]

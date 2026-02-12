@@ -156,7 +156,7 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 | Low      |     7 |            7 |
 
 ⏱️ Duration: 45s | Files: 128 | Dependencies: 47
-📁 Full: .domyh/security_YYYY-MM-DD.json
+📁 Full: .domyh/security/scan_YYYY-MM-DD.json
 ```
 
 ---
@@ -183,4 +183,4 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 - Never expose actual secret values in reports (mask to `sk-****...****`)
 - Warn before scanning large directories (> 10,000 files)
 - Skip scanning `node_modules/`, `vendor/`, `.git/` by default
-- Output findings to `.domyh/` (gitignored) for sensitive content
+- Output findings to `.domyh/security/` (gitignored) for sensitive content

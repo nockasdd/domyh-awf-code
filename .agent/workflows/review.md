@@ -12,12 +12,13 @@ skills: { required: [security], contextual: [auto] }
 
 ## REVIEW FLOW
 
-1. **CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), load review context (`hsa_get_context`), read changed files. Auto-detect review scope: staged changes, uncommitted, or PR
+1. **CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), load review context (`hsa_get_context`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR
 2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Show: `[Analyzing] 12 files changed, 3 high-risk`
 3. **REVIEW** — Apply 5-category checklist on changed code, inline comments with severity
 4. **SELF-REVIEW** — Agent re-reads own findings, removes false positives, verifies evidence accuracy
 5. **REPORT** — Structured feedback with severity, approve/comment/request changes decision
-6. **SYNC** — `hsa_check_changes` to update index
+6. **PERSIST** — Save review findings to `.domyh/reviews/review_YYYY-MM-DD.md`
+7. **SYNC** — `hsa_check_changes` to update index
 
 ---
 

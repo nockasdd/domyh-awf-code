@@ -2,7 +2,7 @@
 name: security
 detect: ["always"]
 priority: 0
-version: "6.2.2"
+version: "6.2.3"
 ---
 
 # Security Patterns (Enhanced 2026)

@@ -12,7 +12,7 @@ skills: { required: [], contextual: [auto] }
 
 ## INITIALIZATION FLOW
 
-1. **DETECT** (Auto) — Parse user intent, detect existing project via HSA (`hsa_detect_stack`), infer stack from keywords
+1. **DETECT** (Auto) — Parse user intent, detect existing project via HSA (`hsa_detect_stack`), check installed tools (`hsa_detect_environment`), infer stack from keywords
 2. **CONFIGURE** — Select template, choose architecture → ⛔ STOP: confirm before scaffold
 3. **SCAFFOLD** — Run init commands, create folder structure, generate base files
 4. **CONFIGURE** — Setup linting/formatting, git hooks, create .env.example

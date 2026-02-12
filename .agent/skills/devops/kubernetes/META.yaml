@@ -1,5 +1,5 @@
 name: kubernetes
-version: "6.2.2"
+version: "6.2.3"
 category: infrastructure
 tier: 3
 

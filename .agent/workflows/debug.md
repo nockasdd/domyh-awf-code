@@ -12,7 +12,7 @@ skills: { required: [], contextual: [auto] }
 
 ## DEBUG FLOW
 
-1. **CAPTURE** (Auto) — Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`), parse stack trace, identify affected files. Show: `[Step 1/7] Capturing error context...`
+1. **CAPTURE** (Auto) — Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`, `hsa_search_skills`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/7] Capturing error context...`
 2. **TIMELINE** — Reconstruct event timeline: `git log --oneline -10`, check recent changes to affected files, correlate with error timestamps. Answer: "When did this start?"
 3. **REPRODUCE** — Create minimal reproduction, confirm error occurs consistently → ⛔ STOP if cannot reproduce: ask user 5 questions
 4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location
@@ -24,7 +24,7 @@ skills: { required: [], contextual: [auto] }
    ```
 6. **ANALYZE** — 5 Whys on CONFIRMED root cause (not assumptions)
 7. **FIX** — Create FAILING test first, implement single fix → if 3+ fixes fail → question architecture. Add **prevention guard** to block similar bugs
-8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to failure repository if novel
+8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel
 
 ---
 

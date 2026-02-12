@@ -12,12 +12,12 @@ skills: { required: [], contextual: [auto] }
 
 ## ONBOARD FLOW
 
-1. **DETECT** — Stack detection (`hsa_detect_stack`), count files/dirs, identify entry points & configs. Show: `[Step 1/6] Detecting stack...`
-2. **ANALYZE** — Parse architecture: folder structure, key modules, dependency graph, build system. Show: `[Step 2/6] Analyzing 342 files...`
+1. **DETECT** — Stack detection (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files/dirs, identify entry points & configs. Show: `[Step 1/6] Detecting stack...`
+2. **ANALYZE** — Parse architecture: folder structure, key modules, dependency graph, build system. Use `hsa_get_repo_map` for file importance ranking. Show: `[Step 2/6] Analyzing 342 files...`
 3. **MAP** — Generate Mermaid architecture diagram + module dependency graph. Show: `[Step 3/6] Mapping architecture...`
 4. **ASSESS** — Identify code health: test coverage, lint score, outdated deps, known issues. Show: `[Step 4/6] Assessing code health...`
 5. **GUIDE** — Create "Getting Started" guide: setup steps, key files, conventions, common tasks. Show: `[Step 5/6] Generating guide...`
-6. **SYNC** — Save onboard report to `.domyh/onboard_YYYY-MM-DD.md`. Show: `[Step 6/6] Saving report...`
+6. **SYNC** — Save onboard report to `.domyh/onboard/onboard_YYYY-MM-DD.md`. Show: `[Step 6/6] Saving report...`
 
 ---
 

@@ -13,11 +13,11 @@ skills: { required: [security, audit-pro], contextual: [auto] }
 
 ## AUDIT FLOW
 
-1. **DISCOVERY** (Auto 30s) — Detect stack (`hsa_detect_stack`), count files, load audit-pro checklists via HSA (`hsa_get_context`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
+1. **DISCOVERY** (Auto 30s) — Detect stack (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files, load audit-pro checklists via HSA (`hsa_get_context`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
 2. **SCOPE CONTRACT** — Display scope options (from scoring.yaml) → ⛔ STOP wait for user selection (1-5). Show **previous audit score** if available for delta comparison. Show **active experts** based on detection
 3. **EXECUTE** — Run active Expert Panels sequentially, collect findings with evidence. Show **progress**: `[Panel 2/8] Architecture — Checkpoint 12/20`
 4. **SELF-REVIEW** — Agent re-reads findings, removes duplicates, verifies evidence accuracy, assigns confidence (1-10) per finding
-5. **REPORT** — Production Readiness Score (0-10), findings by P0/P1/P2/P3, **delta** vs previous audit (↑↓), save to `.domyh/audit_YYYY-MM-DD.md`
+5. **REPORT** — Production Readiness Score (0-10), findings by P0/P1/P2/P3, **delta** vs previous audit (↑↓), save to `.domyh/audits/audit_YYYY-MM-DD.md`
 6. **MEMORY PERSIST** — Update `memory/audit_summary.json`, log decisions, update `memory/state.json` scores
 
 ---
@@ -113,7 +113,7 @@ scoring: skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight profiles, g
 📊 DOMYH AUDIT — [project] — [date] — Score: X.X/10 (↑0.3 from last)
 | Expert | Score | Issues | Δ vs Last |
 👥 Active Experts: 8/12 (Security, Architecture, Performance, Quality, DevOps, UX, Data, Reliability)
-📁 Full: .domyh/audit_YYYY-MM-DD.md
+📁 Full: .domyh/audits/audit_YYYY-MM-DD.md
 ⏱️ Duration: Xm Ys | Files: N | Changed: M
 ```
 

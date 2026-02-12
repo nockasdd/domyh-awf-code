@@ -12,7 +12,7 @@ skills: { required: [], contextual: [auto] }
 
 ## DEV FLOW
 
-1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
+1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
 2. **DEPS CHECK** — Verify dependencies installed:
    - Node.js: `node_modules/` exists? → If not: auto-run `npm install` (or yarn/pnpm/bun)
    - Go: `go.sum` exists? → If not: `go mod download`

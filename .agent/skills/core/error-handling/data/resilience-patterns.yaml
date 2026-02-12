@@ -1,7 +1,7 @@
 metadata:
   skill: error-handling
   domain: resilience_patterns
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-05"
   migrated_from: resilience-patterns.yaml
   patterns_count: 25

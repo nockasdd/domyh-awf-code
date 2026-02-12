@@ -2,7 +2,7 @@
 # SEMANTIC_ENGINE.yaml — HSA Semantic Memory Configuration
 # =============================================================================
 # DOMYH Awesome Code Agent — Vector-based Semantic Search
-# version: 6.2.2
+# version: 6.2.3
 # =============================================================================
 
 # Enable/Disable semantic memory
@@ -159,4 +159,4 @@ metrics:
 # =============================================================================
 # Footer
 # =============================================================================
-# _DOMYH Awesome Code • Semantic Engine v6.2.2 • HSA Integration_
+# _DOMYH Awesome Code • Semantic Engine v6.2.3 • HSA Integration_

@@ -17,6 +17,7 @@ skills: { required: [prompt-engineering], contextual: [domyh-design] }
 3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → sections phù hợp. Choose template theo prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
 4. **GENERATE** — Tạo structured markdown prompt. Viết bằng ngôn ngữ người dùng yêu cầu. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`
 5. **REFINE** — Present output → ⛔ **STOP — user review**. Iterate nếu cần: thêm chi tiết, đổi style, adjust parameters.
+6. **SAVE** (Optional) — If user confirms, save to `.domyh/prompts/prompt_YYYY-MM-DD_{type}.md`
 
 ---
 

@@ -12,7 +12,7 @@ skills: { required: [], contextual: [auto, domyh-design, tailwind] }
 
 ## CODE FLOW
 
-1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect_stack`), load language skill via HSA (`hsa_get_context`)
+1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect_stack`), load language skill via HSA (`hsa_get_context`, `hsa_search_skills`)
    - **UI INTENT CHECK** (→ See FLOW.md §18.1):
      Classify intent into T1 (Create) / T2 (Modify) / T3 (Design):
      T1 (new UI, no existing ref) → Follow FLOW.md §18.2 Create Pipeline (12 steps)

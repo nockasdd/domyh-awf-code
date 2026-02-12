@@ -1,7 +1,7 @@
 ---
 name: angular
 detect: ["angular.json", "*.component.ts", "@angular/core"]
-version: "6.2.2"
+version: "6.2.3"
 category: frontend
 tier: 1
 ---

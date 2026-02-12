@@ -1,7 +1,7 @@
 metadata:
   skill: observability
   domain: language_csharp
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-05"
   migrated_from: language-csharp.yaml
   patterns_count: 25

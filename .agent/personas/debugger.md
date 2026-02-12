@@ -1,6 +1,6 @@
 ---
 name: debugger
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "dbg-001"
 
 # =============================================================================
@@ -70,7 +70,7 @@ tools:
     - write_to_file
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - deploy # Don't deploy fixes directly
     - delete_file

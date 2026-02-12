@@ -3,7 +3,7 @@
 
 ---
 name: quality
-version: "6.2.2"
+version: "6.2.3"
 rule_id: "MOD-QLT-001"
 
 # =============================================================================
@@ -169,9 +169,9 @@ integration:
     - evidence
 
   hsa_tools:
-    hsa_search_patterns:
+    hsa_search_skills:
       purpose: "Retrieve language-specific best practices and anti-patterns"
-      usage: "hsa_search_patterns query=[pattern] domain=[lang] → quality guidance from 730+ patterns"
+      usage: "hsa_search_skills query=[pattern] domain=[lang] → quality guidance from skill knowledge"
     hsa_detect_stack:
       purpose: "Auto-detect correct lint/format tools for quality gates"
       usage: "hsa_detect_stack → determines lint_check, format_check commands"

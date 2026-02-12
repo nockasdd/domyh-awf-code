@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Checkpoint System v6.2.2
+# DOMYH Awesome Code — Checkpoint System v6.2.3
 # Implements periodic rule re-injection to prevent drift in long sessions
 # Research: Long-context degradation patterns
 
-version: "6.2.2"
+version: "6.2.3"
 engine: checkpoint_system
 
 # =============================================================================

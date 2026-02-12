@@ -14,7 +14,7 @@ skills: { required: [], contextual: [auto] }
 
 1. **DETECT** — Identify project stack via HSA (`hsa_detect_stack`), config files. Show: `[Step 1/3] Detected: Go + TypeScript monorepo`
 2. **COLLECT** — Run build, tests, coverage, lint, dep check, `hsa_status` (engine health). Show: `[Step 2/3] Running 6 checks...`
-3. **REPORT** — Calculate health score, identify issues, compare with previous
+3. **REPORT** — Calculate health score, identify issues, compare with previous. Use `hsa_export` for structured data. Save snapshot to `.domyh/status/health_YYYY-MM-DD.md`
 
 ---
 

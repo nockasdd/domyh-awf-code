@@ -1,6 +1,6 @@
 ---
 name: auditor
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "aud-001"
 
 # =============================================================================
@@ -112,7 +112,7 @@ tools:
     - run_command # For test/lint commands
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - replace_file_content # Auditors don't fix
     - delete_file

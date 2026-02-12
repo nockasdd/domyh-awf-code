@@ -1,7 +1,7 @@
 metadata:
   skill: logging
   domain: language_typescript
-  version: 6.2.2
+  version: 6.2.3
   updated: "2026-02-05"
   migrated_from: language-typescript.yaml
   patterns_count: 25

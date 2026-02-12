@@ -1,6 +1,6 @@
 ---
 name: developer
-version: "6.2.2"
+version: "6.2.3"
 persona_id: "dev-001"
 
 # =============================================================================
@@ -68,7 +68,7 @@ tools:
     - run_command
     - hsa_detect_stack
     - hsa_get_context
-    - hsa_search_patterns
+    - hsa_search_skills
   restricted:
     - deploy
     - database_modify

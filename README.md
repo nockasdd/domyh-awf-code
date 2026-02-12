@@ -59,6 +59,60 @@ nock awf --help            # Show all commands
 
 ---
 
+<!-- MCP Requirement Note -->
+<blockquote>
+  <p>⚠️ <strong>MCP Server Required</strong></p>
+  <p>DOMYH Awesome Code uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential:</strong></p>
+
+  <pre><code>nock awf mcp install --ide all      # All supported IDEs
+nock awf mcp install --ide cursor   # Specific IDE only</code></pre>
+</blockquote>
+
+## 🖥️ Web Dashboard & Logs
+
+HSA includes a built-in web dashboard for real-time monitoring — **enabled by default**.
+
+| URL                                | Description                                                  |
+| :--------------------------------- | :----------------------------------------------------------- |
+| `http://localhost:13100/dashboard` | 📊 Project overview, file tree, stack detection, cache stats |
+| `http://localhost:13100/logs`      | 📋 Real-time tool call logs with SSE streaming               |
+| `http://localhost:13100/health`    | ❤️ Health check endpoint                                     |
+
+<details>
+<summary><b>⚙️ Dashboard Configuration</b></summary>
+<br>
+
+**Disable dashboard** — set `HSA_DASHBOARD` to `false` in your IDE's MCP config:
+
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "-p", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": {
+        "HSA_DASHBOARD": "false",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
+  }
+}
+```
+
+**Change port** — set `HSA_DASHBOARD_PORT`:
+
+```json
+"env": {
+  "HSA_DASHBOARD": "true",
+  "HSA_DASHBOARD_PORT": "13200",
+  "HSA_MAX_TOKENS": "8000"
+}
+```
+
+</details>
+
+---
+
 ## 🎯 Commands
 
 <table>
@@ -175,7 +229,7 @@ nock awf --help            # Show all commands
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.2.2 across 15 files                |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.2.3 across 15 files                |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
 | `/lang`         | Switch agent language (English ↔ Tiếng Việt)                          | `/lang vi` → Switch to Vietnamese                            |

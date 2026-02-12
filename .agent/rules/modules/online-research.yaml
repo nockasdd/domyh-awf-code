@@ -3,7 +3,7 @@
 
 ---
 name: online-research
-version: "6.2.2"
+version: "6.2.3"
 rule_id: "MOD-RES-001"
 
 # =============================================================================
@@ -181,9 +181,9 @@ integration:
     - evidence
 
   hsa_tools:
-    hsa_search_patterns:
-      purpose: "Check local pattern database BEFORE searching online"
-      usage: "hsa_search_patterns query=[topic] → may answer without web search"
+    hsa_search_skills:
+      purpose: "Check local skill knowledge database BEFORE searching online"
+      usage: "hsa_search_skills query=[topic] → may answer without web search"
     hsa_get_context:
       purpose: "Gather project context to formulate better search queries"
       usage: "hsa_get_context files=[relevant] → understand what to search for"

@@ -48,5 +48,5 @@ chat:
 #   DevOps, Documenter, Planner, Researcher, Orchestrator, Security
 #
 # Skills: Progressive Disclosure (META.yaml → SKILL.md → ADVANCED.md)
-# MCP Tools: hsa_get_context, hsa_detect_stack, hsa_check_changes, hsa_prepare_handoff, hsa_filter_tools
+# MCP Tools: hsa_get_context, hsa_detect_stack, hsa_get_agent_config, hsa_check_changes, hsa_prefetch, hsa_status, hsa_get_snapshot, hsa_export, hsa_get_repo_map, hsa_search_skills, hsa_detect_environment, hsa_prepare_handoff, hsa_filter_tools
 # Constitutional Rules: Tier 0 (Immutable) → Tier 1 (Safety) → Tier 2 (Execution)
