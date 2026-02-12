@@ -1,7 +1,7 @@
 ---
 name: swift
 detect: ["Package.swift", "*.swift", "*.xcodeproj", "*.xcworkspace"]
-version: "6.2.1"
+version: "6.2.2"
 category: mobile
 tier: 1
 ---

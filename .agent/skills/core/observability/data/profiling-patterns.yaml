@@ -1,7 +1,7 @@
 metadata:
   skill: observability
   domain: profiling_patterns
-  version: 6.2.1
+  version: 6.2.2
   updated: "2026-02-05"
   migrated_from: profiling-patterns.yaml
   patterns_count: 20

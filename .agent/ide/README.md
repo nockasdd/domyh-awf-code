@@ -17,7 +17,7 @@ Each IDE config contains:
 ```json
 {
   "name": "DOMYH Awesome Code ",
-  "version": "v6.2.1",
+  "version": "v6.2.2",
 
   "activation": {
     /* Trigger commands */

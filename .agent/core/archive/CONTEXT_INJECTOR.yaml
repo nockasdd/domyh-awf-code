@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Smart Context Injector v6.2.1
+# DOMYH Awesome Code — Smart Context Injector v6.2.2
 # Intelligent context injection with relevance scoring
 # Based on Context Engineering Best Practices (2025)
 
-version: "6.2.1"
+version: "6.2.2"
 engine: smart_context_injector
 
 # =============================================================================

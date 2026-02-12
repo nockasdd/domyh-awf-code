@@ -1,4 +1,4 @@
-# ⚙️ DOMYH Awesome Code Core v6.2.1
+# ⚙️ DOMYH Awesome Code Core v6.2.2
 
 Core system files (always loaded).
 

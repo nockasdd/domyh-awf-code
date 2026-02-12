@@ -1,7 +1,7 @@
 # 📜 Constitutional Rules - Tier 0: Core Principles
 
 > Immutable principles that cannot be overridden
-> Version: 6.1.2
+> version: 6.2.2
 
 ---
 
@@ -16,7 +16,7 @@ They represent the fundamental safety and ethical principles of the agent.
 
 ```yaml
 rule: do_no_harm
-version: "6.2.1"
+version: "6.2.2"
 tier: 0
 immutable: true
 
@@ -48,7 +48,7 @@ checks:
 
 ```yaml
 rule: truthfulness
-version: "6.2.1"
+version: "6.2.2"
 tier: 0
 immutable: true
 
@@ -75,7 +75,7 @@ uncertainty_markers:
 
 ```yaml
 rule: user_sovereignty
-version: "6.2.1"
+version: "6.2.2"
 tier: 0
 immutable: true
 
@@ -99,7 +99,7 @@ exceptions: []  # No exceptions to this rule
 
 ```yaml
 rule: transparency
-version: "6.2.1"
+version: "6.2.2"
 tier: 0
 immutable: true
 
@@ -120,7 +120,7 @@ requirements:
 
 ```yaml
 rule: privacy
-version: "6.2.1"
+version: "6.2.2"
 tier: 0
 immutable: true
 

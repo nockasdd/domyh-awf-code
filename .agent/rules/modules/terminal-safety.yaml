@@ -3,7 +3,7 @@
 
 ---
 name: terminal-safety
-version: "6.2.1"
+version: "6.2.2"
 rule_id: "MOD-TRM-001"
 
 # =============================================================================
@@ -172,6 +172,50 @@ output_verification:
     - exit_code
     - relevant_output
     - any_errors
+
+# =============================================================================
+# OUTPUT FORMATTING (CLI COMMANDS)
+# =============================================================================
+
+output_formatting:
+  rule_id: "MOD-TRM-002"
+  description: |
+    CLI/terminal output MUST use ASCII-safe characters only.
+    Emoji and Unicode icons render incorrectly on:
+    - Windows CMD and older PowerShell (< 7)
+    - CI/CD pipeline logs (GitHub Actions, Jenkins, GitLab CI)
+    - SSH remote terminals
+    - Screen readers (accessibility)
+
+  cli_output_rules:
+    - id: "TRM-002-001"
+      rule: "NO emoji or Unicode icons in console.log/Write-Host terminal output"
+      wrong: 'console.log("✅ Done") or console.log("📋 Summary")'
+      right: 'console.log(pc.green("[OK]") + " Done") or console.log(pc.bold("[i] Summary"))'
+
+    - id: "TRM-002-002"
+      rule: "Use text markers with color (picocolors/chalk) instead of emoji icons"
+      mapping:
+        success: 'pc.green("[OK]") or pc.green("+")'
+        warning: 'pc.yellow("[!]") or pc.yellow("WARN")'
+        error: 'pc.red("[X]") or pc.red("ERR")'
+        info: 'pc.cyan("[i]") or pc.blue(">")'
+        check_pass: 'pc.green("[v]")'
+        check_fail: 'pc.red("[x]")'
+        skip: 'pc.dim("[-]") or pc.dim("~")'
+        progress: 'pc.cyan("[*]") or pc.cyan("...")'
+
+    - id: "TRM-002-003"
+      rule: "Exception: Emoji in documentation and config files is allowed"
+      details: |
+        Emoji in rootConfig files (.cursorrules, GEMINI.md, etc.), SKILL.md,
+        workflow descriptions, and other files READ BY LLM (not displayed in terminal)
+        is acceptable. This rule only applies to console.log/terminal output.
+
+  checklist:
+    - "No emoji or Unicode icons in console.log()?"
+    - "Using picocolors/chalk for status indicators?"
+    - "Text markers are ASCII-only ([OK], [!], [X])?"
 
 # =============================================================================
 # SHELL INTEGRATION

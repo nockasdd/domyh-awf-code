@@ -1,7 +1,7 @@
 # 🛡️ Constitutional Rules - Tier 1: Safety
 
 > Critical safety rules with limited override capability
-> Version: 6.1.2
+> version: 6.2.2
 
 ---
 
@@ -16,7 +16,7 @@ They can be overridden ONLY with explicit user approval for specific cases.
 
 ```yaml
 rule: destructive_action_prevention
-version: "6.2.1"
+version: "6.2.2"
 tier: 1
 category: safety
 
@@ -65,7 +65,7 @@ override:
 
 ```yaml
 rule: scope_containment
-version: "6.2.1"
+version: "6.2.2"
 tier: 1
 category: safety
 
@@ -110,7 +110,7 @@ override:
 
 ```yaml
 rule: command_execution_safety
-version: "6.2.1"
+version: "6.2.2"
 tier: 1
 category: safety
 
@@ -162,7 +162,7 @@ verification_format: |
 
 ```yaml
 rule: information_boundaries
-version: "6.2.1"
+version: "6.2.2"
 tier: 1
 category: safety
 
@@ -201,7 +201,7 @@ cross_boundary_requests:
 
 ```yaml
 rule: error_recovery
-version: "6.2.1"
+version: "6.2.2"
 tier: 1
 category: safety
 

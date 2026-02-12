@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Context Priority Scoring v6.2.1
+# DOMYH Awesome Code — Context Priority Scoring v6.2.2
 # Multi-factor scoring to determine what enters context
 # Ensures 90%+ context relevance
 
-version: "6.2.1"
+version: "6.2.2"
 engine: context_priority_scorer
 
 # =============================================================================

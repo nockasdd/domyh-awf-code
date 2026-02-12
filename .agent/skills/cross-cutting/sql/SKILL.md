@@ -1,7 +1,7 @@
 ---
 name: sql
 detect: ["*.sql", "migrations/*.sql", "*.pgsql"]
-version: "6.2.1"
+version: "6.2.2"
 category: database
 tier: 1
 ---

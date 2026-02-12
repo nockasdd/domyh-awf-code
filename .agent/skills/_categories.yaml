@@ -131,12 +131,12 @@ categories:
       - bun
       - audit-pro
 
-      # P0 Skills (v6.2.1)
+      # P0 Skills (v6.2.2)
       - tdd-workflow
       - accessibility
       - seo
 
-      # P1 Skills (v6.2.1)
+      # P1 Skills (v6.2.2)
       - microservices
       - monorepo
 

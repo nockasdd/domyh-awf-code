@@ -1,7 +1,7 @@
 # 🔧 Modular Rule: Reflection Integration
 
 > Self-improvement through reflection patterns
-> Version: 6.1.2
+> version: 6.2.2
 
 ---
 
@@ -16,7 +16,7 @@ enabling learning from both successes and failures.
 
 ```yaml
 name: reflection
-version: "6.2.1"
+version: "6.2.2"
 category: improvement
 priority: 2
 

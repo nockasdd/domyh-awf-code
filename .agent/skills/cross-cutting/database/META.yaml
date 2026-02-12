@@ -1,5 +1,5 @@
 name: database
-version: "6.2.1"
+version: "6.2.2"
 display: Database Patterns
 category: infrastructure
 tier: 1

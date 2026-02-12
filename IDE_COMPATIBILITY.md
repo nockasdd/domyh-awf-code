@@ -363,4 +363,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code v6.2.1 • 22 IDEs • 2-Category Feature Matrix • Platform Verified • Feb 7, 2026_
+_DOMYH Awesome Code v6.2.2 • 22 IDEs • 2-Category Feature Matrix • Platform Verified • Feb 7, 2026_

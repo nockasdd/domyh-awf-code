@@ -1,7 +1,7 @@
 ---
 name: julia
 detect: ["*.jl", "Project.toml", "Manifest.toml"]
-version: "6.2.1"
+version: "6.2.2"
 category: scientific
 tier: 2
 ---

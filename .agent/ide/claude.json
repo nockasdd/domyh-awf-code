@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code ",
-  "version": "v6.2.1",
+  "version": "v6.2.2",
   
   "activation": {
     "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/deploy", "/init", "/fix", "/refactor", "/review", "/status", "/migrate", "/git", "/doc", "/security", "/hsa"],

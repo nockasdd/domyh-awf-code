@@ -1,6 +1,6 @@
 ---
 name: debug-report
-version: "6.2.1"
+version: "6.2.2"
 type: report
 triggers: ["/debug"]
 ---

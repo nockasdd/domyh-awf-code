@@ -1,5 +1,5 @@
 {
-  "version": "6.2.1",
+  "version": "6.2.2",
   "changelog": [
     "v6.3.0: Added 15 new skills across 2 new categories (tooling, ai-ml)",
     "Migrated prompt-engineering + rag-patterns from cross-cutting → ai-ml",

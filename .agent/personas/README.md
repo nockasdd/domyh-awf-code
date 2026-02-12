@@ -41,7 +41,7 @@ All personas follow the enhanced schema:
 ```yaml
 ---
 name: [persona_name]
-version: "6.2.1"
+version: "6.2.2"
 persona_id: "[prefix]-001"
 
 # Core Identity (CrewAI Pattern)

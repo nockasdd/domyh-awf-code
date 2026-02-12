@@ -1,7 +1,7 @@
 metadata:
   skill: security
   domain: solidity_security
-  version: 6.2.1
+  version: 6.2.2
   updated: "2026-02-05"
   migrated_from: solidity-security.yaml
   patterns_count: 35

@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code ",
-  "version": "v6.2.1",
+  "version": "v6.2.2",
   
   "gemini": {
     "model_preference": "gemini-2.0-flash",
