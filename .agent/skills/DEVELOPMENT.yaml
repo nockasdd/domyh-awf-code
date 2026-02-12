@@ -63,7 +63,7 @@ workflow:
       template: |
         name: new-skill
         display: New Skill Name
-        category: language  # or framework, devops, cross-cutting
+        category: language  # or framework, devops, cross-cutting, tooling, ai-ml
         priority: 2
         desc: "Brief description under 80 chars"
         keywords:
@@ -148,12 +148,23 @@ categories:
   devops:
     priority: 3
     description: "Infrastructure and deployment"
-    examples: [docker, kubernetes, aws, ci-cd]
+    examples: [docker, kubernetes, aws, ci-cd, terraform, gcp, azure]
 
   cross-cutting:
     priority: 4
     description: "Cross-cutting concerns"
-    examples: [database, testing, tailwind, audit-pro]
+    examples: [database, testing, tailwind, audit-pro, playwright]
+
+  tooling:
+    priority: 5
+    description: "Developer tools, protocols, and extensions"
+    examples: [mcp, api-protocols, ide-extension, cli-dev, browser-agent]
+
+  ai-ml:
+    priority: 6
+    description: "AI/ML agent systems, Gemini APIs, and RAG patterns"
+    examples:
+      [ai-agents, prompt-engineering, gemini-media-gen, gemini-tts, gemini-live]
 
 # =============================================================================
 # 🎯 BEST PRACTICES

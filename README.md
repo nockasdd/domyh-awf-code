@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=57+Skills+•+21+IDEs+•+36+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=82+Skills+•+21+IDEs+•+36+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,7 +15,7 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-57-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-82-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-21-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-36-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
@@ -215,11 +215,11 @@ nock awf --help            # Show all commands
 
 ---
 
-## 🧠 Skills (57 total)
+## 🧠 Skills (82 total)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+8+Frameworks;6+Core+•+4+DevOps;11+Cross-cutting+•+57+Total" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+8+Frameworks;6+Core+•+7+DevOps;21+Cross-cutting+•+5+Tooling+•+7+AI-ML;82+Total+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -247,13 +247,13 @@ nock awf --help            # Show all commands
   <img src="https://skillicons.dev/icons?i=react,vue,nextjs,angular,nuxt,svelte,flutter,tailwind&theme=dark" />
 </p>
 
-### ⚙️ DevOps (4)
+### ⚙️ DevOps (7)
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,githubactions&theme=dark" />
+  <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (17)
+### 🔧 Core & Cross-cutting (27)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -262,7 +262,19 @@ nock awf --help            # Show all commands
 <p align="center">
   <sub><b>Core (6):</b> Security, API Design, Error Handling, Logging, Observability, Auth</sub>
   <br>
-  <sub><b>Cross-cutting (11):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, UI/UX Pro Max, Web Perf, Deno, Bun, Audit Pro</sub>
+  <sub><b>Cross-cutting (21):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright</sub>
+</p>
+
+### 🛠️ Tooling (5)
+
+<p align="center">
+  <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent</sub>
+</p>
+
+### 🤖 AI-ML (7)
+
+<p align="center">
+  <sub>AI Agents, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live</sub>
 </p>
 
 </td>
@@ -273,14 +285,16 @@ nock awf --help            # Show all commands
 <summary><b>📊 Skill Breakdown by Category</b></summary>
 <br>
 
-| Category          | Count  | Skills                                                                                                                                                                                  |
-| :---------------- | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Languages**     | 28     | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal |
-| **Frameworks**    | 8      | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native                                                                                                                       |
-| **Core**          | 6      | Security, API Design, Error Handling, Logging, Observability, Authentication                                                                                                            |
-| **DevOps**        | 4      | Docker, Kubernetes, AWS, CI/CD                                                                                                                                                          |
-| **Cross-cutting** | 11     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, UI/UX Pro Max, Web Perf, Deno, Bun, Audit Pro                                                                                 |
-| **Total**         | **57** |                                                                                                                                                                                         |
+| Category          | Count  | Skills                                                                                                                                                                                                              |
+| :---------------- | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Languages**     | 28     | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal                             |
+| **Frameworks**    | 8      | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native                                                                                                                                                   |
+| **Core**          | 6      | Security, API Design, Error Handling, Logging, Observability, Authentication                                                                                                                                        |
+| **DevOps**        | 7      | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
+| **Cross-cutting** | 21     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright |
+| **Tooling**       | 5      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
+| **AI-ML**         | 7      | AI Agents, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                               |
+| **Total**         | **82** |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -343,12 +357,14 @@ nock awf --help            # Show all commands
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Agent configuration
-├── 🧠 skills/                # 57 specialized skills
+├── 🧠 skills/                # 82 specialized skills
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (8)     # React, Vue, Next.js, Flutter...
 │   ├── core/         (6)     # Security, API Design, Auth...
-│   ├── devops/       (4)     # Docker, K8s, AWS, CI/CD
-│   └── cross-cutting/ (11)   # Testing, Database, UI/UX...
+│   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
+│   ├── cross-cutting/ (21)   # Testing, Database, Playwright...
+│   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
+│   └── ai-ml/        (7)     # AI Agents, Gemini, RAG...
 ├── 🔄 workflows/     (30)    # 36 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
