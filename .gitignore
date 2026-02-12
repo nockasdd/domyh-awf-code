@@ -60,3 +60,5 @@ temp/
 .agent/private/
 # ── FLOW.md ──────────────────────────────────────────────
 FLOW.md
+.gitignore
+.github
