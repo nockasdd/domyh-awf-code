@@ -1,0 +1,230 @@
+metadata:
+  skill: security
+  domain: api_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: api-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - owasp_api_id
+    - example_vuln
+    - example_fix
+patterns:
+  - id: API-01
+    name: Broken Object Level Authorization
+    severity: CRITICAL
+    category: AuthZ
+    description: "Accessing objects by ID without ownership verification - BOLA #1 API vuln"
+    detection_pattern: (findById|getById|params\\.id)(?!.*owner|authorize)
+    fix_pattern: Always verify object ownership not just authentication
+    languages: all
+    owasp_api_id: API1:2023
+    example_vuln: User.findById(req.params.id)
+    example_fix: const user = await User.findById(req.params.id)\nif (user.ownerId !== req.user.id) throw 403
+  - id: API-02
+    name: Broken Authentication
+    severity: CRITICAL
+    category: AuthN
+    description: Weak authentication mechanisms or missing validation
+    detection_pattern: (jwt\\.decode|verify.*none|algorithm.*HS256)(?!.*RS)
+    fix_pattern: Use strong authentication with proper JWT validation
+    languages: all
+    owasp_api_id: API2:2023
+    example_vuln: jwt.decode(token) // No verification
+    example_fix: "jwt.verify(token, publicKey, { algorithms: ['RS256'] })"
+  - id: API-03
+    name: Broken Object Property Authorization
+    severity: HIGH
+    category: AuthZ
+    description: Mass assignment allowing modification of protected fields
+    detection_pattern: (Object\\.assign|spread.*req\\.body|update.*req\\.body)
+    fix_pattern: Use allowlist for updatable fields block sensitive
+    languages: all
+    owasp_api_id: API3:2023
+    example_vuln: User.update(req.body) // All fields
+    example_fix: const allowed = pick(req.body, ['name', 'email'])\nUser.update(allowed)
+  - id: API-04
+    name: Unrestricted Resource Consumption
+    severity: HIGH
+    category: DoS
+    description: No limits on requests data size or computation
+    detection_pattern: (express|fastify|gin)(?!.*rateLimit|limit)
+    fix_pattern: Implement rate limiting pagination and size limits
+    languages: all
+    owasp_api_id: API4:2023
+    example_vuln: app.post('/search', handler)
+    example_fix: "app.post('/search', rateLimit({ max: 100 }), paginate({ max: 50 }), handler)"
+  - id: API-05
+    name: Broken Function Level Authorization
+    severity: CRITICAL
+    category: AuthZ
+    description: Admin functions accessible without proper role checks
+    detection_pattern: (admin|delete|update)(?!.*role|permission|isAdmin)
+    fix_pattern: Verify role permissions for each function
+    languages: all
+    owasp_api_id: API5:2023
+    example_vuln: app.delete('/users/:id', deleteUser)
+    example_fix: app.delete('/users/:id', requireRole('admin'), deleteUser)
+  - id: API-06
+    name: Unrestricted Access to Sensitive Flows
+    severity: HIGH
+    category: Business
+    description: No protection against automation of critical flows
+    detection_pattern: (transfer|purchase|vote)(?!.*captcha|rateLimit)
+    fix_pattern: Add bot protection rate limiting for sensitive flows
+    languages: all
+    owasp_api_id: API6:2023
+    example_vuln: app.post('/transfer', transferFunds)
+    example_fix: "app.post('/transfer', captcha(), rateLimit({ max: 5 }), transferFunds)"
+  - id: API-07
+    name: Server Side Request Forgery
+    severity: CRITICAL
+    category: SSRF
+    description: User-controlled URLs fetched by server without validation
+    detection_pattern: (fetch|axios|http\\.get|urllib)\\(.*req\\.
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    languages: all
+    owasp_api_id: API7:2023
+    example_vuln: fetch(req.body.webhookUrl)
+    example_fix: const url = new URL(req.body.webhookUrl)\nif (!ALLOWED_HOSTS.includes(url.host)) throw 400
+  - id: API-08
+    name: Security Misconfiguration
+    severity: MEDIUM
+    category: Config
+    description: Insecure default configs exposed endpoints or verbose errors
+    detection_pattern: (debug.*true|stackTrace|X-Powered-By)
+    fix_pattern: Harden configuration disable debug in production
+    languages: all
+    owasp_api_id: API8:2023
+    example_vuln: "app.use(errorHandler({ stack: true }))"
+    example_fix: "app.use(errorHandler({ stack: false, log: true }))"
+  - id: API-09
+    name: Improper Inventory Management
+    severity: MEDIUM
+    category: Ops
+    description: Undocumented or shadow APIs without proper tracking
+    detection_pattern: (/api/v1|/api/v2|/internal)(?!.*documented)
+    fix_pattern: Maintain API inventory deprecate old versions
+    languages: all
+    owasp_api_id: API9:2023
+    example_vuln: // Multiple undocumented endpoints
+    example_fix: // Document all APIs in OpenAPI spec\n// Deprecate old versions with sunset headers
+  - id: API-10
+    name: Unsafe Consumption of APIs
+    severity: HIGH
+    category: Integration
+    description: Blindly trusting third-party API responses
+    detection_pattern: (axios|fetch).*then.*res\\.data(?!.*validat)
+    fix_pattern: Validate and sanitize all third-party responses
+    languages: all
+    owasp_api_id: API10:2023
+    example_vuln: const data = await thirdParty.getData()\nprocess(data)
+    example_fix: const data = await thirdParty.getData()\nconst validated = schema.parse(data)\nprocess(validated)
+  - id: API-11
+    name: JWT Algorithm Confusion
+    severity: CRITICAL
+    category: AuthN
+    description: JWT accepts none or symmetric when expecting asymmetric
+    detection_pattern: (algorithm.*none|HS256.*RS256|algorithms.*\\[)
+    fix_pattern: Explicitly specify allowed algorithms as RS256 only
+    languages: all
+    example_vuln: jwt.verify(token, key) // Any algorithm
+    example_fix: "jwt.verify(token, publicKey, { algorithms: ['RS256'] })"
+  - id: API-12
+    name: JWT Secret Weakness
+    severity: CRITICAL
+    category: AuthN
+    description: Weak or default JWT signing secret
+    detection_pattern: (jwt.*secret.*=.*['\]|process\\.env\\.JWT(?!.*256bit))"
+    fix_pattern: Use cryptographically strong secrets minimum 256 bits
+    languages: all
+    example_vuln: const secret = 'mysecret'
+    example_fix: const secret = crypto.randomBytes(32).toString('hex')
+  - id: API-13
+    name: Missing Rate Limit Headers
+    severity: LOW
+    category: UX
+    description: API does not return rate limit status headers
+    detection_pattern: response(?!.*X-RateLimit|rateLimit)
+    fix_pattern: Return X-RateLimit-Limit Remaining Reset headers
+    languages: all
+    example_vuln: res.json(data)
+    example_fix: res.set('X-RateLimit-Limit', 100)\nres.set('X-RateLimit-Remaining', remaining)\nres.json(data)
+  - id: API-14
+    name: Overly Permissive CORS
+    severity: HIGH
+    category: AuthZ
+    description: CORS allows any origin or credentials with wildcard
+    detection_pattern: Access-Control-Allow-Origin.*\\*.*credentials|reflect.*origin
+    fix_pattern: Use specific origin allowlist not wildcard with credentials
+    languages: all
+    example_vuln: res.header('Access-Control-Allow-Origin', '*')
+    example_fix: const allowed = ['https://app.example.com']\nif (allowed.includes(origin)) res.header('ACAO', origin)
+  - id: API-15
+    name: Missing Pagination
+    severity: MEDIUM
+    category: DoS
+    description: Endpoints return unbounded result sets
+    detection_pattern: (find|list|getAll)(?!.*limit|paginate)
+    fix_pattern: Implement mandatory pagination with max limit
+    languages: all
+    example_vuln: return User.find({})
+    example_fix: return User.find({}).limit(Math.min(req.query.limit, 100))
+  - id: API-16
+    name: Verbose Error Messages
+    severity: MEDIUM
+    category: Info
+    description: Errors expose internal details stack traces or queries
+    detection_pattern: (error.*stack|SQLException|throw.*new Error)
+    fix_pattern: Return generic errors log details server-side
+    languages: all
+    example_vuln: "res.status(500).json({ error: err.stack })"
+    example_fix: 'logger.error(err)\nres.status(500).json({ error: ''Internal server error'' })'
+  - id: API-17
+    name: Missing Request Validation
+    severity: HIGH
+    category: Input
+    description: API accepts unvalidated request bodies
+    detection_pattern: (req\\.body|req\\.query)(?!.*valid|parse|schema)
+    fix_pattern: Validate all inputs with schema validation Zod or Joi
+    languages: all
+    example_vuln: const data = req.body
+    example_fix: const data = requestSchema.parse(req.body)
+  - id: API-18
+    name: Insecure Direct Object Reference
+    severity: HIGH
+    category: AuthZ
+    description: Object references exposed without access control - IDOR
+    detection_pattern: (id|uuid|ref).*=.*req\\.(params|query)(?!.*authorize)
+    fix_pattern: Verify authorization for each object access
+    languages: all
+    example_vuln: const doc = await Doc.findById(req.params.id)
+    example_fix: "const doc = await Doc.findOne({ _id: req.params.id, userId: req.user.id })"
+  - id: API-19
+    name: Missing API Versioning
+    severity: LOW
+    category: Ops
+    description: API lacks versioning strategy for breaking changes
+    detection_pattern: (/api/)(?!.*v\\d|version)
+    fix_pattern: Implement versioning via URL path or headers
+    languages: all
+    example_vuln: app.use('/api', router)
+    example_fix: app.use('/api/v1', routerV1)\napp.use('/api/v2', routerV2)
+  - id: API-20
+    name: Excessive Data Exposure
+    severity: HIGH
+    category: Privacy
+    description: API returns more data than client needs
+    detection_pattern: (select.*\\*|find\\(\\)|JSON\\.stringify.*user)
+    fix_pattern: Return only required fields use DTOs
+    languages: all
+    example_vuln: res.json(user) // All fields including password hash
+    example_fix: res.json(pick(user, ['id', 'name', 'email']))

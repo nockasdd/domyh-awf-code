@@ -1,0 +1,228 @@
+metadata:
+  skill: domyh-design
+  domain: desktop
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: desktop.yaml
+  patterns_count: 19
+  columns:
+    - category
+    - stack_id
+    - name
+    - focus
+    - language
+    - patterns
+    - architecture
+    - animation
+    - dark_mode
+    - docs_url
+patterns:
+  - id: item_001
+    category: native
+    stack_id: wpf
+    name: WPF
+    focus: .NET
+    language: C#/XAML
+    patterns: MVVM, Dependency Properties, Commands, Styles, Triggers
+    architecture: Data Templates, User Controls, Content Presenters
+    animation: "Storyboard, DoubleAnimation, EasingFunctions (BackEase, BounceEase, ElasticEase), GPU-friendly: RenderTransform, Opacity"
+    dark_mode: "ThemeMode.Dark, ResourceDictionary: Light.xaml/Dark.xaml, ThemeResource"
+    docs_url: https://docs.microsoft.com/wpf
+  - id: item_002
+    category: native
+    stack_id: winui3
+    name: WinUI 3
+    focus: Windows 11 Native
+    language: C#/XAML
+    patterns: DirectX 12, Mica, Acrylic, Fluent Design, WASDK
+    architecture: App.xaml.cs, MainWindow, NavigationView, ContentFrame
+    animation: CompositionTarget.Rendering, SmoothTransitions, PointerPressed/Released, Implicit animations
+    dark_mode: "Mica backdrop, Acrylic brush, Auto-detect: Application.RequestedTheme"
+    docs_url: https://docs.microsoft.com/windows/apps/winui
+  - id: item_003
+    category: native
+    stack_id: winforms
+    name: WinForms
+    focus: Legacy .NET
+    language: C#
+    patterns: TableLayoutPanel, FlowLayoutPanel, Data Binding, Designer patterns
+    architecture: Form inheritance, UserControl, MVP pattern, Event-driven
+    animation: "GDI+ (limited), Timer-based, Double buffering: SetStyle(ControlStyles.OptimizedDoubleBuffer)"
+    dark_mode: "DarkMode.Explorer: DwmSetWindowAttribute, Manual theme toggle, SystemColors override"
+    docs_url: https://docs.microsoft.com/dotnet/desktop/winforms
+  - id: item_004
+    category: hybrid
+    stack_id: webview2
+    name: WebView2
+    focus: Web+Native Hybrid
+    language: C++/C#
+    patterns: CoreWebView2, PostWebMessage, AddHostObjectToScript, ExecuteScriptAsync
+    architecture: "Evergreen runtime, NavigationStarting event, Security: ValidateOrigin"
+    animation: "CSS animations in WebView, Native: CoreWebView2CompositionController"
+    dark_mode: CSS prefers-color-scheme + Native sync, User data folder per theme
+    docs_url: https://docs.microsoft.com/microsoft-edge/webview2
+  - id: item_005
+    category: cross
+    stack_id: qt-widgets
+    name: Qt Widgets
+    focus: Native Cross-Platform
+    language: C++
+    patterns: QMainWindow, QWidget, Signals/Slots, QStyle, Q_OBJECT macro
+    architecture: Model/View (QAbstractItemModel), QProxyModel, Plugin architecture
+    animation: QPropertyAnimation, QSequentialAnimationGroup, QEasingCurve
+    dark_mode: QPalette::Dark, QStyleFactory::create('Fusion'), Custom QSS
+    docs_url: https://doc.qt.io/qt-6/qtwidgets-index.html
+  - id: item_006
+    category: cross
+    stack_id: qt-qml
+    name: Qt QML
+    focus: Declarative UI
+    language: C++/QML
+    patterns: Item, Rectangle, MouseArea, states, transitions, Loader
+    architecture: QQmlApplicationEngine, C++ backend + QML frontend, Property binding
+    animation: Behavior on, NumberAnimation, SequentialAnimation, Easing.InOutQuad
+    dark_mode: "QtQuick.Controls Material.theme: Material.Dark, Accent colors"
+    docs_url: https://doc.qt.io/qt-6/qmlapplications.html
+  - id: item_007
+    category: cross
+    stack_id: qt-python
+    name: Qt Python
+    focus: Python Qt Bindings
+    language: Python
+    patterns: PySide6/PyQt6, QMainWindow, QTreeView, Signals, QFluentWidgets
+    architecture: Designer .ui files, resources_rc.py, uic.loadUi
+    animation: QPropertyAnimation (same as Qt Widgets), QParallelAnimationGroup
+    dark_mode: setStyle('Fusion'), setPalette(dark_palette), QFluentWidgets themes
+    docs_url: https://doc.qt.io/qtforpython
+  - id: item_008
+    category: game
+    stack_id: imgui
+    name: Dear ImGui
+    focus: Immediate Mode GUI
+    language: C++
+    patterns: ImGui::Begin, ImGui::Button, ImGui::InputText, custom rendering
+    architecture: "Renderer-agnostic, DirectX/OpenGL/Vulkan backends, Platform: Win32/GLFW"
+    animation: ImGuiCol colors, Smooth transitions via lerp(), No built-in animation
+    dark_mode: ImGui::StyleColorsDark(), ImGui::StyleColorsLight(), Custom themes
+    docs_url: https://github.com/ocornut/imgui
+  - id: item_009
+    category: cross
+    stack_id: wxwidgets
+    name: wxWidgets
+    focus: Native Look
+    language: C++
+    patterns: wxFrame, wxPanel, wxSizer, event table macros, DECLARE_EVENT_TABLE
+    architecture: Document/View, XRC (XML resources), wxApp lifecycle
+    animation: wxAnimationCtrl (GIF), Timer-based, Native platform animations
+    dark_mode: wxSystemSettings::GetColour, wxAuiManager, Platform-native dark
+    docs_url: https://www.wxwidgets.org/docs/
+  - id: item_010
+    category: audio
+    stack_id: juce
+    name: JUCE
+    focus: Audio Applications
+    language: C++
+    patterns: Component, AudioProcessor, PluginProcessor, ValueTree
+    architecture: Audio plugin (VST/AU/AAX), Standalone app, ProJucer project
+    animation: LookAndFeel, ComponentAnimator, Desktop::setKioskModeComponent
+    dark_mode: LookAndFeel_V4::getDarkColorScheme(), setColour methods
+    docs_url: https://docs.juce.com
+  - id: item_011
+    category: cross
+    stack_id: nana
+    name: Nana C++
+    focus: Modern C++ GUI
+    language: C++
+    patterns: form, button, panel, place layout, events::click
+    architecture: place layout (div/vert/hort), internationalization, Modern C++11/14
+    animation: animation class, effect::fade_in, effect::fade_out
+    dark_mode: appearance::bground('#1E1E1E'), Custom color scheme
+    docs_url: https://nana.sourceforge.io
+  - id: item_012
+    category: web
+    stack_id: electron
+    name: Electron
+    focus: Web Technology Desktop
+    language: JS/TS
+    patterns: BrowserWindow, ipcMain/ipcRenderer, preload scripts, contextBridge
+    architecture: Main process + Renderer, NodeJS integration, Chromium sandbox
+    animation: CSS animations, Framer Motion, React Spring, requestAnimationFrame
+    dark_mode: "nativeTheme.themeSource, CSS prefers-color-scheme, Tailwind dark:"
+    docs_url: https://www.electronjs.org/docs
+  - id: item_013
+    category: web
+    stack_id: tauri
+    name: Tauri
+    focus: Lightweight Web Desktop
+    language: Rust+JS
+    patterns: tauri::command, invoke, Window, Menu, Tray
+    architecture: Rust backend + WebView2/WebKit frontend, Command pattern
+    animation: "CSS animations, Native: window effects, Vibrancy/Mica via tauri-plugin"
+    dark_mode: prefers-color-scheme + Rust theme detection, <10MB binary
+    docs_url: https://tauri.app/v2/guides
+  - id: item_014
+    category: dotnet
+    stack_id: avalonia
+    name: Avalonia UI
+    focus: Cross-Platform .NET
+    language: C#/XAML
+    patterns: Window, UserControl, Styles, ControlTemplates, DataTemplates
+    architecture: MVVM (ReactiveUI), Skia rendering, Platform detection
+    animation: Transitions, RenderTransformOrigin, Animation, Easing
+    dark_mode: FluentTheme Mode=Dark, SimpleTheme, <StyleInclude>
+    docs_url: https://docs.avaloniaui.net
+  - id: item_015
+    category: dotnet
+    stack_id: maui
+    name: .NET MAUI
+    focus: Mobile-First .NET
+    language: C#/XAML
+    patterns: ContentPage, Shell, CollectionView, BindableProperty
+    architecture: MVVM (CommunityToolkit), Dependency Injection, Handlers
+    animation: Animation class, TranslateTo, FadeTo, ScaleTo, Easing.SpringOut
+    dark_mode: AppThemeBinding, Application.Current.RequestedTheme, DynamicResource
+    docs_url: https://docs.microsoft.com/dotnet/maui
+  - id: item_016
+    category: python
+    stack_id: pyqt
+    name: PyQt6/PySide6
+    focus: Professional Python GUI
+    language: Python
+    patterns: QMainWindow, QWidget, pyqtSignal, connect, QThread
+    architecture: Designer UI files, Model/View, QStyledItemDelegate
+    animation: QPropertyAnimation, QGraphicsOpacityEffect, QTimeLine
+    dark_mode: setStyle('Fusion'), setPalette, QFluentWidgets, qt_material
+    docs_url: https://doc.qt.io/qtforpython
+  - id: item_017
+    category: python
+    stack_id: customtkinter
+    name: CustomTkinter
+    focus: Modern Tkinter
+    language: Python
+    patterns: CTk, CTkFrame, CTkButton, CTkEntry, appearance_mode
+    architecture: Pack/Grid/Place, variable linking, command callbacks
+    animation: No built-in animation, After-based timer animations
+    dark_mode: set_appearance_mode('dark'), set_default_color_theme
+    docs_url: https://customtkinter.tomschimansky.com
+  - id: item_018
+    category: python
+    stack_id: kivy
+    name: Kivy
+    focus: Touch/IoT GUI
+    language: Python
+    patterns: Widget, BoxLayout, GridLayout, kv language, properties
+    architecture: App lifecycle, Screen manager, Kivy language separation
+    animation: Animation class, Animation(property=value).start(), Clock.schedule
+    dark_mode: "kivy.config: theme, Color properties, Canvas instructions"
+    docs_url: https://kivy.org/doc/stable
+  - id: item_019
+    category: python
+    stack_id: flet
+    name: Flet
+    focus: Flutter-style Python
+    language: Python
+    patterns: Page, controls, on_click, update(), Client storage
+    architecture: Page-based routing, Pubsub, Session state
+    animation: animate_* properties, AnimatedSwitcher, implicit animations
+    dark_mode: ThemeMode.DARK, theme.color_scheme, ColorScheme
+    docs_url: https://flet.dev/docs

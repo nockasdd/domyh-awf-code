@@ -2,22 +2,49 @@
 name: security
 detect: ["always"]
 priority: 0
-version: "6.1.2"
+version: "6.2.1"
 ---
 
-# Security Patterns (2026)
+# Security Patterns (Enhanced 2026)
 
-> Core skill with data-driven patterns. Check `data/` for comprehensive lookup tables.
+> Comprehensive security skill with 290+ patterns across 14 data files. Covers OWASP Top 10, API Security, Mobile, Cloud, AI/ML, and Supply Chain.
 
-## 📦 Data Files
+## 📦 Data Files Overview
 
-| File                | Content                                                   | Records |
-| ------------------- | --------------------------------------------------------- | ------- |
-| `owasp-top10.csv`   | OWASP Top 10:2025 (NEW: A03 Supply Chain)                 | 10      |
-| `cwe-top25.csv`     | CWE Top 25:2024 (XSS now #1, full 25 entries)             | 25      |
-| `auth-patterns.csv` | AuthN/AuthZ patterns với secure examples và anti-patterns | 15      |
+### Core Security
 
-## 📦 Security Tools
+| File                 | Content                               | Records |
+| -------------------- | ------------------------------------- | ------- |
+| `owasp-top10.yaml`   | OWASP Top 10:2025 (NEW: Supply Chain) | 10      |
+| `cwe-top25.yaml`     | CWE Top 25:2024 (XSS now #1)          | 25      |
+| `auth-patterns.yaml` | AuthN/AuthZ patterns                  | 15      |
+
+### Domain-Specific Security
+
+| File                       | Content                               | Records |
+| -------------------------- | ------------------------------------- | ------- |
+| `network-security.yaml`    | TLS, DNS, GraphQL, gRPC, WebSocket    | 25      |
+| `api-security.yaml`        | OWASP API Top 10:2023, JWT, OAuth     | 20      |
+| `mobile-security.yaml`     | OWASP Mobile Top 10:2024, iOS/Android | 35      |
+| `cloud-security.yaml`      | AWS/Azure/GCP, K8s, IaC               | 25      |
+| `supply-chain.yaml`        | SLSA, SBOM, Dependency security       | 20      |
+| `ai-ml-security.yaml`      | LLM, Prompt Injection, Adversarial    | 20      |
+| `reverse-engineering.yaml` | Frida, Xposed, Play Integrity         | 30      |
+
+### Language-Specific
+
+| File                                       | Content              | Records |
+| ------------------------------------------ | -------------------- | ------- |
+| `language-specific/go-security.yaml`       | Go-specific patterns | 20      |
+| `language-specific/csharp-security.yaml`   | C#/.NET patterns     | 20      |
+| `language-specific/php-security.yaml`      | PHP patterns         | 20      |
+| `language-specific/solidity-security.yaml` | Smart contracts      | 20      |
+
+**Total: 290+ patterns across 14 files**
+
+---
+
+## �️ Security Tools
 
 | Tool           | Use Case            |
 | -------------- | ------------------- |
@@ -25,11 +52,12 @@ version: "6.1.2"
 | **Trivy**      | Container scanning  |
 | **OWASP ZAP**  | DAST                |
 | **SonarQube**  | SAST                |
+| **Semgrep**    | Custom rules        |
 | **Dependabot** | Auto updates        |
 
-## OWASP Top 10 Quick Reference
+---
 
-See `data/owasp-top10.csv` for detection patterns and code examples.
+## OWASP Top 10:2025 Quick Reference
 
 | ID  | Vulnerability             | Severity | Key Fix                     |
 | --- | ------------------------- | -------- | --------------------------- |
@@ -38,113 +66,154 @@ See `data/owasp-top10.csv` for detection patterns and code examples.
 | A03 | Injection                 | CRITICAL | Parameterized queries       |
 | A04 | Insecure Design           | HIGH     | Threat modeling             |
 | A05 | Security Misconfiguration | HIGH     | Hardened defaults           |
-| A06 | Vulnerable Components     | HIGH     | Dependency scanning         |
+| A06 | Vulnerable Components     | HIGH     | SBOM, Dependency scanning   |
 | A07 | Auth Failures             | CRITICAL | MFA, session rotation       |
-| A08 | Integrity Failures        | HIGH     | Signed releases, SRI        |
+| A08 | Integrity Failures        | HIGH     | SLSA, Signed releases       |
 | A09 | Logging Failures          | MEDIUM   | Security event logging      |
 | A10 | SSRF                      | HIGH     | URL allowlisting            |
 
-## CWE Top 25 Quick Reference
+---
 
-See `data/cwe-top25.csv` for language-specific examples.
+## 🔥 NEW: AI/ML Security
 
-| CWE     | Name                | Languages | Key Fix                |
-| ------- | ------------------- | --------- | ---------------------- |
-| CWE-787 | Out-of-bounds Write | C, C++    | strncpy, bounds check  |
-| CWE-79  | XSS                 | JS, TS    | DOMPurify, CSP         |
-| CWE-89  | SQL Injection       | All       | Prepared statements    |
-| CWE-416 | Use After Free      | C, C++    | Smart pointers         |
-| CWE-78  | Command Injection   | All       | Avoid shell, safe APIs |
-| CWE-22  | Path Traversal      | All       | path.basename, jail    |
+> See `data/ai-ml-security.yaml` for 20 AI/ML threat patterns.
 
-## Security Headers
+| ID      | Vulnerability      | Severity | Fix                            |
+| ------- | ------------------ | -------- | ------------------------------ |
+| AIML-01 | Prompt Injection   | CRITICAL | Input sanitization, guardrails |
+| AIML-02 | Indirect Injection | CRITICAL | Content scanning               |
+| AIML-03 | Jailbreaking       | HIGH     | Content policy checks          |
+| AIML-04 | Training Poisoning | CRITICAL | Data validation, provenance    |
+| AIML-09 | LLM Data Leakage   | CRITICAL | PII filtering, redaction       |
+| AIML-10 | Insecure AI Output | HIGH     | Validation, sandboxing         |
 
-```typescript
-// ✅ Security headers middleware
-const securityHeaders = {
-  "Content-Security-Policy": "default-src 'self'; script-src 'self'",
-  "X-Frame-Options": "DENY",
-  "X-Content-Type-Options": "nosniff",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-  "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-};
+```python
+# ✅ LLM Security Example
+def secure_llm_call(user_input: str) -> str:
+    # 1. Sanitize input
+    cleaned = sanitize_prompt(user_input)
+
+    # 2. Detect prompt injection
+    if detect_injection(cleaned):
+        raise SecurityError("Potential injection detected")
+
+    # 3. Call with guardrails
+    response = llm.complete(
+        messages=[
+            {"role": "system", "content": STRICT_SYSTEM_PROMPT},
+            {"role": "user", "content": cleaned}
+        ],
+        max_tokens=1000
+    )
+
+    # 4. Filter output
+    return pii_filter(response)
 ```
 
-## Auth Patterns
+---
 
-See `data/auth-patterns.csv` for comprehensive list.
+## 📱 Mobile Security (OWASP 2024)
+
+> See `data/mobile-security.yaml` for 35 mobile patterns.
+
+| ID  | Vulnerability                    | Platform | Fix                        |
+| --- | -------------------------------- | -------- | -------------------------- |
+| M1  | Improper Credential Usage        | Both     | Keychain/Keystore          |
+| M2  | Inadequate Supply Chain Security | Both     | Verify SDK, SBOM           |
+| M3  | Insecure Auth/AuthZ              | Both     | Biometric + server verify  |
+| M6  | Inadequate Privacy Controls      | Both     | Consent, data minimization |
+| M7  | Insufficient Binary Protection   | Both     | Obfuscation, anti-tamper   |
+
+```kotlin
+// ✅ Play Integrity API (replaced SafetyNet 2024)
+val integrityRequest = IntegrityManager.createRequest(nonce)
+integrityManager.requestIntegrityToken(integrityRequest)
+    .addOnSuccessListener { response ->
+        // Verify token on server
+        verifyTokenOnServer(response.token())
+    }
+```
+
+---
+
+## ☁️ Cloud Security
+
+> See `data/cloud-security.yaml` for 25 cloud patterns.
+
+```hcl
+# ✅ Terraform: S3 Bucket Security
+resource "aws_s3_bucket" "secure" {
+  bucket = "my-secure-bucket"
+}
+
+resource "aws_s3_bucket_public_access_block" "secure" {
+  bucket = aws_s3_bucket.secure.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# ✅ Force IMDSv2 (prevent SSRF)
+resource "aws_instance" "secure" {
+  metadata_options {
+    http_tokens = "required"
+    http_put_response_hop_limit = 1
+  }
+}
+```
+
+---
+
+## 🔗 Supply Chain Security
+
+> See `data/supply-chain.yaml` for 20 patterns.
+
+| SLSA Level | Description   | Requirements      |
+| ---------- | ------------- | ----------------- |
+| 1          | Documentation | Build exists      |
+| 2          | Control       | Signed provenance |
+| 3          | Integrity     | Hardened builds   |
+| 4          | Trust         | Two-party review  |
+
+```bash
+# ✅ Generate SBOM (EU CRA 2024 mandatory)
+npx @cyclonedx/cyclonedx-npm --output sbom.json
+
+# ✅ Sign with Sigstore
+cosign sign-blob sbom.json --bundle sbom.bundle
+
+# ✅ npm publish with provenance
+npm publish --provenance
+```
+
+---
+
+## 🔐 Auth Patterns Quick Reference
 
 ```typescript
-// ✅ JWT verification (jose library)
+// ✅ JWT verification (jose)
 import { jwtVerify } from "jose";
 
 async function verifyToken(token: string) {
   const { payload } = await jwtVerify(
     token,
     new TextEncoder().encode(process.env.JWT_SECRET),
+    { algorithms: ["HS256"] }, // Explicit algorithm
   );
   return payload;
 }
 
-// ✅ Password hashing (bcrypt)
-import bcrypt from "bcrypt";
-const hash = await bcrypt.hash(password, 12);
-const valid = await bcrypt.compare(password, hash);
-
-// ✅ Rate limiting
-import rateLimit from "express-rate-limit";
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
-app.use("/login", limiter);
+// ✅ Password hashing (argon2)
+import argon2 from "argon2";
+const hash = await argon2.hash(password);
+const valid = await argon2.verify(hash, password);
 ```
 
-## Session Security
+---
 
-```typescript
-// ✅ Secure cookie settings
-Set-Cookie: sessionId=xxx; HttpOnly; Secure; SameSite=Strict; Path=/
-
-// ✅ Session regeneration after login
-req.session.regenerate(() => {
-  req.session.userId = user.id;
-  next();
-});
-```
-
-## Input Validation
-
-```typescript
-// ✅ Zod validation
-import { z } from "zod";
-
-const UserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8).max(100),
-  name: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(/^[a-zA-Z\s]+$/),
-});
-
-const result = UserSchema.safeParse(input);
-if (!result.success) throw new ValidationError(result.error);
-```
-
-## SQL Injection Prevention
-
-```typescript
-// ❌ BAD: String concatenation
-db.query(`SELECT * FROM users WHERE id = ${userId}`);
-
-// ✅ GOOD: Parameterized query
-db.query("SELECT * FROM users WHERE id = $1", [userId]);
-
-// ✅ GOOD: ORM with safe methods
-await User.findOne({ where: { id: userId } });
-```
-
-## Code Review Checklist
+## ✅ Code Review Checklist
 
 ```
 Security Review Checklist:
@@ -154,22 +223,12 @@ Security Review Checklist:
 □ Authorization checked on every endpoint?
 □ Errors don't leak sensitive information?
 □ Rate limiting on auth endpoints?
-□ CSRF protection for state-changing operations?
+□ CSRF protection for state-changing ops?
 □ Dependencies up to date (npm audit)?
+□ SBOM generated for release?
+□ LLM inputs/outputs sanitized?
 ```
-
-## Quick Fixes Table
-
-| Vulnerability   | Detection Pattern                      | Fix                    |
-| --------------- | -------------------------------------- | ---------------------- |
-| SQL Injection   | `query + `, string concat              | Parameterized queries  |
-| XSS             | `innerHTML`, `dangerouslySetInnerHTML` | textContent, DOMPurify |
-| CSRF            | Form without token                     | CSRF middleware        |
-| Secrets in code | API_KEY=, password=                    | Environment variables  |
-| Weak passwords  | MD5, SHA1 hash                         | bcrypt(12), argon2id   |
-| IDOR            | No authz check                         | Permission middleware  |
-| Path Traversal  | `../` in path                          | path.basename()        |
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Security Skill (Data-Driven)_
+_DOMYH Awesome Code • Security Skill Enhanced • 290+ Patterns_

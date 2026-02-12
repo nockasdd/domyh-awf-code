@@ -1,0 +1,104 @@
+# ORM Patterns - HSA Database Skill
+# Supports: Prisma, Drizzle, TypeORM, SQLAlchemy, GORM, Ecto
+# Updated: 2026-02-05
+
+patterns:
+  # Prisma
+  - id: orm001
+    orm: Prisma
+    language: typescript
+    n_plus_one: "include: { posts: true }"
+    raw_query: "prisma.$queryRaw`SELECT * FROM users`"
+    transactions: "prisma.$transaction([...])"
+    relation: "@relation(fields: [authorId], references: [id])"
+    strength: Type-safe, migrations, Prisma Studio
+
+  # Drizzle
+  - id: orm002
+    orm: Drizzle
+    language: typescript
+    n_plus_one: "with: { posts: true }"
+    raw_query: "sql`SELECT * FROM users`"
+    transactions: "db.transaction(async (tx) => {...})"
+    relation: "relations(users, ({ many }) => ({ posts: many(posts) }))"
+    strength: SQL-first, lightweight, serverless-friendly
+
+  # TypeORM
+  - id: orm003
+    orm: TypeORM
+    language: typescript
+    n_plus_one: "relations: ['posts']"
+    raw_query: "dataSource.query('SELECT * FROM users')"
+    transactions: "@Transaction() / queryRunner.startTransaction()"
+    relation: "@ManyToOne(() => User)"
+    strength: Decorator-based, NestJS integration
+
+  # SQLAlchemy
+  - id: orm004
+    orm: SQLAlchemy
+    language: python
+    n_plus_one: "joinedload(User.posts)"
+    raw_query: "session.execute(text('SELECT * FROM users'))"
+    transactions: "with session.begin():"
+    relation: "relationship('Post', back_populates='author')"
+    strength: Industry standard, async 2.0, flexible
+
+  # Django ORM
+  - id: orm005
+    orm: Django ORM
+    language: python
+    n_plus_one: "select_related('author') / prefetch_related('posts')"
+    raw_query: "Model.objects.raw('SELECT * FROM users')"
+    transactions: "@transaction.atomic"
+    relation: "ForeignKey(User, on_delete=CASCADE)"
+    strength: Batteries included, admin panel
+
+  # GORM
+  - id: orm006
+    orm: GORM
+    language: go
+    n_plus_one: "Preload('Posts')"
+    raw_query: "db.Raw('SELECT * FROM users').Scan(&users)"
+    transactions: "db.Transaction(func(tx *gorm.DB) error {...})"
+    relation: "Has Many / Belongs To"
+    strength: Go standard, AutoMigrate
+
+  # Ecto
+  - id: orm007
+    orm: Ecto
+    language: elixir
+    n_plus_one: "preload: [:posts]"
+    raw_query: "Ecto.Adapters.SQL.query(Repo, 'SELECT * FROM users')"
+    transactions: "Repo.transaction(fn -> ... end)"
+    relation: "has_many :posts, Post"
+    strength: Functional, composable, Phoenix
+
+  # Mongoose
+  - id: orm008
+    orm: Mongoose
+    language: typescript
+    n_plus_one: ".populate('posts')"
+    raw_query: "Model.collection.findOne({})"
+    transactions: "session.withTransaction(async () => {...})"
+    relation: "{ type: Schema.Types.ObjectId, ref: 'User' }"
+    strength: MongoDB ODM, schema validation
+
+  # Sequelize
+  - id: orm009
+    orm: Sequelize
+    language: typescript
+    n_plus_one: "include: [{ model: Post }]"
+    raw_query: "sequelize.query('SELECT * FROM users')"
+    transactions: "sequelize.transaction(async (t) => {...})"
+    relation: "User.hasMany(Post)"
+    strength: Multi-dialect, mature ecosystem
+
+  # Kysely
+  - id: orm010
+    orm: Kysely
+    language: typescript
+    n_plus_one: "Manual JOINs (SQL builder)"
+    raw_query: "sql`SELECT * FROM users`"
+    transactions: "db.transaction().execute(async (trx) => {...})"
+    relation: "N/A (SQL builder)"
+    strength: Type-safe SQL builder, minimal overhead

@@ -1,14 +1,17 @@
 name: deno
-version: "6.1.2"
+version: "6.2.1"
 category: runtime
-tier: 2
+tier: 3
 
-description: |
-  Deno 2 development patterns.
-  Covers TypeScript-first, permissions, Fresh framework, npm compat.
+desc: "Deno 2.6+ development patterns. Covers TypeScript-first, permissions, Fresh framework, npm/jsr compat, OpenTelemetry."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 27
+  domains:
+    runtime: 12
+    security: 9
+    tooling: 6
+
     - "deno.json"
     - "deno.jsonc"
     - "deno.lock"
@@ -19,10 +22,21 @@ triggers:
     - deno
     - deno 2
     - deno deploy
+    - Deno.serve
+    - Deno.openKv
     # Features
     - url import
     - permissions deno
     - deno compile
+    - deno audit
+    - jsr:
+    - npm:
+    # Security
+    - "--allow-net"
+    - "--allow-read"
+    - "--allow-write"
+    - "--allow-env"
+    - "--deny-"
     # Framework
     - fresh framework
     - oak deno
@@ -30,15 +44,18 @@ triggers:
     # Testing
     - deno test
     - deno bench
+    - Deno.test
   intents:
     - create deno project
     - deno api
     - fresh app
     - deno deploy
+    - deno permissions
 
 related_skills:
   - typescript
   - javascript
+  - nodejs
 
 prevent_confusion_with:
   - nodejs: "Deno uses URL imports, Node uses npm"

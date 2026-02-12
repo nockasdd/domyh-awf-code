@@ -1,0 +1,48 @@
+{
+  "name": "DOMYH Awesome Code",
+  "version": "v6.2.1",
+  "ide": "Antigravity",
+  "value": "antigravity",
+
+  "activation": {
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/init", "/fix", "/refactor", "/review", "/status", "/deploy", "/git", "/doc", "/security", "/dev", "/perf", "/scaffold", "/think", "/recap", "/hsa"],
+    "workspace_detection": true
+  },
+
+  "skills": {
+    "loading": "progressive",
+    "max_active": 5,
+    "cache_enabled": true
+  },
+
+  "token_budget": {
+    "baseline": 1773,
+    "per_skill": 1500,
+    "max_peak": 9273
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v1.0.0 Context Management - Intelligent context retrieval",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
+  },
+
+  "config_files": {
+    "instructions": "GEMINI.md",
+    "mcp": "~/.gemini/antigravity/mcp_config.json"
+  },
+
+  "hsa": {
+    "enabled": true,
+    "auto_detect_stack": true,
+    "tools": ["hsa_get_context", "hsa_detect_stack", "hsa_check_changes", "hsa_prefetch", "hsa_status"]
+  }
+}

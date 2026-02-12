@@ -1,6 +1,6 @@
 {
-  "name": "DOMYH Awesome Code v6.1.2",
-  "version": "6.1.2",
+  "name": "DOMYH Awesome Code ",
+  "version": "6.2.1",
   
   "windsurf": {
     "cascade_enabled": true,
@@ -8,7 +8,7 @@
   },
 
   "activation": {
-    "triggers": ["@domyh", "/code", "/debug", "/plan"],
+    "triggers": ["@domyh", "/ap", "/code", "/debug", "/plan", "/test", "/fix"],
     "auto_context": true
   },
 
@@ -24,6 +24,20 @@
 
   "config_files": {
     "rules": ".windsurfrules"
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v1.0.0 Context Management",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
   },
 
   "session_engine": {

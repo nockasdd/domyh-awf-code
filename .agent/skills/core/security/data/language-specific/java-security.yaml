@@ -1,0 +1,295 @@
+metadata:
+  skill: security
+  domain: java_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: java-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: JV-01
+    name: Unsafe Deserialization
+    severity: CRITICAL
+    category: Deserialization
+    description: ObjectInputStream deserializes untrusted data leading to RCE
+    detection_pattern: ObjectInputStream(?!.*SerialKiller|whitelist)
+    fix_pattern: Use look-ahead deserialization with class whitelist
+    cwe: CWE-502
+    cve_reference: CVE-2024-28212
+    example_vuln: new ObjectInputStream(untrusted).readObject()
+    example_fix: ObjectInputFilter filter = ...; ois.setObjectInputFilter(filter);
+  - id: JV-02
+    name: JNDI Injection
+    severity: CRITICAL
+    category: Injection
+    description: InitialContext.lookup with user input allows RCE via LDAP/RMI
+    detection_pattern: InitialContext.*lookup.*input(?!.*allowlist)
+    fix_pattern: Restrict JNDI protocols and factory classes
+    cwe: CWE-74
+    cve_reference: CVE-2022-44228,CVE-2024-22319
+    example_vuln: ctx.lookup(userInput)
+    example_fix: '// Restrict to java: naming\nif (!url.startsWith(\java:\")) throw new SecurityException();"'
+  - id: JV-03
+    name: JNDI iiop Bypass
+    severity: CRITICAL
+    category: Injection
+    description: JNDI injection via iiop/corbaname bypasses blacklists
+    detection_pattern: "lookup.*iiop:|lookup.*corbaname:"
+    fix_pattern: Disable iiop corbaname iiopname protocols
+    cwe: CWE-74
+    cve_reference: CVE-2025-64428
+    example_vuln: ctx.lookup(\iiop://evil\" + input)"
+    example_fix: // Block all non-java protocols\nSystem.setProperty(\jdk.jndi.object.factoriesFilter\"
+  - id: JV-04
+    name: Spring SpEL Injection
+    severity: CRITICAL
+    category: Injection
+    description: SpEL parseExpression with user input leads to RCE
+    detection_pattern: SpelExpressionParser.*parseExpression.*input
+    fix_pattern: Use SimpleEvaluationContext or avoid SpEL with user input
+    cwe: CWE-917
+    cve_reference: n/a
+    example_vuln: new SpelExpressionParser().parseExpression(input)
+    example_fix: StandardEvaluationContext ctx = new StandardEvaluationContext();\nctx.setRootObject(safeData); // No user input in expression
+  - id: JV-05
+    name: Spring Authorization Bypass
+    severity: HIGH
+    category: Authorization
+    description: Inherited method annotations not detected in complex hierarchies
+    detection_pattern: '@PreAuthorize.*extends.*\\<.*\\>(?!.*6\\.4\\.10)'
+    fix_pattern: Upgrade Spring Security 6.4.10+ or 6.5.4+
+    cwe: CWE-863
+    cve_reference: CVE-2025-41248,CVE-2025-41249
+    example_vuln: "@PreAuthorize on parent method with unbounded generic"
+    example_fix: // Upgrade Spring Security to 6.4.10+ or 6.5.4+
+  - id: JV-06
+    name: Log4j Message Lookup
+    severity: CRITICAL
+    category: Injection
+    description: Log4j 2.x allows JNDI lookups in log messages
+    detection_pattern: log\\.(info|error|debug).*\\$\\{(?!.*2\\.17)
+    fix_pattern: Upgrade Log4j 2.17+ and set log4j2.formatMsgNoLookups=true
+    cwe: CWE-917
+    cve_reference: CVE-2021-44228,CVE-2021-45046
+    example_vuln: 'log.error(\User: \" + userInput) // Contains ${jndi:ldap://}"'
+    example_fix: 'log.error(\User: {}\"'
+  - id: JV-07
+    name: XML External Entity
+    severity: CRITICAL
+    category: Injection
+    description: DocumentBuilder allows external entity resolution
+    detection_pattern: DocumentBuilderFactory(?!.*setFeature.*false)
+    fix_pattern: Disable external entities and DTD processing
+    cwe: CWE-611
+    cve_reference: n/a
+    example_vuln: factory.newDocumentBuilder().parse(xmlInput)
+    example_fix: factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);\nfactory.setFeature(\http://apache.org/xml/features/disallow-doctype-decl\"
+  - id: JV-08
+    name: XXE SAXParser
+    severity: CRITICAL
+    category: Injection
+    description: SAXParser allows XXE via external entities
+    detection_pattern: SAXParserFactory(?!.*setFeature.*disallow-doctype)
+    fix_pattern: Disable DTD processing in SAXParserFactory
+    cwe: CWE-611
+    cve_reference: n/a
+    example_vuln: SAXParserFactory.newInstance().newSAXParser().parse(xml)
+    example_fix: factory.setFeature(\http://apache.org/xml/features/disallow-doctype-decl\"
+  - id: JV-09
+    name: SQL Injection Statement
+    severity: CRITICAL
+    category: Injection
+    description: Statement.execute with string concatenation
+    detection_pattern: Statement.*execute.*\\+.*input|createStatement.*\\+
+    fix_pattern: Use PreparedStatement with parameterized queries
+    cwe: CWE-89
+    cve_reference: n/a
+    example_vuln: stmt.execute(\SELECT * WHERE id=\" + id)"
+    example_fix: PreparedStatement ps = conn.prepareStatement(\SELECT * WHERE id=?\");\nps.setInt(1
+  - id: JV-10
+    name: SSRF RestTemplate
+    severity: HIGH
+    category: Network
+    description: RestTemplate with user URL allows SSRF
+    detection_pattern: RestTemplate.*getForObject.*input(?!.*allowlist)
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    cwe: CWE-918
+    cve_reference: n/a
+    example_vuln: restTemplate.getForObject(userUrl, String.class)
+    example_fix: if (isAllowedUrl(userUrl)) restTemplate.getForObject(userUrl, String.class);
+  - id: JV-11
+    name: Path Traversal Files
+    severity: HIGH
+    category: File
+    description: File constructor with user input allows path traversal
+    detection_pattern: new\\s+File.*input(?!.*normalize|canonicalize)
+    fix_pattern: Use Path.normalize() and validate against base directory
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: new File(base + userInput)
+    example_fix: Path path = Paths.get(base, userInput).normalize();\nif (!path.startsWith(base)) throw new SecurityException();
+  - id: JV-12
+    name: Insecure Random
+    severity: HIGH
+    category: Cryptography
+    description: java.util.Random used for security-sensitive values
+    detection_pattern: java\\.util\\.Random(?!.*SecureRandom).*token|session
+    fix_pattern: Use java.security.SecureRandom for cryptographic purposes
+    cwe: CWE-330
+    cve_reference: n/a
+    example_vuln: new Random().nextLong() // For token
+    example_fix: new SecureRandom().nextLong()
+  - id: JV-13
+    name: Hardcoded Credentials
+    severity: HIGH
+    category: Secrets
+    description: Password or secret hardcoded in source code
+    detection_pattern: (password|apiKey|secret)\\s*=\\s*\[^\"]+\""
+    fix_pattern: Use environment variables or secrets manager
+    cwe: CWE-798
+    cve_reference: n/a
+    example_vuln: String apiKey = \sk-1234567890\";"
+    example_fix: String apiKey = System.getenv(\API_KEY\");"
+  - id: JV-14
+    name: Weak Password Hash
+    severity: HIGH
+    category: Cryptography
+    description: MD5 or SHA1 used for password hashing
+    detection_pattern: MessageDigest.*getInstance.*(MD5|SHA-1).*password
+    fix_pattern: Use bcrypt scrypt or PBKDF2 with sufficient iterations
+    cwe: CWE-327
+    cve_reference: n/a
+    example_vuln: MessageDigest.getInstance(\MD5\").digest(password.getBytes())"
+    example_fix: BCrypt.hashpw(password, BCrypt.gensalt(12))
+  - id: JV-15
+    name: Timing Attack BCrypt
+    severity: MEDIUM
+    category: Authentication
+    description: BCrypt comparison bypassed with long passwords 72+ chars
+    detection_pattern: BCryptPasswordEncoder(?!.*truncate|length)
+    fix_pattern: Check password length before BCrypt or upgrade Spring Security 6.4.10+
+    cwe: CWE-208
+    cve_reference: CVE-2025-22234
+    example_vuln: // Password > 72 chars bypasses timing protection
+    example_fix: if (password.length() > 72) throw new IllegalArgumentException();
+  - id: JV-16
+    name: Insecure Cookie
+    severity: HIGH
+    category: Session
+    description: Cookie without Secure/HttpOnly flags
+    detection_pattern: new\\s+Cookie(?!.*setSecure|setHttpOnly)
+    fix_pattern: Set Secure HttpOnly and SameSite attributes
+    cwe: CWE-614
+    cve_reference: n/a
+    example_vuln: Cookie c = new Cookie(\session\"
+    example_fix: token);"
+  - id: JV-17
+    name: OGNL Injection Struts
+    severity: CRITICAL
+    category: Injection
+    description: OGNL expression evaluation with user input
+    detection_pattern: OgnlContext.*getValue.*input|Ognl.*getValue
+    fix_pattern: Upgrade Struts disable OGNL in user-facing code
+    cwe: CWE-917
+    cve_reference: CVE-2017-5638
+    example_vuln: Ognl.getValue(userExpression, context)
+    example_fix: // Struts 2.5.30+ with excludedPatterns
+  - id: JV-18
+    name: Spring Kafka Deser
+    severity: HIGH
+    category: Deserialization
+    description: Improper ErrorHandlingDeserializer config allows RCE
+    detection_pattern: ErrorHandlingDeserializer(?!.*checkHeaders|trusted)
+    fix_pattern: Configure trusted packages or disable exception header deser
+    cwe: CWE-502
+    cve_reference: CVE-2023-34040
+    example_vuln: "@KafkaListener with default ErrorHandlingDeserializer"
+    example_fix: spring.kafka.consumer.properties.spring.deserializer.key.delegate.class=StringDeserializer
+  - id: JV-19
+    name: DoS Spring Security
+    severity: HIGH
+    category: DoS
+    description: Spring Security 6.1/6.2 vulnerable to DoS with MVC
+    detection_pattern: Spring.*MVC.*Security\\.6\\.(1\\.[0-5]|2\\.[0-1])
+    fix_pattern: Upgrade Spring Framework 6.0.16+ or Spring Security 6.2.2+
+    cwe: CWE-400
+    cve_reference: CVE-2024-22233
+    example_vuln: // Affected versions
+    example_fix: // Upgrade to Spring Security 6.2.2+
+  - id: JV-20
+    name: JWT Algorithm Confusion
+    severity: CRITICAL
+    category: Authentication
+    description: JWT verification without algorithm restriction
+    detection_pattern: Jwts\\.parser(?!.*setSigningKey.*Algorithm)
+    fix_pattern: Explicitly specify allowed algorithms in JWT parser
+    cwe: CWE-347
+    cve_reference: n/a
+    example_vuln: Jwts.parser().setSigningKey(key).parse(token)
+    example_fix: Jwts.parserBuilder().setSigningKey(key).setAllowedClockSkewSeconds(0).requireAlgorithm(\HS256\").build();"
+  - id: JV-21
+    name: SSRF WebClient
+    severity: HIGH
+    category: Network
+    description: WebClient with user URL allows SSRF
+    detection_pattern: WebClient.*uri.*input(?!.*validate)
+    fix_pattern: Validate URLs block internal networks
+    cwe: CWE-918
+    cve_reference: n/a
+    example_vuln: webClient.get().uri(userUrl).retrieve()
+    example_fix: if (isExternalUrl(userUrl)) webClient.get().uri(userUrl).retrieve();
+  - id: JV-22
+    name: Reflection Injection
+    severity: HIGH
+    category: Injection
+    description: Class.forName with user input allows instantiation of dangerous classes
+    detection_pattern: Class\\.forName.*input(?!.*allowlist)
+    fix_pattern: Whitelist allowed classes for reflection
+    cwe: CWE-470
+    cve_reference: n/a
+    example_vuln: Class.forName(userInput).newInstance()
+    example_fix: if (ALLOWED_CLASSES.contains(userInput)) Class.forName(userInput).newInstance();
+  - id: JV-23
+    name: LDAP Injection
+    severity: HIGH
+    category: Injection
+    description: LDAP filter with unsanitized user input
+    detection_pattern: search.*filter.*\\+.*input(?!.*escape)
+    fix_pattern: Use parameterized LDAP filters or escape special characters
+    cwe: CWE-90
+    cve_reference: n/a
+    example_vuln: ctx.search(\ou=users\"
+    example_fix: \"(uid=\" + input + \")\")"
+  - id: JV-24
+    name: Zip Slip
+    severity: HIGH
+    category: File
+    description: Zip extraction without validating entry names allows path traversal
+    detection_pattern: ZipInputStream.*getNextEntry(?!.*normalize|canonical)
+    fix_pattern: Validate zip entry names against destination directory
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: new File(destDir, entry.getName())
+    example_fix: Path dest = destDir.resolve(entry.getName()).normalize();\nif (!dest.startsWith(destDir)) throw new SecurityException();
+  - id: JV-25
+    name: Server-Side Request Forgery URL
+    severity: HIGH
+    category: Network
+    description: java.net.URL with user input allows SSRF
+    detection_pattern: new\\s+URL.*input.*openConnection(?!.*validate)
+    fix_pattern: Validate URL protocol host and port against allowlist
+    cwe: CWE-918
+    cve_reference: n/a
+    example_vuln: new URL(userInput).openConnection()
+    example_fix: URL url = new URL(userInput);\nif (isAllowed(url.getHost())) url.openConnection();

@@ -1,0 +1,69 @@
+name: authentication
+version: "6.2.1"
+display: Authentication Patterns
+category: core
+tier: 1
+priority: 0
+
+desc: "Comprehensive authentication patterns including JWT, OAuth 2.1, passkeys/FIDO2, sessions, MFA, and password security for 12 languages."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - authentication
+    - authorization
+    - jwt
+    - oauth
+    - oauth2
+    - passkeys
+    - fido2
+    - webauthn
+    - session
+    - cookie
+    - mfa
+    - 2fa
+    - password
+    - login
+    - token
+    - refresh
+    - bearer
+  intents:
+    - auth system
+    - login flow
+    - oauth integration
+    - jwt implementation
+
+caps:
+  - JWT token patterns
+  - OAuth 2.1 flows
+  - Passkey/FIDO2 implementation
+  - Session management
+  - MFA integration
+  - Password security
+
+    - search_authentication_patterns
+    - get_jwt_patterns
+    - get_oauth_patterns
+    - get_passkey_patterns
+    - get_session_patterns
+    - get_mfa_patterns
+    - get_password_patterns
+    - get_auth_language_patterns
+    - get_auth_anti_patterns
+
+data_files:
+  - data/core-patterns.yaml
+  - data/jwt-patterns.yaml
+  - data/oauth-patterns.yaml
+  - data/passkeys-webauthn.yaml
+  - data/session-patterns.yaml
+  - data/mfa-patterns.yaml
+  - data/password-patterns.yaml
+  - data/language-go.yaml
+  - data/language-python.yaml
+  - data/language-typescript.yaml
+  - data/language-rust.yaml
+  - data/language-java.yaml
+  - data/language-csharp.yaml
+  - data/language-mobile.yaml
+  - data/anti-patterns.yaml

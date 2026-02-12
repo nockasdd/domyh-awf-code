@@ -1,0 +1,126 @@
+# Language Server Protocol Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: LSP-001
+    name: Server Initialization
+    category: setup
+    description: LSP server setup with capabilities negotiation.
+    text: |
+      Server declares capabilities during initialize handshake.
+      Common capabilities: completion, hover, definition, references,
+      diagnostics, code actions, rename, formatting.
+    example: |
+      const connection = createConnection(ProtocoLConnection);
+      const documents = new TextDocuments(TextDocument);
+      connection.onInitialize((params) => ({
+        capabilities: {
+          textDocumentSync: TextDocumentSyncKind.Incremental,
+          completionProvider: { resolveProvider: true, triggerCharacters: ["."] },
+          hoverProvider: true,
+          definitionProvider: true,
+          referencesProvider: true,
+          codeActionProvider: true
+        }
+      }));
+      documents.listen(connection);
+      connection.listen();
+
+  - id: LSP-002
+    name: Diagnostics Push
+    category: analysis
+    description: Push diagnostics (errors/warnings) to client.
+    text: |
+      Send diagnostics on document change.
+      Include severity, range, message, source.
+    example: |
+      documents.onDidChangeContent((change) => {
+        const diagnostics: Diagnostic[] = [];
+        const text = change.document.getText();
+        // Analyze text, push diagnostics
+        const match = /TODO/.exec(text);
+        if (match) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Information,
+            range: { start: { line: 0, character: match.index },
+                     end: { line: 0, character: match.index + 4 } },
+            message: "TODO found",
+            source: "my-lsp"
+          });
+        }
+        connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
+      });
+
+  - id: LSP-003
+    name: Code Actions
+    category: refactoring
+    description: Quick fixes and refactoring actions.
+    text: |
+      Return CodeAction[] for given diagnostic context.
+      Types: QuickFix, Refactor, Source, Extract.
+    example: |
+      connection.onCodeAction((params) => {
+        const actions: CodeAction[] = [];
+        for (const diag of params.context.diagnostics) {
+          if (diag.code === "unused-import") {
+            actions.push({
+              title: "Remove unused import",
+              kind: CodeActionKind.QuickFix,
+              edit: { changes: { [params.textDocument.uri]: [TextEdit.del(diag.range)] } },
+              diagnostics: [diag]
+            });
+          }
+        }
+        return actions;
+      });
+
+  - id: LSP-004
+    name: Go-to-Definition
+    category: navigation
+    description: Jump to symbol definition.
+    example: |
+      connection.onDefinition((params) => {
+        const doc = documents.get(params.textDocument.uri);
+        const word = getWordAtPosition(doc, params.position);
+        const location = findDefinition(word);
+        return location ? Location.create(location.uri, location.range) : null;
+      });
+
+  - id: LSP-005
+    name: Hover Information
+    category: analysis
+    description: Show documentation on hover.
+    example: |
+      connection.onHover((params) => {
+        const doc = documents.get(params.textDocument.uri);
+        const word = getWordAtPosition(doc, params.position);
+        const info = getDocumentation(word);
+        return info ? { contents: { kind: "markdown", value: info } } : null;
+      });
+
+  - id: LSP-006
+    name: Transport Configuration
+    category: setup
+    description: |
+      LSP transport options: stdio (most common), IPC, TCP, pipe.
+    text: |
+      stdio: Default, works with all editors
+      IPC: VS Code–specific, faster
+      TCP: Remote debugging, network servers
+
+      Client launch config (VS Code):
+      "languageServer": {
+        "command": "node",
+        "args": ["./server/out/main.js", "--stdio"],
+        "transport": "stdio"
+      }
+
+  - id: LSP-007
+    name: Incremental Sync
+    category: performance
+    description: |
+      Use incremental text sync for large files.
+    text: |
+      TextDocumentSyncKind.Incremental sends only changed ranges.
+      TextDocumentSyncKind.Full sends entire document (simpler but slower).
+      Best practice: Use Incremental for production LSP servers.

@@ -1,0 +1,97 @@
+# tRPC Patterns - HSA API Protocols Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: api-protocols
+  domain: trpc
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 7
+
+patterns:
+  - id: trpc001
+    name: router_setup
+    category: architecture
+    description: tRPC router with procedures and middleware
+    text: router setup procedure query mutation middleware
+    example: |
+      const appRouter = router({
+        user: router({
+          getById: publicProcedure
+            .input(z.object({ id: z.string() }))
+            .query(({ input }) => db.user.findUnique({ where: { id: input.id } })),
+          create: protectedProcedure
+            .input(createUserSchema)
+            .mutation(({ input, ctx }) => db.user.create({ data: input })),
+        }),
+      });
+      export type AppRouter = typeof appRouter;
+
+  - id: trpc002
+    name: middleware
+    category: architecture
+    description: tRPC middleware for auth, logging, rate limiting
+    text: middleware auth logging rate limiting procedure context
+    example: |
+      const isAuthed = t.middleware(({ ctx, next }) => {
+        if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
+        return next({ ctx: { ...ctx, user: ctx.session.user } });
+      });
+      const protectedProcedure = t.procedure.use(isAuthed);
+
+  - id: trpc003
+    name: nextjs_integration
+    category: integration
+    description: tRPC with Next.js App Router
+    text: nextjs app router integration server client component
+    example: |
+      // app/api/trpc/[trpc]/route.ts
+      const handler = fetchRequestHandler({ router: appRouter, createContext });
+      export { handler as GET, handler as POST };
+
+  - id: trpc004
+    name: react_query
+    category: client
+    description: tRPC React Query integration with automatic cache
+    text: react query client hook cache invalidation optimistic
+    example: |
+      const { data } = trpc.user.getById.useQuery({ id: "123" });
+      const utils = trpc.useUtils();
+      // Invalidate cache after mutation
+      await utils.user.getById.invalidate({ id: "123" });
+
+  - id: trpc005
+    name: monorepo_setup
+    category: architecture
+    description: tRPC in monorepo with shared types
+    text: monorepo shared types package workspace turborepo
+    example: |
+      // packages/api/src/router.ts — define router
+      // apps/web/src/trpc.ts — import AppRouter type
+      // Result: full type inference across packages
+
+  - id: trpc006
+    name: error_handling
+    category: design
+    description: tRPC error handling with typed errors
+    text: error handling TRPCError code message cause
+    example: |
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+        cause: originalError
+      });
+
+  - id: trpc007
+    name: subscription
+    category: realtime
+    description: tRPC subscriptions for real-time data
+    text: subscription real-time websocket observable
+    example: |
+      subscription: t.procedure.subscription(() => {
+        return observable<Message>((emit) => {
+          const onMessage = (msg: Message) => emit.next(msg);
+          ee.on("message", onMessage);
+          return () => ee.off("message", onMessage);
+        });
+      })

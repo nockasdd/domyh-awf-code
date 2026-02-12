@@ -1,0 +1,176 @@
+metadata:
+  skill: api-design
+  domain: http_status_codes
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: http-status-codes.yaml
+  patterns_count: 27
+  columns:
+    - code
+    - category
+    - description
+    - example_use
+    - level
+patterns:
+  - id: item_001
+    code: "200"
+    category: Success
+    description: OK - Request succeeded
+    example_use: GET resource returned
+    level: BASIC
+  - id: item_002
+    code: "201"
+    category: Success
+    description: Created - Resource created
+    example_use: POST new resource
+    level: BASIC
+  - id: item_003
+    code: "202"
+    category: Success
+    description: Accepted - Processing async
+    example_use: Long-running job started
+    level: INTERMEDIATE
+  - id: item_004
+    code: "204"
+    category: Success
+    description: No Content - Success no body
+    example_use: DELETE successful
+    level: BASIC
+  - id: item_005
+    code: "206"
+    category: Success
+    description: Partial Content - Range request
+    example_use: Video streaming
+    level: ADVANCED
+  - id: item_006
+    code: "301"
+    category: Redirect
+    description: Moved Permanently
+    example_use: Resource URL changed
+    level: BASIC
+  - id: item_007
+    code: "302"
+    category: Redirect
+    description: Found - Temporary redirect
+    example_use: OAuth callback
+    level: BASIC
+  - id: item_008
+    code: "304"
+    category: Redirect
+    description: Not Modified - Cache valid
+    example_use: ETag validation
+    level: INTERMEDIATE
+  - id: item_009
+    code: "307"
+    category: Redirect
+    description: Temporary Redirect - Keep method
+    example_use: Temporary move
+    level: INTERMEDIATE
+  - id: item_010
+    code: "308"
+    category: Redirect
+    description: Permanent Redirect - Keep method
+    example_use: Permanent move
+    level: INTERMEDIATE
+  - id: item_011
+    code: "400"
+    category: Client Error
+    description: Bad Request - Invalid syntax
+    example_use: Malformed JSON
+    level: BASIC
+  - id: item_012
+    code: "401"
+    category: Client Error
+    description: Unauthorized - Auth required
+    example_use: Missing/invalid token
+    level: BASIC
+  - id: item_013
+    code: "403"
+    category: Client Error
+    description: Forbidden - No permission
+    example_use: Insufficient privileges
+    level: BASIC
+  - id: item_014
+    code: "404"
+    category: Client Error
+    description: Not Found - Resource missing
+    example_use: Invalid resource ID
+    level: BASIC
+  - id: item_015
+    code: "405"
+    category: Client Error
+    description: Method Not Allowed
+    example_use: POST on read-only
+    level: BASIC
+  - id: item_016
+    code: "406"
+    category: Client Error
+    description: Not Acceptable - Content-Type
+    example_use: Accept header mismatch
+    level: INTERMEDIATE
+  - id: item_017
+    code: "408"
+    category: Client Error
+    description: Request Timeout
+    example_use: Client too slow
+    level: INTERMEDIATE
+  - id: item_018
+    code: "409"
+    category: Client Error
+    description: Conflict - State conflict
+    example_use: Duplicate resource
+    level: BASIC
+  - id: item_019
+    code: "410"
+    category: Client Error
+    description: Gone - Permanently removed
+    example_use: Deleted resource
+    level: INTERMEDIATE
+  - id: item_020
+    code: "415"
+    category: Client Error
+    description: Unsupported Media Type
+    example_use: Wrong Content-Type
+    level: BASIC
+  - id: item_021
+    code: "422"
+    category: Client Error
+    description: Unprocessable Entity
+    example_use: Validation failed
+    level: BASIC
+  - id: item_022
+    code: "429"
+    category: Client Error
+    description: Too Many Requests
+    example_use: Rate limit exceeded
+    level: BASIC
+  - id: item_023
+    code: "500"
+    category: Server Error
+    description: Internal Server Error
+    example_use: Unexpected error
+    level: BASIC
+  - id: item_024
+    code: "501"
+    category: Server Error
+    description: Not Implemented
+    example_use: Feature not ready
+    level: INTERMEDIATE
+  - id: item_025
+    code: "502"
+    category: Server Error
+    description: Bad Gateway
+    example_use: Upstream error
+    level: INTERMEDIATE
+  - id: item_026
+    code: "503"
+    category: Server Error
+    description: Service Unavailable
+    example_use: Maintenance mode
+    level: BASIC
+  - id: item_027
+    code: "504"
+    category: Server Error
+    description: Gateway Timeout
+    example_use: Upstream timeout
+    level: INTERMEDIATE

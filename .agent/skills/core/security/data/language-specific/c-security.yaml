@@ -1,0 +1,295 @@
+metadata:
+  skill: security
+  domain: c_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: c-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: C-01
+    name: Stack Buffer Overflow
+    severity: CRITICAL
+    category: Memory
+    description: Buffer on stack overwritten via user input leading to RCE
+    detection_pattern: (strcpy|sprintf|gets|scanf)\\((?!.*n)
+    fix_pattern: Use strncpy snprintf fgets scanf with width specifier
+    cwe: CWE-121
+    cve_reference: CVE-2025-0282
+    example_vuln: char buf[64]; strcpy(buf, user_input);
+    example_fix: char buf[64]; strncpy(buf, user_input, sizeof(buf)-1); buf[63] = '\\0';
+  - id: C-02
+    name: Heap Buffer Overflow
+    severity: CRITICAL
+    category: Memory
+    description: Buffer on heap overwritten allowing heap corruption RCE
+    detection_pattern: (malloc|realloc).*memcpy(?!.*size_check)
+    fix_pattern: Validate size before memcpy use bounded functions
+    cwe: CWE-122
+    cve_reference: CVE-2025-47436
+    example_vuln: char *buf = malloc(64); memcpy(buf, data, data_len);
+    example_fix: if (data_len > 64) return -1; memcpy(buf, data, data_len);
+  - id: C-03
+    name: Format String Vulnerability
+    severity: CRITICAL
+    category: Injection
+    description: User input passed directly to printf allows arbitrary read/write
+    detection_pattern: (printf|fprintf|sprintf|syslog)\\(.*input(?!.*%)
+    fix_pattern: Use format specifier never pass user input directly
+    cwe: CWE-134
+    cve_reference: n/a
+    example_vuln: printf(user_input);
+    example_fix: printf(\%s\"
+  - id: C-04
+    name: Integer Overflow
+    severity: HIGH
+    category: Math
+    description: Integer arithmetic without overflow check leads to small buffer
+    detection_pattern: (malloc|realloc)\\(.*\\*(?!.*overflow|check)
+    fix_pattern: Check for overflow before arithmetic use safe_mul
+    cwe: CWE-190
+    cve_reference: CVE-2024-7025
+    example_vuln: size_t size = width * height; char *buf = malloc(size);
+    example_fix: if (width > SIZE_MAX/height) return -1; size_t size = width * height;
+  - id: C-05
+    name: Off-by-One Error
+    severity: HIGH
+    category: Memory
+    description: Loop boundary error allows one byte overflow
+    detection_pattern: for.*\\<.*=.*len|while.*\\<=.*size
+    fix_pattern: Use strict < comparison verify buffer bounds
+    cwe: CWE-193
+    cve_reference: n/a
+    example_vuln: for (int i = 0; i <= len; i++) buf[i] = src[i];
+    example_fix: for (int i = 0; i < len; i++) buf[i] = src[i];
+  - id: C-06
+    name: Use After Free
+    severity: CRITICAL
+    category: Memory
+    description: Memory accessed after free causing crash or code execution
+    detection_pattern: free\\(.*\\).*\\n.*(?!.*=.*NULL)
+    fix_pattern: Set pointer to NULL after free check before use
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: free(ptr); process(ptr);
+    example_fix: free(ptr); ptr = NULL; if (ptr) process(ptr);
+  - id: C-07
+    name: Double Free
+    severity: CRITICAL
+    category: Memory
+    description: Memory freed twice causing heap corruption
+    detection_pattern: free\\(.*\\).*\\n.*free\\(.*same_ptr)
+    fix_pattern: Set pointer to NULL after free track allocation state
+    cwe: CWE-415
+    cve_reference: n/a
+    example_vuln: free(ptr); free(ptr);
+    example_fix: free(ptr); ptr = NULL;
+  - id: C-08
+    name: Null Pointer Dereference
+    severity: HIGH
+    category: Memory
+    description: Pointer dereferenced without null check
+    detection_pattern: \*\\w+(?!.*if.*!=.*NULL|!=.*NULL)
+    fix_pattern: Check pointer for NULL before dereference
+    cwe: CWE-476
+    cve_reference: n/a
+    example_vuln: return *data;
+    example_fix: if (data == NULL) return -1; return *data;
+  - id: C-09
+    name: Command Injection system
+    severity: CRITICAL
+    category: Injection
+    description: system() with user input allows command execution
+    detection_pattern: system\\(.*input|popen\\(.*user
+    fix_pattern: Use execve with argument array avoid shell
+    cwe: CWE-78
+    cve_reference: n/a
+    example_vuln: system(\cat \" + filename);"
+    example_fix: execl(\/bin/cat\"
+  - id: C-10
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User file path without validation allows directory escape
+    detection_pattern: fopen\\(.*input(?!.*realpath|canonical)
+    fix_pattern: Use realpath validate path is within allowed directory
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: fopen(user_path, \r\");"
+    example_fix: char *real = realpath(user_path, NULL); if (strncmp(real, base, strlen(base)) != 0) return -1;
+  - id: C-11
+    name: Uninitialized Variable
+    severity: HIGH
+    category: Memory
+    description: Variable used before initialization contains garbage
+    detection_pattern: (int|char|void\\*)\\s+\\w+;\\s*(?!.*=).*use
+    fix_pattern: Initialize all variables at declaration
+    cwe: CWE-457
+    cve_reference: n/a
+    example_vuln: int count; if (flag) count = 10; return count;
+    example_fix: int count = 0; if (flag) count = 10; return count;
+  - id: C-12
+    name: Race Condition File
+    severity: HIGH
+    category: Concurrency
+    description: TOCTOU race between check and use of file
+    detection_pattern: access\\(.*\\).*open\\(|stat\\(.*\\).*fopen
+    fix_pattern: Use atomic operations fopen directly with flags
+    cwe: CWE-367
+    cve_reference: n/a
+    example_vuln: if (access(file, R_OK) == 0) fopen(file, \r\");"
+    example_fix: FILE *f = fopen(file, \r\"); if (f == NULL) return -1;"
+  - id: C-13
+    name: Insecure Temporary File
+    severity: HIGH
+    category: File
+    description: mktemp creates predictable temporary file names
+    detection_pattern: mktemp\\((?!.*mkstemp)
+    fix_pattern: Use mkstemp or tmpfile for secure temp files
+    cwe: CWE-377
+    cve_reference: n/a
+    example_vuln: char *tmp = mktemp(template); fopen(tmp, \w\");"
+    example_fix: int fd = mkstemp(template); FILE *f = fdopen(fd, \w\");"
+  - id: C-14
+    name: Memory Leak
+    severity: MEDIUM
+    category: Memory
+    description: Allocated memory never freed causing resource exhaustion
+    detection_pattern: malloc|calloc(?!.*free)
+    fix_pattern: Ensure every malloc has corresponding free use RAII patterns
+    cwe: CWE-401
+    cve_reference: n/a
+    example_vuln: char *buf = malloc(1024); return result;
+    example_fix: char *buf = malloc(1024); /* ... */ free(buf); return result;
+  - id: C-15
+    name: Unbounded String Copy
+    severity: CRITICAL
+    category: Memory
+    description: String functions without length limit
+    detection_pattern: strncat.*sizeof(?!.*-1)|strcat\\(
+    fix_pattern: Use strncat with proper size accounting for null terminator
+    cwe: CWE-120
+    cve_reference: n/a
+    example_vuln: strncat(dest, src, sizeof(dest));
+    example_fix: strncat(dest, src, sizeof(dest) - strlen(dest) - 1);
+  - id: C-16
+    name: Signed Integer Overflow
+    severity: HIGH
+    category: Math
+    description: Signed integer overflow is undefined behavior
+    detection_pattern: (int|long).*\\+.*>.*MAX|signed.*overflow
+    fix_pattern: Use unsigned types or explicit overflow checks
+    cwe: CWE-190
+    cve_reference: n/a
+    example_vuln: int result = a + b; if (result < a) // Too late
+    example_fix: if (a > INT_MAX - b) return -1; int result = a + b;
+  - id: C-17
+    name: Improper Array Index
+    severity: HIGH
+    category: Memory
+    description: Array accessed with unchecked index
+    detection_pattern: \\[.*input\\]|\\[.*user(?!.*check|bound)
+    fix_pattern: Validate array index against bounds before access
+    cwe: CWE-129
+    cve_reference: n/a
+    example_vuln: return array[user_index];
+    example_fix: if (user_index >= array_size) return -1; return array[user_index];
+  - id: C-18
+    name: Signal Handler Race
+    severity: HIGH
+    category: Concurrency
+    description: Non-reentrant function called from signal handler
+    detection_pattern: signal.*handler.*printf|malloc.*signal_handler
+    fix_pattern: Use only async-signal-safe functions in handlers
+    cwe: CWE-364
+    cve_reference: n/a
+    example_vuln: void handler(int sig) { printf(\signal\"); }"
+    example_fix: void handler(int sig) { write(1, \signal\"
+  - id: C-19
+    name: Weak Random Number
+    severity: HIGH
+    category: Crypto
+    description: rand() used for security-sensitive values
+    detection_pattern: rand\\(\\).*token|srand.*time(?!.*secure)
+    fix_pattern: Use CSPRNG like /dev/urandom or arc4random
+    cwe: CWE-330
+    cve_reference: n/a
+    example_vuln: int token = rand();
+    example_fix: arc4random_buf(token, sizeof(token));
+  - id: C-20
+    name: Sensitive Data in Core
+    severity: HIGH
+    category: Information
+    description: Sensitive data may appear in core dumps
+    detection_pattern: password|secret.*malloc(?!.*mlock)
+    fix_pattern: Use mlock to prevent paging clear sensitive data
+    cwe: CWE-316
+    cve_reference: n/a
+    example_vuln: char *password = malloc(256);
+    example_fix: char *password = malloc(256); mlock(password, 256);
+  - id: C-21
+    name: va_arg Type Mismatch
+    severity: CRITICAL
+    category: Memory
+    description: va_arg used with wrong type causing undefined behavior
+    detection_pattern: va_arg\\(.*,\\s*\\w+(?!.*promoted)
+    fix_pattern: Match va_arg type with actual argument type
+    cwe: CWE-119
+    cve_reference: n/a
+    example_vuln: int val = va_arg(args, short); // Wrong
+    example_fix: int val = va_arg(args, int); // short promotes to int
+  - id: C-22
+    name: Uncontrolled Recursion
+    severity: MEDIUM
+    category: DoS
+    description: Recursive function without depth limit causes stack overflow
+    detection_pattern: \\w+\\(.*\\)\\s*\\{[^}]*\\w+\\((?!.*depth)
+    fix_pattern: Add depth parameter and limit max recursion depth
+    cwe: CWE-674
+    cve_reference: n/a
+    example_vuln: void parse(Node *n) { parse(n->child); }
+    example_fix: void parse(Node *n, int depth) { if (depth > MAX_DEPTH) return; parse(n->child, depth+1); }
+  - id: C-23
+    name: Dangerous Function gets
+    severity: CRITICAL
+    category: Memory
+    description: gets() has no bounds checking now deprecated
+    detection_pattern: gets\\(
+    fix_pattern: Replace with fgets() which has size limit
+    cwe: CWE-242
+    cve_reference: n/a
+    example_vuln: gets(buffer);
+    example_fix: fgets(buffer, sizeof(buffer), stdin);
+  - id: C-24
+    name: Missing Return Value Check
+    severity: HIGH
+    category: Error
+    description: malloc/realloc return value not checked for NULL
+    detection_pattern: (malloc|realloc)\\(.*\\)(?!.*if.*==.*NULL|!=.*NULL)
+    fix_pattern: Always check return value of memory allocation
+    cwe: CWE-252
+    cve_reference: n/a
+    example_vuln: char *p = malloc(size); *p = 'x';
+    example_fix: char *p = malloc(size); if (p == NULL) return -1; *p = 'x';
+  - id: C-25
+    name: Insecure Permissions
+    severity: MEDIUM
+    category: File
+    description: File created with world-readable permissions
+    detection_pattern: open\\(.*0777|fopen(?!.*fchmod)
+    fix_pattern: Use restrictive permissions 0600 for sensitive files
+    cwe: CWE-732
+    cve_reference: n/a
+    example_vuln: open(file, O_CREAT, 0777);
+    example_fix: open(file, O_CREAT, 0600);

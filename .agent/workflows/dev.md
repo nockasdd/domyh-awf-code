@@ -1,295 +1,137 @@
 ---
-name: dev
-trigger: ["/dev", "start", "run dev", "chạy"]
-persona: developer
 description: "▶️ Start development server: detect stack, run dev commands, validate output"
+skills: { required: [], contextual: [auto] }
 ---
 
-# ▶️ /dev — Dev Pro v3.1
+# ▶️ /dev — Dev Pro
 
 > Intelligent Development Runner
-> 📚 30+ Languages • Auto-detect • Hot Reload
+> 📚 Auto-detect Stack • HMR 2025 • Error Recovery • Multi-service
 
 ---
 
-## 🔄 DEV FLOW
+## DEV FLOW
 
-```
-User: /dev [options]
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 1: DETECT                         │
-│ ▸ Identify project stack                │
-│ ▸ Find config files                     │
-│ ▸ Check dependencies                    │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 2: PREPARE                        │
-│ ▸ Install deps if needed                │
-│ ▸ Set environment                       │
-│ ▸ Check ports                           │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 3: START                          │
-│ ▸ Run dev command                       │
-│ ▸ Watch for output                      │
-│ ▸ Report URL/port                       │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 4: VALIDATE                       │
-│ ▸ Health check                          │
-│ ▸ Open browser (optional)               │
-│ ▸ Watch for errors                      │
-└─────────────────────────────────────────┘
+1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
+2. **DEPS CHECK** — Verify dependencies installed:
+   - Node.js: `node_modules/` exists? → If not: auto-run `npm install` (or yarn/pnpm/bun)
+   - Go: `go.sum` exists? → If not: `go mod download`
+   - Python: `venv/` or `.venv/` exists? → If not: `python -m venv .venv && pip install -r requirements.txt`
+   - Rust: Run `cargo check` to verify
+     → Show: `[Step 2/6] Dependencies ✅` or `Installing dependencies...`
+3. **SERVICES** — Check required services (DB, Redis, message queue):
+   - Docker Compose found? → Offer `docker-compose up -d`
+   - `.env` references DB_HOST? → Check if DB accessible
+   - Redis required? → Check `redis-cli ping`
+     → Show: `[Step 3/6] Services: PostgreSQL ✅ | Redis ✅`
+4. **SETUP** — Set environment, check ports:
+   - Load `.env` / `.env.local`
+   - Check if default port available (3000, 8080, etc.)
+   - If port in use: suggest next available or show what's using it
+     → Show: `[Step 4/6] Port 3000 available ✅`
+5. **START** — Run dev command, watch output:
+   - On crash/error: show error + common fixes + offer auto-restart
+   - On monorepo: offer parallel start for multiple packages
+     → Show: `[Step 5/6] Starting server...`
+6. **VALIDATE** — Confirm server running, show access URL:
+   - Check health endpoint responds
+   - Show URL for browser access
+     → Show: `[Step 6/6] ✅ Server running at http://localhost:3000`
+
+---
+
+## ERROR RECOVERY
+
+```yaml
+on_crash:
+  1_show_error: "Display clear error message"
+  2_common_fixes:
+    port_in_use: "Kill process on port: npx kill-port 3000"
+    missing_env: "Create .env from .env.example"
+    missing_deps: "Run: npm install"
+    db_not_running: "Start DB: docker-compose up -d db"
+    permission: "Check file permissions"
+  3_auto_restart: "Offer: Restart server? (y/n)"
+  4_max_retries: 3 # Stop after 3 consecutive crashes
+
+on_port_in_use:
+  detect: "lsof -i :PORT (Unix) | netstat -ano | findstr PORT (Windows)"
+  options:
+    - "Kill existing process"
+    - "Use next available port"
+    - "Show what's using the port"
 ```
 
 ---
 
-## 🎯 COMMANDS
+## COMMANDS
 
-| Command           | Description       |
-| ----------------- | ----------------- |
-| `/dev`            | Start dev server  |
-| `/dev stop`       | Stop server       |
-| `/dev restart`    | Restart server    |
-| `/dev logs`       | View logs         |
-| `/dev port [num]` | Use specific port |
+| Command           | Description           |
+| ----------------- | --------------------- |
+| `/dev`            | Start dev server      |
+| `/dev stop`       | Stop server           |
+| `/dev restart`    | Restart server        |
+| `/dev logs`       | View logs             |
+| `/dev port [num]` | Use specific port     |
+| `/dev --all`      | Start all services    |
+| `/dev --clean`    | Clean install + start |
 
 ---
 
 ## 🔧 DEV COMMANDS BY STACK
 
-```yaml
-# ═══════════════════════════════════════════════════════════════
-# DEVELOPMENT COMMANDS BY LANGUAGE/FRAMEWORK
-# ═══════════════════════════════════════════════════════════════
-
-commands:
-  # Node.js / TypeScript
-  typescript:
-    detect: ["package.json", "tsconfig.json"]
-    dev:
-      - "npm run dev"
-      - "yarn dev"
-      - "pnpm dev"
-    frameworks:
-      nextjs: "next dev"
-      vite: "vite"
-      remix: "remix dev"
-      nuxt: "nuxt dev"
-
-  # Go
-  go:
-    detect: ["go.mod", "main.go"]
-    dev:
-      - "go run ."
-      - "air" # Hot reload
-    frameworks:
-      gin: "go run main.go"
-      fiber: "go run main.go"
-
-  # Python
-  python:
-    detect: ["requirements.txt", "pyproject.toml", "setup.py"]
-    dev:
-      - "python main.py"
-      - "uvicorn main:app --reload"
-    frameworks:
-      fastapi: "uvicorn main:app --reload"
-      django: "python manage.py runserver"
-      flask: "flask run --reload"
-
-  # Rust
-  rust:
-    detect: ["Cargo.toml"]
-    dev:
-      - "cargo run"
-      - "cargo watch -x run" # Hot reload
-
-  # Java
-  java:
-    detect: ["pom.xml", "build.gradle"]
-    dev:
-      maven: "mvn spring-boot:run"
-      gradle: "./gradlew bootRun"
-
-  # C#/.NET
-  csharp:
-    detect: ["*.csproj", "*.sln"]
-    dev: "dotnet run --watch"
-
-  # PHP
-  php:
-    detect: ["composer.json"]
-    dev:
-      laravel: "php artisan serve"
-      symfony: "symfony server:start"
-
-  # Ruby
-  ruby:
-    detect: ["Gemfile"]
-    dev:
-      rails: "rails server"
-      sinatra: "ruby app.rb"
-```
+| Framework            | Dev Command                  | Alt                     |
+| -------------------- | ---------------------------- | ----------------------- |
+| **Next.js**          | `next dev`                   | `npm run dev`           |
+| **Vite**             | `vite`                       | `npm run dev`           |
+| **Remix**            | `remix dev`                  | `npm run dev`           |
+| **Nuxt**             | `nuxt dev`                   | `npm run dev`           |
+| **Angular**          | `ng serve`                   | `npm start`             |
+| **Go (Air)**         | `air`                        | `go run .`              |
+| **Go (Gin)**         | `go run main.go`             | `air`                   |
+| **Python (Django)**  | `python manage.py runserver` | `./manage.py runserver` |
+| **Python (FastAPI)** | `uvicorn main:app --reload`  | `fastapi dev`           |
+| **Python (Flask)**   | `flask run --debug`          | `python app.py`         |
+| **Rust (Cargo)**     | `cargo run`                  | `cargo watch -x run`    |
+| **Java (Spring)**    | `./mvnw spring-boot:run`     | `./gradlew bootRun`     |
+| **PHP (Laravel)**    | `php artisan serve`          | `valet`                 |
+| **PHP (Symfony)**    | `symfony server:start`       | `php -S localhost:8000` |
+| **Ruby (Rails)**     | `rails server`               | `bin/dev`               |
 
 ---
 
-## 📊 OUTPUT FORMAT
-
-```markdown
-▶️ DEV SERVER STARTED
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Stack: Next.js 14 + TypeScript
-Command: npm run dev
-Port: 3000
-
-🌐 Local: http://localhost:3000
-🌐 Network: http://192.168.1.100:3000
-
-✅ Server ready in 2.3s
-
-Watching for changes...
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Commands:
-
-- /dev stop → Stop server
-- /dev restart → Restart
-- /dev logs → View full logs
-```
-
----
-
-## 🔧 HOT RELOAD TOOLS
+## 🐳 MULTI-SERVICE / MONOREPO
 
 ```yaml
-hot_reload:
-  go: "air"
-  rust: "cargo-watch"
-  python: "uvicorn --reload"
-  node: "nodemon"
-  dotnet: "dotnet watch"
+monorepo_detection:
+  nx: "nx.json → nx run-many --target=dev"
+  turbo: "turbo.json → turbo dev"
+  pnpm: "pnpm-workspace.yaml → pnpm -r dev"
+  npm: "package.json workspaces → npm run dev --workspaces"
+  lerna: "lerna.json → lerna run dev --parallel"
+
+docker_compose:
+  detected: "docker-compose.yml exists"
+  action: "Offer: Start all services with docker-compose up -d?"
+  selective: "Or start specific: docker-compose up -d db redis"
 ```
 
 ---
 
-## ⚙️ TOKEN OPTIMIZATION
+## ⚡ HMR 2025 STANDARDS
 
-```yaml
-token_saving:
-  - Auto-detect stack (no manual config)
-  - Concise output
-  - Only show errors/warnings
-```
+| Metric             | Target                     |
+| ------------------ | -------------------------- |
+| Module update      | < 100ms                    |
+| Full reload        | < 1s                       |
+| State preservation | React/Vue state maintained |
+| Cold start         | < 3s                       |
 
----
+### Modern Bundlers
 
-## ⚡ HMR 2025 STANDARDS (v3.1)
-
-```yaml
-hmr_optimization:
-  description: "Sub-100ms hot module replacement"
-
-  targets:
-    module_update: "< 100ms"
-    full_reload: "< 1s for config changes"
-    state_preservation: "React/Vue state maintained"
-    cold_start: "< 3s for large projects"
-
-  native_esm:
-    description: "No dev bundling needed"
-    benefits:
-      - "Instant cold start"
-      - "On-demand compilation"
-      - "Browser caching"
-      - "Parallel module resolution"
-
-  performance_patterns:
-    dynamic_imports: "Lazy load non-critical modules"
-    barrel_exports: "Avoid large re-exports"
-    circular_deps: "Detect and warn"
-
-  anti_patterns:
-    - "Large barrel exports (index.ts)"
-    - "Circular dependencies"
-    - "Sync dynamic imports"
-    - "Importing entire libraries"
-
-  tools:
-    vite: "Native ESM, < 50ms updates"
-    turbopack: "Rust-based, incremental compute"
-    rspack: "Rust port of webpack"
-
-  commands:
-    check: "/dev optimize check"
-    fix: "/dev optimize fix"
-    benchmark: "/dev optimize benchmark"
-```
-
----
-
-## 🚨 ERROR OVERLAY ENHANCEMENT (v3.1)
-
-```yaml
-error_overlay:
-  description: "Developer-friendly error display"
-
-  features:
-    stack_trace:
-      clickable: true
-      source_links: "Open in editor"
-      file_context: "Show surrounding lines"
-
-    source_map:
-      original_source: true
-      minified_fallback: false
-
-    quick_fix:
-      suggestions: true
-      one_click_apply: "Safe fixes only"
-      explain: "Why this error happened"
-
-  ai_assist:
-    explain_error: true
-    suggest_fix: true
-    auto_apply: "Safe fixes only"
-    learn_pattern: "Prevent similar errors"
-
-  integration:
-    vscode: "Click to open file"
-    cursor: "AI explain button"
-    terminal: "Formatted output"
-
-  commands:
-    overlay_config: "/dev overlay [config]"
-    ai_explain: "/dev explain [error]"
-```
-
----
-
-## 🔧 SUB-COMMANDS
-
-| Command                | Description            |
-| ---------------------- | ---------------------- |
-| `/dev`                 | Start dev server       |
-| `/dev stop`            | Stop server            |
-| `/dev restart`         | Restart server         |
-| `/dev logs`            | View full logs         |
-| `/dev optimize check`  | Check HMR performance  |
-| `/dev optimize fix`    | Fix performance issues |
-| `/dev explain [error]` | AI explain error       |
-
----
-
-_DOMYH Awesome Code v6.1.2 • Dev Pro v3.1 • HMR 2025 + Error Overlay_
+| Tool      | Speed        | Use Case                 |
+| --------- | ------------ | ------------------------ |
+| Vite      | ⚡ Fast      | Default for new projects |
+| Turbopack | ⚡⚡ Fastest | Next.js 15+              |
+| Rspack    | ⚡⚡ Fast    | webpack migration        |
+| esbuild   | ⚡⚡ Fastest | Build-only               |

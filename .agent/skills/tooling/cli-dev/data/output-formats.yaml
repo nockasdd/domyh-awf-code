@@ -1,0 +1,58 @@
+# CLI Output Formats — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: CLI-OUT-001
+    name: Structured Output
+    category: output
+    description: |
+      Support multiple output formats.
+    example: |
+      function output(data: unknown, format: string) {
+        switch (format) {
+          case "json": console.log(JSON.stringify(data, null, 2)); break;
+          case "yaml": console.log(yaml.stringify(data)); break;
+          case "csv": console.log(toCSV(data)); break;
+          case "table": default: console.log(renderTable(data)); break;
+        }
+      }
+
+      program.option("--format <format>", "Output format", "table");
+
+  - id: CLI-OUT-002
+    name: Exit Codes
+    category: output
+    description: |
+      Standard exit codes for CLI tools.
+    text: |
+      | Code | Meaning | When |
+      |------|---------|------|
+      | 0 | Success | Normal completion |
+      | 1 | General error | Runtime errors |
+      | 2 | Usage error | Invalid args/options |
+      | 126 | Not executable | Permission denied |
+      | 127 | Not found | Command not found |
+      | 130 | Interrupted | Ctrl+C (SIGINT) |
+
+  - id: CLI-OUT-003
+    name: Progress Indicators
+    category: output
+    description: |
+      Show progress for long-running operations.
+    example: |
+      import ora from "ora";
+      import cliProgress from "cli-progress";
+
+      // Spinner
+      const spinner = ora("Processing...").start();
+      await doWork();
+      spinner.succeed("Done!");
+
+      // Progress bar
+      const bar = new cliProgress.SingleBar();
+      bar.start(100, 0);
+      for (let i = 0; i <= 100; i++) {
+        bar.update(i);
+        await sleep(50);
+      }
+      bar.stop();

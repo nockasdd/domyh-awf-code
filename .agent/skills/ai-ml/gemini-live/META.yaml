@@ -1,0 +1,55 @@
+name: gemini-live
+version: "1.0.0"
+display: Gemini Live & Advanced APIs
+category: ai-ml
+tier: 1
+priority: 4
+
+desc: "Advanced Gemini APIs: Live API (real-time voice/video streaming via WebSocket), Context Caching (implicit + explicit TTL), Code Execution (Python sandbox, 30+ libs), Grounding with Google Search (citations). 28+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - live api
+    - real-time ai
+    - gemini live
+    - context caching
+    - code execution
+    - gemini sandbox
+    - grounding
+    - google search grounding
+    - implicit caching
+    - explicit caching
+    - voice activity detection
+    - session management
+    - ephemeral token
+    - websocket ai
+    - streaming ai
+  intents:
+    - build real-time AI app
+    - cache context for LLM
+    - execute code with gemini
+    - ground responses with search
+    - stream audio/video to AI
+
+caps:
+  - Live API (WebSocket, audio/video streaming)
+  - Voice Activity Detection (VAD)
+  - Context Caching (implicit + explicit TTL, cost savings)
+  - Code Execution (Python sandbox, 30+ libs including TensorFlow)
+  - Grounding with Google Search (real-time citations)
+  - Multi-tool combinations (Search + Code + Functions)
+  - Session management for long conversations
+  - Ephemeral tokens (client-side auth)
+  - Partner integrations (Pipecat, LiveKit, ADK)
+
+related_skills:
+  - ai-agents
+  - prompt-engineering
+  - gemini-media-gen
+
+data_files:
+  - data/live-api.yaml
+  - data/context-caching.yaml
+  - data/code-execution.yaml
+  - data/grounding.yaml

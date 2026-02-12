@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_python
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-python.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: PY-001
+    category: stdlib
+    library: logging
+    name: getLogger
+    description: Create module-specific logger
+    example: logger = logging.getLogger(__name__)
+    when_to_use: Every Python module
+  - id: PY-002
+    category: stdlib
+    library: logging
+    name: basicConfig
+    description: Simple logging configuration
+    example: logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+    when_to_use: Quick setup
+  - id: PY-003
+    category: stdlib
+    library: logging
+    name: FileHandler
+    description: Log to file
+    example: handler = logging.FileHandler('app.log')
+    when_to_use: File-based logging
+  - id: PY-004
+    category: stdlib
+    library: logging
+    name: StreamHandler
+    description: Log to console
+    example: handler = logging.StreamHandler(sys.stdout)
+    when_to_use: Console output
+  - id: PY-005
+    category: stdlib
+    library: logging
+    name: Formatter
+    description: Custom log format
+    example: formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s')
+    when_to_use: Custom formatting
+  - id: PY-006
+    category: stdlib
+    library: logging
+    name: dictConfig
+    description: Configure via dictionary
+    example: logging.config.dictConfig(config_dict)
+    when_to_use: Complex configurations
+  - id: PY-007
+    category: stdlib
+    library: logging
+    name: Exception Logging
+    description: Log with traceback
+    example: logger.exception("Error occurred")
+    when_to_use: Exception handling
+  - id: PY-008
+    category: stdlib
+    library: logging
+    name: Extra Fields
+    description: Add context via extra
+    example: 'logger.info("msg", extra={''user_id'': 123})'
+    when_to_use: Structured context
+  - id: PY-009
+    category: structlog
+    library: structlog
+    name: get_logger
+    description: Get structlog logger
+    example: log = structlog.get_logger()
+    when_to_use: Structured logging
+  - id: PY-010
+    category: structlog
+    library: structlog
+    name: Bound Logger
+    description: Logger with bound context
+    example: log = log.bind(user_id=123)
+    when_to_use: Request-scoped context
+  - id: PY-011
+    category: structlog
+    library: structlog
+    name: Processors
+    description: Transform log events
+    example: structlog.configure(processors=[structlog.processors.JSONRenderer()])
+    when_to_use: Log transformation
+  - id: PY-012
+    category: structlog
+    library: structlog
+    name: add_log_level
+    description: Add log level to event
+    example: structlog.processors.add_log_level
+    when_to_use: Level information
+  - id: PY-013
+    category: structlog
+    library: structlog
+    name: TimeStamper
+    description: Add ISO timestamps
+    example: structlog.processors.TimeStamper(fmt='iso')
+    when_to_use: Timestamp formatting
+  - id: PY-014
+    category: structlog
+    library: structlog
+    name: JSONRenderer
+    description: JSON output
+    example: structlog.processors.JSONRenderer()
+    when_to_use: Production logging
+  - id: PY-015
+    category: structlog
+    library: structlog
+    name: ConsoleRenderer
+    description: Pretty console output
+    example: structlog.dev.ConsoleRenderer()
+    when_to_use: Development logging
+  - id: PY-016
+    category: structlog
+    library: structlog
+    name: StackInfoRenderer
+    description: Add stack info
+    example: structlog.processors.StackInfoRenderer()
+    when_to_use: Debugging
+  - id: PY-017
+    category: structlog
+    library: structlog
+    name: ExceptionPrettyPrinter
+    description: Format exceptions
+    example: structlog.processors.ExceptionPrettyPrinter()
+    when_to_use: Error logging
+  - id: PY-018
+    category: loguru
+    library: loguru
+    name: logger.add
+    description: Add sink destination
+    example: logger.add('file.log', rotation='500 MB')
+    when_to_use: File logging
+  - id: PY-019
+    category: loguru
+    library: loguru
+    name: Rotation
+    description: Automatic log rotation
+    example: logger.add('file.log', rotation='1 day')
+    when_to_use: Log management
+  - id: PY-020
+    category: loguru
+    library: loguru
+    name: Retention
+    description: Log retention policy
+    example: logger.add('file.log', retention='10 days')
+    when_to_use: Disk management
+  - id: PY-021
+    category: loguru
+    library: loguru
+    name: Serialization
+    description: JSON serialization
+    example: logger.add(sink, serialize=True)
+    when_to_use: Structured output
+  - id: PY-022
+    category: loguru
+    library: loguru
+    name: logger.catch
+    description: Decorator for exception logging
+    example: "@logger.catch; def my_func(): ..."
+    when_to_use: Automatic exception capture
+  - id: PY-023
+    category: loguru
+    library: loguru
+    name: Lazy Evaluation
+    description: Defer expensive evaluation
+    example: "logger.debug('Result: {result}', result=lambda: expensive())"
+    when_to_use: Performance
+  - id: PY-024
+    category: general
+    library: any
+    name: JSON Formatter
+    description: Custom JSON formatter
+    example: "class JsonFormatter(logging.Formatter): ..."
+    when_to_use: JSON logging with stdlib
+  - id: PY-025
+    category: general
+    library: any
+    name: Context Filter
+    description: Add request context
+    example: "class ContextFilter(logging.Filter): ..."
+    when_to_use: Request-scoped logging

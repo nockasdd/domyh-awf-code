@@ -1,0 +1,101 @@
+# Audit Pro — Scoring & Grading System
+# Supports 12-Expert Panel with conditional activation
+
+scoring:
+  scale: 10
+  formula: weighted_average(active_expert_scores)
+
+  # Default weights (5 core experts only)
+  weights:
+    {
+      security: 0.30,
+      architecture: 0.20,
+      performance: 0.20,
+      quality: 0.15,
+      devops: 0.15,
+    }
+
+  # Weight profiles for different audit scopes
+  # Note: when conditional experts are skipped, their weight
+  # redistributes proportionally to remaining active experts
+  weight_profiles:
+    default:
+      security: 0.30
+      architecture: 0.20
+      performance: 0.20
+      quality: 0.15
+      devops: 0.15
+    full_audit:
+      security: 0.18
+      architecture: 0.12
+      performance: 0.10
+      quality: 0.10
+      devops: 0.08
+      ux: 0.06
+      data: 0.06
+      compliance: 0.06
+      product: 0.06
+      reliability: 0.06
+      cloud: 0.06
+      ai_safety: 0.06
+    backend_focus:
+      security: 0.25
+      architecture: 0.20
+      performance: 0.20
+      quality: 0.10
+      devops: 0.10
+      data: 0.10
+      reliability: 0.05
+    frontend_focus:
+      security: 0.15
+      quality: 0.20
+      ux: 0.25
+      performance: 0.20
+      architecture: 0.10
+      product: 0.10
+    security_focus:
+      security: 0.35
+      compliance: 0.30
+      architecture: 0.10
+      quality: 0.10
+      devops: 0.15
+    ai_ml_focus:
+      ai_safety: 0.25
+      security: 0.20
+      data: 0.15
+      reliability: 0.15
+      performance: 0.15
+      quality: 0.10
+
+  redistribution:
+    method: proportional
+    description: "When a conditional expert is inactive, its weight is redistributed proportionally to remaining active experts"
+
+  # level | label | meaning | sla | penalty
+  priorities:
+    - P0 | 🔴 Critical | Security/Data loss risk | Fix immediately | -2.0
+    - P1 | 🟠 High | Affects core functionality | Fix before deploy | -1.0
+    - P2 | 🟡 Medium | Should fix soon | Fix this sprint | -0.5
+    - P3 | 🟢 Low | Nice to have | Backlog | -0.1
+
+  # range | label | action
+  grades:
+    - 9.0-10.0 | 🏆 Production Ready | Deploy with confidence
+    - 7.0-8.9 | ✅ Ready with minor fixes | Fix P1s before deploy
+    - 5.0-6.9 | ⚠️ Needs work | Address P0/P1 before deploy
+    - 3.0-4.9 | 🚫 Not ready | Significant remediation needed
+    - 0.0-2.9 | ❌ Critical issues | Do not deploy, major rework
+
+  # id | label | estimate | coverage | use_case | experts
+  scope_options:
+    - 1 | 🔴 FULL AUDIT | ~2h | All 12 experts | Pre-production, Major releases
+    - 2 | 🟠 BACKEND | ~1h | Core 5 + Data + Reliability | Backend changes, API updates
+    - 3 | 🟡 FRONTEND | ~30m | Security + Quality + UX + Perf | UI changes, UX updates
+    - 4 | 🟢 SECURITY ONLY | ~1h | Security + Compliance | Security review, Compliance
+    - 5 | 🔵 CUSTOM | ? | User-defined | Specific areas of concern
+
+  consensus:
+    voting: Weighted average by severity
+    conflicts: Highlight disagreements
+    final: Human arbitration for P0
+    confidence: { high: ">80%", medium: "60-80%", low: "<60% → flag" }

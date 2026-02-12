@@ -1,0 +1,71 @@
+# =============================================================================
+# chunking-strategies.yaml — Document Chunking Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+fixed_size:
+  description: "Split by character/token count"
+  config:
+    chunk_size: 512
+    chunk_overlap: 50
+    split_on: "tokens"
+  best_for: "Simple text, logs, uniform content"
+  example_python: |
+    from langchain.text_splitter import CharacterTextSplitter
+    splitter = CharacterTextSplitter(
+        chunk_size=512,
+        chunk_overlap=50,
+        separator="\n"
+    )
+    chunks = splitter.split_text(document)
+
+recursive:
+  description: "Split by hierarchy of separators"
+  separators: ["\n\n", "\n", ". ", " ", ""]
+  best_for: "Markdown, code, HTML, structured docs"
+  example_python: |
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        separators=["\n\n", "\n", ". ", " "]
+    )
+    chunks = splitter.split_documents(docs)
+
+semantic:
+  description: "Split by meaning changes using embeddings"
+  method: |
+    1. Split into sentences
+    2. Create embeddings for each sentence
+    3. Compute cosine similarity between adjacent sentences
+    4. Split where similarity drops below threshold
+  best_for: "Mixed content, preserving meaning"
+  example_python: |
+    from langchain_experimental.text_splitter import SemanticChunker
+    from langchain_openai import OpenAIEmbeddings
+    chunker = SemanticChunker(
+        OpenAIEmbeddings(),
+        breakpoint_threshold_type="percentile"
+    )
+    chunks = chunker.split_text(text)
+
+code_splitting:
+  description: "Language-aware code splitting"
+  languages: ["python", "javascript", "go", "rust", "java"]
+  example_python: |
+    from langchain.text_splitter import Language, RecursiveCharacterTextSplitter
+    splitter = RecursiveCharacterTextSplitter.from_language(
+        language=Language.PYTHON,
+        chunk_size=2000,
+        chunk_overlap=200
+    )
+
+best_practices:
+  - "Include metadata (source, page, section) with each chunk"
+  - "Overlap 10-20% to maintain context at boundaries"
+  - "Keep chunks between 100-1000 tokens"
+  - "For tables: keep entire table as one chunk"
+  - "For code: split at function/class boundaries"
+
+# _DOMYH Awesome Code • Chunking Strategies_

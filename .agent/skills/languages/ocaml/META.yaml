@@ -1,29 +1,12 @@
 name: ocaml
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 
-description: |
-  OCaml development patterns for OCaml 5.1+.
-  ML family, algebraic types, pattern matching, multicore.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.ml"
-    - "*.mli"
-    - "dune"
-    - "dune-project"
-    - "*.opam"
-  keywords:
-    - ocaml
-    - opam
-    - dune
-    - reason
-    - melange
-  intents:
-    - ocaml project
-    - ml programming
-    - reason react
+desc: "OCaml development patterns for OCaml 5.1+. ML family, algebraic types, pattern matching, multicore."
 
 related_skills:
   - haskell

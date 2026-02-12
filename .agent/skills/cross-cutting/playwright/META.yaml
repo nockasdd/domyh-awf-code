@@ -1,0 +1,90 @@
+name: playwright
+version: "1.0.0"
+display: Playwright
+category: cross-cutting
+tier: 1
+priority: 2
+
+desc: "Playwright browser automation: MCP tools (19), E2E testing, AI agents (Planner/Generator/Healer), comprehensive UI interaction checklist (58 checkpoints), accessibility snapshots, Page Object Model."
+
+  ### Data Files (6 domains, ~80 patterns)
+  - mcp-tools.yaml: 19 MCP tool definitions — navigation, interaction, observation (19)
+  - interaction-checklist.yaml: 58 mandatory checkpoints — dropdown, modal, button, hover (58)
+  - locator-patterns.yaml: Priority-ordered locator strategies (5)
+  - config-templates.yaml: CI/local/mobile/visual regression configs (4)
+  - ai-agents.yaml: Planner/Generator/Healer workflow patterns (3)
+  - open-source-tools.yaml: Browser automation ecosystem reference (8)
+
+triggers:
+  file_patterns:
+    - "playwright.config.*"
+    - "tests/e2e/**"
+    - "*.e2e.*"
+    - "*.pw.*"
+    - "**/__e2e__/**"
+  keywords:
+    # Core
+    - playwright
+    - browser testing
+    - e2e testing
+    - end to end
+    - browser automation
+    # MCP
+    - playwright mcp
+    - browser_snapshot
+    - browser_click
+    - accessibility snapshot
+    # Patterns
+    - cross-browser
+    - visual regression
+    - page object model
+    # Interactive elements
+    - test dropdown
+    - test modal
+    - verify button
+    - check hover
+  intents:
+    - test frontend
+    - verify UI
+    - browser test
+    - check dropdown
+    - test modal
+    - verify button action
+    - comprehensive UI test
+
+caps:
+  - Playwright MCP 19 tools reference (navigate, click, type, snapshot, etc.)
+  - 58-checkpoint comprehensive interaction testing checklist
+  - Dropdown testing (18 checkpoints: open/close/select/keyboard/validation)
+  - Modal testing (16 checkpoints: trigger/close/focus trap/Escape/form)
+  - Button testing (14 checkpoints: click action/disabled/loading/rage-click)
+  - Hover testing (10 checkpoints: tooltip/menu/keyboard equivalent)
+  - AI Test Agents — Planner/Generator/Healer patterns
+  - Accessibility snapshot vs screenshot strategy
+  - Page Object Model templates
+  - Locator priority: getByRole > getByLabel > getByTestId > locator
+  - Visual regression with toHaveScreenshot()
+  - Cross-browser & mobile device testing
+  - CI/CD pipeline integration configs
+  - Open-source tools ecosystem (Stagehand, Browser-Use, Midscene.js)
+
+data_files:
+  - data/mcp-tools.yaml
+  - data/interaction-checklist.yaml
+  - data/locator-patterns.yaml
+  - data/config-templates.yaml
+  - data/ai-agents.yaml
+  - data/open-source-tools.yaml
+
+related_skills:
+  - testing
+  - accessibility
+  - browser-agent
+  - mcp
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/cross-cutting/playwright/data"
+  preload_data: true
+
+# _DOMYH Awesome Code • Playwright Skill META v1.0.0_

@@ -1,0 +1,211 @@
+# =============================================================================
+# CI/CD Security Patterns (Feb 2026)
+# =============================================================================
+# Dependency review, secret scanning, supply chain security
+
+metadata:
+  skill: ci-cd
+  domain: security
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: cicd010
+    name: Dependency Review Action
+    category: security
+    version: "2023+"
+    description: Block PRs that introduce vulnerable dependencies
+    text: dependency review vulnerability scan pr check security
+    example: |
+      name: Dependency Review
+
+      on: pull_request
+
+      permissions:
+        contents: read
+        pull-requests: write
+
+      jobs:
+        dependency-review:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/dependency-review-action@v4
+              with:
+                # Fail on critical/high vulnerabilities
+                fail-on-severity: high
+                # Allow specific licenses
+                allow-licenses: MIT, Apache-2.0, BSD-3-Clause
+                # Deny copyleft for commercial projects
+                deny-licenses: GPL-3.0, AGPL-3.0
+
+      # Also enable in repo settings:
+      # - Dependabot security updates
+      # - Dependabot version updates
+    severity: CRITICAL
+    docs_url: https://github.com/actions/dependency-review-action
+
+  - id: cicd011
+    name: CodeQL Security Scanning
+    category: security
+    version: "2022+"
+    description: Semantic code analysis for security vulnerabilities
+    text: codeql security scanning sast static analysis vulnerabilities
+    example: |
+      name: CodeQL Analysis
+
+      on:
+        push:
+          branches: [main]
+        pull_request:
+          branches: [main]
+        schedule:
+          - cron: '0 6 * * 1'  # Weekly
+
+      jobs:
+        analyze:
+          runs-on: ubuntu-latest
+          permissions:
+            security-events: write
+            contents: read
+          strategy:
+            matrix:
+              language: ['javascript', 'python', 'go']
+          steps:
+            - uses: actions/checkout@v4
+
+            - uses: github/codeql-action/init@v3
+              with:
+                languages: ${{ matrix.language }}
+                # Use extended queries for more findings
+                queries: +security-extended
+
+            - uses: github/codeql-action/autobuild@v3
+
+            - uses: github/codeql-action/analyze@v3
+              with:
+                category: "/language:${{ matrix.language }}"
+
+      # Results appear in Security tab
+    severity: CRITICAL
+    docs_url: https://docs.github.com/en/code-security/code-scanning
+
+  - id: cicd012
+    name: Secret Scanning Push Protection
+    category: security
+    version: "2023+"
+    description: Block pushes containing hardcoded secrets
+    text: secret scanning push protection block credentials tokens
+    example: |
+      # Enable in repo settings:
+      # Settings > Security > Secret scanning > Push protection
+
+      # When enabled:
+      # 1. Git push blocked if secrets detected
+      # 2. Developer sees which secrets found
+      # 3. Options: remove secret, bypass (with reason), cancel
+
+      # Supported secret types (200+):
+      # - AWS keys
+      # - GitHub tokens
+      # - Azure credentials
+      # - Database passwords
+      # - API keys
+
+      # Custom patterns (org level):
+      # Pattern: mycompany_[a-zA-Z0-9]{32}
+      # Used for internal API keys
+
+      # API to check commits:
+      gh api /repos/{owner}/{repo}/secret-scanning/alerts
+
+      # Best practice: Use GHAS for enterprise
+    severity: CRITICAL
+    docs_url: https://docs.github.com/en/code-security/secret-scanning
+
+  - id: cicd013
+    name: OIDC for Cloud Authentication
+    category: security
+    version: "2022+"
+    description: Keyless auth to AWS/Azure/GCP using GitHub OIDC
+    text: oidc authentication keyless aws azure gcp workload identity
+    example: |
+      name: Deploy with OIDC
+
+      on:
+        push:
+          branches: [main]
+
+      permissions:
+        id-token: write  # Required for OIDC
+        contents: read
+
+      jobs:
+        deploy:
+          runs-on: ubuntu-latest
+          steps:
+            # AWS
+            - uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::123456789:role/GitHubActions
+                aws-region: us-east-1
+
+            # Azure
+            - uses: azure/login@v2
+              with:
+                client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+            # GCP
+            - uses: google-github-actions/auth@v2
+              with:
+                workload_identity_provider: 'projects/123/locations/global/workloadIdentityPools/...'
+                service_account: 'github-actions@project.iam.gserviceaccount.com'
+
+      # Benefits: No long-lived credentials, automatic rotation
+    severity: CRITICAL
+    docs_url: https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+
+  - id: cicd014
+    name: Permissions Hardening
+    category: security
+    version: "2022+"
+    description: Principle of least privilege for workflow permissions
+    text: permissions security hardening principle least privilege token
+    example: |
+      name: Secure Workflow
+
+      on: push
+
+      # Restrictive default permissions
+      permissions:
+        contents: read
+
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - run: npm ci && npm test
+
+        publish:
+          needs: build
+          runs-on: ubuntu-latest
+          # Grant write only where needed
+          permissions:
+            contents: read
+            packages: write
+          steps:
+            - uses: actions/checkout@v4
+            - run: npm publish
+
+      # Security best practices:
+      # 1. Default to read-only at workflow level
+      # 2. Grant write permissions per-job
+      # 3. Never use permissions: write-all
+      # 4. Audit third-party actions
+      # 5. Pin action versions to SHA
+    severity: HIGH
+    docs_url: https://docs.github.com/en/actions/security-guides/automatic-token-authentication

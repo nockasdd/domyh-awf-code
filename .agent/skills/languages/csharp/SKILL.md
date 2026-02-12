@@ -1,12 +1,12 @@
 ---
 name: csharp
 detect: ["*.csproj", "*.sln", "*.cs", "global.json"]
-version: "6.1.2"
+version: "6.2.1"
 category: language
 tier: 1
 ---
 
-# C# Development Patterns — DOMYH Awesome Code v6.1.2
+# C# Development Patterns — DOMYH Awesome Code
 
 > Modern C# (C# 12/13/14) with .NET 9/10 — 2025-2026
 
@@ -617,4 +617,4 @@ builder.Services.AddHttpClient<IPaymentClient, PaymentClient>(client =>
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • C# Development (C# 12/13/14 • .NET 9/10) • 2025-2026_
+_DOMYH Awesome Code • C# Development (C# 12/13/14 • .NET 9/10) • 2025-2026_

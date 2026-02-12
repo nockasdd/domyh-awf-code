@@ -1,6 +1,6 @@
 # Skills Customization Framework
 
-# DOMYH Awesome Code v6.1.2
+# DOMYH Awesome Code
 
 ---
 
@@ -90,9 +90,11 @@ skills:
   priority_override:
     my-skill: 0 # Make custom skill high priority
 
-  custom:
-    path: ./custom-skills/ # Custom skills directory
-    auto_load: true
+private:
+  path: ./private/ # Private skills directory
+  auto_load: true
+  override_public: true # Private takes precedence
+  registry: ./private/_index.yaml
 ```
 
 ### Skill Loading Modes
@@ -102,6 +104,61 @@ skills:
 | progressive | Load T1, activate T2 on-demand   | Default      |
 | eager       | Preload all T2 for active skills | Low latency  |
 | lazy        | Load only when explicitly needed | Token saving |
+
+---
+
+## 🔒 Private Skills
+
+> Skills riêng cho dự án / công ty — **KHÔNG** commit vào repo public.
+
+### Overview
+
+Private skills are stored in `.agent/private/` which is **gitignored**. They follow the same 3-tier structure as public skills but have `priority: -1` (highest), meaning they override public skills with the same ID.
+
+```
+Skill Resolution:
+  private/ (priority -1) → skills/ (priority 0-5)
+```
+
+### Creating a Private Skill
+
+**Step 1**: Copy `.agent/private/_template/` to a new directory:
+
+```bash
+# PowerShell
+Copy-Item -Recurse .agent/private/_template .agent/private/my-skill
+```
+
+**Step 2**: Edit the files:
+
+| File          | Action                                               |
+| ------------- | ---------------------------------------------------- |
+| `META.yaml`   | Change `name`, `display`, `desc`, `triggers`, `caps` |
+| `SKILL.md`    | Write patterns, checklists, examples                 |
+| `data/*.yaml` | Add data files if needed                             |
+
+**Step 3**: Register in `_index.yaml`:
+
+```yaml
+count: 1
+skills:
+  - { id: my-skill, has_advanced: false }
+```
+
+### Private Skill Categories
+
+| Use Case                  | Example                                          |
+| ------------------------- | ------------------------------------------------ |
+| Company API conventions   | Internal naming, patterns, endpoints             |
+| Project-specific patterns | Domain models, architecture decisions            |
+| Client-specific code      | Custom integrations, proprietary logic           |
+| Override public skills    | Replace `testing` with company testing standards |
+
+### Override Rules
+
+- Private skill with **same ID** as a public skill → private wins
+- Private skills have `category: private` and `priority: -1`
+- Listed in `private/_index.yaml`, not in `skills/_categories.yaml`
 
 ---
 
@@ -132,7 +189,8 @@ python scripts/semantic_selector.py --generate
 3. **Use T3 for deep content** — Reference material
 4. **Test semantic matching** — Verify detection works
 5. **Document capabilities** — Clear skill boundaries
+6. **Use private/ for internal skills** — Never commit company-specific patterns to public repo
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Customization Framework_
+_DOMYH Awesome Code — Customization Framework_

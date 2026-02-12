@@ -1,12 +1,12 @@
 ---
 name: crystal
 detect: ["*.cr", "shard.yml", "shard.lock"]
-version: "6.1.2"
+version: "6.2.1"
 category: language
 tier: 3
 ---
 
-# Crystal Patterns — DOMYH Awesome Code v6.1.2
+# Crystal Patterns — DOMYH Awesome Code
 
 > **Version**: Crystal 1.10+ (2025-2026)
 > **Framework**: Kemal, Lucky
@@ -114,4 +114,4 @@ end
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Crystal 1.10+_
+_DOMYH Awesome Code • Crystal 1.10+_

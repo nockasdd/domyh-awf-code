@@ -1,0 +1,60 @@
+name: api-design
+version: "6.2.1"
+display: API Design Patterns
+category: core
+tier: 1
+priority: 1
+
+desc: "Comprehensive API design patterns: REST (Richardson Maturity, HATEOAS), GraphQL (schema, resolvers, DataLoader), gRPC (streaming, protocol buffers). Versioning, pagination, rate limiting, error responses (RFC 9457). HSA dynamic search enabled."
+
+triggers:
+  file_patterns:
+    - "openapi.yaml"
+    - "swagger.json"
+    - "*.proto"
+    - "schema.graphql"
+    - "*.graphql"
+  keywords:
+    - api
+    - rest
+    - graphql
+    - grpc
+    - versioning
+    - pagination
+    - hateoas
+    - rate-limiting
+    - openapi
+    - swagger
+    - protocol-buffers
+    - rfc-9457
+  intents:
+    - api design
+    - rest api
+    - graphql schema
+    - grpc service
+
+caps:
+  - REST API design (Richardson Maturity Level 0-3)
+  - GraphQL schema design and resolvers
+  - gRPC protocol buffers and streaming
+  - API versioning strategies (Stripe/GitHub/Twilio)
+  - Pagination patterns (offset/cursor/keyset)
+  - Rate limiting (token bucket/sliding window)
+  - Error responses (RFC 9457)
+  - HATEOAS hypermedia controls
+  - OpenAPI/Swagger documentation
+  - Test API suggestions (JSONPlaceholder/httpbin/reqres)
+
+    - search_api_patterns
+    - suggest_test_api
+
+data_files:
+  - data/rest-patterns.yaml
+  - data/graphql-patterns.yaml
+  - data/grpc-patterns.yaml
+  - data/api-versioning.yaml
+  - data/pagination.yaml
+  - data/rate-limiting.yaml
+  - data/error-responses.yaml
+  - data/http-status-codes.yaml
+  - data/test-apis.yaml

@@ -1,0 +1,253 @@
+# =============================================================================
+# Kubernetes Security Patterns (Feb 2026)
+# =============================================================================
+# Pod Security Standards, RBAC, Secrets, User Namespaces
+
+metadata:
+  skill: kubernetes
+  domain: security
+  version: "1.33.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: k8s020
+    name: Pod Security Standards
+    category: security
+    version: "1.25+"
+    description: Built-in pod security policies (Privileged, Baseline, Restricted)
+    text: pod security standards admission restricted baseline privileged
+    example: |
+      # Apply security level to namespace
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: production
+        labels:
+          # Enforce restricted standard
+          pod-security.kubernetes.io/enforce: restricted
+          pod-security.kubernetes.io/enforce-version: latest
+          # Warn on baseline violations
+          pod-security.kubernetes.io/warn: baseline
+          pod-security.kubernetes.io/warn-version: latest
+
+      # Restricted-compliant pod
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: secure-app
+        namespace: production
+      spec:
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        containers:
+          - name: app
+            image: myapp:latest
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+      # Levels:
+      # - Privileged: No restrictions (avoid in prod)
+      # - Baseline: Minimal restrictions
+      # - Restricted: Hardened pods only
+    severity: CRITICAL
+    docs_url: https://kubernetes.io/docs/concepts/security/pod-security-standards/
+
+  - id: k8s021
+    name: User Namespaces (1.30+)
+    category: security
+    version: "1.30+"
+    description: Container runs as root inside but non-root on host
+    text: user namespaces security isolation root nonroot mapping
+    example: |
+      # User Namespaces (stable in K8s 1.33+)
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: app-with-user-namespace
+      spec:
+        hostUsers: false  # Enable user namespaces!
+
+        containers:
+          - name: app
+            image: legacy-app:latest  # Needs root inside container
+            securityContext:
+              runAsUser: 0  # Root inside container
+              # But mapped to non-root on host!
+
+      # Benefits:
+      # - Legacy apps requiring root work safely
+      # - Container root != Host root
+      # - Prevents privilege escalation to host
+      # - CVE mitigation for container escapes
+
+      # Requirements:
+      # - Container runtime support (containerd 2.0+)
+      # - Linux kernel 5.19+
+      # - Feature gate: UserNamespacesSupport (default in 1.33)
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+
+  - id: k8s022
+    name: RBAC Best Practices
+    category: security
+    version: "1.0+"
+    description: Role-based access control with least privilege
+    text: rbac role clusterrole rolebinding service account
+    example: |
+      # Create service account
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: app-sa
+        namespace: production
+
+      # Role with minimal permissions
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: Role
+      metadata:
+        name: app-role
+        namespace: production
+      rules:
+        - apiGroups: [""]
+          resources: ["configmaps", "secrets"]
+          resourceNames: ["app-config", "app-secrets"]  # Specific resources!
+          verbs: ["get"]
+        - apiGroups: [""]
+          resources: ["pods"]
+          verbs: ["get", "list"]
+
+      # Bind role to service account
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+      metadata:
+        name: app-binding
+        namespace: production
+      subjects:
+        - kind: ServiceAccount
+          name: app-sa
+          namespace: production
+      roleRef:
+        kind: Role
+        name: app-role
+        apiGroup: rbac.authorization.k8s.io
+
+      # Use in deployment
+      spec:
+        serviceAccountName: app-sa
+        automountServiceAccountToken: false  # Unless needed!
+    severity: CRITICAL
+    docs_url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+
+  - id: k8s023
+    name: External Secrets Operator
+    category: security
+    version: "all"
+    description: Sync secrets from external vaults (AWS, Azure, GCP, Vault)
+    text: external secrets vault aws secrets manager azure keyvault
+    example: |
+      # Install External Secrets Operator
+      helm install external-secrets \
+        external-secrets/external-secrets \
+        -n external-secrets --create-namespace
+
+      # Configure AWS Secrets Manager
+      apiVersion: external-secrets.io/v1beta1
+      kind: SecretStore
+      metadata:
+        name: aws-secrets
+      spec:
+        provider:
+          aws:
+            service: SecretsManager
+            region: us-east-1
+            auth:
+              jwt:
+                serviceAccountRef:
+                  name: external-secrets-sa
+
+      # Sync secret from AWS
+      apiVersion: external-secrets.io/v1beta1
+      kind: ExternalSecret
+      metadata:
+        name: db-credentials
+      spec:
+        refreshInterval: 1h
+        secretStoreRef:
+          name: aws-secrets
+          kind: SecretStore
+        target:
+          name: db-secret
+          creationPolicy: Owner
+        data:
+          - secretKey: password
+            remoteRef:
+              key: production/database
+              property: password
+
+      # Result: K8s Secret "db-secret" auto-synced from AWS
+    severity: HIGH
+    docs_url: https://external-secrets.io/
+
+  - id: k8s024
+    name: Network Policy Egress Control
+    category: security
+    version: "1.0+"
+    description: Control outbound traffic from pods
+    text: network policy egress outbound control firewall
+    example: |
+      # Default deny all egress
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: deny-all-egress
+        namespace: production
+      spec:
+        podSelector: {}
+        policyTypes:
+          - Egress
+
+      # Allow specific egress
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: app-egress
+        namespace: production
+      spec:
+        podSelector:
+          matchLabels:
+            app: api
+        policyTypes:
+          - Egress
+        egress:
+          # Allow DNS
+          - to:
+              - namespaceSelector: {}
+            ports:
+              - protocol: UDP
+                port: 53
+          # Allow database
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: postgres
+            ports:
+              - protocol: TCP
+                port: 5432
+          # Allow external API
+          - to:
+              - ipBlock:
+                  cidr: 203.0.113.0/24
+            ports:
+              - protocol: TCP
+                port: 443
+
+      # Important: Always allow DNS (port 53/UDP)
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/services-networking/network-policies/

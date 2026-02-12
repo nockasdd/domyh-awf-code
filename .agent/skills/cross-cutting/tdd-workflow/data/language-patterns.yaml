@@ -1,0 +1,115 @@
+# Language-Specific TDD Patterns
+# Framework setup and idioms per language
+
+languages:
+  - name: typescript
+    frameworks: ["Jest", "Vitest"]
+    setup:
+      vitest: "npm install -D vitest; npx vitest --init"
+      jest: "npm install -D jest @types/jest ts-jest"
+    tdd_cycle:
+      red: |
+        import { describe, it, expect } from 'vitest';
+        import { add } from './calc';
+        describe('add', () => {
+          it('adds two numbers', () => {
+            expect(add(1, 2)).toBe(3);
+          });
+        });
+      green: |
+        export function add(a: number, b: number): number {
+          return a + b;
+        }
+      run: "npx vitest run"
+
+  - name: python
+    frameworks: ["pytest"]
+    setup: "pip install pytest pytest-cov"
+    tdd_cycle:
+      red: |
+        from calc import add
+        def test_add():
+            assert add(1, 2) == 3
+      green: |
+        def add(a: int, b: int) -> int:
+            return a + b
+      run: "pytest -v --cov=src"
+
+  - name: go
+    frameworks: ["testing (stdlib)"]
+    setup: "Built-in — no install needed"
+    tdd_cycle:
+      red: |
+        func TestAdd(t *testing.T) {
+            got := Add(1, 2)
+            if got != 3 {
+                t.Errorf("Add(1,2) = %d; want 3", got)
+            }
+        }
+      green: |
+        func Add(a, b int) int {
+            return a + b
+        }
+      run: "go test ./... -v -cover"
+
+  - name: rust
+    frameworks: ["built-in"]
+    setup: "Built-in — #[cfg(test)] mod tests"
+    tdd_cycle:
+      red: |
+        #[cfg(test)]
+        mod tests {
+            use super::*;
+            #[test]
+            fn test_add() {
+                assert_eq!(add(1, 2), 3);
+            }
+        }
+      green: |
+        pub fn add(a: i32, b: i32) -> i32 {
+            a + b
+        }
+      run: "cargo test"
+
+  - name: java
+    frameworks: ["JUnit 5", "Mockito"]
+    setup: |
+      <!-- pom.xml -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <scope>test</scope>
+      </dependency>
+    tdd_cycle:
+      red: |
+        @Test
+        void shouldAddTwoNumbers() {
+            assertEquals(3, Calculator.add(1, 2));
+        }
+      green: |
+        public static int add(int a, int b) {
+            return a + b;
+        }
+      run: "mvn test"
+
+  - name: csharp
+    frameworks: ["xUnit", "NUnit", "Moq"]
+    setup: "dotnet add package xunit"
+    tdd_cycle:
+      red: |
+        [Fact]
+        public void Add_TwoNumbers_ReturnsSum()
+        {
+            Assert.Equal(3, Calculator.Add(1, 2));
+        }
+      run: "dotnet test"
+
+  - name: cpp
+    frameworks: ["Google Test", "Catch2"]
+    setup: "find_package(GTest REQUIRED)"
+    tdd_cycle:
+      red: |
+        TEST(CalculatorTest, AddsTwoNumbers) {
+            EXPECT_EQ(add(1, 2), 3);
+        }
+      run: "cmake --build build && ctest --test-dir build"

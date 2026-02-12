@@ -1,12 +1,12 @@
 ---
 name: elixir
 detect: ["*.ex", "*.exs", "mix.exs", "mix.lock"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 2
 ---
 
-# Elixir Patterns — DOMYH Awesome Code v6.1.2
+# Elixir Patterns — DOMYH Awesome Code
 
 > **Version**: Elixir 1.16+ / OTP 26+
 > **Framework**: Phoenix 1.7+, LiveView 0.20+
@@ -365,4 +365,4 @@ end
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Elixir 1.16+ Phoenix 1.7+_
+_DOMYH Awesome Code • Elixir 1.16+ Phoenix 1.7+_

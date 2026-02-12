@@ -1,0 +1,74 @@
+# =============================================================================
+# ci-cd-strategies.yaml — CI/CD for Monorepos
+# =============================================================================
+
+version: "1.0.0"
+
+affected_detection:
+  description: "Only build/test packages affected by changes"
+
+  nx: |
+    # GitHub Actions
+    - name: Affected Build
+      run: npx nx affected --target=build --base=origin/main
+
+  turborepo: |
+    # GitHub Actions
+    - name: Affected Build
+      run: npx turbo run build --filter='[HEAD~1]'
+
+  manual: |
+    # Using git diff
+    CHANGED=$(git diff --name-only HEAD~1)
+    if echo "$CHANGED" | grep -q "packages/ui"; then
+      npm run build --workspace=@org/ui
+    fi
+
+github_actions:
+  full_pipeline: |
+    name: CI
+    on:
+      pull_request:
+        branches: [main]
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              fetch-depth: 0   # Full history for affected
+
+          - uses: pnpm/action-setup@v4
+
+          - uses: actions/setup-node@v4
+            with:
+              node-version: 22
+              cache: 'pnpm'
+
+          - run: pnpm install --frozen-lockfile
+
+          - name: Build affected
+            run: pnpm exec nx affected --target=build --base=origin/main
+
+          - name: Test affected
+            run: pnpm exec nx affected --target=test --base=origin/main
+
+          - name: Lint affected
+            run: pnpm exec nx affected --target=lint --base=origin/main
+
+parallelism:
+  strategies:
+    - name: "Task-level parallelism"
+      description: "Run independent tasks concurrently"
+      tool: "Nx/Turborepo built-in"
+
+    - name: "Machine-level parallelism"
+      description: "Split tasks across CI machines"
+      tool: "Nx Cloud DTE (Distributed Task Execution)"
+
+    - name: "Cache-first strategy"
+      description: "Skip tasks with cache hits"
+      tool: "Remote caching (Nx Cloud / Vercel)"
+
+# _DOMYH Awesome Code • Monorepo CI/CD_

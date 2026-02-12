@@ -1,0 +1,73 @@
+# Output Patterns for Prompt Engineering
+
+patterns:
+  - name: json-mode
+    description: "Force structured JSON output"
+    providers:
+      openai: "response_format: { type: 'json_object' }"
+      anthropic: "Respond ONLY with valid JSON. No markdown, no explanation."
+      google: "responseMimeType: 'application/json'"
+    template: |
+      Return a JSON object matching this schema:
+      {
+        "name": "string",
+        "score": "number (0-100)",
+        "issues": ["string array"]
+      }
+
+  - name: xml-tags
+    description: "Use XML tags for structured sections"
+    when: "Claude/Anthropic models (optimized for XML)"
+    template: |
+      <context>
+      [background information]
+      </context>
+      <task>
+      [what to do]
+      </task>
+      <output_format>
+      [expected format]
+      </output_format>
+
+  - name: markdown-format
+    description: "Request formatted markdown output"
+    template: |
+      Format your response as markdown with:
+      - H2 headers for main sections
+      - Bullet points for lists
+      - Code blocks with language identifiers
+      - Bold for key terms
+
+  - name: tabular-output
+    description: "Request data in table format"
+    template: |
+      Present results as a markdown table with columns:
+      | Column 1 | Column 2 | Column 3 |
+      Include all entries, sorted by [criteria].
+
+  - name: constrained-output
+    description: "Limit output to specific format/length"
+    variants:
+      length: "Respond in exactly 3 sentences."
+      format: "Answer with ONLY one of: YES, NO, MAYBE"
+      vocabulary: "Use only words a 5th grader would understand"
+      style: "Write in the style of [author/format]"
+
+  - name: prefill-technique
+    description: "Pre-fill assistant response to guide output (Claude)"
+    when: "Need specific format from the start"
+    example: |
+      Human: Analyze this code for bugs.
+      Assistant: ```json
+      {
+        "bugs": [
+    note: "Claude will continue from the prefill point"
+
+  - name: delimiter-separation
+    description: "Use delimiters to separate input sections"
+    delimiters: ["###", "---", "===", "```", "<<<>>>", '"""']
+    example: |
+      Translate the text between triple backticks:
+      ```
+      Hello, how are you?
+      ```

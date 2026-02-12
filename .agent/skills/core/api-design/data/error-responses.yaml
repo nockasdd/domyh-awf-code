@@ -1,0 +1,135 @@
+metadata:
+  skill: api-design
+  domain: error_responses
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: error-responses.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - rfc
+    - level
+patterns:
+  - id: ERR-01
+    pattern: RFC 9457 Format
+    description: Standard problem details
+    example: "{type title status detail instance}"
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-02
+    pattern: Type URI
+    description: URI identifying problem type
+    example: "type: https://api.example.com/errors/rate-limit"
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-03
+    pattern: Title
+    description: Short human-readable summary
+    example: 'title: "Rate Limit Exceeded"'
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-04
+    pattern: Status
+    description: HTTP status code in body
+    example: "status: 429"
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-05
+    pattern: Detail
+    description: Specific occurrence explanation
+    example: 'detail: "You have exceeded 100 requests per minute"'
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-06
+    pattern: Instance
+    description: URI for this occurrence
+    example: "instance: /logs/abc123"
+    rfc: RFC 9457
+    level: INTERMEDIATE
+  - id: ERR-07
+    pattern: Content-Type
+    description: Problem details media type
+    example: "Content-Type: application/problem+json"
+    rfc: RFC 9457
+    level: BASIC
+  - id: ERR-08
+    pattern: Extension Members
+    description: Custom fields in response
+    example: '{...traceId: "abc" retryAfter: 60}'
+    rfc: RFC 9457
+    level: INTERMEDIATE
+  - id: ERR-09
+    pattern: Validation Errors
+    description: Array of field errors
+    example: '{errors: [{field: "email" code: "invalid"}]}'
+    rfc: Custom
+    level: BASIC
+  - id: ERR-10
+    pattern: Error Codes
+    description: Machine-readable error codes
+    example: '{code: "ERR_INVALID_EMAIL"}'
+    rfc: Custom
+    level: BASIC
+  - id: ERR-11
+    pattern: Localized Messages
+    description: i18n error messages
+    example: '{message: "Invalid email" locale: "en"}'
+    rfc: Custom
+    level: INTERMEDIATE
+  - id: ERR-12
+    pattern: Stack Trace Hidden
+    description: Never expose stack traces
+    example: Remove stack in production
+    rfc: Security
+    level: BASIC
+  - id: ERR-13
+    pattern: Sensitive Data Hidden
+    description: Mask sensitive info in errors
+    example: Hide passwords tokens
+    rfc: Security
+    level: BASIC
+  - id: ERR-14
+    pattern: Correlation ID
+    description: Link errors to logs
+    example: '{correlationId: "req-abc123"}'
+    rfc: Observability
+    level: INTERMEDIATE
+  - id: ERR-15
+    pattern: Timestamp
+    description: Error occurrence time
+    example: '{timestamp: "2024-01-15T10:30:00Z"}'
+    rfc: Debugging
+    level: BASIC
+  - id: ERR-16
+    pattern: Request ID
+    description: Unique request identifier
+    example: "X-Request-ID: abc123"
+    rfc: Debugging
+    level: INTERMEDIATE
+  - id: ERR-17
+    pattern: Documentation Link
+    description: Link to error docs
+    example: '{docs: "https://docs.api.com/errors/E001"}'
+    rfc: DX
+    level: INTERMEDIATE
+  - id: ERR-18
+    pattern: Suggested Action
+    description: What client should do
+    example: '{action: "Retry after 60 seconds"}'
+    rfc: DX
+    level: ADVANCED
+  - id: ERR-19
+    pattern: Partial Success
+    description: Return partial results with errors
+    example: "{data: [...] errors: [{index: 2}]}"
+    rfc: Bulk ops
+    level: ADVANCED
+  - id: ERR-20
+    pattern: Error Hierarchy
+    description: Categorized error types
+    example: '{category: "validation" type: "field_error"}'
+    rfc: Organization
+    level: INTERMEDIATE

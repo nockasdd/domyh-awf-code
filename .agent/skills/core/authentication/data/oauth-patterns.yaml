@@ -1,0 +1,255 @@
+metadata:
+  skill: authentication
+  domain: oauth_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: oauth-patterns.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: OAUTH-001
+    pattern_name: OAuth 2.1 Standard
+    description: Updated RFC with security best practices
+    category: standards
+    security_level: high
+    keywords:
+      - oauth2.1
+      - rfc
+  - id: OAUTH-002
+    pattern_name: Authorization Code Flow
+    description: Redirect-based code exchange for web apps
+    category: flows
+    security_level: high
+    keywords:
+      - authz-code
+      - web
+  - id: OAUTH-003
+    pattern_name: PKCE Extension
+    description: Proof Key for Code Exchange prevents interception
+    category: security
+    security_level: critical
+    keywords:
+      - pkce
+      - verifier
+  - id: OAUTH-004
+    pattern_name: Client Credentials Flow
+    description: Service-to-service machine authentication
+    category: flows
+    security_level: high
+    keywords:
+      - client-creds
+      - m2m
+  - id: OAUTH-005
+    pattern_name: Device Authorization Flow
+    description: For devices without browser (CLI TV)
+    category: flows
+    security_level: medium
+    keywords:
+      - device
+      - cli
+  - id: OAUTH-006
+    pattern_name: Implicit Flow Deprecated
+    description: Removed in OAuth 2.1 due to security
+    category: deprecated
+    security_level: critical
+    keywords:
+      - implicit
+      - removed
+  - id: OAUTH-007
+    pattern_name: Resource Owner Password Deprecated
+    description: Direct password not recommended
+    category: deprecated
+    security_level: critical
+    keywords:
+      - ropc
+      - password
+  - id: OAUTH-008
+    pattern_name: Access Token
+    description: Short-lived bearer token for API access
+    category: tokens
+    security_level: high
+    keywords:
+      - access
+      - bearer
+  - id: OAUTH-009
+    pattern_name: Refresh Token
+    description: Long-lived token for obtaining new access
+    category: tokens
+    security_level: high
+    keywords:
+      - refresh
+      - renewal
+  - id: OAUTH-010
+    pattern_name: ID Token (OIDC)
+    description: JWT with user identity claims
+    category: tokens
+    security_level: high
+    keywords:
+      - id-token
+      - oidc
+  - id: OAUTH-011
+    pattern_name: State Parameter
+    description: CSRF protection in authorization request
+    category: security
+    security_level: critical
+    keywords:
+      - state
+      - csrf
+  - id: OAUTH-012
+    pattern_name: Nonce Parameter
+    description: Replay protection for ID tokens
+    category: security
+    security_level: high
+    keywords:
+      - nonce
+      - replay
+  - id: OAUTH-013
+    pattern_name: Scope Requesting
+    description: Request minimal permissions needed
+    category: authorization
+    security_level: high
+    keywords:
+      - scope
+      - minimal
+  - id: OAUTH-014
+    pattern_name: Token Introspection
+    description: Server-side token validation endpoint
+    category: infrastructure
+    security_level: high
+    keywords:
+      - introspect
+      - validate
+  - id: OAUTH-015
+    pattern_name: Token Revocation Endpoint
+    description: Invalidate tokens before expiry
+    category: infrastructure
+    security_level: high
+    keywords:
+      - revoke
+      - endpoint
+  - id: OAUTH-016
+    pattern_name: Authorization Server Metadata
+    description: Discovery of OAuth endpoints
+    category: infrastructure
+    security_level: medium
+    keywords:
+      - discovery
+      - metadata
+  - id: OAUTH-017
+    pattern_name: Client Registration
+    description: Dynamic client registration protocol
+    category: infrastructure
+    security_level: medium
+    keywords:
+      - registration
+      - client
+  - id: OAUTH-018
+    pattern_name: Sender-Constrained Tokens
+    description: DPoP or mTLS bound tokens
+    category: security
+    security_level: high
+    keywords:
+      - dpop
+      - mtls
+  - id: OAUTH-019
+    pattern_name: DPoP (Proof of Possession)
+    description: Demonstrate token ownership
+    category: security
+    security_level: high
+    keywords:
+      - dpop
+      - proof
+  - id: OAUTH-020
+    pattern_name: mTLS Client Auth
+    description: Mutual TLS for client authentication
+    category: security
+    security_level: high
+    keywords:
+      - mtls
+      - certificate
+  - id: OAUTH-021
+    pattern_name: Private Key JWT
+    description: Client auth using signed JWT assertion
+    category: security
+    security_level: high
+    keywords:
+      - private-key-jwt
+      - assertion
+  - id: OAUTH-022
+    pattern_name: OIDC Claims Request
+    description: Request specific user info claims
+    category: user-info
+    security_level: medium
+    keywords:
+      - claims
+      - request
+  - id: OAUTH-023
+    pattern_name: UserInfo Endpoint
+    description: Retrieve user profile information
+    category: infrastructure
+    security_level: medium
+    keywords:
+      - userinfo
+      - profile
+  - id: OAUTH-024
+    pattern_name: Redirect URI Validation
+    description: Exact match redirect URI required
+    category: security
+    security_level: critical
+    keywords:
+      - redirect
+      - validation
+  - id: OAUTH-025
+    pattern_name: Native App Best Practices
+    description: PKCE with custom scheme or loopback
+    category: mobile
+    security_level: high
+    keywords:
+      - native
+      - pkce
+  - id: OAUTH-026
+    pattern_name: SPA Best Practices
+    description: BFF pattern or token handler
+    category: web
+    security_level: high
+    keywords:
+      - spa
+      - bff
+  - id: OAUTH-027
+    pattern_name: Token Exchange
+    description: RFC 8693 impersonation and delegation
+    category: flows
+    security_level: high
+    keywords:
+      - exchange
+      - delegation
+  - id: OAUTH-028
+    pattern_name: Pushed Authorization Requests
+    description: PAR for enhanced security
+    category: security
+    security_level: high
+    keywords:
+      - par
+      - pushed
+  - id: OAUTH-029
+    pattern_name: Rich Authorization Requests
+    description: Fine-grained authorization data
+    category: authorization
+    security_level: medium
+    keywords:
+      - rar
+      - finegrained
+  - id: OAUTH-030
+    pattern_name: Proof of Possession
+    description: Cryptographic binding of tokens
+    category: security
+    security_level: high
+    keywords:
+      - pop
+      - binding

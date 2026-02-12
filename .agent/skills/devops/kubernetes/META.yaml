@@ -1,89 +1,64 @@
 name: kubernetes
-version: "6.1.2"
-category: devops
-tier: 1
+version: "6.2.1"
+category: infrastructure
+tier: 3
 
-description: |
-  Container orchestration platform patterns for Kubernetes 1.30/1.31.
-  Covers deployments, services, Helm 3, ArgoCD GitOps, scaling, security.
+desc: "Kubernetes orchestration patterns for K8s 1.32-1.33+. Covers Gateway API, Sidecar Containers, Kueue, Pod Security."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 20
+  domains:
+    networking: 5
+    workloads: 5
+    security: 5
+    scheduling: 5
+
     - "*.yaml"
-    - "helm/"
+    - "*.yml"
     - "Chart.yaml"
-    - "values.yaml"
     - "kustomization.yaml"
+    - "values.yaml"
   keywords:
     # Core
     - kubernetes
     - k8s
     - kubectl
-    - pod
+    - helm
+    - kustomize
+    # Workloads
     - deployment
+    - statefulset
+    - daemonset
+    - job
+    - cronjob
+    # Networking
     - service
     - ingress
-    - configmap
-    - secret
-    # Helm
-    - helm
-    - helm chart
-    - values.yaml
-    - Chart.yaml
-    - helm install
-    - helm upgrade
-    # ArgoCD/GitOps
-    - argocd
-    - argo cd
-    - gitops
-    - flux
-    - applicationset
-    # Scaling
-    - hpa
-    - autoscaling
-    - horizontal pod autoscaler
-    - vpa
-    - vertical pod autoscaler
-    # Networking
-    - network policy
-    - ingress controller
-    - nginx ingress
-    - traefik
-    - service mesh
-    - istio
+    - gateway api
+    - gateway
+    - httproute
     # Security
-    - rbac
-    - role binding
-    - service account
     - pod security
-    - security context
-    # Tools
-    - k9s
-    - lens
-    - kubectx
-    - kubens
-    - kustomize
-    # Operations
-    - rollout
-    - deployment strategy
-    - rolling update
-    - blue green
-    - canary
-    - pod disruption budget
-    - pdb
+    - rbac
+    - service account
+    - network policy
+    # Scheduling
+    - node selector
+    - affinity
+    - kueue
+    - priority class
   intents:
-    - deploy to kubernetes
-    - create helm chart
-    - scale deployment
+    - deploy kubernetes
+    - create deployment
     - configure ingress
-    - setup argocd
-    - kubernetes security
+    - setup k8s
 
 related_skills:
   - docker
   - aws
   - ci-cd
+  - security
 
 prevent_confusion_with:
-  - docker: "K8s orchestrates containers, Docker builds them"
-  - aws-serverless: "K8s for container orchestration, not Lambda"
+  - docker: "kubernetes orchestrates containers, docker builds them"
+  - aws: "kubernetes is general, aws covers EKS specifically"

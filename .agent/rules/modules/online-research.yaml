@@ -3,7 +3,7 @@
 
 ---
 name: online-research
-version: "6.1.2"
+version: "6.2.1"
 rule_id: "MOD-RES-001"
 
 # =============================================================================
@@ -180,5 +180,13 @@ integration:
   related_modules:
     - evidence
 
+  hsa_tools:
+    hsa_search_patterns:
+      purpose: "Check local pattern database BEFORE searching online"
+      usage: "hsa_search_patterns query=[topic] → may answer without web search"
+    hsa_get_context:
+      purpose: "Gather project context to formulate better search queries"
+      usage: "hsa_get_context files=[relevant] → understand what to search for"
+
 ---
-_DOMYH Awesome Code v6.1.2 • Online Research Rule_
+_DOMYH Awesome Code • Online Research Rule_

@@ -1,0 +1,380 @@
+# =============================================================================
+# JavaScript Core Patterns (Feb 2026)
+# Version: ES2025/ES2026
+# =============================================================================
+
+metadata:
+  skill: javascript
+  domain: core
+  version: "ES2026"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: js001
+    name: Object.groupBy
+    category: data-manipulation
+    version: "ES2024"
+    description: |
+      Native object grouping without lodash.
+      groupBy for objects, Map.groupBy for Map.
+    text: groupBy group array object lodash alternative
+    example: |
+      // ✅ Object.groupBy (ES2024)
+      const products = [
+        { name: 'apple', category: 'fruit', price: 1.5 },
+        { name: 'banana', category: 'fruit', price: 0.5 },
+        { name: 'carrot', category: 'vegetable', price: 0.8 },
+        { name: 'broccoli', category: 'vegetable', price: 1.2 },
+      ];
+
+      const grouped = Object.groupBy(products, p => p.category);
+      // {
+      //   fruit: [{ name: 'apple', ... }, { name: 'banana', ... }],
+      //   vegetable: [{ name: 'carrot', ... }, { name: 'broccoli', ... }]
+      // }
+
+      // ✅ Map.groupBy for Map result
+      const groupedMap = Map.groupBy(products, p => p.category);
+      // Map { 'fruit' => [...], 'vegetable' => [...] }
+
+      // ✅ Complex grouping
+      const byPriceRange = Object.groupBy(products, p => {
+        if (p.price < 1) return 'cheap';
+        if (p.price < 2) return 'medium';
+        return 'expensive';
+      });
+
+      // ✅ Group by multiple criteria
+      const users = [
+        { name: 'Alice', role: 'admin', active: true },
+        { name: 'Bob', role: 'user', active: true },
+        { name: 'Charlie', role: 'user', active: false },
+      ];
+
+      const byRoleAndStatus = Object.groupBy(
+        users,
+        u => `${u.role}-${u.active ? 'active' : 'inactive'}`
+      );
+    severity: HIGH
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy
+
+  - id: js002
+    name: Promise.withResolvers
+    category: async
+    version: "ES2024"
+    description: |
+      External control over promise resolution.
+      No more deferred pattern boilerplate.
+    text: promise withResolvers deferred resolve reject
+    example: |
+      // ✅ Promise.withResolvers (ES2024)
+      const { promise, resolve, reject } = Promise.withResolvers();
+
+      // Resolve from external event
+      button.onclick = () => resolve('clicked');
+      setTimeout(() => reject(new Error('timeout')), 5000);
+
+      const result = await promise;
+
+      // ✅ Before (manual deferred)
+      function createDeferred() {
+        let resolve, reject;
+        const promise = new Promise((res, rej) => {
+          resolve = res;
+          reject = rej;
+        });
+        return { promise, resolve, reject };
+      }
+
+      // ✅ Use case: Awaiting user input
+      async function promptUser(message) {
+        const { promise, resolve, reject } = Promise.withResolvers();
+        
+        const dialog = createDialog(message, {
+          onConfirm: (value) => resolve(value),
+          onCancel: () => reject(new Error('cancelled')),
+        });
+        
+        return promise;
+      }
+
+      // ✅ Use case: WebSocket message response
+      class MessageQueue {
+        #pending = new Map();
+        
+        async send(data) {
+          const id = crypto.randomUUID();
+          const { promise, resolve, reject } = Promise.withResolvers();
+          
+          this.#pending.set(id, { resolve, reject });
+          this.ws.send(JSON.stringify({ id, data }));
+          
+          return promise;
+        }
+        
+        onMessage(event) {
+          const { id, result, error } = JSON.parse(event.data);
+          const pending = this.#pending.get(id);
+          if (pending) {
+            error ? pending.reject(error) : pending.resolve(result);
+            this.#pending.delete(id);
+          }
+        }
+      }
+    severity: HIGH
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers
+
+  - id: js003
+    name: Using Declaration
+    category: resource-management
+    version: "ES2025"
+    description: |
+      Automatic resource cleanup with using keyword.
+      RAII pattern for JavaScript.
+    text: using symbol dispose disposable cleanup resource
+    example: |
+      // ✅ using declaration (ES2025)
+      // Automatically calls Symbol.dispose when block exits
+
+      class FileHandle {
+        constructor(path) {
+          this.path = path;
+          console.log(`Opening ${path}`);
+        }
+        
+        read() {
+          return 'file contents';
+        }
+        
+        [Symbol.dispose]() {
+          console.log(`Closing ${this.path}`);
+        }
+      }
+
+      function processFile(path) {
+        using file = new FileHandle(path);
+        return file.read();
+        // file automatically closed here
+      }
+
+      // ✅ Async disposal
+      class Connection {
+        async query(sql) { /* ... */ }
+        
+        async [Symbol.asyncDispose]() {
+          await this.close();
+        }
+      }
+
+      async function queryDatabase() {
+        await using conn = await getConnection();
+        return await conn.query('SELECT * FROM users');
+        // Connection closed after await
+      }
+
+      // ✅ Multiple resources
+      async function transfer(src, dest) {
+        await using srcConn = await getConnection(src);
+        await using destConn = await getConnection(dest);
+        
+        const data = await srcConn.read();
+        await destConn.write(data);
+        // Both connections closed in reverse order
+      }
+
+      // ✅ DisposableStack for dynamic resources
+      function processMultiple(paths) {
+        using stack = new DisposableStack();
+        
+        const files = paths.map(path => {
+          const file = new FileHandle(path);
+          stack.use(file);
+          return file;
+        });
+        
+        // Process files...
+        // All disposed when stack exits scope
+      }
+    severity: HIGH
+    docs_url: https://github.com/tc39/proposal-explicit-resource-management
+
+  - id: js004
+    name: Iterator Helpers
+    category: iteration
+    version: "ES2025"
+    description: |
+      Array-like methods on iterators.
+      Lazy evaluation, memory efficient.
+    text: iterator helpers map filter take drop lazy
+    example: |
+      // ✅ Iterator helpers (ES2025)
+      function* numbers() {
+        let i = 0;
+        while (true) yield i++;
+      }
+
+      // Lazy evaluation - efficient for large/infinite data
+      const result = numbers()
+        .filter(n => n % 2 === 0)   // Even numbers
+        .map(n => n * 2)            // Double them
+        .take(5)                     // First 5
+        .toArray();                  // Materialize
+
+      console.log(result); // [0, 4, 8, 12, 16]
+
+      // ✅ Available methods
+      const iter = [1, 2, 3, 4, 5].values();
+
+      iter.map(x => x * 2);         // Transform each
+      iter.filter(x => x > 2);      // Keep matching
+      iter.take(3);                 // First n
+      iter.drop(2);                 // Skip first n
+      iter.flatMap(x => [x, x]);    // Map and flatten
+      iter.reduce((a, b) => a + b); // Reduce to value
+      iter.toArray();               // To array
+      iter.forEach(console.log);    // Side effect
+      iter.some(x => x > 3);        // Any match?
+      iter.every(x => x > 0);       // All match?
+      iter.find(x => x === 3);      // First match
+
+      // ✅ Memory efficiency
+      // Instead of:
+      const expensiveArray = Array.from({ length: 1_000_000 }, (_, i) => i)
+        .filter(n => n % 2 === 0)
+        .map(n => n * 2)
+        .slice(0, 10);
+
+      // Use iterator (O(1) memory for first 10):
+      function* range(n) {
+        for (let i = 0; i < n; i++) yield i;
+      }
+
+      const efficient = range(1_000_000)
+        .filter(n => n % 2 === 0)
+        .map(n => n * 2)
+        .take(10)
+        .toArray();
+    severity: MEDIUM
+    docs_url: https://github.com/tc39/proposal-iterator-helpers
+
+  - id: js005
+    name: Array.fromAsync
+    category: async
+    version: "ES2024"
+    description: |
+      Create array from async iterable.
+      Await each value, handle async generators.
+    text: fromAsync async iterable array generator
+    example: |
+      // ✅ Array.fromAsync (ES2024)
+      // Await each element from async iterable
+
+      async function* fetchPages(url) {
+        let page = 1;
+        while (true) {
+          const data = await fetch(`${url}?page=${page++}`).then(r => r.json());
+          if (!data.items.length) break;
+          yield* data.items;
+        }
+      }
+
+      const allItems = await Array.fromAsync(fetchPages('/api/items'));
+
+      // ✅ From promise array
+      const urls = ['url1', 'url2', 'url3'];
+      const results = await Array.fromAsync(
+        urls.map(url => fetch(url).then(r => r.json()))
+      );
+
+      // ✅ With mapper function
+      const processed = await Array.fromAsync(
+        fetchPages('/api/users'),
+        user => user.name.toUpperCase()
+      );
+
+      // ✅ ReadableStream to array
+      async function* streamToAsyncIterable(stream) {
+        const reader = stream.getReader();
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) return;
+            yield value;
+          }
+        } finally {
+          reader.releaseLock();
+        }
+      }
+
+      const response = await fetch('/api/data');
+      const chunks = await Array.fromAsync(
+        streamToAsyncIterable(response.body)
+      );
+
+      // ✅ Comparison with for-await
+      // Before:
+      const items = [];
+      for await (const item of asyncIterable) {
+        items.push(item);
+      }
+
+      // After:
+      const items2 = await Array.fromAsync(asyncIterable);
+    severity: MEDIUM
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fromAsync
+
+  - id: js006
+    name: RegExp.escape
+    category: text-processing
+    version: "ES2025"
+    description: |
+      Safely escape regex special characters.
+      Prevent ReDoS, safe user input.
+    text: regex escape special characters safe user input
+    example: |
+      // ✅ RegExp.escape (ES2025)
+      const userInput = 'search (this)';
+
+      // Before: manual escaping
+      const escaped = userInput.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+      // After: native method
+      const safePattern = RegExp.escape(userInput);
+      // "search \\(this\\)"
+
+      const regex = new RegExp(safePattern, 'i');
+
+      // ✅ Use case: Search with user input
+      function searchText(text, query) {
+        const pattern = new RegExp(RegExp.escape(query), 'gi');
+        return text.match(pattern) || [];
+      }
+
+      // ✅ Use case: Replace with user input
+      function replaceAll(text, search, replace) {
+        const pattern = new RegExp(RegExp.escape(search), 'g');
+        return text.replace(pattern, replace);
+      }
+
+      // ✅ Safe template pattern
+      function createMatcher(template) {
+        // Allow {placeholder} syntax, escape everything else
+        const pattern = template
+          .split(/(\{[^}]+\})/)
+          .map(part => {
+            if (part.match(/^\{.+\}$/)) {
+              return '(?<' + part.slice(1, -1) + '>.+?)';
+            }
+            return RegExp.escape(part);
+          })
+          .join('');
+        
+        return new RegExp(`^${pattern}$`);
+      }
+
+      const matcher = createMatcher('/users/{id}/posts/{postId}');
+      const match = '/users/123/posts/456'.match(matcher);
+      // { groups: { id: '123', postId: '456' } }
+    severity: MEDIUM
+    docs_url: https://github.com/tc39/proposal-regex-escaping

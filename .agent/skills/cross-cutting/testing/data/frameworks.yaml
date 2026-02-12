@@ -1,0 +1,300 @@
+metadata:
+  skill: testing
+  domain: frameworks
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: frameworks.yaml
+  patterns_count: 20
+  columns:
+    - name
+    - language
+    - type
+    - install
+    - test_command
+    - assertion_style
+    - mocking
+    - coverage
+    - docs_url
+patterns:
+  - id: item_001
+    name: Jest
+    language: javascript
+    type: unit
+    install: npm i -D jest
+    test_command: npm test
+    assertion_style: expect(x).toBe(y)
+    mocking: jest.fn(), jest.mock()
+    coverage: --coverage
+    docs_url: https://jestjs.io
+    version_info:
+      current: "29.7.0"
+      min_supported: "27.0.0"
+      breaking_changes:
+        "29.0":
+          - "Node 14 dropped, requires Node 16+"
+          - "jest.useFakeTimers() default modern"
+          - "Snapshot format changed"
+        "28.0":
+          - "jest-environment-jsdom now separate package"
+          - "Test runner config changed"
+      version_patterns:
+        ">=29.0":
+          timer: "jest.useFakeTimers() default modern"
+          env: "npm i -D jest-environment-jsdom"
+          config: "jest.config.js with transform"
+        ">=27.0,<29.0":
+          timer: "jest.useFakeTimers('modern')"
+          config: "jest.config.js"
+  - id: item_002
+    name: Vitest
+    language: typescript
+    type: unit
+    install: npm i -D vitest
+    test_command: npm test
+    assertion_style: expect(x).toBe(y)
+    mocking: vi.fn(), vi.mock()
+    coverage: --coverage
+    docs_url: https://vitest.dev
+    # v6.2.1: Version-specific info
+    version_info:
+      current: "4.0.0"
+      min_supported: "2.0.0"
+      breaking_changes:
+        "4.0":
+          - "workspace.defineConfig deprecated → defineWorkspace"
+          - "Browser mode restructured"
+          - "Pool options renamed"
+          - "Chai expect deprecated for vi.expect"
+        "3.0":
+          - "globalSetup signature changed"
+          - "ESM-first configuration"
+      version_patterns:
+        ">=4.0":
+          config: "vitest.config.ts with defineConfig"
+          workspace: "vitest.workspace.ts with defineWorkspace"
+          browser: "browser.enabled with playwright provider"
+          mocking: "vi.fn(), vi.hoisted()"
+        ">=2.0,<4.0":
+          config: "vitest.config.ts"
+          workspace: "vitest.workspaces.ts"
+          mocking: "vi.fn(), vi.mock()"
+  - id: item_003
+    name: Mocha
+    language: javascript
+    type: unit
+    install: npm i -D mocha chai
+    test_command: npm test
+    assertion_style: expect(x).to.equal(y)
+    mocking: sinon.stub()
+    coverage: nyc
+    docs_url: https://mochajs.org
+  - id: item_004
+    name: Playwright
+    language: typescript
+    type: e2e
+    install: npm i -D @playwright/test
+    test_command: npx playwright test
+    assertion_style: expect(locator).toHaveText()
+    mocking: page.route()
+    coverage: --reporter=html
+    docs_url: https://playwright.dev
+    version_info:
+      current: "1.50.0"
+      min_supported: "1.30.0"
+      breaking_changes:
+        "1.50":
+          - "Clock API stable (clock.install)"
+          - "BoxedStep annotation"
+        "1.40":
+          - "waitForTimeout deprecated for toPass"
+          - "New test.step API"
+        "1.35":
+          - "UI Mode stable"
+          - "Route.fetch changed"
+      version_patterns:
+        ">=1.40":
+          wait: "expect(cb).toPass({ timeout })"
+          retry: "test.step with retry"
+          clock: "clock.install() for time mocking"
+        ">=1.30,<1.40":
+          wait: "page.waitForTimeout()"
+          retry: "expect.poll()"
+  - id: item_005
+    name: Cypress
+    language: javascript
+    type: e2e
+    install: npm i -D cypress
+    test_command: npx cypress run
+    assertion_style: cy.get().should('have.text')
+    mocking: cy.intercept()
+    coverage: --reporter mochawesome
+    docs_url: https://cypress.io
+  - id: item_006
+    name: Testing Library
+    language: javascript
+    type: component
+    install: npm i -D @testing-library/react
+    test_command: npm test
+    assertion_style: expect(screen.getByText()).toBeInTheDocument()
+    mocking: jest.mock()
+    coverage: jest --coverage
+    docs_url: https://testing-library.com
+  - id: item_007
+    name: pytest
+    language: python
+    type: unit
+    install: pip install pytest
+    test_command: pytest
+    assertion_style: assert x == y
+    mocking: pytest-mock, monkeypatch
+    coverage: pytest --cov
+    docs_url: https://pytest.org
+    version_info:
+      current: "8.3.0"
+      min_supported: "7.0.0"
+      breaking_changes:
+        "8.0":
+          - "Python 3.8 dropped, requires 3.9+"
+          - "pytest.warns() strict mode default"
+          - "Collection order changed"
+        "7.0":
+          - "py.path deprecated for pathlib"
+          - "Improved assertion introspection"
+      version_patterns:
+        ">=8.0":
+          async: "pytest-asyncio with mode=auto"
+          fixture: "yield fixtures with async support"
+          config: "pyproject.toml [tool.pytest]"
+        ">=7.0,<8.0":
+          async: "pytest-asyncio mode=strict"
+          config: "pytest.ini or pyproject.toml"
+  - id: item_008
+    name: unittest
+    language: python
+    type: unit
+    install: builtin
+    test_command: python -m unittest
+    assertion_style: self.assertEqual(x, y)
+    mocking: unittest.mock.patch()
+    coverage: coverage run
+    docs_url: https://docs.python.org/3/library/unittest.html
+  - id: item_009
+    name: Go testing
+    language: go
+    type: unit
+    install: builtin
+    test_command: go test ./...
+    assertion_style: if got != want { t.Errorf() }
+    mocking: gomock, testify/mock
+    coverage: go test -cover
+    docs_url: https://golang.org/pkg/testing/
+  - id: item_010
+    name: testify
+    language: go
+    type: unit
+    install: go get github.com/stretchr/testify
+    test_command: go test ./...
+    assertion_style: assert.Equal(t, expected, actual)
+    mocking: testify/mock
+    coverage: go test -coverprofile
+    docs_url: https://github.com/stretchr/testify
+  - id: item_011
+    name: xUnit
+    language: csharp
+    type: unit
+    install: dotnet add package xunit
+    test_command: dotnet test
+    assertion_style: Assert.Equal(expected, actual)
+    mocking: Moq, NSubstitute
+    coverage: coverlet
+    docs_url: https://xunit.net
+  - id: item_012
+    name: NUnit
+    language: csharp
+    type: unit
+    install: dotnet add package NUnit
+    test_command: dotnet test
+    assertion_style: Assert.That(actual, Is.EqualTo(expected))
+    mocking: Moq
+    coverage: coverlet
+    docs_url: https://nunit.org
+  - id: item_013
+    name: JUnit 5
+    language: java
+    type: unit
+    install: Maven/Gradle dependency
+    test_command: mvn test
+    assertion_style: assertEquals(expected, actual)
+    mocking: Mockito
+    coverage: JaCoCo
+    docs_url: https://junit.org/junit5/
+  - id: item_014
+    name: cargo test
+    language: rust
+    type: unit
+    install: builtin
+    test_command: cargo test
+    assertion_style: assert_eq!(expected, actual)
+    mocking: mockall crate
+    coverage: cargo tarpaulin
+    docs_url: https://doc.rust-lang.org/book/ch11-00-testing.html
+  - id: item_015
+    name: RSpec
+    language: ruby
+    type: unit
+    install: gem install rspec
+    test_command: rspec
+    assertion_style: expect(x).to eq(y)
+    mocking: rspec-mocks
+    coverage: simplecov
+    docs_url: https://rspec.info
+  - id: item_016
+    name: PHPUnit
+    language: php
+    type: unit
+    install: composer require phpunit/phpunit
+    test_command: ./vendor/bin/phpunit
+    assertion_style: $this->assertEquals($expected, $actual)
+    mocking: Mockery, Prophecy
+    coverage: --coverage-html
+    docs_url: https://phpunit.de
+  - id: item_017
+    name: ExUnit
+    language: elixir
+    type: unit
+    install: builtin
+    test_command: mix test
+    assertion_style: assert x == y
+    mocking: Mox
+    coverage: mix test --cover
+    docs_url: https://hexdocs.pm/ex_unit
+  - id: item_018
+    name: Kotest
+    language: kotlin
+    type: unit
+    install: Gradle dependency
+    test_command: ./gradlew test
+    assertion_style: x shouldBe y
+    mocking: MockK
+    coverage: Kover
+    docs_url: https://kotest.io
+  - id: item_019
+    name: XCTest
+    language: swift
+    type: unit
+    install: builtin
+    test_command: swift test
+    assertion_style: XCTAssertEqual(x, y)
+    mocking: protocol-based
+    coverage: --enable-code-coverage
+    docs_url: https://developer.apple.com/documentation/xctest
+  - id: item_020
+    name: Flutter Test
+    language: dart
+    type: unit
+    install: flutter pub add test
+    test_command: flutter test
+    assertion_style: expect(x, equals(y))
+    mocking: mockito
+    coverage: flutter test --coverage
+    docs_url: https://docs.flutter.dev/testing

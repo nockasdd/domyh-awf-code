@@ -1,0 +1,149 @@
+# =============================================================================
+# passkey-patterns.yaml — WebAuthn / Passkey Authentication
+# =============================================================================
+
+version: "1.0.0"
+
+overview:
+  description: |
+    Passkeys replace passwords with cryptographic key pairs bound to
+    devices. Based on WebAuthn standard (FIDO2). Phishing-resistant,
+    no shared secrets, biometric-enabled.
+
+  benefits:
+    - "Phishing-resistant (origin-bound)"
+    - "No password to leak or forget"
+    - "Biometric convenience (Face ID, fingerprint)"
+    - "Cross-device sync (iCloud Keychain, Google Password Manager)"
+
+registration:
+  flow: |
+    1. Server generates challenge (random bytes)
+    2. Browser calls navigator.credentials.create()
+    3. Authenticator creates key pair
+    4. Public key sent to server
+    5. Server stores public key + credential ID
+
+  frontend: |
+    // Registration (client-side)
+    const options = await fetch('/api/auth/register/options', {
+      method: 'POST',
+      body: JSON.stringify({ username: 'user@example.com' }),
+    }).then(r => r.json());
+
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge: base64url.decode(options.challenge),
+        rp: { name: 'My App', id: 'example.com' },
+        user: {
+          id: base64url.decode(options.userId),
+          name: 'user@example.com',
+          displayName: 'User',
+        },
+        pubKeyCredParams: [
+          { type: 'public-key', alg: -7 },   // ES256
+          { type: 'public-key', alg: -257 },  // RS256
+        ],
+        authenticatorSelection: {
+          residentKey: 'required',        // Discoverable credential
+          userVerification: 'preferred',   // Biometric when available
+        },
+        timeout: 60000,
+      },
+    });
+
+    // Send credential to server for storage
+    await fetch('/api/auth/register/verify', {
+      method: 'POST',
+      body: JSON.stringify(credential),
+    });
+
+authentication:
+  flow: |
+    1. Server generates challenge
+    2. Browser calls navigator.credentials.get()
+    3. Authenticator signs challenge with private key
+    4. Server verifies signature with stored public key
+    5. User authenticated
+
+  frontend: |
+    // Authentication (client-side)
+    const options = await fetch('/api/auth/login/options', {
+      method: 'POST',
+    }).then(r => r.json());
+
+    const assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: base64url.decode(options.challenge),
+        rpId: 'example.com',
+        allowCredentials: [], // Empty = discoverable credential
+        userVerification: 'preferred',
+        timeout: 60000,
+      },
+    });
+
+    const result = await fetch('/api/auth/login/verify', {
+      method: 'POST',
+      body: JSON.stringify(assertion),
+    }).then(r => r.json());
+
+server_libraries:
+  typescript:
+    name: "@simplewebauthn/server"
+    example: |
+      import {
+        generateRegistrationOptions,
+        verifyRegistrationResponse,
+        generateAuthenticationOptions,
+        verifyAuthenticationResponse,
+      } from '@simplewebauthn/server';
+
+      // Generate registration options
+      const options = await generateRegistrationOptions({
+        rpName: 'My App',
+        rpID: 'example.com',
+        userName: user.email,
+        attestationType: 'none',
+        authenticatorSelection: {
+          residentKey: 'required',
+          userVerification: 'preferred',
+        },
+      });
+
+  go:
+    name: "go-webauthn/webauthn"
+    example: |
+      import "github.com/go-webauthn/webauthn/webauthn"
+
+      web, _ := webauthn.New(&webauthn.Config{
+          RPDisplayName: "My App",
+          RPID:          "example.com",
+          RPOrigins:     []string{"https://example.com"},
+      })
+
+      options, session, _ := web.BeginRegistration(user)
+
+  python:
+    name: "py_webauthn"
+
+database_schema: |
+  CREATE TABLE passkeys (
+      id              UUID PRIMARY KEY,
+      user_id         UUID REFERENCES users(id),
+      credential_id   BYTEA UNIQUE NOT NULL,
+      public_key      BYTEA NOT NULL,
+      sign_count      BIGINT DEFAULT 0,
+      transports      TEXT[],
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      last_used_at    TIMESTAMPTZ
+  );
+
+migration_strategy:
+  description: "Gradual migration from passwords to passkeys"
+  phases:
+    - "Phase 1: Offer passkey as optional 2FA"
+    - "Phase 2: Prompt password users to add passkey"
+    - "Phase 3: Allow passkey-only accounts"
+    - "Phase 4: Deprecate password login (optional)"
+
+# _DOMYH Awesome Code • Passkey Patterns_

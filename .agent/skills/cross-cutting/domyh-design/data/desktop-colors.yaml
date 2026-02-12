@@ -1,0 +1,467 @@
+metadata:
+  skill: domyh-design
+  domain: desktop_colors
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: desktop-colors.yaml
+  patterns_count: 50
+  columns:
+    - platform
+    - theme
+    - role
+    - color_name
+    - hex
+    - rgb
+    - usage
+    - contrast_ratio
+patterns:
+  - id: item_001
+    platform: windows
+    theme: dark
+    role: background
+    color_name: Mica Base
+    hex: "#202020"
+    rgb: 32,32,32
+    usage: Window background with depth
+    contrast_ratio: N/A
+  - id: item_002
+    platform: windows
+    theme: dark
+    role: background
+    color_name: Acrylic
+    hex: "#2D2D2D"
+    rgb: 45,45,45
+    usage: Flyouts and overlays
+    contrast_ratio: N/A
+  - id: item_003
+    platform: windows
+    theme: dark
+    role: surface
+    color_name: Card Base
+    hex: "#2D2D2D"
+    rgb: 45,45,45
+    usage: Card and panel backgrounds
+    contrast_ratio: N/A
+  - id: item_004
+    platform: windows
+    theme: dark
+    role: surface
+    color_name: Card Hover
+    hex: "#383838"
+    rgb: 56,56,56
+    usage: Elevated surface states
+    contrast_ratio: N/A
+  - id: item_005
+    platform: windows
+    theme: dark
+    role: text
+    color_name: Primary Text
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Headlines and primary content
+    contrast_ratio: 15.8:1
+  - id: item_006
+    platform: windows
+    theme: dark
+    role: text
+    color_name: Secondary Text
+    hex: "#C5C5C5"
+    rgb: 197,197,197
+    usage: Supporting text and labels
+    contrast_ratio: 11.5:1
+  - id: item_007
+    platform: windows
+    theme: dark
+    role: accent
+    color_name: Accent Primary
+    hex: "#60CDFF"
+    rgb: 96,205,255
+    usage: Primary actions and links
+    contrast_ratio: 8.2:1
+  - id: item_008
+    platform: windows
+    theme: dark
+    role: accent
+    color_name: Accent Hover
+    hex: "#98D9FF"
+    rgb: 152,217,255
+    usage: Hovered accent elements
+    contrast_ratio: 6.1:1
+  - id: item_009
+    platform: windows
+    theme: dark
+    role: border
+    color_name: Subtle Border
+    hex: "#454545"
+    rgb: 69,69,69
+    usage: Dividers and separators
+    contrast_ratio: N/A
+  - id: item_010
+    platform: windows
+    theme: dark
+    role: border
+    color_name: Control Border
+    hex: "#6B6B6B"
+    rgb: 107,107,107
+    usage: Input field borders
+    contrast_ratio: N/A
+  - id: item_011
+    platform: windows
+    theme: light
+    role: background
+    color_name: Mica Base
+    hex: "#F3F3F3"
+    rgb: 243,243,243
+    usage: Window background with depth
+    contrast_ratio: N/A
+  - id: item_012
+    platform: windows
+    theme: light
+    role: background
+    color_name: Acrylic
+    hex: "#FCFCFC"
+    rgb: 252,252,252
+    usage: Flyouts and overlays
+    contrast_ratio: N/A
+  - id: item_013
+    platform: windows
+    theme: light
+    role: surface
+    color_name: Card Base
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Card and panel backgrounds
+    contrast_ratio: N/A
+  - id: item_014
+    platform: windows
+    theme: light
+    role: surface
+    color_name: Card Hover
+    hex: "#F5F5F5"
+    rgb: 245,245,245
+    usage: Elevated surface states
+    contrast_ratio: N/A
+  - id: item_015
+    platform: windows
+    theme: light
+    role: text
+    color_name: Primary Text
+    hex: "#1A1A1A"
+    rgb: 26,26,26
+    usage: Headlines and primary content
+    contrast_ratio: 17.4:1
+  - id: item_016
+    platform: windows
+    theme: light
+    role: text
+    color_name: Secondary Text
+    hex: "#5C5C5C"
+    rgb: 92,92,92
+    usage: Supporting text and labels
+    contrast_ratio: 7.6:1
+  - id: item_017
+    platform: windows
+    theme: light
+    role: accent
+    color_name: Accent Primary
+    hex: "#005FB8"
+    rgb: 0,95,184
+    usage: Primary actions and links
+    contrast_ratio: 5.9:1
+  - id: item_018
+    platform: windows
+    theme: light
+    role: accent
+    color_name: Accent Hover
+    hex: "#0066CC"
+    rgb: 0,102,204
+    usage: Hovered accent elements
+    contrast_ratio: 5.4:1
+  - id: item_019
+    platform: windows
+    theme: light
+    role: border
+    color_name: Subtle Border
+    hex: "#E0E0E0"
+    rgb: 224,224,224
+    usage: Dividers and separators
+    contrast_ratio: N/A
+  - id: item_020
+    platform: windows
+    theme: light
+    role: border
+    color_name: Control Border
+    hex: "#C4C4C4"
+    rgb: 196,196,196
+    usage: Input field borders
+    contrast_ratio: N/A
+  - id: item_021
+    platform: macos
+    theme: dark
+    role: background
+    color_name: Window
+    hex: "#1E1E1E"
+    rgb: 30,30,30
+    usage: Window background
+    contrast_ratio: N/A
+  - id: item_022
+    platform: macos
+    theme: dark
+    role: background
+    color_name: Vibrancy
+    hex: "#252525"
+    rgb: 37,37,37
+    usage: Sidebar and overlays
+    contrast_ratio: N/A
+  - id: item_023
+    platform: macos
+    theme: dark
+    role: surface
+    color_name: Card
+    hex: "#2C2C2C"
+    rgb: 44,44,44
+    usage: Card backgrounds
+    contrast_ratio: N/A
+  - id: item_024
+    platform: macos
+    theme: dark
+    role: text
+    color_name: Label
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Primary labels
+    contrast_ratio: 16.1:1
+  - id: item_025
+    platform: macos
+    theme: dark
+    role: text
+    color_name: Secondary Label
+    hex: "#EBEBF599"
+    rgb: 235,235,245, 0.6
+    usage: Secondary text
+    contrast_ratio: 8.2:1
+  - id: item_026
+    platform: macos
+    theme: dark
+    role: accent
+    color_name: System Blue
+    hex: "#007AFF"
+    rgb: 0,122,255
+    usage: Default accent color
+    contrast_ratio: v6.2.1:1
+  - id: item_027
+    platform: macos
+    theme: dark
+    role: accent
+    color_name: System Green
+    hex: "#30D158"
+    rgb: 48,209,88
+    usage: Success states
+    contrast_ratio: 7.1:1
+  - id: item_028
+    platform: macos
+    theme: dark
+    role: accent
+    color_name: System Red
+    hex: "#FF453A"
+    rgb: 255,69,58
+    usage: Error and destructive
+    contrast_ratio: 4.8:1
+  - id: item_029
+    platform: macos
+    theme: light
+    role: background
+    color_name: Window
+    hex: "#ECECEC"
+    rgb: 236,236,236
+    usage: Window background
+    contrast_ratio: N/A
+  - id: item_030
+    platform: macos
+    theme: light
+    role: background
+    color_name: Vibrancy
+    hex: "#F5F5F5"
+    rgb: 245,245,245
+    usage: Sidebar and overlays
+    contrast_ratio: N/A
+  - id: item_031
+    platform: macos
+    theme: light
+    role: surface
+    color_name: Card
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Card backgrounds
+    contrast_ratio: N/A
+  - id: item_032
+    platform: macos
+    theme: light
+    role: text
+    color_name: Label
+    hex: "#000000"
+    rgb: 0,0,0
+    usage: Primary labels
+    contrast_ratio: "21:1"
+  - id: item_033
+    platform: macos
+    theme: light
+    role: text
+    color_name: Secondary Label
+    hex: "#3C3C4399"
+    rgb: 60,60,67, 0.6
+    usage: Secondary text
+    contrast_ratio: 5.8:1
+  - id: item_034
+    platform: macos
+    theme: light
+    role: accent
+    color_name: System Blue
+    hex: "#007AFF"
+    rgb: 0,122,255
+    usage: Default accent color
+    contrast_ratio: 4.5:1
+  - id: item_035
+    platform: linux
+    theme: dark
+    role: background
+    color_name: GnomeWindow
+    hex: "#1E1E1E"
+    rgb: 30,30,30
+    usage: libadwaita background
+    contrast_ratio: N/A
+  - id: item_036
+    platform: linux
+    theme: dark
+    role: surface
+    color_name: GnomeSurface
+    hex: "#303030"
+    rgb: 48,48,48
+    usage: Card and elevated surfaces
+    contrast_ratio: N/A
+  - id: item_037
+    platform: linux
+    theme: dark
+    role: text
+    color_name: GnomeForeground
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Text on dark
+    contrast_ratio: 15.1:1
+  - id: item_038
+    platform: linux
+    theme: dark
+    role: accent
+    color_name: GnomeAccent
+    hex: "#3584E4"
+    rgb: 53,132,228
+    usage: GNOME blue accent
+    contrast_ratio: 5.8:1
+  - id: item_039
+    platform: linux
+    theme: light
+    role: background
+    color_name: GnomeWindow
+    hex: "#FAFAFA"
+    rgb: 250,250,250
+    usage: libadwaita background
+    contrast_ratio: N/A
+  - id: item_040
+    platform: linux
+    theme: light
+    role: surface
+    color_name: GnomeSurface
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Card and elevated surfaces
+    contrast_ratio: N/A
+  - id: item_041
+    platform: linux
+    theme: light
+    role: text
+    color_name: GnomeForeground
+    hex: "#1E1E1E"
+    rgb: 30,30,30
+    usage: Text on light
+    contrast_ratio: 15.1:1
+  - id: item_042
+    platform: linux
+    theme: light
+    role: accent
+    color_name: GnomeAccent
+    hex: "#1C71D8"
+    rgb: 28,113,216
+    usage: GNOME blue accent
+    contrast_ratio: 5.1:1
+  - id: item_043
+    platform: qt
+    theme: dark
+    role: background
+    color_name: Material Dark
+    hex: "#121212"
+    rgb: 18,18,18
+    usage: Material Design dark
+    contrast_ratio: N/A
+  - id: item_044
+    platform: qt
+    theme: dark
+    role: surface
+    color_name: Material Surface
+    hex: "#1E1E1E"
+    rgb: 30,30,30
+    usage: Elevated surfaces
+    contrast_ratio: N/A
+  - id: item_045
+    platform: qt
+    theme: dark
+    role: text
+    color_name: Material OnBackground
+    hex: "#E4E4E4"
+    rgb: 228,228,228
+    usage: Primary text
+    contrast_ratio: 14.2:1
+  - id: item_046
+    platform: qt
+    theme: dark
+    role: accent
+    color_name: Material Primary
+    hex: "#BB86FC"
+    rgb: 187,134,252
+    usage: Primary color
+    contrast_ratio: 6.1:1
+  - id: item_047
+    platform: qt
+    theme: light
+    role: background
+    color_name: Material Light
+    hex: "#FFFFFF"
+    rgb: 255,255,255
+    usage: Material Design light
+    contrast_ratio: N/A
+  - id: item_048
+    platform: qt
+    theme: light
+    role: surface
+    color_name: Material Surface
+    hex: "#FAFAFA"
+    rgb: 250,250,250
+    usage: Elevated surfaces
+    contrast_ratio: N/A
+  - id: item_049
+    platform: qt
+    theme: light
+    role: text
+    color_name: Material OnBackground
+    hex: "#121212"
+    rgb: 18,18,18
+    usage: Primary text
+    contrast_ratio: 17.8:1
+  - id: item_050
+    platform: qt
+    theme: light
+    role: accent
+    color_name: Material Primary
+    hex: "#6200EE"
+    rgb: 98,0,238
+    usage: Primary color
+    contrast_ratio: 7.1:1

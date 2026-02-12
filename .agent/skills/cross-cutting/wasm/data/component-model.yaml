@@ -1,0 +1,85 @@
+# WASM Component Model — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: WASM-CM-001
+    name: WIT Interface Definition
+    category: interface
+    description: |
+      WebAssembly Interface Types (WIT) for component interop.
+    example: |
+      // my-component.wit
+      package example:calculator@1.0.0;
+
+      interface operations {
+        add: func(a: f64, b: f64) -> f64;
+        subtract: func(a: f64, b: f64) -> f64;
+        multiply: func(a: f64, b: f64) -> f64;
+        divide: func(a: f64, b: f64) -> result<f64, string>;
+      }
+
+      world calculator {
+        export operations;
+      }
+
+  - id: WASM-CM-002
+    name: Component Composition
+    category: architecture
+    description: |
+      Compose multiple WASM components together.
+    text: |
+      Components can import/export interfaces.
+      Composition creates a linked component graph.
+      Tools: wasm-tools compose, wac (WebAssembly Composition)
+    example: |
+      # Compose two components
+      wasm-tools compose frontend.wasm -d calculator.wasm -o composed.wasm
+
+  - id: WASM-CM-003
+    name: WASI 0.2 Interfaces
+    category: system
+    description: |
+      WebAssembly System Interface standard interfaces.
+    text: |
+      Core interfaces:
+      - wasi:io/streams — I/O streams
+      - wasi:filesystem/types — File system access
+      - wasi:sockets/tcp — TCP networking
+      - wasi:http/incoming-handler — HTTP server handler
+      - wasi:cli/run — CLI program entry point
+      - wasi:random/random — Random number generation
+      - wasi:clocks/wall-clock — System clock access
+
+  - id: WASM-CM-004
+    name: Rust to Component
+    category: toolchain
+    description: |
+      Build Rust code as WASM component.
+    example: |
+      # Cargo.toml
+      [lib]
+      crate-type = ["cdylib"]
+
+      [dependencies]
+      wit-bindgen = "0.25"
+
+      # Build
+      cargo component build --release
+
+  - id: WASM-CM-005
+    name: Resource Types
+    category: interface
+    description: |
+      WIT resource types for handle-based APIs.
+    example: |
+      interface database {
+        resource connection {
+          constructor(url: string);
+          query: func(sql: string) -> list<row>;
+          close: func();
+        }
+        record row {
+          columns: list<string>,
+          values: list<string>,
+        }
+      }

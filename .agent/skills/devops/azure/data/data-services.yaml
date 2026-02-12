@@ -1,0 +1,126 @@
+# Azure Data Services — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: AZ-DAT-001
+    name: Cosmos DB
+    category: database
+    description: |
+      Multi-model globally distributed database.
+    example: |
+      import { CosmosClient } from "@azure/cosmos";
+
+      const client = new CosmosClient({ endpoint: "...", key: "..." });
+      const database = client.database("mydb");
+      const container = database.container("items");
+
+      // Create
+      await container.items.create({
+        id: "item1", category: "electronics", name: "Laptop", price: 999
+      });
+
+      // Query
+      const { resources } = await container.items
+        .query("SELECT * FROM c WHERE c.category = @cat", [
+          { name: "@cat", value: "electronics" }
+        ])
+        .fetchAll();
+
+  - id: AZ-DAT-002
+    name: Azure Storage
+    category: storage
+    description: |
+      Blob, Queue, Table, and File storage.
+    example: |
+      import { BlobServiceClient } from "@azure/storage-blob";
+
+      const blobService = BlobServiceClient.fromConnectionString(connStr);
+      const container = blobService.getContainerClient("uploads");
+
+      // Upload
+      const blockBlob = container.getBlockBlobClient("file.pdf");
+      await blockBlob.uploadFile("./local-file.pdf");
+
+      // Download
+      await blockBlob.downloadToFile("./downloaded.pdf");
+
+      // SAS token (temporary access)
+      const sasUrl = generateBlobSASQueryParameters({ ... });
+
+  - id: AZ-DAT-003
+    name: Azure Service Bus
+    category: messaging
+    description: |
+      Enterprise message broker with queues and topics.
+    example: |
+      import { ServiceBusClient } from "@azure/service-bus";
+
+      const client = new ServiceBusClient(connStr);
+
+      // Send
+      const sender = client.createSender("orders-queue");
+      await sender.sendMessages({ body: { orderId: "123", amount: 99.99 } });
+
+      // Receive
+      const receiver = client.createReceiver("orders-queue");
+      const messages = await receiver.receiveMessages(10, { maxWaitTimeInMs: 5000 });
+      for (const msg of messages) {
+        processOrder(msg.body);
+        await receiver.completeMessage(msg);
+      }
+
+  - id: AZ-DAT-004
+    name: Entra ID (Azure AD)
+    category: security
+    description: |
+      Identity and access management.
+    text: |
+      Key concepts:
+      - Tenants: Organization directory
+      - App registrations: OAuth2 apps
+      - Managed Identity: No credentials for Azure services
+      - RBAC: Role-based access control
+
+      Best practice: Use Managed Identity for service-to-service auth
+    example: |
+      import { DefaultAzureCredential } from "@azure/identity";
+
+      // Uses Managed Identity in Azure, CLI creds locally
+      const credential = new DefaultAzureCredential();
+
+  - id: AZ-DAT-005
+    name: Azure DevOps Pipelines
+    category: ci-cd
+    description: |
+      CI/CD pipelines with Azure DevOps.
+    example: |
+      # azure-pipelines.yml
+      trigger: [main]
+      pool:
+        vmImage: 'ubuntu-latest'
+
+      stages:
+        - stage: Build
+          jobs:
+            - job: Build
+              steps:
+                - task: NodeTool@0
+                  inputs: { versionSpec: '20.x' }
+                - script: npm ci
+                - script: npm test
+                - script: npm run build
+        
+        - stage: Deploy
+          dependsOn: Build
+          condition: succeeded()
+          jobs:
+            - deployment: Deploy
+              environment: production
+              strategy:
+                runOnce:
+                  deploy:
+                    steps:
+                      - task: AzureWebApp@1
+                        inputs:
+                          azureSubscription: 'my-subscription'
+                          appName: 'my-webapp'

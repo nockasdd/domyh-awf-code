@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: language_typescript_php_ruby
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-typescript-php-ruby.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - language
+    - category
+    - level
+patterns:
+  - id: EH-TS-001
+    pattern: try-catch
+    description: Catch exceptions
+    example: try { risky(); } catch (e) { handle(e); }
+    language: TypeScript
+    category: Exception
+    level: BASIC
+  - id: EH-TS-002
+    pattern: throw
+    description: Throw error
+    example: throw new Error("message");
+    language: TypeScript
+    category: Exception
+    level: BASIC
+  - id: EH-TS-003
+    pattern: Custom Error
+    description: Extend Error class
+    example: class MyError extends Error { constructor(msg) { super(msg); } }
+    language: TypeScript
+    category: Definition
+    level: BASIC
+  - id: EH-TS-004
+    pattern: Type Guard
+    description: Narrow error type
+    example: if (error instanceof MyError) { }
+    language: TypeScript
+    category: Type
+    level: INTERMEDIATE
+  - id: EH-TS-005
+    pattern: Type Predicate
+    description: Define type guard
+    example: "function isMyError(e: unknown): e is MyError {}"
+    language: TypeScript
+    category: Type
+    level: INTERMEDIATE
+  - id: EH-TS-006
+    pattern: Result Pattern
+    description: Type-safe result
+    example: "type Result<T, E> = { ok: true; value: T } | { ok: false; error: E }"
+    language: TypeScript
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-TS-007
+    pattern: Promise catch
+    description: Handle async error
+    example: promise.catch(e => handle(e))
+    language: TypeScript
+    category: Async
+    level: BASIC
+  - id: EH-TS-008
+    pattern: async try-catch
+    description: Await with try-catch
+    example: try { await async(); } catch (e) { }
+    language: TypeScript
+    category: Async
+    level: BASIC
+  - id: EH-TS-009
+    pattern: Promise.allSettled
+    description: Get all results
+    example: const results = await Promise.allSettled(promises);
+    language: TypeScript
+    category: Async
+    level: INTERMEDIATE
+  - id: EH-TS-010
+    pattern: never type
+    description: Unreachable code
+    example: "function fail(msg: string): never { throw new Error(msg); }"
+    language: TypeScript
+    category: Type
+    level: INTERMEDIATE
+  - id: EH-PHP-001
+    pattern: try-catch
+    description: Catch exceptions
+    example: try { risky(); } catch (Exception $e) { handle($e); }
+    language: PHP
+    category: Exception
+    level: BASIC
+  - id: EH-PHP-002
+    pattern: throw
+    description: Throw exception
+    example: throw new \Exception('message');
+    language: PHP
+    category: Exception
+    level: BASIC
+  - id: EH-PHP-003
+    pattern: Throwable
+    description: Catch Error and Exception
+    example: catch (\Throwable $e) { handle($e); }
+    language: PHP
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-PHP-004
+    pattern: Error class
+    description: Catch runtime errors (PHP 7+)
+    example: catch (\Error $e) { }
+    language: PHP
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-PHP-005
+    pattern: Custom Exception
+    description: Extend Exception
+    example: class MyException extends \Exception { }
+    language: PHP
+    category: Definition
+    level: BASIC
+  - id: EH-PHP-006
+    pattern: finally
+    description: Cleanup code
+    example: try { } catch {} finally { cleanup(); }
+    language: PHP
+    category: Cleanup
+    level: BASIC
+  - id: EH-PHP-007
+    pattern: set_error_handler
+    description: Custom error handler
+    example: set_error_handler(function($errno, $errstr) { });
+    language: PHP
+    category: Handler
+    level: INTERMEDIATE
+  - id: EH-PHP-008
+    pattern: set_exception_handler
+    description: Uncaught exception handler
+    example: set_exception_handler(function($e) { log($e); });
+    language: PHP
+    category: Handler
+    level: INTERMEDIATE
+  - id: EH-PHP-009
+    pattern: error_reporting
+    description: Configure error level
+    example: error_reporting(E_ALL);
+    language: PHP
+    category: Config
+    level: BASIC
+  - id: EH-PHP-010
+    pattern: Multi-catch
+    description: Catch multiple types
+    example: catch (Ex1 | Ex2 $e) { }
+    language: PHP
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-RUBY-001
+    pattern: begin-rescue
+    description: Catch exceptions
+    example: begin; risky; rescue => e; handle(e); end
+    language: Ruby
+    category: Exception
+    level: BASIC
+  - id: EH-RUBY-002
+    pattern: raise
+    description: Raise exception
+    example: raise ArgumentError, "invalid input"
+    language: Ruby
+    category: Exception
+    level: BASIC
+  - id: EH-RUBY-003
+    pattern: Custom Exception
+    description: Define exception class
+    example: class MyError < StandardError; end
+    language: Ruby
+    category: Definition
+    level: BASIC
+  - id: EH-RUBY-004
+    pattern: rescue specific
+    description: Catch specific type
+    example: rescue ArgumentError => e
+    language: Ruby
+    category: Exception
+    level: BASIC
+  - id: EH-RUBY-005
+    pattern: rescue multiple
+    description: Catch multiple types
+    example: rescue ArgumentError, TypeError => e
+    language: Ruby
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-RUBY-006
+    pattern: ensure
+    description: Always execute
+    example: begin; code; ensure; cleanup; end
+    language: Ruby
+    category: Cleanup
+    level: BASIC
+  - id: EH-RUBY-007
+    pattern: else clause
+    description: Code if no exception
+    example: begin; code; rescue; err; else; success; end
+    language: Ruby
+    category: Control
+    level: INTERMEDIATE
+  - id: EH-RUBY-008
+    pattern: retry
+    description: Retry after rescue
+    example: rescue; attempts += 1; retry if attempts < 3; end
+    language: Ruby
+    category: Recovery
+    level: INTERMEDIATE
+  - id: EH-RUBY-009
+    pattern: Result Monad
+    description: dry-monads Result
+    example: Success(value) or Failure(error)
+    language: Ruby
+    category: Functional
+    level: ADVANCED
+  - id: EH-RUBY-010
+    pattern: fail keyword
+    description: Alias for raise
+    example: fail "error message"
+    language: Ruby
+    category: Exception
+    level: BASIC

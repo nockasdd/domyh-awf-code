@@ -1,0 +1,250 @@
+# =============================================================================
+# Flutter State Management Patterns (Feb 2026)
+# =============================================================================
+# Riverpod, BLoC, Provider best practices
+
+metadata:
+  skill: flutter
+  domain: state
+  version: "3.29"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: flt007
+    name: Riverpod 3.0
+    category: state
+    version: "3.0+"
+    description: |
+      Recommended state management for most Flutter apps.
+      Type-safe, testable, compile-time safety.
+    text: riverpod provider notifier async future state management
+    example: |
+      import 'package:riverpod/riverpod.dart';
+
+      // ✅ FutureProvider for async data
+      final userProvider = FutureProvider.autoDispose<User>((ref) async {
+        final api = ref.watch(apiClientProvider);
+        return api.fetchUser();
+      });
+
+      // ✅ Notifier for complex state
+      class CounterNotifier extends Notifier<int> {
+        @override
+        int build() => 0;  // Initial state
+
+        void increment() => state++;
+        void decrement() => state--;
+      }
+
+      final counterProvider = NotifierProvider<CounterNotifier, int>(
+        CounterNotifier.new,
+      );
+
+      // ✅ In widgets: watch() in build, read() in callbacks
+      class CounterWidget extends ConsumerWidget {
+        @override
+        Widget build(BuildContext context, WidgetRef ref) {
+          final count = ref.watch(counterProvider);  // ✅ watch in build
+
+          return Column(
+            children: [
+              Text('Count: $count'),
+              ElevatedButton(
+                onPressed: () => ref.read(counterProvider.notifier).increment(),
+                child: Text('Increment'),
+              ),
+            ],
+          );
+        }
+      }
+
+      // ✅ Use ref.select() to reduce rebuilds
+      final userName = ref.watch(userProvider.select((u) => u.name));
+    severity: CRITICAL
+    docs_url: https://riverpod.dev/
+
+  - id: flt008
+    name: BLoC Pattern
+    category: state
+    version: "8.0+"
+    description: |
+      Business Logic Component pattern for enterprise apps.
+      Separates UI from business logic with events and states.
+    text: bloc cubit event state stream business logic flutter_bloc
+    example: |
+      import 'package:flutter_bloc/flutter_bloc.dart';
+
+      // ✅ Events (sealed for exhaustive matching)
+      sealed class AuthEvent {}
+      class LoginRequested extends AuthEvent {
+        final String email;
+        final String password;
+        LoginRequested(this.email, this.password);
+      }
+      class LogoutRequested extends AuthEvent {}
+
+      // ✅ States (sealed for exhaustive matching)
+      sealed class AuthState {}
+      class AuthInitial extends AuthState {}
+      class AuthLoading extends AuthState {}
+      class AuthAuthenticated extends AuthState {
+        final User user;
+        AuthAuthenticated(this.user);
+      }
+      class AuthError extends AuthState {
+        final String message;
+        AuthError(this.message);
+      }
+
+      // ✅ BLoC
+      class AuthBloc extends Bloc<AuthEvent, AuthState> {
+        final AuthRepository _repository;
+
+        AuthBloc(this._repository) : super(AuthInitial()) {
+          on<LoginRequested>(_onLoginRequested);
+          on<LogoutRequested>(_onLogoutRequested);
+        }
+
+        Future<void> _onLoginRequested(
+          LoginRequested event,
+          Emitter<AuthState> emit,
+        ) async {
+          emit(AuthLoading());
+          try {
+            final user = await _repository.login(event.email, event.password);
+            emit(AuthAuthenticated(user));
+          } catch (e) {
+            emit(AuthError(e.toString()));
+          }
+        }
+
+        Future<void> _onLogoutRequested(
+          LogoutRequested event,
+          Emitter<AuthState> emit,
+        ) async {
+          await _repository.logout();
+          emit(AuthInitial());
+        }
+      }
+
+      // ✅ Use BlocBuilder efficiently
+      BlocBuilder<AuthBloc, AuthState>(
+        buildWhen: (previous, current) => current is! AuthLoading,
+        builder: (context, state) {
+          return switch (state) {
+            AuthInitial() => LoginScreen(),
+            AuthLoading() => LoadingIndicator(),
+            AuthAuthenticated(user: final u) => HomeScreen(user: u),
+            AuthError(message: final m) => ErrorScreen(message: m),
+          };
+        },
+      )
+    severity: HIGH
+    docs_url: https://bloclibrary.dev/
+
+  - id: flt009
+    name: Cubit (Simplified BLoC)
+    category: state
+    version: "8.0+"
+    description: Simpler alternative to BLoC without events
+    text: cubit state simple bloc emit flutter_bloc
+    example: |
+      import 'package:flutter_bloc/flutter_bloc.dart';
+
+      // ✅ Cubit - simpler than BLoC (no events)
+      class CounterCubit extends Cubit<int> {
+        CounterCubit() : super(0);
+
+        void increment() => emit(state + 1);
+        void decrement() => emit(state - 1);
+        void reset() => emit(0);
+      }
+
+      // ✅ Async Cubit
+      class UserCubit extends Cubit<UserState> {
+        final UserRepository _repository;
+
+        UserCubit(this._repository) : super(UserInitial());
+
+        Future<void> loadUser(String id) async {
+          emit(UserLoading());
+          try {
+            final user = await _repository.getUser(id);
+            emit(UserLoaded(user));
+          } catch (e) {
+            emit(UserError(e.toString()));
+          }
+        }
+      }
+
+      // ✅ Use in widget
+      BlocProvider(
+        create: (context) => CounterCubit(),
+        child: BlocBuilder<CounterCubit, int>(
+          builder: (context, count) {
+            return Text('Count: $count');
+          },
+        ),
+      )
+
+      // ✅ Call methods
+      context.read<CounterCubit>().increment();
+    severity: MEDIUM
+    docs_url: https://bloclibrary.dev/bloc-concepts/#cubit
+
+  - id: flt010
+    name: Provider (Simple State)
+    category: state
+    version: "6.0+"
+    description: Simple state management for small apps
+    text: provider changenotifier valuenotifier simple state
+    example: |
+      import 'package:provider/provider.dart';
+
+      // ✅ ChangeNotifier for simple mutable state
+      class CartProvider extends ChangeNotifier {
+        final List<CartItem> _items = [];
+
+        List<CartItem> get items => List.unmodifiable(_items);
+        int get itemCount => _items.length;
+        double get totalPrice => _items.fold(0, (sum, item) => sum + item.price);
+
+        void addItem(CartItem item) {
+          _items.add(item);
+          notifyListeners();  // ✅ Notify widgets
+        }
+
+        void removeItem(String id) {
+          _items.removeWhere((item) => item.id == id);
+          notifyListeners();
+        }
+
+        void clear() {
+          _items.clear();
+          notifyListeners();
+        }
+      }
+
+      // ✅ Provide at top level
+      void main() {
+        runApp(
+          ChangeNotifierProvider(
+            create: (_) => CartProvider(),
+            child: MyApp(),
+          ),
+        );
+      }
+
+      // ✅ Consume in widgets
+      Consumer<CartProvider>(
+        builder: (context, cart, child) {
+          return Text('Items: ${cart.itemCount}');
+        },
+      )
+
+      // ✅ Quick access (use sparingly)
+      final cart = context.read<CartProvider>();
+      cart.addItem(item);
+    severity: MEDIUM
+    docs_url: https://pub.dev/packages/provider

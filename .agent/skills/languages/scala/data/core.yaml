@@ -1,0 +1,349 @@
+# =============================================================================
+# Scala Core Patterns (Feb 2026)
+# Version: Scala 3.4
+# =============================================================================
+
+metadata:
+  skill: scala
+  domain: core
+  version: "3.4"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: scala001
+    name: Scala 3 Syntax
+    category: language
+    version: "Scala3"
+    description: |
+      New Scala 3 syntax features.
+      Optional braces, extension methods, given/using.
+    text: extension given using opaque type enum
+    example: |
+      // ✅ Braceless syntax (significant indentation)
+      def process(items: List[Int]): List[Int] =
+        items
+          .filter(_ > 0)
+          .map(_ * 2)
+          .sorted
+
+      // ✅ Enums (replacing sealed trait hierarchies)
+      enum Color:
+        case Red, Green, Blue
+
+      enum Option[+T]:
+        case Some(value: T)
+        case None
+
+      // ✅ Extension methods
+      extension (s: String)
+        def toIntOption: Option[Int] =
+          s.toIntOption
+        def words: List[String] =
+          s.split("\\s+").toList
+
+      // ✅ Given instances (replacing implicits)
+      trait Ordering[T]:
+        def compare(a: T, b: T): Int
+
+      given intOrdering: Ordering[Int] with
+        def compare(a: Int, b: Int): Int = a - b
+
+      // ✅ Using clauses
+      def sort[T](list: List[T])(using ord: Ordering[T]): List[T] =
+        list.sortWith((a, b) => ord.compare(a, b) < 0)
+
+      // ✅ Opaque types (zero-cost abstractions)
+      opaque type UserId = Long
+      object UserId:
+        def apply(id: Long): UserId = id
+        extension (id: UserId)
+          def value: Long = id
+
+      // ✅ Union and intersection types
+      type StringOrInt = String | Int
+      type Resetable = Closeable & Flushable
+
+      def handle(x: StringOrInt): String = x match
+        case s: String => s
+        case i: Int => i.toString
+    severity: HIGH
+    docs_url: https://docs.scala-lang.org/scala3/
+
+  - id: scala002
+    name: ZIO Effect System
+    category: effects
+    version: "ZIO2"
+    description: |
+      Type-safe functional effects.
+      ZIO, ZLayer, ZStream.
+    text: zio effect layer stream fiber
+    example: |
+      import zio.*
+      import zio.stream.*
+
+      // ✅ Basic ZIO effect
+      val program: ZIO[Any, IOException, Unit] =
+        for
+          _ <- Console.printLine("Enter name:")
+          name <- Console.readLine
+          _ <- Console.printLine(s"Hello, $name!")
+        yield ()
+
+      // ✅ Error handling
+      def fetchUser(id: UserId): ZIO[UserRepo, UserError, User] =
+        for
+          maybeUser <- UserRepo.find(id)
+          user <- ZIO.fromOption(maybeUser)
+            .orElseFail(UserError.NotFound(id))
+        yield user
+
+      // ✅ ZLayer for dependency injection
+      trait UserService:
+        def getUser(id: UserId): Task[User]
+
+      object UserService:
+        val live: ZLayer[UserRepo & HttpClient, Nothing, UserService] =
+          ZLayer.fromFunction { (repo: UserRepo, http: HttpClient) =>
+            new UserService:
+              def getUser(id: UserId): Task[User] =
+                repo.find(id).flatMap:
+                  case Some(user) => ZIO.succeed(user)
+                  case None => http.fetchUser(id)
+          }
+
+      // ✅ Fiber-based concurrency
+      def processItems(items: List[Item]): Task[List[Result]] =
+        ZIO.foreachPar(items)(process)
+
+      val raceExample =
+        ZIO.raceFirst(
+          fetchFromCache(key),
+          fetchFromDb(key).delay(100.millis)
+        )
+
+      // ✅ ZStream for streaming
+      val numbers: ZStream[Any, Nothing, Int] =
+        ZStream.iterate(1)(_ + 1)
+
+      val processStream =
+        ZStream
+          .fromIterable(items)
+          .mapZIO(validate)
+          .filter(_.isValid)
+          .grouped(100)
+          .mapZIO(batch => saveAll(batch))
+          .runDrain
+    severity: MEDIUM
+    docs_url: https://zio.dev/
+
+  - id: scala003
+    name: Cats Effect
+    category: effects
+    version: "CatsEffect3"
+    description: |
+      Typelevel pure functional programming.
+      IO, Resource, concurrent primitives.
+    text: cats io resource fiber ref deferred
+    example: |
+      import cats.effect.*
+      import cats.effect.std.*
+      import cats.syntax.all.*
+
+      // ✅ Basic IO
+      def program: IO[Unit] =
+        for
+          _ <- IO.println("Enter name:")
+          name <- IO.readLine
+          _ <- IO.println(s"Hello, $name!")
+        yield ()
+
+      // ✅ Resource management
+      def openFile(path: String): Resource[IO, BufferedSource] =
+        Resource.make(
+          IO(Source.fromFile(path))
+        )(source =>
+          IO(source.close())
+        )
+
+      def processFile(path: String): IO[List[String]] =
+        openFile(path).use { source =>
+          IO(source.getLines().toList)
+        }
+
+      // ✅ Concurrent primitives
+      def counter: IO[Unit] =
+        for
+          ref <- Ref.of[IO, Int](0)
+          _ <- (1 to 100).toList.parTraverse_ { _ =>
+            ref.update(_ + 1)
+          }
+          count <- ref.get
+          _ <- IO.println(s"Count: $count")
+        yield ()
+
+      // ✅ Fiber-based concurrency
+      def raceWithTimeout[A](io: IO[A], timeout: FiniteDuration): IO[Option[A]] =
+        io.timeout(timeout).option
+
+      def parallel: IO[Unit] =
+        (taskA, taskB, taskC).parTupled.void
+
+      // ✅ Queue-based patterns
+      def producer(queue: Queue[IO, Int]): IO[Unit] =
+        Stream.iterate(1)(_ + 1)
+          .evalMap(queue.offer)
+          .compile.drain
+
+      def consumer(queue: Queue[IO, Int]): IO[Unit] =
+        Stream.fromQueueUnterminated(queue)
+          .evalMap(n => IO.println(s"Got: $n"))
+          .compile.drain
+    severity: MEDIUM
+    docs_url: https://typelevel.org/cats-effect/
+
+  - id: scala004
+    name: Akka Actors
+    category: concurrency
+    version: "Akka"
+    description: |
+      Actor-based concurrency.
+      Typed actors, persistence, streams.
+    text: actor behavior message spawn cluster
+    example: |
+      import akka.actor.typed.*
+      import akka.actor.typed.scaladsl.*
+
+      // ✅ Define actor protocol
+      object Counter:
+        sealed trait Command
+        case class Increment(replyTo: ActorRef[Int]) extends Command
+        case class Decrement(replyTo: ActorRef[Int]) extends Command
+        case object GetValue extends Command
+
+        def apply(value: Int = 0): Behavior[Command] =
+          Behaviors.receive { (context, message) =>
+            message match
+              case Increment(replyTo) =>
+                val newValue = value + 1
+                replyTo ! newValue
+                apply(newValue)
+              case Decrement(replyTo) =>
+                val newValue = value - 1
+                replyTo ! newValue
+                apply(newValue)
+              case GetValue =>
+                context.log.info(s"Current value: $value")
+                Behaviors.same
+          }
+
+      // ✅ Spawn and interact
+      object Main:
+        def apply(): Behavior[ActorRef[Counter.Command]] =
+          Behaviors.setup { context =>
+            val counter = context.spawn(Counter(), "counter")
+            
+            Behaviors.receiveMessage { ref =>
+              ref ! Counter.Increment(context.self.narrow)
+              Behaviors.same
+            }
+          }
+
+      // ✅ Akka Streams
+      import akka.stream.scaladsl.*
+
+      val source = Source(1 to 100)
+      val flow = Flow[Int].map(_ * 2).filter(_ > 10)
+      val sink = Sink.foreach(println)
+
+      source.via(flow).runWith(sink)
+
+      // ✅ HTTP with Akka HTTP
+      import akka.http.scaladsl.server.Directives.*
+
+      val route =
+        path("users" / IntNumber) { userId =>
+          get {
+            complete(getUser(userId))
+          } ~
+          put {
+            entity(as[User]) { user =>
+              complete(updateUser(userId, user))
+            }
+          }
+        }
+    severity: MEDIUM
+    docs_url: https://doc.akka.io/
+
+  - id: scala005
+    name: Functional Patterns
+    category: patterns
+    version: "Scala3"
+    description: |
+      Core FP patterns in Scala.
+      ADTs, pattern matching, higher-kinded types.
+    text: sealed case match monad typeclass
+    example: |
+      // ✅ Algebraic Data Types
+      enum Result[+E, +A]:
+        case Success(value: A)
+        case Failure(error: E)
+        
+        def map[B](f: A => B): Result[E, B] = this match
+          case Success(a) => Success(f(a))
+          case Failure(e) => Failure(e)
+        
+        def flatMap[EE >: E, B](f: A => Result[EE, B]): Result[EE, B] = this match
+          case Success(a) => f(a)
+          case Failure(e) => Failure(e)
+
+      // ✅ Type classes
+      trait Monoid[A]:
+        def empty: A
+        def combine(x: A, y: A): A
+
+      object Monoid:
+        given Monoid[Int] with
+          def empty: Int = 0
+          def combine(x: Int, y: Int): Int = x + y
+        
+        given [A]: Monoid[List[A]] with
+          def empty: List[A] = Nil
+          def combine(x: List[A], y: List[A]): List[A] = x ++ y
+
+      def combineAll[A](as: List[A])(using m: Monoid[A]): A =
+        as.foldLeft(m.empty)(m.combine)
+
+      // ✅ Higher-kinded types
+      trait Functor[F[_]]:
+        extension [A](fa: F[A])
+          def map[B](f: A => B): F[B]
+
+      given Functor[List] with
+        extension [A](fa: List[A])
+          def map[B](f: A => B): List[B] = fa.map(f)
+
+      given Functor[Option] with
+        extension [A](fa: Option[A])
+          def map[B](f: A => B): Option[B] = fa.map(f)
+
+      // ✅ For-comprehension
+      case class User(name: String, email: String)
+
+      def createUser(name: Option[String], email: Option[String]): Option[User] =
+        for
+          n <- name
+          e <- email
+          if e.contains("@")
+        yield User(n, e)
+
+      // ✅ Pattern matching with guards
+      def describe(x: Any): String = x match
+        case i: Int if i > 0 => "positive int"
+        case i: Int if i < 0 => "negative int"
+        case 0 => "zero"
+        case s: String => s"string: $s"
+        case list: List[?] => s"list of ${list.size}"
+        case _ => "unknown"
+    severity: HIGH
+    docs_url: https://docs.scala-lang.org/scala3/book/fp-intro.html

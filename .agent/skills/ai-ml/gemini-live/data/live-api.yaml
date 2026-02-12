@@ -1,0 +1,103 @@
+# =============================================================================
+# live-api.yaml — Gemini Live API Patterns
+# =============================================================================
+# 8 patterns for real-time WebSocket streaming with Gemini
+# Source: https://ai.google.dev/gemini-api/docs/live
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 8
+
+overview:
+  description: "Low-latency, real-time voice and video interactions with Gemini"
+  transport: "WebSocket"
+  input_formats:
+    audio: "PCM 16-bit, 16kHz, mono"
+    video: "Supported camera streams"
+    text: "UTF-8 text"
+  output_audio: "24kHz sample rate"
+  features:
+    - "Voice Activity Detection (VAD)"
+    - "Tool use and function calling"
+    - "Session management"
+    - "Ephemeral tokens"
+    - "Multi-tool support"
+
+approaches:
+  server_to_server:
+    desc: "Backend proxies client streams to Live API"
+    pros:
+      - "Full security control"
+      - "API key stays server-side"
+      - "Can add business logic"
+    cons:
+      - "Added latency from proxy"
+      - "Server resource requirements"
+    use_case: "Production apps with security requirements"
+
+  client_to_server:
+    desc: "Frontend connects directly to Live API"
+    pros:
+      - "Lowest latency"
+      - "Simpler architecture"
+    cons:
+      - "Requires ephemeral tokens"
+      - "Limited security control"
+    use_case: "Real-time demos, low-latency requirements"
+
+voice_activity_detection:
+  desc: "Automatic detection of when user starts/stops speaking"
+  behavior: "Model processes accumulated audio when silence detected"
+  customization: "Configurable silence threshold"
+
+session_management:
+  desc: "Maintain conversation state across multiple exchanges"
+  features:
+    - "Session persistence"
+    - "Context window management"
+    - "Automatic reconnection"
+  max_duration: "Configurable (model dependent)"
+
+ephemeral_tokens:
+  desc: "Short-lived tokens for client-side auth"
+  flow:
+    - "Server generates ephemeral token from API key"
+    - "Token sent to client"
+    - "Client uses token to connect directly"
+    - "Token expires after set duration"
+  security: "Never expose API key to client"
+
+partner_integrations:
+  - name: "Pipecat (Daily)"
+    desc: "Real-time AI chatbot framework"
+    url: "https://docs.pipecat.ai/guides/features/gemini-live"
+  - name: "LiveKit"
+    desc: "Agents with Gemini Live"
+    url: "https://docs.livekit.io/agents/models/realtime/plugins/gemini/"
+  - name: "ADK (Google)"
+    desc: "Agent Development Kit with Live API"
+    url: "https://google.github.io/adk-docs/streaming/"
+  - name: "Fishjam"
+    desc: "Live video/audio streaming"
+    url: "https://docs.fishjam.io/tutorials/gemini-live-integration"
+  - name: "Voximplant"
+    desc: "Phone call integration"
+    url: "https://voximplant.com/products/gemini-client"
+
+api_usage:
+  python: |
+    from google import genai
+    client = genai.Client(api_key="API_KEY")
+
+    async with client.aio.live.connect(model="gemini-2.0-flash-live-001") as session:
+        # Send audio
+        await session.send(audio_data, end_of_turn=True)
+        
+        # Receive response
+        async for response in session.receive():
+            if response.data:
+                play_audio(response.data)
+
+# =============================================================================
+# _DOMYH Awesome Code • Live API v1.0_
+# =============================================================================

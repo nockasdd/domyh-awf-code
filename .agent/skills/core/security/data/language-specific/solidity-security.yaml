@@ -1,0 +1,369 @@
+metadata:
+  skill: security
+  domain: solidity_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: solidity-security.yaml
+  patterns_count: 35
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_vuln
+    - example_fix
+patterns:
+  - id: SOL-01
+    name: Reentrancy Attack
+    severity: CRITICAL
+    category: Logic
+    description: External call before state update allows reentrancy
+    detection_pattern: (\.call|transfer|send)\{.*\}\(.*\).*state
+    fix_pattern: Use Checks-Effects-Interactions pattern or ReentrancyGuard
+    cwe: CWE-841
+    example_vuln: "function withdraw() { msg.sender.call{value: balance}(''); balance = 0; }"
+    example_fix: "function withdraw() { uint bal = balance; balance = 0; msg.sender.call{value: bal}(''); }"
+  - id: SOL-02
+    name: Integer Overflow Pre-0.8
+    severity: CRITICAL
+    category: Math
+    description: Arithmetic overflow in Solidity < 0.8 without SafeMath
+    detection_pattern: (\+|\-|\*)(?!.*SafeMath|.*unchecked).*pragma.*<.*0\.8
+    fix_pattern: Upgrade to Solidity 0.8+ or use SafeMath library
+    cwe: CWE-190
+    example_vuln: uint8 x = 255; x += 1; // Overflows to 0
+    example_fix: '// Solidity 0.8+: auto-reverts on overflow\nuint8 x = 255; x += 1; // Reverts'
+  - id: SOL-03
+    name: Unchecked Call Return
+    severity: HIGH
+    category: Logic
+    description: Call send or transfer return value not checked
+    detection_pattern: (\.call|\.send)(?!.*require|.*if)
+    fix_pattern: Always check return value of external calls
+    cwe: CWE-252
+    example_vuln: payable(addr).send(amount);
+    example_fix: require(payable(addr).send(amount), 'Transfer failed');
+  - id: SOL-04
+    name: Delegatecall Injection
+    severity: CRITICAL
+    category: Logic
+    description: Delegatecall to user-controlled address allows takeover
+    detection_pattern: delegatecall.*\(.*user|msg\.sender
+    fix_pattern: Never delegatecall to untrusted addresses validate target
+    cwe: CWE-284
+    example_vuln: contract.delegatecall(abi.encode(userFn));
+    example_fix: // Only delegatecall to trusted implementations
+  - id: SOL-05
+    name: Storage Collision
+    severity: CRITICAL
+    category: Upgrade
+    description: Proxy storage layout conflicts with implementation
+    detection_pattern: (Proxy|upgradeable)(?!.*ERC1967|storage.*layout)
+    fix_pattern: Use ERC1967 storage slots or unstructured storage pattern
+    cwe: CWE-665
+    example_vuln: // Implementation inherits from different base
+    example_fix: // Use EIP-1967 storage slots\nbytes32 constant SLOT = keccak256('eip1967.proxy.implementation');
+  - id: SOL-06
+    name: Uninitialized Storage
+    severity: HIGH
+    category: Memory
+    description: Storage variables used before initialization
+    detection_pattern: (address|uint).*storage(?!.*=|.*initialize)
+    fix_pattern: Always initialize storage variables explicitly
+    cwe: CWE-665
+    example_vuln: address public owner; // Never set
+    example_fix: constructor() { owner = msg.sender; }
+  - id: SOL-07
+    name: Tx.origin Authentication
+    severity: HIGH
+    category: Auth
+    description: Using tx.origin for authentication vulnerable to phishing
+    detection_pattern: tx\.origin\s*(==|!=)
+    fix_pattern: Use msg.sender not tx.origin for authentication
+    cwe: CWE-346
+    example_vuln: require(tx.origin == owner);
+    example_fix: require(msg.sender == owner);
+  - id: SOL-08
+    name: Block Timestamp Manipulation
+    severity: MEDIUM
+    category: Logic
+    description: Using block.timestamp for critical decisions
+    detection_pattern: block\.timestamp.*(?!logging|event).*random|winner
+    fix_pattern: Avoid block.timestamp for randomness or precise timing
+    cwe: CWE-330
+    example_vuln: winner = block.timestamp % participants.length;
+    example_fix: // Use Chainlink VRF for randomness
+  - id: SOL-09
+    name: Missing Access Control
+    severity: CRITICAL
+    category: Auth
+    description: Sensitive functions without proper access modifiers
+    detection_pattern: function.*(transfer|withdraw|mint)(?!.*onlyOwner|require.*msg\.sender)
+    fix_pattern: Add access control modifiers to sensitive functions
+    cwe: CWE-284
+    example_vuln: function mint(uint amount) public { _mint(msg.sender, amount); }
+    example_fix: function mint(uint amount) public onlyOwner { _mint(msg.sender, amount); }
+  - id: SOL-10
+    name: Front-Running Vulnerability
+    severity: HIGH
+    category: Logic
+    description: Transaction can be front-run by observing mempool
+    detection_pattern: (swap|buy|sell)(?!.*commit.*reveal|slippage)
+    fix_pattern: Use commit-reveal scheme or slippage protection
+    cwe: CWE-362
+    example_vuln: function swap(uint minOut) { ... }
+    example_fix: // Add deadline and slippage protection\nfunction swap(uint minOut, uint deadline) { require(block.timestamp <= deadline); }
+  - id: SOL-11
+    name: Denial of Service
+    severity: HIGH
+    category: DoS
+    description: Gas-heavy operations in loops on unbounded arrays
+    detection_pattern: for.*length(?!.*gas|limit)
+    fix_pattern: Add gas limits pagination or pull over push pattern
+    cwe: CWE-400
+    example_vuln: for (uint i = 0; i < users.length; i++) { users[i].transfer(1 ether); }
+    example_fix: "// Use pull pattern: users claim their own funds"
+  - id: SOL-12
+    name: Floating Pragma
+    severity: LOW
+    category: Config
+    description: Pragma version not locked to specific version
+    detection_pattern: pragma.*solidity.*\^|>=(?!.*<)
+    fix_pattern: Lock pragma to specific version for production
+    cwe: CWE-665
+    example_vuln: pragma solidity ^0.8.0;
+    example_fix: pragma solidity 0.8.19;
+  - id: SOL-13
+    name: Missing Events
+    severity: LOW
+    category: Audit
+    description: State changes without event emission
+    detection_pattern: (=|\+\+|\-\-)(?!.*emit).*state
+    fix_pattern: Emit events for all state-changing operations
+    cwe: CWE-778
+    example_vuln: owner = newOwner;
+    example_fix: emit OwnerChanged(owner, newOwner);\nowner = newOwner;
+  - id: SOL-14
+    name: Selfdestruct Vulnerability
+    severity: MEDIUM
+    category: Logic
+    description: Contract can be destroyed by unauthorized caller
+    detection_pattern: selfdestruct(?!.*onlyOwner)
+    fix_pattern: Add access control or remove selfdestruct
+    cwe: CWE-284
+    example_vuln: function kill() public { selfdestruct(payable(msg.sender)); }
+    example_fix: function kill() public onlyOwner { selfdestruct(payable(msg.sender)); }
+  - id: SOL-15
+    name: Signature Malleability
+    severity: HIGH
+    category: Crypto
+    description: ECDSA signature can be altered to produce valid variant
+    detection_pattern: ecrecover(?!.*nonce|used\[)
+    fix_pattern: Track used signatures implement replay protection
+    cwe: CWE-347
+    example_vuln: address signer = ecrecover(hash, v, r, s);
+    example_fix: require(!usedSignatures[sig]); usedSignatures[sig] = true;
+  - id: SOL-16
+    name: Flash Loan Attack
+    severity: CRITICAL
+    category: DeFi
+    description: Price or state manipulated within single transaction
+    detection_pattern: (getPrice|reserve|balance)(?!.*TWAP|oracle)
+    fix_pattern: Use TWAPs or trusted oracles for price data
+    cwe: CWE-362
+    example_vuln: uint price = reserve1 / reserve0; // Manipulable
+    example_fix: // Use Chainlink price feed\nuint price = priceFeed.latestRoundData();
+  - id: SOL-17
+    name: Precision Loss
+    severity: MEDIUM
+    category: Math
+    description: Integer division causes precision loss
+    detection_pattern: (/.*\*|\*/.*<)(?!.*1e18|WAD|RAY)
+    fix_pattern: Multiply before divide use fixed-point math libraries
+    cwe: CWE-682
+    example_vuln: uint result = (a / b) * c;
+    example_fix: uint result = (a * c) / b; // Or use WAD
+  - id: SOL-18
+    name: Missing Zero Address Check
+    severity: MEDIUM
+    category: Input
+    description: Address parameters not validated for zero address
+    detection_pattern: (address.*=|address.*param)(?!.*!=.*0|require)
+    fix_pattern: Always check for zero address on critical params
+    cwe: CWE-20
+    example_vuln: function setOwner(address _owner) { owner = _owner; }
+    example_fix: require(_owner != address(0)); owner = _owner;
+  - id: SOL-19
+    name: Unbounded Return Data
+    severity: MEDIUM
+    category: Gas
+    description: External call with unbounded return data causes OOG
+    detection_pattern: staticcall|call(?!.*gas.*limit)
+    fix_pattern: Use assembly to limit return data copy size
+    cwe: CWE-400
+    example_vuln: (bool success, bytes memory data) = addr.call(payload);
+    example_fix: // Use low-level call with gas limit
+  - id: SOL-20
+    name: Initializer Not Protected
+    severity: CRITICAL
+    category: Upgrade
+    description: Initializer can be called multiple times
+    detection_pattern: function.*initialize(?!.*initializer)
+    fix_pattern: Use OpenZeppelin's initializer modifier
+    cwe: CWE-665
+    example_vuln: function initialize(address _owner) public { owner = _owner; }
+    example_fix: function initialize(address _owner) public initializer { owner = _owner; }
+  - id: SOL-21
+    name: Cross-Chain Replay
+    severity: CRITICAL
+    category: Bridge
+    description: Signature valid on multiple chains without chain ID
+    detection_pattern: ecrecover(?!.*chainId|block\.chainid)
+    fix_pattern: Include block.chainid in signature data
+    cwe: CWE-294
+    example_vuln: bytes32 hash = keccak256(abi.encode(to, amount));
+    example_fix: bytes32 hash = keccak256(abi.encode(block.chainid, to, amount));
+  - id: SOL-22
+    name: Bridge Oracle Manipulation
+    severity: CRITICAL
+    category: Bridge
+    description: Bridge relies on single oracle for cross-chain messages
+    detection_pattern: oracle(?!.*multi|threshold|decentralized)
+    fix_pattern: Use multi-sig oracles or threshold signatures
+    cwe: CWE-346
+    example_vuln: function receiveMessage(bytes memory proof) { validateOracle(proof); }
+    example_fix: // Use threshold signatures with 2/3 consensus
+  - id: SOL-23
+    name: MEV Sandwich Attack
+    severity: HIGH
+    category: DeFi
+    description: Swap can be sandwiched by MEV bots
+    detection_pattern: swap(?!.*flashbots|private.*pool)
+    fix_pattern: Use private mempools or MEV protection services
+    cwe: CWE-362
+    example_vuln: // Public swap can be exploited\nfunction swap(uint amount) { ... }
+    example_fix: // Use Flashbots Protect or MEV-Share
+  - id: SOL-24
+    name: EIP-4337 Validation Gas
+    severity: HIGH
+    category: AA
+    description: Account abstraction validateUserOp gas not limited
+    detection_pattern: validateUserOp(?!.*gasLimit)
+    fix_pattern: Limit validation gas to prevent DoS
+    cwe: CWE-400
+    example_vuln: function validateUserOp(UserOperation op) { // Unbounded }
+    example_fix: // Limit validation to 200k gas
+  - id: SOL-25
+    name: ERC-4626 Inflation Attack
+    severity: CRITICAL
+    category: DeFi
+    description: Vault share inflation via first deposit frontrun
+    detection_pattern: deposit(?!.*virtualAssets|offset)
+    fix_pattern: Use virtual assets to prevent inflation
+    cwe: CWE-682
+    example_vuln: function deposit(uint assets) { shares = assets / totalAssets; }
+    example_fix: "// Add virtual offset: shares = assets / (totalAssets + 1)"
+  - id: SOL-26
+    name: Create2 Factory Hijack
+    severity: HIGH
+    category: Deploy
+    description: CREATE2 address can be hijacked with same salt
+    detection_pattern: create2(?!.*validate.*deployer)
+    fix_pattern: Validate deployer in salt or use access control
+    cwe: CWE-94
+    example_vuln: address deployed = Create2.deploy(salt, bytecode);
+    example_fix: // Include msg.sender in salt
+  - id: SOL-27
+    name: Permit2 Signature Reuse
+    severity: HIGH
+    category: DeFi
+    description: Permit2 signatures indefinitely valid without expiration
+    detection_pattern: permit(?!.*deadline|expiration)
+    fix_pattern: Always include deadline in permit signatures
+    cwe: CWE-613
+    example_vuln: // No expiration\npermit(owner, spender, value, v, r, s);
+    example_fix: permit(owner, spender, value, deadline, v, r, s);
+  - id: SOL-28
+    name: LayerZero Untrusted Path
+    severity: CRITICAL
+    category: Bridge
+    description: LayerZero message from untrusted source endpoint
+    detection_pattern: lzReceive(?!.*trustedRemote)
+    fix_pattern: Validate trustedRemoteLookup for source
+    cwe: CWE-284
+    example_vuln: function lzReceive(uint16 srcChainId) { process(); }
+    example_fix: require(trustedRemoteLookup[srcChainId] != bytes32(0));
+  - id: SOL-29
+    name: Diamond Facet Collision
+    severity: HIGH
+    category: Upgrade
+    description: EIP-2535 function selector collision between facets
+    detection_pattern: diamondCut(?!.*checkSelectors)
+    fix_pattern: Check for selector collisions during upgrades
+    cwe: CWE-694
+    example_vuln: // Selectors can collide\ndiamondCut(facets);
+    example_fix: // Use facet selector registry
+  - id: SOL-30
+    name: Account Abstraction Paymaster DoS
+    severity: HIGH
+    category: AA
+    description: Paymaster can be drained by malicious operations
+    detection_pattern: paymaster(?!.*whitelist|rateLimit)
+    fix_pattern: Implement rate limiting and whitelist
+    cwe: CWE-400
+    example_vuln: function validatePaymasterUserOp() { // Any op pays }
+    example_fix: // Rate limit per user and validate operation
+  - id: SOL-31
+    name: ERC-721A Overflow
+    severity: HIGH
+    category: NFT
+    description: ERC721A quantity overflow in batch mint
+    detection_pattern: _mint(?!.*maxBatch|quantity.*check)
+    fix_pattern: Limit batch size to prevent overflow
+    cwe: CWE-190
+    example_vuln: function batchMint(uint quantity) { _mint(to, quantity); }
+    example_fix: require(quantity <= MAX_BATCH); _mint(to, quantity);
+  - id: SOL-32
+    name: Governance Flash Loan
+    severity: CRITICAL
+    category: DAO
+    description: Voting power acquired via flash loan for single block
+    detection_pattern: snapshot(?!.*delay|timelock)
+    fix_pattern: Use voting delay and snapshot before proposal
+    cwe: CWE-362
+    example_vuln: // Vote immediately after deposit\nfunction vote() { require(balance[msg.sender] > 0); }
+    example_fix: // Snapshot voting power 1 block before
+  - id: SOL-33
+    name: EIP-712 Domain Separator Cache
+    severity: MEDIUM
+    category: Crypto
+    description: Cached domain separator invalid after chain fork
+    detection_pattern: DOMAIN_SEPARATOR(?!.*computed|block\.chainid)
+    fix_pattern: Recompute domain separator if chainId changes
+    cwe: CWE-294
+    example_vuln: bytes32 public immutable DOMAIN_SEPARATOR;
+    example_fix: "function DOMAIN_SEPARATOR() public view returns (bytes32) { return block.chainid == chainIdCached ? cached : compute(); }"
+  - id: SOL-34
+    name: NFT Royalty Bypass
+    severity: MEDIUM
+    category: NFT
+    description: ERC-2981 royalties not enforced on marketplace
+    detection_pattern: royaltyInfo(?!.*enforce|operator)
+    fix_pattern: Use operator filtering or on-chain enforcement
+    cwe: CWE-284
+    example_vuln: // Royalties optional\nfunction royaltyInfo() { return (receiver, amount); }
+    example_fix: // Use OperatorFilterer to enforce
+  - id: SOL-35
+    name: Insufficient Randomness Commit
+    severity: HIGH
+    category: Logic
+    description: Commit-reveal with predictable reveal
+    detection_pattern: reveal(?!.*blockhash.*future|VRF)
+    fix_pattern: Use Chainlink VRF or blockhash of future block
+    cwe: CWE-330
+    example_vuln: function reveal(bytes32 seed) { random = uint(keccak256(seed)); }
+    example_fix: // Request randomness from Chainlink VRF

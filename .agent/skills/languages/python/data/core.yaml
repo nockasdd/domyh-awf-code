@@ -1,0 +1,259 @@
+# =============================================================================
+# Python Core Patterns (Feb 2026)
+# Version: Python 3.13/3.14
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: core
+  version: "3.14"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: py001
+    name: Free-Threaded Python
+    category: performance
+    version: "3.13+"
+    description: |
+      GIL-free mode for true CPU parallelism.
+      Official in 3.14 (PEP 779). Requires python3.14t install.
+    text: free-threaded gil parallel multicore threading nogil
+    example: |
+      # Install free-threaded build: python3.14t
+      # Check: python -c "import sys; print(sys._is_gil_enabled())"
+
+      import threading
+      import time
+
+      def cpu_intensive(n: int) -> int:
+          """CPU-bound task - true parallel in free-threaded mode"""
+          return sum(i * i for i in range(n))
+
+      # ✅ Real parallelism without GIL
+      threads = [
+          threading.Thread(target=cpu_intensive, args=(10_000_000,))
+          for _ in range(4)
+      ]
+
+      start = time.perf_counter()
+      for t in threads:
+          t.start()
+      for t in threads:
+          t.join()
+      print(f"Parallel time: {time.perf_counter() - start:.2f}s")
+    severity: HIGH
+    docs_url: https://docs.python.org/3/howto/free-threading.html
+
+  - id: py002
+    name: JIT Compiler
+    category: performance
+    version: "3.13+"
+    description: |
+      Experimental Just-In-Time compiler for performance.
+      Enable with -X jit flag.
+    text: jit compiler performance optimization speed
+    example: |
+      # Enable JIT (experimental)
+      # python -X jit script.py
+
+      # Or via environment variable
+      # PYTHON_JIT=1 python script.py
+
+      # Check JIT status
+      import sys
+      if hasattr(sys, '_jit'):
+          print(f"JIT enabled: {sys._jit}")
+
+      # ✅ JIT benefits tight loops
+      def fibonacci(n: int) -> int:
+          if n <= 1:
+              return n
+          a, b = 0, 1
+          for _ in range(n - 1):
+              a, b = b, a + b
+          return b
+
+      # JIT compiles hot code paths automatically
+      result = fibonacci(1000)
+    severity: MEDIUM
+    docs_url: https://peps.python.org/pep-0744/
+
+  - id: py003
+    name: Template Strings (t-strings)
+    category: strings
+    version: "3.14"
+    description: |
+      PEP 750 template strings for custom string processing.
+      Similar to f-strings but with deferred evaluation.
+    text: template strings t-strings pep750 formatting
+    example: |
+      # ✅ Template strings (PEP 750) - Python 3.14
+      from string.templatelib import Template
+
+      name = "Alice"
+      age = 30
+
+      # t-string creates Template object (not evaluated immediately)
+      template = t"Hello, {name}! You are {age} years old."
+
+      # Access interpolation parts
+      for part in template.args:
+          print(f"Value: {part.value}, Expr: {part.expr}")
+
+      # ✅ Use case: SQL safe interpolation
+      def sql_escape(template: Template) -> str:
+          parts = []
+          for arg in template.args:
+              if isinstance(arg, str):
+                  parts.append(arg)
+              else:
+                  # Escape value safely
+                  parts.append(escape_sql(arg.value))
+          return "".join(parts)
+
+      query = t"SELECT * FROM users WHERE name = {user_input}"
+      safe_query = sql_escape(query)
+    severity: MEDIUM
+    docs_url: https://peps.python.org/pep-0750/
+
+  - id: py004
+    name: Modern Type Hints
+    category: typing
+    version: "3.12+"
+    description: |
+      Modern type hint syntax with generics, unions, and type aliases.
+      PEP 695 type parameter syntax.
+    text: type hints typing annotations generics typevar
+    example: |
+      from typing import TypeAlias, Annotated, Self
+      from dataclasses import dataclass
+
+      # ✅ PEP 695: Type parameter syntax (3.12+)
+      def first[T](items: list[T]) -> T | None:
+          return items[0] if items else None
+
+      # ✅ Generic class with new syntax
+      class Stack[T]:
+          def __init__(self) -> None:
+              self._items: list[T] = []
+          
+          def push(self, item: T) -> Self:
+              self._items.append(item)
+              return self
+          
+          def pop(self) -> T:
+              return self._items.pop()
+
+      # ✅ Type aliases
+      JsonValue: TypeAlias = str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
+
+      # ✅ Annotated for metadata
+      UserId = Annotated[int, "User identifier"]
+
+      # ✅ Union with | (3.10+)
+      def process(data: str | bytes) -> str:
+          if isinstance(data, bytes):
+              return data.decode()
+          return data
+    severity: HIGH
+    docs_url: https://peps.python.org/pep-0695/
+
+  - id: py005
+    name: Pattern Matching
+    category: control-flow
+    version: "3.10+"
+    description: |
+      Structural pattern matching with match-case.
+      Supports guards, captures, and class patterns.
+    text: pattern matching match case structural guards
+    example: |
+      from dataclasses import dataclass
+      from typing import Any
+
+      @dataclass
+      class Point:
+          x: float
+          y: float
+
+      def describe(obj: Any) -> str:
+          match obj:
+              # ✅ Literal patterns
+              case 0:
+                  return "zero"
+              
+              # ✅ Capture with guard
+              case int(n) if n > 0:
+                  return f"positive int: {n}"
+              
+              # ✅ Sequence unpacking
+              case [first, *rest]:
+                  return f"list starting with {first}"
+              
+              # ✅ Class pattern
+              case Point(x=0, y=0):
+                  return "origin"
+              case Point(x=x, y=y) if x == y:
+                  return f"on diagonal at {x}"
+              
+              # ✅ Dict pattern
+              case {"type": "user", "name": name}:
+                  return f"user: {name}"
+              
+              # ✅ Or pattern
+              case "yes" | "y" | "true":
+                  return "affirmative"
+              
+              case _:
+                  return "unknown"
+    severity: HIGH
+    docs_url: https://peps.python.org/pep-0636/
+
+  - id: py006
+    name: Dataclasses and attrs
+    category: data-structures
+    version: "3.7+"
+    description: |
+      Modern data classes with minimal boilerplate.
+      Use dataclasses for simple cases, attrs for advanced.
+    text: dataclass attrs frozen slots kw_only
+    example: |
+      from dataclasses import dataclass, field
+      from typing import ClassVar
+
+      # ✅ Modern dataclass (3.10+ features)
+      @dataclass(frozen=True, slots=True, kw_only=True)
+      class User:
+          id: int
+          name: str
+          email: str
+          tags: list[str] = field(default_factory=list)
+          _count: ClassVar[int] = 0
+          
+          def __post_init__(self) -> None:
+              User._count += 1
+
+      # ✅ With validation via __post_init__
+      @dataclass
+      class Config:
+          host: str
+          port: int = 8080
+          
+          def __post_init__(self) -> None:
+              if not 1 <= self.port <= 65535:
+                  raise ValueError(f"Invalid port: {self.port}")
+
+      # ✅ attrs for advanced cases
+      import attrs
+
+      @attrs.define
+      class Product:
+          name: str = attrs.field(validator=attrs.validators.min_len(1))
+          price: float = attrs.field(validator=attrs.validators.gt(0))
+          
+          @price.validator
+          def _check_price(self, attribute, value):
+              if value > 10000:
+                  raise ValueError("Price too high")
+    severity: MEDIUM
+    docs_url: https://docs.python.org/3/library/dataclasses.html

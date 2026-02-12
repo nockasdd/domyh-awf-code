@@ -1,12 +1,12 @@
 ---
 name: r
 detect: ["*.R", "*.Rmd", "*.qmd", "DESCRIPTION", ".Rproj", "renv.lock"]
-version: "6.1.2"
+version: "6.2.1"
 category: data
 tier: 2
 ---
 
-# R Patterns — DOMYH Awesome Code v6.1.2
+# R Patterns — DOMYH Awesome Code
 
 > **Version**: R 4.4+ (2025-2026)
 > **Ecosystem**: Tidyverse, Shiny, ggplot2
@@ -345,4 +345,4 @@ summarize_data <- function(data, group_var, value_var) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • R 4.4+ Tidyverse_
+_DOMYH Awesome Code • R 4.4+ Tidyverse_

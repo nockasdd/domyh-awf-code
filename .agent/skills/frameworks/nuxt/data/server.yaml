@@ -1,0 +1,283 @@
+# =============================================================================
+# Nuxt Server Patterns (Feb 2026)
+# =============================================================================
+# Nitro, Server Routes, Runtime Config
+
+metadata:
+  skill: nuxt
+  domain: server
+  version: "4.3"
+  updated: "2026-02-11"
+  patterns_count: 5
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: nuxt007
+    name: Server Routes (Nitro)
+    category: api
+    version: "3+"
+    description: File-based API routes powered by Nitro
+    text: server api route nitro get post defineEventHandler
+    example: |
+      // server/api/users.get.ts
+      // ✅ GET /api/users
+      export default defineEventHandler(async (event) => {
+        const users = await db.user.findMany();
+        return users;
+      });
+
+      // server/api/users.post.ts
+      // ✅ POST /api/users
+      export default defineEventHandler(async (event) => {
+        const body = await readBody(event);
+        const user = await db.user.create({ data: body });
+        return user;
+      });
+
+      // server/api/users/[id].get.ts
+      // ✅ GET /api/users/:id
+      export default defineEventHandler(async (event) => {
+        const id = getRouterParam(event, 'id');
+        const user = await db.user.findUnique({ where: { id } });
+
+        if (!user) {
+          throw createError({
+            statusCode: 404,
+            message: 'User not found',
+          });
+        }
+
+        return user;
+      });
+
+      // ✅ Query parameters
+      export default defineEventHandler((event) => {
+        const query = getQuery(event);
+        const page = Number(query.page) || 1;
+        const limit = Number(query.limit) || 10;
+        // ...
+      });
+
+      // ✅ Headers and cookies
+      export default defineEventHandler((event) => {
+        const auth = getHeader(event, 'authorization');
+        const sessionId = getCookie(event, 'session');
+        // ...
+      });
+    severity: CRITICAL
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+
+  - id: nuxt008
+    name: Runtime Config
+    category: configuration
+    version: "3+"
+    description: Environment variables with type-safe access
+    text: runtime config env secret public private useRuntimeConfig
+    example: |
+      // nuxt.config.ts
+      export default defineNuxtConfig({
+        runtimeConfig: {
+          // ✅ Private (server-only)
+          apiSecret: process.env.API_SECRET,
+          databaseUrl: process.env.DATABASE_URL,
+
+          // ✅ Public (client & server)
+          public: {
+            apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
+            appName: 'My App',
+          },
+        },
+      });
+
+      // ✅ Server-side access
+      // server/api/secret.get.ts
+      export default defineEventHandler((event) => {
+        const config = useRuntimeConfig(event);
+
+        // Access private config
+        const secret = config.apiSecret;  // ✅ Only on server
+        const dbUrl = config.databaseUrl;
+
+        // Access public config
+        const apiBase = config.public.apiBase;
+
+        return { status: 'ok' };
+      });
+
+      // ✅ Client-side access
+      // pages/index.vue
+      <script setup>
+      const config = useRuntimeConfig();
+
+      // ⚠️ Only public config available on client
+      const apiBase = config.public.apiBase;
+      const appName = config.public.appName;
+
+      // ❌ This would be undefined on client
+      // const secret = config.apiSecret;
+      </script>
+    severity: HIGH
+    docs_url: https://nuxt.com/docs/guide/going-further/runtime-config
+
+  - id: nuxt009
+    name: Server Middleware
+    category: server
+    version: "3+"
+    description: Server-level middleware for requests
+    text: server middleware request response handler nitro
+    example: |
+      // server/middleware/log.ts
+      // ✅ Runs on every server request
+      export default defineEventHandler((event) => {
+        console.log('Request:', event.node.req.url);
+        // Don't return anything to continue to next handler
+      });
+
+      // server/middleware/auth.ts
+      export default defineEventHandler(async (event) => {
+        // Skip for public routes
+        if (event.path.startsWith('/api/public')) {
+          return;
+        }
+
+        // ✅ Validate auth token
+        const token = getHeader(event, 'authorization')?.split(' ')[1];
+
+        if (!token) {
+          throw createError({
+            statusCode: 401,
+            message: 'Unauthorized',
+          });
+        }
+
+        try {
+          const user = await verifyToken(token);
+          event.context.auth = { user };  // Attach to context
+        } catch {
+          throw createError({
+            statusCode: 401,
+            message: 'Invalid token',
+          });
+        }
+      });
+
+      // ✅ Access auth in route handlers
+      // server/api/protected.get.ts
+      export default defineEventHandler((event) => {
+        const { user } = event.context.auth;
+        return { message: `Hello ${user.name}` };
+      });
+    severity: MEDIUM
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server#server-middleware
+
+  - id: nuxt010
+    name: Nitro Caching
+    category: caching
+    version: "4+"
+    description: |
+      Nuxt 4 leverages Nitro for improved caching.
+      Better server performance and faster builds.
+    text: nitro cache caching storage preset deployment
+    example: |
+      // nuxt.config.ts
+      export default defineNuxtConfig({
+        nitro: {
+          // ✅ Route caching
+          routeRules: {
+            '/api/users': { cache: { maxAge: 60 } },
+            '/api/static/**': { cache: { maxAge: 60 * 60 } },
+            '/admin/**': { ssr: false },  // Client-side only
+          },
+
+          // ✅ Storage (for KV, caching)
+          storage: {
+            cache: {
+              driver: 'redis',
+              url: process.env.REDIS_URL,
+            },
+          },
+        },
+      });
+
+      // ✅ Cached API routes
+      // server/api/cached-data.get.ts
+      export default defineCachedEventHandler(async (event) => {
+        // This result is cached
+        const data = await expensiveOperation();
+        return data;
+      }, {
+        maxAge: 60 * 5,  // 5 minutes
+        staleMaxAge: 60 * 60,  // Serve stale while revalidating
+        swr: true,  // Stale-while-revalidate
+      });
+
+      // ✅ Cached function
+      const getCachedUser = defineCachedFunction(
+        async (id: string) => {
+          return await db.user.findUnique({ where: { id } });
+        },
+        {
+          maxAge: 60,
+          getKey: (id) => `user:${id}`,
+        }
+      );
+    severity: MEDIUM
+    docs_url: https://nitro.unjs.io/guide/cache
+
+  - id: nuxt011
+    name: Nuxt 4 Performance
+    category: performance
+    version: "4+"
+    description: |
+      Nuxt 4 performance improvements.
+      Shared payload, faster HMR, shallow refs.
+    text: performance hmr hot reload payload shallow fast
+    example: |
+      // ✅ Nuxt 4 Performance Improvements
+
+      // 1. Shared payload for faster builds
+      // Automatically deduplicates data across pages
+
+      // 2. shallowRef by default
+      // Less reactivity overhead for data fetching
+      const { data } = await useFetch('/api/data');
+      // data.value is a shallowRef - mutate via reassignment
+
+      // 3. Faster HMR
+      // Internal sockets and native file watching
+
+      // 4. Better font handling
+      // nuxt.config.ts
+      export default defineNuxtConfig({
+        // ✅ @nuxt/fonts auto-optimizes fonts
+        fonts: {
+          defaults: {
+            weights: [400, 500, 600, 700],
+          },
+        },
+      });
+
+      // 5. Payload compression
+      // Enabled by default, reduces hydration data
+
+      // 6. TypeScript improvements
+      // Separate contexts for app, server, and shared code
+
+      // ✅ Best practices
+      // - Use shallowRef unless deep reactivity needed
+      // - Leverage route-based code splitting
+      // - Use setup instead of Options API
+      // - Prefer useFetch over $fetch in components
+    severity: MEDIUM
+    docs_url: https://nuxt.com/blog/nuxt4

@@ -1,0 +1,118 @@
+# JetBrains Plugin Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: JB-001
+    name: Plugin Structure
+    category: setup
+    description: JetBrains IntelliJ Plugin SDK structure.
+    text: |
+      Key files:
+      - plugin.xml: Extension points, actions, services
+      - build.gradle.kts: Gradle IntelliJ Plugin
+
+      Key concepts:
+      - Extension Points: Register plugin functionality  
+      - Actions: User-triggered operations (menus, toolbar)
+      - Services: Application/project/module-level singletons
+      - PSI: Program Structure Interface (AST)
+    example: |
+      // plugin.xml
+      <idea-plugin>
+        <id>com.example.myplugin</id>
+        <name>My Plugin</name>
+        <depends>com.intellij.modules.platform</depends>
+        <extensions defaultExtensionNs="com.intellij">
+          <toolWindow id="MyWindow" factoryClass="com.example.MyToolWindowFactory"/>
+        </extensions>
+        <actions>
+          <action id="MyAction" class="com.example.MyAction" text="Do Something"/>
+        </actions>
+      </idea-plugin>
+
+  - id: JB-002
+    name: PSI Tree Traversal
+    category: analysis
+    description: |
+      Program Structure Interface for code analysis.
+    text: |
+      PSI provides AST-like tree for all supported languages.
+      Use PsiTreeUtil for traversal, PsiElementVisitor for walking.
+    example: |
+      // Kotlin
+      class MyInspection : LocalInspectionTool() {
+        override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+          return object : PsiElementVisitor() {
+            override fun visitElement(element: PsiElement) {
+              if (element is PsiMethod && element.name.startsWith("_")) {
+                holder.registerProblem(element, "Methods should not start with underscore")
+              }
+            }
+          }
+        }
+      }
+
+  - id: JB-003
+    name: Action System
+    category: ui
+    description: Register actions for menus, toolbar, shortcuts.
+    example: |
+      // Kotlin
+      class MyAction : AnAction("My Action") {
+        override fun actionPerformed(e: AnActionEvent) {
+          val project = e.project ?: return
+          val editor = e.getData(CommonDataKeys.EDITOR) ?: return
+          // perform action
+          Messages.showInfoMessage(project, "Hello!", "My Plugin")
+        }
+        override fun update(e: AnActionEvent) {
+          e.presentation.isEnabled = e.project != null
+        }
+      }
+
+  - id: JB-004
+    name: Service Pattern
+    category: architecture
+    description: |
+      Application/project-level singleton services.
+    text: |
+      Service levels:
+      - Application: Shared across all projects
+      - Project: One per open project  
+      - Module: One per module
+
+      Register in plugin.xml or use @Service annotation (2023+).
+    example: |
+      @Service(Service.Level.PROJECT)
+      class MyProjectService(private val project: Project) {
+        fun analyze(): List<Finding> { ... }
+        companion object {
+          fun getInstance(project: Project) = project.service<MyProjectService>()
+        }
+      }
+
+  - id: JB-005
+    name: Tool Window
+    category: ui
+    description: Custom panels in IDE (bottom/side panels).
+    example: |
+      class MyToolWindowFactory : ToolWindowFactory {
+        override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+          val panel = JPanel(BorderLayout())
+          panel.add(JLabel("Hello from plugin!"), BorderLayout.CENTER)
+          val content = ContentFactory.getInstance().createContent(panel, "My Tab", false)
+          toolWindow.contentManager.addContent(content)
+        }
+      }
+
+  - id: JB-006
+    name: Remote Dev Compatibility
+    category: architecture
+    description: |
+      Ensure plugin works with JetBrains Remote Development.
+    text: |
+      Rules for remote dev compatibility:
+      - Split frontend (UI) and backend (analysis) logic
+      - Use RemoteRobot for UI testing
+      - Avoid java.awt.* directly for headless backend
+      - Mark services with correct level (Project = backend, Application = mixed)

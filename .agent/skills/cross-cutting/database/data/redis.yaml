@@ -1,0 +1,129 @@
+# Redis Patterns - HSA Database Skill
+# Version: Redis 8 (2025)
+# Updated: 2026-02-05
+
+patterns:
+  # Performance
+  - id: re001
+    pattern: Pipelining
+    category: performance
+    version: all
+    description: Send multiple commands in one roundtrip
+    example: "pipe = redis.pipeline(); pipe.get('a'); pipe.get('b'); pipe.execute()"
+    severity: HIGH
+
+  - id: re002
+    pattern: I/O Threading
+    category: performance
+    version: "8"
+    description: Multi-threaded I/O for 87% faster latency
+    example: "io-threads 4, io-threads-do-reads yes"
+    severity: HIGH
+
+  # Memory
+  - id: re003
+    pattern: Memory Eviction
+    category: memory
+    version: all
+    description: Configure eviction policy for memory limits
+    example: "maxmemory-policy allkeys-lru"
+    severity: CRITICAL
+
+  - id: re004
+    pattern: Replica Memory Savings
+    category: memory
+    version: "8"
+    description: 35% less memory on replica nodes
+    example: "Automatic in Redis 8"
+    severity: MEDIUM
+
+  # New Data Types (Redis 8)
+  - id: re005
+    pattern: Vector Set
+    category: data
+    version: "8"
+    description: Native vector similarity search (beta), 1B vectors
+    example: "VADD myvecs id1 [...] VSEARCH myvecs TOPK 10 [...]"
+    severity: HIGH
+
+  - id: re006
+    pattern: JSON Data Type
+    category: data
+    version: "8"
+    description: Native JSON storage and manipulation
+    example: 'JSON.SET user:1 $ ''{"name":"Alice"}'''
+    severity: MEDIUM
+
+  - id: re007
+    pattern: Time Series
+    category: data
+    version: "8"
+    description: Native time series data with aggregation
+    example: "TS.ADD sensor:temp * 25.3"
+    severity: MEDIUM
+
+  - id: re008
+    pattern: Probabilistic
+    category: data
+    version: "8"
+    description: Bloom, cuckoo, count-min, top-k, t-digest
+    example: "BF.ADD mybloom item1"
+    severity: LOW
+
+  # New Commands (Redis 8)
+  - id: re009
+    pattern: HGETDEL
+    category: command
+    version: "8"
+    description: Get hash field and delete it atomically
+    example: "HGETDEL myhash field1"
+    severity: MEDIUM
+
+  - id: re010
+    pattern: HGETEX/HSETEX
+    category: command
+    version: "8"
+    description: Get/set hash fields with optional TTL
+    example: "HSETEX myhash EX 3600 field1 value1"
+    severity: MEDIUM
+
+  # Patterns
+  - id: re011
+    pattern: SCAN over KEYS
+    category: performance
+    version: "2.8+"
+    description: Never use KEYS in production, use SCAN
+    example: "SCAN 0 MATCH user:* COUNT 100"
+    severity: CRITICAL
+
+  - id: re012
+    pattern: Lua Scripts
+    category: atomicity
+    version: all
+    description: Use Lua for atomic multi-key operations
+    example: 'EVAL ''redis.call("set", KEYS[1], ARGV[1])'' 1 key value'
+    severity: MEDIUM
+
+  - id: re013
+    pattern: Streams
+    category: messaging
+    version: "5+"
+    description: Use streams for persistent message queues
+    example: "XADD stream * field value; XREAD STREAMS stream 0"
+    severity: HIGH
+
+  - id: re014
+    pattern: Cluster Mode
+    category: scaling
+    version: "3+"
+    description: Horizontal scaling with hash slots
+    example: "redis-cli --cluster create ..."
+    severity: HIGH
+
+  - id: re015
+    pattern: TTL Strategy
+    category: memory
+    version: all
+    description: Set TTL on cache keys to prevent memory bloat
+    example: "SETEX key 3600 value"
+    severity: HIGH

@@ -1,0 +1,141 @@
+# Tauri Build & Distribution — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TAURI-BLD-001
+    name: Project Configuration
+    category: config
+    description: tauri.conf.json core configuration.
+    example: |
+      {
+        "productName": "My App",
+        "version": "1.0.0",
+        "identifier": "com.mycompany.myapp",
+        "build": { "frontendDist": "../dist" },
+        "app": {
+          "windows": [
+            { "title": "My App", "width": 1200, "height": 800,
+              "resizable": true, "fullscreen": false }
+          ],
+          "security": {
+            "csp": "default-src 'self'; script-src 'self'"
+          }
+        },
+        "bundle": {
+          "active": true,
+          "targets": "all",
+          "icon": ["icons/32x32.png", "icons/128x128.png", "icons/icon.icns"]
+        }
+      }
+
+  - id: TAURI-BLD-002
+    name: Bundle Targets
+    category: distribution
+    description: |
+      Platform-specific bundle formats.
+    text: |
+      | Platform | Format | Notes |
+      |----------|--------|-------|
+      | Windows | MSI, NSIS | MSI for enterprise, NSIS for consumer |
+      | macOS | DMG, App Bundle | Requires code signing for notarization |
+      | Linux | AppImage, DEB, RPM | AppImage for universal, DEB for Debian |
+      | iOS | IPA | Requires Xcode + Apple Developer |
+      | Android | APK, AAB | Requires Android Studio + SDK |
+
+  - id: TAURI-BLD-003
+    name: Code Signing
+    category: distribution
+    description: |
+      Platform-specific code signing for distribution.
+    text: |
+      Windows: EV code signing certificate (avoid SmartScreen warnings)
+      macOS: Apple Developer certificate + notarization
+
+      Env variables:
+      TAURI_SIGNING_PRIVATE_KEY — For updater signatures
+      APPLE_SIGNING_IDENTITY — macOS code signing
+      APPLE_ID — For notarization
+
+  - id: TAURI-BLD-004
+    name: CI/CD Build Matrix
+    category: ci-cd
+    description: |
+      GitHub Actions build matrix for all platforms.
+    example: |
+      # .github/workflows/release.yml
+      jobs:
+        release:
+          strategy:
+            matrix:
+              include:
+                - platform: ubuntu-22.04
+                  args: ""
+                - platform: windows-latest
+                  args: ""
+                - platform: macos-latest
+                  args: "--target aarch64-apple-darwin"
+                - platform: macos-latest
+                  args: "--target x86_64-apple-darwin"
+          runs-on: ${{ matrix.platform }}
+          steps:
+            - uses: actions/checkout@v4
+            - uses: dtolnay/rust-toolchain@stable
+            - uses: tauri-apps/tauri-action@v0
+              with:
+                tagName: v__VERSION__
+                releaseName: "v__VERSION__"
+                args: ${{ matrix.args }}
+
+  - id: TAURI-BLD-005
+    name: Auto-updater Setup
+    category: distribution
+    description: |
+      Configure Tauri auto-updater.
+    text: |
+      1. Generate signing keys: cargo tauri signer generate
+      2. Configure update endpoints in tauri.conf.json
+      3. Host update manifest (JSON) at endpoint
+      4. Updater checks version on app start
+    example: |
+      // Update manifest (hosted at endpoint)
+      {
+        "version": "1.1.0",
+        "notes": "Bug fixes and improvements",
+        "pub_date": "2026-02-12T00:00:00Z",
+        "platforms": {
+          "windows-x86_64": {
+            "signature": "...",
+            "url": "https://releases.myapp.com/v1.1.0/myapp_1.1.0_x64-setup.nsis.zip"
+          }
+        }
+      }
+
+  - id: TAURI-BLD-006
+    name: Development Workflow
+    category: development
+    description: |
+      Tauri development commands.
+    text: |
+      cargo tauri dev       — Run in development mode (hot reload)
+      cargo tauri build     — Build production bundle
+      cargo tauri icon      — Generate icons from source image
+      cargo tauri signer    — Generate update signing keys
+      cargo tauri info      — Show environment info
+      cargo tauri init      — Initialize Tauri in existing project
+
+  - id: TAURI-BLD-007
+    name: Optimization
+    category: performance
+    description: |
+      Reduce binary size and improve performance.
+    text: |
+      Cargo.toml:
+      [profile.release]
+      panic = "abort"
+      codegen-units = 1
+      lto = true
+      strip = true
+      opt-level = "s"
+
+      Results: ~3-10MB binary (vs Electron ~150MB+)
+      Additional: Use UPX compression for further reduction

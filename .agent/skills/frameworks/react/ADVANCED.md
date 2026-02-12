@@ -1,6 +1,6 @@
 # React — Advanced Patterns
 
-# DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+# DOMYH Awesome Code — Tier 3 Reference
 
 # Load only when explicitly referenced
 
@@ -673,4 +673,4 @@ function Input({ ref, ...props }: Props & { ref?: Ref<HTMLInputElement> }) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Tier 3 Reference — Vercel Performance Rules Full_
+_DOMYH Awesome Code — Tier 3 Reference — Vercel Performance Rules Full_

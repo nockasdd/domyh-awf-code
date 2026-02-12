@@ -1,0 +1,246 @@
+# =============================================================================
+# Flutter Platform Patterns (Feb 2026)
+# =============================================================================
+# Flutter 3.29 features, Impeller, performance
+
+metadata:
+  skill: flutter
+  domain: platform
+  version: "3.29"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: flt011
+    name: Impeller (iOS Default)
+    category: rendering
+    version: "3.29+"
+    description: |
+      Impeller is now the DEFAULT rendering engine on iOS.
+      Skia removed from iOS builds. ~2x faster rendering.
+    text: impeller rendering engine ios performance skia
+    example: |
+      // ✅ Flutter 3.29: Impeller is DEFAULT on iOS
+      // No configuration needed - automatic performance boost
+
+      // Benefits:
+      // - ~2x faster rendering than Skia
+      // - Consistent frame rates
+      // - Reduced shader compilation jank
+      // - Smaller binary size (Skia removed)
+
+      // ⚠️ Android: Impeller still opt-in
+      // In AndroidManifest.xml:
+      <meta-data
+        android:name="io.flutter.embedding.android.EnableImpeller"
+        android:value="true" />
+
+      // Or via command line:
+      // flutter run --enable-impeller
+    severity: CRITICAL
+    docs_url: https://docs.flutter.dev/perf/impeller
+
+  - id: flt012
+    name: Main Thread Dart Execution
+    category: architecture
+    version: "3.29+"
+    description: |
+      Dart code now runs on platform main thread (Android/iOS).
+      Eliminates UI thread overhead, better platform interop.
+    text: main thread dart execution platform native interop
+    example: |
+      // ✅ Flutter 3.29: Main Thread Dart Execution
+
+      // Benefits:
+      // 1. Eliminates separate UI thread - simpler architecture
+      // 2. Synchronous platform channel calls possible
+      // 3. Better integration with platform native code
+      // 4. Reduced overhead for platform channels
+
+      // Platform channels now faster:
+      import 'package:flutter/services.dart';
+
+      class NativeBridge {
+        static const platform = MethodChannel('com.example/native');
+
+        // ✅ Faster synchronous-like calls
+        Future<String> getNativeData() async {
+          return await platform.invokeMethod<String>('getData') ?? '';
+        }
+      }
+    severity: HIGH
+    docs_url: https://docs.flutter.dev/release/breaking-changes
+
+  - id: flt013
+    name: BackdropGroup Widget
+    category: ui
+    version: "3.29+"
+    description: Optimized blur effects with grouped BackdropFilters
+    text: backdrop blur filter group optimized glassmorphism
+    example: |
+      import 'package:flutter/widgets.dart';
+      import 'dart:ui';
+
+      // ✅ BackdropGroup for multiple blur effects
+      BackdropGroup(
+        children: [
+          BackdropFilter.grouped(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              color: Colors.white.withOpacity(0.5),
+              child: Text('Blurred background 1'),
+            ),
+          ),
+          BackdropFilter.grouped(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              color: Colors.blue.withOpacity(0.3),
+              child: Text('Blurred background 2'),
+            ),
+          ),
+        ],
+      )
+
+      // Benefits:
+      // - Shared blur computation between children
+      // - Better performance than separate BackdropFilters
+      // - Perfect for glassmorphism UIs
+    severity: MEDIUM
+    docs_url: https://api.flutter.dev/flutter/widgets/BackdropGroup-class.html
+
+  - id: flt014
+    name: ImageFilter.shader
+    category: ui
+    version: "3.29+"
+    description: Apply custom fragment shaders to widgets
+    text: shader fragment image filter custom effect gpu
+    example: |
+      import 'dart:ui' as ui;
+
+      // ✅ Load and apply custom shader
+      class ShaderWidget extends StatefulWidget {
+        @override
+        State<ShaderWidget> createState() => _ShaderWidgetState();
+      }
+
+      class _ShaderWidgetState extends State<ShaderWidget> {
+        ui.FragmentShader? _shader;
+
+        @override
+        void initState() {
+          super.initState();
+          _loadShader();
+        }
+
+        Future<void> _loadShader() async {
+          final program = await ui.FragmentProgram.fromAsset('shaders/my_effect.frag');
+          setState(() => _shader = program.fragmentShader());
+        }
+
+        @override
+        Widget build(BuildContext context) {
+          if (_shader == null) return const SizedBox();
+
+          return ImageFiltered(
+            imageFilter: ui.ImageFilter.shader(_shader!),
+            child: Image.asset('assets/photo.png'),
+          );
+        }
+      }
+
+      // shader file: shaders/my_effect.frag
+      // #version 460
+      // precision mediump float;
+      // ...
+    severity: MEDIUM
+    docs_url: https://docs.flutter.dev/development/ui/advanced/shaders
+
+  - id: flt015
+    name: Performance Optimization
+    category: performance
+    version: "3.0+"
+    description: Key techniques for smooth 60fps Flutter apps
+    text: performance optimization const rebuild repaint isolate
+    example: |
+      // ✅ 1. Use const constructors
+      const SizedBox(height: 16);
+      const Text('Hello');
+      const Icon(Icons.star);
+
+      // ✅ 2. Extract widgets to avoid rebuilds
+      class UserList extends StatelessWidget {
+        @override
+        Widget build(BuildContext context) {
+          return ListView.builder(
+            itemCount: users.length,
+            itemBuilder: (context, index) => UserListItem(
+              key: ValueKey(users[index].id),  // ✅ Add keys!
+              user: users[index],
+            ),
+          );
+        }
+      }
+
+      // ✅ 3. RepaintBoundary for complex widgets
+      RepaintBoundary(
+        child: ComplexAnimatedWidget(),
+      )
+
+      // ✅ 4. Offload heavy computation to isolates
+      import 'dart:isolate';
+
+      Future<List<ProcessedItem>> processDataInIsolate(
+        List<RawItem> items
+      ) async {
+        return await Isolate.run(() {
+          return items.map((item) => processItem(item)).toList();
+        });
+      }
+
+      // ✅ 5. Use ListView.builder not ListView
+      // ✅ 6. Cache network images with CachedNetworkImage
+      // ✅ 7. Profile with DevTools Performance tab
+    severity: CRITICAL
+    docs_url: https://docs.flutter.dev/perf/best-practices
+
+  - id: flt016
+    name: Material 3 Updates
+    category: ui
+    version: "3.29+"
+    description: Latest Material 3 transitions and theming
+    text: material 3 theme transition page animation design
+    example: |
+      // ✅ FadeForwardsPageTransitionsBuilder - new default transition
+      MaterialApp(
+        theme: ThemeData(
+          useMaterial3: true,  // ✅ Material 3 (default in 3.27+)
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            brightness: Brightness.light,
+          ),
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+              TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            },
+          ),
+        ),
+      )
+
+      // ✅ Dynamic color (Android 12+)
+      import 'package:dynamic_color/dynamic_color.dart';
+
+      DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+          return MaterialApp(
+            theme: ThemeData(
+              colorScheme: lightDynamic ?? defaultLightColorScheme,
+            ),
+            darkTheme: ThemeData(
+              colorScheme: darkDynamic ?? defaultDarkColorScheme,
+            ),
+          );
+        },
+      )
+    severity: HIGH
+    docs_url: https://m3.material.io/develop/flutter

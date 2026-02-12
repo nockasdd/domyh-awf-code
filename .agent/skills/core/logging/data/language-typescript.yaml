@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_typescript
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-typescript.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: TS-001
+    category: winston
+    library: winston
+    name: createLogger
+    description: Create Winston logger
+    example: "const logger = winston.createLogger({ level: 'info' })"
+    when_to_use: Full-featured logging
+  - id: TS-002
+    category: winston
+    library: winston
+    name: transports.Console
+    description: Console transport
+    example: new winston.transports.Console()
+    when_to_use: Development output
+  - id: TS-003
+    category: winston
+    library: winston
+    name: transports.File
+    description: File transport
+    example: "new winston.transports.File({ filename: 'app.log' })"
+    when_to_use: File logging
+  - id: TS-004
+    category: winston
+    library: winston
+    name: format.json
+    description: JSON format
+    example: "format: winston.format.json()"
+    when_to_use: Structured logging
+  - id: TS-005
+    category: winston
+    library: winston
+    name: format.combine
+    description: Combine formats
+    example: format.combine(format.timestamp(), format.json())
+    when_to_use: Multiple formatters
+  - id: TS-006
+    category: winston
+    library: winston
+    name: format.printf
+    description: Custom format
+    example: "format.printf(({ level, message }) => `${level}: ${message}`)"
+    when_to_use: Custom output
+  - id: TS-007
+    category: winston
+    library: winston
+    name: Child Logger
+    description: Create child with metadata
+    example: "logger.child({ requestId: '123' })"
+    when_to_use: Request-scoped logging
+  - id: TS-008
+    category: winston
+    library: winston
+    name: Custom Levels
+    description: Define custom log levels
+    example: "levels: { error: 0, warn: 1, custom: 2 }"
+    when_to_use: Custom severity
+  - id: TS-009
+    category: winston
+    library: winston
+    name: Exception Handling
+    description: Log uncaught exceptions
+    example: "exceptionHandlers: [new transports.File({ filename: 'exceptions.log' })]"
+    when_to_use: Error capture
+  - id: TS-010
+    category: winston
+    library: winston
+    name: Rejection Handling
+    description: Log promise rejections
+    example: "rejectionHandlers: [new transports.File({ filename: 'rejections.log' })]"
+    when_to_use: Async error capture
+  - id: TS-011
+    category: pino
+    library: pino
+    name: pino()
+    description: Create Pino logger
+    example: "const logger = pino({ level: 'info' })"
+    when_to_use: Fastest JSON logging
+  - id: TS-012
+    category: pino
+    library: pino
+    name: Child Logger
+    description: Create child logger
+    example: "const child = logger.child({ requestId: '123' })"
+    when_to_use: Request-scoped logging
+  - id: TS-013
+    category: pino
+    library: pino
+    name: Serializers
+    description: Custom object serialization
+    example: "serializers: { req: pino.stdSerializers.req }"
+    when_to_use: Custom field handling
+  - id: TS-014
+    category: pino
+    library: pino
+    name: pino-pretty
+    description: Human-readable output
+    example: "transport: { target: 'pino-pretty' }"
+    when_to_use: Development logging
+  - id: TS-015
+    category: pino
+    library: pino
+    name: Async Mode
+    description: Async logging for performance
+    example: "const logger = pino(pino.destination({ sync: false }))"
+    when_to_use: High-throughput
+  - id: TS-016
+    category: pino
+    library: pino
+    name: Redact
+    description: Redact sensitive fields
+    example: "redact: ['password', 'creditCard']"
+    when_to_use: Security
+  - id: TS-017
+    category: pino
+    library: pino
+    name: Base Properties
+    description: Default fields for all logs
+    example: "base: { pid: process.pid, hostname: os.hostname() }"
+    when_to_use: Consistent metadata
+  - id: TS-018
+    category: pino
+    library: pino
+    name: Level Mapping
+    description: Map log levels
+    example: "customLevels: { trace: 5, debug: 10 }"
+    when_to_use: Custom levels
+  - id: TS-019
+    category: pino
+    library: pino
+    name: pino-http
+    description: HTTP request logging
+    example: app.use(pinoHttp({ logger }))
+    when_to_use: Express/Fastify middleware
+  - id: TS-020
+    category: pino
+    library: pino
+    name: Multistream
+    description: Multiple destinations
+    example: "pino.multistream([{ stream: process.stdout }, { stream: fileStream }])"
+    when_to_use: Multi-target logging
+  - id: TS-021
+    category: general
+    library: any
+    name: Error Wrapper
+    description: Structured error logging
+    example: logger.error({ err, requestId, userId }, 'Request failed')
+    when_to_use: Error handling
+  - id: TS-022
+    category: general
+    library: any
+    name: Request Middleware
+    description: Express logging middleware
+    example: app.use((req, res, next) => { req.logger = logger.child({ requestId }); next() })
+    when_to_use: Request tracing
+  - id: TS-023
+    category: general
+    library: any
+    name: Console Replacement
+    description: Replace console methods
+    example: console.log = (...args) => logger.info({ args }, 'console.log')
+    when_to_use: Legacy code migration
+  - id: TS-024
+    category: general
+    library: any
+    name: Browser Logging
+    description: Browser-compatible logging
+    example: if (typeof window !== 'undefined') { /* browser logger */ }
+    when_to_use: Isomorphic apps
+  - id: TS-025
+    category: general
+    library: any
+    name: Type-Safe Logging
+    description: TypeScript typed logger
+    example: "interface Logger { info(msg: string, meta?: Record<string, unknown>): void }"
+    when_to_use: Type safety

@@ -1,0 +1,326 @@
+# =============================================================================
+# Clojure Core Patterns (Feb 2026)
+# Version: Clojure 1.12
+# =============================================================================
+
+metadata:
+  skill: clojure
+  domain: core
+  version: "1.12"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: clj001
+    name: Immutable Data Structures
+    category: data
+    version: "Clojure"
+    description: |
+      Persistent immutable collections.
+      Vectors, maps, sets, sequences.
+    text: vector map set list immutable persistent
+    example: |
+      ;; ✅ Vectors (indexed access)
+      (def v [1 2 3 4 5])
+      (nth v 2)           ; => 3
+      (conj v 6)          ; => [1 2 3 4 5 6]
+      (assoc v 0 10)      ; => [10 2 3 4 5]
+      (subvec v 1 3)      ; => [2 3]
+
+      ;; ✅ Maps (key-value)
+      (def user {:name "John" :age 30 :email "john@email.com"})
+      (:name user)        ; => "John"
+      (get user :age)     ; => 30
+      (assoc user :role :admin)  ; => {:name "John", :age 30, :email "...", :role :admin}
+      (dissoc user :email)       ; => {:name "John", :age 30}
+      (update user :age inc)     ; => {:name "John", :age 31, ...}
+
+      ;; ✅ Nested updates
+      (def order {:user {:name "John"} :items [{:id 1} {:id 2}]})
+      (assoc-in order [:user :email] "john@email.com")
+      (update-in order [:items 0 :quantity] (fnil inc 0))
+      (get-in order [:user :name])  ; => "John"
+
+      ;; ✅ Sets
+      (def tags #{:clojure :functional :jvm})
+      (contains? tags :clojure)  ; => true
+      (conj tags :lisp)          ; => #{:clojure :functional :jvm :lisp}
+      (disj tags :jvm)           ; => #{:clojure :functional}
+
+      ;; ✅ Sequences (lazy)
+      (take 5 (range))           ; => (0 1 2 3 4)
+      (filter even? (range 10))  ; => (0 2 4 6 8)
+      (map inc [1 2 3])          ; => (2 3 4)
+
+      ;; ✅ Threading macros
+      (->> (range 100)
+           (filter even?)
+           (map #(* % %))
+           (take 5))
+      ; => (0 4 16 36 64)
+
+      (-> user
+          (assoc :role :admin)
+          (update :age inc)
+          (dissoc :email))
+    severity: HIGH
+    docs_url: https://clojure.org/reference/data_structures
+
+  - id: clj002
+    name: Functions and Closures
+    category: language
+    version: "Clojure"
+    description: |
+      First-class functions.
+      defn, fn, partial, comp.
+    text: defn fn partial comp lambda closure
+    example: |
+      ;; ✅ Named functions
+      (defn greet
+        "Greets a person by name"
+        [name]
+        (str "Hello, " name "!"))
+
+      ;; ✅ Multi-arity
+      (defn greet
+        ([name] (greet name "Hello"))
+        ([name greeting] (str greeting ", " name "!")))
+
+      (greet "John")           ; => "Hello, John!"
+      (greet "John" "Hi")      ; => "Hi, John!"
+
+      ;; ✅ Variadic
+      (defn sum [& nums]
+        (reduce + 0 nums))
+
+      (sum 1 2 3 4 5)  ; => 15
+
+      ;; ✅ Destructuring
+      (defn process-user [{:keys [name age email] :or {age 0}}]
+        (println name age email))
+
+      (defn first-two [[a b & rest]]
+        [a b])
+
+      ;; ✅ Anonymous functions
+      (fn [x] (* x x))
+      #(* % %)           ; Short form for single arg
+      #(+ %1 %2)         ; Multiple args
+
+      ;; ✅ Higher-order functions
+      (defn make-adder [n]
+        (fn [x] (+ x n)))
+
+      (def add-5 (make-adder 5))
+      (add-5 10)  ; => 15
+
+      ;; ✅ Partial application
+      (def add-10 (partial + 10))
+      (add-10 5)  ; => 15
+
+      ;; ✅ Function composition
+      (def process (comp str inc #(* % 2)))
+      (process 5)  ; => "11"
+
+      ;; ✅ Memoization
+      (def fib
+        (memoize
+          (fn [n]
+            (if (<= n 1)
+              n
+              (+ (fib (- n 1)) (fib (- n 2)))))))
+    severity: HIGH
+    docs_url: https://clojure.org/guides/learn/functions
+
+  - id: clj003
+    name: Concurrency Primitives
+    category: concurrency
+    version: "Clojure"
+    description: |
+      Software transactional memory.
+      Atoms, refs, agents.
+    text: atom ref agent swap dosync future promise
+    example: |
+      ;; ✅ Atoms (uncoordinated, synchronous)
+      (def counter (atom 0))
+
+      (swap! counter inc)        ; Modify with function
+      (reset! counter 0)         ; Set directly
+      @counter                   ; Dereference => 0
+
+      (swap! counter + 5)        ; Add 5
+      (compare-and-set! counter 0 10)  ; CAS operation
+
+      ;; ✅ Atom with validation
+      (def age (atom 0 :validator pos?))
+      (swap! age inc)    ; OK
+      (reset! age -1)    ; Throws exception
+
+      ;; ✅ Refs (coordinated, transactional)
+      (def account-a (ref 100))
+      (def account-b (ref 200))
+
+      (defn transfer [from to amount]
+        (dosync
+          (alter from - amount)
+          (alter to + amount)))
+
+      (transfer account-a account-b 50)
+      @account-a  ; => 50
+      @account-b  ; => 250
+
+      ;; ✅ Agents (uncoordinated, asynchronous)
+      (def logger (agent []))
+
+      (send logger conj "Event 1")
+      (send logger conj "Event 2")
+      (await logger)  ; Wait for completion
+      @logger        ; => ["Event 1" "Event 2"]
+
+      ;; ✅ Futures (async computation)
+      (def result (future (Thread/sleep 1000) 42))
+      @result  ; Blocks until complete => 42
+      (realized? result)  ; => true
+
+      ;; ✅ Promises (deliver later)
+      (def p (promise))
+      (future (Thread/sleep 1000) (deliver p "done"))
+      @p  ; Blocks until delivered => "done"
+
+      ;; ✅ core.async channels
+      (require '[clojure.core.async :as async])
+
+      (def ch (async/chan 10))
+      (async/put! ch "message")
+      (async/<!! ch)  ; => "message"
+
+      (async/go
+        (let [msg (async/<! ch)]
+          (println "Received:" msg)))
+    severity: HIGH
+    docs_url: https://clojure.org/reference/atoms
+
+  - id: clj004
+    name: Protocols and Records
+    category: types
+    version: "Clojure"
+    description: |
+      Polymorphism via protocols.
+      Records for typed entities.
+    text: defprotocol defrecord extend-type reify
+    example: |
+      ;; ✅ Define protocol
+      (defprotocol Drawable
+        "Protocol for drawable shapes"
+        (draw [this] "Draw the shape")
+        (area [this] "Calculate area"))
+
+      ;; ✅ Records implementing protocol
+      (defrecord Circle [radius]
+        Drawable
+        (draw [this] (str "Drawing circle with radius " radius))
+        (area [this] (* Math/PI radius radius)))
+
+      (defrecord Rectangle [width height]
+        Drawable
+        (draw [this] (str "Drawing " width "x" height " rectangle"))
+        (area [this] (* width height)))
+
+      ;; Usage
+      (def c (->Circle 5))
+      (draw c)  ; => "Drawing circle with radius 5"
+      (area c)  ; => 78.539...
+
+      ;; ✅ Extend existing types
+      (extend-type String
+        Drawable
+        (draw [this] (str "Drawing text: " this))
+        (area [this] 0))
+
+      (draw "Hello")  ; => "Drawing text: Hello"
+
+      ;; ✅ Record as data
+      (def rect (->Rectangle 10 20))
+      (:width rect)              ; => 10
+      (assoc rect :width 15)     ; => Rectangle{:width 15, :height 20}
+      (= rect (->Rectangle 10 20))  ; => true
+
+      ;; ✅ Multi-methods (dispatch on value)
+      (defmulti process-event :type)
+
+      (defmethod process-event :user/created [event]
+        (println "User created:" (:user event)))
+
+      (defmethod process-event :user/deleted [event]
+        (println "User deleted:" (:user-id event)))
+
+      (defmethod process-event :default [event]
+        (println "Unknown event:" event))
+
+      (process-event {:type :user/created :user {:name "John"}})
+    severity: MEDIUM
+    docs_url: https://clojure.org/reference/protocols
+
+  - id: clj005
+    name: Ring/Compojure Web
+    category: web
+    version: "Ring"
+    description: |
+      HTTP server patterns.
+      Ring handlers, Compojure routing.
+    text: ring compojure handler route middleware
+    example: |
+      (require '[ring.adapter.jetty :refer [run-jetty]]
+               '[ring.middleware.json :refer [wrap-json-body wrap-json-response]]
+               '[compojure.core :refer [defroutes GET POST PUT DELETE]]
+               '[compojure.route :as route])
+
+      ;; ✅ Ring handler (request -> response)
+      (defn hello-handler [request]
+        {:status 200
+         :headers {"Content-Type" "text/plain"}
+         :body "Hello, World!"})
+
+      ;; ✅ JSON responses
+      (defn get-user [id]
+        {:status 200
+         :body {:id (Integer/parseInt id)
+                :name "John"
+                :email "john@email.com"}})
+
+      ;; ✅ Compojure routes
+      (defroutes app-routes
+        (GET "/" [] "Welcome!")
+        (GET "/users" [] (list-users))
+        (GET "/users/:id" [id] (get-user id))
+        (POST "/users" {body :body} (create-user body))
+        (PUT "/users/:id" [id :as {body :body}] (update-user id body))
+        (DELETE "/users/:id" [id] (delete-user id))
+        (route/not-found "Not Found"))
+
+      ;; ✅ Middleware composition
+      (def app
+        (-> app-routes
+            (wrap-json-body {:keywords? true})
+            wrap-json-response
+            wrap-cors))
+
+      ;; ✅ Custom middleware
+      (defn wrap-logging [handler]
+        (fn [request]
+          (println (:request-method request) (:uri request))
+          (handler request)))
+
+      (defn wrap-auth [handler]
+        (fn [request]
+          (if-let [token (get-in request [:headers "authorization"])]
+            (if (valid-token? token)
+              (handler (assoc request :user (decode-token token)))
+              {:status 401 :body {:error "Invalid token"}})
+            {:status 401 :body {:error "No token"}})))
+
+      ;; ✅ Start server
+      (defn -main []
+        (run-jetty app {:port 3000 :join? false}))
+    severity: MEDIUM
+    docs_url: https://github.com/ring-clojure/ring

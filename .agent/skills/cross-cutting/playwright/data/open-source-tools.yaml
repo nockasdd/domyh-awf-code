@@ -1,0 +1,95 @@
+# =============================================================================
+# open-source-tools.yaml — Browser Automation Ecosystem Reference
+# =============================================================================
+
+version: "1.0.0"
+
+tools:
+  - name: "Playwright MCP"
+    url: "https://github.com/microsoft/playwright-mcp"
+    stars: "14k+"
+    approach: "Accessibility snapshots for LLM interaction"
+    key_feature: "Official Microsoft — 19 MCP tools, structured page state"
+    language: "TypeScript"
+    use_when: "AI agent needs to interact with browser via structured data"
+    integration: "Built-in MCP server, works with Claude, Cursor, Antigravity"
+
+  - name: "Stagehand"
+    url: "https://github.com/browserbase/stagehand"
+    stars: "12k+"
+    approach: "Hybrid code + natural language automation"
+    key_feature: "v3: modular driver (Puppeteer/CDP), AI-first automation"
+    language: "TypeScript"
+    use_when: "Need flexibility between explicit code and NL commands"
+    integration: "Browserbase cloud, session replay, CAPTCHA solving"
+
+  - name: "Browser-Use"
+    url: "https://github.com/browser-use/browser-use"
+    stars: "10k+"
+    approach: "Multi-LLM browser agent framework"
+    key_feature: "Foundation for many agentic projects, supports multiple LLMs"
+    language: "Python"
+    use_when: "Building custom AI browser agent with different LLM backends"
+    integration: "Puppeteer/Playwright compatible"
+
+  - name: "Midscene.js"
+    url: "https://github.com/anthropics/midscene"
+    stars: "5k+"
+    approach: "Visual AI + natural language UI testing"
+    key_feature: "Visual debugging tools, AI-powered test creation"
+    language: "TypeScript"
+    use_when: "Complex UI testing with visual AI understanding"
+    integration: "Works with Puppeteer and Playwright"
+
+  - name: "Shortest"
+    url: "https://github.com/shortest-inc/shortest"
+    stars: "4k+"
+    approach: "NL-based E2E testing framework"
+    key_feature: "Natural language test descriptions, Anthropic Claude powered"
+    language: "TypeScript"
+    use_when: "Writing tests in plain English, rapid test creation"
+    integration: "Built on Playwright, Anthropic Claude API"
+
+  - name: "TestDriver.ai"
+    url: "https://github.com/testdriverai/testdriver"
+    stars: "3k+"
+    approach: "Autonomous AI QA agent"
+    key_feature: "AI vision + OS-level emulation, web + desktop"
+    language: "TypeScript"
+    use_when: "Need to test desktop apps alongside web, human-like testing"
+    integration: "OS-level clicks, GitHub Actions support"
+
+  - name: "Skyvern"
+    url: "https://github.com/Skyvern-AI/skyvern"
+    stars: "2k+"
+    approach: "No-code + LLM + computer vision"
+    key_feature: "Adapts to website changes via NL commands"
+    language: "Python"
+    use_when: "Automating workflows on third-party websites"
+    integration: "REST API, cloud deployment"
+
+  - name: "BrowserOS"
+    url: "https://github.com/nicholasgasior/browseros"
+    stars: "1k+"
+    approach: "AI-native agentic browser"
+    key_feature: "Privacy-first, local AI via Ollama"
+    language: "TypeScript"
+    use_when: "Need local/private AI-powered browser automation"
+    integration: "Ollama for local LLM, privacy controls"
+
+accessibility_tools:
+  - name: "axe-core"
+    url: "https://github.com/dequelabs/axe-core"
+    purpose: "WCAG 2.0/2.1/2.2 compliance scanning"
+    integration: "npm install @axe-core/playwright"
+    usage: |
+      import AxeBuilder from '@axe-core/playwright';
+      const results = await new AxeBuilder({ page }).analyze();
+      expect(results.violations).toEqual([]);
+
+  - name: "mcp-accessibility-scanner"
+    url: "https://github.com/nicholasgasior/mcp-accessibility-scanner"
+    purpose: "MCP server for automated accessibility audits"
+    integration: "MCP server + axe-core + Playwright"
+
+# _DOMYH Awesome Code • Browser Automation Ecosystem v1.0.0_

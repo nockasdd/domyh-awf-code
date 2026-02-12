@@ -1,0 +1,415 @@
+# =============================================================================
+# Ruby Rails Patterns (Feb 2026)
+# Version: Rails 8
+# =============================================================================
+
+metadata:
+  skill: ruby
+  domain: rails
+  version: "8"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rb101
+    name: Rails Models
+    category: data
+    version: "Rails8"
+    description: |
+      ActiveRecord patterns.
+      Associations, validations, callbacks.
+    text: activerecord model association validation callback
+    example: |
+      # ✅ Model with associations
+      class User < ApplicationRecord
+        # Associations
+        has_many :orders, dependent: :destroy
+        has_many :products, through: :orders
+        has_one :profile, dependent: :destroy
+        belongs_to :team, optional: true
+        
+        # Validations
+        validates :email, presence: true, uniqueness: true,
+                          format: { with: URI::MailTo::EMAIL_REGEXP }
+        validates :name, presence: true, length: { minimum: 2, maximum: 100 }
+        validates :password, length: { minimum: 8 }, if: :password_required?
+        
+        # Callbacks
+        before_save :normalize_email
+        after_create :send_welcome_email
+        after_commit :sync_to_search_index, on: [:create, :update]
+        
+        # Scopes
+        scope :active, -> { where(active: true) }
+        scope :admins, -> { where(role: 'admin') }
+        scope :created_after, ->(date) { where('created_at > ?', date) }
+        scope :search, ->(term) { where('name ILIKE ?', "%#{term}%") }
+        
+        # Enum
+        enum :status, { pending: 0, active: 1, suspended: 2 }, prefix: true
+        
+        # Encrypted attribute (Rails 7+)
+        encrypts :api_key
+        
+        private
+        
+        def normalize_email
+          self.email = email.downcase.strip
+        end
+        
+        def send_welcome_email
+          UserMailer.welcome(self).deliver_later
+        end
+        
+        def password_required?
+          new_record? || password.present?
+        end
+      end
+
+      # ✅ Query usage
+      User.active
+          .search('john')
+          .created_after(1.month.ago)
+          .includes(:orders)
+          .order(created_at: :desc)
+          .page(params[:page])
+    severity: HIGH
+    docs_url: https://guides.rubyonrails.org/active_record_basics.html
+
+  - id: rb102
+    name: Rails Controllers
+    category: web
+    version: "Rails8"
+    description: |
+      Request handling patterns.
+      Strong params, before_action, respond_to.
+    text: controller action params before_action respond_to
+    example: |
+      # ✅ RESTful controller
+      class UsersController < ApplicationController
+        before_action :authenticate_user!
+        before_action :set_user, only: [:show, :edit, :update, :destroy]
+        
+        def index
+          @users = User.active
+                       .includes(:orders)
+                       .order(created_at: :desc)
+                       .page(params[:page])
+          
+          respond_to do |format|
+            format.html
+            format.json { render json: UserSerializer.new(@users) }
+          end
+        end
+        
+        def show
+          respond_to do |format|
+            format.html
+            format.json { render json: UserSerializer.new(@user) }
+          end
+        end
+        
+        def create
+          @user = User.new(user_params)
+          
+          if @user.save
+            respond_to do |format|
+              format.html { redirect_to @user, notice: 'User created.' }
+              format.json { render json: @user, status: :created }
+            end
+          else
+            respond_to do |format|
+              format.html { render :new, status: :unprocessable_entity }
+              format.json { render json: @user.errors, status: :unprocessable_entity }
+            end
+          end
+        end
+        
+        def update
+          if @user.update(user_params)
+            redirect_to @user, notice: 'User updated.'
+          else
+            render :edit, status: :unprocessable_entity
+          end
+        end
+        
+        def destroy
+          @user.destroy
+          redirect_to users_url, notice: 'User deleted.', status: :see_other
+        end
+        
+        private
+        
+        def set_user
+          @user = User.find(params[:id])
+        end
+        
+        def user_params
+          params.require(:user).permit(:name, :email, :role, :active)
+        end
+      end
+
+      # ✅ API controller
+      class Api::V1::UsersController < Api::BaseController
+        skip_before_action :verify_authenticity_token
+        before_action :authenticate_api_token!
+        
+        def index
+          users = User.active.limit(params[:limit] || 20)
+          render json: { data: users, meta: { total: User.active.count } }
+        end
+      end
+    severity: HIGH
+    docs_url: https://guides.rubyonrails.org/action_controller_overview.html
+
+  - id: rb103
+    name: Hotwire (Turbo + Stimulus)
+    category: ui
+    version: "Rails8"
+    description: |
+      Modern Rails frontend.
+      Turbo Frames, Turbo Streams, Stimulus.
+    text: hotwire turbo stimulus frame stream broadcast
+    example: |
+      # ✅ Turbo Frame - erb template
+      # app/views/users/index.html.erb
+      <%= turbo_frame_tag "users" do %>
+        <% @users.each do |user| %>
+          <%= render user %>
+        <% end %>
+        
+        <%= link_to "Load more", users_path(page: @page + 1),
+                    data: { turbo_frame: "users" } %>
+      <% end %>
+
+      # ✅ Turbo Stream response
+      # app/controllers/users_controller.rb
+      def create
+        @user = User.create(user_params)
+        
+        respond_to do |format|
+          format.turbo_stream
+          format.html { redirect_to users_path }
+        end
+      end
+
+      # app/views/users/create.turbo_stream.erb
+      <%= turbo_stream.prepend "users", @user %>
+      <%= turbo_stream.update "user_count", User.count %>
+
+      # ✅ Broadcast from model
+      class Message < ApplicationRecord
+        after_create_commit do
+          broadcast_append_to "messages",
+            target: "messages",
+            partial: "messages/message"
+        end
+        
+        after_destroy_commit do
+          broadcast_remove_to "messages"
+        end
+      end
+
+      # ✅ Stimulus controller
+      # app/javascript/controllers/toggle_controller.js
+      import { Controller } from "@hotwired/stimulus"
+
+      export default class extends Controller {
+        static targets = ["content"]
+        static values = { open: Boolean }
+        
+        toggle() {
+          this.openValue = !this.openValue
+        }
+        
+        openValueChanged() {
+          this.contentTarget.classList.toggle("hidden", !this.openValue)
+        }
+      }
+
+      # Usage in view
+      <div data-controller="toggle" data-toggle-open-value="false">
+        <button data-action="click->toggle#toggle">Toggle</button>
+        <div data-toggle-target="content" class="hidden">
+          Content here
+        </div>
+      </div>
+    severity: MEDIUM
+    docs_url: https://turbo.hotwired.dev/
+
+  - id: rb104
+    name: Rails Jobs
+    category: async
+    version: "Rails8"
+    description: |
+      Background job processing.
+      ActiveJob, Sidekiq integration.
+    text: activejob sidekiq background queue perform
+    example: |
+      # ✅ Job class
+      class ProcessOrderJob < ApplicationJob
+        queue_as :orders
+        retry_on StandardError, wait: :exponentially_longer, attempts: 3
+        discard_on ActiveRecord::RecordNotFound
+        
+        def perform(order)
+          order.process!
+          
+          OrderMailer.confirmation(order).deliver_later
+          
+          InventoryService.new(order).update_stock
+        end
+      end
+
+      # ✅ Enqueueing jobs
+      ProcessOrderJob.perform_later(order)
+
+      # With delay
+      ProcessOrderJob.set(wait: 5.minutes).perform_later(order)
+
+      # At specific time
+      ProcessOrderJob.set(wait_until: Date.tomorrow.noon).perform_later(order)
+
+      # On specific queue
+      ProcessOrderJob.set(queue: :high_priority).perform_later(order)
+
+      # ✅ Mailer with job
+      class OrderMailer < ApplicationMailer
+        def confirmation(order)
+          @order = order
+          mail(to: order.user.email, subject: 'Order Confirmed')
+        end
+      end
+
+      # Async delivery
+      OrderMailer.confirmation(order).deliver_later
+
+      # ✅ Periodic jobs with good_job
+      class DailyReportJob < ApplicationJob
+        include GoodJob::ActiveJobExtensions::Concurrency
+        
+        good_job_control_concurrency_with(
+          total_limit: 1,
+          key: -> { "daily_report_#{Date.current}" }
+        )
+        
+        def perform
+          ReportService.generate_daily
+        end
+      end
+
+      # ✅ Batch processing
+      class ImportUsersJob < ApplicationJob
+        def perform(users_batch)
+          users_batch.each do |user_data|
+            User.create!(user_data)
+          end
+        end
+      end
+
+      # Enqueue batches
+      users.each_slice(100) do |batch|
+        ImportUsersJob.perform_later(batch)
+      end
+    severity: MEDIUM
+    docs_url: https://guides.rubyonrails.org/active_job_basics.html
+
+  - id: rb105
+    name: Rails Testing
+    category: testing
+    version: "Rails8"
+    description: |
+      Testing with RSpec.
+      Factories, system tests, mocking.
+    text: rspec test factory system request spec
+    example: |
+      # ✅ Model spec
+      RSpec.describe User, type: :model do
+        describe 'validations' do
+          it { is_expected.to validate_presence_of(:email) }
+          it { is_expected.to validate_uniqueness_of(:email) }
+          it { is_expected.to validate_length_of(:name).is_at_least(2) }
+        end
+        
+        describe 'associations' do
+          it { is_expected.to have_many(:orders).dependent(:destroy) }
+          it { is_expected.to belong_to(:team).optional }
+        end
+        
+        describe '#full_name' do
+          let(:user) { build(:user, first_name: 'John', last_name: 'Doe') }
+          
+          it 'returns the full name' do
+            expect(user.full_name).to eq('John Doe')
+          end
+        end
+      end
+
+      # ✅ Request spec
+      RSpec.describe 'Users API', type: :request do
+        let(:user) { create(:user) }
+        let(:headers) { { 'Authorization' => "Bearer #{user.api_token}" } }
+        
+        describe 'GET /api/users' do
+          before { create_list(:user, 3) }
+          
+          it 'returns all users' do
+            get '/api/users', headers: headers
+            
+            expect(response).to have_http_status(:ok)
+            expect(json_response['data'].size).to eq(4)
+          end
+        end
+        
+        describe 'POST /api/users' do
+          let(:valid_params) { { user: attributes_for(:user) } }
+          
+          it 'creates a new user' do
+            expect {
+              post '/api/users', params: valid_params, headers: headers
+            }.to change(User, :count).by(1)
+            
+            expect(response).to have_http_status(:created)
+          end
+        end
+      end
+
+      # ✅ Factory
+      FactoryBot.define do
+        factory :user do
+          sequence(:email) { |n| "user#{n}@example.com" }
+          name { Faker::Name.name }
+          password { 'password123' }
+          active { true }
+          
+          trait :admin do
+            role { 'admin' }
+          end
+          
+          trait :with_orders do
+            after(:create) do |user|
+              create_list(:order, 3, user: user)
+            end
+          end
+        end
+      end
+
+      # ✅ System spec
+      RSpec.describe 'User Management', type: :system do
+        let(:admin) { create(:user, :admin) }
+        
+        before { sign_in admin }
+        
+        it 'creates a new user' do
+          visit new_user_path
+          
+          fill_in 'Name', with: 'Jane Doe'
+          fill_in 'Email', with: 'jane@example.com'
+          click_button 'Create User'
+          
+          expect(page).to have_content('User created successfully')
+          expect(page).to have_content('Jane Doe')
+        end
+      end
+    severity: MEDIUM
+    docs_url: https://rspec.info/documentation/

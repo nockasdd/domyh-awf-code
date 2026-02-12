@@ -1,12 +1,12 @@
 ---
 name: swift
 detect: ["Package.swift", "*.swift", "*.xcodeproj", "*.xcworkspace"]
-version: "6.1.2"
+version: "6.2.1"
 category: mobile
 tier: 1
 ---
 
-# Swift Patterns — DOMYH Awesome Code v6.1.2
+# Swift Patterns — DOMYH Awesome Code
 
 > **Version**: Swift 6/6.1 (2025-2026)
 > **Frameworks**: SwiftUI, UIKit
@@ -339,4 +339,4 @@ func fetchUser(id: Int) async throws(NetworkError) -> User {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Swift 6/6.1_
+_DOMYH Awesome Code • Swift 6/6.1_

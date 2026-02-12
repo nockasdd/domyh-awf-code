@@ -1,0 +1,362 @@
+# =============================================================================
+# C# Core Patterns (Feb 2026)
+# Version: C# 12/13/.NET 9
+# =============================================================================
+
+metadata:
+  skill: csharp
+  domain: core
+  version: "13"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: cs001
+    name: Async/Await
+    category: concurrency
+    version: "C#"
+    description: |
+      Asynchronous programming patterns.
+      Task, ValueTask, async streams.
+    text: async await task valuetask configureawait cancellation
+    example: |
+      // ✅ Basic async method
+      public async Task<User> GetUserAsync(int id, CancellationToken ct = default)
+      {
+          var response = await _httpClient.GetAsync($"/users/{id}", ct);
+          response.EnsureSuccessStatusCode();
+          return await response.Content.ReadFromJsonAsync<User>(ct);
+      }
+
+      // ✅ ValueTask for hot paths
+      public ValueTask<int> GetCachedValueAsync(string key)
+      {
+          if (_cache.TryGetValue(key, out var value))
+              return ValueTask.FromResult(value);  // No allocation
+          
+          return new ValueTask<int>(FetchValueAsync(key));
+      }
+
+      // ✅ Parallel async operations
+      public async Task<(User, Order, Settings)> LoadDashboardAsync()
+      {
+          var userTask = GetUserAsync();
+          var orderTask = GetLatestOrderAsync();
+          var settingsTask = GetSettingsAsync();
+          
+          await Task.WhenAll(userTask, orderTask, settingsTask);
+          
+          return (await userTask, await orderTask, await settingsTask);
+      }
+
+      // ✅ Async streams (IAsyncEnumerable)
+      public async IAsyncEnumerable<Item> StreamItemsAsync(
+          [EnumeratorCancellation] CancellationToken ct = default)
+      {
+          await foreach (var page in FetchPagesAsync().WithCancellation(ct))
+          {
+              foreach (var item in page.Items)
+              {
+                  yield return item;
+              }
+          }
+      }
+
+      // Consume async stream
+      await foreach (var item in StreamItemsAsync(ct))
+      {
+          Console.WriteLine(item.Name);
+      }
+
+      // ✅ Cancellation pattern
+      using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+      try
+      {
+          await LongRunningOperationAsync(cts.Token);
+      }
+      catch (OperationCanceledException)
+      {
+          Console.WriteLine("Operation was cancelled");
+      }
+
+      // ✅ ConfigureAwait in libraries
+      public async Task<Data> FetchDataAsync()
+      {
+          var data = await _service.GetAsync().ConfigureAwait(false);
+          return Process(data);
+      }
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/
+
+  - id: cs002
+    name: Records and Primary Constructors
+    category: types
+    version: "C#12"
+    description: |
+      Immutable data types with records.
+      Primary constructors for classes.
+    text: record struct primary constructor immutable with
+    example: |
+      // ✅ Record class (reference type)
+      public record User(string Name, string Email);
+
+      var user = new User("John", "john@email.com");
+      var updated = user with { Email = "new@email.com" };  // Non-destructive mutation
+
+      // ✅ Record struct (value type)
+      public readonly record struct Point(int X, int Y);
+
+      // ✅ Record with additional members
+      public record Person(string FirstName, string LastName)
+      {
+          public string FullName => $"{FirstName} {LastName}";
+          
+          public void Deconstruct(out string first, out string last)
+              => (first, last) = (FirstName, LastName);
+      }
+
+      // ✅ Primary constructor (C# 12)
+      public class UserService(IUserRepository repository, ILogger<UserService> logger)
+      {
+          public async Task<User?> GetUserAsync(int id)
+          {
+              logger.LogInformation("Getting user {Id}", id);
+              return await repository.FindByIdAsync(id);
+          }
+      }
+
+      // ✅ Primary constructor with field capture
+      public class Counter(int initialValue)
+      {
+          private int _value = initialValue;  // Captured as field
+          
+          public int Increment() => ++_value;
+          public int Current => _value;
+      }
+
+      // ✅ Inheritance with records
+      public abstract record Shape;
+      public record Circle(double Radius) : Shape;
+      public record Rectangle(double Width, double Height) : Shape;
+
+      double Area(Shape shape) => shape switch
+      {
+          Circle c => Math.PI * c.Radius * c.Radius,
+          Rectangle r => r.Width * r.Height,
+          _ => 0
+      };
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12
+
+  - id: cs003
+    name: Pattern Matching
+    category: types
+    version: "C#12"
+    description: |
+      Advanced pattern matching.
+      Switch expressions, property patterns, list patterns.
+    text: pattern switch is when property list relational
+    example: |
+      // ✅ Switch expression
+      string GetStatus(int code) => code switch
+      {
+          200 => "OK",
+          201 => "Created",
+          400 => "Bad Request",
+          401 => "Unauthorized",
+          404 => "Not Found",
+          >= 500 and < 600 => "Server Error",
+          _ => "Unknown"
+      };
+
+      // ✅ Property patterns
+      bool IsValidUser(User user) => user is
+      {
+          Name: { Length: > 0 },
+          Email: { Length: > 0 } email
+      } && email.Contains('@');
+
+      // ✅ Type patterns with when
+      string Describe(object obj) => obj switch
+      {
+          int n when n < 0 => "Negative integer",
+          int n when n > 0 => "Positive integer",
+          int => "Zero",
+          string { Length: 0 } => "Empty string",
+          string s => $"String: {s}",
+          null => "Null value",
+          _ => obj.GetType().Name
+      };
+
+      // ✅ List patterns (C# 11+)
+      string DescribeList(int[] numbers) => numbers switch
+      {
+          [] => "Empty",
+          [var single] => $"Single: {single}",
+          [var first, var second] => $"Pair: {first}, {second}",
+          [var first, .., var last] => $"First: {first}, Last: {last}",
+          [_, _, _, ..] => "Three or more elements"
+      };
+
+      // ✅ Relational patterns
+      string GetGrade(double score) => score switch
+      {
+          >= 90 => "A",
+          >= 80 and < 90 => "B",
+          >= 70 and < 80 => "C",
+          >= 60 and < 70 => "D",
+          < 60 => "F"
+      };
+
+      // ✅ Extended property patterns
+      bool IsLocalAddress(Uri uri) => uri is
+      {
+          Scheme: "http" or "https",
+          Host: "localhost" or "127.0.0.1",
+          Port: 80 or 443 or (>= 3000 and <= 9999)
+      };
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/pattern-matching
+
+  - id: cs004
+    name: LINQ
+    category: data
+    version: "C#"
+    description: |
+      Language Integrated Query patterns.
+      Query syntax, method syntax, custom operators.
+    text: linq select where orderby groupby aggregate
+    example: |
+      // ✅ Basic LINQ queries
+      var adults = users
+          .Where(u => u.Age >= 18)
+          .OrderBy(u => u.Name)
+          .Select(u => new { u.Name, u.Email })
+          .ToList();
+
+      // ✅ Query syntax
+      var query = from u in users
+                  where u.IsActive
+                  orderby u.CreatedAt descending
+                  select u;
+
+      // ✅ Grouping
+      var byCity = users
+          .GroupBy(u => u.City)
+          .Select(g => new { City = g.Key, Count = g.Count() });
+
+      // ✅ Joins
+      var orders = from o in orderList
+                   join c in customers on o.CustomerId equals c.Id
+                   select new { o.OrderId, c.CustomerName, o.Total };
+
+      // ✅ Aggregations
+      var stats = new
+      {
+          Total = orders.Sum(o => o.Amount),
+          Average = orders.Average(o => o.Amount),
+          Max = orders.Max(o => o.Amount),
+          Count = orders.Count(o => o.IsPaid)
+      };
+
+      // ✅ First/Single with defaults
+      var user = users.FirstOrDefault(u => u.Id == id);
+      var onlyAdmin = users.SingleOrDefault(u => u.Role == "Admin");
+
+      // ✅ Chunk (batching)
+      var batches = items.Chunk(100);
+      foreach (var batch in batches)
+      {
+          await ProcessBatchAsync(batch);
+      }
+
+      // ✅ DistinctBy, IntersectBy, ExceptBy
+      var uniqueByEmail = users.DistinctBy(u => u.Email);
+
+      // ✅ Async LINQ with EF Core
+      var result = await dbContext.Users
+          .Where(u => u.IsActive)
+          .OrderBy(u => u.Name)
+          .Take(10)
+          .ToListAsync(cancellationToken);
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/dotnet/csharp/linq/
+
+  - id: cs005
+    name: Nullable Reference Types
+    category: safety
+    version: "C#"
+    description: |
+      Compile-time null safety.
+      Null-forgiving, null-coalescing.
+    text: nullable null safety warning annotations
+    example: |
+      // ✅ Enable in project
+      // <Nullable>enable</Nullable>
+
+      // ✅ Non-nullable by default
+      public class User
+      {
+          public string Name { get; set; }      // Cannot be null
+          public string? Email { get; set; }    // Can be null
+          public Address Address { get; set; }  // Cannot be null
+      }
+
+      // ✅ Null checks with pattern matching
+      if (user is { Email: not null } u)
+      {
+          SendEmail(u.Email);  // Email is known non-null here
+      }
+
+      // ✅ Null-coalescing operators
+      string name = user.Name ?? "Unknown";
+      user.Email ??= "default@email.com";  // Assign if null
+
+      // ✅ Null-conditional operator
+      int? length = user?.Name?.Length;
+
+      // ✅ Required members (C# 11)
+      public class Person
+      {
+          public required string Name { get; init; }
+          public required string Email { get; init; }
+      }
+
+      var person = new Person { Name = "John", Email = "john@email.com" };
+
+      // ✅ Null-forgiving operator (use sparingly!)
+      string value = possiblyNull!;  // Tell compiler "trust me"
+
+      // ✅ MemberNotNull attribute
+      public class Service
+      {
+          private ILogger? _logger;
+          
+          [MemberNotNull(nameof(_logger))]
+          private void EnsureInitialized()
+          {
+              _logger ??= CreateLogger();
+          }
+          
+          public void Log(string message)
+          {
+              EnsureInitialized();
+              _logger.LogInformation(message);  // No warning
+          }
+      }
+
+      // ✅ NotNullWhen attribute
+      public static bool TryParse(
+          string? input,
+          [NotNullWhen(true)] out User? user)
+      {
+          if (string.IsNullOrEmpty(input))
+          {
+              user = null;
+              return false;
+          }
+          user = Parse(input);
+          return true;
+      }
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references

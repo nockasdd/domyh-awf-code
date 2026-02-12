@@ -1,4 +1,4 @@
-# Ruby Advanced Patterns — DOMYH Awesome Code v6.1.2
+# Ruby Advanced Patterns — DOMYH Awesome Code
 
 > Deep dive into Ruby 3.3/3.4 advanced patterns
 
@@ -378,4 +378,4 @@ end
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Ruby Advanced Patterns_
+_DOMYH Awesome Code • Ruby Advanced Patterns_

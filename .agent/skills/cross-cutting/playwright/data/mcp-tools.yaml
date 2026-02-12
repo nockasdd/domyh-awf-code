@@ -1,0 +1,153 @@
+# =============================================================================
+# mcp-tools.yaml — Playwright MCP Tool Reference (19 tools)
+# =============================================================================
+
+version: "1.0.0"
+
+navigation:
+  - name: browser_navigate
+    args: { url: "string (required)" }
+    purpose: "Navigate to URL"
+    when: "Opening a page, following a link"
+    example: 'browser_navigate(url="http://localhost:3000/dashboard")'
+
+  - name: browser_navigate_back
+    args: {}
+    purpose: "Go back in history"
+    when: "Testing back navigation, breadcrumb flows"
+    example: "browser_navigate_back()"
+
+  - name: browser_close
+    args: {}
+    purpose: "Close browser/tab"
+    when: "Cleanup after testing, closing popup windows"
+    example: "browser_close()"
+
+  - name: browser_resize
+    args: { width: "number", height: "number" }
+    purpose: "Change viewport size"
+    when: "Testing responsive design, mobile views"
+    example: "browser_resize(width=375, height=812)  # iPhone"
+
+  - name: browser_tabs
+    args: { action: "list|new|close|select", index: "number (optional)" }
+    purpose: "Manage browser tabs"
+    when: "Multi-tab testing, popup handling"
+    example: 'browser_tabs(action="list")'
+
+interaction:
+  - name: browser_click
+    args: { ref: "string", element: "string (description)" }
+    purpose: "Click element"
+    when: "Button clicks, link navigation, tab switching, accordion toggle"
+    critical_for: ["button", "link", "tab", "accordion", "modal trigger"]
+    example: 'browser_click(ref="submit-btn", element="Submit button")'
+
+  - name: browser_type
+    args: { ref: "string", text: "string", submit: "boolean" }
+    purpose: "Type text into element"
+    when: "Form input, search fields, text areas"
+    critical_for: ["input", "textarea", "search"]
+    example: 'browser_type(ref="email-input", text="user@test.com")'
+
+  - name: browser_press_key
+    args: { key: "string" }
+    purpose: "Press keyboard key"
+    when: "Escape to close modal, Enter to submit, Tab to navigate"
+    critical_for: ["modal close", "form submit", "keyboard navigation"]
+    example: 'browser_press_key(key="Escape")  # Close modal'
+
+  - name: browser_hover
+    args: { ref: "string", element: "string" }
+    purpose: "Hover over element"
+    when: "Tooltip display, dropdown menu trigger, hover state change"
+    critical_for: ["tooltip", "dropdown menu", "hover state"]
+    example: 'browser_hover(ref="user-avatar", element="User avatar with tooltip")'
+
+  - name: browser_select_option
+    args: { ref: "string", values: "string[]" }
+    purpose: "Select dropdown option"
+    when: "Native <select> dropdown selection"
+    critical_for: ["dropdown", "select"]
+    example: 'browser_select_option(ref="country-select", values=["vietnam"])'
+
+  - name: browser_drag
+    args: { startRef: "string", endRef: "string" }
+    purpose: "Drag and drop"
+    when: "Reorder items, drag-to-upload, kanban boards"
+    critical_for: ["drag-drop", "reorder", "kanban"]
+    example: 'browser_drag(startRef="task-1", endRef="done-column")'
+
+  - name: browser_file_upload
+    args: { paths: "string[]" }
+    purpose: "Upload files"
+    when: "File input, avatar upload, document attachment"
+    critical_for: ["file input", "upload"]
+    example: 'browser_file_upload(paths=["/tmp/test.png"])'
+
+  - name: browser_handle_dialog
+    args: { accept: "boolean", promptText: "string (optional)" }
+    purpose: "Handle browser dialogs"
+    when: "Alert, confirm, prompt dialogs"
+    critical_for: ["alert", "confirm", "prompt"]
+    example: "browser_handle_dialog(accept=true)"
+
+  - name: browser_fill_form
+    args: { fields: "array of {ref, type, value}" }
+    purpose: "Fill multiple form fields at once"
+    when: "Complex forms with many fields"
+    critical_for: ["form", "registration", "checkout"]
+    example: |
+      browser_fill_form(fields=[
+        { ref: "name", type: "textbox", value: "John" },
+        { ref: "agree", type: "checkbox", value: "true" }
+      ])
+
+observation:
+  - name: browser_snapshot
+    args: {}
+    purpose: "Capture accessibility tree (structured page state)"
+    when: "ALWAYS FIRST — understand page structure before interaction"
+    critical_for: ["page understanding", "element discovery", "LLM context"]
+    note: "PREFERRED over screenshot for LLM — structured, fast, lightweight"
+    example: "browser_snapshot()  # Returns accessibility tree with refs"
+
+  - name: browser_take_screenshot
+    args: { type: "png|jpeg", fullPage: "boolean", ref: "string (optional)" }
+    purpose: "Capture visual screenshot"
+    when: "Visual verification, debugging, evidence collection"
+    critical_for: ["visual verification", "bug evidence", "reporting"]
+    example: 'browser_take_screenshot(type="png", fullPage=true)'
+
+  - name: browser_evaluate
+    args: { function: "string (JS code)" }
+    purpose: "Execute JavaScript in page context"
+    when: "Check CSS computed styles, DOM state, local storage"
+    critical_for: ["DOM inspection", "CSS validation", "state check"]
+    example: |
+      browser_evaluate(function="() => {
+        return document.querySelector('.modal').style.display;
+      }")
+
+  - name: browser_console_messages
+    args: { level: "error|warning|info|debug" }
+    purpose: "Read browser console messages"
+    when: "Error detection, warning check, debugging"
+    critical_for: ["error detection", "warning check"]
+    example: 'browser_console_messages(level="error")'
+
+  - name: browser_network_requests
+    args: { includeStatic: "boolean" }
+    purpose: "List network requests"
+    when: "API call verification, failed request detection"
+    critical_for: ["API verification", "404 detection", "CORS check"]
+    example: "browser_network_requests(includeStatic=false)"
+
+# Usage Strategy
+strategy:
+  always_first: "browser_snapshot — understand page before interacting"
+  for_interaction: "browser_click → browser_snapshot — verify state change"
+  for_debugging: "browser_console_messages + browser_network_requests"
+  for_evidence: "browser_take_screenshot — capture visual proof"
+
+# _DOMYH Awesome Code • Playwright MCP Tools Reference v1.0.0_

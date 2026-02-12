@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_go
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-go.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: GO-001
+    name: OpenTelemetry SDK
+    category: Go
+    description: Initialize OTel in Go
+    example: otel.SetTracerProvider(tp)
+    library: opentelemetry-go
+  - id: GO-002
+    name: TracerProvider Setup
+    category: Go
+    description: Configure tracer with exporter
+    example: sdktrace.NewTracerProvider()
+    library: opentelemetry-go
+  - id: GO-003
+    name: MeterProvider Setup
+    category: Go
+    description: Configure metrics provider
+    example: sdkmetric.NewMeterProvider()
+    library: opentelemetry-go
+  - id: GO-004
+    name: OTLP Exporter
+    category: Go
+    description: Export via OTLP protocol
+    example: otlptrace.New(ctx, otlptracegrpc.NewClient())
+    library: opentelemetry-go
+  - id: GO-005
+    name: Context Propagation
+    category: Go
+    description: Pass context through calls
+    example: ctx = otel.GetTextMapPropagator().Extract(ctx, carrier)
+    library: opentelemetry-go
+  - id: GO-006
+    name: pprof CPU Profile
+    category: Go
+    description: Profile CPU usage
+    example: import _ 'net/http/pprof'
+    library: pprof
+  - id: GO-007
+    name: pprof Memory Profile
+    category: Go
+    description: Profile heap allocations
+    example: pprof.WriteHeapProfile(f)
+    library: pprof
+  - id: GO-008
+    name: pprof Block Profile
+    category: Go
+    description: Profile goroutine blocking
+    example: runtime.SetBlockProfileRate(1)
+    library: pprof
+  - id: GO-009
+    name: pprof Goroutine
+    category: Go
+    description: List active goroutines
+    example: pprof.Lookup('goroutine').WriteTo(w, 1)
+    library: pprof
+  - id: GO-010
+    name: Prometheus Client
+    category: Go
+    description: Create metrics
+    example: promauto.NewCounter(prometheus.CounterOpts{})
+    library: prometheus-go
+  - id: GO-011
+    name: Prometheus HTTP
+    category: Go
+    description: Expose /metrics endpoint
+    example: http.Handle('/metrics', promhttp.Handler())
+    library: prometheus-go
+  - id: GO-012
+    name: Prometheus Labels
+    category: Go
+    description: Add dimensions to metrics
+    example: "counter.With(prometheus.Labels{'method': 'GET'})"
+    library: prometheus-go
+  - id: GO-013
+    name: Prometheus Histogram
+    category: Go
+    description: Track latency distribution
+    example: prometheus.NewHistogram(prometheus.HistogramOpts{})
+    library: prometheus-go
+  - id: GO-014
+    name: Runtime Metrics
+    category: Go
+    description: Expose Go runtime stats
+    example: "promhttp.HandlerOpts{EnableOpenMetrics: true}"
+    library: prometheus-go
+  - id: GO-015
+    name: Trace Span Creation
+    category: Go
+    description: Create spans in code
+    example: ctx, span := tracer.Start(ctx, 'operation')
+    library: opentelemetry-go
+  - id: GO-016
+    name: Span Attributes
+    category: Go
+    description: Add metadata to span
+    example: span.SetAttributes(attribute.String('key', 'value'))
+    library: opentelemetry-go
+  - id: GO-017
+    name: Span Events
+    category: Go
+    description: Record events in span
+    example: span.AddEvent('cache_hit')
+    library: opentelemetry-go
+  - id: GO-018
+    name: Record Exception
+    category: Go
+    description: Attach error to span
+    example: span.RecordError(err); span.SetStatus(codes.Error, err.Error())
+    library: opentelemetry-go
+  - id: GO-019
+    name: expvar
+    category: Go
+    description: Expose variables for monitoring
+    example: expvar.NewInt('requests').Add(1)
+    library: stdlib
+  - id: GO-020
+    name: StatsD Client
+    category: Go
+    description: Send metrics via UDP
+    example: statsd.Incr('requests.total', tags, 1)
+    library: go-statsd
+  - id: GO-021
+    name: zap Tracing
+    category: Go
+    description: Integrate zap with traces
+    example: zap.L().With(zap.String('trace_id', traceID))
+    library: uber-zap
+  - id: GO-022
+    name: Fgprof
+    category: Go
+    description: Wall-clock profiler
+    example: fgprof.Handler()
+    library: fgprof
+  - id: GO-023
+    name: goleak
+    category: Go
+    description: Detect goroutine leaks in tests
+    example: goleak.VerifyNone(t)
+    library: goleak
+  - id: GO-024
+    name: Pyroscope Agent
+    category: Go
+    description: Continuous profiling
+    example: pyroscope.Start(pyroscope.Config{})
+    library: pyroscope-go
+  - id: GO-025
+    name: Auto-Instrumentation
+    category: Go
+    description: Automatic span creation
+    example: OpenTelemetry instrumentation for net/http, gRPC
+    library: otel-contrib

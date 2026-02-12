@@ -1,12 +1,12 @@
 ---
 name: ruby
 detect: ["Gemfile", "*.rb", "*.gemspec", "Rakefile", "config.ru"]
-version: "6.1.2"
+version: "6.2.1"
 category: scripting
 tier: 1
 ---
 
-# Ruby Patterns — DOMYH Awesome Code v6.1.2
+# Ruby Patterns — DOMYH Awesome Code
 
 > **Version**: Ruby 3.3/3.4 (2025-2026)
 > **Frameworks**: Rails 8, Hotwire, Hanami 2
@@ -414,4 +414,4 @@ end
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Ruby 3.3/3.4 + Rails 8_
+_DOMYH Awesome Code • Ruby 3.3/3.4 + Rails 8_

@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: metrics_prometheus
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: metrics-prometheus.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: PROM-001
+    name: Counter
+    category: Prometheus
+    description: Monotonically increasing metric
+    example: http_requests_total
+    level: beginner
+  - id: PROM-002
+    name: Gauge
+    category: Prometheus
+    description: Value that can go up or down
+    example: temperature_celsius
+    level: beginner
+  - id: PROM-003
+    name: Histogram
+    category: Prometheus
+    description: Distribution of values in buckets
+    example: http_request_duration_seconds
+    level: intermediate
+  - id: PROM-004
+    name: Summary
+    category: Prometheus
+    description: Pre-calculated quantiles
+    example: request_latency_seconds{quantile='0.99'}
+    level: intermediate
+  - id: PROM-005
+    name: Labels
+    category: Prometheus
+    description: Key-value pairs for dimensions
+    example: method, path, status_code
+    level: beginner
+  - id: PROM-006
+    name: Label Best Practices
+    category: Prometheus
+    description: Limit cardinality
+    example: Avoid user_id, use bounded values
+    level: intermediate
+  - id: PROM-007
+    name: Naming Conventions
+    category: Prometheus
+    description: snake_case with unit suffix
+    example: http_request_duration_seconds
+    level: beginner
+  - id: PROM-008
+    name: PromQL Basics
+    category: Prometheus
+    description: Query language for metrics
+    example: rate(http_requests_total[5m])
+    level: beginner
+  - id: PROM-009
+    name: Rate vs Increase
+    category: Prometheus
+    description: Per-second rate vs total increase
+    example: rate() for counters, irate() for spiky
+    level: intermediate
+  - id: PROM-010
+    name: Aggregation
+    category: Prometheus
+    description: sum, avg, max, min by labels
+    example: sum by (instance) (cpu_usage)
+    level: intermediate
+  - id: PROM-011
+    name: Histogram Quantiles
+    category: Prometheus
+    description: Calculate percentiles from histogram
+    example: histogram_quantile(0.95, sum(rate(h_bucket[5m])) by (le))
+    level: advanced
+  - id: PROM-012
+    name: Recording Rules
+    category: Prometheus
+    description: Pre-compute expensive queries
+    example: "record: job:http_requests:rate5m"
+    level: intermediate
+  - id: PROM-013
+    name: Alerting Rules
+    category: Prometheus
+    description: Define alert conditions
+    example: "expr: up == 0 for: 5m"
+    level: intermediate
+  - id: PROM-014
+    name: Service Discovery
+    category: Prometheus
+    description: Auto-discover scrape targets
+    example: kubernetes_sd_configs, consul_sd_configs
+    level: intermediate
+  - id: PROM-015
+    name: Scrape Configs
+    category: Prometheus
+    description: Define how to scrape targets
+    example: "scrape_interval: 15s, metrics_path: /metrics"
+    level: beginner
+  - id: PROM-016
+    name: Federation
+    category: Prometheus
+    description: Aggregate from multiple Prometheus
+    example: match[] selector for hierarchical setup
+    level: advanced
+  - id: PROM-017
+    name: Remote Write
+    category: Prometheus
+    description: Send metrics to remote storage
+    example: Cortex, Thanos, VictoriaMetrics
+    level: advanced
+  - id: PROM-018
+    name: Pushgateway
+    category: Prometheus
+    description: Accept pushed metrics
+    example: For batch jobs, short-lived processes
+    level: intermediate
+  - id: PROM-019
+    name: Exporters
+    category: Prometheus
+    description: Expose metrics from systems
+    example: node_exporter, mysql_exporter
+    level: beginner
+  - id: PROM-020
+    name: Client Libraries
+    category: Prometheus
+    description: Instrument applications
+    example: prometheus-go, prom-client, prometheus_client
+    level: beginner
+  - id: PROM-021
+    name: Alertmanager
+    category: Prometheus
+    description: Route and manage alerts
+    example: Grouping, silencing, inhibition
+    level: intermediate
+  - id: PROM-022
+    name: Silence Alerts
+    category: Prometheus
+    description: Temporarily suppress alerts
+    example: During maintenance windows
+    level: beginner
+  - id: PROM-023
+    name: Alert Routing
+    category: Prometheus
+    description: Send alerts to different channels
+    example: Slack, PagerDuty, email by severity
+    level: intermediate
+  - id: PROM-024
+    name: High Availability
+    category: Prometheus
+    description: Run multiple Prometheus instances
+    example: Identical configs, same targets
+    level: advanced
+  - id: PROM-025
+    name: Long-term Storage
+    category: Prometheus
+    description: Store metrics beyond retention
+    example: Thanos, Cortex, VictoriaMetrics
+    level: advanced

@@ -1,0 +1,56 @@
+name: gemini-media-gen
+version: "1.0.0"
+display: Gemini Media Generation
+category: ai-ml
+tier: 1
+priority: 2
+
+desc: "Gemini native media generation: Nano Banana image gen (Flash + Pro 4K), Veo 3.1 video gen (8s 720p-4K + audio), Files API integration. Prompt optimization, multi-ref images, search grounding, batch generation. 36+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - nano banana
+    - image generation
+    - generate image
+    - veo
+    - video generation
+    - generate video
+    - gemini image
+    - gemini video
+    - text to image
+    - text to video
+    - image editing
+    - 4k image
+    - search grounding image
+    - files api
+    - media generation
+    - aspect ratio
+    - image prompt
+  intents:
+    - generate image
+    - create video
+    - edit image
+    - media generation
+    - batch image creation
+
+caps:
+  - Nano Banana Flash (speed, 1024px max)
+  - Nano Banana Pro (4K, Thinking, 14 ref images, Search grounding)
+  - Veo 3.1 (8s video, 720p-4K, native audio)
+  - Video extension & frame control
+  - Files API (20GB/project, 48h retention, free)
+  - Batch image generation
+  - Multi-reference image compositing
+  - Text rendering in images
+  - Image editing (inpainting, style transfer)
+
+related_skills:
+  - prompt-engineering
+  - domyh-design
+
+data_files:
+  - data/image-models.yaml
+  - data/image-prompts.yaml
+  - data/video-generation.yaml
+  - data/files-api.yaml

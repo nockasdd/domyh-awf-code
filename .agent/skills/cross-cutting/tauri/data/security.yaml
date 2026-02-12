@@ -1,0 +1,134 @@
+# Tauri Security Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TAURI-SEC-001
+    name: Capability-based Permissions
+    category: security
+    description: |
+      Tauri 2.0 uses capability-based security model.
+      Each window gets explicit permissions via capabilities/*.json.
+    text: |
+      Principles:
+      - Default deny: no permissions unless explicitly granted
+      - Per-window: different windows can have different permissions
+      - Scoped: restrict to specific directories/URLs
+      - Auditable: all permissions in JSON files
+    example: |
+      // src-tauri/capabilities/main.json
+      {
+        "identifier": "main-window",
+        "description": "Main window permissions",
+        "windows": ["main"],
+        "permissions": [
+          "core:default",
+          "fs:allow-read-text-file",
+          "fs:allow-write-text-file",
+          { "identifier": "fs:scope",
+            "allow": [{ "path": "$APPDATA/**" }] },
+          "dialog:allow-open",
+          "dialog:allow-save",
+          "shell:allow-open"
+        ]
+      }
+
+  - id: TAURI-SEC-002
+    name: Content Security Policy
+    category: security
+    description: CSP configuration for WebView.
+    text: |
+      Default CSP (tauri.conf.json):
+      "security": {
+        "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+      }
+      Rules:
+      - Never use 'unsafe-eval' in production
+      - Whitelist specific CDN domains if needed
+      - Use nonces for inline scripts when required
+
+  - id: TAURI-SEC-003
+    name: IPC Safety
+    category: security
+    description: |
+      Secure IPC communication between frontend and Rust.
+    text: |
+      Best practices:
+      - Validate all input in Rust commands (never trust frontend)
+      - Use typed parameters with serde deserialization
+      - Return Result<T, E> to handle errors properly
+      - Never expose raw file paths from frontend
+    example: |
+      #[tauri::command]
+      fn read_config(path: &str) -> Result<String, String> {
+        // Validate path is within allowed scope
+        let canonical = std::fs::canonicalize(path)
+          .map_err(|e| e.to_string())?;
+        if !canonical.starts_with(app_data_dir()) {
+          return Err("Access denied: path outside allowed scope".into());
+        }
+        std::fs::read_to_string(canonical).map_err(|e| e.to_string())
+      }
+
+  - id: TAURI-SEC-004
+    name: Scoped File Access
+    category: security
+    description: |
+      Restrict file system access to specific directories.
+    text: |
+      Scope variables:
+      $APPDATA — App-specific data directory
+      $APPCONFIG — App config directory
+      $DESKTOP — User desktop
+      $DOCUMENT — User documents
+      $HOME — User home directory
+    example: |
+      // Only allow reading from app data
+      { "identifier": "fs:scope",
+        "allow": [
+          { "path": "$APPDATA/**" },
+          { "path": "$DOCUMENT/*.md" }
+        ],
+        "deny": [
+          { "path": "$HOME/.ssh/**" }
+        ]
+      }
+
+  - id: TAURI-SEC-005
+    name: Update Security
+    category: security
+    description: |
+      Secure auto-update with signature verification.
+    text: |
+      Tauri updater verifies Ed25519 signatures.
+      Configure update endpoints with HTTPS only.
+      Use tauri-cli signer to generate key pairs.
+    example: |
+      // tauri.conf.json
+      "plugins": {
+        "updater": {
+          "endpoints": ["https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"],
+          "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ..."
+        }
+      }
+
+  - id: TAURI-SEC-006
+    name: Window-level Isolation
+    category: security
+    description: |
+      Different windows can have different permission sets.
+    text: |
+      Use case: Settings window needs more permissions than main window.
+      Create separate capability files per window.
+
+  - id: TAURI-SEC-007
+    name: No Node.js Advantage
+    category: security
+    description: |
+      Unlike Electron, Tauri has no Node.js in renderer.
+    text: |
+      Security advantages:
+      - No require() or import of Node.js modules in frontend
+      - No child_process access from frontend
+      - No fs module directly accessible
+      - All system access must go through IPC → Rust commands
+      - Prevents supply chain attacks via npm in renderer

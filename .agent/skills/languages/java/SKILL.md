@@ -2,12 +2,12 @@
 name: java
 detect:
   ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "settings.gradle"]
-version: "6.1.2"
+version: "6.2.1"
 category: backend
 tier: 1
 ---
 
-# Java Patterns — DOMYH Awesome Code v6.1.2
+# Java Patterns — DOMYH Awesome Code
 
 > Java 21/22/23 LTS — 2025-2026
 
@@ -492,4 +492,4 @@ tasks.withType<Test> {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Java Development • 2025-2026_
+_DOMYH Awesome Code • Java Development • 2025-2026_

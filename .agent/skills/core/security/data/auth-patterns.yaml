@@ -1,0 +1,195 @@
+metadata:
+  skill: security
+  domain: auth_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: auth-patterns.yaml
+  patterns_count: 15
+  columns:
+    - pattern
+    - category
+    - description
+    - languages
+    - use_case
+    - example_code
+    - anti_pattern
+patterns:
+  - id: item_001
+    pattern: JWT_VERIFICATION
+    category: AuthN
+    description: Verify JWT signature and claims before trusting payload
+    languages:
+      - typescript
+      - go
+      - python
+      - java
+    use_case: API authentication, stateless sessions
+    example_code: "// TypeScript (jose)
+
+      import { jwtVerify } from 'jose';
+
+      const { payload } = await jwtVerify(token, secretKey);"
+    anti_pattern: "// NEVER: Skip verification
+
+      const payload = JSON.parse(atob(token.split('.')[1]))"
+  - id: item_002
+    pattern: JWT_EXPIRY
+    category: AuthN
+    description: Always set and check token expiration (exp claim)
+    languages: all
+    use_case: Short-lived access tokens, refresh token rotation
+    example_code: "// Issue with expiry
+
+      jwt.sign({ userId }, secret, { expiresIn: '15m' })
+
+      // Verify checks exp automatically"
+    anti_pattern: "// NEVER: No expiry
+
+      jwt.sign({ userId }, secret) // Token valid forever"
+  - id: item_003
+    pattern: PASSWORD_BCRYPT
+    category: AuthN
+    description: Hash passwords with bcrypt cost factor 12+ or argon2id
+    languages: all
+    use_case: User registration, password storage
+    example_code: "// bcrypt
+
+      const hash = await bcrypt.hash(password, 12);
+
+      const valid = await bcrypt.compare(input, hash);"
+    anti_pattern: "// NEVER: MD5/SHA1/plaintext
+
+      const hash = crypto.createHash('md5').update(password)"
+  - id: item_004
+    pattern: OAUTH2_PKCE
+    category: AuthN
+    description: Use PKCE for public clients (SPA, mobile)
+    languages:
+      - typescript
+      - swift
+      - kotlin
+    use_case: OAuth2 authorization code flow
+    example_code: "// Generate code verifier + challenge
+
+      const verifier = generateCodeVerifier();
+
+      const challenge = sha256(verifier);"
+    anti_pattern: "// NEVER: Implicit flow for new apps
+
+      response_type=token // Deprecated"
+  - id: item_005
+    pattern: MFA_TOTP
+    category: AuthN
+    description: Implement TOTP-based MFA with backup codes
+    languages: all
+    use_case: Two-factor authentication
+    example_code: "// Verify TOTP
+
+      import { authenticator } from 'otplib';
+
+      const isValid = authenticator.verify({ token, secret });"
+    anti_pattern: "// NEVER: SMS-only MFA (SIM swap vulnerable)"
+  - id: item_006
+    pattern: SESSION_HTTPONLY
+    category: Session
+    description: Set HttpOnly, Secure, SameSite on session cookies
+    languages: all
+    use_case: Web session management
+    example_code: "Set-Cookie: sessionId=xxx; HttpOnly; Secure; SameSite=Strict; Path=/"
+    anti_pattern: "// NEVER: Accessible to JS
+
+      Set-Cookie: sessionId=xxx"
+  - id: item_007
+    pattern: SESSION_ROTATION
+    category: Session
+    description: Regenerate session ID after login to prevent fixation
+    languages: all
+    use_case: Login flow
+    example_code: "// After successful auth
+
+      req.session.regenerate(() => { /* assign user */ });"
+    anti_pattern: "// NEVER: Keep same session ID"
+  - id: item_008
+    pattern: RATE_LIMITING
+    category: AuthN
+    description: Implement rate limiting on auth endpoints
+    languages: all
+    use_case: Login, password reset, API
+    example_code: "// express-rate-limit
+
+      const limiter = rateLimit({ windowMs: 15*60*1000, max: 5 });
+
+      app.use('/login', limiter);"
+    anti_pattern: "// NEVER: Unlimited attempts"
+  - id: item_009
+    pattern: API_KEY_ROTATION
+    category: AuthZ
+    description: Support API key rotation without downtime
+    languages: all
+    use_case: API authentication
+    example_code: "// Accept multiple keys during rotation
+
+      const validKeys = [currentKey, previousKey];
+
+      if (!validKeys.includes(providedKey)) throw 401;"
+    anti_pattern: "// NEVER: Single key, no rotation plan"
+  - id: item_010
+    pattern: RBAC_MIDDLEWARE
+    category: AuthZ
+    description: Check permissions at middleware level, not in handlers
+    languages: all
+    use_case: Role-based access control
+    example_code: "// Middleware pattern\nconst requireRole = (role) => (req, res, next) => {\n  if (!req.user.roles.includes(role)) return res.status(403);\n  next();\n};"
+    anti_pattern: "// NEVER: Check roles in each handler manually"
+  - id: item_011
+    pattern: CORS_ALLOWLIST
+    category: AuthZ
+    description: Whitelist specific origins, not wildcard
+    languages: all
+    use_case: Cross-origin API access
+    example_code: "// Specific origins
+
+      cors({ origin: ['https://app.example.com'] })"
+    anti_pattern: "// NEVER: Allow all
+
+      cors({ origin: '*', credentials: true }) // Dangerous combo"
+  - id: item_012
+    pattern: INPUT_SANITIZATION
+    category: Validation
+    description: Sanitize all user input before use
+    languages: all
+    use_case: XSS prevention, injection prevention
+    example_code: "// DOMPurify for HTML
+
+      const clean = DOMPurify.sanitize(userHtml);
+
+      // Zod for data
+
+      const data = schema.parse(req.body);"
+    anti_pattern: "// NEVER: Trust user input directly"
+  - id: item_013
+    pattern: CSP_HEADER
+    category: Headers
+    description: Content-Security-Policy to prevent XSS
+    languages: all
+    use_case: Web applications
+    example_code: "Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'"
+    anti_pattern: "// NEVER: No CSP or unsafe-inline everywhere"
+  - id: item_014
+    pattern: HSTS_HEADER
+    category: Headers
+    description: Strict-Transport-Security for HTTPS enforcement
+    languages: all
+    use_case: All production sites
+    example_code: "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload"
+    anti_pattern: "// NEVER: Allow HTTP in production"
+  - id: item_015
+    pattern: X_FRAME_OPTIONS
+    category: Headers
+    description: Prevent clickjacking with frame-ancestors
+    languages: all
+    use_case: Web applications
+    example_code: "X-Frame-Options: DENY
+
+      // or CSP: frame-ancestors 'none'"
+    anti_pattern: "// NEVER: Allow any framing"

@@ -8,7 +8,7 @@ version: "1.0.0"
 
 categories:
   # ==========================================================================
-  # LANGUAGES (24 skills)
+  # LANGUAGES (28 skills)
   # ==========================================================================
   languages:
     description: "Programming languages"
@@ -52,6 +52,9 @@ categories:
       - r
       - julia
 
+      # Apple/Mobile
+      - swift
+
       # Blockchain
       - solidity
 
@@ -76,7 +79,7 @@ categories:
       - react-native
 
   # ==========================================================================
-  # DEVOPS (4 skills)
+  # DEVOPS (7 skills)
   # ==========================================================================
   devops:
     description: "Infrastructure and deployment"
@@ -87,20 +90,29 @@ categories:
       - kubernetes
       - aws
       - ci-cd
+      # v6.3 New
+      - terraform
+      - gcp
+      - azure
 
   # ==========================================================================
-  # CORE (1 skill - always loaded)
+  # CORE (6 skills - always loaded)
   # ==========================================================================
   core:
-    description: "Core security rules - always active"
+    description: "Core patterns - security, API design, error handling, logging, observability, authentication"
     path: "core/"
     priority: 0
     always_load: true
     skills:
       - security
+      - api-design
+      - error-handling
+      - logging
+      - observability
+      - authentication
 
   # ==========================================================================
-  # CROSS-CUTTING (10 skills)
+  # CROSS-CUTTING (21 skills)
   # ==========================================================================
   cross-cutting:
     description: "Cross-cutting concerns and utilities"
@@ -113,24 +125,73 @@ categories:
       - tailwind
       - electron
       - coding-rules
-      - ui-ux-pro-max
+      - domyh-design
       - web-perf
       - deno
       - bun
+      - audit-pro
+
+      # P0 Skills (v6.2.1)
+      - tdd-workflow
+      - accessibility
+      - seo
+
+      # P1 Skills (v6.2.1)
+      - microservices
+      - monorepo
+
+      # v6.3 New
+      - tauri
+      - real-time
+      - event-driven
+      - wasm
+      - playwright
+
+  # ==========================================================================
+  # TOOLING (5 skills) — NEW v6.3
+  # ==========================================================================
+  tooling:
+    description: "Development tools, protocols, and extensions"
+    path: "tooling/"
+    priority: 2
+    skills:
+      - mcp
+      - ide-extension
+      - cli-dev
+      - api-protocols
+      - browser-agent
+
+  # ==========================================================================
+  # AI-ML (7 skills) — v6.3 + Google AI
+  # ==========================================================================
+  ai-ml:
+    description: "AI/ML agent systems, vector search, prompt engineering, and Gemini APIs"
+    path: "ai-ml/"
+    priority: 3
+    skills:
+      - ai-agents
+      - vector-search
+      # Migrated from cross-cutting
+      - prompt-engineering
+      - rag-patterns
+      # v6.3 New — Google AI
+      - gemini-media-gen
+      - gemini-tts
+      - gemini-live
 
 # =============================================================================
 # STATISTICS
 # =============================================================================
 
 stats:
-  total_skills: 51
-  categories: 5
+  total_skills: 82
+  categories: 7
   estimated_tokens:
-    all_meta: 5100 # ~100 tokens × 51
+    all_meta: 8200 # ~100 tokens × 82
     router_only: 500 # Router + core META
-    typical_session: 2500 # Router + 2 language + 1 framework
+    typical_session: 3000 # Router + 2 language + 1 framework + 1 tooling
 
 
 # =============================================================================
-# _DOMYH Awesome Code v7.0 • Category Definitions_
+# _DOMYH Awesome Code • Category Definitions v6.3_
 # =============================================================================

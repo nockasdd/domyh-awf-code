@@ -1,0 +1,258 @@
+# DOMYH Awesome Code — Hierarchical Summarization Engine v6.2.1
+# Implements 3-level summarization for token optimization
+
+version: "6.2.1"
+engine: hierarchical_summarizer
+
+# =============================================================================
+# SUMMARIZATION LEVELS
+# =============================================================================
+
+levels:
+  # Level 1: Light Compression (~20% reduction)
+  light:
+    trigger:
+      tokens: 5000
+      session_age_minutes: 60
+      interaction_count: 20
+
+    actions:
+      - compress_old_interactions:
+          keep_last: 5
+          summarize_rest: true
+          summary_max_tokens: 200
+
+      - merge_similar_notes:
+          threshold: 0.8
+          combine_duplicates: true
+
+      - trim_verbose_logs:
+          keep_first_line: true
+          keep_error_details: true
+
+    output:
+      estimated_reduction: "20%"
+      preserves: [errors, decisions, current_task]
+
+  # Level 2: Medium Compression (~50% reduction)
+  medium:
+    trigger:
+      tokens: 8000
+      session_age_minutes: 120
+      interaction_count: 40
+
+    actions:
+      - summarize_session_notes:
+          max_tokens: 500
+          preserve_structure: true
+          keep_headers: true
+
+      - archive_resolved_errors:
+          move_to: memory/archive/errors/
+          keep_summary: true
+          summary_format: "date: error_type - resolution"
+
+      - compress_workflow_history:
+          keep_last: 3
+          summarize_older: true
+          include_outcomes_only: true
+
+      - flatten_decisions:
+          keep_recent: 10
+          archive_older: memory/archive/decisions/
+
+    output:
+      estimated_reduction: "50%"
+      preserves: [critical_errors, recent_decisions, current_task]
+
+  # Level 3: Aggressive Compression (~80% reduction)
+  aggressive:
+    trigger:
+      tokens: 10000
+      session_age_minutes: 180
+      force: on_context_overflow
+
+    actions:
+      - compress_all_to_summary:
+          max_tokens: 300
+          format: bullet_points
+          include:
+            - session_goal
+            - major_outcomes
+            - blocking_issues
+            - key_decisions
+
+      - unload_all_optional:
+          keep_only: [working_memory, critical_state]
+          archive_rest: true
+
+      - reset_session_notes:
+          backup: true
+          backup_path: memory/archive/sessions/
+          new_content: summary_only
+
+      - consolidate_state:
+          merge_redundant: true
+          remove_stale: true
+          stale_threshold_hours: 24
+
+    output:
+      estimated_reduction: "80%"
+      preserves: [current_task, critical_blockers, session_goal]
+
+# =============================================================================
+# SUMMARIZATION TEMPLATES
+# =============================================================================
+
+templates:
+  # Session summary template
+  session_summary: |
+    ## Session Summary
+    **Goal**: {goal}
+    **Duration**: {duration}
+    **Status**: {status}
+
+    ### Completed
+    {completed_items}
+
+    ### Pending
+    {pending_items}
+
+    ### Key Decisions
+    {decisions_summary}
+
+  # Workflow history summary
+  workflow_summary: |
+    | Workflow | Status | Key Outcome |
+    |----------|--------|-------------|
+    {workflow_rows}
+
+  # Error archive summary
+  error_summary: |
+    **Archived Errors**: {count}
+    **Most Common**: {top_error}
+    **Last Resolved**: {last_date}
+
+  # Decision consolidation template
+  decision_summary: |
+    ### Key Decisions ({count} total)
+    {recent_decisions}
+
+    _Archived: {archived_count} older decisions_
+
+# =============================================================================
+# COMPRESSION RULES
+# =============================================================================
+
+compression_rules:
+  # What to always preserve
+  preserve_always:
+    - current_task_description
+    - active_errors
+    - blocking_issues
+    - session_goal
+    - last_decision
+
+  # What can be compressed first
+  compress_first:
+    - old_interactions (>10 interactions ago)
+    - resolved_errors
+    - completed_workflow_logs
+    - verbose_debug_output
+
+  # What to archive (not delete)
+  archive_on_compress:
+    - detailed_error_traces
+    - full_audit_reports
+    - complete_decision_rationale
+    - old_session_notes
+
+  # What can be safely removed
+  removable:
+    - duplicate_notes
+    - redundant_context
+    - stale_timestamps
+    - empty_sections
+
+# =============================================================================
+# SMART SUMMARIZATION LOGIC
+# =============================================================================
+
+smart_logic:
+  # Detect content type for appropriate summarization
+  content_detection:
+    code_block:
+      action: preserve_if_active
+      summarize_to: "Code block: {language} - {purpose}"
+
+    error_trace:
+      action: extract_key_info
+      keep: [error_type, file, line, message]
+      remove: [full_stack_trace, if_resolved]
+
+    decision:
+      action: preserve_recent
+      recent_count: 10
+      summarize_format: "{date}: {decision} → {outcome}"
+
+    workflow_log:
+      action: keep_outcomes_only
+      format: "{workflow}: {status} - {key_result}"
+
+  # Context-aware compression
+  context_aware:
+    during_debugging:
+      preserve: [error_traces, recent_changes, logs]
+      compress: [old_decisions, completed_workflows]
+
+    during_coding:
+      preserve: [code_context, file_changes, errors]
+      compress: [old_sessions, resolved_issues]
+
+    during_audit:
+      preserve: [findings, scores, recommendations]
+      compress: [old_audits, general_notes]
+
+# =============================================================================
+# ARCHIVE MANAGEMENT
+# =============================================================================
+
+archive:
+  base_path: memory/archive/
+
+  structure:
+    sessions: "{date}_{session_id}.md"
+    decisions: "{date}_decisions.md"
+    errors: "{date}_errors.md"
+    audits: "{date}_audit.json"
+
+  retention:
+    sessions: 30 # days
+    decisions: 90 # days
+    errors: 30 # days
+    audits: 365 # days
+
+  cleanup:
+    schedule: on_session_start
+    max_archive_size_mb: 50
+    action_on_limit: delete_oldest
+
+# =============================================================================
+# HOOKS
+# =============================================================================
+
+hooks:
+  pre_summarize:
+    - validate_token_count
+    - backup_current_state
+    - check_active_tasks
+
+  post_summarize:
+    - verify_critical_preserved
+    - update_session_cache
+    - log_compression_ratio
+
+  on_archive:
+    - create_index
+    - update_archive_manifest
+    - cleanup_old_archives

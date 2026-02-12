@@ -1,0 +1,366 @@
+# =============================================================================
+# Kotlin Core Patterns (Feb 2026)
+# Version: Kotlin 2.0/2.1
+# =============================================================================
+
+metadata:
+  skill: kotlin
+  domain: core
+  version: "2.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: kt001
+    name: Coroutines
+    category: concurrency
+    version: "Kotlin"
+    description: |
+      Structured concurrency with coroutines.
+      Suspend functions, scopes, jobs.
+    text: coroutine suspend async launch scope job
+    example: |
+      import kotlinx.coroutines.*
+
+      // ✅ Basic coroutine
+      suspend fun fetchUser(id: Int): User {
+          delay(1000)  // Non-blocking delay
+          return User(id, "John")
+      }
+
+      // ✅ Launch coroutines
+      fun main() = runBlocking {
+          val job = launch {
+              delay(1000)
+              println("World")
+          }
+          println("Hello")
+          job.join()  // Wait for completion
+      }
+
+      // ✅ Async for parallel work
+      suspend fun loadData(): Data = coroutineScope {
+          val user = async { fetchUser(1) }
+          val settings = async { fetchSettings() }
+          val orders = async { fetchOrders() }
+          
+          Data(
+              user.await(),
+              settings.await(),
+              orders.await()
+          )
+      }
+
+      // ✅ Structured concurrency
+      suspend fun processItems(items: List<Item>) = coroutineScope {
+          items.forEach { item ->
+              launch {
+                  processItem(item)
+              }
+          }
+          // All child coroutines complete here
+      }
+
+      // ✅ Exception handling
+      val handler = CoroutineExceptionHandler { _, exception ->
+          println("Caught: $exception")
+      }
+
+      val scope = CoroutineScope(SupervisorJob() + handler)
+      scope.launch {
+          throw RuntimeException("Oops")
+      }
+
+      // ✅ Cancellation
+      val job = launch {
+          repeat(1000) { i ->
+              ensureActive()  // Check for cancellation
+              println("Processing $i")
+              delay(100)
+          }
+      }
+      delay(500)
+      job.cancel()  // Cancel after 500ms
+    severity: HIGH
+    docs_url: https://kotlinlang.org/docs/coroutines-guide.html
+
+  - id: kt002
+    name: Flow
+    category: reactive
+    version: "Kotlin"
+    description: |
+      Cold asynchronous streams.
+      Operators, collectors, StateFlow.
+    text: flow stateflow sharedflow collect emit operators
+    example: |
+      import kotlinx.coroutines.flow.*
+
+      // ✅ Basic flow
+      fun numbers(): Flow<Int> = flow {
+          for (i in 1..3) {
+              delay(100)
+              emit(i)
+          }
+      }
+
+      // Collect
+      numbers().collect { value ->
+          println(value)
+      }
+
+      // ✅ Flow operators
+      val prices = flowOf(10.0, 20.0, 30.0)
+          .filter { it > 15 }
+          .map { it * 1.1 }  // Add 10% tax
+          .onEach { println("Processing: $it") }
+
+      // ✅ StateFlow (hot, state holder)
+      class ViewModel {
+          private val _uiState = MutableStateFlow(UiState.Loading)
+          val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+          
+          fun load() {
+              viewModelScope.launch {
+                  _uiState.value = UiState.Loading
+                  try {
+                      val data = fetchData()
+                      _uiState.value = UiState.Success(data)
+                  } catch (e: Exception) {
+                      _uiState.value = UiState.Error(e.message)
+                  }
+              }
+          }
+      }
+
+      // ✅ SharedFlow (hot, event stream)
+      class EventBus {
+          private val _events = MutableSharedFlow<Event>()
+          val events = _events.asSharedFlow()
+          
+          suspend fun emit(event: Event) {
+              _events.emit(event)
+          }
+      }
+
+      // ✅ Flow transformations
+      val searchResults = searchQuery
+          .debounce(300)  // Wait 300ms after last keystroke
+          .distinctUntilChanged()
+          .flatMapLatest { query ->
+              if (query.isEmpty()) flowOf(emptyList())
+              else searchApi(query)
+          }
+          .catch { emit(emptyList()) }
+          .stateIn(scope, SharingStarted.Lazily, emptyList())
+    severity: HIGH
+    docs_url: https://kotlinlang.org/docs/flow.html
+
+  - id: kt003
+    name: Sealed Classes
+    category: types
+    version: "Kotlin"
+    description: |
+      Exhaustive type hierarchies.
+      When expressions, sealed interfaces.
+    text: sealed class interface when exhaustive hierarchy
+    example: |
+      // ✅ Sealed class for UI state
+      sealed class UiState {
+          object Loading : UiState()
+          data class Success(val data: List<Item>) : UiState()
+          data class Error(val message: String) : UiState()
+      }
+
+      // ✅ Exhaustive when (no else needed)
+      fun render(state: UiState) = when (state) {
+          is UiState.Loading -> showLoadingSpinner()
+          is UiState.Success -> showItems(state.data)
+          is UiState.Error -> showError(state.message)
+      }
+
+      // ✅ Sealed interface (Java interop friendly)
+      sealed interface Result<out T> {
+          data class Success<T>(val value: T) : Result<T>
+          data class Failure(val error: Throwable) : Result<Nothing>
+      }
+
+      inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> = 
+          when (this) {
+              is Result.Success -> Result.Success(transform(value))
+              is Result.Failure -> this
+          }
+
+      // ✅ Nested sealed classes
+      sealed class ApiResponse<out T> {
+          sealed class Success<T>(val data: T) : ApiResponse<T>() {
+              class FromCache<T>(data: T) : Success<T>(data)
+              class FromNetwork<T>(data: T) : Success<T>(data)
+          }
+          
+          sealed class Error : ApiResponse<Nothing>() {
+              data class Network(val code: Int) : Error()
+              data class Validation(val fields: List<String>) : Error()
+              object Unknown : Error()
+          }
+      }
+
+      fun handleResponse(response: ApiResponse<User>) = when (response) {
+          is ApiResponse.Success.FromCache -> "Cached: ${response.data}"
+          is ApiResponse.Success.FromNetwork -> "Fresh: ${response.data}"
+          is ApiResponse.Error.Network -> "Network error: ${response.code}"
+          is ApiResponse.Error.Validation -> "Invalid: ${response.fields}"
+          ApiResponse.Error.Unknown -> "Unknown error"
+      }
+    severity: HIGH
+    docs_url: https://kotlinlang.org/docs/sealed-classes.html
+
+  - id: kt004
+    name: Extension Functions
+    category: language
+    version: "Kotlin"
+    description: |
+      Add methods to existing classes.
+      Scope functions, DSL builders.
+    text: extension function scope let apply also run with
+    example: |
+      // ✅ Extension function
+      fun String.isEmail(): Boolean =
+          matches(Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
+
+      "test@email.com".isEmail()  // true
+
+      // ✅ Extension property
+      val String.wordCount: Int
+          get() = split("\\s+".toRegex()).size
+
+      "Hello World".wordCount  // 2
+
+      // ✅ Scope functions
+      // let - transform and null safety
+      val length = name?.let { it.length } ?: 0
+
+      // apply - configure object
+      val person = Person().apply {
+          name = "John"
+          age = 30
+          email = "john@email.com"
+      }
+
+      // also - side effects
+      val result = fetchData().also { 
+          logger.info("Fetched: $it") 
+      }
+
+      // with - call multiple methods
+      with(person) {
+          println(name)
+          println(age)
+      }
+
+      // run - transform with context
+      val html = StringBuilder().run {
+          append("<html>")
+          append("<body>Hello</body>")
+          append("</html>")
+          toString()
+      }
+
+      // ✅ DSL with extension functions
+      class HtmlBuilder {
+          private val elements = mutableListOf<String>()
+          
+          fun body(init: BodyBuilder.() -> Unit) {
+              val builder = BodyBuilder()
+              builder.init()
+              elements.add("<body>${builder.build()}</body>")
+          }
+          
+          fun build() = elements.joinToString("\n")
+      }
+
+      fun html(init: HtmlBuilder.() -> Unit): String {
+          val builder = HtmlBuilder()
+          builder.init()
+          return builder.build()
+      }
+
+      // Usage
+      val page = html {
+          body {
+              h1("Welcome")
+              p("Hello World")
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://kotlinlang.org/docs/extensions.html
+
+  - id: kt005
+    name: Null Safety
+    category: safety
+    version: "Kotlin"
+    description: |
+      Compile-time null checking.
+      Safe calls, Elvis operator, smart casts.
+    text: null safety nullable elvis safe call smart cast
+    example: |
+      // ✅ Nullable types
+      var name: String = "John"    // Cannot be null
+      var email: String? = null    // Can be null
+
+      // ✅ Safe call operator
+      val length = email?.length  // Returns Int? (nullable)
+
+      // ✅ Elvis operator
+      val len = email?.length ?: 0  // Default to 0 if null
+
+      // ✅ Safe call chain
+      val city = user?.address?.city ?: "Unknown"
+
+      // ✅ Not-null assertion (avoid if possible!)
+      val forcedLength = email!!.length  // Throws NPE if null
+
+      // ✅ Safe cast
+      val str: String? = value as? String  // null if cast fails
+
+      // ✅ Smart casts
+      fun process(value: Any) {
+          if (value is String) {
+              println(value.length)  // Smart cast to String
+          }
+          
+          when (value) {
+              is Int -> println(value * 2)
+              is String -> println(value.uppercase())
+              is List<*> -> println(value.size)
+          }
+      }
+
+      // ✅ Null check with let
+      email?.let { e ->
+          sendEmail(e)
+          logEmail(e)
+      }
+
+      // ✅ requireNotNull / checkNotNull
+      fun processUser(user: User?) {
+          val validUser = requireNotNull(user) { "User cannot be null" }
+          // validUser is now non-null
+      }
+
+      // ✅ lateinit for non-null delayed init
+      class Component {
+          lateinit var service: Service  // Must be initialized before use
+          
+          fun setup() {
+              if (::service.isInitialized) {
+                  // Safe to use
+              }
+          }
+      }
+
+      // ✅ Lazy initialization
+      val heavyObject: ExpensiveClass by lazy {
+          ExpensiveClass()  // Created on first access
+      }
+    severity: HIGH
+    docs_url: https://kotlinlang.org/docs/null-safety.html

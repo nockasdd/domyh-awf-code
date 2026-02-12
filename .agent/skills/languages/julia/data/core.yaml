@@ -1,0 +1,356 @@
+# =============================================================================
+# Julia Core Patterns (Feb 2026)
+# Version: Julia 1.11
+# =============================================================================
+
+metadata:
+  skill: julia
+  domain: core
+  version: "1.11"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: jl001
+    name: Multiple Dispatch
+    category: language
+    version: "Julia"
+    description: |
+      Function overloading by argument types.
+      Method specialization.
+    text: dispatch method function type signature
+    example: |
+      # ✅ Basic multiple dispatch
+      area(shape) = error("Unknown shape: $(typeof(shape))")
+
+      struct Circle
+          radius::Float64
+      end
+
+      struct Rectangle
+          width::Float64
+          height::Float64
+      end
+
+      struct Triangle
+          a::Float64
+          b::Float64
+          c::Float64
+      end
+
+      # Methods for each type
+      area(c::Circle) = π * c.radius^2
+      area(r::Rectangle) = r.width * r.height
+      function area(t::Triangle)
+          s = (t.a + t.b + t.c) / 2
+          sqrt(s * (s - t.a) * (s - t.b) * (s - t.c))
+      end
+
+      # ✅ Dispatch on multiple arguments
+      combine(x::Int, y::Int) = x + y
+      combine(x::String, y::String) = x * y  # Concatenation
+      combine(x::Array, y::Array) = vcat(x, y)
+      combine(x, y) = string(x, y)  # Fallback
+
+      # ✅ Parametric types
+      struct Point{T <: Number}
+          x::T
+          y::T
+      end
+
+      distance(p1::Point{T}, p2::Point{T}) where T = 
+          sqrt((p1.x - p2.x)^2 + (p1.y - p2.y)^2)
+
+      # Works for any numeric type
+      p1 = Point(1.0, 2.0)  # Point{Float64}
+      p2 = Point(4.0, 6.0)
+      distance(p1, p2)  # 5.0
+
+      # ✅ Abstract types
+      abstract type Animal end
+
+      struct Dog <: Animal
+          name::String
+      end
+
+      struct Cat <: Animal
+          name::String
+      end
+
+      speak(a::Animal) = error("Unknown animal")
+      speak(d::Dog) = "$(d.name) says: Woof!"
+      speak(c::Cat) = "$(c.name) says: Meow!"
+    severity: HIGH
+    docs_url: https://docs.julialang.org/en/v1/manual/methods/
+
+  - id: jl002
+    name: Broadcasting
+    category: arrays
+    version: "Julia"
+    description: |
+      Element-wise operations.
+      Dot syntax for vectorization.
+    text: broadcast dot elementwise vectorize array
+    example: |
+      # ✅ Dot syntax for broadcasting
+      x = [1, 2, 3, 4, 5]
+      y = x .^ 2      # [1, 4, 9, 16, 25]
+      z = sin.(x)     # Apply sin to each element
+
+      # ✅ Multiple arrays
+      a = [1, 2, 3]
+      b = [10, 20, 30]
+      a .+ b          # [11, 22, 33]
+      a .* b          # [10, 40, 90]
+
+      # ✅ Broadcasting with scalars
+      x = [1, 2, 3]
+      x .+ 10         # [11, 12, 13]
+      x .* 2          # [2, 4, 6]
+
+      # ✅ Different dimensions
+      matrix = [1 2 3; 4 5 6]  # 2x3 matrix
+      vector = [10, 20, 30]    # 3 element vector
+      matrix .+ vector'        # Broadcasts row vector
+
+      # ✅ @. macro for full broadcast
+      x = [1, 2, 3]
+      @. y = sin(x)^2 + cos(x)^2  # All operations broadcast
+
+      # ✅ In-place broadcast
+      x = [1.0, 2.0, 3.0]
+      x .= x .^ 2     # Modifies x in place
+
+      # ✅ Custom function broadcast
+      my_func(x, y) = x^2 + y
+      my_func.([1, 2, 3], [10, 20, 30])  # [11, 24, 39]
+
+      # ✅ Broadcast over structs
+      struct Config
+          scale::Float64
+          offset::Float64
+      end
+
+      transform(x, c::Config) = x * c.scale + c.offset
+      transform.([1, 2, 3], Ref(Config(2.0, 10.0)))  # [12.0, 14.0, 16.0]
+    severity: HIGH
+    docs_url: https://docs.julialang.org/en/v1/manual/arrays/#Broadcasting
+
+  - id: jl003
+    name: DataFrames.jl
+    category: data
+    version: "DataFrames"
+    description: |
+      Tabular data manipulation.
+      Similar to pandas/dplyr.
+    text: dataframe select transform groupby combine
+    example: |
+      using DataFrames, CSV, Statistics
+
+      # ✅ Create DataFrame
+      df = DataFrame(
+          name = ["Alice", "Bob", "Charlie", "Diana"],
+          age = [30, 25, 35, 28],
+          salary = [50000, 45000, 60000, 52000],
+          department = ["Engineering", "Sales", "Engineering", "Marketing"]
+      )
+
+      # ✅ Read CSV
+      df = CSV.read("data/employees.csv", DataFrame)
+
+      # ✅ Select columns
+      select(df, :name, :age)
+      select(df, Not(:salary))
+      select(df, r"^sal")  # Regex match
+
+      # ✅ Filter rows
+      filter(row -> row.age > 30, df)
+      filter(:department => ==("Engineering"), df)
+      subset(df, :age => x -> x .> 25, :salary => x -> x .> 45000)
+
+      # ✅ Transform columns
+      transform(df, :salary => (x -> x * 1.1) => :new_salary)
+      transform(df, [:salary, :age] => ((s, a) -> s ./ a) => :salary_per_year)
+
+      # ✅ Group and aggregate
+      gdf = groupby(df, :department)
+      combine(gdf, 
+          :salary => mean => :avg_salary,
+          :salary => sum => :total_salary,
+          nrow => :count
+      )
+
+      # ✅ Chain operations
+      result = df |>
+          x -> filter(:age => >(25), x) |>
+          x -> groupby(x, :department) |>
+          x -> combine(x, :salary => mean => :avg)
+
+      # ✅ Joins
+      orders = DataFrame(id = [1, 2, 3], customer_id = [1, 2, 1])
+      customers = DataFrame(id = [1, 2], name = ["Alice", "Bob"])
+
+      leftjoin(orders, customers, on = :customer_id => :id, renamecols = "_order" => "_customer")
+
+      # ✅ Wide to long
+      stack(df, [:col1, :col2], variable_name = :metric, value_name = :value)
+      unstack(long_df, :id, :variable, :value)
+    severity: HIGH
+    docs_url: https://dataframes.juliadata.org/stable/
+
+  - id: jl004
+    name: Flux.jl Deep Learning
+    category: ml
+    version: "Flux"
+    description: |
+      Neural networks in pure Julia.
+      Automatic differentiation.
+    text: flux neural network gradient train model
+    example: |
+      using Flux
+      using Flux: train!, params
+      using CUDA  # GPU support
+
+      # ✅ Define model
+      model = Chain(
+          Dense(784, 256, relu),
+          Dropout(0.5),
+          Dense(256, 128, relu),
+          Dense(128, 10),
+          softmax
+      )
+
+      # ✅ Move to GPU
+      model = model |> gpu
+
+      # ✅ Loss function
+      loss(x, y) = Flux.crossentropy(model(x), y)
+
+      # ✅ Training loop
+      opt = Adam(0.001)
+
+      for epoch in 1:10
+          for (x, y) in train_loader
+              x, y = x |> gpu, y |> gpu
+              grads = Flux.gradient(() -> loss(x, y), params(model))
+              Flux.update!(opt, params(model), grads)
+          end
+          
+          # Validation
+          acc = accuracy(model, test_loader)
+          println("Epoch $epoch: Accuracy = $acc")
+      end
+
+      # ✅ Custom layer
+      struct Attention
+          query::Dense
+          key::Dense
+          value::Dense
+      end
+
+      Flux.@layer Attention
+
+      function (a::Attention)(x)
+          q, k, v = a.query(x), a.key(x), a.value(x)
+          scores = softmax(q' * k / √size(k, 1))
+          v * scores
+      end
+
+      # ✅ Save and load
+      using BSON: @save, @load
+
+      @save "model.bson" model
+      @load "model.bson" model
+
+      # ✅ Inference
+      model = model |> cpu
+      predictions = model(test_data)
+      predicted_labels = argmax.(eachcol(predictions))
+    severity: MEDIUM
+    docs_url: https://fluxml.ai/Flux.jl/stable/
+
+  - id: jl005
+    name: Parallel Computing
+    category: performance
+    version: "Julia"
+    description: |
+      Multi-threading and distributed.
+      Tasks, channels, workers.
+    text: threads parallel distributed channel async
+    example: |
+      using Base.Threads
+
+      # ✅ Threading with @threads
+      function parallel_sum(arr)
+          n = length(arr)
+          chunk_size = n ÷ nthreads()
+          partial_sums = zeros(nthreads())
+          
+          @threads for i in 1:nthreads()
+              start_idx = (i - 1) * chunk_size + 1
+              end_idx = i == nthreads() ? n : i * chunk_size
+              partial_sums[i] = sum(@view arr[start_idx:end_idx])
+          end
+          
+          sum(partial_sums)
+      end
+
+      # ✅ Atomic operations
+      counter = Atomic{Int}(0)
+
+      @threads for i in 1:1000
+          atomic_add!(counter, 1)
+      end
+
+      # ✅ Channels for producer-consumer
+      ch = Channel{Int}(32)
+
+      # Producer
+      @async begin
+          for i in 1:100
+              put!(ch, i)
+          end
+          close(ch)
+      end
+
+      # Consumer
+      @async begin
+          for item in ch
+              process(item)
+          end
+      end
+
+      # ✅ Tasks
+      task1 = @async fetch_data(url1)
+      task2 = @async fetch_data(url2)
+
+      result1 = fetch(task1)
+      result2 = fetch(task2)
+
+      # ✅ Distributed computing
+      using Distributed
+      addprocs(4)  # Add 4 workers
+
+      @everywhere function expensive_computation(x)
+          sleep(1)
+          x^2
+      end
+
+      # Parallel map
+      results = pmap(expensive_computation, 1:10)
+
+      # @distributed for reduction
+      total = @distributed (+) for i in 1:1000000
+          expensive_computation(i)
+      end
+
+      # ✅ @spawn for task parallelism
+      tasks = []
+      for url in urls
+          t = Threads.@spawn fetch_url(url)
+          push!(tasks, t)
+      end
+
+      results = [fetch(t) for t in tasks]
+    severity: MEDIUM
+    docs_url: https://docs.julialang.org/en/v1/manual/parallel-computing/

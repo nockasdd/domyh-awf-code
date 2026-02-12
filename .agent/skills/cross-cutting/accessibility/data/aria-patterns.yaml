@@ -1,0 +1,88 @@
+# ARIA Patterns Data
+
+patterns:
+  - name: modal-dialog
+    role: dialog
+    html: |
+      <div role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 id="modal-title">Confirm Action</h2>
+        <p>Are you sure?</p>
+        <button>Cancel</button>
+        <button>Confirm</button>
+      </div>
+    requirements:
+      - "Focus trapped inside modal"
+      - "Escape key closes modal"
+      - "Focus returns to trigger on close"
+      - "Background content inert (inert attribute)"
+
+  - name: tabs
+    role: tablist
+    html: |
+      <div role="tablist" aria-label="Settings">
+        <button role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">General</button>
+        <button role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">Security</button>
+      </div>
+      <div role="tabpanel" id="panel-1" aria-labelledby="tab-1">...</div>
+      <div role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>...</div>
+    keyboard:
+      - "Arrow Left/Right: Switch tabs"
+      - "Home/End: First/last tab"
+      - "Tab: Move to panel content"
+
+  - name: accordion
+    html: |
+      <h3>
+        <button aria-expanded="false" aria-controls="section-1">Section Title</button>
+      </h3>
+      <div id="section-1" role="region" aria-labelledby="accordion-btn" hidden>
+        Content here
+      </div>
+    keyboard:
+      - "Enter/Space: Toggle expand"
+      - "Arrow Up/Down: Move between headers"
+
+  - name: combobox-autocomplete
+    role: combobox
+    html: |
+      <label for="search">Search</label>
+      <input id="search" role="combobox" aria-expanded="false"
+             aria-controls="suggestions" aria-autocomplete="list"
+             aria-activedescendant="">
+      <ul id="suggestions" role="listbox" hidden>
+        <li role="option" id="opt-1">Option 1</li>
+      </ul>
+    keyboard:
+      - "Arrow Down: Open list, move selection"
+      - "Escape: Close list"
+      - "Enter: Select option"
+
+  - name: live-region
+    description: "Announce dynamic content changes"
+    variants:
+      alert: '<div role="alert">Error: Invalid email</div>'
+      status: '<div role="status" aria-live="polite">3 results found</div>'
+      log: '<div role="log" aria-live="polite">Chat messages...</div>'
+    rules:
+      - "Use role='alert' for urgent (assertive)"
+      - "Use aria-live='polite' for non-urgent"
+      - "Keep announcements brief and clear"
+
+  - name: skip-navigation
+    html: |
+      <a href="#main-content" class="skip-link">Skip to main content</a>
+      <!-- Navigation -->
+      <main id="main-content">...</main>
+    css: |
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+      }
+      .skip-link:focus {
+        position: fixed;
+        top: 0; left: 0;
+        z-index: 9999;
+        padding: 1rem;
+        background: #000;
+        color: #fff;
+      }

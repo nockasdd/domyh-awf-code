@@ -1,0 +1,165 @@
+metadata:
+  skill: api-design
+  domain: grpc_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: grpc-patterns.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - level
+    - category
+patterns:
+  - id: GRPC-01
+    pattern: Proto3 Syntax
+    description: Use proto3 for all .proto files
+    example: syntax = "proto3";
+    level: BASIC
+    category: protobuf
+  - id: GRPC-02
+    pattern: Package Naming
+    description: Use reverse domain package names
+    example: package com.example.api.v1;
+    level: BASIC
+    category: protobuf
+  - id: GRPC-03
+    pattern: Message Naming
+    description: Use PascalCase for messages
+    example: message UserRequest
+    level: BASIC
+    category: naming
+  - id: GRPC-04
+    pattern: Field Naming
+    description: Use snake_case for fields
+    example: string user_name = 1;
+    level: BASIC
+    category: naming
+  - id: GRPC-05
+    pattern: Enum Naming
+    description: SCREAMING_SNAKE for enum values
+    example: enum Status { STATUS_UNSPECIFIED = 0; }
+    level: BASIC
+    category: naming
+  - id: GRPC-06
+    pattern: Unspecified Enum
+    description: First enum value is UNSPECIFIED = 0
+    example: STATUS_UNSPECIFIED = 0;
+    level: BASIC
+    category: protobuf
+  - id: GRPC-07
+    pattern: Reserved Tags
+    description: Never reuse deleted field tags
+    example: reserved 2 15 to 17;
+    level: INTERMEDIATE
+    category: protobuf
+  - id: GRPC-08
+    pattern: Reserved Names
+    description: Reserve deleted field names
+    example: reserved "old_field" "legacy";
+    level: INTERMEDIATE
+    category: protobuf
+  - id: GRPC-09
+    pattern: Field Immutability
+    description: Never change field types after deploy
+    example: int32 to int64 breaks clients
+    level: INTERMEDIATE
+    category: protobuf
+  - id: GRPC-10
+    pattern: Well-Known Types
+    description: Use google well-known types
+    example: google.protobuf.Timestamp
+    level: BASIC
+    category: protobuf
+  - id: GRPC-11
+    pattern: Unary RPC
+    description: Single request single response
+    example: rpc GetUser(UserRequest) returns (User)
+    level: BASIC
+    category: rpc
+  - id: GRPC-12
+    pattern: Server Streaming
+    description: Single request stream response
+    example: rpc ListUsers(Empty) returns (stream User)
+    level: INTERMEDIATE
+    category: streaming
+  - id: GRPC-13
+    pattern: Client Streaming
+    description: Stream request single response
+    example: rpc UploadData(stream Chunk) returns (Status)
+    level: INTERMEDIATE
+    category: streaming
+  - id: GRPC-14
+    pattern: Bidirectional Stream
+    description: Both sides stream
+    example: rpc Chat(stream Msg) returns (stream Msg)
+    level: ADVANCED
+    category: streaming
+  - id: GRPC-15
+    pattern: Deadlines
+    description: Always set RPC deadlines
+    example: ctx WithTimeout(ctx 5*time.Second)
+    level: BASIC
+    category: reliability
+  - id: GRPC-16
+    pattern: Keepalive Pings
+    description: Maintain HTTP/2 connections
+    example: "keepalive.ClientParameters{Time: 10s}"
+    level: INTERMEDIATE
+    category: reliability
+  - id: GRPC-17
+    pattern: Channel Reuse
+    description: Reuse gRPC channels
+    example: Single channel per service
+    level: BASIC
+    category: performance
+  - id: GRPC-18
+    pattern: Channel Pooling
+    description: Pool channels under high load
+    example: Multiple channels for load distribution
+    level: ADVANCED
+    category: performance
+  - id: GRPC-19
+    pattern: Interceptors
+    description: Cross-cutting via interceptors
+    example: Logging auth interceptors
+    level: INTERMEDIATE
+    category: patterns
+  - id: GRPC-20
+    pattern: Error Codes
+    description: Use gRPC status codes
+    example: codes.NotFound codes.InvalidArgument
+    level: BASIC
+    category: errors
+  - id: GRPC-21
+    pattern: Error Details
+    description: Add structured error details
+    example: status.WithDetails(errInfo)
+    level: INTERMEDIATE
+    category: errors
+  - id: GRPC-22
+    pattern: Service Versioning
+    description: Version in package name
+    example: package api.v1; package api.v2;
+    level: BASIC
+    category: versioning
+  - id: GRPC-23
+    pattern: Backward Compatible
+    description: Add fields don't remove
+    example: New optional fields are safe
+    level: INTERMEDIATE
+    category: versioning
+  - id: GRPC-24
+    pattern: mTLS Auth
+    description: Mutual TLS for security
+    example: grpc.WithTransportCredentials(creds)
+    level: ADVANCED
+    category: security
+  - id: GRPC-25
+    pattern: Buf Lint
+    description: Use buf lint for proto files
+    example: buf lint buf format buf breaking
+    level: INTERMEDIATE
+    category: tooling

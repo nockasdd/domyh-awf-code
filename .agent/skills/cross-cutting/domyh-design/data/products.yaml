@@ -1,0 +1,1339 @@
+metadata:
+  skill: domyh-design
+  domain: products
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: products.yaml
+  patterns_count: 96
+  columns:
+    - "No"
+    - Product Type
+    - Keywords
+    - Primary Style Recommendation
+    - Secondary Styles
+    - Landing Page Pattern
+    - Dashboard Style (if applicable)
+    - Color Palette Focus
+    - Key Considerations
+patterns:
+  - id: "1"
+    product_type: SaaS (General)
+    keywords:
+      - app
+      - b2b
+      - cloud
+      - general
+      - saas
+      - software
+      - subscription
+    primary_style_recommendation: Glassmorphism + Flat Design
+    secondary_styles: Soft UI Evolution, Minimalism
+    landing_page_pattern: Hero + Features + CTA
+    dashboard_style_if_applicable: Data-Dense + Real-Time Monitoring
+    color_palette_focus: Trust blue + accent contrast
+    key_considerations: Balance modern feel with clarity. Focus on CTAs.
+  - id: "2"
+    product_type: Micro SaaS
+    keywords:
+      - app
+      - b2b
+      - cloud
+      - indie
+      - micro
+      - micro-saas
+      - niche
+      - saas
+      - small
+      - software
+      - solo
+      - subscription
+    primary_style_recommendation: Flat Design + Vibrant & Block
+    secondary_styles: Motion-Driven, Micro-interactions
+    landing_page_pattern: Minimal & Direct + Demo
+    dashboard_style_if_applicable: Executive Dashboard
+    color_palette_focus: Vibrant primary + white space
+    key_considerations: Keep simple, show product quickly. Speed is key.
+  - id: "3"
+    product_type: E-commerce
+    keywords:
+      - buy
+      - commerce
+      - e
+      - ecommerce
+      - products
+      - retail
+      - sell
+      - shop
+      - store
+    primary_style_recommendation: Vibrant & Block-based
+    secondary_styles: Aurora UI, Motion-Driven
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Brand primary + success green
+    key_considerations: Engagement & conversions. High visual hierarchy.
+  - id: "4"
+    product_type: E-commerce Luxury
+    keywords:
+      - buy
+      - commerce
+      - e
+      - ecommerce
+      - elegant
+      - exclusive
+      - high-end
+      - luxury
+      - premium
+      - products
+      - retail
+      - sell
+      - shop
+      - store
+    primary_style_recommendation: Liquid Glass + Glassmorphism
+    secondary_styles: 3D & Hyperrealism, Aurora UI
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Premium colors + minimal accent
+    key_considerations: Elegance & sophistication. Premium materials.
+  - id: "5"
+    product_type: Service Landing Page
+    keywords:
+      - appointment
+      - booking
+      - consultation
+      - conversion
+      - landing
+      - marketing
+      - page
+      - service
+    primary_style_recommendation: Hero-Centric + Trust & Authority
+    secondary_styles: Social Proof-Focused, Storytelling
+    landing_page_pattern: Hero-Centric Design
+    dashboard_style_if_applicable: N/A - Analytics for conversions
+    color_palette_focus: Brand primary + trust colors
+    key_considerations: Social proof essential. Show expertise.
+  - id: "6"
+    product_type: B2B Service
+    keywords:
+      - appointment
+      - b
+      - b2b
+      - booking
+      - business
+      - consultation
+      - corporate
+      - enterprise
+      - service
+    primary_style_recommendation: Trust & Authority + Minimal
+    secondary_styles: Feature-Rich, Conversion-Optimized
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Professional blue + neutral grey
+    key_considerations: Credibility essential. Clear ROI messaging.
+  - id: "7"
+    product_type: Financial Dashboard
+    keywords:
+      - admin
+      - analytics
+      - dashboard
+      - data
+      - financial
+      - panel
+    primary_style_recommendation: Dark Mode (OLED) + Data-Dense
+    secondary_styles: Minimalism, Accessible & Ethical
+    landing_page_pattern: N/A - Dashboard focused
+    dashboard_style_if_applicable: Financial Dashboard
+    color_palette_focus: Dark bg + red/green alerts + trust blue
+    key_considerations: High contrast, real-time updates, accuracy paramount.
+  - id: "8"
+    product_type: Analytics Dashboard
+    keywords:
+      - admin
+      - analytics
+      - dashboard
+      - data
+      - panel
+    primary_style_recommendation: Data-Dense + Heat Map & Heatmap
+    secondary_styles: Minimalism, Dark Mode (OLED)
+    landing_page_pattern: N/A - Analytics focused
+    dashboard_style_if_applicable: Drill-Down Analytics + Comparative
+    color_palette_focus: Cool→Hot gradients + neutral grey
+    key_considerations: Clarity > aesthetics. Color-coded data priority.
+  - id: "9"
+    product_type: Healthcare App
+    keywords:
+      - app
+      - clinic
+      - health
+      - healthcare
+      - medical
+      - patient
+    primary_style_recommendation: Neumorphism + Accessible & Ethical
+    secondary_styles: Soft UI Evolution, Claymorphism (for patients)
+    landing_page_pattern: Social Proof-Focused
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Calm blue + health green + trust
+    key_considerations: Accessibility mandatory. Calming aesthetic.
+  - id: "10"
+    product_type: Educational App
+    keywords:
+      - app
+      - course
+      - education
+      - educational
+      - learning
+      - school
+      - training
+    primary_style_recommendation: Claymorphism + Micro-interactions
+    secondary_styles: Vibrant & Block-based, Flat Design
+    landing_page_pattern: Storytelling-Driven
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Playful colors + clear hierarchy
+    key_considerations: Engagement & ease of use. Age-appropriate design.
+  - id: "11"
+    product_type: Creative Agency
+    keywords:
+      - agency
+      - creative
+      - design
+      - marketing
+      - studio
+    primary_style_recommendation: Brutalism + Motion-Driven
+    secondary_styles: Retro-Futurism, Storytelling-Driven
+    landing_page_pattern: Storytelling-Driven
+    dashboard_style_if_applicable: N/A - Portfolio focused
+    color_palette_focus: Bold primaries + artistic freedom
+    key_considerations: Differentiation key. Wow-factor necessary.
+  - id: "12"
+    product_type: Portfolio/Personal
+    keywords:
+      - creative
+      - personal
+      - portfolio
+      - projects
+      - showcase
+      - work
+    primary_style_recommendation: Motion-Driven + Minimalism
+    secondary_styles: Brutalism, Aurora UI
+    landing_page_pattern: Storytelling-Driven
+    dashboard_style_if_applicable: N/A - Personal branding
+    color_palette_focus: Brand primary + artistic interpretation
+    key_considerations: Showcase work. Personality shine through.
+  - id: "13"
+    product_type: Gaming
+    keywords:
+      - entertainment
+      - esports
+      - game
+      - gaming
+      - play
+    primary_style_recommendation: 3D & Hyperrealism + Retro-Futurism
+    secondary_styles: Motion-Driven, Vibrant & Block
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: N/A - Game focused
+    color_palette_focus: Vibrant + neon + immersive colors
+    key_considerations: Immersion priority. Performance critical.
+  - id: "14"
+    product_type: Government/Public Service
+    keywords:
+      - appointment
+      - booking
+      - consultation
+      - government
+      - public
+      - service
+    primary_style_recommendation: Accessible & Ethical + Minimalism
+    secondary_styles: Flat Design, Inclusive Design
+    landing_page_pattern: Minimal & Direct
+    dashboard_style_if_applicable: Executive Dashboard
+    color_palette_focus: Professional blue + high contrast
+    key_considerations: WCAG AAA mandatory. Trust paramount.
+  - id: "15"
+    product_type: Fintech/Crypto
+    keywords:
+      - banking
+      - blockchain
+      - crypto
+      - defi
+      - finance
+      - fintech
+      - money
+      - nft
+      - payment
+      - web3
+    primary_style_recommendation: Glassmorphism + Dark Mode (OLED)
+    secondary_styles: Retro-Futurism, Motion-Driven
+    landing_page_pattern: Conversion-Optimized
+    dashboard_style_if_applicable: Real-Time Monitoring + Predictive
+    color_palette_focus: Dark tech colors + trust + vibrant accents
+    key_considerations: Security perception. Real-time data critical.
+  - id: "16"
+    product_type: Social Media App
+    keywords:
+      - app
+      - community
+      - content
+      - entertainment
+      - media
+      - network
+      - sharing
+      - social
+      - streaming
+      - users
+      - video
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Aurora UI, Micro-interactions
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Vibrant + engagement colors
+    key_considerations: Engagement & retention. Addictive design ethics.
+  - id: "17"
+    product_type: Productivity Tool
+    keywords:
+      - collaboration
+      - productivity
+      - project
+      - task
+      - tool
+      - workflow
+    primary_style_recommendation: Flat Design + Micro-interactions
+    secondary_styles: Minimalism, Soft UI Evolution
+    landing_page_pattern: Interactive Product Demo
+    dashboard_style_if_applicable: Drill-Down Analytics
+    color_palette_focus: Clear hierarchy + functional colors
+    key_considerations: Ease of use. Speed & efficiency focus.
+  - id: "18"
+    product_type: Design System/Component Library
+    keywords:
+      - component
+      - design
+      - library
+      - system
+    primary_style_recommendation: Minimalism + Accessible & Ethical
+    secondary_styles: Flat Design, Zero Interface
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: N/A - Dev focused
+    color_palette_focus: Clear hierarchy + code-like structure
+    key_considerations: Consistency. Developer-first approach.
+  - id: "19"
+    product_type: AI/Chatbot Platform
+    keywords:
+      - ai
+      - artificial-intelligence
+      - automation
+      - chatbot
+      - machine-learning
+      - ml
+      - platform
+    primary_style_recommendation: AI-Native UI + Minimalism
+    secondary_styles: Zero Interface, Glassmorphism
+    landing_page_pattern: Interactive Product Demo
+    dashboard_style_if_applicable: AI/ML Analytics Dashboard
+    color_palette_focus: Neutral + AI Purple (#6366F1)
+    key_considerations: Conversational UI. Streaming text. Context awareness. Minimal chrome.
+  - id: "20"
+    product_type: NFT/Web3 Platform
+    keywords:
+      - nft
+      - platform
+      - web
+    primary_style_recommendation: Cyberpunk UI + Glassmorphism
+    secondary_styles: Aurora UI, 3D & Hyperrealism
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Crypto/Blockchain Dashboard
+    color_palette_focus: Dark + Neon + Gold (#FFD700)
+    key_considerations: Wallet integration. Transaction feedback. Gas fees display. Dark mode essential.
+  - id: "21"
+    product_type: Creator Economy Platform
+    keywords:
+      - creator
+      - economy
+      - platform
+    primary_style_recommendation: Vibrant & Block-based + Bento Box Grid
+    secondary_styles: Motion-Driven, Aurora UI
+    landing_page_pattern: Social Proof-Focused
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Vibrant + Brand colors
+    key_considerations: Creator profiles. Monetization display. Engagement metrics. Social proof.
+  - id: "22"
+    product_type: Sustainability/ESG Platform
+    keywords:
+      - ai
+      - artificial-intelligence
+      - automation
+      - esg
+      - machine-learning
+      - ml
+      - platform
+      - sustainability
+    primary_style_recommendation: Organic Biophilic + Minimalism
+    secondary_styles: Accessible & Ethical, Flat Design
+    landing_page_pattern: Trust & Authority
+    dashboard_style_if_applicable: Energy/Utilities Dashboard
+    color_palette_focus: Green (#228B22) + Earth tones
+    key_considerations: Carbon footprint visuals. Progress indicators. Certification badges. Eco-friendly imagery.
+  - id: "23"
+    product_type: Remote Work/Collaboration Tool
+    keywords:
+      - collaboration
+      - remote
+      - tool
+      - work
+    primary_style_recommendation: Soft UI Evolution + Minimalism
+    secondary_styles: Glassmorphism, Micro-interactions
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Drill-Down Analytics
+    color_palette_focus: Calm Blue + Neutral grey
+    key_considerations: Real-time collaboration. Status indicators. Video integration. Notification management.
+  - id: "24"
+    product_type: Mental Health App
+    keywords:
+      - app
+      - health
+      - mental
+    primary_style_recommendation: Neumorphism + Accessible & Ethical
+    secondary_styles: Claymorphism, Soft UI Evolution
+    landing_page_pattern: Social Proof-Focused
+    dashboard_style_if_applicable: Healthcare Analytics
+    color_palette_focus: Calm Pastels + Trust colors
+    key_considerations: Calming aesthetics. Privacy-first. Crisis resources. Progress tracking. Accessibility mandatory.
+  - id: "25"
+    product_type: Pet Tech App
+    keywords:
+      - app
+      - pet
+      - tech
+    primary_style_recommendation: Claymorphism + Vibrant & Block-based
+    secondary_styles: Micro-interactions, Flat Design
+    landing_page_pattern: Storytelling-Driven
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Playful + Warm colors
+    key_considerations: Pet profiles. Health tracking. Playful UI. Photo galleries. Vet integration.
+  - id: "26"
+    product_type: Smart Home/IoT Dashboard
+    keywords:
+      - admin
+      - analytics
+      - dashboard
+      - data
+      - home
+      - iot
+      - panel
+      - smart
+    primary_style_recommendation: Glassmorphism + Dark Mode (OLED)
+    secondary_styles: Minimalism, AI-Native UI
+    landing_page_pattern: Interactive Product Demo
+    dashboard_style_if_applicable: Real-Time Monitoring
+    color_palette_focus: Dark + Status indicator colors
+    key_considerations: Device status. Real-time controls. Energy monitoring. Automation rules. Quick actions.
+  - id: "27"
+    product_type: EV/Charging Ecosystem
+    keywords:
+      - charging
+      - ecosystem
+      - ev
+    primary_style_recommendation: Minimalism + Aurora UI
+    secondary_styles: Glassmorphism, Organic Biophilic
+    landing_page_pattern: Hero-Centric Design
+    dashboard_style_if_applicable: Energy/Utilities Dashboard
+    color_palette_focus: Electric Blue (#009CD1) + Green
+    key_considerations: Charging station maps. Range estimation. Cost calculation. Environmental impact.
+  - id: "28"
+    product_type: Subscription Box Service
+    keywords:
+      - appointment
+      - booking
+      - box
+      - consultation
+      - membership
+      - plan
+      - recurring
+      - service
+      - subscription
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Claymorphism, Aurora UI
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: E-commerce Analytics
+    color_palette_focus: Brand + Excitement colors
+    key_considerations: Unboxing experience. Personalization quiz. Subscription management. Product reveals.
+  - id: "29"
+    product_type: Podcast Platform
+    keywords:
+      - platform
+      - podcast
+    primary_style_recommendation: Dark Mode (OLED) + Minimalism
+    secondary_styles: Motion-Driven, Vibrant & Block-based
+    landing_page_pattern: Storytelling-Driven
+    dashboard_style_if_applicable: Media/Entertainment Dashboard
+    color_palette_focus: Dark + Audio waveform accents
+    key_considerations: Audio player UX. Episode discovery. Creator tools. Analytics for podcasters.
+  - id: "30"
+    product_type: Dating App
+    keywords:
+      - app
+      - dating
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Aurora UI, Glassmorphism
+    landing_page_pattern: Social Proof-Focused
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: Warm + Romantic (Pink/Red gradients)
+    key_considerations: Profile cards. Swipe interactions. Match animations. Safety features. Video chat.
+  - id: "31"
+    product_type: Micro-Credentials/Badges Platform
+    keywords:
+      - badges
+      - credentials
+      - micro
+      - platform
+    primary_style_recommendation: Minimalism + Flat Design
+    secondary_styles: Accessible & Ethical, Swiss Modernism 2.0
+    landing_page_pattern: Trust & Authority
+    dashboard_style_if_applicable: Education Dashboard
+    color_palette_focus: Trust Blue + Gold (#FFD700)
+    key_considerations: Credential verification. Badge display. Progress tracking. Issuer trust. LinkedIn integration.
+  - id: "32"
+    product_type: Knowledge Base/Documentation
+    keywords:
+      - base
+      - documentation
+      - knowledge
+    primary_style_recommendation: Minimalism + Accessible & Ethical
+    secondary_styles: Swiss Modernism 2.0, Flat Design
+    landing_page_pattern: FAQ/Documentation
+    dashboard_style_if_applicable: N/A - Documentation focused
+    color_palette_focus: Clean hierarchy + minimal color
+    key_considerations: Search-first. Clear navigation. Code highlighting. Version switching. Feedback system.
+  - id: "33"
+    product_type: Hyperlocal Services
+    keywords:
+      - appointment
+      - booking
+      - consultation
+      - hyperlocal
+      - service
+      - services
+    primary_style_recommendation: Minimalism + Vibrant & Block-based
+    secondary_styles: Micro-interactions, Flat Design
+    landing_page_pattern: Conversion-Optimized
+    dashboard_style_if_applicable: Drill-Down Analytics + Map
+    color_palette_focus: Location markers + Trust colors
+    key_considerations: Map integration. Service categories. Provider profiles. Booking system. Reviews.
+  - id: "34"
+    product_type: Beauty/Spa/Wellness Service
+    keywords:
+      - appointment
+      - beauty
+      - booking
+      - consultation
+      - service
+      - spa
+      - wellness
+    primary_style_recommendation: Soft UI Evolution + Neumorphism
+    secondary_styles: Glassmorphism, Minimalism
+    landing_page_pattern: Hero-Centric Design + Social Proof
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: "Soft pastels (Pink #FFB6C1 Sage #90EE90) + Cream + Gold accents"
+    key_considerations: Calming aesthetic. Booking system. Service menu. Before/after gallery. Testimonials. Relaxing imagery.
+  - id: "35"
+    product_type: Luxury/Premium Brand
+    keywords:
+      - brand
+      - elegant
+      - exclusive
+      - high-end
+      - luxury
+      - premium
+    primary_style_recommendation: Liquid Glass + Glassmorphism
+    secondary_styles: Minimalism, 3D & Hyperrealism
+    landing_page_pattern: Storytelling-Driven + Feature-Rich
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Black + Gold (#FFD700) + White + Minimal accent
+    key_considerations: Elegance paramount. Premium imagery. Storytelling. High-quality visuals. Exclusive feel.
+  - id: "36"
+    product_type: Restaurant/Food Service
+    keywords:
+      - appointment
+      - booking
+      - consultation
+      - delivery
+      - food
+      - menu
+      - order
+      - restaurant
+      - service
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Claymorphism, Flat Design
+    landing_page_pattern: Hero-Centric Design + Conversion
+    dashboard_style_if_applicable: N/A - Booking focused
+    color_palette_focus: Warm colors (Orange Red Brown) + appetizing imagery
+    key_considerations: Menu display. Online ordering. Reservation system. Food photography. Location/hours prominent.
+  - id: "37"
+    product_type: Fitness/Gym App
+    keywords:
+      - app
+      - exercise
+      - fitness
+      - gym
+      - health
+      - workout
+    primary_style_recommendation: Vibrant & Block-based + Dark Mode (OLED)
+    secondary_styles: Motion-Driven, Neumorphism
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: User Behavior Analytics
+    color_palette_focus: "Energetic (Orange #FF6B35 Electric Blue) + Dark bg"
+    key_considerations: Progress tracking. Workout plans. Community features. Achievements. Motivational design.
+  - id: "38"
+    product_type: Real Estate/Property
+    keywords:
+      - buy
+      - estate
+      - housing
+      - property
+      - real
+      - real-estate
+      - rent
+    primary_style_recommendation: Glassmorphism + Minimalism
+    secondary_styles: Motion-Driven, 3D & Hyperrealism
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Trust Blue (#0077B6) + Gold accents + White
+    key_considerations: Property listings. Virtual tours. Map integration. Agent profiles. Mortgage calculator. High-quality imagery.
+  - id: "39"
+    product_type: Travel/Tourism Agency
+    keywords:
+      - agency
+      - booking
+      - creative
+      - design
+      - flight
+      - hotel
+      - marketing
+      - studio
+      - tourism
+      - travel
+      - vacation
+    primary_style_recommendation: Aurora UI + Motion-Driven
+    secondary_styles: Vibrant & Block-based, Glassmorphism
+    landing_page_pattern: Storytelling-Driven + Hero-Centric
+    dashboard_style_if_applicable: Booking Analytics
+    color_palette_focus: Vibrant destination colors + Sky Blue + Warm accents
+    key_considerations: Destination showcase. Booking system. Itinerary builder. Reviews. Inspiration galleries. Mobile-first.
+  - id: "40"
+    product_type: Hotel/Hospitality
+    keywords:
+      - hospitality
+      - hotel
+    primary_style_recommendation: Liquid Glass + Minimalism
+    secondary_styles: Glassmorphism, Soft UI Evolution
+    landing_page_pattern: Hero-Centric Design + Social Proof
+    dashboard_style_if_applicable: Revenue Management Dashboard
+    color_palette_focus: Warm neutrals + Gold (#D4AF37) + Brand accent
+    key_considerations: Room booking. Amenities showcase. Location maps. Guest reviews. Seasonal pricing. Luxury imagery.
+  - id: "41"
+    product_type: Wedding/Event Planning
+    keywords:
+      - conference
+      - event
+      - meetup
+      - planning
+      - registration
+      - ticket
+      - wedding
+    primary_style_recommendation: Soft UI Evolution + Aurora UI
+    secondary_styles: Glassmorphism, Motion-Driven
+    landing_page_pattern: Storytelling-Driven + Social Proof
+    dashboard_style_if_applicable: N/A - Planning focused
+    color_palette_focus: Soft Pink (#FFD6E0) + Gold + Cream + Sage
+    key_considerations: Portfolio gallery. Vendor directory. Planning tools. Timeline. Budget tracker. Romantic aesthetic.
+  - id: "42"
+    product_type: Legal Services
+    keywords:
+      - appointment
+      - attorney
+      - booking
+      - compliance
+      - consultation
+      - contract
+      - law
+      - legal
+      - service
+      - services
+    primary_style_recommendation: Trust & Authority + Minimalism
+    secondary_styles: Accessible & Ethical, Swiss Modernism 2.0
+    landing_page_pattern: Trust & Authority + Minimal
+    dashboard_style_if_applicable: Case Management Dashboard
+    color_palette_focus: Navy Blue (#1E3A5F) + Gold + White
+    key_considerations: Credibility paramount. Practice areas. Attorney profiles. Case results. Contact forms. Professional imagery.
+  - id: "43"
+    product_type: Insurance Platform
+    keywords:
+      - insurance
+      - platform
+    primary_style_recommendation: Trust & Authority + Flat Design
+    secondary_styles: Accessible & Ethical, Minimalism
+    landing_page_pattern: Conversion-Optimized + Trust
+    dashboard_style_if_applicable: Claims Analytics Dashboard
+    color_palette_focus: Trust Blue (#0066CC) + Green (security) + Neutral
+    key_considerations: Quote calculator. Policy comparison. Claims process. Trust signals. Clear pricing. Security badges.
+  - id: "44"
+    product_type: Banking/Traditional Finance
+    keywords:
+      - banking
+      - finance
+      - traditional
+    primary_style_recommendation: Minimalism + Accessible & Ethical
+    secondary_styles: Trust & Authority, Dark Mode (OLED)
+    landing_page_pattern: Trust & Authority + Feature-Rich
+    dashboard_style_if_applicable: Financial Dashboard
+    color_palette_focus: Navy (#0A1628) + Trust Blue + Gold accents
+    key_considerations: Security-first. Account overview. Transaction history. Mobile banking. Accessibility critical. Trust paramount.
+  - id: "45"
+    product_type: Online Course/E-learning
+    keywords:
+      - course
+      - e
+      - learning
+      - online
+    primary_style_recommendation: Claymorphism + Vibrant & Block-based
+    secondary_styles: Motion-Driven, Flat Design
+    landing_page_pattern: Feature-Rich Showcase + Social Proof
+    dashboard_style_if_applicable: Education Dashboard
+    color_palette_focus: Vibrant learning colors + Progress green
+    key_considerations: Course catalog. Progress tracking. Video player. Quizzes. Certificates. Community forums. Gamification.
+  - id: "46"
+    product_type: Non-profit/Charity
+    keywords:
+      - charity
+      - non
+      - profit
+    primary_style_recommendation: Accessible & Ethical + Organic Biophilic
+    secondary_styles: Minimalism, Storytelling-Driven
+    landing_page_pattern: Storytelling-Driven + Trust
+    dashboard_style_if_applicable: Donation Analytics Dashboard
+    color_palette_focus: Cause-related colors + Trust + Warm
+    key_considerations: Impact stories. Donation flow. Transparency reports. Volunteer signup. Event calendar. Emotional connection.
+  - id: "47"
+    product_type: Music Streaming
+    keywords:
+      - music
+      - streaming
+    primary_style_recommendation: Dark Mode (OLED) + Vibrant & Block-based
+    secondary_styles: Motion-Driven, Aurora UI
+    landing_page_pattern: Feature-Rich Showcase
+    dashboard_style_if_applicable: Media/Entertainment Dashboard
+    color_palette_focus: Dark (#121212) + Vibrant accents + Album art colors
+    key_considerations: Audio player. Playlist management. Artist pages. Personalization. Social features. Waveform visualizations.
+  - id: "48"
+    product_type: Video Streaming/OTT
+    keywords:
+      - ott
+      - streaming
+      - video
+    primary_style_recommendation: Dark Mode (OLED) + Motion-Driven
+    secondary_styles: Glassmorphism, Vibrant & Block-based
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Media/Entertainment Dashboard
+    color_palette_focus: Dark bg + Content poster colors + Brand accent
+    key_considerations: Video player. Content discovery. Watchlist. Continue watching. Personalized recommendations. Thumbnail-heavy.
+  - id: "49"
+    product_type: Job Board/Recruitment
+    keywords:
+      - board
+      - job
+      - recruitment
+    primary_style_recommendation: Flat Design + Minimalism
+    secondary_styles: Vibrant & Block-based, Accessible & Ethical
+    landing_page_pattern: Conversion-Optimized + Feature-Rich
+    dashboard_style_if_applicable: HR Analytics Dashboard
+    color_palette_focus: Professional Blue + Success Green + Neutral
+    key_considerations: Job listings. Search/filter. Company profiles. Application tracking. Resume upload. Salary insights.
+  - id: "50"
+    product_type: Marketplace (P2P)
+    keywords:
+      - buyers
+      - listings
+      - marketplace
+      - p
+      - platform
+      - sellers
+    primary_style_recommendation: Vibrant & Block-based + Flat Design
+    secondary_styles: Micro-interactions, Trust & Authority
+    landing_page_pattern: Feature-Rich Showcase + Social Proof
+    dashboard_style_if_applicable: E-commerce Analytics
+    color_palette_focus: Trust colors + Category colors + Success green
+    key_considerations: Seller/buyer profiles. Listings. Reviews/ratings. Secure payment. Messaging. Search/filter. Trust badges.
+  - id: "51"
+    product_type: Logistics/Delivery
+    keywords:
+      - delivery
+      - logistics
+    primary_style_recommendation: Minimalism + Flat Design
+    secondary_styles: Dark Mode (OLED), Micro-interactions
+    landing_page_pattern: Feature-Rich Showcase + Conversion
+    dashboard_style_if_applicable: Real-Time Monitoring + Route Analytics
+    color_palette_focus: Blue (#2563EB) + Orange (tracking) + Green (delivered)
+    key_considerations: Real-time tracking. Delivery scheduling. Route optimization. Driver management. Status updates. Map integration.
+  - id: "52"
+    product_type: Agriculture/Farm Tech
+    keywords:
+      - agriculture
+      - farm
+      - tech
+    primary_style_recommendation: Organic Biophilic + Flat Design
+    secondary_styles: Minimalism, Accessible & Ethical
+    landing_page_pattern: Feature-Rich Showcase + Trust
+    dashboard_style_if_applicable: IoT Sensor Dashboard
+    color_palette_focus: Earth Green (#4A7C23) + Brown + Sky Blue
+    key_considerations: Crop monitoring. Weather data. IoT sensors. Yield tracking. Market prices. Sustainable imagery.
+  - id: "53"
+    product_type: Construction/Architecture
+    keywords:
+      - architecture
+      - construction
+    primary_style_recommendation: Minimalism + 3D & Hyperrealism
+    secondary_styles: Brutalism, Swiss Modernism 2.0
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Project Management Dashboard
+    color_palette_focus: Grey (#4A4A4A) + Orange (safety) + Blueprint Blue
+    key_considerations: Project portfolio. 3D renders. Timeline. Material specs. Team collaboration. Blueprint aesthetic.
+  - id: "54"
+    product_type: Automotive/Car Dealership
+    keywords:
+      - automotive
+      - car
+      - dealership
+    primary_style_recommendation: Motion-Driven + 3D & Hyperrealism
+    secondary_styles: Dark Mode (OLED), Glassmorphism
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Sales Intelligence Dashboard
+    color_palette_focus: Brand colors + Metallic accents + Dark/Light
+    key_considerations: Vehicle showcase. 360° views. Comparison tools. Financing calculator. Test drive booking. High-quality imagery.
+  - id: "55"
+    product_type: Photography Studio
+    keywords:
+      - photography
+      - studio
+    primary_style_recommendation: Motion-Driven + Minimalism
+    secondary_styles: Aurora UI, Glassmorphism
+    landing_page_pattern: Storytelling-Driven + Hero-Centric
+    dashboard_style_if_applicable: N/A - Portfolio focused
+    color_palette_focus: Black + White + Minimal accent
+    key_considerations: Portfolio gallery. Before/after. Service packages. Booking system. Client galleries. Full-bleed imagery.
+  - id: "56"
+    product_type: Coworking Space
+    keywords:
+      - coworking
+      - space
+    primary_style_recommendation: Vibrant & Block-based + Glassmorphism
+    secondary_styles: Minimalism, Motion-Driven
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Occupancy Dashboard
+    color_palette_focus: Energetic colors + Wood tones + Brand accent
+    key_considerations: Space tour. Membership plans. Booking system. Amenities. Community events. Virtual tour.
+  - id: "57"
+    product_type: Cleaning Service
+    keywords:
+      - appointment
+      - booking
+      - cleaning
+      - consultation
+      - service
+    primary_style_recommendation: Soft UI Evolution + Flat Design
+    secondary_styles: Minimalism, Micro-interactions
+    landing_page_pattern: Conversion-Optimized + Trust
+    dashboard_style_if_applicable: Service Analytics
+    color_palette_focus: Fresh Blue (#00B4D8) + Clean White + Green
+    key_considerations: Service packages. Booking system. Price calculator. Before/after gallery. Reviews. Trust badges.
+  - id: "58"
+    product_type: Home Services (Plumber/Electrician)
+    keywords:
+      - appointment
+      - booking
+      - consultation
+      - electrician
+      - home
+      - plumber
+      - service
+      - services
+    primary_style_recommendation: Flat Design + Trust & Authority
+    secondary_styles: Minimalism, Accessible & Ethical
+    landing_page_pattern: Conversion-Optimized + Trust
+    dashboard_style_if_applicable: Service Analytics
+    color_palette_focus: Trust Blue + Safety Orange + Professional grey
+    key_considerations: Service list. Emergency contact. Booking. Price transparency. Certifications. Local trust signals.
+  - id: "59"
+    product_type: Childcare/Daycare
+    keywords:
+      - childcare
+      - daycare
+    primary_style_recommendation: Claymorphism + Vibrant & Block-based
+    secondary_styles: Soft UI Evolution, Accessible & Ethical
+    landing_page_pattern: Social Proof-Focused + Trust
+    dashboard_style_if_applicable: Parent Dashboard
+    color_palette_focus: Playful pastels + Safe colors + Warm accents
+    key_considerations: Programs. Staff profiles. Safety certifications. Parent portal. Activity updates. Cheerful imagery.
+  - id: "60"
+    product_type: Senior Care/Elderly
+    keywords:
+      - care
+      - elderly
+      - senior
+    primary_style_recommendation: Accessible & Ethical + Soft UI Evolution
+    secondary_styles: Minimalism, Neumorphism
+    landing_page_pattern: Trust & Authority + Social Proof
+    dashboard_style_if_applicable: Healthcare Analytics
+    color_palette_focus: Calm Blue + Warm neutrals + Large text
+    key_considerations: Care services. Staff qualifications. Facility tour. Family portal. Large touch targets. High contrast. Accessibility-first.
+  - id: "61"
+    product_type: Medical Clinic
+    keywords:
+      - clinic
+      - medical
+    primary_style_recommendation: Accessible & Ethical + Minimalism
+    secondary_styles: Neumorphism, Trust & Authority
+    landing_page_pattern: Trust & Authority + Conversion
+    dashboard_style_if_applicable: Healthcare Analytics
+    color_palette_focus: Medical Blue (#0077B6) + Trust White + Calm Green
+    key_considerations: Services. Doctor profiles. Online booking. Patient portal. Insurance info. HIPAA compliant. Trust signals.
+  - id: "62"
+    product_type: Pharmacy/Drug Store
+    keywords:
+      - drug
+      - pharmacy
+      - store
+    primary_style_recommendation: Flat Design + Accessible & Ethical
+    secondary_styles: Minimalism, Trust & Authority
+    landing_page_pattern: Conversion-Optimized + Trust
+    dashboard_style_if_applicable: Inventory Dashboard
+    color_palette_focus: Pharmacy Green + Trust Blue + Clean White
+    key_considerations: Product catalog. Prescription upload. Refill reminders. Health info. Store locator. Safety certifications.
+  - id: "63"
+    product_type: Dental Practice
+    keywords:
+      - dental
+      - practice
+    primary_style_recommendation: Soft UI Evolution + Minimalism
+    secondary_styles: Accessible & Ethical, Trust & Authority
+    landing_page_pattern: Social Proof-Focused + Conversion
+    dashboard_style_if_applicable: Patient Analytics
+    color_palette_focus: Fresh Blue + White + Smile Yellow accent
+    key_considerations: Services. Dentist profiles. Before/after. Online booking. Insurance. Patient testimonials. Friendly imagery.
+  - id: "64"
+    product_type: Veterinary Clinic
+    keywords:
+      - clinic
+      - veterinary
+    primary_style_recommendation: Claymorphism + Accessible & Ethical
+    secondary_styles: Soft UI Evolution, Flat Design
+    landing_page_pattern: Social Proof-Focused + Trust
+    dashboard_style_if_applicable: Pet Health Dashboard
+    color_palette_focus: Caring Blue + Pet-friendly colors + Warm accents
+    key_considerations: Pet services. Vet profiles. Online booking. Pet portal. Emergency info. Friendly animal imagery.
+  - id: "65"
+    product_type: Florist/Plant Shop
+    keywords:
+      - florist
+      - plant
+      - shop
+    primary_style_recommendation: Organic Biophilic + Vibrant & Block-based
+    secondary_styles: Aurora UI, Motion-Driven
+    landing_page_pattern: Hero-Centric Design + Conversion
+    dashboard_style_if_applicable: E-commerce Analytics
+    color_palette_focus: Natural Green + Floral pinks/purples + Earth tones
+    key_considerations: Product catalog. Occasion categories. Delivery scheduling. Care guides. Seasonal collections. Beautiful imagery.
+  - id: "66"
+    product_type: Bakery/Cafe
+    keywords:
+      - bakery
+      - cafe
+    primary_style_recommendation: Vibrant & Block-based + Soft UI Evolution
+    secondary_styles: Claymorphism, Motion-Driven
+    landing_page_pattern: Hero-Centric Design + Conversion
+    dashboard_style_if_applicable: N/A - Order focused
+    color_palette_focus: Warm Brown + Cream + Appetizing accents
+    key_considerations: Menu display. Online ordering. Location/hours. Catering. Seasonal specials. Appetizing photography.
+  - id: "67"
+    product_type: Coffee Shop
+    keywords:
+      - coffee
+      - shop
+    primary_style_recommendation: Minimalism + Organic Biophilic
+    secondary_styles: Soft UI Evolution, Flat Design
+    landing_page_pattern: Hero-Centric Design + Conversion
+    dashboard_style_if_applicable: N/A - Order focused
+    color_palette_focus: Coffee Brown (#6F4E37) + Cream + Warm accents
+    key_considerations: Menu. Online ordering. Loyalty program. Location. Story/origin. Cozy aesthetic.
+  - id: "68"
+    product_type: Brewery/Winery
+    keywords:
+      - brewery
+      - winery
+    primary_style_recommendation: Motion-Driven + Storytelling-Driven
+    secondary_styles: Dark Mode (OLED), Organic Biophilic
+    landing_page_pattern: Storytelling-Driven + Hero-Centric
+    dashboard_style_if_applicable: N/A - E-commerce focused
+    color_palette_focus: Deep amber/burgundy + Gold + Craft aesthetic
+    key_considerations: Product showcase. Story/heritage. Tasting notes. Events. Club membership. Artisanal imagery.
+  - id: "69"
+    product_type: Airline
+    keywords:
+      - ai
+      - airline
+      - artificial-intelligence
+      - automation
+      - machine-learning
+      - ml
+    primary_style_recommendation: Minimalism + Glassmorphism
+    secondary_styles: Motion-Driven, Accessible & Ethical
+    landing_page_pattern: Conversion-Optimized + Feature-Rich
+    dashboard_style_if_applicable: Operations Dashboard
+    color_palette_focus: Sky Blue + Brand colors + Trust accents
+    key_considerations: Flight search. Booking. Check-in. Boarding pass. Loyalty program. Route maps. Mobile-first.
+  - id: "70"
+    product_type: News/Media Platform
+    keywords:
+      - content
+      - entertainment
+      - media
+      - news
+      - platform
+      - streaming
+      - video
+    primary_style_recommendation: Minimalism + Flat Design
+    secondary_styles: Dark Mode (OLED), Accessible & Ethical
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Media Analytics Dashboard
+    color_palette_focus: Brand colors + High contrast + Category colors
+    key_considerations: Article layout. Breaking news. Categories. Search. Subscription. Mobile reading. Fast loading.
+  - id: "71"
+    product_type: Magazine/Blog
+    keywords:
+      - articles
+      - blog
+      - content
+      - magazine
+      - posts
+      - writing
+    primary_style_recommendation: Swiss Modernism 2.0 + Motion-Driven
+    secondary_styles: Minimalism, Aurora UI
+    landing_page_pattern: Storytelling-Driven + Hero-Centric
+    dashboard_style_if_applicable: Content Analytics
+    color_palette_focus: Editorial colors + Brand primary + Clean white
+    key_considerations: Article showcase. Category navigation. Author profiles. Newsletter signup. Related content. Typography-focused.
+  - id: "72"
+    product_type: Freelancer Platform
+    keywords:
+      - freelancer
+      - platform
+    primary_style_recommendation: Flat Design + Minimalism
+    secondary_styles: Vibrant & Block-based, Micro-interactions
+    landing_page_pattern: Feature-Rich Showcase + Conversion
+    dashboard_style_if_applicable: Marketplace Analytics
+    color_palette_focus: Professional Blue + Success Green + Neutral
+    key_considerations: Profile creation. Portfolio. Skill matching. Messaging. Payment. Reviews. Project management.
+  - id: "73"
+    product_type: Consulting Firm
+    keywords:
+      - consulting
+      - firm
+    primary_style_recommendation: Trust & Authority + Minimalism
+    secondary_styles: Swiss Modernism 2.0, Accessible & Ethical
+    landing_page_pattern: Trust & Authority + Feature-Rich
+    dashboard_style_if_applicable: N/A - Lead generation
+    color_palette_focus: Navy + Gold + Professional grey
+    key_considerations: Service areas. Case studies. Team profiles. Thought leadership. Contact. Professional credibility.
+  - id: "74"
+    product_type: Marketing Agency
+    keywords:
+      - agency
+      - creative
+      - design
+      - marketing
+      - studio
+    primary_style_recommendation: Brutalism + Motion-Driven
+    secondary_styles: Vibrant & Block-based, Aurora UI
+    landing_page_pattern: Storytelling-Driven + Feature-Rich
+    dashboard_style_if_applicable: Campaign Analytics
+    color_palette_focus: Bold brand colors + Creative freedom
+    key_considerations: Portfolio. Case studies. Services. Team. Creative showcase. Results-focused. Bold aesthetic.
+  - id: "75"
+    product_type: Event Management
+    keywords:
+      - conference
+      - event
+      - management
+      - meetup
+      - registration
+      - ticket
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Glassmorphism, Aurora UI
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Event Analytics
+    color_palette_focus: Event theme colors + Excitement accents
+    key_considerations: Event showcase. Registration. Agenda. Speakers. Sponsors. Ticket sales. Countdown timer.
+  - id: "76"
+    product_type: Conference/Webinar Platform
+    keywords:
+      - conference
+      - platform
+      - webinar
+    primary_style_recommendation: Glassmorphism + Minimalism
+    secondary_styles: Motion-Driven, Flat Design
+    landing_page_pattern: Feature-Rich Showcase + Conversion
+    dashboard_style_if_applicable: Attendee Analytics
+    color_palette_focus: Professional Blue + Video accent + Brand
+    key_considerations: Registration. Agenda. Speaker profiles. Live stream. Networking. Recording access. Virtual event features.
+  - id: "77"
+    product_type: Membership/Community
+    keywords:
+      - community
+      - membership
+    primary_style_recommendation: Vibrant & Block-based + Soft UI Evolution
+    secondary_styles: Bento Box Grid, Micro-interactions
+    landing_page_pattern: Social Proof-Focused + Conversion
+    dashboard_style_if_applicable: Community Analytics
+    color_palette_focus: Community brand colors + Engagement accents
+    key_considerations: Member benefits. Pricing tiers. Community showcase. Events. Member directory. Exclusive content.
+  - id: "78"
+    product_type: Newsletter Platform
+    keywords:
+      - newsletter
+      - platform
+    primary_style_recommendation: Minimalism + Flat Design
+    secondary_styles: Swiss Modernism 2.0, Accessible & Ethical
+    landing_page_pattern: Minimal & Direct + Conversion
+    dashboard_style_if_applicable: Email Analytics
+    color_palette_focus: Brand primary + Clean white + CTA accent
+    key_considerations: Subscribe form. Archive. About. Social proof. Sample content. Simple conversion.
+  - id: "79"
+    product_type: Digital Products/Downloads
+    keywords:
+      - digital
+      - downloads
+      - products
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Glassmorphism, Bento Box Grid
+    landing_page_pattern: Feature-Rich Showcase + Conversion
+    dashboard_style_if_applicable: E-commerce Analytics
+    color_palette_focus: Product category colors + Brand + Success green
+    key_considerations: Product showcase. Preview. Pricing. Instant delivery. License management. Customer reviews.
+  - id: "80"
+    product_type: Church/Religious Organization
+    keywords:
+      - church
+      - organization
+      - religious
+    primary_style_recommendation: Accessible & Ethical + Soft UI Evolution
+    secondary_styles: Minimalism, Trust & Authority
+    landing_page_pattern: Hero-Centric Design + Social Proof
+    dashboard_style_if_applicable: N/A - Community focused
+    color_palette_focus: Warm Gold + Deep Purple/Blue + White
+    key_considerations: Service times. Events. Sermons. Community. Giving. Location. Welcoming imagery.
+  - id: "81"
+    product_type: Sports Team/Club
+    keywords:
+      - club
+      - sports
+      - team
+    primary_style_recommendation: Vibrant & Block-based + Motion-Driven
+    secondary_styles: Dark Mode (OLED), 3D & Hyperrealism
+    landing_page_pattern: Hero-Centric Design + Feature-Rich
+    dashboard_style_if_applicable: Performance Analytics
+    color_palette_focus: Team colors + Energetic accents
+    key_considerations: Schedule. Roster. News. Tickets. Merchandise. Fan engagement. Action imagery.
+  - id: "82"
+    product_type: Museum/Gallery
+    keywords:
+      - gallery
+      - museum
+    primary_style_recommendation: Minimalism + Motion-Driven
+    secondary_styles: Swiss Modernism 2.0, 3D & Hyperrealism
+    landing_page_pattern: Storytelling-Driven + Feature-Rich
+    dashboard_style_if_applicable: Visitor Analytics
+    color_palette_focus: Art-appropriate neutrals + Exhibition accents
+    key_considerations: Exhibitions. Collections. Tickets. Events. Virtual tours. Educational content. Art-focused design.
+  - id: "83"
+    product_type: Theater/Cinema
+    keywords:
+      - cinema
+      - theater
+    primary_style_recommendation: Dark Mode (OLED) + Motion-Driven
+    secondary_styles: Vibrant & Block-based, Glassmorphism
+    landing_page_pattern: Hero-Centric Design + Conversion
+    dashboard_style_if_applicable: Booking Analytics
+    color_palette_focus: Dark + Spotlight accents + Gold
+    key_considerations: Showtimes. Seat selection. Trailers. Coming soon. Membership. Dramatic imagery.
+  - id: "84"
+    product_type: Language Learning App
+    keywords:
+      - app
+      - language
+      - learning
+    primary_style_recommendation: Claymorphism + Vibrant & Block-based
+    secondary_styles: Micro-interactions, Flat Design
+    landing_page_pattern: Feature-Rich Showcase + Social Proof
+    dashboard_style_if_applicable: Learning Analytics
+    color_palette_focus: Playful colors + Progress indicators + Country flags
+    key_considerations: Lesson structure. Progress tracking. Gamification. Speaking practice. Community. Achievement badges.
+  - id: "85"
+    product_type: Coding Bootcamp
+    keywords:
+      - bootcamp
+      - coding
+    primary_style_recommendation: Dark Mode (OLED) + Minimalism
+    secondary_styles: Cyberpunk UI, Flat Design
+    landing_page_pattern: Feature-Rich Showcase + Social Proof
+    dashboard_style_if_applicable: Student Analytics
+    color_palette_focus: Code editor colors + Brand + Success green
+    key_considerations: Curriculum. Projects. Career outcomes. Alumni. Pricing. Application. Terminal aesthetic.
+  - id: "86"
+    product_type: Cybersecurity Platform
+    keywords:
+      - cyber
+      - security
+      - platform
+    primary_style_recommendation: Cyberpunk UI + Dark Mode (OLED)
+    secondary_styles: Neubrutalism, Minimal & Direct
+    landing_page_pattern: Trust & Authority + Real-Time
+    dashboard_style_if_applicable: Real-Time Monitoring + Heat Map
+    color_palette_focus: Matrix Green + Deep Black + Terminal feel
+    key_considerations: Data density. Threat visualization. Dark mode default.
+  - id: "87"
+    product_type: Developer Tool / IDE
+    keywords:
+      - dev
+      - developer
+      - tool
+      - ide
+    primary_style_recommendation: Dark Mode (OLED) + Minimalism
+    secondary_styles: Flat Design, Bento Box Grid
+    landing_page_pattern: Minimal & Direct + Documentation
+    dashboard_style_if_applicable: Real-Time Monitor + Terminal
+    color_palette_focus: Dark syntax theme colors + Blue focus
+    key_considerations: Keyboard shortcuts. Syntax highlighting. Fast performance.
+  - id: "88"
+    product_type: Biotech / Life Sciences
+    keywords:
+      - biotech
+      - biology
+      - science
+    primary_style_recommendation: Glassmorphism + Clean Science
+    secondary_styles: Minimalism, Organic Biophilic
+    landing_page_pattern: Storytelling-Driven + Research
+    dashboard_style_if_applicable: Data-Dense + Predictive
+    color_palette_focus: Sterile White + DNA Blue + Life Green
+    key_considerations: Data accuracy. Cleanliness. Complex data viz.
+  - id: "89"
+    product_type: Space Tech / Aerospace
+    keywords:
+      - aerospace
+      - space
+      - tech
+    primary_style_recommendation: Holographic / HUD + Dark Mode
+    secondary_styles: Glassmorphism, 3D & Hyperrealism
+    landing_page_pattern: Immersive Experience + Hero
+    dashboard_style_if_applicable: Real-Time Monitoring + 3D
+    color_palette_focus: Deep Space Black + Star White + Metallic
+    key_considerations: High-tech feel. Precision. Telemetry data.
+  - id: "90"
+    product_type: Architecture / Interior
+    keywords:
+      - architecture
+      - design
+      - interior
+    primary_style_recommendation: Exaggerated Minimalism + High Imagery
+    secondary_styles: Swiss Modernism 2.0, Parallax
+    landing_page_pattern: Portfolio Grid + Visuals
+    dashboard_style_if_applicable: Project Management + Gallery
+    color_palette_focus: Monochrome + Gold Accent + High Imagery
+    key_considerations: High-res images. Typography. Space.
+  - id: "91"
+    product_type: Quantum Computing Interface
+    keywords:
+      - quantum
+      - computing
+      - physics
+      - qubit
+      - future
+      - science
+    primary_style_recommendation: Holographic / HUD + Dark Mode
+    secondary_styles: Glassmorphism, Spatial UI
+    landing_page_pattern: Immersive/Interactive Experience
+    dashboard_style_if_applicable: 3D Spatial Data + Real-Time Monitor
+    color_palette_focus: "Quantum Blue #00FFFF + Deep Black + Interference patterns"
+    key_considerations: Visualize complexity. Qubit states. Probability clouds. High-tech trust.
+  - id: "92"
+    product_type: Biohacking / Longevity App
+    keywords:
+      - biohacking
+      - health
+      - longevity
+      - tracking
+      - wellness
+      - science
+    primary_style_recommendation: Biomimetic / Organic 2.0
+    secondary_styles: Minimalism, Dark Mode (OLED)
+    landing_page_pattern: Data-Dense + Storytelling
+    dashboard_style_if_applicable: Real-Time Monitor + Biological Data
+    color_palette_focus: Cellular Pink/Red + DNA Blue + Clean White
+    key_considerations: Personal data privacy. Scientific credibility. Biological visualizations.
+  - id: "93"
+    product_type: Autonomous Drone Fleet Manager
+    keywords:
+      - drone
+      - autonomous
+      - fleet
+      - aerial
+      - logistics
+      - robotics
+    primary_style_recommendation: HUD / Sci-Fi FUI
+    secondary_styles: Real-Time Monitor, Spatial UI
+    landing_page_pattern: Real-Time Monitor
+    dashboard_style_if_applicable: Geographic + Real-Time
+    color_palette_focus: "Tactical Green #00FF00 + Alert Red + Map Dark"
+    key_considerations: Real-time telemetry. 3D spatial awareness. Latency indicators. Safety alerts.
+  - id: "94"
+    product_type: Generative Art Platform
+    keywords:
+      - art
+      - generative
+      - ai
+      - creative
+      - platform
+      - gallery
+    primary_style_recommendation: Minimalism (Frame) + Gen Z Chaos
+    secondary_styles: Masonry Grid, Dark Mode
+    landing_page_pattern: Bento Grid Showcase
+    dashboard_style_if_applicable: Gallery / Portfolio
+    color_palette_focus: "Neutral #F5F5F5 (Canvas) + User Content"
+    key_considerations: Content is king. Fast loading. Creator attribution. Minting flow.
+  - id: "95"
+    product_type: Spatial Computing OS / App
+    keywords:
+      - spatial
+      - vr
+      - ar
+      - vision
+      - os
+      - immersive
+      - mixed-reality
+    primary_style_recommendation: Spatial UI (VisionOS)
+    secondary_styles: Glassmorphism, 3D & Hyperrealism
+    landing_page_pattern: Immersive/Interactive Experience
+    dashboard_style_if_applicable: Spatial Dashboard
+    color_palette_focus: Frosted Glass + System Colors + Depth
+    key_considerations: Gaze/Pinch interaction. Depth hierarchy. Environment awareness.
+  - id: "96"
+    product_type: Sustainable Energy / Climate Tech
+    keywords:
+      - climate
+      - energy
+      - sustainable
+      - green
+      - tech
+      - carbon
+    primary_style_recommendation: Organic Biophilic + E-Ink / Paper
+    secondary_styles: Data-Dense, Swiss Modernism
+    landing_page_pattern: Interactive Demo + Data
+    dashboard_style_if_applicable: Energy/Utilities Dashboard
+    color_palette_focus: Earth Green + Sky Blue + Solar Yellow
+    key_considerations: Data transparency. Impact visualization. Low-carbon web design.

@@ -1,0 +1,177 @@
+metadata:
+  skill: domyh-design
+  domain: platform_guidelines
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: platform-guidelines.yaml
+  patterns_count: 12
+  columns:
+    - platform
+    - design_system
+    - spacing_base
+    - spacing_scale
+    - border_radius
+    - shadow_levels
+    - color_tokens
+    - typography_scale
+    - accessibility_level
+    - animation_duration
+    - touch_target
+    - key_patterns
+patterns:
+  - id: item_001
+    platform: Web-React
+    design_system: Custom/shadcn/MUI
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32/48/64
+    border_radius: sm:4px md:8px lg:12px xl:16px
+    shadow_levels: sm:0-1-3 md:0-4-6 lg:0-10-15
+    color_tokens: '{"primary": "brand", "secondary": "muted", "accent": "highlight", "destructive": "error"}'
+    typography_scale: xs:12 sm:14 base:16 lg:18 xl:20 2xl:24
+    accessibility_level: WCAG 2.1 AA
+    animation_duration: fast:150ms normal:250ms slow:350ms
+    touch_target: 44x44px min
+    key_patterns: Component composition + Hooks + Server Components
+  - id: item_002
+    platform: Web-Vue
+    design_system: Vuetify/PrimeVue/Custom
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: md:6px lg:12px
+    shadow_levels: sm:0-2-4 md:0-4-8
+    color_tokens: '{"primary": "", "secondary": "", "success": "", "warning": "", "error": ""}'
+    typography_scale: xs:12 sm:14 base:16 lg:18 xl:20
+    accessibility_level: WCAG 2.1 AA
+    animation_duration: fast:150ms normal:200ms
+    touch_target: 44x44px min
+    key_patterns: Composition API + Provide/Inject
+  - id: item_003
+    platform: Desktop-Windows
+    design_system: Fluent Design (WinUI3)
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: compact:2px normal:4px
+    shadow_levels: Elevation 0-64
+    color_tokens: '{"accent": "system", "background": "mica/acrylic", "text": "primary/secondary"}'
+    typography_scale: caption:12 body:14 subtitle:20 title:28 display:68
+    accessibility_level: WCAG 2.0 AA
+    animation_duration: standard:250ms fast:167ms
+    touch_target: 32x32px min
+    key_patterns: Adaptive layouts + XAML + MVVM
+  - id: item_004
+    platform: Desktop-WPF
+    design_system: Fluent/Custom Modern
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24
+    border_radius: 4-8px radius
+    shadow_levels: DropShadowEffect
+    color_tokens: '{"primary": "", "accent": "", "background": "", "foreground": ""}'
+    typography_scale: small:11 body:14 subtitle:18 title:24
+    accessibility_level: WCAG 2.0 AA
+    animation_duration: Duration 200-400ms
+    touch_target: 32x32px min
+    key_patterns: DynamicResource + MVVM + Styles
+  - id: item_005
+    platform: Desktop-Qt
+    design_system: Qt Quick Controls
+    spacing_base: 4px
+    spacing_scale: 4/8/16/24
+    border_radius: platform-native
+    shadow_levels: Qt.shadow
+    color_tokens: '{"highlighted": "", "window": "", "button": "", "text": ""}'
+    typography_scale: small:10 body:12 title:16 heading:24
+    accessibility_level: Platform-native
+    animation_duration: PropertyAnimation 200-300ms
+    touch_target: 32x32px min
+    key_patterns: QML + Signals/Slots + MVC
+  - id: item_006
+    platform: Desktop-Electron
+    design_system: Web-based (Tailwind/CSS)
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32/48
+    border_radius: md:8px lg:12px
+    shadow_levels: CSS box-shadow
+    color_tokens: '{"bg": "dark/light", "text": "primary/secondary", "border": "muted"}'
+    typography_scale: xs:12 sm:14 base:16 lg:18 xl:20
+    accessibility_level: WCAG 2.1 AA
+    animation_duration: CSS transitions 150-250ms
+    touch_target: 44x44px min
+    key_patterns: IPC + Preload + Web APIs
+  - id: item_007
+    platform: Desktop-Tauri
+    design_system: Web-based (modern CSS)
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: md:8px lg:12px
+    shadow_levels: CSS box-shadow
+    color_tokens: '{"surface": "", "primary": "", "accent": ""}'
+    typography_scale: sm:14 base:16 lg:18
+    accessibility_level: WCAG 2.1 AA
+    animation_duration: CSS/GSAP 150-300ms
+    touch_target: 44x44px min
+    key_patterns: Rust commands + Web frontend
+  - id: item_008
+    platform: Desktop-macOS
+    design_system: Human Interface Guidelines
+    spacing_base: 8px
+    spacing_scale: 8/12/16/20/24/28
+    border_radius: small:6 medium:10 large:14
+    shadow_levels: NSColor.shadowColor
+    color_tokens: '{"accent": "system", "control": "", "label": "primary/secondary/tertiary"}'
+    typography_scale: caption:10 body:13 title:17 headline:20 largeTitle:28
+    accessibility_level: WCAG 2.0 AA
+    animation_duration: standard:250ms
+    touch_target: 22x22px min (controls)
+    key_patterns: AppKit/SwiftUI + MVVM
+  - id: item_009
+    platform: Mobile-iOS
+    design_system: Human Interface (SwiftUI)
+    spacing_base: 4px
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: continuous:10-14px
+    shadow_levels: shadow symmetry
+    color_tokens: '{"accent": "system", "background": "primary/secondary", "label": "primary/secondary"}'
+    typography_scale: caption2:11 footnote:13 body:17 title2:22 largeTitle:34
+    accessibility_level: WCAG 2.0 AA
+    animation_duration: standard:350ms fast:250ms
+    touch_target: 44x44pt min
+    key_patterns: SwiftUI + Combine + MVVM
+  - id: item_010
+    platform: Mobile-Android
+    design_system: Material Design 3
+    spacing_base: 4dp
+    spacing_scale: 4/8/12/16/24/32/48
+    border_radius: sm:4dp md:8dp lg:16dp
+    shadow_levels: elevation:1-5
+    color_tokens: '{"primary": "", "secondary": "", "tertiary": "", "surface": "", "error": ""}'
+    typography_scale: labelSmall:11 bodyMedium:14 titleLarge:22 displayMedium:45
+    accessibility_level: WCAG 2.1 AA
+    animation_duration: short:100ms standard:300ms
+    touch_target: 48x48dp min
+    key_patterns: Jetpack Compose + ViewModel + Material3
+  - id: item_011
+    platform: Mobile-Flutter
+    design_system: Material/Cupertino
+    spacing_base: "4.0"
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: 4-16 logical pixels
+    shadow_levels: BoxShadow/Elevation
+    color_tokens: '{"primary": "", "secondary": "", "surface": "", "background": ""}'
+    typography_scale: caption:12 body:14 title:16 headline:24
+    accessibility_level: Platform-adaptive
+    animation_duration: "Duration(milliseconds: 200-300)"
+    touch_target: 44x44 logical pixels
+    key_patterns: Widgets + BLoC/Riverpod + Platform-adaptive
+  - id: item_012
+    platform: Mobile-ReactNative
+    design_system: Custom/NativeBase/Gluestack
+    spacing_base: "4"
+    spacing_scale: 4/8/12/16/24/32
+    border_radius: 4-16
+    shadow_levels: StyleSheet.shadow
+    color_tokens: '{"primary": "", "secondary": "", "background": "", "text": ""}'
+    typography_scale: xs:12 sm:14 md:16 lg:18 xl:20
+    accessibility_level: Platform-native
+    animation_duration: Animated 200-300ms
+    touch_target: 44x44 min
+    key_patterns: Hooks + Native Modules + Hermes

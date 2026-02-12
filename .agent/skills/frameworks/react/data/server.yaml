@@ -1,0 +1,295 @@
+# =============================================================================
+# React Server Patterns (Feb 2026)
+# =============================================================================
+# Server Components, Server Functions, React Compiler
+
+metadata:
+  skill: react
+  domain: server
+  version: "19.2"
+  updated: "2026-02-11"
+  patterns_count: 5
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: react007
+    name: Server Components
+    category: rendering
+    version: "18+"
+    description: Render components on the server to reduce client bundle
+    text: server component rsc async data fetch bundle
+    example: |
+      // ✅ Server Component (default in Next.js App Router)
+      // No 'use client' directive = Server Component
+
+      import { db } from '@/lib/db';
+
+      // Async component - fetches data on server
+      export async function UserList() {
+        // Direct database access - never sent to client
+        const users = await db.user.findMany({
+          take: 10,
+          orderBy: { createdAt: 'desc' },
+        });
+
+        return (
+          <ul>
+            {users.map((user) => (
+              <li key={user.id}>{user.name}</li>
+            ))}
+          </ul>
+        );
+      }
+
+      // ✅ Benefits:
+      // - Zero client JS for this component
+      // - Direct database access
+      // - Secrets never exposed
+      // - Faster initial load
+
+      // ✅ Composition with Client Components
+      import { LikeButton } from './LikeButton'; // 'use client'
+
+      export async function PostCard({ postId }) {
+        const post = await db.post.findUnique({ where: { id: postId } });
+
+        return (
+          <article>
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+            <LikeButton postId={postId} initialLikes={post.likes} />
+          </article>
+        );
+      }
+    severity: CRITICAL
+    docs_url: https://react.dev/reference/rsc/server-components
+
+  - id: react008
+    name: Server Functions
+    category: data-mutation
+    version: "19+"
+    description: Server-side mutations triggered from client
+    text: use server function form mutation revalidate
+    example: |
+      // actions.ts
+      'use server';
+
+      import { revalidatePath } from 'next/cache';
+      import { z } from 'zod';
+
+      const UserSchema = z.object({
+        name: z.string().min(2),
+        email: z.string().email(),
+      });
+
+      export async function createUser(formData: FormData) {
+        const validated = UserSchema.parse({
+          name: formData.get('name'),
+          email: formData.get('email'),
+        });
+
+        await db.user.create({ data: validated });
+        revalidatePath('/users');
+      }
+
+      // ✅ Usage in form
+      export function CreateUserForm() {
+        return (
+          <form action={createUser}>
+            <input name="name" placeholder="Name" required />
+            <input name="email" type="email" placeholder="Email" required />
+            <button type="submit">Create User</button>
+          </form>
+        );
+      }
+
+      // ✅ Usage with client-side callback
+      'use client';
+      import { createUser } from './actions';
+
+      export function UserButton() {
+        async function handleClick() {
+          const formData = new FormData();
+          formData.set('name', 'John');
+          formData.set('email', 'john@example.com');
+          await createUser(formData);
+        }
+
+        return <button onClick={handleClick}>Create</button>;
+      }
+    severity: HIGH
+    docs_url: https://react.dev/reference/rsc/server-actions
+
+  - id: react009
+    name: React Compiler (Stable)
+    category: optimization
+    version: "19+"
+    description: |
+      Automatic memoization at build time.
+      No more manual useMemo/useCallback.
+    text: react compiler memoization useMemo useCallback forget
+    example: |
+      // ✅ React Compiler: Automatic memoization
+
+      // Before React Compiler (manual optimization):
+      function TodoList({ todos, filter }) {
+        const filteredTodos = useMemo(() => {
+          return todos.filter((t) => t.status === filter);
+        }, [todos, filter]);
+
+        const handleClick = useCallback((id) => {
+          toggleTodo(id);
+        }, []);
+
+        return filteredTodos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} onClick={handleClick} />
+        ));
+      }
+
+      // ✅ After React Compiler (just write normal code!):
+      function TodoList({ todos, filter }) {
+        // Compiler auto-memoizes this
+        const filteredTodos = todos.filter((t) => t.status === filter);
+
+        // Compiler auto-memoizes callbacks too
+        const handleClick = (id) => {
+          toggleTodo(id);
+        };
+
+        return filteredTodos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} onClick={handleClick} />
+        ));
+      }
+
+      // ✅ Enable in Next.js 16+:
+      // next.config.ts
+      export default {
+        experimental: {
+          reactCompiler: true,
+        },
+      };
+    severity: HIGH
+    docs_url: https://react.dev/learn/react-compiler
+
+  - id: react010
+    name: Suspense Boundaries
+    category: loading
+    version: "18+"
+    description: Declarative loading states for async content
+    text: suspense fallback loading lazy async boundary
+    example: |
+      import { Suspense, lazy } from 'react';
+
+      // ✅ Lazy load components
+      const Dashboard = lazy(() => import('./Dashboard'));
+      const Analytics = lazy(() => import('./Analytics'));
+
+      function App() {
+        return (
+          <div>
+            <h1>My App</h1>
+
+            {/* ✅ Suspense for code splitting */}
+            <Suspense fallback={<DashboardSkeleton />}>
+              <Dashboard />
+            </Suspense>
+
+            {/* ✅ Nested Suspense for granular loading */}
+            <Suspense fallback={<PageLoader />}>
+              <Profile />
+              <Suspense fallback={<AnalyticsSkeleton />}>
+                <Analytics />
+              </Suspense>
+            </Suspense>
+          </div>
+        );
+      }
+
+      // ✅ Suspense with data fetching (React 19)
+      function UserProfile({ userId }) {
+        return (
+          <Suspense fallback={<ProfileSkeleton />}>
+            <ProfileContent userId={userId} />
+          </Suspense>
+        );
+      }
+
+      async function ProfileContent({ userId }) {
+        const user = await fetchUser(userId);  // Suspends here
+        return <h1>{user.name}</h1>;
+      }
+    severity: MEDIUM
+    docs_url: https://react.dev/reference/react/Suspense
+
+  - id: react011
+    name: Error Boundaries
+    category: error-handling
+    version: "16+"
+    description: Catch and handle rendering errors
+    text: error boundary catch fallback componentDidCatch
+    example: |
+      import { Component, ReactNode } from 'react';
+
+      interface Props {
+        fallback: ReactNode;
+        children: ReactNode;
+      }
+
+      interface State {
+        hasError: boolean;
+        error: Error | null;
+      }
+
+      // ✅ Class Component (still needed for error boundaries)
+      class ErrorBoundary extends Component<Props, State> {
+        constructor(props: Props) {
+          super(props);
+          this.state = { hasError: false, error: null };
+        }
+
+        static getDerivedStateFromError(error: Error): State {
+          return { hasError: true, error };
+        }
+
+        componentDidCatch(error: Error, info: React.ErrorInfo) {
+          console.error('Error caught:', error, info);
+          // Log to error reporting service
+          logErrorToService(error, info);
+        }
+
+        render() {
+          if (this.state.hasError) {
+            return this.props.fallback;
+          }
+          return this.props.children;
+        }
+      }
+
+      // ✅ Usage
+      <ErrorBoundary fallback={<ErrorFallback />}>
+        <UserProfile />
+      </ErrorBoundary>
+
+      // ✅ With react-error-boundary library
+      import { ErrorBoundary } from 'react-error-boundary';
+
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={(error, info) => logErrorToService(error, info)}
+        onReset={() => window.location.reload()}
+      >
+        <App />
+      </ErrorBoundary>
+    severity: MEDIUM
+    docs_url: https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary

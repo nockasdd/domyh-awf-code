@@ -1,0 +1,253 @@
+# =============================================================================
+# C Memory Patterns (Feb 2026)
+# Version: Modern C with Sanitizers
+# =============================================================================
+
+metadata:
+  skill: c
+  domain: memory
+  version: "C23"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: c101
+    name: Safe malloc Pattern
+    category: memory
+    version: "C"
+    description: |
+      Defensive malloc with NULL checking.
+      Avoid memory leaks and crashes.
+    text: malloc calloc realloc free memory allocation
+    example: |
+      #include <stdlib.h>
+      #include <string.h>
+
+      // ✅ Safe allocation pattern
+      void* safe_malloc(size_t size) {
+          if (size == 0) return NULL;
+          
+          void* ptr = malloc(size);
+          if (!ptr) {
+              // Handle allocation failure
+              perror("malloc failed");
+              exit(EXIT_FAILURE);  // Or return NULL for graceful handling
+          }
+          return ptr;
+      }
+
+      // ✅ calloc for zero-initialized memory
+      int* array = calloc(100, sizeof(int));  // All zeros
+
+      // ✅ Safe realloc pattern (avoid memory leak)
+      int* resize_array(int* arr, size_t new_count) {
+          int* new_arr = realloc(arr, new_count * sizeof(int));
+          if (!new_arr && new_count > 0) {
+              // Original arr is still valid if realloc fails!
+              return arr;  // Keep original on failure
+          }
+          return new_arr;
+      }
+
+      // ✅ Cleanup pattern with goto
+      int process_data(void) {
+          int result = -1;
+          char* buf1 = malloc(1024);
+          char* buf2 = malloc(2048);
+          
+          if (!buf1 || !buf2) goto cleanup;
+          
+          // Do work...
+          result = 0;
+          
+      cleanup:
+          free(buf2);  // free(NULL) is safe
+          free(buf1);
+          return result;
+      }
+
+      // ✅ Set pointer to NULL after free
+      free(ptr);
+      ptr = NULL;  // Avoid dangling pointer
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/c/memory/malloc
+
+  - id: c102
+    name: Address Sanitizer
+    category: debugging
+    version: "Modern"
+    description: |
+      Compile-time instrumentation for memory bugs.
+      Detect buffer overflows, use-after-free.
+    text: asan sanitizer buffer overflow use-after-free
+    example: |
+      // ✅ Compile with AddressSanitizer
+      // gcc -fsanitize=address -fno-omit-frame-pointer -g main.c
+      // clang -fsanitize=address -fno-omit-frame-pointer -g main.c
+
+      // ✅ Common bugs ASan detects:
+
+      // 1. Buffer overflow
+      void overflow_example(void) {
+          int arr[10];
+          arr[10] = 42;  // ASan: stack-buffer-overflow
+      }
+
+      // 2. Heap buffer overflow
+      void heap_overflow(void) {
+          int* p = malloc(10 * sizeof(int));
+          p[10] = 42;  // ASan: heap-buffer-overflow
+          free(p);
+      }
+
+      // 3. Use after free
+      void use_after_free(void) {
+          int* p = malloc(sizeof(int));
+          free(p);
+          *p = 42;  // ASan: heap-use-after-free
+      }
+
+      // 4. Double free
+      void double_free(void) {
+          int* p = malloc(sizeof(int));
+          free(p);
+          free(p);  // ASan: double-free
+      }
+
+      // 5. Memory leak (with -fsanitize=leak)
+      void leak(void) {
+          int* p = malloc(sizeof(int));
+          // No free - ASan: memory leak
+      }
+
+      // ✅ CMake configuration
+      // set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address")
+
+      // ✅ Runtime options
+      // ASAN_OPTIONS=detect_leaks=1:halt_on_error=0 ./program
+    severity: HIGH
+    docs_url: https://clang.llvm.org/docs/AddressSanitizer.html
+
+  - id: c103
+    name: Valgrind Patterns
+    category: debugging
+    version: "Modern"
+    description: |
+      Runtime memory analysis with Valgrind.
+      Detect leaks, uninitialized reads.
+    text: valgrind memcheck leak detection memory debugging
+    example: |
+      // ✅ Run with Valgrind
+      // valgrind --leak-check=full --show-leak-kinds=all ./program
+
+      // ✅ Valgrind client requests (optional debugging)
+      #include <valgrind/memcheck.h>
+
+      void custom_allocator(void) {
+          void* pool = malloc(1024);
+          
+          // Tell Valgrind this memory is now "allocated" to user
+          VALGRIND_MALLOCLIKE_BLOCK(pool, 1024, 0, 0);
+          
+          // Mark as uninitialized
+          VALGRIND_MAKE_MEM_UNDEFINED(pool, 1024);
+          
+          // When freed
+          VALGRIND_FREELIKE_BLOCK(pool, 0);
+          free(pool);
+      }
+
+      // ✅ Suppress false positives
+      // Create a suppression file: valgrind --gen-suppressions=all
+
+      // ✅ Common Valgrind output interpretation:
+      // "definitely lost" - Memory you allocated but never freed
+      // "indirectly lost" - Lost because parent pointer was lost
+      // "possibly lost" - Pointer arithmetic hid the pointer
+      // "still reachable" - Not freed but still accessible at exit
+
+      // ✅ Uninitialized value detection
+      void uninit_example(void) {
+          int x;
+          if (x == 0) {  // Valgrind: Conditional jump depends on uninit
+              printf("zero\n");
+          }
+      }
+
+      // ✅ Useful flags
+      // --track-origins=yes   : Show where uninit values came from
+      // --num-callers=20      : More stack frames
+      // --suppressions=file   : Ignore known issues
+    severity: MEDIUM
+    docs_url: https://valgrind.org/docs/manual/mc-manual.html
+
+  - id: c104
+    name: Arena Allocator
+    category: memory
+    version: "Modern"
+    description: |
+      Bulk allocation and deallocation pattern.
+      Fast allocations, single free.
+    text: arena allocator memory pool bump allocator
+    example: |
+      #include <stdlib.h>
+      #include <stdint.h>
+      #include <stdalign.h>
+
+      // ✅ Simple arena allocator
+      typedef struct {
+          uint8_t* base;
+          size_t size;
+          size_t offset;
+      } Arena;
+
+      Arena arena_create(size_t size) {
+          return (Arena){
+              .base = malloc(size),
+              .size = size,
+              .offset = 0
+          };
+      }
+
+      void* arena_alloc(Arena* a, size_t size, size_t align) {
+          // Align the offset
+          size_t aligned = (a->offset + align - 1) & ~(align - 1);
+          
+          if (aligned + size > a->size) {
+              return NULL;  // Out of memory
+          }
+          
+          void* ptr = a->base + aligned;
+          a->offset = aligned + size;
+          return ptr;
+      }
+
+      void arena_reset(Arena* a) {
+          a->offset = 0;  // "Free" all allocations instantly
+      }
+
+      void arena_destroy(Arena* a) {
+          free(a->base);
+          a->base = NULL;
+          a->size = 0;
+          a->offset = 0;
+      }
+
+      // ✅ Usage
+      void process_frame(void) {
+          Arena scratch = arena_create(1024 * 1024);  // 1MB
+          
+          // Allocate freely during frame
+          int* data = arena_alloc(&scratch, 1000 * sizeof(int), alignof(int));
+          char* str = arena_alloc(&scratch, 256, 1);
+          
+          // Do work...
+          
+          // Free everything at once
+          arena_reset(&scratch);
+          
+          // Or destroy when done
+          arena_destroy(&scratch);
+      }
+    severity: MEDIUM
+    docs_url: https://en.wikipedia.org/wiki/Region-based_memory_management

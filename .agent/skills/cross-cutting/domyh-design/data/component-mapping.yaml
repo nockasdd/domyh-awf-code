@@ -1,0 +1,318 @@
+metadata:
+  skill: domyh-design
+  domain: component_mapping
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: component-mapping.yaml
+  patterns_count: 30
+  columns:
+    - component
+    - category
+    - library_score
+    - headless_score
+    - custom_score
+    - a11y_priority
+    - mapping_strategy
+    - common_libs
+    - token_cost_saved
+patterns:
+  - id: item_001
+    component: Button
+    category: Core
+    library_score: "4"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix) + Tailwind
+    common_libs: shadcn/Radix/MUI/Chakra
+    token_cost_saved: 85%
+  - id: item_002
+    component: Input
+    category: Core
+    library_score: "4"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless + validation
+    common_libs: React Hook Form + shadcn
+    token_cost_saved: 80%
+  - id: item_003
+    component: Modal/Dialog
+    category: Core
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "2"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Dialog)
+    common_libs: Radix Dialog/Headless UI
+    token_cost_saved: 90%
+  - id: item_004
+    component: Select/Dropdown
+    category: Core
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "2"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Select)
+    common_libs: Radix Select/React Select
+    token_cost_saved: 90%
+  - id: item_005
+    component: Checkbox
+    category: Core
+    library_score: "4"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Checkbox)
+    common_libs: Radix/shadcn
+    token_cost_saved: 85%
+  - id: item_006
+    component: Radio
+    category: Core
+    library_score: "4"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Radio)
+    common_libs: Radix/shadcn
+    token_cost_saved: 85%
+  - id: item_007
+    component: Switch/Toggle
+    category: Core
+    library_score: "4"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Switch)
+    common_libs: Radix/shadcn
+    token_cost_saved: 85%
+  - id: item_008
+    component: Card
+    category: Layout
+    library_score: "3"
+    headless_score: "2"
+    custom_score: "5"
+    a11y_priority: LOW
+    mapping_strategy: Custom with tokens
+    common_libs: Custom/shadcn
+    token_cost_saved: 70%
+  - id: item_009
+    component: Avatar
+    category: Display
+    library_score: "4"
+    headless_score: "3"
+    custom_score: "4"
+    a11y_priority: LOW
+    mapping_strategy: Custom or library
+    common_libs: shadcn/MUI
+    token_cost_saved: 75%
+  - id: item_010
+    component: Badge
+    category: Display
+    library_score: "3"
+    headless_score: "2"
+    custom_score: "5"
+    a11y_priority: LOW
+    mapping_strategy: Custom utility class
+    common_libs: Custom/shadcn
+    token_cost_saved: 90%
+  - id: item_011
+    component: Tooltip
+    category: Overlay
+    library_score: "4"
+    headless_score: "4"
+    custom_score: "3"
+    a11y_priority: LOW
+    mapping_strategy: Headless or library
+    common_libs: Radix Tooltip
+    token_cost_saved: 80%
+  - id: item_012
+    component: Toast/Notification
+    category: Feedback
+    library_score: "4"
+    headless_score: "4"
+    custom_score: "3"
+    a11y_priority: LOW
+    mapping_strategy: Sonner or library
+    common_libs: Sonner/react-hot-toast
+    token_cost_saved: 80%
+  - id: item_013
+    component: Tabs
+    category: Navigation
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Tabs)
+    common_libs: Radix Tabs
+    token_cost_saved: 85%
+  - id: item_014
+    component: Accordion
+    category: Navigation
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Accordion)
+    common_libs: Radix Accordion
+    token_cost_saved: 85%
+  - id: item_015
+    component: Menu/Context
+    category: Navigation
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "2"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Menu)
+    common_libs: Radix Menu
+    token_cost_saved: 90%
+  - id: item_016
+    component: Table
+    category: Data
+    library_score: "5"
+    headless_score: "2"
+    custom_score: "3"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library (TanStack Table)
+    common_libs: TanStack Table/AG Grid
+    token_cost_saved: 70%
+  - id: item_017
+    component: Form
+    category: Composite
+    library_score: "4"
+    headless_score: "4"
+    custom_score: "3"
+    a11y_priority: HIGH
+    mapping_strategy: React Hook Form + inputs
+    common_libs: RHF + Zod + shadcn
+    token_cost_saved: 75%
+  - id: item_018
+    component: DatePicker
+    category: Input
+    library_score: "5"
+    headless_score: "2"
+    custom_score: "1"
+    a11y_priority: HIGH
+    mapping_strategy: Library specialized
+    common_libs: react-day-picker/date-fns
+    token_cost_saved: 90%
+  - id: item_019
+    component: ColorPicker
+    category: Input
+    library_score: "5"
+    headless_score: "2"
+    custom_score: "2"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library specialized
+    common_libs: react-colorful
+    token_cost_saved: 85%
+  - id: item_020
+    component: RichTextEditor
+    category: Input
+    library_score: "5"
+    headless_score: "1"
+    custom_score: "1"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library specialized
+    common_libs: TipTap/Slate
+    token_cost_saved: 95%
+  - id: item_021
+    component: Carousel
+    category: Media
+    library_score: "4"
+    headless_score: "3"
+    custom_score: "2"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library (Embla)
+    common_libs: Embla Carousel
+    token_cost_saved: 80%
+  - id: item_022
+    component: Progress
+    category: Feedback
+    library_score: "4"
+    headless_score: "4"
+    custom_score: "3"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library or headless
+    common_libs: Radix Progress
+    token_cost_saved: 80%
+  - id: item_023
+    component: Slider
+    category: Input
+    library_score: "3"
+    headless_score: "5"
+    custom_score: "2"
+    a11y_priority: HIGH
+    mapping_strategy: Headless (Radix Slider)
+    common_libs: Radix Slider
+    token_cost_saved: 85%
+  - id: item_024
+    component: Skeleton
+    category: Loading
+    library_score: "4"
+    headless_score: "3"
+    custom_score: "4"
+    a11y_priority: LOW
+    mapping_strategy: Custom or library
+    common_libs: shadcn
+    token_cost_saved: 80%
+  - id: item_025
+    component: Sidebar
+    category: Layout
+    library_score: "3"
+    headless_score: "3"
+    custom_score: "4"
+    a11y_priority: MEDIUM
+    mapping_strategy: Custom with headless
+    common_libs: Custom + Radix
+    token_cost_saved: 60%
+  - id: item_026
+    component: Header/Navbar
+    category: Layout
+    library_score: "2"
+    headless_score: "2"
+    custom_score: "5"
+    a11y_priority: MEDIUM
+    mapping_strategy: Custom component
+    common_libs: Custom
+    token_cost_saved: 50%
+  - id: item_027
+    component: Footer
+    category: Layout
+    library_score: "2"
+    headless_score: "1"
+    custom_score: "5"
+    a11y_priority: LOW
+    mapping_strategy: Custom component
+    common_libs: Custom
+    token_cost_saved: 50%
+  - id: item_028
+    component: Pagination
+    category: Navigation
+    library_score: "4"
+    headless_score: "3"
+    custom_score: "3"
+    a11y_priority: MEDIUM
+    mapping_strategy: Library + custom UI
+    common_libs: Custom/shadcn
+    token_cost_saved: 75%
+  - id: item_029
+    component: Breadcrumb
+    category: Navigation
+    library_score: "4"
+    headless_score: "4"
+    custom_score: "3"
+    a11y_priority: MEDIUM
+    mapping_strategy: Custom or library
+    common_libs: shadcn
+    token_cost_saved: 80%
+  - id: item_030
+    component: Stepper/Wizard
+    category: Composite
+    library_score: "4"
+    headless_score: "3"
+    custom_score: "3"
+    a11y_priority: MEDIUM
+    mapping_strategy: Custom + state machine
+    common_libs: Custom/React Step
+    token_cost_saved: 60%

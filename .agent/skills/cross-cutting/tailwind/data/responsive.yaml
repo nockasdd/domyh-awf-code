@@ -1,0 +1,148 @@
+# Tailwind CSS 4.0 - Responsive & Container Patterns
+# Breakpoints, container queries, pointer media queries
+# Source: tailwindcss.com/docs/responsive-design (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: responsive
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: resp001
+    name: "Container Queries"
+    category: responsive
+    version: "4.0+"
+    description: |
+      Style elements based on container size, not viewport.
+      Built-in v4 support. No plugin needed.
+    text: "@container container query width size parent responsive"
+    example: |
+      <!-- Define container -->
+      <div class="@container">
+        <!-- Respond to container size -->
+        <div class="@md:flex @lg:grid @xl:grid-cols-3">
+          Adapts to container width
+        </div>
+      </div>
+
+      <!-- Named container -->
+      <div class="@container/sidebar">
+        <nav class="@lg/sidebar:flex">Named container</nav>
+      </div>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/container-queries"
+
+  - id: resp002
+    name: "Pointer Queries"
+    category: responsive
+    version: "4.0+"
+    description: |
+      Detect input device type. Style differently for
+      touch (coarse) vs mouse (fine) devices.
+    text: "pointer-coarse pointer-fine touch mouse device input media query"
+    example: |
+      <!-- Touch-friendly buttons -->
+      <button class="
+        p-2 pointer-fine:p-1
+        pointer-coarse:p-4 pointer-coarse:text-lg
+      ">
+        Adapts to device
+      </button>
+
+      <!-- Hover only for mouse users -->
+      <div class="
+        any-pointer-fine:hover:scale-105
+        any-pointer-coarse:active:scale-95
+      ">
+        Adaptive interaction
+      </div>
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#pointer"
+
+  - id: resp003
+    name: "Breakpoints"
+    category: responsive
+    version: "3.0+"
+    description: |
+      Mobile-first responsive breakpoints.
+      Default: sm(640), md(768), lg(1024), xl(1280), 2xl(1536).
+    text: "responsive sm md lg xl 2xl breakpoint mobile first screen"
+    example: |
+      <!-- Mobile-first pattern -->
+      <div class="
+        flex flex-col gap-4 p-4
+        md:flex-row md:gap-6 md:p-6
+        lg:gap-8 lg:p-8
+        xl:max-w-7xl xl:mx-auto
+      " />
+
+      <!-- Custom breakpoint -->
+      <div class="min-[940px]:grid-cols-3" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/responsive-design"
+
+  - id: resp004
+    name: "Max-width Breakpoints"
+    category: responsive
+    version: "3.0+"
+    description: |
+      Target screens below a breakpoint.
+      Use max-* prefix for desktop-first patterns.
+    text: "max-sm max-md max-lg responsive below under breakpoint"
+    example: |
+      <!-- Hide on mobile only -->
+      <nav class="max-md:hidden">Desktop nav</nav>
+
+      <!-- Stack on tablet and below -->
+      <div class="flex max-lg:flex-col" />
+
+      <!-- Custom max breakpoint -->
+      <div class="max-[800px]:text-sm" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/responsive-design#targeting-a-breakpoint-range"
+
+  - id: resp005
+    name: "Arbitrary Breakpoints"
+    category: responsive
+    version: "3.0+"
+    description: |
+      One-off responsive values using bracket notation.
+      No need to extend theme.
+    text: "arbitrary breakpoint min max bracket notation custom"
+    example: |
+      <!-- Custom breakpoint -->
+      <div class="min-[768px]:grid min-[768px]:grid-cols-2" />
+
+      <!-- Range targeting -->
+      <div class="min-[600px]:max-[900px]:bg-blue-500" />
+
+      <!-- Arbitrary container query -->
+      <div class="@[400px]:flex @[600px]:grid" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/responsive-design#arbitrary-values"
+
+  - id: resp006
+    name: "prefers-reduced-motion"
+    category: accessibility
+    version: "3.0+"
+    description: |
+      Respect user's motion preferences.
+      Disable animations for sensitive users.
+    text: "motion-reduce motion-safe animation accessibility a11y preference"
+    example: |
+      <!-- Disable animations for sensitive users -->
+      <div class="
+        animate-bounce
+        motion-reduce:animate-none
+      " />
+
+      <!-- Only animate if user allows -->
+      <div class="
+        transition-none
+        motion-safe:transition-all
+        motion-safe:duration-300
+      " />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#prefers-reduced-motion"

@@ -1,12 +1,12 @@
 ---
 name: scala
 detect: ["*.scala", "*.sc", "build.sbt", "project/*.scala"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 2
 ---
 
-# Scala 3 Patterns — DOMYH Awesome Code v6.1.2
+# Scala 3 Patterns — DOMYH Awesome Code
 
 > **Version**: Scala 3.4+ (2025-2026)
 > **Frameworks**: ZIO 2, Cats Effect 3, Akka
@@ -199,4 +199,4 @@ object UserRepo:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Scala 3.4+_
+_DOMYH Awesome Code • Scala 3.4+_

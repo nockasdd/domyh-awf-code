@@ -1,0 +1,424 @@
+# =============================================================================
+# Go Concurrency Patterns (Feb 2026)
+# Version: Go 1.24/1.25
+# =============================================================================
+
+metadata:
+  skill: go
+  domain: concurrency
+  version: "1.25"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: go101
+    name: Worker Pool Pattern
+    category: concurrency
+    version: "1.18+"
+    description: |
+      Worker pool for parallel task processing.
+      Bounded concurrency with channels.
+    text: worker pool goroutine channel concurrency parallel
+    example: |
+      import (
+          "context"
+          "sync"
+      )
+
+      type Job struct {
+          ID   int
+          Data string
+      }
+
+      type Result struct {
+          JobID  int
+          Output string
+          Err    error
+      }
+
+      // ✅ Worker pool with bounded concurrency
+      func WorkerPool(ctx context.Context, jobs <-chan Job, workers int) <-chan Result {
+          results := make(chan Result, len(jobs))
+          var wg sync.WaitGroup
+          
+          for i := 0; i < workers; i++ {
+              wg.Add(1)
+              go func(workerID int) {
+                  defer wg.Done()
+                  for {
+                      select {
+                      case <-ctx.Done():
+                          return
+                      case job, ok := <-jobs:
+                          if !ok {
+                              return
+                          }
+                          output, err := process(job)
+                          results <- Result{
+                              JobID:  job.ID,
+                              Output: output,
+                              Err:    err,
+                          }
+                      }
+                  }
+              }(i)
+          }
+          
+          go func() {
+              wg.Wait()
+              close(results)
+          }()
+          
+          return results
+      }
+
+      // ✅ Usage
+      func main() {
+          ctx, cancel := context.WithCancel(context.Background())
+          defer cancel()
+          
+          jobs := make(chan Job, 100)
+          go func() {
+              for i := 0; i < 100; i++ {
+                  jobs <- Job{ID: i, Data: fmt.Sprintf("job-%d", i)}
+              }
+              close(jobs)
+          }()
+          
+          results := WorkerPool(ctx, jobs, 10)
+          for result := range results {
+              if result.Err != nil {
+                  log.Printf("Job %d failed: %v", result.JobID, result.Err)
+                  continue
+              }
+              log.Printf("Job %d: %s", result.JobID, result.Output)
+          }
+      }
+    severity: HIGH
+    docs_url: https://go.dev/blog/pipelines
+
+  - id: go102
+    name: Fan-Out/Fan-In
+    category: concurrency
+    version: "1.0+"
+    description: |
+      Fan-out to parallelize work, fan-in to collect results.
+      Classic Go concurrency pattern.
+    text: fan out fan in pipeline channel merge
+    example: |
+      import "sync"
+
+      // ✅ Fan-out: distribute work to multiple goroutines
+      func FanOut[T, R any](input <-chan T, workers int, fn func(T) R) []<-chan R {
+          outputs := make([]<-chan R, workers)
+          
+          for i := 0; i < workers; i++ {
+              out := make(chan R)
+              outputs[i] = out
+              
+              go func() {
+                  defer close(out)
+                  for item := range input {
+                      out <- fn(item)
+                  }
+              }()
+          }
+          
+          return outputs
+      }
+
+      // ✅ Fan-in: merge multiple channels into one
+      func FanIn[T any](channels ...<-chan T) <-chan T {
+          var wg sync.WaitGroup
+          merged := make(chan T)
+          
+          output := func(ch <-chan T) {
+              defer wg.Done()
+              for item := range ch {
+                  merged <- item
+              }
+          }
+          
+          wg.Add(len(channels))
+          for _, ch := range channels {
+              go output(ch)
+          }
+          
+          go func() {
+              wg.Wait()
+              close(merged)
+          }()
+          
+          return merged
+      }
+
+      // ✅ Combined pipeline
+      func ProcessPipeline(items []string) []Result {
+          // Create input channel
+          input := make(chan string, len(items))
+          go func() {
+              for _, item := range items {
+                  input <- item
+              }
+              close(input)
+          }()
+          
+          // Fan-out to 4 workers
+          workers := FanOut(input, 4, processItem)
+          
+          // Fan-in results
+          results := FanIn(workers...)
+          
+          // Collect
+          var output []Result
+          for result := range results {
+              output = append(output, result)
+          }
+          return output
+      }
+    severity: MEDIUM
+    docs_url: https://go.dev/blog/pipelines
+
+  - id: go103
+    name: errgroup for Parallel Tasks
+    category: concurrency
+    version: "golang.org/x/sync"
+    description: |
+      errgroup for managing goroutine groups with error handling.
+      Cancellation on first error, bounded concurrency.
+    text: errgroup sync parallel error handling wait group
+    example: |
+      import (
+          "context"
+          "golang.org/x/sync/errgroup"
+      )
+
+      // ✅ Basic errgroup usage
+      func FetchAll(ctx context.Context, urls []string) ([]Response, error) {
+          g, ctx := errgroup.WithContext(ctx)
+          responses := make([]Response, len(urls))
+          
+          for i, url := range urls {
+              i, url := i, url // Capture for closure
+              g.Go(func() error {
+                  resp, err := fetch(ctx, url)
+                  if err != nil {
+                      return err
+                  }
+                  responses[i] = resp
+                  return nil
+              })
+          }
+          
+          if err := g.Wait(); err != nil {
+              return nil, err
+          }
+          return responses, nil
+      }
+
+      // ✅ With bounded concurrency (SetLimit)
+      func ProcessWithLimit(ctx context.Context, items []Item) error {
+          g, ctx := errgroup.WithContext(ctx)
+          g.SetLimit(10) // Max 10 concurrent goroutines
+          
+          for _, item := range items {
+              item := item
+              g.Go(func() error {
+                  return processItem(ctx, item)
+              })
+          }
+          
+          return g.Wait()
+      }
+
+      // ✅ TryGo for non-blocking (1.22+)
+      func ProcessNonBlocking(items []Item) error {
+          g := new(errgroup.Group)
+          g.SetLimit(5)
+          
+          for _, item := range items {
+              item := item
+              // Returns false if limit reached
+              if !g.TryGo(func() error {
+                  return processItem(context.Background(), item)
+              }) {
+                  // Handle limit reached
+                  log.Println("Worker pool full, waiting...")
+                  // Force wait for slot
+                  g.Go(func() error {
+                      return processItem(context.Background(), item)
+                  })
+              }
+          }
+          
+          return g.Wait()
+      }
+    severity: HIGH
+    docs_url: https://pkg.go.dev/golang.org/x/sync/errgroup
+
+  - id: go104
+    name: sync.Pool for Object Reuse
+    category: performance
+    version: "1.3+"
+    description: |
+      sync.Pool for reducing allocations.
+      Reuse temporary objects to reduce GC pressure.
+    text: sync pool allocation gc pressure reuse memory
+    example: |
+      import (
+          "bytes"
+          "sync"
+      )
+
+      // ✅ Buffer pool for reducing allocations
+      var bufferPool = sync.Pool{
+          New: func() any {
+              return new(bytes.Buffer)
+          },
+      }
+
+      func ProcessData(data []byte) string {
+          buf := bufferPool.Get().(*bytes.Buffer)
+          defer func() {
+              buf.Reset()
+              bufferPool.Put(buf)
+          }()
+          
+          buf.Write(data)
+          buf.WriteString(" processed")
+          return buf.String()
+      }
+
+      // ✅ Struct pool with typed wrapper
+      type Request struct {
+          ID      int
+          Payload []byte
+      }
+
+      var requestPool = sync.Pool{
+          New: func() any {
+              return &Request{
+                  Payload: make([]byte, 0, 1024),
+              }
+          },
+      }
+
+      func GetRequest() *Request {
+          return requestPool.Get().(*Request)
+      }
+
+      func PutRequest(r *Request) {
+          r.ID = 0
+          r.Payload = r.Payload[:0] // Reset slice, keep capacity
+          requestPool.Put(r)
+      }
+
+      // ✅ Usage in handler
+      func handleRequest(data []byte) {
+          req := GetRequest()
+          defer PutRequest(req)
+          
+          req.Payload = append(req.Payload, data...)
+          process(req)
+      }
+    severity: MEDIUM
+    docs_url: https://pkg.go.dev/sync#Pool
+
+  - id: go105
+    name: Channel Patterns
+    category: concurrency
+    version: "1.0+"
+    description: |
+      Essential channel patterns for Go concurrency.
+      Select, timeouts, done channels, generators.
+    text: channel select timeout done signal pattern
+    example: |
+      import (
+          "context"
+          "time"
+      )
+
+      // ✅ Generator pattern
+      func Generate(ctx context.Context, nums ...int) <-chan int {
+          out := make(chan int)
+          go func() {
+              defer close(out)
+              for _, n := range nums {
+                  select {
+                  case <-ctx.Done():
+                      return
+                  case out <- n:
+                  }
+              }
+          }()
+          return out
+      }
+
+      // ✅ Select with timeout
+      func FetchWithTimeout(ch <-chan Result) (Result, error) {
+          select {
+          case result := <-ch:
+              return result, nil
+          case <-time.After(5 * time.Second):
+              return Result{}, errors.New("timeout")
+          }
+      }
+
+      // ✅ Non-blocking send/receive
+      func TrySend(ch chan<- int, value int) bool {
+          select {
+          case ch <- value:
+              return true
+          default:
+              return false // Channel full
+          }
+      }
+
+      // ✅ Done channel for graceful shutdown
+      func Worker(done <-chan struct{}, jobs <-chan Job) {
+          for {
+              select {
+              case <-done:
+                  return
+              case job := <-jobs:
+                  process(job)
+              }
+          }
+      }
+
+      // ✅ Rate limiting with ticker
+      func RateLimitedProcess(items []Item, rate time.Duration) {
+          ticker := time.NewTicker(rate)
+          defer ticker.Stop()
+          
+          for _, item := range items {
+              <-ticker.C // Wait for tick
+              process(item)
+          }
+      }
+
+      // ✅ Or-done channel pattern
+      func OrDone[T any](done <-chan struct{}, c <-chan T) <-chan T {
+          out := make(chan T)
+          go func() {
+              defer close(out)
+              for {
+                  select {
+                  case <-done:
+                      return
+                  case v, ok := <-c:
+                      if !ok {
+                          return
+                      }
+                      select {
+                      case out <- v:
+                      case <-done:
+                          return
+                      }
+                  }
+              }
+          }()
+          return out
+      }
+    severity: HIGH
+    docs_url: https://go.dev/blog/pipelines

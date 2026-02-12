@@ -1,0 +1,165 @@
+metadata:
+  skill: error-handling
+  domain: error_messages
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: error-messages.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - audience
+    - level
+patterns:
+  - id: EM-001
+    pattern: User-Facing Message
+    description: Clear message for end users
+    example: Something went wrong. Please try again.
+    audience: User
+    level: BASIC
+  - id: EM-002
+    pattern: Developer Message
+    description: Technical details for debugging
+    example: NullPointerException at UserService.java:42
+    audience: Developer
+    level: BASIC
+  - id: EM-003
+    pattern: Contextual Information
+    description: Include relevant context
+    example: "Failed to load user: id=123, reason=not found"
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-004
+    pattern: Action Suggestion
+    description: Tell user what to do
+    example: Invalid email. Please enter a valid email address.
+    audience: User
+    level: BASIC
+  - id: EM-005
+    pattern: Specific Error
+    description: Precise error description
+    example: Password must be at least 8 characters
+    audience: User
+    level: BASIC
+  - id: EM-006
+    pattern: Error Code Display
+    description: Show error code for support
+    example: "Error AUTH-001: Contact support with this code"
+    audience: User
+    level: INTERMEDIATE
+  - id: EM-007
+    pattern: Timestamp
+    description: Include when error occurred
+    example: Error occurred at 2024-01-15T10:30:00Z
+    audience: Developer
+    level: BASIC
+  - id: EM-008
+    pattern: Request ID
+    description: Include request identifier
+    example: "Request ID: abc-123-def for tracking"
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-009
+    pattern: Stack Trace
+    description: Include call stack (dev only)
+    example: Full stack trace in development environment
+    audience: Developer
+    level: BASIC
+  - id: EM-010
+    pattern: Sanitized Output
+    description: Remove sensitive information
+    example: Hide passwords and tokens in logs
+    audience: Security
+    level: INTERMEDIATE
+  - id: EM-011
+    pattern: Localized Message
+    description: Translate to user's language
+    example: Error message in user's locale
+    audience: User
+    level: INTERMEDIATE
+  - id: EM-012
+    pattern: Error Title
+    description: Short title for error
+    example: Authentication Failed as title
+    audience: User
+    level: BASIC
+  - id: EM-013
+    pattern: Error Description
+    description: Longer explanation
+    example: Detailed explanation of what happened
+    audience: User
+    level: INTERMEDIATE
+  - id: EM-014
+    pattern: Structured Log
+    description: JSON format for parsing
+    example: '{"level": "error", "message": "...", "context": {}}'
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-015
+    pattern: Correlation ID
+    description: Link related errors
+    example: Same correlation ID across service calls
+    audience: Developer
+    level: ADVANCED
+  - id: EM-016
+    pattern: Error Category
+    description: Classify error type
+    example: "Category: VALIDATION or AUTHENTICATION"
+    audience: Developer
+    level: BASIC
+  - id: EM-017
+    pattern: Environment Info
+    description: Include runtime context
+    example: "Node v18.0.0, OS: Linux, Memory: 512MB"
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-018
+    pattern: Previous State
+    description: What was attempted
+    example: "Attempted to create user with email: user@..."
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-019
+    pattern: Expected vs Actual
+    description: Show the delta
+    example: Expected array, got string
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-020
+    pattern: Documentation Link
+    description: Link to help docs
+    example: "See docs at: https://docs.example.com/errors/AUTH-001"
+    audience: User
+    level: INTERMEDIATE
+  - id: EC-021
+    pattern: Retry Information
+    description: Should user retry
+    example: Please try again in 5 minutes
+    audience: User
+    level: INTERMEDIATE
+  - id: EM-022
+    pattern: Contact Info
+    description: How to get help
+    example: Contact support@example.com for assistance
+    audience: User
+    level: BASIC
+  - id: EM-023
+    pattern: Error Severity
+    description: Indicate severity level
+    example: "[CRITICAL] Database connection failed"
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-024
+    pattern: Affected Component
+    description: Which system failed
+    example: Payment Gateway returned error
+    audience: Developer
+    level: INTERMEDIATE
+  - id: EM-025
+    pattern: Input Echo
+    description: Show what user entered
+    example: "Invalid format for: your.email (missing @)"
+    audience: User
+    level: INTERMEDIATE

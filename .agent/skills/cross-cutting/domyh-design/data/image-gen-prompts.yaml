@@ -1,0 +1,678 @@
+metadata:
+  skill: domyh-design
+  domain: image-generation
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: >
+    AI image generation prompt optimization for IDE-integrated models.
+    PRISM framework, 15 component templates, negative prompt catalog,
+    platform presets, and realism boosters.
+  based_on: "18 online research sources, Gemini Imagen3 API docs"
+  compatible_models:
+    - nano_banana_pro # Antigravity + Cursor
+    - dall_e_3 # Cursor MCP
+    - imagen_4 # Vertex AI
+
+# --- Section 1: Model Parameters Registry ---
+model_params:
+  nano_banana_pro:
+    display: "Gemini 3 Pro Image (Nano Banana Pro)"
+    used_by: ["Antigravity IDE", "Cursor IDE"]
+    supported_aspect_ratios:
+      - value: "1:1"
+        pixels: "1024x1024"
+        use_case: "icon, avatar, square card, component preview"
+      - value: "3:4"
+        pixels: "768x1024"
+        use_case: "mobile portrait, email template, story format"
+      - value: "4:3"
+        pixels: "1024x768"
+        use_case: "tablet, fullscreen view, landing page above-fold"
+      - value: "9:16"
+        pixels: "576x1024"
+        use_case: "mobile app screen, tall portrait, story"
+      - value: "16:9"
+        pixels: "1024x576"
+        use_case: "desktop dashboard, widescreen, hero section"
+    supported_image_sizes:
+      - value: "1K"
+        note: "Default, fastest generation"
+      - value: "2K"
+        note: "Recommended for UI mockups"
+      - value: "4K"
+        note: "Highest detail, slower generation"
+    supports_negative_prompt: true
+    supports_enhance_prompt: true
+    supports_seed: true
+    max_reference_images: 14
+    optimal_prompt_length: "15-30 words per instruction"
+    output_formats: ["image/png", "image/jpeg"]
+    tips:
+      - "enhancePrompt=true works best for simple prompts <30 words"
+      - "enhancePrompt=false recommended for detailed UI prompts >30 words"
+      - "seed param unavailable when addWatermark=true"
+      - "Use 2K imageSize for best quality/speed balance in UI mockups"
+
+  dall_e_3:
+    display: "DALL-E 3"
+    used_by: ["Cursor IDE (via MCP)"]
+    supported_aspect_ratios:
+      - value: "1:1"
+        pixels: "1024x1024"
+      - value: "16:9"
+        pixels: "1792x1024"
+      - value: "9:16"
+        pixels: "1024x1792"
+    supports_negative_prompt: false
+    supports_enhance_prompt: false
+    supports_seed: false
+    tips:
+      - "Negative prompts not natively supported — use positive framing"
+      - "Excels at creative/artistic styles over technical UI precision"
+
+# --- Section 2: Platform Presets ---
+platform_presets:
+  desktop_dashboard:
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    resolution_note: "1920x1080 equivalent"
+    auto_negative: ["always_apply"]
+
+  mobile_app:
+    aspect_ratio: "9:16"
+    image_size: "2K"
+    enhance_prompt: true
+    resolution_note: "1080x1920 equivalent, portrait orientation"
+    auto_negative: ["always_apply"]
+
+  tablet_app:
+    aspect_ratio: "4:3"
+    image_size: "2K"
+    enhance_prompt: false
+    resolution_note: "iPad-like proportions"
+    auto_negative: ["always_apply"]
+
+  landing_page_hero:
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    resolution_note: "Above-the-fold hero section"
+    auto_negative: ["always_apply"]
+
+  landing_page_full:
+    aspect_ratio: "4:3"
+    image_size: "2K"
+    enhance_prompt: false
+    resolution_note: "Full page view, scrollable feel"
+    auto_negative: ["always_apply"]
+
+  component_preview:
+    aspect_ratio: "1:1"
+    image_size: "1K"
+    enhance_prompt: true
+    resolution_note: "Single component isolation shot"
+    auto_negative: ["always_apply", "ui_quality"]
+
+  email_template:
+    aspect_ratio: "3:4"
+    image_size: "1K"
+    enhance_prompt: true
+    resolution_note: "Email viewport proportions"
+    auto_negative: ["always_apply"]
+
+# --- Section 3: PRISM Prompt Framework ---
+prompt_framework:
+  name: "PRISM"
+  version: "1.0"
+  description: >
+    5-part structured prompt for consistent high-quality UI mockups.
+    Persona→Reference→Intent→Structure→Modifiers.
+  assembly_order:
+    - persona
+    - reference
+    - intent
+    - structure
+    - modifiers
+
+  parts:
+    persona:
+      description: "Role context — sets quality expectations"
+      always_include: true
+      templates:
+        default: "You are a senior UI/UX designer at a top-tier design agency."
+        mobile: "You are a senior mobile app designer specializing in iOS and Android native apps."
+        dashboard: "You are a data visualization expert designing enterprise dashboards."
+        e_commerce: "You are an e-commerce UX designer optimizing for conversion."
+        saas: "You are a SaaS product designer creating intuitive B2B interfaces."
+
+    reference:
+      description: "Visual context — realism boosters and format keywords"
+      always_include: true
+      realism_boosters:
+        - keyword: "screenshot"
+          impact: "⭐⭐⭐"
+          description: "Dramatically increases realism — looks like captured from real app"
+        - keyword: "UI design mockup"
+          impact: "⭐⭐⭐"
+          description: "Clear interface structure with proper component hierarchy"
+        - keyword: "high-fidelity"
+          impact: "⭐⭐"
+          description: "Professional detail level — production-ready appearance"
+        - keyword: "pixel-perfect"
+          impact: "⭐⭐"
+          description: "Sharp, precise rendering without blur or artifacts"
+        - keyword: "studio quality render"
+          impact: "⭐⭐"
+          description: "Premium output quality with refined aesthetics"
+        - keyword: "anti-aliased clean edges"
+          impact: "⭐"
+          description: "Smooth line rendering, no jagged edges"
+      format_template: "High-fidelity screenshot of a {description}"
+
+    intent:
+      description: "What exactly the UI shows — the core subject"
+      always_include: true
+      template: "{component_type} for {product_type} showing {content_description}"
+      examples:
+        - "analytics dashboard for a SaaS project management tool showing team performance metrics"
+        - "mobile banking app login screen with biometric authentication options"
+        - "e-commerce product page for premium headphones with 360-degree view"
+
+    structure:
+      description: "Layout, spacing, visual hierarchy, grid system"
+      always_include: true
+      template: "{layout_type} layout, {grid_system}, {spacing_system}"
+      layout_options:
+        - "sidebar + main content area"
+        - "top navigation + hero + content grid"
+        - "full-width single column"
+        - "split-screen (image left, form right)"
+        - "card grid (3-4 columns)"
+        - "bento grid with mixed card sizes"
+      spacing_keywords:
+        - "clean 8px grid system"
+        - "generous whitespace with 24px gaps"
+        - "compact layout with 12px gaps"
+        - "breathing room between sections"
+
+    modifiers:
+      description: "Style, colors, typography, technical details"
+      always_include: true
+      template: "{style_name}, {color_description}, {font_family}, {mode}"
+      style_options:
+        - "dark mode with glassmorphism cards"
+        - "clean light theme with subtle shadows"
+        - "neubrutalist with hard shadows and bold borders"
+        - "minimal with monochrome palette"
+        - "vibrant gradient accents on neutral background"
+      color_pin_format: "primary {hex}, background {hex}, text {hex}"
+      font_pin_format: "{font_name} font family"
+
+# --- Section 4: Negative Prompts Catalog ---
+negative_prompts:
+  always_apply: # Include in EVERY prompt
+    phrases:
+      - "no device frames (no laptop, phone, or tablet mockup frames)"
+      - "no watermarks or logos overlaid on the design"
+      - "no lorem ipsum or placeholder text"
+      - "no blurry or low-resolution elements"
+
+  ui_quality: # Prevent UI rendering issues
+    phrases:
+      - "no overlapping UI elements or z-index conflicts"
+      - "no inconsistent spacing or misaligned content"
+      - "no misaligned text or broken typography hierarchy"
+      - "no broken grid layouts or asymmetric unintentional gaps"
+      - "no cluttered interface with too many elements competing"
+      - "no inconsistent icon styles (mixed outlined and filled)"
+
+  realism: # Prevent AI artifacts
+    phrases:
+      - "no distorted proportions or warped elements"
+      - "no visual artifacts, glitches, or noise patterns"
+      - "no unreadable or gibberish text on UI elements"
+      - "no unrealistic shadows going in multiple directions"
+      - "no impossible perspective or conflicting depth cues"
+
+  composition: # Prevent layout problems
+    phrases:
+      - "no empty unused whitespace without clear purpose"
+      - "no excessive decorative elements distracting from content"
+      - "no visual noise or background patterns competing with UI"
+      - "no cut-off or cropped essential UI elements at edges"
+
+  text_content: # Prevent text issues
+    phrases:
+      - "no mixed fonts (use consistent font family throughout)"
+      - "no text smaller than readable size (minimum 10px equivalent)"
+      - "no all-caps navigation unless intentional brand style"
+
+  preset_combinations:
+    dashboard: "always_apply + ui_quality + composition"
+    landing_page: "always_apply + realism + composition"
+    mobile_app: "always_apply + ui_quality + text_content"
+    component: "always_apply + ui_quality"
+    general: "always_apply"
+
+# --- Section 5: Component Templates (15 types) ---
+component_templates:
+  # --- Template 1: Dashboard ---
+  dashboard:
+    prompt_template: >
+      High-fidelity screenshot of a modern {product_type} dashboard.
+      {style_description} with {color_scheme}.
+      Left sidebar navigation with {nav_items}.
+      Main content area showing {widgets}.
+      {font_family} font family, {accent_color} accent color.
+      16:9 desktop layout, clean 8px grid spacing.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    chain_of_thought:
+      step_1: "Define overall layout — sidebar width (240-280px), header height (56-64px), content grid"
+      step_2: "Place primary navigation in sidebar — logo, nav links with icons, user avatar at bottom"
+      step_3: "Arrange main content — row of 4 metric cards on top, charts in middle, table at bottom"
+      step_4: "Apply color scheme — dark/light mode, accent color for active states and CTAs"
+      step_5: "Add micro-details — status badges, notification dot, trend arrows, timestamps"
+    key_elements:
+      - "sidebar with logo, 6-8 nav links with icons, user avatar"
+      - "header with search bar, notification bell with badge, profile dropdown"
+      - "4 metric cards with icon, value, label, and trend indicator (+/-)"
+      - "line chart or area chart with gradient fill and legend"
+      - "data table with 5-6 columns, sortable headers, pagination"
+      - "activity feed or recent items list in secondary panel"
+    negative_preset: "dashboard"
+    style_variants:
+      dark_glass: "dark mode (#0f172a), glassmorphism cards with backdrop-filter blur, translucent sidebar (#1e293b/90%), blue accent (#3b82f6)"
+      minimal_light: "clean white (#ffffff) background, subtle gray borders (#e5e7eb), light gray sidebar (#f9fafb), emerald accent (#10b981)"
+      corporate_blue: "professional navy sidebar (#1e3a5f), white content area, blue accent (#2563eb), Inter font"
+      colorful_modern: "vibrant gradient header (purple→blue), rounded cards (16px), colorful chart lines, Outfit font"
+      neubrutalist: "white background, hard 3px black borders, yellow accent (#facc15), offset shadows (4px 4px), bold Inter"
+
+  # --- Template 2: Landing Page ---
+  landing_page:
+    prompt_template: >
+      High-fidelity screenshot of a modern landing page for {product_description}.
+      {style_description} with {color_scheme}.
+      Hero section with headline, subtext, and CTA button.
+      Feature grid below with {feature_count} items.
+      {font_family} font, {accent_color} accent.
+      16:9 desktop layout, generous whitespace.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    chain_of_thought:
+      step_1: "Define hero section — large headline, supporting text, primary CTA button, optional hero image"
+      step_2: "Add navigation bar — logo, 4-5 nav links, CTA button (secondary style)"
+      step_3: "Create feature section below fold — 3 or 4 feature cards with icons and descriptions"
+      step_4: "Apply visual hierarchy — headline 48-64px, subtext 18-20px, body 16px"
+      step_5: "Refine with style — gradients, illustrations, or abstract shapes as decoration"
+    key_elements:
+      - "top navigation with logo, links, and CTA"
+      - "hero section with compelling headline and subtext"
+      - "primary CTA button (prominent, contrasting color)"
+      - "3-4 feature cards with icons and brief descriptions"
+      - "social proof element (logos, testimonials, or stats)"
+    negative_preset: "landing_page"
+    style_variants:
+      gradient_modern: "dark background (#0a0a0a), vibrant gradient CTA (purple→pink), large Outfit font, floating glassmorphic cards"
+      clean_minimal: "white background, single accent color, Inter font, plenty of whitespace, subtle gray sections"
+      bold_startup: "bold colors, large typography (72px headline), energetic feel, geometric decorations"
+      saas_professional: "light gray background, blue accent, Inter font, structured grid, trust badges"
+
+  # --- Template 3: Login Page ---
+  login_page:
+    prompt_template: >
+      Pixel-perfect screenshot of a {style_description} login page.
+      {layout_type} layout with {visual_element} on one side and login form on the other.
+      Form fields: email input, password input, login button, social login options.
+      {font_family} font, {accent_color} accent, {color_scheme}.
+      Clean spacing with rounded input fields.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    chain_of_thought:
+      step_1: "Choose layout — split-screen (60:40 image:form) or centered form with background"
+      step_2: "Design form — logo, headline, email field, password field, forgot password link"
+      step_3: "Add primary login button — full-width, prominent color, clear label"
+      step_4: "Add social login — divider ('or'), Google/Apple/GitHub buttons"
+      step_5: "Style inputs — rounded corners 8-12px, subtle borders, focus states implied"
+    key_elements:
+      - "app logo or brand name at top of form"
+      - "email/username input field with label"
+      - "password input field with show/hide toggle"
+      - "primary login button (full-width, accent color)"
+      - "forgot password text link"
+      - "social login divider and OAuth buttons"
+      - "sign-up link at bottom"
+    negative_preset: "general"
+    style_variants:
+      split_gradient: "split-screen, left side abstract gradient artwork, right side white form, rounded 12px inputs"
+      centered_dark: "centered card on dark background, glassmorphism form card, subtle glow accent"
+      minimal_white: "centered form on clean white, minimal borders, gray placeholder text, single accent button"
+      branded_illustration: "split-screen, left side product illustration, right side form with brand colors"
+
+  # --- Template 4: Settings Page ---
+  settings_page:
+    prompt_template: >
+      High-fidelity screenshot of a {product_type} settings page.
+      {style_description} with {color_scheme}.
+      Left sidebar settings navigation, main content with grouped settings sections.
+      Toggle switches, dropdowns, text inputs, and save button.
+      {font_family} font, clean form layout.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "settings sidebar with category groups (Account, Appearance, Notifications, Security, Integrations)"
+      - "section header with title and description"
+      - "form groups with labels, input fields, and help text"
+      - "toggle switches for boolean settings"
+      - "dropdown selects for enumerated options"
+      - "save/cancel button pair at section bottom"
+    negative_preset: "general"
+    chain_of_thought:
+      step_1: "Layout sidebar settings nav + main content area with grouped sections"
+      step_2: "Add form controls — toggles, dropdowns, text inputs, grouped by category"
+      step_3: "Apply styling — section borders, help text, save/cancel button pair"
+    style_variants:
+      clean_light: "white background, subtle section borders, gray sidebar, blue save button"
+      dark_mode: "dark background (#111827), dark input fields (#1f2937), green toggle active (#10b981)"
+
+  # --- Template 5: Mobile App Screen ---
+  mobile_app_screen:
+    prompt_template: >
+      Pixel-perfect screenshot of a {product_type} mobile app screen.
+      {style_description} with {color_scheme}.
+      Status bar at top, {screen_content}, bottom tab navigation with {tab_count} tabs.
+      {font_family} font, {accent_color} accent.
+      9:16 mobile portrait layout, iOS/Android native feel.
+    aspect_ratio: "9:16"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "status bar with time, signal, battery"
+      - "app header with title and action buttons"
+      - "main content area with scrollable content"
+      - "bottom tab bar with 4-5 icons and labels"
+      - "floating action button if applicable"
+    negative_preset: "mobile_app"
+    chain_of_thought:
+      step_1: "Define mobile chrome — status bar, app header, bottom tab navigation"
+      step_2: "Arrange main content area with scrollable content and touch-sized elements"
+      step_3: "Apply platform style — iOS/Android conventions, accent colors, native feel"
+    style_variants:
+      ios_native: "iOS style, SF Pro font, system blur backgrounds, rounded tab bar, blue accent"
+      android_material: "Material Design 3, Roboto font, FAB button, dynamic color, rounded corners 28px"
+      dark_premium: "dark background, neon accent, Inter font, card-based layout, subtle gradients"
+
+  # --- Template 6: Navigation Bar ---
+  navigation_bar:
+    prompt_template: >
+      UI design mockup of a {nav_type} navigation bar for {product_type}.
+      {style_description} with {color_scheme}.
+      Logo on left, {nav_items} navigation links, {action_buttons} on right.
+      {font_family} font, {height}px height, full-width.
+    aspect_ratio: "16:9"
+    image_size: "1K"
+    enhance_prompt: false
+    key_elements:
+      - "logo or brand mark aligned left"
+      - "4-6 navigation links with hover/active states"
+      - "search input or icon"
+      - "notification bell icon"
+      - "user avatar with dropdown indicator"
+      - "CTA button (optional, for SaaS)"
+    negative_preset: "component"
+    chain_of_thought:
+      step_1: "Place logo, nav links, and action buttons in horizontal bar"
+      step_2: "Add interactive elements — search, notifications, user avatar"
+      step_3: "Style bar — background, height, hover/active states, responsive"
+    style_variants:
+      transparent_blur: "transparent background with backdrop blur, floating over hero content"
+      solid_white: "solid white background (#ffffff), subtle bottom border, dark text"
+      dark_solid: "dark background (#111827), white text, accent-colored active link"
+      mega_menu: "includes mega-dropdown with featured content and icons on hover"
+
+  # --- Template 7: Card Component ---
+  card_component:
+    prompt_template: >
+      UI design mockup of a {card_type} card component.
+      {style_description} with {color_scheme}.
+      {card_content} layout with {corner_radius} rounded corners.
+      {font_family} font, clean spacing.
+    aspect_ratio: "1:1"
+    image_size: "1K"
+    enhance_prompt: false
+    key_elements:
+      - "card container with border/shadow"
+      - "image or icon area (top or left)"
+      - "title text (16-18px bold)"
+      - "description text (14px regular)"
+      - "metadata (date, author, tags)"
+      - "action button or link"
+    negative_preset: "component"
+    chain_of_thought:
+      step_1: "Define card container — dimensions, border/shadow, corner radius"
+      step_2: "Arrange content — image/icon area, title, description, metadata"
+      step_3: "Add action — button or link, hover state implied"
+    style_variants:
+      elevated: "white card, subtle elevation shadow, 12px corners, light gray border"
+      glassmorphic: "frosted glass card, backdrop blur, translucent white, vibrant background behind"
+      outlined: "no shadow, 1px border, clean interior, minimal style"
+      neubrutalist: "hard 3px black border, offset shadow (4px 4px #000), bold colors inside"
+
+  # --- Template 8: Modal Dialog ---
+  modal_dialog:
+    prompt_template: >
+      UI design mockup of a {modal_type} modal dialog.
+      {style_description}, centered on {backdrop_style} backdrop.
+      {modal_content} with action buttons at bottom.
+      {font_family} font, {corner_radius} corners, {width}px width.
+    aspect_ratio: "16:9"
+    image_size: "1K"
+    enhance_prompt: false
+    key_elements:
+      - "semi-transparent dark backdrop overlay"
+      - "centered modal card with title and close button"
+      - "content area (form fields, confirmation text, or info)"
+      - "action buttons (primary + secondary/cancel)"
+    negative_preset: "component"
+    chain_of_thought:
+      step_1: "Create backdrop overlay and centered modal card with close button"
+      step_2: "Design content area — form, confirmation, or informational content"
+      step_3: "Add action buttons — primary CTA + secondary/cancel at bottom"
+    style_variants:
+      clean_centered: "white modal, dark overlay (50% opacity), 16px corners, blue primary button"
+      slide_up_mobile: "bottom-sheet style, rounded top corners, drag handle, full-width on mobile"
+
+  # --- Template 9: Data Table ---
+  data_table:
+    prompt_template: >
+      High-fidelity screenshot of a {data_type} data table.
+      {style_description} with {color_scheme}.
+      {column_count} columns with sortable headers, row hover states, pagination.
+      {font_family} font, zebra striping optional, action column.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "table header with column names and sort indicators"
+      - "data rows with consistent cell formatting"
+      - "row hover highlight state"
+      - "status badges with color coding (green/yellow/red)"
+      - "action column with edit/delete icons or dropdown"
+      - "pagination controls at bottom"
+      - "search/filter bar above table"
+    negative_preset: "dashboard"
+    chain_of_thought:
+      step_1: "Define table header with column names, sort indicators, search/filter bar"
+      step_2: "Populate data rows with status badges, formatted cells, action column"
+      step_3: "Add pagination controls and row hover states"
+    style_variants:
+      clean_bordered: "subtle borders between cells, white background, gray header background"
+      minimal_lines: "no vertical borders, horizontal dividers only, clean spacing"
+      dark_table: "dark background (#1e293b), lighter row alternation, white text"
+
+  # --- Template 10: Form Layout ---
+  form_layout:
+    prompt_template: >
+      UI design mockup of a {form_type} form layout.
+      {style_description} with {color_scheme}.
+      Grouped sections with labels, input fields, validation states.
+      {font_family} font, consistent field sizing, clear hierarchy.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "section headers with dividers"
+      - "labeled input fields with placeholder text"
+      - "required field indicators (*)"
+      - "help text below complex fields"
+      - "validation state example (error, success)"
+      - "submit button and cancel option"
+    negative_preset: "general"
+    chain_of_thought:
+      step_1: "Group form fields into logical sections with headers"
+      step_2: "Design individual fields — labels, inputs, help text, validation states"
+      step_3: "Add submit/cancel actions and required field indicators"
+    style_variants:
+      stacked: "full-width fields stacked vertically, labels above inputs"
+      inline_labels: "labels and inputs on same row, aligned grid"
+      multi_column: "2-column grid for related fields (first name / last name)"
+
+  # --- Template 11: Pricing Page ---
+  pricing_page:
+    prompt_template: >
+      High-fidelity screenshot of a {product_type} pricing page.
+      {style_description} with {color_scheme}.
+      {tier_count} pricing tiers side by side, recommended tier highlighted.
+      {font_family} font, toggle for monthly/annual, feature comparison.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "pricing toggle (monthly / annual)"
+      - "3-4 pricing cards side by side"
+      - "recommended/popular tier highlighted with badge and border"
+      - "price amount prominently displayed"
+      - "feature list with check/cross icons"
+      - "CTA button on each tier"
+    negative_preset: "landing_page"
+    chain_of_thought:
+      step_1: "Layout pricing cards side by side with recommended tier highlighted"
+      step_2: "Design each tier — name, price, feature checklist, CTA button"
+      step_3: "Add monthly/annual toggle and social proof below"
+    style_variants:
+      gradient_highlight: "white cards, gradient border on featured tier, dark background"
+      clean_comparison: "light background, subtle borders, blue highlight on recommended"
+      dark_premium: "dark background, glassmorphic cards, gold/premium highlight"
+
+  # --- Template 12: Profile Page ---
+  profile_page:
+    prompt_template: >
+      High-fidelity screenshot of a {platform_type} user profile page.
+      {style_description} with {color_scheme}.
+      Cover photo, avatar, user info, stats, and content tabs.
+      {font_family} font, clean layout.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "cover photo or gradient header"
+      - "circular avatar with border"
+      - "display name, username, bio text"
+      - "stats row (followers, following, posts)"
+      - "action buttons (follow, message, settings)"
+      - "content tabs (posts, media, likes)"
+    negative_preset: "general"
+    chain_of_thought:
+      step_1: "Design header area — cover photo, avatar overlay, action buttons"
+      step_2: "Arrange user info — name, username, bio, stats row"
+      step_3: "Add content tabs and sample content grid below"
+    style_variants:
+      social_media: "large cover photo, overlapping avatar, stats prominently displayed"
+      professional: "clean header, structured info card, portfolio grid below"
+
+  # --- Template 13: E-Commerce Product ---
+  e_commerce_product:
+    prompt_template: >
+      Pixel-perfect screenshot of an e-commerce product page for {product_name}.
+      {style_description} with {color_scheme}.
+      Product image gallery left, details right, add to cart CTA.
+      {font_family} font, trust badges, clean layout.
+    aspect_ratio: "16:9"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "product image gallery with thumbnail navigation"
+      - "product title, price (with discount formatting)"
+      - "star rating with review count"
+      - "size/color selector options"
+      - "quantity selector"
+      - "add to cart CTA button (prominent)"
+      - "trust badges (shipping, returns, secure)"
+      - "product description tabs"
+    negative_preset: "general"
+    chain_of_thought:
+      step_1: "Layout product image gallery (left) and details panel (right)"
+      step_2: "Design details — title, price, rating, size/color selectors, add-to-cart CTA"
+      step_3: "Add trust badges and product description tabs"
+    style_variants:
+      minimal_luxury: "white background, large product image, minimal UI, gold accents"
+      marketplace: "structured layout, seller info, shipping estimates, similar products grid"
+
+  # --- Template 14: Chat Interface ---
+  chat_interface:
+    prompt_template: >
+      High-fidelity screenshot of a {chat_type} chat interface.
+      {style_description} with {color_scheme}.
+      Message bubbles with timestamps, input bar at bottom, contact list or header.
+      {font_family} font, readable message styling.
+    aspect_ratio: "9:16"
+    image_size: "2K"
+    enhance_prompt: false
+    key_elements:
+      - "chat header with contact name, avatar, status"
+      - "message bubbles (sent right, received left)"
+      - "timestamps on messages"
+      - "read receipts (double check marks)"
+      - "input bar with text field, emoji button, send button"
+      - "typing indicator dots"
+    negative_preset: "mobile_app"
+    chain_of_thought:
+      step_1: "Design chat header and message bubble area (sent right, received left)"
+      step_2: "Style messages with timestamps, read receipts, typing indicator"
+      step_3: "Add input bar at bottom — text field, emoji, send button"
+    style_variants:
+      messaging_app: "blue sent bubbles, gray received, white background, iOS feel"
+      ai_assistant: "AI messages in styled card, user messages in blue bubble, dark mode"
+      support_chat: "embedded widget style, brand-colored header, agent avatar"
+
+  # --- Template 15: Onboarding Flow ---
+  onboarding_flow:
+    prompt_template: >
+      High-fidelity screenshot of step {step_number} of {step_total} in a {product_type} onboarding flow.
+      {style_description} with {color_scheme}.
+      Progress indicator at top, main illustration or content, next/skip buttons at bottom.
+      {font_family} font, welcoming and clear design.
+    aspect_ratio: "9:16"
+    image_size: "2K"
+    enhance_prompt: true
+    key_elements:
+      - "step progress indicator (dots or bar)"
+      - "large illustration or icon"
+      - "concise headline explaining the step"
+      - "supporting description text"
+      - "primary next/continue button"
+      - "skip or back option"
+    negative_preset: "mobile_app"
+    chain_of_thought:
+      step_1: "Design progress indicator and large illustration/icon area"
+      step_2: "Add headline and supporting description text"
+      step_3: "Place navigation — primary next/continue button, skip/back option"
+    style_variants:
+      illustration_centric: "full-width illustration, text below, gradient background"
+      minimal_step: "simple icon, centered text, plenty of whitespace"
+      interactive_tutorial: "shows a simulated UI action being performed"

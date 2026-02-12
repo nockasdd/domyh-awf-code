@@ -1,0 +1,174 @@
+metadata:
+  skill: domyh-design
+  domain: design-system-prompts
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: >
+    Design system prompt fragments for AI image generation.
+    Maps popular design systems to copy-paste-ready prompt modifiers
+    ensuring generated mockups follow established design language.
+
+# --- Design System Prompt Fragments ---
+design_systems:
+  material_design_3:
+    display: "Material Design 3 (Expressive)"
+    vendor: "Google"
+    prompt_fragment: >
+      Material Design 3 Expressive style with rounded corners (28px large, 16px medium, 8px small),
+      dynamic color scheme, elevation-based shadows (1-5 levels), Roboto font family,
+      FAB button, filled and outlined component variants, 4dp spacing grid.
+    key_tokens:
+      corner_radius_large: "28px"
+      corner_radius_medium: "16px"
+      corner_radius_small: "8px"
+      elevation_levels: "1 (1dp) → 5 (12dp)"
+      spacing_unit: "4dp"
+      font_primary: "Roboto"
+      font_display: "Google Sans"
+      motion_standard: "300ms emphasized decelerate"
+    color_roles:
+      - "primary, on-primary, primary-container"
+      - "secondary, tertiary"
+      - "surface, surface-variant"
+      - "outline, outline-variant"
+      - "error, on-error"
+    best_for: ["Android apps", "cross-platform", "enterprise dashboards"]
+
+  human_interface:
+    display: "Apple Human Interface Guidelines"
+    vendor: "Apple"
+    prompt_fragment: >
+      Apple HIG style with SF Pro font, vibrancy blur overlays (30px), system-integrated design,
+      semantic system colors, 44px minimum touch targets, subtle depth with translucent materials,
+      rounded 10px corners, clean spacing.
+    key_tokens:
+      corner_radius: "10px (continuous)"
+      blur_radius: "30px"
+      min_touch_target: "44x44px"
+      font_primary: "SF Pro"
+      font_mono: "SF Mono"
+      spacing_unit: "8px"
+      motion_standard: "350ms spring"
+    color_roles:
+      - "systemBlue, systemGreen, systemRed"
+      - "label, secondaryLabel, tertiaryLabel"
+      - "systemBackground, secondarySystemBackground"
+      - "separator, opaqueSeparator"
+    best_for: ["iOS apps", "macOS apps", "Apple ecosystem"]
+
+  fluent_2:
+    display: "Fluent Design System 2"
+    vendor: "Microsoft"
+    prompt_fragment: >
+      Microsoft Fluent 2 style with Segoe UI Variable font, acrylic material (80% tint opacity),
+      subtle depth and motion, 4px corner radius, 4px spacing grid,
+      elevation with shadow + color layering, compact density option.
+    key_tokens:
+      corner_radius: "4px"
+      acrylic_tint: "80%"
+      font_primary: "Segoe UI Variable"
+      spacing_unit: "4px"
+      elevation: "shadow (2/4/8/16/64px blur)"
+      density: "compact | normal | spacious"
+      motion_standard: "250ms ease"
+    color_roles:
+      - "brandForeground, brandBackground"
+      - "neutralForeground, neutralBackground"
+      - "subtleForeground, subtleBackground"
+      - "compoundBrand, danger, success, warning"
+    best_for: ["Windows apps", "Microsoft 365", "enterprise B2B"]
+
+  shadcn_ui:
+    display: "shadcn/ui"
+    vendor: "Community (Radix + Tailwind)"
+    prompt_fragment: >
+      shadcn/ui aesthetic with monochrome neutral palette, Inter font, clean minimalist borders (1px),
+      6px border radius, muted backgrounds, consistent component API,
+      dark mode as first-class, accessible by default.
+    key_tokens:
+      corner_radius: "6px (--radius)"
+      border: "1px solid hsl(var(--border))"
+      font_primary: "Inter"
+      spacing: "Tailwind scale (4/8/12/16/20/24px)"
+      colors: "HSL-based CSS variables"
+    palette_example:
+      background: "hsl(0 0% 100%)"
+      foreground: "hsl(222.2 84% 4.9%)"
+      primary: "hsl(222.2 47.4% 11.2%)"
+      secondary: "hsl(210 40% 96.1%)"
+      muted: "hsl(210 40% 96.1%)"
+      accent: "hsl(210 40% 96.1%)"
+      destructive: "hsl(0 84.2% 60.2%)"
+    best_for: ["Next.js", "React", "modern SaaS", "developer tools"]
+
+  ant_design:
+    display: "Ant Design 5"
+    vendor: "Ant Group"
+    prompt_fragment: >
+      Ant Design 5 style with compact layout, blue primary color (#1677ff), clear data hierarchy,
+      6px border radius, 8-16-24px spacing rhythm, system font stack,
+      structured form layouts, dense data tables, informative components.
+    key_tokens:
+      corner_radius: "6px"
+      primary_color: "#1677ff"
+      font_primary: "system-ui, -apple-system"
+      spacing: "8px / 16px / 24px"
+      border: "1px solid #d9d9d9"
+    color_roles:
+      - "colorPrimary: #1677ff"
+      - "colorSuccess: #52c41a"
+      - "colorWarning: #faad14"
+      - "colorError: #ff4d4f"
+      - "colorInfo: #1677ff"
+      - "colorBgContainer: #ffffff"
+    best_for: ["enterprise dashboards", "admin panels", "data-heavy B2B"]
+
+  chakra_ui:
+    display: "Chakra UI"
+    vendor: "Community"
+    prompt_fragment: >
+      Chakra UI aesthetic with teal accent color (#319795), flexible spacing from theme scale,
+      accessible by default, 6px border radius, clean component design,
+      clear focus rings, system font stack, responsive by design.
+    key_tokens:
+      corner_radius: "6px (md)"
+      primary_color: "#319795 (teal.500)"
+      font_primary: "system-ui"
+      spacing_scale: "1=4px, 2=8px, 3=12px, 4=16px, 5=20px, 6=24px, 8=32px"
+      focus_ring: "2px solid teal.500 + 2px offset"
+    best_for: ["React apps", "accessible interfaces", "startups"]
+
+# --- Quick Selection Guide ---
+selection_guide:
+  by_platform:
+    ios_app: "human_interface"
+    android_app: "material_design_3"
+    windows_app: "fluent_2"
+    web_saas: "shadcn_ui"
+    enterprise_admin: "ant_design"
+    modern_startup: "chakra_ui"
+    cross_platform: "material_design_3"
+
+  by_density:
+    compact: ["ant_design", "fluent_2"]
+    normal: ["shadcn_ui", "material_design_3", "chakra_ui"]
+    spacious: ["human_interface"]
+
+  by_aesthetic:
+    minimal: ["shadcn_ui", "human_interface"]
+    corporate: ["fluent_2", "ant_design"]
+    modern: ["material_design_3", "chakra_ui"]
+
+# --- Prompt Assembly Helper ---
+assembly_example:
+  scenario: "Generate a SaaS dashboard using shadcn/ui"
+  assembled_prompt: >
+    You are a senior UI/UX designer at a top-tier design agency.
+    High-fidelity screenshot of a modern SaaS project management dashboard.
+    shadcn/ui aesthetic with monochrome neutral palette, Inter font,
+    clean minimalist borders (1px), 6px border radius, muted backgrounds.
+    Left sidebar navigation (240px) with logo, 6 nav items with Lucide icons, user avatar.
+    Main content: 4 metric cards, area chart with gradient fill, recent tasks table.
+    Dark mode, primary hsl(222.2 47.4% 11.2%), background hsl(222.2 84% 4.9%).
+    16:9 desktop layout, 8px grid spacing.
+    No device frames, no watermarks, no lorem ipsum.

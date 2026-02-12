@@ -1,0 +1,124 @@
+# MCP Tool Design Patterns - HSA MCP Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: mcp
+  domain: tool-design
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: td001
+    name: stateless_tool
+    category: design
+    description: Stateless tool that produces same output for same input
+    text: stateless tool idempotent pure function no side effects
+    example: |
+      server.tool("search", { query: z.string(), limit: z.number().default(10) },
+        async ({ query, limit }) => {
+          const results = await db.search(query, limit);
+          return { content: [{ type: "text", text: JSON.stringify(results) }] };
+        });
+    severity: CRITICAL
+    rule: "Tools MUST be stateless and idempotent"
+
+  - id: td002
+    name: pagination
+    category: design
+    description: Pagination pattern for large result sets
+    text: pagination cursor token next page large results bounded
+    example: |
+      server.tool("list_items", {
+        cursor: z.string().optional(),
+        pageSize: z.number().default(20).max(100)
+      }, async ({ cursor, pageSize }) => {
+        const { items, nextCursor } = await db.paginate(cursor, pageSize);
+        return {
+          content: [{ type: "text", text: JSON.stringify(items) }],
+          _meta: { nextCursor }
+        };
+      });
+    rule: "NEVER return unbounded results"
+
+  - id: td003
+    name: input_validation
+    category: design
+    description: JSON Schema validation for all tool inputs
+    text: input validation json schema zod type safety
+    example: |
+      const schema = z.object({
+        path: z.string().refine(p => !p.includes(".."), "No path traversal"),
+        content: z.string().max(100000, "Content too large")
+      });
+    severity: CRITICAL
+
+  - id: td004
+    name: error_handling
+    category: design
+    description: Structured error responses using JSON-RPC error codes
+    text: error handling json-rpc error codes recoverable fatal
+    example: |
+      // Return error as content (recoverable)
+      return { content: [{ type: "text", text: "Error: File not found" }], isError: true };
+      // Throw for fatal errors
+      throw new McpError(ErrorCode.InvalidParams, "Invalid file path");
+    error_codes:
+      -32600: "Invalid Request"
+      -32601: "Method not found"
+      -32602: "Invalid params"
+      -32603: "Internal error"
+
+  - id: td005
+    name: resource_design
+    category: design
+    description: Resource primitives for exposing data
+    text: resource uri template static dynamic data exposure
+    example: |
+      // Static resource
+      server.resource("readme", "file:///README.md", async () => ({
+        contents: [{ uri: "file:///README.md", text: readmeContent }]
+      }));
+      // Dynamic resource template
+      server.resourceTemplate("user/{id}", async (uri) => ({
+        contents: [{ uri: uri.href, text: await getUser(uri.params.id) }]
+      }));
+
+  - id: td006
+    name: prompt_design
+    category: design
+    description: Prompt primitives for reusable prompt templates
+    text: prompt template reusable parameterized prompt primitive
+    example: |
+      server.prompt("code_review", { language: z.string(), code: z.string() },
+        ({ language, code }) => ({
+          messages: [{
+            role: "user",
+            content: { type: "text", text: `Review this ${language} code:\n${code}` }
+          }]
+        }));
+
+  - id: td007
+    name: bounded_context
+    category: design
+    description: Single responsibility per server
+    text: bounded context single responsibility server separation concerns
+    example: "// ✅ Separate servers: file-server, git-server, db-server"
+    rule: "Each MCP server should have ONE bounded context"
+    anti_pattern: "// ❌ One server doing files + git + database + email"
+
+  - id: td008
+    name: response_format
+    category: design
+    description: Content types and response formatting
+    text: response content type text image resource embedded
+    example: |
+      // Text content
+      { content: [{ type: "text", text: "Hello" }] }
+      // Image content
+      { content: [{ type: "image", data: base64Data, mimeType: "image/png" }] }
+      // Multiple content blocks
+      { content: [
+        { type: "text", text: "Found 3 results:" },
+        { type: "text", text: JSON.stringify(results) }
+      ]}

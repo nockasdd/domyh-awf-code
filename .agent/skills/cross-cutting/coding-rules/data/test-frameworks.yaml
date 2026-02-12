@@ -1,0 +1,183 @@
+metadata:
+  skill: coding-rules
+  domain: test_frameworks
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: test-frameworks.yaml
+  patterns_count: 24
+  columns:
+    - test_framework
+    - language
+    - detection_file
+    - detection_pattern
+    - run_command
+    - file_pattern
+patterns:
+  - id: item_001
+    test_framework: Jest
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: jest in devDependencies
+    run_command: npm test
+    file_pattern: "*.test.js;*.spec.ts"
+  - id: item_002
+    test_framework: Vitest
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: vitest in devDependencies
+    run_command: npm test
+    file_pattern: "*.test.ts;*.spec.ts"
+  - id: item_003
+    test_framework: Mocha
+    language: JavaScript
+    detection_file: package.json
+    detection_pattern: mocha in devDependencies
+    run_command: npm test
+    file_pattern: "*.test.js"
+  - id: item_004
+    test_framework: Cypress
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: cypress in devDependencies
+    run_command: npx cypress run
+    file_pattern: "*.cy.ts;*.cy.js"
+  - id: item_005
+    test_framework: Playwright
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: "@playwright/test in devDependencies"
+    run_command: npx playwright test
+    file_pattern: "*.spec.ts"
+  - id: item_006
+    test_framework: pytest
+    language: Python
+    detection_file: requirements.txt
+    detection_pattern: pytest
+    run_command: pytest
+    file_pattern: test_*.py;*_test.py
+  - id: item_007
+    test_framework: unittest
+    language: Python
+    detection_file: "*.py"
+    detection_pattern: import unittest
+    run_command: python -m unittest
+    file_pattern: test_*.py
+  - id: item_008
+    test_framework: nose2
+    language: Python
+    detection_file: requirements.txt
+    detection_pattern: nose2
+    run_command: nose2
+    file_pattern: test_*.py
+  - id: item_009
+    test_framework: xUnit
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: xunit PackageReference
+    run_command: dotnet test
+    file_pattern: "*Test.cs;*Tests.cs"
+  - id: item_010
+    test_framework: NUnit
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: NUnit PackageReference
+    run_command: dotnet test
+    file_pattern: "*Test.cs;*Tests.cs"
+  - id: item_011
+    test_framework: MSTest
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: MSTest.TestFramework PackageReference
+    run_command: dotnet test
+    file_pattern: "*Test.cs;*Tests.cs"
+  - id: item_012
+    test_framework: Google Test
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(GTest)
+    run_command: ctest --output-on-failure
+    file_pattern: "*_test.cpp;*_test.cc"
+  - id: item_013
+    test_framework: Catch2
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(Catch2)
+    run_command: ctest --output-on-failure
+    file_pattern: "*_test.cpp"
+  - id: item_014
+    test_framework: Boost.Test
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: Boost::unit_test_framework
+    run_command: ctest;./test_runner
+    file_pattern: "*_test.cpp"
+  - id: item_015
+    test_framework: JUnit 5
+    language: Java
+    detection_file: pom.xml
+    detection_pattern: junit-jupiter in dependency
+    run_command: mvn test
+    file_pattern: "*Test.java;*Tests.java"
+  - id: item_016
+    test_framework: JUnit 4
+    language: Java
+    detection_file: pom.xml
+    detection_pattern: junit:junit in dependency
+    run_command: mvn test
+    file_pattern: "*Test.java"
+  - id: item_017
+    test_framework: TestNG
+    language: Java
+    detection_file: pom.xml
+    detection_pattern: testng in dependency
+    run_command: mvn test
+    file_pattern: "*Test.java"
+  - id: item_018
+    test_framework: Spock
+    language: Groovy/Java
+    detection_file: build.gradle
+    detection_pattern: spock-core
+    run_command: ./gradlew test
+    file_pattern: "*Spec.groovy"
+  - id: item_019
+    test_framework: Go testing
+    language: Go
+    detection_file: "*_test.go"
+    detection_pattern: import "testing"
+    run_command: go test ./...
+    file_pattern: "*_test.go"
+  - id: item_020
+    test_framework: Cargo test
+    language: Rust
+    detection_file: "*.rs"
+    detection_pattern: "#[test]"
+    run_command: cargo test
+    file_pattern: "*.rs"
+  - id: item_021
+    test_framework: ExUnit
+    language: Elixir
+    detection_file: mix.exs
+    detection_pattern: ExUnit.start()
+    run_command: mix test
+    file_pattern: "*_test.exs"
+  - id: item_022
+    test_framework: RSpec
+    language: Ruby
+    detection_file: Gemfile
+    detection_pattern: gem 'rspec'
+    run_command: bundle exec rspec
+    file_pattern: "*_spec.rb"
+  - id: item_023
+    test_framework: PHPUnit
+    language: PHP
+    detection_file: composer.json
+    detection_pattern: phpunit/phpunit
+    run_command: ./vendor/bin/phpunit
+    file_pattern: "*Test.php"
+  - id: item_024
+    test_framework: flutter_test
+    language: Dart
+    detection_file: pubspec.yaml
+    detection_pattern: flutter_test in dev_dependencies
+    run_command: flutter test
+    file_pattern: "*_test.dart"

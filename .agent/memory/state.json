@@ -1,17 +1,17 @@
 {
-  "version": "1.2.0",
+  "version": "1.0.0",
   "last_updated": "2026-02-03T00:50:00+07:00",
   
   "system": {
     "name": "DOMYH Awesome Code",
-    "version": "v6.1.2",
-    "version_short": "v6.1.2",
+    "version": "v6.2.1",
+    "version_short": "v6.2.1",
     "_note": "Sync from core/VERSION.yaml"
   },
   
   "project": {
     "name": "DOMYH Awesome Code",
-    "path": "e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent",
+    "path": ".",
     "type": "ai-agent-library",
     "stack": ["yaml", "markdown", "python", "json"],
     "initialized_at": "2026-02-01T11:17:00+07:00"

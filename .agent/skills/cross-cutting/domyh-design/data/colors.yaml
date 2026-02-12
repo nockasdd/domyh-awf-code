@@ -1,0 +1,1226 @@
+metadata:
+  skill: domyh-design
+  domain: colors
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: colors.yaml
+  patterns_count: 96
+  columns:
+    - "No"
+    - Product Type
+    - Keywords
+    - Primary (Hex)
+    - Secondary (Hex)
+    - CTA (Hex)
+    - Background (Hex)
+    - Text (Hex)
+    - Border (Hex)
+    - Notes
+patterns:
+  - id: "1"
+    product_type: SaaS (General)
+    keywords:
+      - saas
+      - general
+    primary_hex: "#2563EB"
+    secondary_hex: "#3B82F6"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Trust blue + accent contrast
+  - id: "2"
+    product_type: Micro SaaS
+    keywords:
+      - micro
+      - saas
+    primary_hex: "#2563EB"
+    secondary_hex: "#3B82F6"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Vibrant primary + white space
+  - id: "3"
+    product_type: E-commerce
+    keywords: commerce
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand primary + success green
+  - id: "4"
+    product_type: E-commerce Luxury
+    keywords:
+      - commerce
+      - luxury
+    primary_hex: "#1C1917"
+    secondary_hex: "#44403C"
+    cta_hex: "#CA8A04"
+    background_hex: "#FAFAF9"
+    text_hex: "#0C0A09"
+    border_hex: "#D6D3D1"
+    notes: Premium colors + minimal accent
+  - id: "5"
+    product_type: Service Landing Page
+    keywords:
+      - service
+      - landing
+      - page
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand primary + trust colors
+  - id: "6"
+    product_type: B2B Service
+    keywords:
+      - b2b
+      - service
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Professional blue + neutral grey
+  - id: "7"
+    product_type: Financial Dashboard
+    keywords:
+      - financial
+      - dashboard
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark bg + red/green alerts + trust blue
+  - id: "8"
+    product_type: Analytics Dashboard
+    keywords:
+      - analytics
+      - dashboard
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Cool→Hot gradients + neutral grey
+  - id: "9"
+    product_type: Healthcare App
+    keywords:
+      - healthcare
+      - app
+    primary_hex: "#0891B2"
+    secondary_hex: "#22D3EE"
+    cta_hex: "#059669"
+    background_hex: "#ECFEFF"
+    text_hex: "#164E63"
+    border_hex: "#A5F3FC"
+    notes: Calm blue + health green + trust
+  - id: "10"
+    product_type: Educational App
+    keywords:
+      - educational
+      - app
+    primary_hex: "#4F46E5"
+    secondary_hex: "#818CF8"
+    cta_hex: "#F97316"
+    background_hex: "#EEF2FF"
+    text_hex: "#1E1B4B"
+    border_hex: "#C7D2FE"
+    notes: Playful colors + clear hierarchy
+  - id: "11"
+    product_type: Creative Agency
+    keywords:
+      - creative
+      - agency
+    primary_hex: "#EC4899"
+    secondary_hex: "#F472B6"
+    cta_hex: "#06B6D4"
+    background_hex: "#FDF2F8"
+    text_hex: "#831843"
+    border_hex: "#FBCFE8"
+    notes: Bold primaries + artistic freedom
+  - id: "12"
+    product_type: Portfolio/Personal
+    keywords:
+      - portfolio
+      - personal
+    primary_hex: "#18181B"
+    secondary_hex: "#3F3F46"
+    cta_hex: "#2563EB"
+    background_hex: "#FAFAFA"
+    text_hex: "#09090B"
+    border_hex: "#E4E4E7"
+    notes: Brand primary + artistic interpretation
+  - id: "13"
+    product_type: Gaming
+    keywords: gaming
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#F43F5E"
+    background_hex: "#0F0F23"
+    text_hex: "#E2E8F0"
+    border_hex: "#4C1D95"
+    notes: Vibrant + neon + immersive colors
+  - id: "14"
+    product_type: Government/Public Service
+    keywords:
+      - government
+      - public
+      - service
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Professional blue + high contrast
+  - id: "15"
+    product_type: Fintech/Crypto
+    keywords:
+      - fintech
+      - crypto
+    primary_hex: "#F59E0B"
+    secondary_hex: "#FBBF24"
+    cta_hex: "#8B5CF6"
+    background_hex: "#0F172A"
+    text_hex: "#F8FAFC"
+    border_hex: "#334155"
+    notes: Dark tech colors + trust + vibrant accents
+  - id: "16"
+    product_type: Social Media App
+    keywords:
+      - social
+      - media
+      - app
+    primary_hex: "#2563EB"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F43F5E"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#DBEAFE"
+    notes: Vibrant + engagement colors
+  - id: "17"
+    product_type: Productivity Tool
+    keywords:
+      - productivity
+      - tool
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Clear hierarchy + functional colors
+  - id: "18"
+    product_type: Design System/Component Library
+    keywords:
+      - design
+      - system
+      - component
+      - library
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Clear hierarchy + code-like structure
+  - id: "19"
+    product_type: AI/Chatbot Platform
+    keywords:
+      - chatbot
+      - platform
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#06B6D4"
+    background_hex: "#FAF5FF"
+    text_hex: "#1E1B4B"
+    border_hex: "#DDD6FE"
+    notes: Neutral + AI Purple (#6366F1)
+  - id: "20"
+    product_type: NFT/Web3 Platform
+    keywords:
+      - nft
+      - web3
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark + Neon + Gold (#FFD700)
+  - id: "21"
+    product_type: Creator Economy Platform
+    keywords:
+      - creator
+      - economy
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Vibrant + Brand colors
+  - id: "22"
+    product_type: Sustainability/ESG Platform
+    keywords:
+      - sustainability
+      - esg
+      - platform
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#06B6D4"
+    background_hex: "#FAF5FF"
+    text_hex: "#1E1B4B"
+    border_hex: "#DDD6FE"
+    notes: Green (#228B22) + Earth tones
+  - id: "23"
+    product_type: Remote Work/Collaboration Tool
+    keywords:
+      - remote
+      - work
+      - collaboration
+      - tool
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Calm Blue + Neutral grey
+  - id: "24"
+    product_type: Mental Health App
+    keywords:
+      - mental
+      - health
+      - app
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Calm Pastels + Trust colors
+  - id: "25"
+    product_type: Pet Tech App
+    keywords:
+      - pet
+      - tech
+      - app
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Playful + Warm colors
+  - id: "26"
+    product_type: Smart Home/IoT Dashboard
+    keywords:
+      - smart
+      - home
+      - iot
+      - dashboard
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark + Status indicator colors
+  - id: "27"
+    product_type: EV/Charging Ecosystem
+    keywords:
+      - charging
+      - ecosystem
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Electric Blue (#009CD1) + Green
+  - id: "28"
+    product_type: Subscription Box Service
+    keywords:
+      - subscription
+      - box
+      - service
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand + Excitement colors
+  - id: "29"
+    product_type: Podcast Platform
+    keywords:
+      - podcast
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark + Audio waveform accents
+  - id: "30"
+    product_type: Dating App
+    keywords:
+      - dating
+      - app
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Warm + Romantic (Pink/Red gradients)
+  - id: "31"
+    product_type: Micro-Credentials/Badges Platform
+    keywords:
+      - micro
+      - credentials
+      - badges
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Trust Blue + Gold (#FFD700)
+  - id: "32"
+    product_type: Knowledge Base/Documentation
+    keywords:
+      - knowledge
+      - base
+      - documentation
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Clean hierarchy + minimal color
+  - id: "33"
+    product_type: Hyperlocal Services
+    keywords:
+      - hyperlocal
+      - services
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Location markers + Trust colors
+  - id: "34"
+    product_type: Beauty/Spa/Wellness Service
+    keywords:
+      - beauty
+      - spa
+      - wellness
+      - service
+    primary_hex: "#10B981"
+    secondary_hex: "#34D399"
+    cta_hex: "#8B5CF6"
+    background_hex: "#ECFDF5"
+    text_hex: "#064E3B"
+    border_hex: "#A7F3D0"
+    notes: "Soft pastels (Pink #FFB6C1 Sage #90EE90) + Cream + Gold accents"
+  - id: "35"
+    product_type: Luxury/Premium Brand
+    keywords:
+      - luxury
+      - premium
+      - brand
+    primary_hex: "#1C1917"
+    secondary_hex: "#44403C"
+    cta_hex: "#CA8A04"
+    background_hex: "#FAFAF9"
+    text_hex: "#0C0A09"
+    border_hex: "#D6D3D1"
+    notes: Black + Gold (#FFD700) + White + Minimal accent
+  - id: "36"
+    product_type: Restaurant/Food Service
+    keywords:
+      - restaurant
+      - food
+      - service
+    primary_hex: "#DC2626"
+    secondary_hex: "#F87171"
+    cta_hex: "#CA8A04"
+    background_hex: "#FEF2F2"
+    text_hex: "#450A0A"
+    border_hex: "#FECACA"
+    notes: Warm colors (Orange Red Brown) + appetizing imagery
+  - id: "37"
+    product_type: Fitness/Gym App
+    keywords:
+      - fitness
+      - gym
+      - app
+    primary_hex: "#DC2626"
+    secondary_hex: "#F87171"
+    cta_hex: "#16A34A"
+    background_hex: "#FEF2F2"
+    text_hex: "#1F2937"
+    border_hex: "#FECACA"
+    notes: "Energetic (Orange #FF6B35 Electric Blue) + Dark bg"
+  - id: "38"
+    product_type: Real Estate/Property
+    keywords:
+      - real
+      - estate
+      - property
+    primary_hex: "#0F766E"
+    secondary_hex: "#14B8A6"
+    cta_hex: "#0369A1"
+    background_hex: "#F0FDFA"
+    text_hex: "#134E4A"
+    border_hex: "#99F6E4"
+    notes: Trust Blue (#0077B6) + Gold accents + White
+  - id: "39"
+    product_type: Travel/Tourism Agency
+    keywords:
+      - travel
+      - tourism
+      - agency
+    primary_hex: "#EC4899"
+    secondary_hex: "#F472B6"
+    cta_hex: "#06B6D4"
+    background_hex: "#FDF2F8"
+    text_hex: "#831843"
+    border_hex: "#FBCFE8"
+    notes: Vibrant destination colors + Sky Blue + Warm accents
+  - id: "40"
+    product_type: Hotel/Hospitality
+    keywords:
+      - hotel
+      - hospitality
+    primary_hex: "#1E3A8A"
+    secondary_hex: "#3B82F6"
+    cta_hex: "#CA8A04"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E40AF"
+    border_hex: "#BFDBFE"
+    notes: Warm neutrals + Gold (#D4AF37) + Brand accent
+  - id: "41"
+    product_type: Wedding/Event Planning
+    keywords:
+      - wedding
+      - event
+      - planning
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#F97316"
+    background_hex: "#FAF5FF"
+    text_hex: "#4C1D95"
+    border_hex: "#DDD6FE"
+    notes: Soft Pink (#FFD6E0) + Gold + Cream + Sage
+  - id: "42"
+    product_type: Legal Services
+    keywords:
+      - legal
+      - services
+    primary_hex: "#1E3A8A"
+    secondary_hex: "#1E40AF"
+    cta_hex: "#B45309"
+    background_hex: "#F8FAFC"
+    text_hex: "#0F172A"
+    border_hex: "#CBD5E1"
+    notes: Navy Blue (#1E3A5F) + Gold + White
+  - id: "43"
+    product_type: Insurance Platform
+    keywords:
+      - insurance
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Trust Blue (#0066CC) + Green (security) + Neutral
+  - id: "44"
+    product_type: Banking/Traditional Finance
+    keywords:
+      - banking
+      - traditional
+      - finance
+    primary_hex: "#0F766E"
+    secondary_hex: "#14B8A6"
+    cta_hex: "#0369A1"
+    background_hex: "#F0FDFA"
+    text_hex: "#134E4A"
+    border_hex: "#99F6E4"
+    notes: Navy (#0A1628) + Trust Blue + Gold accents
+  - id: "45"
+    product_type: Online Course/E-learning
+    keywords:
+      - online
+      - course
+      - learning
+    primary_hex: "#0D9488"
+    secondary_hex: "#2DD4BF"
+    cta_hex: "#EA580C"
+    background_hex: "#F0FDFA"
+    text_hex: "#134E4A"
+    border_hex: "#5EEAD4"
+    notes: Vibrant learning colors + Progress green
+  - id: "46"
+    product_type: Non-profit/Charity
+    keywords:
+      - non
+      - profit
+      - charity
+    primary_hex: "#0891B2"
+    secondary_hex: "#22D3EE"
+    cta_hex: "#F97316"
+    background_hex: "#ECFEFF"
+    text_hex: "#164E63"
+    border_hex: "#A5F3FC"
+    notes: Cause-related colors + Trust + Warm
+  - id: "47"
+    product_type: Music Streaming
+    keywords:
+      - music
+      - streaming
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark (#121212) + Vibrant accents + Album art colors
+  - id: "48"
+    product_type: Video Streaming/OTT
+    keywords:
+      - video
+      - streaming
+      - ott
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark bg + Content poster colors + Brand accent
+  - id: "49"
+    product_type: Job Board/Recruitment
+    keywords:
+      - job
+      - board
+      - recruitment
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Professional Blue + Success Green + Neutral
+  - id: "50"
+    product_type: Marketplace (P2P)
+    keywords:
+      - marketplace
+      - p2p
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Trust colors + Category colors + Success green
+  - id: "51"
+    product_type: Logistics/Delivery
+    keywords:
+      - logistics
+      - delivery
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Blue (#2563EB) + Orange (tracking) + Green (delivered)
+  - id: "52"
+    product_type: Agriculture/Farm Tech
+    keywords:
+      - agriculture
+      - farm
+      - tech
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Earth Green (#4A7C23) + Brown + Sky Blue
+  - id: "53"
+    product_type: Construction/Architecture
+    keywords:
+      - construction
+      - architecture
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Grey (#4A4A4A) + Orange (safety) + Blueprint Blue
+  - id: "54"
+    product_type: Automotive/Car Dealership
+    keywords:
+      - automotive
+      - car
+      - dealership
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand colors + Metallic accents + Dark/Light
+  - id: "55"
+    product_type: Photography Studio
+    keywords:
+      - photography
+      - studio
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Black + White + Minimal accent
+  - id: "56"
+    product_type: Coworking Space
+    keywords:
+      - coworking
+      - space
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Energetic colors + Wood tones + Brand accent
+  - id: "57"
+    product_type: Cleaning Service
+    keywords:
+      - cleaning
+      - service
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Fresh Blue (#00B4D8) + Clean White + Green
+  - id: "58"
+    product_type: Home Services (Plumber/Electrician)
+    keywords:
+      - home
+      - services
+      - plumber
+      - electrician
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Trust Blue + Safety Orange + Professional grey
+  - id: "59"
+    product_type: Childcare/Daycare
+    keywords:
+      - childcare
+      - daycare
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Playful pastels + Safe colors + Warm accents
+  - id: "60"
+    product_type: Senior Care/Elderly
+    keywords:
+      - senior
+      - care
+      - elderly
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Calm Blue + Warm neutrals + Large text
+  - id: "61"
+    product_type: Medical Clinic
+    keywords:
+      - medical
+      - clinic
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Medical Blue (#0077B6) + Trust White + Calm Green
+  - id: "62"
+    product_type: Pharmacy/Drug Store
+    keywords:
+      - pharmacy
+      - drug
+      - store
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Pharmacy Green + Trust Blue + Clean White
+  - id: "63"
+    product_type: Dental Practice
+    keywords:
+      - dental
+      - practice
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Fresh Blue + White + Smile Yellow accent
+  - id: "64"
+    product_type: Veterinary Clinic
+    keywords:
+      - veterinary
+      - clinic
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Caring Blue + Pet-friendly colors + Warm accents
+  - id: "65"
+    product_type: Florist/Plant Shop
+    keywords:
+      - florist
+      - plant
+      - shop
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Natural Green + Floral pinks/purples + Earth tones
+  - id: "66"
+    product_type: Bakery/Cafe
+    keywords:
+      - bakery
+      - cafe
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Warm Brown + Cream + Appetizing accents
+  - id: "67"
+    product_type: Coffee Shop
+    keywords:
+      - coffee
+      - shop
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Coffee Brown (#6F4E37) + Cream + Warm accents
+  - id: "68"
+    product_type: Brewery/Winery
+    keywords:
+      - brewery
+      - winery
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Deep amber/burgundy + Gold + Craft aesthetic
+  - id: "69"
+    product_type: Airline
+    keywords: airline
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#06B6D4"
+    background_hex: "#FAF5FF"
+    text_hex: "#1E1B4B"
+    border_hex: "#DDD6FE"
+    notes: Sky Blue + Brand colors + Trust accents
+  - id: "70"
+    product_type: News/Media Platform
+    keywords:
+      - news
+      - media
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand colors + High contrast + Category colors
+  - id: "71"
+    product_type: Magazine/Blog
+    keywords:
+      - magazine
+      - blog
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Editorial colors + Brand primary + Clean white
+  - id: "72"
+    product_type: Freelancer Platform
+    keywords:
+      - freelancer
+      - platform
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Professional Blue + Success Green + Neutral
+  - id: "73"
+    product_type: Consulting Firm
+    keywords:
+      - consulting
+      - firm
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Navy + Gold + Professional grey
+  - id: "74"
+    product_type: Marketing Agency
+    keywords:
+      - marketing
+      - agency
+    primary_hex: "#EC4899"
+    secondary_hex: "#F472B6"
+    cta_hex: "#06B6D4"
+    background_hex: "#FDF2F8"
+    text_hex: "#831843"
+    border_hex: "#FBCFE8"
+    notes: Bold brand colors + Creative freedom
+  - id: "75"
+    product_type: Event Management
+    keywords:
+      - event
+      - management
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#F97316"
+    background_hex: "#FAF5FF"
+    text_hex: "#4C1D95"
+    border_hex: "#DDD6FE"
+    notes: Event theme colors + Excitement accents
+  - id: "76"
+    product_type: Conference/Webinar Platform
+    keywords:
+      - conference
+      - webinar
+      - platform
+    primary_hex: "#0F172A"
+    secondary_hex: "#334155"
+    cta_hex: "#0369A1"
+    background_hex: "#F8FAFC"
+    text_hex: "#020617"
+    border_hex: "#E2E8F0"
+    notes: Professional Blue + Video accent + Brand
+  - id: "77"
+    product_type: Membership/Community
+    keywords:
+      - membership
+      - community
+    primary_hex: "#7C3AED"
+    secondary_hex: "#A78BFA"
+    cta_hex: "#F97316"
+    background_hex: "#FAF5FF"
+    text_hex: "#4C1D95"
+    border_hex: "#DDD6FE"
+    notes: Community brand colors + Engagement accents
+  - id: "78"
+    product_type: Newsletter Platform
+    keywords:
+      - newsletter
+      - platform
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Brand primary + Clean white + CTA accent
+  - id: "79"
+    product_type: Digital Products/Downloads
+    keywords:
+      - digital
+      - products
+      - downloads
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Product category colors + Brand + Success green
+  - id: "80"
+    product_type: Church/Religious Organization
+    keywords:
+      - church
+      - religious
+      - organization
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Warm Gold + Deep Purple/Blue + White
+  - id: "81"
+    product_type: Sports Team/Club
+    keywords:
+      - sports
+      - team
+      - club
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Team colors + Energetic accents
+  - id: "82"
+    product_type: Museum/Gallery
+    keywords:
+      - museum
+      - gallery
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Art-appropriate neutrals + Exhibition accents
+  - id: "83"
+    product_type: Theater/Cinema
+    keywords:
+      - theater
+      - cinema
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Dark + Spotlight accents + Gold
+  - id: "84"
+    product_type: Language Learning App
+    keywords:
+      - language
+      - learning
+      - app
+    primary_hex: "#0D9488"
+    secondary_hex: "#2DD4BF"
+    cta_hex: "#EA580C"
+    background_hex: "#F0FDFA"
+    text_hex: "#134E4A"
+    border_hex: "#5EEAD4"
+    notes: Playful colors + Progress indicators + Country flags
+  - id: "85"
+    product_type: Coding Bootcamp
+    keywords:
+      - coding
+      - bootcamp
+    primary_hex: "#3B82F6"
+    secondary_hex: "#60A5FA"
+    cta_hex: "#F97316"
+    background_hex: "#F8FAFC"
+    text_hex: "#1E293B"
+    border_hex: "#E2E8F0"
+    notes: Code editor colors + Brand + Success green
+  - id: "86"
+    product_type: Cybersecurity Platform
+    keywords:
+      - cybersecurity
+      - security
+      - cyber
+      - hacker
+    primary_hex: "#00FF41"
+    secondary_hex: "#0D0D0D"
+    cta_hex: "#00FF41"
+    background_hex: "#000000"
+    text_hex: "#E0E0E0"
+    border_hex: "#1F1F1F"
+    notes: Matrix Green + Deep Black + Terminal feel
+  - id: "87"
+    product_type: Developer Tool / IDE
+    keywords:
+      - developer
+      - tool
+      - ide
+      - code
+      - dev
+    primary_hex: "#3B82F6"
+    secondary_hex: "#1E293B"
+    cta_hex: "#2563EB"
+    background_hex: "#0F172A"
+    text_hex: "#F1F5F9"
+    border_hex: "#334155"
+    notes: Dark syntax theme colors + Blue focus
+  - id: "88"
+    product_type: Biotech / Life Sciences
+    keywords:
+      - biotech
+      - science
+      - biology
+      - medical
+    primary_hex: "#0EA5E9"
+    secondary_hex: "#0284C7"
+    cta_hex: "#10B981"
+    background_hex: "#F8FAFC"
+    text_hex: "#0F172A"
+    border_hex: "#E2E8F0"
+    notes: Sterile White + DNA Blue + Life Green
+  - id: "89"
+    product_type: Space Tech / Aerospace
+    keywords:
+      - space
+      - aerospace
+      - tech
+      - futuristic
+    primary_hex: "#FFFFFF"
+    secondary_hex: "#94A3B8"
+    cta_hex: "#3B82F6"
+    background_hex: "#0B0B10"
+    text_hex: "#F8FAFC"
+    border_hex: "#1E293B"
+    notes: Deep Space Black + Star White + Metallic
+  - id: "90"
+    product_type: Architecture / Interior
+    keywords:
+      - architecture
+      - interior
+      - design
+      - luxury
+    primary_hex: "#171717"
+    secondary_hex: "#404040"
+    cta_hex: "#D4AF37"
+    background_hex: "#FFFFFF"
+    text_hex: "#171717"
+    border_hex: "#E5E5E5"
+    notes: Monochrome + Gold Accent + High Imagery
+  - id: "91"
+    product_type: Quantum Computing
+    keywords:
+      - quantum
+      - qubit
+      - tech
+    primary_hex: "#00FFFF"
+    secondary_hex: "#7B61FF"
+    cta_hex: "#FF00FF"
+    background_hex: "#050510"
+    text_hex: "#E0E0FF"
+    border_hex: "#333344"
+    notes: Interference patterns + Neon + Deep Dark
+  - id: "92"
+    product_type: Biohacking / Longevity
+    keywords:
+      - bio
+      - health
+      - science
+    primary_hex: "#FF4D4D"
+    secondary_hex: "#4D94FF"
+    cta_hex: "#00E676"
+    background_hex: "#F5F5F7"
+    text_hex: "#1C1C1E"
+    border_hex: "#E5E5EA"
+    notes: Biological red/blue + Clinical white
+  - id: "93"
+    product_type: Autonomous Systems
+    keywords:
+      - drone
+      - robot
+      - fleet
+    primary_hex: "#00FF41"
+    secondary_hex: "#008F11"
+    cta_hex: "#FF3333"
+    background_hex: "#0D1117"
+    text_hex: "#E6EDF3"
+    border_hex: "#30363D"
+    notes: Terminal Green + Tactical Dark
+  - id: "94"
+    product_type: Generative AI Art
+    keywords:
+      - art
+      - gen-ai
+      - creative
+    primary_hex: "#111111"
+    secondary_hex: "#333333"
+    cta_hex: "#FFFFFF"
+    background_hex: "#FAFAFA"
+    text_hex: "#000000"
+    border_hex: "#E5E5E5"
+    notes: Canvas Neutral + High Contrast
+  - id: "95"
+    product_type: Spatial / Vision OS
+    keywords:
+      - spatial
+      - glass
+      - vision
+    primary_hex: "#FFFFFF"
+    secondary_hex: "#E5E5E5"
+    cta_hex: "#007AFF"
+    background_hex: "#888888"
+    text_hex: "#000000"
+    border_hex: "#FFFFFF"
+    notes: Glass opacity 20% + System Blue
+  - id: "96"
+    product_type: Climate Tech
+    keywords:
+      - climate
+      - green
+      - energy
+    primary_hex: "#2E8B57"
+    secondary_hex: "#87CEEB"
+    cta_hex: "#FFD700"
+    background_hex: "#F0FFF4"
+    text_hex: "#1A3320"
+    border_hex: "#C6E6C6"
+    notes: Nature Green + Solar Yellow + Air Blue

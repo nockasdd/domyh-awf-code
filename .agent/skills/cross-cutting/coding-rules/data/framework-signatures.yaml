@@ -1,0 +1,344 @@
+metadata:
+  skill: coding-rules
+  domain: framework_signatures
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: framework-signatures.yaml
+  patterns_count: 47
+  columns:
+    - framework
+    - language
+    - detection_file
+    - detection_pattern
+    - category
+    - confidence
+patterns:
+  - id: item_001
+    framework: React
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: react in dependencies
+    category: frontend
+    confidence: "100"
+  - id: item_002
+    framework: Vue.js
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: vue in dependencies
+    category: frontend
+    confidence: "100"
+  - id: item_003
+    framework: Angular
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: "@angular/core in dependencies"
+    category: frontend
+    confidence: "100"
+  - id: item_004
+    framework: Svelte
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: svelte in dependencies
+    category: frontend
+    confidence: "100"
+  - id: item_005
+    framework: Next.js
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: next in dependencies
+    category: fullstack
+    confidence: "100"
+  - id: item_006
+    framework: Nuxt.js
+    language: Vue
+    detection_file: package.json
+    detection_pattern: nuxt in dependencies
+    category: fullstack
+    confidence: "100"
+  - id: item_007
+    framework: Express.js
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: express in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_008
+    framework: NestJS
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: "@nestjs/core in dependencies"
+    category: backend
+    confidence: "100"
+  - id: item_009
+    framework: Fastify
+    language: JavaScript/TypeScript
+    detection_file: package.json
+    detection_pattern: fastify in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_010
+    framework: Spring Boot
+    language: Java
+    detection_file: pom.xml
+    detection_pattern: spring-boot-starter in artifactId
+    category: backend
+    confidence: "100"
+  - id: item_011
+    framework: Spring Boot
+    language: Java
+    detection_file: build.gradle
+    detection_pattern: org.springframework.boot plugin
+    category: backend
+    confidence: "100"
+  - id: item_012
+    framework: Quarkus
+    language: Java
+    detection_file: pom.xml
+    detection_pattern: quarkus-bom in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_013
+    framework: Django
+    language: Python
+    detection_file: requirements.txt
+    detection_pattern: Django==
+    category: backend
+    confidence: "100"
+  - id: item_014
+    framework: Django
+    language: Python
+    detection_file: "*.py"
+    detection_pattern: import django
+    category: backend
+    confidence: "80"
+  - id: item_015
+    framework: Flask
+    language: Python
+    detection_file: requirements.txt
+    detection_pattern: Flask==
+    category: backend
+    confidence: "100"
+  - id: item_016
+    framework: FastAPI
+    language: Python
+    detection_file: requirements.txt
+    detection_pattern: fastapi
+    category: backend
+    confidence: "100"
+  - id: item_017
+    framework: Rails
+    language: Ruby
+    detection_file: Gemfile
+    detection_pattern: gem 'rails'
+    category: fullstack
+    confidence: "100"
+  - id: item_018
+    framework: Laravel
+    language: PHP
+    detection_file: composer.json
+    detection_pattern: laravel/framework
+    category: fullstack
+    confidence: "100"
+  - id: item_019
+    framework: ASP.NET Core
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: Sdk="Microsoft.NET.Sdk.Web"
+    category: backend
+    confidence: "100"
+  - id: item_020
+    framework: WPF
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: <UseWPF>true</UseWPF>
+    category: desktop
+    confidence: "100"
+  - id: item_021
+    framework: WinForms
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: <UseWindowsForms>true</UseWindowsForms>
+    category: desktop
+    confidence: "100"
+  - id: item_022
+    framework: MAUI
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: <UseMaui>true</UseMaui>
+    category: mobile
+    confidence: "100"
+  - id: item_023
+    framework: Blazor
+    language: C#
+    detection_file: "*.csproj"
+    detection_pattern: Sdk="Microsoft.NET.Sdk.BlazorWebAssembly"
+    category: frontend
+    confidence: "100"
+  - id: item_024
+    framework: Qt
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(Qt
+    category: desktop
+    confidence: "100"
+  - id: item_025
+    framework: Boost
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(Boost
+    category: library
+    confidence: "100"
+  - id: item_026
+    framework: POCO
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(Poco
+    category: library
+    confidence: "100"
+  - id: item_027
+    framework: wxWidgets
+    language: C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(wxWidgets
+    category: desktop
+    confidence: "100"
+  - id: item_028
+    framework: GTK
+    language: C/C++
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(GTK
+    category: desktop
+    confidence: "100"
+  - id: item_029
+    framework: Flutter
+    language: Dart
+    detection_file: pubspec.yaml
+    detection_pattern: "flutter:"
+    category: mobile
+    confidence: "100"
+  - id: item_030
+    framework: React Native
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: react-native in dependencies
+    category: mobile
+    confidence: "100"
+  - id: item_031
+    framework: Expo
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: expo in dependencies
+    category: mobile
+    confidence: "100"
+  - id: item_032
+    framework: SwiftUI
+    language: Swift
+    detection_file: "*.swift"
+    detection_pattern: import SwiftUI
+    category: mobile
+    confidence: "90"
+  - id: item_033
+    framework: UIKit
+    language: Swift
+    detection_file: "*.swift"
+    detection_pattern: import UIKit
+    category: mobile
+    confidence: "90"
+  - id: item_034
+    framework: Jetpack Compose
+    language: Kotlin
+    detection_file: build.gradle.kts
+    detection_pattern: androidx.compose
+    category: mobile
+    confidence: "100"
+  - id: item_035
+    framework: Android SDK
+    language: Java/Kotlin
+    detection_file: build.gradle
+    detection_pattern: com.android.application
+    category: mobile
+    confidence: "100"
+  - id: item_036
+    framework: Electron
+    language: TypeScript
+    detection_file: package.json
+    detection_pattern: electron in dependencies
+    category: desktop
+    confidence: "100"
+  - id: item_037
+    framework: Tauri
+    language: Rust
+    detection_file: Cargo.toml
+    detection_pattern: tauri in dependencies
+    category: desktop
+    confidence: "100"
+  - id: item_038
+    framework: Phoenix
+    language: Elixir
+    detection_file: mix.exs
+    detection_pattern: :phoenix in deps
+    category: fullstack
+    confidence: "100"
+  - id: item_039
+    framework: Gin
+    language: Go
+    detection_file: go.mod
+    detection_pattern: github.com/gin-gonic/gin
+    category: backend
+    confidence: "100"
+  - id: item_040
+    framework: Echo
+    language: Go
+    detection_file: go.mod
+    detection_pattern: github.com/labstack/echo
+    category: backend
+    confidence: "100"
+  - id: item_041
+    framework: Fiber
+    language: Go
+    detection_file: go.mod
+    detection_pattern: github.com/gofiber/fiber
+    category: backend
+    confidence: "100"
+  - id: item_042
+    framework: Actix
+    language: Rust
+    detection_file: Cargo.toml
+    detection_pattern: actix-web in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_043
+    framework: Rocket
+    language: Rust
+    detection_file: Cargo.toml
+    detection_pattern: rocket in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_044
+    framework: Axum
+    language: Rust
+    detection_file: Cargo.toml
+    detection_pattern: axum in dependencies
+    category: backend
+    confidence: "100"
+  - id: item_045
+    framework: Tokio
+    language: Rust
+    detection_file: Cargo.toml
+    detection_pattern: tokio in dependencies
+    category: runtime
+    confidence: "100"
+  - id: item_046
+    framework: gRPC
+    language: Multiple
+    detection_file: CMakeLists.txt
+    detection_pattern: find_package(gRPC
+    category: rpc
+    confidence: "100"
+  - id: item_047
+    framework: gRPC
+    language: Multiple
+    detection_file: package.json
+    detection_pattern: "@grpc/grpc-js"
+    category: rpc
+    confidence: "100"

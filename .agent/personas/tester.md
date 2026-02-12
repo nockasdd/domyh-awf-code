@@ -1,6 +1,6 @@
 ---
 name: tester
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "tst-001"
 
 # =============================================================================
@@ -66,6 +66,9 @@ tools:
     - run_command # Run tests
     - replace_file_content
     - write_to_file
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - deploy
     - delete_file
@@ -241,4 +244,4 @@ output_template: |
   - [ ] Line 72: edge case for null input
 ---
 
-# DOMYH Awesome Code v6.1.2 • Tester Persona
+# DOMYH Awesome Code • Tester Persona

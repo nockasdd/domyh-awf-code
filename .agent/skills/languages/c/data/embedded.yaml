@@ -1,0 +1,251 @@
+# =============================================================================
+# C Embedded Patterns (Feb 2026)
+# Version: Embedded / MISRA
+# =============================================================================
+
+metadata:
+  skill: c
+  domain: embedded
+  version: "C23"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: c201
+    name: Volatile for Hardware
+    category: embedded
+    version: "C"
+    description: |
+      volatile keyword for memory-mapped I/O.
+      Prevent optimization of hardware accesses.
+    text: volatile hardware register mmio memory-mapped
+    example: |
+      #include <stdint.h>
+
+      // ✅ Memory-mapped I/O register
+      #define GPIO_BASE   0x40020000
+      #define GPIO_ODR    (*(volatile uint32_t*)(GPIO_BASE + 0x14))
+      #define GPIO_IDR    (*(volatile uint32_t*)(GPIO_BASE + 0x10))
+
+      // Set pin high
+      GPIO_ODR |= (1 << 5);
+
+      // Read pin state
+      uint32_t state = GPIO_IDR & (1 << 5);
+
+      // ✅ Why volatile is required:
+      void wait_for_ready(void) {
+          // Without volatile, compiler may optimize to infinite loop
+          // thinking STATUS never changes
+          volatile uint32_t* status = (volatile uint32_t*)0x40000000;
+          while ((*status & 0x01) == 0) {
+              // Wait for ready bit
+          }
+      }
+
+      // ✅ Struct for register groups
+      typedef struct {
+          volatile uint32_t CR;    // Control
+          volatile uint32_t SR;    // Status
+          volatile uint32_t DR;    // Data
+          volatile uint32_t reserved[5];
+      } UART_TypeDef;
+
+      #define UART1 ((UART_TypeDef*)0x40011000)
+
+      void uart_send(uint8_t byte) {
+          while (!(UART1->SR & (1 << 7)));  // Wait for TXE
+          UART1->DR = byte;
+      }
+
+      // ✅ volatile for ISR-modified variables
+      volatile int isr_flag = 0;
+
+      void interrupt_handler(void) {
+          isr_flag = 1;
+      }
+
+      void main_loop(void) {
+          while (!isr_flag);  // Need volatile or may never exit
+      }
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/c/language/volatile
+
+  - id: c202
+    name: Bit Fields and Packing
+    category: embedded
+    version: "C"
+    description: |
+      Compact data with bit fields.
+      Memory-efficient structures.
+    text: bitfield packed struct bit manipulation
+    example: |
+      #include <stdint.h>
+
+      // ✅ Bit fields for flags
+      typedef struct {
+          uint8_t enabled : 1;
+          uint8_t mode : 3;       // 0-7
+          uint8_t priority : 2;   // 0-3
+          uint8_t reserved : 2;
+      } DeviceFlags;
+
+      // ✅ Packed struct for protocol
+      #pragma pack(push, 1)
+      typedef struct {
+          uint8_t header;
+          uint16_t length;
+          uint32_t sequence;
+          uint8_t payload[0];  // Flexible array
+      } Packet;
+      #pragma pack(pop)
+      _Static_assert(sizeof(Packet) == 7, "Packet must be 7 bytes");
+
+      // ✅ GCC/Clang attribute syntax
+      typedef struct __attribute__((packed)) {
+          uint8_t type;
+          uint32_t value;
+      } CompactData;
+
+      // ✅ Bit manipulation macros
+      #define BIT(n)           (1UL << (n))
+      #define SET_BIT(x, n)    ((x) |= BIT(n))
+      #define CLEAR_BIT(x, n)  ((x) &= ~BIT(n))
+      #define TOGGLE_BIT(x, n) ((x) ^= BIT(n))
+      #define CHECK_BIT(x, n)  (((x) >> (n)) & 1)
+
+      // ✅ Extract/insert fields
+      #define FIELD_GET(x, mask, shift)  (((x) >> (shift)) & (mask))
+      #define FIELD_SET(x, val, mask, shift) \
+          (((x) & ~((mask) << (shift))) | (((val) & (mask)) << (shift)))
+
+      // Usage
+      uint32_t reg = 0;
+      reg = FIELD_SET(reg, 5, 0x0F, 4);  // Set bits [7:4] to 5
+      int val = FIELD_GET(reg, 0x0F, 4); // Get bits [7:4]
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/c/language/bit_field
+
+  - id: c203
+    name: Interrupt Handling
+    category: embedded
+    version: "C"
+    description: |
+      ISR patterns for embedded systems.
+      Critical sections, atomics.
+    text: interrupt isr critical section atomic nested
+    example: |
+      #include <stdint.h>
+      #include <stdatomic.h>
+
+      // ✅ ISR function (ARM Cortex-M example)
+      void TIM2_IRQHandler(void) __attribute__((interrupt));
+      void TIM2_IRQHandler(void) {
+          // Keep ISRs short!
+          if (TIM2->SR & TIM_SR_UIF) {
+              TIM2->SR &= ~TIM_SR_UIF;  // Clear flag
+              tick_count++;
+          }
+      }
+
+      // ✅ Critical section (disable interrupts)
+      static inline uint32_t enter_critical(void) {
+          uint32_t primask;
+          __asm volatile ("mrs %0, primask" : "=r" (primask));
+          __asm volatile ("cpsid i" ::: "memory");
+          return primask;
+      }
+
+      static inline void exit_critical(uint32_t primask) {
+          __asm volatile ("msr primask, %0" :: "r" (primask) : "memory");
+      }
+
+      // Usage
+      void safe_increment(int* counter) {
+          uint32_t state = enter_critical();
+          (*counter)++;
+          exit_critical(state);
+      }
+
+      // ✅ C11 Atomics (if available)
+      atomic_int shared_counter = 0;
+
+      void isr_with_atomic(void) {
+          atomic_fetch_add(&shared_counter, 1);
+      }
+
+      // ✅ Ring buffer for ISR communication
+      #define RING_SIZE 32
+      volatile uint8_t ring_buffer[RING_SIZE];
+      volatile uint8_t ring_head = 0;
+      volatile uint8_t ring_tail = 0;
+
+      void isr_push(uint8_t byte) {
+          uint8_t next = (ring_head + 1) % RING_SIZE;
+          if (next != ring_tail) {
+              ring_buffer[ring_head] = byte;
+              ring_head = next;
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.arm.com/documentation/
+
+  - id: c204
+    name: MISRA C Guidelines
+    category: safety
+    version: "MISRA"
+    description: |
+      Safety-critical coding guidelines.
+      Automotive, medical, aerospace.
+    text: misra safety-critical coding guidelines automotive
+    example: |
+      // ✅ MISRA C key rules summary
+
+      // Rule 1.3: No undefined behavior
+      // Always initialize variables
+      int x = 0;  // ✅ Good
+      // int x;   // ❌ Uninitialized
+
+      // Rule 10.1: Use explicit types
+      uint32_t counter = 0U;  // ✅ Use unsigned suffix
+
+      // Rule 11.3: No pointer-to-pointer casts
+      // ❌ int* p = (int*)0x1234;
+      // ✅ Use stdint.h and explicit casts through uintptr_t
+      uintptr_t addr = 0x1234;
+      int* p = (int*)addr;
+
+      // Rule 12.3: Avoid side effects in conditions
+      // ❌ if (x++ > 0) { }
+      // ✅
+      if (x > 0) {
+          x++;
+      }
+
+      // Rule 14.3: Use braces for all control statements
+      if (condition) {
+          do_something();
+      }  // ✅ Even single statements
+
+      // Rule 15.5: Single exit point per function
+      int function(int input) {
+          int result;
+          if (input > 0) {
+              result = input * 2;
+          } else {
+              result = 0;
+          }
+          return result;  // ✅ Single return
+      }
+
+      // Rule 17.7: Return value must be used
+      // ❌ malloc(100);
+      void* ptr = malloc(100);  // ✅ Assigned
+      (void)printf("test");     // ✅ Cast to void if intentionally ignored
+
+      // Rule 20.7: Macro parameters in parentheses
+      #define SQUARE(x) ((x) * (x))  // ✅ Parentheses around x
+
+      // Tools: PC-lint, Polyspace, Parasoft C/C++test, cppcheck --addon=misra
+    severity: HIGH
+    docs_url: https://misra.org.uk/

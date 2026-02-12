@@ -1,0 +1,101 @@
+# =============================================================================
+# retrieval-patterns.yaml — Advanced Retrieval Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+hybrid_search:
+  description: "Combine dense (vector) + sparse (keyword) search"
+  method: |
+    Score = α × dense_score + (1-α) × sparse_score
+    α = 0.7 (typical, tune per use case)
+  implementations:
+    - name: "Qdrant"
+      method: "Sparse + dense vectors natively"
+    - name: "Weaviate"
+      method: "BM25 + vector built-in"
+    - name: "pgvector + pg_trgm"
+      method: "Vector similarity + trigram text search"
+  example: |
+    # Qdrant hybrid search
+    from qdrant_client.models import SparseVector
+    results = client.query_points(
+        collection_name="docs",
+        prefetch=[
+            Prefetch(query=dense_vector, using="dense", limit=20),
+            Prefetch(query=sparse_vector, using="sparse", limit=20),
+        ],
+        query=FusionQuery(fusion=Fusion.RRF),  # Reciprocal Rank Fusion
+        limit=5,
+    )
+
+reranking:
+  description: "Re-score top-K results with a cross-encoder"
+  models:
+    - "Cohere Rerank v3"
+    - "BAAI/bge-reranker-v2-m3"
+    - "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  pipeline: |
+    1. Retrieve top-20 from vector search
+    2. Re-rank with cross-encoder model
+    3. Return top-5 after reranking
+  example_python: |
+    from cohere import Client
+    co = Client("API_KEY")
+
+    results = co.rerank(
+        model="rerank-v3.5",
+        query="What is RAG?",
+        documents=retrieved_chunks,
+        top_n=5
+    )
+
+hyde:
+  name: "Hypothetical Document Embeddings"
+  description: |
+    Generate a hypothetical answer to the query, embed it, then
+    search for similar real documents. Improves retrieval for
+    questions that don't lexically match the source.
+  pipeline: |
+    Query → LLM generates hypothetical answer → Embed answer → Search
+  example_python: |
+    # 1. Generate hypothetical answer
+    hypothetical = llm.generate(f"Answer this question: {query}")
+
+    # 2. Embed the hypothetical answer
+    embedding = embed_model.encode(hypothetical)
+
+    # 3. Search with hypothetical embedding
+    results = vector_store.similarity_search(embedding, k=5)
+
+self_query:
+  description: "LLM extracts structured filters from natural language query"
+  example: |
+    Query: "What papers about transformers were published after 2023?"
+    → filter: {"year": {">": 2023}, "topic": "transformers"}
+    → vector search with metadata filter
+
+multi_query:
+  description: "Generate multiple query variants for broader retrieval"
+  pipeline: |
+    Original query → LLM generates 3-5 variants → Search each → Deduplicate → Rank
+  example: |
+    Query: "How to handle errors in Go?"
+    Variants:
+      - "Go error handling patterns"
+      - "golang error wrapping best practices"
+      - "Go error types and sentinel errors"
+
+contextual_compression:
+  description: "Extract only relevant parts from retrieved chunks"
+  pipeline: |
+    Retrieved chunk (500 tokens) → LLM extracts relevant sentences → Compressed (100 tokens)
+  benefit: "Fits more relevant context in LLM prompt"
+
+parent_document:
+  description: "Store small chunks for retrieval, return parent doc for context"
+  pipeline: |
+    Document → Split into small chunks (200 tokens) → Index
+    Query → Match small chunk → Return parent section (2000 tokens)
+
+# _DOMYH Awesome Code • Retrieval Patterns_

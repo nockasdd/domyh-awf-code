@@ -1,0 +1,184 @@
+metadata:
+  skill: logging
+  domain: language_others
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-others.yaml
+  patterns_count: 24
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: PHP-001
+    category: monolog
+    library: Monolog
+    name: Logger
+    description: Create Monolog logger
+    example: $logger = new Logger('app')
+    when_to_use: PHP applications
+  - id: PHP-002
+    category: monolog
+    library: Monolog
+    name: StreamHandler
+    description: File handler
+    example: $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG))
+    when_to_use: File logging
+  - id: PHP-003
+    category: monolog
+    library: Monolog
+    name: JsonFormatter
+    description: JSON output
+    example: $handler->setFormatter(new JsonFormatter())
+    when_to_use: Structured logging
+  - id: PHP-004
+    category: monolog
+    library: Monolog
+    name: RotatingFileHandler
+    description: Log rotation
+    example: new RotatingFileHandler('app.log', 14, Logger::INFO)
+    when_to_use: Log management
+  - id: PHP-005
+    category: monolog
+    library: Monolog
+    name: Processor
+    description: Add context
+    example: $logger->pushProcessor(new WebProcessor())
+    when_to_use: Request context
+  - id: PHP-006
+    category: psr3
+    library: PSR-3
+    name: LoggerInterface
+    description: Standard interface
+    example: function __construct(LoggerInterface $logger)
+    when_to_use: Interoperability
+  - id: PHP-007
+    category: psr3
+    library: PSR-3
+    name: Context Array
+    description: Structured context
+    example: $logger->info('User {user} logged in', ['user' => $userId])
+    when_to_use: PSR-3 context
+  - id: RB-001
+    category: stdlib
+    library: Logger
+    name: Logger.new
+    description: Create Ruby logger
+    example: logger = Logger.new(STDOUT)
+    when_to_use: Ruby applications
+  - id: RB-002
+    category: stdlib
+    library: Logger
+    name: formatter
+    description: Custom formatter
+    example: logger.formatter = proc { |severity, time, progname, msg| ... }
+    when_to_use: Custom output
+  - id: RB-003
+    category: stdlib
+    library: Logger
+    name: level
+    description: Set log level
+    example: logger.level = Logger::INFO
+    when_to_use: Verbosity control
+  - id: RB-004
+    category: rails
+    library: Rails
+    name: Rails.logger
+    description: Rails application logger
+    example: Rails.logger.info("message")
+    when_to_use: Rails applications
+  - id: RB-005
+    category: rails
+    library: Rails
+    name: Tagged Logging
+    description: Tag-based context
+    example: Rails.logger.tagged('User', user_id) { Rails.logger.info msg }
+    when_to_use: Request context
+  - id: RB-006
+    category: semantic
+    library: SemanticLogger
+    name: SemanticLogger
+    description: Structured logger
+    example: "SemanticLogger[MyClass].info(message: 'msg', user_id: id)"
+    when_to_use: Structured logging
+  - id: RB-007
+    category: semantic
+    library: SemanticLogger
+    name: Named Tags
+    description: Named context
+    example: "logger.tagged(user_id: id) { logger.info('action') }"
+    when_to_use: Rich context
+  - id: CPP-001
+    category: spdlog
+    library: spdlog
+    name: spdlog::info
+    description: Log at info level
+    example: spdlog::info("User {} logged in", userId)
+    when_to_use: Modern C++ logging
+  - id: CPP-002
+    category: spdlog
+    library: spdlog
+    name: basic_logger
+    description: File logger
+    example: auto logger = spdlog::basic_logger_mt("app", "app.log")
+    when_to_use: File logging
+  - id: CPP-003
+    category: spdlog
+    library: spdlog
+    name: rotating_logger
+    description: Rotating file
+    example: auto logger = spdlog::rotating_logger_mt("app", "app.log", 1024*1024, 3)
+    when_to_use: Log rotation
+  - id: CPP-004
+    category: spdlog
+    library: spdlog
+    name: async_logger
+    description: Async logging
+    example: auto logger = spdlog::create_async<spdlog::sinks::basic_file_sink_mt>("async")
+    when_to_use: High performance
+  - id: CPP-005
+    category: spdlog
+    library: spdlog
+    name: set_pattern
+    description: Custom pattern
+    example: spdlog::set_pattern("[%Y-%m-%d %H:%M:%S] [%l] %v")
+    when_to_use: Custom format
+  - id: CPP-006
+    category: glog
+    library: glog
+    name: LOG
+    description: Google logging
+    example: LOG(INFO) << "User " << userId << " logged in"
+    when_to_use: Google-style logging
+  - id: CPP-007
+    category: glog
+    library: glog
+    name: LOG_IF
+    description: Conditional logging
+    example: 'LOG_IF(INFO, count > 100) << "High count: " << count'
+    when_to_use: Conditional logs
+  - id: EX-001
+    category: logger
+    library: Logger
+    name: Logger.info
+    description: Elixir logger
+    example: 'Logger.info("User login", user_id: user_id)'
+    when_to_use: Elixir applications
+  - id: EX-002
+    category: logger
+    library: Logger
+    name: Logger.metadata
+    description: Set metadata
+    example: "Logger.metadata(request_id: request_id)"
+    when_to_use: Request context
+  - id: EX-003
+    category: logger
+    library: Logger
+    name: configure
+    description: Runtime config
+    example: "Logger.configure(level: :debug)"
+    when_to_use: Dynamic configuration

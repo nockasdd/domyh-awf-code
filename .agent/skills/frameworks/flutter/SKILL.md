@@ -1,16 +1,16 @@
 ---
 name: flutter
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
-version: "6.1.2"
+version: "6.2.1"
 category: mobile
 tier: 1
 ---
 
-# Flutter/Dart Patterns — DOMYH Awesome Code v6.1.2
+# Flutter/Dart Patterns — DOMYH Awesome Code
 
-> Flutter 3.27+ & Dart 3.6 — 2025-2026
+> Flutter 3.29+ & Dart 3.7 — 2025-2026
 
-## � Language Detection
+## 🔍 Language Detection
 
 ```yaml
 flutter_indicators:  # Flutter/Dart skill activates
@@ -32,25 +32,74 @@ not_flutter:  # Other frameworks
 
 ## 📊 Flutter & Dart Versions (2025-2026)
 
-| Version          | Release | Key Features                        |
-| ---------------- | ------- | ----------------------------------- |
-| **Dart 3.5**     | 2024-09 | Macros preview, digit separators    |
-| **Dart 3.6**     | 2024-12 | Pub workspaces, improved analyzer   |
-| **Flutter 3.27** | 2024-12 | Material 3 default, Impeller stable |
-| **Flutter 3.28** | 2025-Q1 | Performance improvements            |
+| Version          | Release | Key Features                           |
+| ---------------- | ------- | -------------------------------------- |
+| **Dart 3.6**     | 2024-12 | Pub workspaces, improved analyzer      |
+| **Dart 3.7**     | 2025-Q1 | Wildcard variables, improved formatter |
+| **Flutter 3.27** | 2024-12 | Material 3 default, Impeller stable    |
+| **Flutter 3.29** | 2025-Q1 | Impeller iOS default, main thread Dart |
 
-### Dart 3.6 Features
+### Dart 3.7 Features
 
 ```dart
 // ✅ Digit separators (readability)
 const billion = 1_000_000_000;
 const hex = 0xFF_EC_DE_5D;
 
-// ✅ Pub workspaces (monorepo support)
-// pubspec.yaml
-// workspace:
-//   - packages/core
-//   - packages/feature_auth
+// ✅ Wildcard variables - elegant callback handling
+future.then((_) => print('Done!')); // Underscore as wildcard
+
+// ✅ Improved formatter - auto trailing commas
+// Formatter now adds/removes trailing commas based on line length
+```
+
+### Flutter 3.29 New Features
+
+```dart
+// ✅ Impeller is now DEFAULT on iOS (Skia removed)
+// No configuration needed - automatic performance boost
+
+// ✅ Main Thread Dart Execution (Android/iOS)
+// Eliminates separate UI thread - better platform interop
+// Allows synchronous calls to/from native platform
+
+// ✅ BackdropGroup for optimized blur effects
+import 'package:flutter/widgets.dart';
+
+BackdropGroup(
+  children: [
+    BackdropFilter.grouped(
+      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      child: Container(color: Colors.white.withOpacity(0.5)),
+    ),
+    BackdropFilter.grouped(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Container(color: Colors.blue.withOpacity(0.3)),
+    ),
+  ],
+)
+
+// ✅ ImageFilter.shader - Custom shaders on child widgets
+ImageFilter.shader(
+  fragmentShader: myFragmentShader,
+  child: Image.asset('assets/photo.png'),
+)
+```
+
+### Material 3 Updates (3.29)
+
+```dart
+// ✅ FadeForwardsPageTransitionsBuilder - new default transition
+MaterialApp(
+  theme: ThemeData(
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+  ),
+)
 ```
 
 ---
@@ -489,4 +538,4 @@ Future<List<ProcessedItem>> processDataInIsolate(List<RawItem> items) async {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Flutter/Dart • 2025-2026_
+_DOMYH Awesome Code • Flutter 3.29+ / Dart 3.7+ • Impeller Default_

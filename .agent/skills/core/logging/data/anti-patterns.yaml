@@ -1,0 +1,121 @@
+metadata:
+  skill: logging
+  domain: anti_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: anti-patterns.yaml
+  patterns_count: 15
+  columns:
+    - pattern_id
+    - category
+    - name
+    - description
+    - bad_example
+    - good_example
+    - impact
+patterns:
+  - id: ANTI-001
+    category: basics
+    name: Console in Production
+    description: Using console.log/print in production
+    bad_example: console.log('User:', user)
+    good_example: "logger.info({ userId: user.id }, 'User action')"
+    impact: Unstructured unmaintainable logs
+  - id: ANTI-002
+    category: basics
+    name: No Log Levels
+    description: Not using log levels
+    bad_example: print('An error occurred')
+    good_example: logger.error('Failed to process', err)
+    impact: Cannot filter by severity
+  - id: ANTI-003
+    category: basics
+    name: String Concatenation
+    description: Building log strings eagerly
+    bad_example: logger.debug('User ' + userId + ' action')
+    good_example: logger.debug({ userId }, 'User action')
+    impact: Performance overhead
+  - id: ANTI-004
+    category: security
+    name: Logging Passwords
+    description: Including passwords in logs
+    bad_example: logger.info('Login', { password })
+    good_example: logger.info('Login', { userId }) // never password
+    impact: Security vulnerability
+  - id: ANTI-005
+    category: security
+    name: Logging PII
+    description: Including personal data
+    bad_example: logger.info({ email, ssn, address })
+    good_example: logger.info({ userId }) // mask or omit PII
+    impact: Privacy violation
+  - id: ANTI-006
+    category: security
+    name: Logging Tokens
+    description: Including auth tokens
+    bad_example: logger.debug({ accessToken })
+    good_example: "logger.debug({ tokenHash: hash(token) })"
+    impact: Token exposure
+  - id: ANTI-007
+    category: context
+    name: No Context
+    description: Logs without identifying information
+    bad_example: logger.error('Request failed')
+    good_example: logger.error({ requestId, userId }, 'Request failed')
+    impact: Cannot trace issues
+  - id: ANTI-008
+    category: context
+    name: No Timestamp
+    description: Missing or inconsistent timestamps
+    bad_example: "Custom format: 01/15/24"
+    good_example: "ISO 8601: 2024-01-15T10:30:00Z"
+    impact: Correlation issues
+  - id: ANTI-009
+    category: context
+    name: No Correlation ID
+    description: No request tracing
+    bad_example: logger.info('Processing')
+    good_example: logger.info({ traceId, spanId }, 'Processing')
+    impact: Cannot trace distributed requests
+  - id: ANTI-010
+    category: performance
+    name: Sync File Logging
+    description: Blocking file I/O
+    bad_example: fs.writeFileSync(logFile, msg)
+    good_example: Use async logger or buffer
+    impact: Application slowdown
+  - id: ANTI-011
+    category: performance
+    name: Over-Logging
+    description: Logging every small event
+    bad_example: for (item in items) logger.debug(item)
+    good_example: "logger.debug({ count: items.length }, 'Processing batch')"
+    impact: Performance and storage issues
+  - id: ANTI-012
+    category: structure
+    name: Inconsistent Format
+    description: Mixed log formats
+    bad_example: Some JSON some text
+    good_example: Consistent JSON across all services
+    impact: Parsing difficulties
+  - id: ANTI-013
+    category: structure
+    name: Deep Nesting
+    description: Deeply nested log objects
+    bad_example: "{ user: { account: { profile: { ... } } } }"
+    good_example: Flatten to 2-3 levels max
+    impact: Query performance
+  - id: ANTI-014
+    category: operations
+    name: No Rotation
+    description: Unbounded log files
+    bad_example: Single growing log file
+    good_example: Rotate by size or time
+    impact: Disk exhaustion
+  - id: ANTI-015
+    category: operations
+    name: No Retention
+    description: Keeping logs forever
+    bad_example: No deletion policy
+    good_example: "Hot: 7d, Warm: 30d, Cold: 1yr"
+    impact: Storage cost explosion

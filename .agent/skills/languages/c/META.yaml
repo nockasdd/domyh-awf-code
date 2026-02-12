@@ -1,16 +1,12 @@
 name: c
-version: "6.1.2"
+version: "6.2.1"
 display: C
 category: language
-tier: 1
+tier: 3
 priority: 1
 
-description: |
-  Pure C (ISO C23) development patterns.
-  Covers memory management, string safety, POSIX, Windows APIs.
+desc: "Pure C (ISO C23) development patterns. typeof, constexpr, nullptr, memory patterns, MISRA."
 
-triggers:
-  file_patterns:
     - "*.c"
     - "*.h"
     - "Makefile"

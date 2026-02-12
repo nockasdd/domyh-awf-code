@@ -1,6 +1,6 @@
 # C Language — Advanced Patterns
 
-# DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -622,4 +622,4 @@ gcc -shared -o my_math.dll my_math.c
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — C Language Advanced Patterns_
+_DOMYH Awesome Code — C Language Advanced Patterns_

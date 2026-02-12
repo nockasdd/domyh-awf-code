@@ -1,0 +1,217 @@
+metadata:
+  skill: api-design
+  domain: test_apis
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: test-apis.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - url
+    - description
+    - methods
+    - features
+    - category
+    - use_case
+patterns:
+  - id: TEST-01
+    name: JSONPlaceholder
+    url: https://jsonplaceholder.typicode.com
+    description: Free fake REST API for testing
+    methods: GET POST PUT PATCH DELETE
+    features: posts users comments albums todos photos
+    category: REST
+    use_case: Prototyping demos learning
+  - id: TEST-02
+    name: httpbin
+    url: https://httpbin.org
+    description: HTTP request/response testing
+    methods: GET POST PUT DELETE
+    features: headers status-codes auth cookies
+    category: HTTP Debug
+    use_case: Request inspection learning
+  - id: TEST-03
+    name: Reqres
+    url: https://reqres.in
+    description: Hosted REST API with user data
+    methods: GET POST PUT PATCH DELETE
+    features: users register login pagination delay
+    category: REST Auth
+    use_case: Frontend prototyping
+  - id: TEST-04
+    name: Random User
+    url: https://randomuser.me/api
+    description: Random user generator
+    methods: GET
+    features: user-profiles photos nationalities
+    category: Data Gen
+    use_case: UI testing sample data
+  - id: TEST-05
+    name: Dog API
+    url: https://dog.ceo/api
+    description: Random dog images
+    methods: GET
+    features: breed-images random
+    category: Fun API
+    use_case: Learning callbacks
+  - id: TEST-06
+    name: Cat Facts
+    url: https://catfact.ninja/fact
+    description: Random cat facts
+    methods: GET
+    features: facts breeds pagination
+    category: Fun API
+    use_case: Simple GET practice
+  - id: TEST-07
+    name: Pokemon API
+    url: https://pokeapi.co/api/v2
+    description: Pokemon data comprehensive
+    methods: GET
+    features: pokemon abilities moves items
+    category: Data API
+    use_case: GraphQL REST learning
+  - id: TEST-08
+    name: OpenWeather Mock
+    url: https://api.openweathermap.org/data/2.5
+    description: Weather data (free tier)
+    methods: GET
+    features: weather forecast geolocation
+    category: Weather
+    use_case: Real API keys practice
+  - id: TEST-09
+    name: Postman Echo
+    url: https://postman-echo.com
+    description: Postman request testing
+    methods: GET POST PUT DELETE
+    features: echo headers auth cookies
+    category: HTTP Debug
+    use_case: Postman learning
+  - id: TEST-10
+    name: SWAPI
+    url: https://swapi.dev/api
+    description: Star Wars data
+    methods: GET
+    features: films people planets species
+    category: Data API
+    use_case: Async patterns
+  - id: TEST-11
+    name: REST Countries
+    url: https://restcountries.com/v3.1
+    description: Country information
+    methods: GET
+    features: countries flags currencies
+    category: Data API
+    use_case: Filtering searching
+  - id: TEST-12
+    name: Beeceptor
+    url: https://beeceptor.com
+    description: Custom mock API creator
+    methods: GET POST PUT DELETE
+    features: custom-endpoints rules delays
+    category: Mock Server
+    use_case: Custom testing
+  - id: TEST-13
+    name: Mocky
+    url: https://run.mocky.io
+    description: Custom mock responses
+    methods: GET POST
+    features: custom-json custom-headers
+    category: Mock Server
+    use_case: Response testing
+  - id: TEST-14
+    name: GitHub API
+    url: https://api.github.com
+    description: GitHub REST API (public)
+    methods: GET POST PUT DELETE
+    features: repos users issues pulls
+    category: Real API
+    use_case: OAuth learning
+  - id: TEST-15
+    name: JSONBin
+    url: https://jsonbin.io
+    description: JSON storage REST API
+    methods: GET POST PUT DELETE
+    features: store retrieve update bins
+    category: Storage
+    use_case: Persistence testing
+  - id: TEST-16
+    name: httpbin.dmuth.org
+    url: https://httpbin.dmuth.org
+    description: Self-hosted httpbin alternative
+    methods: GET POST PUT DELETE
+    features: all-httpbin-features
+    category: HTTP Debug
+    use_case: Enterprise testing
+  - id: TEST-17
+    name: MockAPI.io
+    url: https://mockapi.io
+    description: Custom REST API generator
+    methods: GET POST PUT DELETE
+    features: custom-resources relations
+    category: Mock Server
+    use_case: Team collaboration
+  - id: TEST-18
+    name: Dummy JSON
+    url: https://dummyjson.com
+    description: Comprehensive dummy data
+    methods: GET POST PUT DELETE
+    features: products carts users quotes
+    category: Data API
+    use_case: E-commerce prototyping
+  - id: TEST-19
+    name: FakeStore API
+    url: https://fakestoreapi.com
+    description: E-commerce mock data
+    methods: GET POST PUT DELETE
+    features: products carts users auth
+    category: E-commerce
+    use_case: Shopping cart testing
+  - id: TEST-20
+    name: GoREST
+    url: https://gorest.co.in
+    description: User management API
+    methods: GET POST PUT DELETE
+    features: users posts comments todos GraphQL
+    category: REST GraphQL
+    use_case: CRUD operations
+  - id: TEST-21
+    name: Spotify Mock
+    url: N/A - Use Spotify Web API
+    description: Music data (OAuth required)
+    methods: GET POST PUT DELETE
+    features: tracks playlists artists
+    category: Real API
+    use_case: OAuth2 flow practice
+  - id: TEST-22
+    name: Stripe Test
+    url: https://api.stripe.com (test mode)
+    description: Payment testing (test keys)
+    methods: GET POST
+    features: payments customers subscriptions
+    category: Payment
+    use_case: Webhook testing
+  - id: TEST-23
+    name: Twilio Test
+    url: https://api.twilio.com (test creds)
+    description: SMS testing credentials
+    methods: GET POST
+    features: messages voice verify
+    category: Communication
+    use_case: Integration testing
+  - id: TEST-24
+    name: httpstat.us
+    url: https://httpstat.us
+    description: HTTP status code testing
+    methods: GET
+    features: 100-599 status codes random delay
+    category: Status Codes
+    use_case: Error handling
+  - id: TEST-25
+    name: Public APIs List
+    url: https://api.publicapis.org
+    description: API discovery endpoint
+    methods: GET
+    features: list random categories
+    category: Meta
+    use_case: Finding more APIs

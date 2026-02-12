@@ -1,0 +1,164 @@
+# =============================================================================
+# Docker Security Patterns (Feb 2026)
+# =============================================================================
+# Hardened images, rootless, scanning, microVM sandboxes
+
+metadata:
+  skill: docker
+  domain: security
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: docker020
+    name: Hardened Images (Docker Official)
+    category: security
+    version: "2024+"
+    description: Docker's hardened base images with minimal attack surface
+    text: hardened images docker official minimal security distroless
+    example: |
+      # Docker Hardened Images (2024+)
+      FROM docker.io/library/node:22-slim-hardened
+
+      # Or use distroless (Google)
+      FROM gcr.io/distroless/nodejs22-debian12
+
+      # Hardened image features:
+      # - No shell (prevents shell escapes)
+      # - Minimal packages (reduced CVEs)
+      # - Non-root user by default
+      # - Read-only filesystem compatible
+      # - SBOM included
+
+      # Multi-platform hardened
+      FROM --platform=$BUILDPLATFORM docker.io/library/python:3.12-slim
+
+      # Final stage with hardened base
+      FROM gcr.io/distroless/python3-debian12
+      COPY --from=builder /app /app
+      USER nonroot
+      CMD ["python", "/app/main.py"]
+    severity: CRITICAL
+    docs_url: https://docs.docker.com/trusted-content/
+
+  - id: docker021
+    name: Rootless Docker
+    category: security
+    version: "20.10+"
+    description: Run Docker daemon and containers without root privileges
+    text: rootless docker non-root security user namespace
+    example: |
+      # Install rootless Docker
+      dockerd-rootless-setuptool.sh install
+
+      # Configure shell
+      export PATH=/home/user/bin:$PATH
+      export DOCKER_HOST=unix:///run/user/1000/docker.sock
+
+      # Run container as non-root
+      docker run --rm -it \
+        --security-opt no-new-privileges \
+        --cap-drop ALL \
+        --read-only \
+        myapp
+
+      # Kubernetes Pod Security equivalent
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+    severity: HIGH
+    docs_url: https://docs.docker.com/engine/security/rootless/
+
+  - id: docker022
+    name: Image Scanning
+    category: security
+    version: "2022+"
+    description: Scan images for vulnerabilities with Docker Scout
+    text: docker scout scan vulnerability cve security analysis
+    example: |
+      # Scan local image
+      docker scout cves myapp:latest
+
+      # Scan with recommendations
+      docker scout recommendations myapp:latest
+
+      # SBOM generation
+      docker scout sbom myapp:latest
+
+      # Compare versions
+      docker scout compare myapp:v1 --to myapp:v2
+
+      # CI/CD integration
+      - name: Scan with Docker Scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: myregistry/myapp:${{ github.sha }}
+          only-severities: critical,high
+
+      # Alternative: Trivy
+      trivy image --severity HIGH,CRITICAL myapp:latest
+    severity: HIGH
+    docs_url: https://docs.docker.com/scout/
+
+  - id: docker023
+    name: MicroVM Sandboxes
+    category: security
+    version: "2025+"
+    description: Hardware-isolated containers with Firecracker/gVisor
+    text: microvm sandbox firecracker gvisor isolation kata containers
+    example: |
+      # Docker Desktop (2025+): MicroVM isolation
+
+      # Enable in settings.json or Docker Desktop UI
+      {
+        "experimental": true,
+        "vm": {
+          "type": "microvm"
+        }
+      }
+
+      # Or use gVisor runtime
+      docker run --runtime=runsc myapp
+
+      # Install gVisor
+      sudo apt-get install runsc
+
+      # Configure Docker daemon
+      # /etc/docker/daemon.json
+      {
+        "runtimes": {
+          "runsc": {
+            "path": "/usr/bin/runsc",
+            "runtimeArgs": [
+              "--platform=systrap"
+            ]
+          }
+        }
+      }
+
+      # Kubernetes with gVisor
+      apiVersion: node.k8s.io/v1
+      kind: RuntimeClass
+      metadata:
+        name: gvisor
+      handler: runsc
+
+      # Use in Pod
+      spec:
+        runtimeClassName: gvisor
+        containers:
+          - name: app
+            image: myapp
+
+      # Benefits:
+      # - Hardware-level isolation
+      # - Prevents container escapes
+      # - Minimal performance overhead (5-10%)
+    severity: HIGH
+    docs_url: https://docs.docker.com/desktop/features/isolation/

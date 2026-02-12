@@ -1,0 +1,255 @@
+metadata:
+  skill: authentication
+  domain: jwt_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: jwt-patterns.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: JWT-001
+    pattern_name: JWT Structure
+    description: Header.Payload.Signature base64url encoded
+    category: fundamentals
+    security_level: medium
+    keywords:
+      - structure
+      - parts
+  - id: JWT-002
+    pattern_name: Symmetric Signing (HS256)
+    description: HMAC-SHA256 shared secret signing
+    category: algorithms
+    security_level: medium
+    keywords:
+      - hs256
+      - hmac
+  - id: JWT-003
+    pattern_name: Asymmetric Signing (RS256)
+    description: RSA-SHA256 public/private key signing
+    category: algorithms
+    security_level: high
+    keywords:
+      - rs256
+      - rsa
+  - id: JWT-004
+    pattern_name: ES256 Algorithm
+    description: ECDSA P-256 curve signing - compact and fast
+    category: algorithms
+    security_level: high
+    keywords:
+      - es256
+      - ecdsa
+  - id: JWT-005
+    pattern_name: JWT Expiration (exp)
+    description: Required claim for token lifetime
+    category: claims
+    security_level: critical
+    keywords:
+      - exp
+      - expiry
+  - id: JWT-006
+    pattern_name: JWT Issued At (iat)
+    description: Timestamp of token creation
+    category: claims
+    security_level: medium
+    keywords:
+      - iat
+      - issued
+  - id: JWT-007
+    pattern_name: JWT Not Before (nbf)
+    description: Token not valid before this time
+    category: claims
+    security_level: medium
+    keywords:
+      - nbf
+      - notbefore
+  - id: JWT-008
+    pattern_name: JWT Issuer (iss)
+    description: Identifies token issuer
+    category: claims
+    security_level: high
+    keywords:
+      - iss
+      - issuer
+  - id: JWT-009
+    pattern_name: JWT Audience (aud)
+    description: Intended recipient of token
+    category: claims
+    security_level: high
+    keywords:
+      - aud
+      - audience
+  - id: JWT-010
+    pattern_name: JWT Subject (sub)
+    description: Unique user identifier
+    category: claims
+    security_level: high
+    keywords:
+      - sub
+      - subject
+  - id: JWT-011
+    pattern_name: JWT ID (jti)
+    description: Unique token identifier for revocation
+    category: claims
+    security_level: high
+    keywords:
+      - jti
+      - id
+  - id: JWT-012
+    pattern_name: Short-Lived Access Tokens
+    description: 15-30 minute expiry for access tokens
+    category: best-practice
+    security_level: critical
+    keywords:
+      - short
+      - access
+  - id: JWT-013
+    pattern_name: Long-Lived Refresh Tokens
+    description: 7-30 day expiry stored securely
+    category: best-practice
+    security_level: high
+    keywords:
+      - refresh
+      - long
+  - id: JWT-014
+    pattern_name: Token Refresh Flow
+    description: Use refresh token to get new access token
+    category: flows
+    security_level: high
+    keywords:
+      - refresh
+      - rotation
+  - id: JWT-015
+    pattern_name: Refresh Token Rotation
+    description: Issue new refresh token on each use
+    category: security
+    security_level: critical
+    keywords:
+      - rotation
+      - single-use
+  - id: JWT-016
+    pattern_name: Token Revocation
+    description: Blacklist or allowlist for invalidation
+    category: security
+    security_level: high
+    keywords:
+      - revocation
+      - blacklist
+  - id: JWT-017
+    pattern_name: HttpOnly Cookie Storage
+    description: Prevent XSS access to tokens
+    category: security
+    security_level: critical
+    keywords:
+      - httponly
+      - cookie
+  - id: JWT-018
+    pattern_name: Secure Cookie Flag
+    description: Only send over HTTPS
+    category: security
+    security_level: critical
+    keywords:
+      - secure
+      - https
+  - id: JWT-019
+    pattern_name: SameSite Cookie Policy
+    description: CSRF protection via cookie attribute
+    category: security
+    security_level: high
+    keywords:
+      - samesite
+      - csrf
+  - id: JWT-020
+    pattern_name: Memory Storage for SPA
+    description: Store access token in memory only
+    category: security
+    security_level: high
+    keywords:
+      - memory
+      - spa
+  - id: JWT-021
+    pattern_name: Avoid localStorage
+    description: XSS vulnerable for token storage
+    category: anti-pattern
+    security_level: critical
+    keywords:
+      - localstorage
+      - xss
+  - id: JWT-022
+    pattern_name: Token Fingerprinting
+    description: Bind token to device/session
+    category: security
+    security_level: high
+    keywords:
+      - fingerprint
+      - binding
+  - id: JWT-023
+    pattern_name: JWT Encryption (JWE)
+    description: Encrypt payload for sensitive data
+    category: security
+    security_level: high
+    keywords:
+      - jwe
+      - encryption
+  - id: JWT-024
+    pattern_name: JWKS Endpoint
+    description: Public key distribution for verification
+    category: infrastructure
+    security_level: high
+    keywords:
+      - jwks
+      - keys
+  - id: JWT-025
+    pattern_name: Key Rotation
+    description: Regular rotation of signing keys
+    category: security
+    security_level: critical
+    keywords:
+      - rotation
+      - keys
+  - id: JWT-026
+    pattern_name: Algorithm Header Validation
+    description: Reject none and unexpected algorithms
+    category: security
+    security_level: critical
+    keywords:
+      - alg
+      - validation
+  - id: JWT-027
+    pattern_name: Signature Verification
+    description: Always verify before trusting claims
+    category: security
+    security_level: critical
+    keywords:
+      - verify
+      - signature
+  - id: JWT-028
+    pattern_name: Claim Validation
+    description: Validate iss aud exp after signature
+    category: security
+    security_level: high
+    keywords:
+      - claims
+      - validation
+  - id: JWT-029
+    pattern_name: Token Size Limits
+    description: Keep tokens under 8KB for headers
+    category: performance
+    security_level: medium
+    keywords:
+      - size
+      - limit
+  - id: JWT-030
+    pattern_name: Stateless vs Stateful
+    description: Choose based on revocation requirements
+    category: architecture
+    security_level: medium
+    keywords:
+      - stateless
+      - stateful

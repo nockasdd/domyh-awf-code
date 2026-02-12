@@ -1,0 +1,126 @@
+# Tailwind CSS 4.0 - Dark Mode & Theme Patterns
+# Class-based toggling, CSS variables, semantic colors
+# Source: tailwindcss.com/docs/dark-mode (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: theme
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: theme001
+    name: "Dark Mode (Class)"
+    category: theme
+    version: "3.0+"
+    description: |
+      Class-based dark mode toggling.
+      Add 'dark' class to html element to activate.
+    text: "dark mode class toggle theme switch light"
+    example: |
+      <html class="dark">
+        <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+          <button 
+            class="bg-gray-200 dark:bg-gray-700"
+            onclick="document.documentElement.classList.toggle('dark')"
+          >
+            Toggle Theme
+          </button>
+        </body>
+      </html>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/dark-mode"
+
+  - id: theme002
+    name: "CSS Variables Theme"
+    category: theme
+    version: "4.0+"
+    description: |
+      Use CSS variables for runtime theming.
+      Switch themes without class changes.
+    text: "css variable custom property runtime theme dynamic"
+    example: |
+      @theme {
+        --color-surface: #ffffff;
+        --color-text: #0f172a;
+      }
+
+      @theme dark {
+        --color-surface: #0f172a;
+        --color-text: #f8fafc;
+      }
+
+      /* Usage: <div class="bg-surface text-text" /> */
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/theme"
+
+  - id: theme003
+    name: "Semantic Colors"
+    category: theme
+    version: "4.0+"
+    description: |
+      Define semantic color tokens instead of raw values.
+      Makes theming easier across components.
+    text: "semantic color token primary secondary accent success error warning"
+    example: |
+      @theme {
+        /* Semantic colors */
+        --color-primary: #3b82f6;
+        --color-secondary: #8b5cf6;
+        --color-accent: #06b6d4;
+        
+        /* Status colors */
+        --color-success: #10b981;
+        --color-warning: #f59e0b;
+        --color-error: #ef4444;
+        
+        /* Surfaces */
+        --color-surface: #ffffff;
+        --color-surface-elevated: #f8fafc;
+      }
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/customizing-colors"
+
+  - id: theme004
+    name: "P3 Color Palette"
+    category: theme
+    version: "4.0+"
+    description: |
+      Modernized color palette using P3 wide gamut.
+      More vivid colors on supported displays.
+    text: "p3 color oklch wide gamut modern display vivid"
+    example: |
+      /* v4 uses OKLCH color space internally */
+      /* Fallback to sRGB on unsupported displays */
+
+      @theme {
+        --color-blue-500: oklch(0.58 0.22 250);
+        --color-purple-500: oklch(0.55 0.27 305);
+      }
+
+      /* Usage remains same */
+      <div class="bg-blue-500 text-purple-500" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/customizing-colors"
+
+  - id: theme005
+    name: "Color Opacity"
+    category: theme
+    version: "3.0+"
+    description: |
+      Apply opacity to any color using /opacity syntax.
+      Uses color-mix() in v4 for better performance.
+    text: "opacity alpha transparency color slash"
+    example: |
+      <!-- Opacity modifier -->
+      <div class="bg-blue-500/50">50% opacity blue</div>
+      <div class="text-white/80">80% white text</div>
+
+      <!-- Arbitrary opacity -->
+      <div class="bg-blue-500/[0.15]">15% opacity</div>
+
+      <!-- With dark mode -->
+      <div class="bg-black/50 dark:bg-white/50" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/background-color#changing-the-opacity"

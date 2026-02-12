@@ -1,6 +1,6 @@
 # Next.js — Advanced Patterns
 
-# DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -13,7 +13,7 @@
 
 ## Server Components
 
-### Server Actions
+### Server Functions
 
 ```tsx
 // actions.ts
@@ -136,7 +136,7 @@ async function getProducts() {
 }
 
 // On-demand revalidation
-// In Server Action or Route Handler
+// In Server Function or Route Handler
 import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function updateProduct(id: string, data: ProductData) {
@@ -222,4 +222,4 @@ export async function GET(request: Request) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Tier 3 Reference_
+_DOMYH Awesome Code — Tier 3 Reference_

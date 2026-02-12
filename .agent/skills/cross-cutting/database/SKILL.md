@@ -2,14 +2,83 @@
 name: database
 detect:
   ["*.sql", "schema.prisma", "drizzle/", "migrations/", "*.db", "*.sqlite"]
-version: "6.1.2"
+version: "6.2.0"
 category: infrastructure
 tier: 1
 ---
 
-# Database Patterns — DOMYH Awesome Code v6.1.2
+# Database Patterns — DOMYH Awesome Code
 
-> SQL + NoSQL Patterns — PostgreSQL 17/18, MySQL, MongoDB, Redis — 2025-2026
+> SQL + NoSQL Patterns — PostgreSQL 18, MySQL 9.4, MongoDB 8, Redis 8 — 2025-2026
+
+---
+
+## 📦 What's New in Databases (2025-2026)
+
+| Database       | Version | Release  | Key Features                        |
+| -------------- | ------- | -------- | ----------------------------------- |
+| **PostgreSQL** | 18      | Sep 2025 | UUIDv7, Virtual Columns, AIO        |
+| **MySQL**      | 9.4     | Jul 2025 | Vector type, JSON Duality, HeatWave |
+| **MongoDB**    | 8       | 2025     | QE Range Queries, Express Path      |
+| **Redis**      | 8       | 2025     | Vector Set, JSON, 87% faster        |
+
+### PostgreSQL 18 Highlights
+
+```sql
+-- UUIDv7: Time-ordered UUIDs (better index performance)
+id UUID DEFAULT uuidv7()
+
+-- Virtual Generated Columns (compute on demand)
+full_name TEXT GENERATED ALWAYS AS (first || ' ' || last) VIRTUAL
+
+-- RETURNING OLD/NEW
+UPDATE users SET name = 'New' RETURNING OLD.name, NEW.name
+
+-- UNIQUE NULLS DISTINCT
+CREATE UNIQUE INDEX idx ON t(col) NULLS DISTINCT
+```
+
+### MySQL 9.4 Highlights
+
+```sql
+-- Vector Data Type (for ML/AI)
+CREATE TABLE items (
+  id INT PRIMARY KEY,
+  embedding VECTOR(1536)
+);
+
+-- JSON Duality Views (expose relational as JSON)
+CREATE JSON DUALITY VIEW users_json AS SELECT * FROM users;
+
+-- Parallel Query (multi-core)
+SET SESSION parallel_degree = 4;
+```
+
+### MongoDB 8 Highlights
+
+```javascript
+// Queryable Encryption with Range Queries (NEW in 8)
+db.patients.find({ age: { $gte: 21, $lte: 65 } }); // encrypted!
+
+// Express Path (faster simple queries)
+// Automatic for _id and simple equality
+
+// 8.2 Preview: Prefix/Suffix search on encrypted
+```
+
+### Redis 8 Highlights
+
+```bash
+# Vector Set (AI semantic search, beta)
+VADD myvecs id1 [...vector...]
+VSEARCH myvecs TOPK 10 [...query...]
+
+# New Hash Commands
+HGETDEL myhash field1  # Get and delete
+HSETEX myhash EX 3600 field1 value1  # Set with TTL
+
+# Performance: 87% faster latency, 2x throughput
+```
 
 ## 🔍 Database Detection
 
@@ -46,7 +115,9 @@ nosql_indicators:
 | **Session storage**           | Redis                    | Fast, TTL support               |
 | **Time-series**               | PostgreSQL + TimescaleDB | Optimized for time data         |
 | **Full-text search**          | PostgreSQL               | Built-in, or Elasticsearch      |
-| **Distributed**               | CockroachDB, Vitess      | Horizontal scaling              |
+| **Distributed**               | TiDB, CockroachDB        | Horizontal scaling, global      |
+| **Serverless DB**             | PlanetScale, Neon        | Branching, autoscaling          |
+| **Graph queries**             | Neo4j, SurrealDB         | Connected data                  |
 
 ### Polyglot Persistence (Recommended Pattern)
 
@@ -718,4 +789,19 @@ async function withLock<T>(key: string, fn: () => Promise<T>, ttlMs = 30000) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Database Patterns • 2025-2026_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine across 6 database domains:
+
+| Domain     | Query Examples                                |
+| ---------- | --------------------------------------------- |
+| PostgreSQL | "UUIDv7 AIO virtual columns PG18"             |
+| MySQL      | "vector type JSON duality views"              |
+| MongoDB    | "aggregation pipeline queryable encryption"   |
+| Redis      | "vector set distributed lock pub/sub"         |
+| ORM        | "Prisma Drizzle N+1 query optimization"       |
+| Migration  | "connection pooling PgBouncer rolling deploy" |
+
+---
+
+_DOMYH Awesome Code • Database Patterns • HSA-Powered • 2025-2026_

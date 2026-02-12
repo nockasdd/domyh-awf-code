@@ -3,7 +3,7 @@
 
 ---
 name: terminal-safety
-version: "6.1.2"
+version: "6.2.1"
 rule_id: "MOD-TRM-001"
 
 # =============================================================================
@@ -212,10 +212,18 @@ integration:
     - stop-conditions
     - edit-verification
 
+  hsa_tools:
+    hsa_detect_stack:
+      purpose: "Auto-detect runtime versions and correct shell for pre-flight checks"
+      usage: "hsa_detect_stack → determines OS, shell type, package manager, runtime versions"
+    hsa_search_patterns:
+      purpose: "Lookup safe command patterns for the detected stack"
+      usage: "hsa_search_patterns query=[command] domain=[infra] → safe alternatives"
+
   reflection:
     enabled: true
     check_before: "command"
     question: "Is this command safe to run?"
 
 ---
-_DOMYH Awesome Code v6.1.2 • Terminal Safety Rule_
+_DOMYH Awesome Code • Terminal Safety Rule_

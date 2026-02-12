@@ -1,0 +1,191 @@
+# =============================================================================
+# AWS Lambda & ECS Compute Patterns (Feb 2026)
+# =============================================================================
+# Serverless and container compute patterns from re:Invent 2025+
+
+metadata:
+  skill: aws
+  domain: compute
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: aws001
+    name: Lambda .NET 10 Runtime
+    category: lambda
+    version: "2026+"
+    description: .NET 10 managed runtime with automatic updates
+    text: lambda dotnet net10 runtime managed auto update
+    example: |
+      # serverless.yml
+      service: my-dotnet-service
+      provider:
+        name: aws
+        runtime: dotnet10
+      functions:
+        hello:
+          handler: MyAssembly::MyNamespace.Function::Handler
+
+      # SAM template
+      Resources:
+        Function:
+          Type: AWS::Serverless::Function
+          Properties:
+            Runtime: dotnet10
+            Handler: Bootstrap::Handler
+    severity: HIGH
+    docs_url: https://aws.amazon.com/lambda/
+
+  - id: aws002
+    name: Lambda Durable Functions
+    category: lambda
+    version: "2026+"
+    description: Multi-step workflows with long-running orchestration
+    text: lambda durable functions workflow orchestration steps state machine
+    example: |
+      // Lambda Durable for multi-step AI workflows
+      const { orchestrate } = require('@aws-sdk/lambda-durable');
+
+      exports.handler = orchestrate(async (ctx) => {
+        // Step 1: Get data
+        const data = await ctx.call('fetchData', { id: ctx.input.id });
+
+        // Step 2: Process with AI (can take hours)
+        const result = await ctx.call('processWithBedrock', data);
+
+        // Step 3: Store results
+        await ctx.call('storeResults', result);
+
+        return result;
+      });
+
+      // Features:
+      // - Pause/resume without paying for idle time
+      // - Built-in retries and error handling
+      // - Coordinate tasks over hours/days
+    severity: CRITICAL
+    docs_url: https://aws.amazon.com/lambda/durable-functions/
+
+  - id: aws003
+    name: Lambda Managed Instances
+    category: lambda
+    version: "2026+"
+    description: Run Lambda on EC2 for specialized hardware and cost optimization
+    text: lambda managed instances ec2 gpu graviton cost optimization
+    example: |
+      Resources:
+        Function:
+          Type: AWS::Serverless::Function
+          Properties:
+            FunctionName: my-ml-function
+            # Use Managed Instances for specialized compute
+            ComputeType: ManagedInstance
+            ManagedInstanceConfig:
+              InstanceType: ml.g5.xlarge  # GPU instance
+              # Or for cost optimization:
+              # InstanceType: m7g.large   # Graviton
+            Runtime: python3.12
+            Handler: app.handler
+
+      # Benefits:
+      # - Access to GPU, Graviton, custom AMIs
+      # - EC2 pricing (up to 30% cheaper for steady workloads)
+      # - Serverless operations (no patching)
+    severity: HIGH
+    docs_url: https://aws.amazon.com/lambda/managed-instances/
+
+  - id: aws004
+    name: ECS tmpfs Mounts
+    category: ecs
+    version: "2026+"
+    description: Memory-backed file systems for ECS Fargate tasks
+    text: ecs fargate tmpfs memory filesystem ephemeral storage
+    example: |
+      {
+        "containerDefinitions": [{
+          "name": "app",
+          "mountPoints": [{
+            "sourceVolume": "scratch",
+            "containerPath": "/tmp"
+          }]
+        }],
+        "volumes": [{
+          "name": "scratch",
+          "dockerVolumeConfiguration": {
+            "scope": "task",
+            "driver": "local",
+            "driverOpts": {
+              "type": "tmpfs",
+              "device": "tmpfs",
+              "o": "size=512M"
+            }
+          }
+        }]
+      }
+
+      # Use cases:
+      # - High-speed temporary storage
+      # - Sensitive data (ephemeral)
+      # - ML model caching
+    severity: MEDIUM
+    docs_url: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/
+
+  - id: aws005
+    name: ECS NLB Canary Deployments
+    category: ecs
+    version: "2026+"
+    description: Linear and Canary traffic shifting with Network Load Balancer
+    text: ecs nlb canary linear deployment traffic shifting blue green
+    example: |
+      DeploymentConfiguration:
+        DeploymentType: LINEAR
+        TrafficRoutingConfig:
+          Type: TimeBasedLinear
+          TimeBasedLinear:
+            LinearInterval: 5
+            LinearPercentage: 10
+
+      # Canary deployment
+      DeploymentConfiguration:
+        DeploymentType: CANARY
+        TrafficRoutingConfig:
+          Type: TimeBasedCanary
+          TimeBasedCanary:
+            CanaryInterval: 10
+            CanaryPercentage: 10
+
+      # Monitor with CloudWatch alarms for auto-rollback
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-types.html
+
+  - id: aws006
+    name: Lambda CloudWatch Metrics
+    category: lambda
+    version: "2026+"
+    description: Enhanced CloudWatch metrics for event source polling
+    text: lambda cloudwatch metrics polling sqs kinesis event source monitoring
+    example: |
+      # New CloudWatch metrics for Lambda event sources:
+
+      # SQS Polling
+      - "SQSPollingDuration"
+      - "SQSMessagesReceived"
+      - "SQSPollingErrors"
+
+      # Kinesis Polling
+      - "KinesisIteratorAge"
+      - "KinesisRecordsBehind"
+
+      # Create CloudWatch Alarm
+      aws cloudwatch put-metric-alarm \
+        --alarm-name HighPollingErrors \
+        --metric-name SQSPollingErrors \
+        --namespace AWS/Lambda \
+        --statistic Sum \
+        --threshold 10 \
+        --evaluation-periods 5 \
+        --period 60 \
+        --comparison-operator GreaterThanThreshold
+    severity: MEDIUM
+    docs_url: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html

@@ -1,0 +1,80 @@
+metadata:
+  skill: domyh-design
+  domain: directory_structure
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: directory-structure.yaml
+  patterns_count: 8
+  columns:
+    - architecture_type
+    - project_size
+    - tech_stack
+    - folder_structure
+    - when_to_use
+    - anti_patterns
+    - example_projects
+patterns:
+  - id: item_001
+    architecture_type: fsd
+    project_size: Large (50+ pages)
+    tech_stack: React/Vue/Angular
+    folder_structure: '{"app": "providers + routing", "pages": "route components", "widgets": "page sections", "features": "user actions", "entities": "business models", "shared": "ui + lib"}'
+    when_to_use: Large teams + Complex domains + Long-term maintenance
+    anti_patterns: Mixing layers + Circular dependencies + Global state abuse
+    example_projects: Enterprise SaaS + E-commerce platforms
+  - id: item_002
+    architecture_type: fsd-lite
+    project_size: Medium (10-50 pages)
+    tech_stack: React/Vue
+    folder_structure: '{"app": "config", "pages": "routes", "features": "user flows", "shared": "components + utils"}'
+    when_to_use: Growing projects + Medium teams
+    anti_patterns: Premature optimization + Over-engineering
+    example_projects: B2B dashboards + Admin panels
+  - id: item_003
+    architecture_type: atomic
+    project_size: UI-heavy + Design system
+    tech_stack: React + Storybook
+    folder_structure: '{"atoms": "Button/Input/Icon", "molecules": "SearchBar/Card", "organisms": "Header/Sidebar", "templates": "Layouts", "pages": "Routes"}'
+    when_to_use: Design system focus + Component library
+    anti_patterns: Business logic in atoms + Unclear molecule/organism boundary
+    example_projects: Design systems + Component libraries
+  - id: item_004
+    architecture_type: simple
+    project_size: Small (<10 pages)
+    tech_stack: Any
+    folder_structure: '{"src": {"components": "all", "pages": "routes", "utils": "helpers", "hooks": "custom hooks"}}'
+    when_to_use: Startups + MVPs + Prototypes + Solo developers
+    anti_patterns: Premature scaling + Too many folders
+    example_projects: Landing pages + Simple apps
+  - id: item_005
+    architecture_type: monorepo-packages
+    project_size: Multi-app + Shared libs
+    tech_stack: React/Vue + Turborepo/Nx
+    folder_structure: '{"packages": {"ui": "shared components", "utils": "shared utilities", "config": "shared configs"}, "apps": {"web": "main app", "admin": "admin panel"}}'
+    when_to_use: Multiple apps + Shared codebase + Large organizations
+    anti_patterns: Circular package deps + Build complexity
+    example_projects: Enterprise multi-product
+  - id: item_006
+    architecture_type: colocation
+    project_size: Feature-first
+    tech_stack: Next.js App Router
+    folder_structure: '{"app": {"(feature)": {"page.tsx": "", "components": "", "hooks": "", "actions": ""}}}'
+    when_to_use: Next.js projects + Server Components + Feature isolation
+    anti_patterns: Deep nesting + Unclear boundaries
+    example_projects: Next.js enterprise apps
+  - id: item_007
+    architecture_type: domain-driven
+    project_size: Business logic heavy
+    tech_stack: Any + Backend teams
+    folder_structure: '{"domains": {"user": "all user logic", "product": "all product logic", "order": "all order logic"}, "shared": "cross-domain"}'
+    when_to_use: Complex business domains + Large backend teams
+    anti_patterns: Premature domain splitting + Shared state leaking
+    example_projects: Enterprise backends + Microservices
+  - id: item_008
+    architecture_type: flat-components
+    project_size: Component library
+    tech_stack: React + Storybook
+    folder_structure: '{"src": {"Button": "index + styles + test", "Input": "index + styles + test"}}'
+    when_to_use: Pure component libraries + Design systems
+    anti_patterns: Business logic in components
+    example_projects: Open-source UI libraries

@@ -1,0 +1,47 @@
+name: terraform
+version: "1.0.0"
+display: Terraform IaC
+category: devops
+tier: 1
+priority: 5
+
+desc: "Terraform Infrastructure as Code. HCL syntax, module design, state management, multi-cloud providers, and CI/CD pipeline patterns."
+
+triggers:
+  file_patterns:
+    - "*.tf"
+    - "*.tfvars"
+    - "terraform.tfstate"
+    - ".terraform/**"
+    - "terraform.lock.hcl"
+  keywords:
+    - terraform
+    - IaC
+    - infrastructure as code
+    - HCL
+    - tfstate
+    - terraform plan
+    - terraform apply
+    - terraform module
+    - terraform provider
+
+caps:
+  - HCL syntax & best practices
+  - Module design (reusable, versioned)
+  - State management (remote backend, locking)
+  - Provider ecosystem (AWS, GCP, Azure)
+  - Workspace management (dev/staging/prod)
+  - Import & migration strategies
+  - CI/CD integration (plan → approve → apply)
+
+related_skills:
+  - aws
+  - gcp
+  - azure
+  - docker
+  - kubernetes
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/devops/terraform/data"
+  preload_data: false

@@ -1,0 +1,297 @@
+metadata:
+  skill: security
+  domain: network_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: network-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - example_vuln
+    - example_fix
+patterns:
+  - id: NS-01
+    name: TLS Version Downgrade
+    severity: CRITICAL
+    category: Protocol
+    description: Allowing fallback to TLS 1.0/1.1 or SSLv3
+    detection_pattern: (SSLv3|TLSv1\\.0|TLSv1\\.1|TLS1_0|TLS1_1)
+    fix_pattern: Force TLS 1.2+ only disable legacy protocols
+    languages: all
+    example_vuln: "minVersion: tls.VersionTLS10"
+    example_fix: "minVersion: tls.VersionTLS12 // NIST mandatory 2024"
+  - id: NS-02
+    name: Certificate Validation Bypass
+    severity: CRITICAL
+    category: TLS
+    description: Disabling certificate verification in production
+    detection_pattern: (InsecureSkipVerify.*true|verify.*false|SSL_VERIFY_NONE|CERT_NONE|checkServerIdentity.*null)
+    fix_pattern: Always verify certificates and pin critical ones
+    languages:
+      - go
+      - python
+      - java
+      - javascript
+      - csharp
+    example_vuln: "InsecureSkipVerify: true"
+    example_fix: 'InsecureSkipVerify: false\nRootCAs: trustedCertPool'
+  - id: NS-03
+    name: Weak Cipher Suites
+    severity: HIGH
+    category: Crypto
+    description: Using export-grade DES RC4 or weak ciphers
+    detection_pattern: (RC4|DES|3DES|EXPORT|NULL|MD5|SHA1(?!-)|anon)
+    fix_pattern: "Use only modern ciphers: AES-GCM ChaCha20-Poly1305"
+    languages: all
+    example_vuln: TLS_RSA_WITH_RC4_128_SHA
+    example_fix: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+  - id: NS-04
+    name: DNS Rebinding
+    severity: HIGH
+    category: Network
+    description: Application does not validate Host header allowing DNS rebinding attacks
+    detection_pattern: (Host:.*|req\\.headers\\.host)(?!.*allowlist|whitelist)
+    fix_pattern: Validate Host header against allowlist
+    languages: all
+    example_vuln: const host = req.headers.host // Untrusted
+    example_fix: const ALLOWED = ['api.example.com']\nif (!ALLOWED.includes(host)) return res.status(403)
+  - id: NS-05
+    name: WebSocket Origin Bypass
+    severity: HIGH
+    category: Protocol
+    description: Not validating Origin header for WebSocket connections
+    detection_pattern: (ws://|wss://)(?!.*origin.*valid)
+    fix_pattern: Check Origin header against allowlist
+    languages:
+      - javascript
+      - go
+      - python
+    example_vuln: ws.on('connection', (client) => {})
+    example_fix: if (req.headers.origin !== 'https://example.com') ws.close()
+  - id: NS-06
+    name: Certificate Pinning Missing
+    severity: LOW
+    category: Mobile
+    description: "Mobile app does not pin certificates for critical domains - NOTE: largely obsolete in 2024"
+    detection_pattern: (URLSession|OkHttp|fetch)(?!.*pinning)
+    fix_pattern: Consider mTLS or Certificate Transparency instead of pinning
+    languages:
+      - swift
+      - kotlin
+      - java
+    example_vuln: URLSession.shared.dataTask(url)
+    example_fix: '// Modern: Use Certificate Transparency\n// Or: mTLS for service-to-service'
+  - id: NS-07
+    name: HTTP Request Smuggling
+    severity: HIGH
+    category: Protocol
+    description: Inconsistent parsing of Content-Length and Transfer-Encoding headers
+    detection_pattern: (Content-Length.*Transfer-Encoding|Transfer-Encoding.*Content-Length)
+    fix_pattern: Use HTTP/2 normalize headers reject ambiguous requests
+    languages: all
+    example_vuln: 'Content-Length: 6\nTransfer-Encoding: chunked'
+    example_fix: // Use HTTP/2 or reject if TE && CL both present
+  - id: NS-08
+    name: GraphQL Introspection Leak
+    severity: MEDIUM
+    category: API
+    description: GraphQL introspection enabled in production exposing schema
+    detection_pattern: (introspection.*true|__schema|__type)(?!.*prod.*false)
+    fix_pattern: Disable introspection in production
+    languages:
+      - javascript
+      - go
+      - python
+      - java
+    example_vuln: "introspection: true"
+    example_fix: "introspection: process.env.NODE_ENV === 'development'"
+  - id: NS-09
+    name: GraphQL Batching Attack
+    severity: HIGH
+    category: API
+    description: No limits on GraphQL batched queries enabling brute force
+    detection_pattern: (graphql.*batch|batching.*true)(?!.*limit)
+    fix_pattern: Limit batch size and add rate limiting per operation
+    languages:
+      - javascript
+      - go
+      - python
+    example_vuln: // No batch limits
+    example_fix: 'maxBatchSize: 10\nrateLimit: { window: ''1m'', max: 100 }'
+  - id: NS-10
+    name: GraphQL Query Depth DoS
+    severity: HIGH
+    category: API
+    description: No query depth limits allowing resource exhaustion
+    detection_pattern: (graphql)(?!.*depth.*limit|maxDepth)
+    fix_pattern: Set maximum query depth typically 7-10 levels
+    languages:
+      - javascript
+      - go
+      - python
+    example_vuln: // No depth limit - 69% of APIs vulnerable
+    example_fix: "validationRules: [depthLimit(10)]"
+  - id: NS-11
+    name: GraphQL Field Duplication
+    severity: MEDIUM
+    category: API
+    description: No limits on field duplication causing redundant computation
+    detection_pattern: (graphql)(?!.*fieldDedupe|duplicateField)
+    fix_pattern: Deduplicate identical fields in queries
+    languages:
+      - javascript
+      - go
+      - python
+    example_vuln: query { user { name name name name } }
+    example_fix: // Use field deduplication middleware
+  - id: NS-12
+    name: gRPC Metadata Injection
+    severity: HIGH
+    category: Protocol
+    description: Untrusted metadata passed to gRPC without validation
+    detection_pattern: (metadata\\.append|metadata\\.set|WithOutgoingContext).*user
+    fix_pattern: Validate and sanitize all incoming metadata
+    languages:
+      - go
+      - java
+      - python
+      - csharp
+    example_vuln: md.Append('auth', req.Query.token)
+    example_fix: if (!isValidToken(token)) throw\nmd.Append('auth', sanitize(token))
+  - id: NS-13
+    name: WebRTC IP Leak
+    severity: MEDIUM
+    category: Browser
+    description: WebRTC reveals real IP even behind VPN or proxy
+    detection_pattern: (RTCPeerConnection|getUserMedia)(?!.*TURN)
+    fix_pattern: Use TURN servers only or disable WebRTC
+    languages: javascript
+    example_vuln: new RTCPeerConnection()
+    example_fix: 'iceServers: [{ urls: ''turn:relay.example.com'' }]\niceCandidatePoolSize: 0'
+  - id: NS-14
+    name: Missing HSTS Header
+    severity: HIGH
+    category: HTTP
+    description: Strict-Transport-Security header not set
+    detection_pattern: (?<!Strict-Transport-Security.*)response\\.header
+    fix_pattern: Add HSTS header with min 1 year max-age
+    languages: all
+    example_vuln: // No HSTS header
+    example_fix: "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload"
+  - id: NS-15
+    name: Missing CSP Header
+    severity: MEDIUM
+    category: HTTP
+    description: Content-Security-Policy header not configured
+    detection_pattern: (?<!Content-Security-Policy.*)response\\.header
+    fix_pattern: Set restrictive CSP with nonce or hash
+    languages: all
+    example_vuln: // No CSP
+    example_fix: "Content-Security-Policy: default-src 'self'; script-src 'nonce-{random}'"
+  - id: NS-16
+    name: CORS Wildcard
+    severity: HIGH
+    category: HTTP
+    description: Access-Control-Allow-Origin set to * with credentials
+    detection_pattern: Access-Control-Allow-Origin.*\\*.*credentials
+    fix_pattern: Use specific origin allowlist not wildcard
+    languages: all
+    example_vuln: "Access-Control-Allow-Origin: *"
+    example_fix: "Access-Control-Allow-Origin: https://trusted.example.com"
+  - id: NS-17
+    name: Missing X-Frame-Options
+    severity: MEDIUM
+    category: HTTP
+    description: X-Frame-Options or CSP frame-ancestors not set
+    detection_pattern: (?<!X-Frame-Options|frame-ancestors.*)response
+    fix_pattern: "Add X-Frame-Options: DENY or SAMEORIGIN"
+    languages: all
+    example_vuln: // No frame protection
+    example_fix: 'X-Frame-Options: DENY\n// Or CSP: frame-ancestors ''none'''
+  - id: NS-18
+    name: Cookie Without Secure Flag
+    severity: HIGH
+    category: HTTP
+    description: Sensitive cookies without Secure SameSite HttpOnly flags
+    detection_pattern: (Set-Cookie|cookie)(?!.*(Secure|HttpOnly|SameSite))
+    fix_pattern: Always set Secure HttpOnly SameSite=Strict for auth cookies
+    languages: all
+    example_vuln: "Set-Cookie: session=abc123"
+    example_fix: "Set-Cookie: session=abc123; Secure; HttpOnly; SameSite=Strict"
+  - id: NS-19
+    name: Server Version Disclosure
+    severity: LOW
+    category: HTTP
+    description: Server header exposes software version information
+    detection_pattern: Server:.*(Apache|nginx|IIS).*\\d+\\.\\d+
+    fix_pattern: Remove or obfuscate Server header in production
+    languages: all
+    example_vuln: "Server: nginx/1.21.0"
+    example_fix: "Server: web-server"
+  - id: NS-20
+    name: SSRF via URL Parameter
+    severity: CRITICAL
+    category: Network
+    description: User-controlled URLs fetched without validation
+    detection_pattern: (fetch|request|urllib|http\\.get)\\(.*req\\.(query|body|params)
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    languages: all
+    example_vuln: fetch(req.query.url)
+    example_fix: const parsed = new URL(req.query.url)\nif (!ALLOWED_HOSTS.includes(parsed.host)) throw
+  - id: NS-21
+    name: Open Redirect
+    severity: MEDIUM
+    category: HTTP
+    description: Redirects based on user input without validation
+    detection_pattern: (redirect|location).*=.*req\\.(query|body|params)
+    fix_pattern: Validate redirect URLs against allowlist
+    languages: all
+    example_vuln: res.redirect(req.query.next)
+    example_fix: if (!isInternalUrl(req.query.next)) throw\nres.redirect(req.query.next)
+  - id: NS-22
+    name: Missing OCSP Stapling
+    severity: LOW
+    category: TLS
+    description: OCSP stapling not enabled causing latency and privacy issues
+    detection_pattern: (?<!ocsp.*stapl)
+    fix_pattern: Enable OCSP stapling for faster TLS handshakes
+    languages: all
+    example_vuln: // No OCSP stapling config
+    example_fix: ssl_stapling on;\nssl_stapling_verify on;
+  - id: NS-23
+    name: Missing DNSSEC
+    severity: LOW
+    category: DNS
+    description: DNS responses not validated with DNSSEC
+    detection_pattern: (?<!dnssec)
+    fix_pattern: Enable DNSSEC validation for DNS queries
+    languages: all
+    example_vuln: // No DNSSEC validation
+    example_fix: resolver.dnssec = true
+  - id: NS-24
+    name: Insecure WebSocket
+    severity: HIGH
+    category: Protocol
+    description: WebSocket connection over ws:// instead of wss://
+    detection_pattern: ws://(?!localhost|127\\.0\\.0\\.1)
+    fix_pattern: Always use wss:// for WebSocket connections
+    languages: all
+    example_vuln: ws://api.example.com/socket
+    example_fix: wss://api.example.com/socket
+  - id: NS-25
+    name: Missing Rate Limiting
+    severity: HIGH
+    category: API
+    description: No rate limiting on API endpoints enabling DoS and brute force
+    detection_pattern: (express|fastify|gin|echo)(?!.*rateLimit|throttle)
+    fix_pattern: Implement rate limiting per IP and per user
+    languages: all
+    example_vuln: app.get('/api/login')
+    example_fix: "app.use(rateLimit({ windowMs: 60000, max: 100 }))"

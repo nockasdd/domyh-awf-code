@@ -3,7 +3,7 @@
 
 ---
 name: edit-verification
-version: "6.1.2"
+version: "6.2.1"
 rule_id: "MOD-EDV-001"
 
 # =============================================================================
@@ -23,7 +23,7 @@ category: "verification"
 context:
   always_apply: true
   personas: ["developer", "debugger", "devops"]
-  workflows: ["/code", "/debug", "/refactor", "/modify"]
+  workflows: ["/code", "/debug", "/refactor"]
 
 # =============================================================================
 # CORE PRINCIPLES
@@ -180,10 +180,18 @@ integration:
     - stop-conditions
     - evidence
 
+  hsa_tools:
+    hsa_detect_stack:
+      purpose: "Auto-detect correct build/lint/test commands for verification gates"
+      usage: "hsa_detect_stack → determines syntax_check, build_check, test_check commands"
+    hsa_get_context:
+      purpose: "Pre-edit context to assess impact before modifying code"
+      usage: "hsa_get_context files=[target] → understand dependencies and callers"
+
   reflection:
     enabled: true
     check_after: "edit"
     question: "Did I verify this edit properly?"
 
 ---
-_DOMYH Awesome Code v6.1.2 • Edit Verification Rule_
+_DOMYH Awesome Code • Edit Verification Rule_

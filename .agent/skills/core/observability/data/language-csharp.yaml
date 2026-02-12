@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_csharp
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-csharp.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: CS-001
+    name: OpenTelemetry SDK
+    category: CSharp
+    description: Initialize OTel in .NET
+    example: Sdk.CreateTracerProviderBuilder().Build()
+    library: opentelemetry-dotnet
+  - id: CS-002
+    name: TracerProvider Setup
+    category: CSharp
+    description: Configure tracer
+    example: AddSource('MyApp').AddOtlpExporter()
+    library: opentelemetry-dotnet
+  - id: CS-003
+    name: MeterProvider Setup
+    category: CSharp
+    description: Configure metrics
+    example: AddMeter('MyApp').AddPrometheusExporter()
+    library: opentelemetry-dotnet
+  - id: CS-004
+    name: OTLP Exporter
+    category: CSharp
+    description: Export via OTLP
+    example: .AddOtlpExporter(o => o.Endpoint = new Uri('...'))
+    library: opentelemetry-dotnet
+  - id: CS-005
+    name: Auto-Instrumentation
+    category: CSharp
+    description: Instrument common libs
+    example: .AddAspNetCoreInstrumentation()
+    library: opentelemetry-dotnet
+  - id: CS-006
+    name: Manual Spans
+    category: CSharp
+    description: Create custom spans
+    example: using var span = tracer.StartActiveSpan('op');
+    library: opentelemetry-dotnet
+  - id: CS-007
+    name: Span Attributes
+    category: CSharp
+    description: Add metadata
+    example: span.SetAttribute('key', 'value')
+    library: opentelemetry-dotnet
+  - id: CS-008
+    name: Activity API
+    category: CSharp
+    description: Built-in diagnostics
+    example: using var activity = source.StartActivity('op');
+    library: System.Diagnostics
+  - id: CS-009
+    name: DiagnosticSource
+    category: CSharp
+    description: Diagnostic events
+    example: DiagnosticListener.AllListeners.Subscribe(...)
+    library: System.Diagnostics
+  - id: CS-010
+    name: Application Insights
+    category: CSharp
+    description: Azure APM
+    example: services.AddApplicationInsightsTelemetry();
+    library: ApplicationInsights
+  - id: CS-011
+    name: Application Insights Tracing
+    category: CSharp
+    description: Application Map
+    example: dependency correlation in Azure Portal
+    library: ApplicationInsights
+  - id: CS-012
+    name: Prometheus-net
+    category: CSharp
+    description: Prometheus metrics
+    example: Metrics.CreateCounter('requests_total', 'Total requests')
+    library: prometheus-net
+  - id: CS-013
+    name: Prometheus Middleware
+    category: CSharp
+    description: Expose /metrics
+    example: app.UseMetricServer()
+    library: prometheus-net
+  - id: CS-014
+    name: EventCounters
+    category: CSharp
+    description: .NET runtime metrics
+    example: dotnet-counters monitor --process-id <PID>
+    library: dotnet
+  - id: CS-015
+    name: dotnet-trace
+    category: CSharp
+    description: Collect traces
+    example: dotnet-trace collect --process-id <PID>
+    library: dotnet
+  - id: CS-016
+    name: dotnet-dump
+    category: CSharp
+    description: Collect dump
+    example: dotnet-dump collect --process-id <PID>
+    library: dotnet
+  - id: CS-017
+    name: PerfView
+    category: CSharp
+    description: Performance analysis
+    example: Collect CPU samples, memory allocation
+    library: perfview
+  - id: CS-018
+    name: BenchmarkDotNet
+    category: CSharp
+    description: Microbenchmarks
+    example: "[Benchmark] public void TestMethod()"
+    library: BenchmarkDotNet
+  - id: CS-019
+    name: ASP.NET Core Instrumentation
+    category: CSharp
+    description: Trace HTTP requests
+    example: .AddAspNetCoreInstrumentation()
+    library: opentelemetry-dotnet
+  - id: CS-020
+    name: EF Core Instrumentation
+    category: CSharp
+    description: Trace database queries
+    example: .AddEntityFrameworkCoreInstrumentation()
+    library: opentelemetry-dotnet
+  - id: CS-021
+    name: HttpClient Instrumentation
+    category: CSharp
+    description: Trace outgoing HTTP
+    example: .AddHttpClientInstrumentation()
+    library: opentelemetry-dotnet
+  - id: CS-022
+    name: Serilog + Trace ID
+    category: CSharp
+    description: Logs with trace context
+    example: "enrichers: [{Name: 'WithTraceId'}]"
+    library: serilog
+  - id: CS-023
+    name: Azure Monitor Exporter
+    category: CSharp
+    description: Export to Azure
+    example: .AddAzureMonitorTraceExporter()
+    library: Azure.Monitor
+  - id: CS-024
+    name: Health Checks
+    category: CSharp
+    description: Health endpoints
+    example: services.AddHealthChecks()
+    library: AspNetCore
+  - id: CS-025
+    name: Metrics API .NET
+    category: CSharp
+    description: .NET 8+ metrics
+    example: Meter.CreateCounter<long>('requests')
+    library: System.Diagnostics.Metrics

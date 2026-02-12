@@ -145,4 +145,4 @@ JSON files should maintain schema:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Memory System_
+_DOMYH Awesome Code — Memory System_

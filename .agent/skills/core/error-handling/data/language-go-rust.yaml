@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: language_go_rust
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-go-rust.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - language
+    - category
+    - level
+patterns:
+  - id: EH-GO-001
+    pattern: if err != nil
+    description: Explicit error check after function call
+    example: if err != nil { return err }
+    language: Go
+    category: Check
+    level: BASIC
+  - id: EH-GO-002
+    pattern: Error Wrapping
+    description: Add context with fmt.Errorf %w
+    example: 'return fmt.Errorf("context: %w", err)'
+    language: Go
+    category: Context
+    level: BASIC
+  - id: EH-GO-003
+    pattern: errors.Is
+    description: Check if error matches target
+    example: if errors.Is(err, ErrNotFound) {}
+    language: Go
+    category: Inspect
+    level: INTERMEDIATE
+  - id: EH-GO-004
+    pattern: errors.As
+    description: Extract typed error from chain
+    example: var myErr *MyError; errors.As(err, &myErr)
+    language: Go
+    category: Inspect
+    level: INTERMEDIATE
+  - id: EH-GO-005
+    pattern: Sentinel Error
+    description: Predefined error variable
+    example: var ErrNotFound = errors.New("not found")
+    language: Go
+    category: Definition
+    level: BASIC
+  - id: EH-GO-006
+    pattern: Custom Error Type
+    description: Implement error interface
+    example: func (e *MyError) Error() string { return e.msg }
+    language: Go
+    category: Definition
+    level: INTERMEDIATE
+  - id: EH-GO-007
+    pattern: errors.Join
+    description: Combine multiple errors
+    example: err := errors.Join(err1, err2, err3)
+    language: Go
+    category: Combine
+    level: INTERMEDIATE
+  - id: EH-GO-008
+    pattern: panic
+    description: Stop execution for unrecoverable error
+    example: panic("impossible state")
+    language: Go
+    category: Fatal
+    level: BASIC
+  - id: EH-GO-009
+    pattern: recover
+    description: Recover from panic in defer
+    example: defer func() { if r := recover(); r != nil {} }()
+    language: Go
+    category: Recovery
+    level: ADVANCED
+  - id: EH-GO-010
+    pattern: Multiple Return
+    description: Return value and error together
+    example: func f() (int, error) { return 0, nil }
+    language: Go
+    category: Pattern
+    level: BASIC
+  - id: EH-GO-011
+    pattern: Error Logging
+    description: Log error with context
+    example: 'log.Printf("failed to %s: %v", "action", err)'
+    language: Go
+    category: Observability
+    level: BASIC
+  - id: EH-GO-012
+    pattern: Defer Cleanup
+    description: Ensure cleanup on error
+    example: defer file.Close()
+    language: Go
+    category: Resource
+    level: BASIC
+  - id: EH-GO-013
+    pattern: Named Return
+    description: Use named returns for error
+    example: func f() (result int, err error) {}
+    language: Go
+    category: Pattern
+    level: INTERMEDIATE
+  - id: EH-GO-014
+    pattern: Custom Unwrap
+    description: Implement Unwrap for error chain
+    example: func (e *WrapError) Unwrap() error { return e.cause }
+    language: Go
+    category: Chain
+    level: ADVANCED
+  - id: EH-RUST-001
+    pattern: Result<T E>
+    description: Return success or error
+    example: fn f() -> Result<i32, Error> { Ok(42) }
+    language: Rust
+    category: Type
+    level: BASIC
+  - id: EH-RUST-002
+    pattern: "? Operator"
+    description: Propagate error early
+    example: let val = risky_fn()?;
+    language: Rust
+    category: Propagation
+    level: BASIC
+  - id: EH-RUST-003
+    pattern: unwrap
+    description: Get value or panic on error
+    example: let val = result.unwrap();
+    language: Rust
+    category: Danger
+    level: BASIC
+  - id: EH-RUST-004
+    pattern: expect
+    description: Unwrap with custom panic message
+    example: let val = result.expect("should exist");
+    language: Rust
+    category: Danger
+    level: BASIC
+  - id: EH-RUST-005
+    pattern: unwrap_or
+    description: Default value on error
+    example: let val = result.unwrap_or(default);
+    language: Rust
+    category: Recovery
+    level: BASIC
+  - id: EH-RUST-006
+    pattern: unwrap_or_else
+    description: Lazy default on error
+    example: let val = result.unwrap_or_else(|e| handle(e));
+    language: Rust
+    category: Recovery
+    level: INTERMEDIATE
+  - id: EH-RUST-007
+    pattern: map_err
+    description: Transform error type
+    example: result.map_err(|e| MyError::from(e))
+    language: Rust
+    category: Transform
+    level: INTERMEDIATE
+  - id: EH-RUST-008
+    pattern: and_then
+    description: Chain fallible operations
+    example: result.and_then(|v| process(v))
+    language: Rust
+    category: Monadic
+    level: INTERMEDIATE
+  - id: EH-RUST-009
+    pattern: or_else
+    description: Try alternative on error
+    example: result.or_else(|e| alternative(e))
+    language: Rust
+    category: Recovery
+    level: INTERMEDIATE
+  - id: EH-RUST-010
+    pattern: thiserror
+    description: Derive Error trait easily
+    example: "#[derive(Error, Debug)] enum MyError {}"
+    language: Rust
+    category: Library
+    level: INTERMEDIATE
+  - id: EH-RUST-011
+    pattern: anyhow
+    description: Flexible error handling
+    example: use anyhow::{Context, Result};
+    language: Rust
+    category: Library
+    level: INTERMEDIATE
+  - id: EH-RUST-012
+    pattern: Custom Error
+    description: Implement std::error::Error
+    example: impl std::error::Error for MyError {}
+    language: Rust
+    category: Definition
+    level: INTERMEDIATE
+  - id: EH-RUST-013
+    pattern: panic! macro
+    description: Unrecoverable error
+    example: panic!("impossible state");
+    language: Rust
+    category: Fatal
+    level: BASIC
+  - id: EH-RUST-014
+    pattern: Option to Result
+    description: Convert None to Err
+    example: opt.ok_or(MyError::NotFound)
+    language: Rust
+    category: Convert
+    level: INTERMEDIATE
+  - id: EH-RUST-015
+    pattern: collect::<Result>
+    description: Collect into Result
+    example: results.into_iter().collect::<Result<Vec<_>, _>>()
+    language: Rust
+    category: Collection
+    level: ADVANCED
+  - id: EH-RUST-016
+    pattern: Error Derive
+    description: Auto-implement Error
+    example: "#[derive(Debug)] struct MyError;"
+    language: Rust
+    category: Definition
+    level: BASIC

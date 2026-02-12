@@ -1,14 +1,10 @@
 name: rust
-version: "6.1.2"
+version: "6.2.1"
 category: systems
-tier: 1
+tier: 3
 
-description: |
-  Systems programming patterns for Rust 1.80+.
-  Covers async/await, Tokio, Axum, error handling, WebAssembly.
+desc: "Systems programming patterns for Rust 2024 Edition (1.85). Async closures, thiserror/anyhow, Axum 0.8, Tower, SQLx."
 
-triggers:
-  file_patterns:
     - "Cargo.toml"
     - "*.rs"
     - "Cargo.lock"

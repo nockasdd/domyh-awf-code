@@ -1,0 +1,396 @@
+# =============================================================================
+# F# Core Patterns (Feb 2026)
+# Version: F# 8
+# =============================================================================
+
+metadata:
+  skill: fsharp
+  domain: core
+  version: "8"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: fsharp001
+    name: Type System
+    category: language
+    version: "FSharp8"
+    description: |
+      F# type system features.
+      Records, discriminated unions, units of measure.
+    text: record union measure type pattern
+    example: |
+      // ✅ Records (immutable by default)
+      type User = {
+          Id: int
+          Name: string
+          Email: string
+          CreatedAt: DateTime
+      }
+
+      // Create and copy
+      let user = { Id = 1; Name = "John"; Email = "john@example.com"; CreatedAt = DateTime.Now }
+      let updated = { user with Name = "Jane" }
+
+      // ✅ Discriminated Unions
+      type Result<'T, 'E> =
+          | Ok of 'T
+          | Error of 'E
+
+      type Shape =
+          | Circle of radius: float
+          | Rectangle of width: float * height: float
+          | Triangle of a: float * b: float * c: float
+
+      let area shape =
+          match shape with
+          | Circle r -> Math.PI * r * r
+          | Rectangle (w, h) -> w * h
+          | Triangle (a, b, c) ->
+              let s = (a + b + c) / 2.0
+              sqrt(s * (s - a) * (s - b) * (s - c))
+
+      // ✅ Units of measure
+      [<Measure>] type m
+      [<Measure>] type s
+      [<Measure>] type kg
+
+      let distance: float<m> = 100.0<m>
+      let time: float<s> = 9.58<s>
+      let speed = distance / time  // float<m/s>
+
+      // ✅ Option type
+      let tryParse (s: string) : int option =
+          match Int32.TryParse(s) with
+          | true, value -> Some value
+          | false, _ -> None
+
+      // ✅ Active patterns
+      let (|Even|Odd|) n = if n % 2 = 0 then Even else Odd
+
+      let describe n =
+          match n with
+          | Even -> "even"
+          | Odd -> "odd"
+    severity: HIGH
+    docs_url: https://learn.microsoft.com/en-us/dotnet/fsharp/
+
+  - id: fsharp002
+    name: Railway-Oriented Programming
+    category: patterns
+    version: "FSharp"
+    description: |
+      Result-based error handling.
+      Bind, map, composition.
+    text: result bind map railway validation
+    example: |
+      open System
+
+      // ✅ Define Result type
+      type ValidationError =
+          | EmptyName
+          | InvalidEmail
+          | TooShort of field: string * minLength: int
+
+      // ✅ Railway-oriented functions
+      let validateName name =
+          if String.IsNullOrWhiteSpace(name) then
+              Error EmptyName
+          elif name.Length < 2 then
+              Error (TooShort ("name", 2))
+          else
+              Ok name
+
+      let validateEmail email =
+          if not (email.Contains("@")) then
+              Error InvalidEmail
+          else
+              Ok email
+
+      // ✅ Bind operator (>>=)
+      let (>>=) result f =
+          match result with
+          | Ok x -> f x
+          | Error e -> Error e
+
+      // ✅ Map operator (<!>)
+      let (<!>) f result =
+          match result with
+          | Ok x -> Ok (f x)
+          | Error e -> Error e
+
+      // ✅ Compose validations
+      type ValidUser = { Name: string; Email: string }
+
+      let createUser name email =
+          validateName name
+          >>= fun validName ->
+              validateEmail email
+              >>= fun validEmail ->
+                  Ok { Name = validName; Email = validEmail }
+
+      // ✅ Computation expression
+      type ResultBuilder() =
+          member _.Bind(x, f) =
+              match x with
+              | Ok v -> f v
+              | Error e -> Error e
+          member _.Return(x) = Ok x
+          member _.ReturnFrom(x) = x
+
+      let result = ResultBuilder()
+
+      let createUserCE name email =
+          result {
+              let! validName = validateName name
+              let! validEmail = validateEmail email
+              return { Name = validName; Email = validEmail }
+          }
+
+      // ✅ Applicative validation (collect all errors)
+      let (<*>) fResult xResult =
+          match fResult, xResult with
+          | Ok f, Ok x -> Ok (f x)
+          | Error e, Ok _ -> Error [e]
+          | Ok _, Error e -> Error [e]
+          | Error e1, Error e2 -> Error (e1 @ e2)
+    severity: HIGH
+    docs_url: https://fsharpforfunandprofit.com/rop/
+
+  - id: fsharp003
+    name: Async and Task
+    category: async
+    version: "FSharp8"
+    description: |
+      Asynchronous programming.
+      Async workflows, Task, parallel.
+    text: async task parallel await computation
+    example: |
+      open System
+      open System.Net.Http
+      open System.Threading.Tasks
+
+      // ✅ Async workflow
+      let fetchUrl (url: string) : Async<string> =
+          async {
+              use client = new HttpClient()
+              let! response = client.GetStringAsync(url) |> Async.AwaitTask
+              return response
+          }
+
+      // ✅ Sequential async
+      let fetchMultiple urls =
+          async {
+              let! results =
+                  urls
+                  |> List.map fetchUrl
+                  |> Async.Sequential
+              return results
+          }
+
+      // ✅ Parallel async
+      let fetchParallel urls =
+          urls
+          |> List.map fetchUrl
+          |> Async.Parallel
+
+      // ✅ Task computation expression (F# 8)
+      let fetchUrlTask (url: string) : Task<string> =
+          task {
+              use client = new HttpClient()
+              let! response = client.GetStringAsync(url)
+              return response
+          }
+
+      // ✅ Cancellation
+      let fetchWithTimeout url timeout =
+          async {
+              use cts = new CancellationTokenSource(timeout)
+              try
+                  let! result = fetchUrl url
+                  return Some result
+              with
+              | :? OperationCanceledException -> return None
+          }
+
+      // ✅ Async.Choice - first to complete
+      let raceUrls urls =
+          urls
+          |> List.map (fun url ->
+              async {
+                  let! result = fetchUrl url
+                  return Some (url, result)
+              })
+          |> Async.Choice
+
+      // ✅ Error handling in async
+      let safeAsync computation =
+          async {
+              try
+                  let! result = computation
+                  return Ok result
+              with
+              | ex -> return Error ex.Message
+          }
+
+      // ✅ Run async
+      let main =
+          fetchUrl "https://example.com"
+          |> Async.RunSynchronously
+    severity: HIGH
+    docs_url: https://learn.microsoft.com/en-us/dotnet/fsharp/tutorials/async
+
+  - id: fsharp004
+    name: Collections and Pipelines
+    category: patterns
+    version: "FSharp"
+    description: |
+      Functional collection processing.
+      Seq, List, Array, pipelines.
+    text: seq list array pipe map filter fold
+    example: |
+      // ✅ List operations
+      let numbers = [1; 2; 3; 4; 5]
+
+      let doubled = numbers |> List.map (fun x -> x * 2)
+      let evens = numbers |> List.filter (fun x -> x % 2 = 0)
+      let sum = numbers |> List.fold (+) 0
+      let product = numbers |> List.reduce (*)
+
+      // ✅ Pipeline operator
+      let result =
+          [1..100]
+          |> List.filter (fun x -> x % 2 = 0)
+          |> List.map (fun x -> x * x)
+          |> List.take 10
+          |> List.sum
+
+      // ✅ Sequence (lazy)
+      let infiniteSquares =
+          Seq.initInfinite (fun i -> i * i)
+          |> Seq.skip 1
+          |> Seq.take 100
+
+      // ✅ List comprehension
+      let squares = [ for x in 1..10 -> x * x ]
+
+      let coordinates = [
+          for x in 1..3 do
+          for y in 1..3 do
+              yield (x, y)
+      ]
+
+      // ✅ Pattern matching in collections
+      let rec sum list =
+          match list with
+          | [] -> 0
+          | head :: tail -> head + sum tail
+
+      // ✅ Grouping and aggregation
+      type Person = { Name: string; Age: int; City: string }
+
+      let people = [
+          { Name = "Alice"; Age = 30; City = "NYC" }
+          { Name = "Bob"; Age = 25; City = "LA" }
+          { Name = "Charlie"; Age = 30; City = "NYC" }
+      ]
+
+      let byCity =
+          people
+          |> List.groupBy (fun p -> p.City)
+          |> List.map (fun (city, persons) ->
+              city, persons |> List.averageBy (fun p -> float p.Age))
+
+      // ✅ Choose (filter + map)
+      let tryParseInt s =
+          match Int32.TryParse(s) with
+          | true, n -> Some n
+          | false, _ -> None
+
+      let validNumbers =
+          ["1"; "abc"; "2"; "xyz"; "3"]
+          |> List.choose tryParseInt  // [1; 2; 3]
+    severity: HIGH
+    docs_url: https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/fsharp-collection-types
+
+  - id: fsharp005
+    name: Giraffe Web
+    category: web
+    version: "Giraffe"
+    description: |
+      Functional web apps on ASP.NET.
+      HttpHandlers, routing, composition.
+    text: giraffe handler route json aspnet
+    example: |
+      open Giraffe
+      open Microsoft.AspNetCore.Builder
+      open Microsoft.AspNetCore.Http
+      open Microsoft.Extensions.DependencyInjection
+
+      // ✅ Basic handlers
+      let helloHandler: HttpHandler =
+          fun next ctx ->
+              text "Hello, World!" next ctx
+
+      let jsonHandler: HttpHandler =
+          json {| message = "Hello"; timestamp = DateTime.Now |}
+
+      // ✅ Route parameters
+      let userHandler (id: int): HttpHandler =
+          fun next ctx ->
+              let user = getUserById id
+              json user next ctx
+
+      // ✅ Composition with >=>
+      let webApp: HttpHandler =
+          choose [
+              GET >=> route "/" >=> text "Home"
+              GET >=> route "/hello" >=> helloHandler
+              GET >=> routef "/users/%i" userHandler
+              
+              POST >=> route "/users" >=> bindJson<CreateUserDto> (fun dto ->
+                  let user = createUser dto
+                  setStatusCode 201 >=> json user)
+              
+              PUT >=> routef "/users/%i" (fun id ->
+                  bindJson<UpdateUserDto> (fun dto ->
+                      let user = updateUser id dto
+                      json user))
+              
+              DELETE >=> routef "/users/%i" (fun id ->
+                  deleteUser id
+                  setStatusCode 204)
+              
+              setStatusCode 404 >=> text "Not Found"
+          ]
+
+      // ✅ Custom handlers
+      let mustBeAuthenticated: HttpHandler =
+          fun next ctx ->
+              match ctx.User.Identity.IsAuthenticated with
+              | true -> next ctx
+              | false -> setStatusCode 401 earlyReturn ctx
+
+      let authorizedRoutes: HttpHandler =
+          mustBeAuthenticated >=>
+          choose [
+              GET >=> route "/profile" >=> profileHandler
+              GET >=> route "/settings" >=> settingsHandler
+          ]
+
+      // ✅ App setup
+      let configureApp (app: IApplicationBuilder) =
+          app.UseGiraffe webApp
+
+      let configureServices (services: IServiceCollection) =
+          services.AddGiraffe() |> ignore
+
+      [<EntryPoint>]
+      let main args =
+          WebApplication
+              .CreateBuilder(args)
+              .Build()
+              .Run()
+          0
+    severity: MEDIUM
+    docs_url: https://github.com/giraffe-fsharp/Giraffe

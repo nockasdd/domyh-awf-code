@@ -1,12 +1,12 @@
 ---
 name: clojure
 detect: ["*.clj", "*.cljs", "*.cljc", "deps.edn", "project.clj"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 ---
 
-# Clojure Patterns — DOMYH Awesome Code v6.1.2
+# Clojure Patterns — DOMYH Awesome Code
 
 > **Version**: Clojure 1.11+ (2025-2026)
 > **Framework**: Ring, Pedestal, Reagent
@@ -127,4 +127,4 @@ Use for: Data processing, concurrent systems, REPL prototyping.
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Clojure 1.11+_
+_DOMYH Awesome Code • Clojure 1.11+_

@@ -1,0 +1,300 @@
+# =============================================================================
+# Lua Embedding Patterns (Feb 2026)
+# Version: Lua 5.4 / LuaJIT
+# =============================================================================
+
+metadata:
+  skill: lua
+  domain: embedding
+  version: "5.4"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: lua101
+    name: C API
+    category: embedding
+    version: "Lua"
+    description: |
+      Embed Lua in C/C++ applications.
+      lua_State, stack operations, calling Lua from C.
+    text: c api embed lua_State stack luaL
+    example: |
+      // ✅ Initialize Lua state
+      #include <lua.h>
+      #include <lauxlib.h>
+      #include <lualib.h>
+
+      int main() {
+          lua_State *L = luaL_newstate();
+          luaL_openlibs(L);  // Standard libraries
+          
+          // ✅ Execute Lua code
+          luaL_dostring(L, "print('Hello from Lua')");
+          
+          // ✅ Load and run file
+          if (luaL_dofile(L, "script.lua") != LUA_OK) {
+              fprintf(stderr, "Error: %s\n", lua_tostring(L, -1));
+          }
+          
+          // ✅ Push/pop stack operations
+          lua_pushnumber(L, 42);
+          lua_pushstring(L, "hello");
+          lua_pushboolean(L, 1);
+          
+          int number = lua_tonumber(L, 1);
+          const char* str = lua_tostring(L, 2);
+          
+          // ✅ Call Lua function from C
+          lua_getglobal(L, "myFunction");
+          lua_pushnumber(L, 10);
+          lua_pushnumber(L, 20);
+          
+          if (lua_pcall(L, 2, 1, 0) != LUA_OK) {
+              // Handle error
+          }
+          
+          double result = lua_tonumber(L, -1);
+          lua_pop(L, 1);
+          
+          // ✅ Register C function to Lua
+          lua_register(L, "cFunction", l_cfunction);
+          // Now callable from Lua as cFunction()
+          
+          lua_close(L);
+          return 0;
+      }
+
+      // ✅ C function callable from Lua
+      static int l_cfunction(lua_State *L) {
+          double x = luaL_checknumber(L, 1);
+          lua_pushnumber(L, x * 2);
+          return 1;  // Number of return values
+      }
+    severity: HIGH
+    docs_url: https://www.lua.org/manual/5.4/manual.html#4
+
+  - id: lua102
+    name: LuaJIT FFI
+    category: ffi
+    version: "LuaJIT"
+    description: |
+      Direct C function calls with LuaJIT FFI.
+      No C wrapper needed, JIT-compiled.
+    text: ffi luajit cdef foreign function interface
+    example: |
+      local ffi = require("ffi")
+
+      -- ✅ Define C types and functions
+      ffi.cdef[[
+        typedef struct { double x, y; } Point;
+        
+        double sqrt(double x);
+        double sin(double x);
+        double cos(double x);
+        
+        int printf(const char* fmt, ...);
+        void* malloc(size_t size);
+        void free(void* ptr);
+      ]]
+
+      -- ✅ Call C functions directly
+      local result = ffi.C.sqrt(16)
+      print(result)  -- 4.0
+
+      ffi.C.printf("Hello %s\n", "FFI")
+
+      -- ✅ Create C structs
+      local point = ffi.new("Point", {x = 3.0, y = 4.0})
+      print(point.x, point.y)
+
+      -- ✅ Arrays
+      local arr = ffi.new("int[10]")
+      for i = 0, 9 do
+        arr[i] = i * 2
+      end
+
+      -- ✅ Pointers
+      local ptr = ffi.new("int[1]")
+      ptr[0] = 42
+
+      -- ✅ Load shared library
+      local lib = ffi.load("mylib")  -- mylib.so or mylib.dll
+      local result = lib.my_function(arg)
+
+      -- ✅ Callbacks
+      local callback = ffi.cast("int (*)(int)", function(x)
+        return x * 2
+      end)
+
+      -- ✅ Memory management
+      local buf = ffi.C.malloc(1024)
+      ffi.gc(buf, ffi.C.free)  -- Auto-free when garbage collected
+
+      -- ✅ String conversion
+      local cstr = ffi.new("char[?]", #"hello" + 1, "hello")
+      local luastr = ffi.string(cstr)
+    severity: HIGH
+    docs_url: https://luajit.org/ext_ffi.html
+
+  - id: lua103
+    name: Game Scripting
+    category: games
+    version: "Lua"
+    description: |
+      Lua patterns for game engines.
+      LÖVE, Defold, Roblox integration.
+    text: love2d defold roblox game engine scripting
+    example: |
+      -- ✅ LÖVE 2D basic structure
+      function love.load()
+        player = {x = 400, y = 300, speed = 200}
+        image = love.graphics.newImage("player.png")
+      end
+
+      function love.update(dt)
+        if love.keyboard.isDown("left") then
+          player.x = player.x - player.speed * dt
+        end
+        if love.keyboard.isDown("right") then
+          player.x = player.x + player.speed * dt
+        end
+      end
+
+      function love.draw()
+        love.graphics.draw(image, player.x, player.y)
+        love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
+      end
+
+      -- ✅ Entity Component System pattern
+      local Entity = {}
+      Entity.__index = Entity
+
+      function Entity.new()
+        return setmetatable({components = {}}, Entity)
+      end
+
+      function Entity:addComponent(name, component)
+        self.components[name] = component
+        return self
+      end
+
+      function Entity:getComponent(name)
+        return self.components[name]
+      end
+
+      -- ✅ State machine for game states
+      local StateMachine = {
+        states = {},
+        current = nil
+      }
+
+      function StateMachine:add(name, state)
+        self.states[name] = state
+      end
+
+      function StateMachine:switch(name)
+        if self.current and self.current.exit then
+          self.current:exit()
+        end
+        self.current = self.states[name]
+        if self.current.enter then
+          self.current:enter()
+        end
+      end
+
+      -- ✅ Object pooling for performance
+      local BulletPool = {
+        available = {},
+        active = {}
+      }
+
+      function BulletPool:get()
+        local bullet = table.remove(self.available) or {x = 0, y = 0}
+        table.insert(self.active, bullet)
+        return bullet
+      end
+
+      function BulletPool:recycle(bullet)
+        for i, b in ipairs(self.active) do
+          if b == bullet then
+            table.remove(self.active, i)
+            table.insert(self.available, bullet)
+            break
+          end
+        end
+      end
+    severity: MEDIUM
+    docs_url: https://love2d.org/wiki/Getting_Started
+
+  - id: lua104
+    name: OpenResty
+    category: web
+    version: "OpenResty"
+    description: |
+      High-performance web apps with OpenResty.
+      Nginx + LuaJIT for web services.
+    text: openresty nginx web server cosocket
+    example: |
+      -- ✅ nginx.conf location block
+      -- location /api {
+      --     content_by_lua_file 'lua/api.lua';
+      -- }
+
+      -- ✅ Basic handler (api.lua)
+      local cjson = require "cjson"
+
+      ngx.header.content_type = "application/json"
+
+      local method = ngx.req.get_method()
+      local uri = ngx.var.uri
+
+      if method == "GET" then
+        ngx.say(cjson.encode({
+          status = "ok",
+          path = uri
+        }))
+      else
+        ngx.status = 405
+        ngx.say(cjson.encode({error = "Method not allowed"}))
+      end
+
+      -- ✅ Read request body
+      ngx.req.read_body()
+      local body = ngx.req.get_body_data()
+      local data = cjson.decode(body)
+
+      -- ✅ Query parameters
+      local args = ngx.req.get_uri_args()
+      local id = args.id
+
+      -- ✅ Non-blocking HTTP request
+      local http = require "resty.http"
+      local httpc = http.new()
+
+      local res, err = httpc:request_uri("http://api.example.com/data", {
+        method = "GET",
+        headers = {["Authorization"] = "Bearer token"}
+      })
+
+      if res then
+        ngx.say(res.body)
+      end
+
+      -- ✅ Redis access
+      local redis = require "resty.redis"
+      local red = redis:new()
+
+      red:connect("127.0.0.1", 6379)
+      red:set("key", "value")
+      local value = red:get("key")
+
+      -- Return connection to pool
+      red:set_keepalive(10000, 100)
+
+      -- ✅ Shared dictionary (cross-worker cache)
+      local shared = ngx.shared.my_cache
+      shared:set("key", "value", 60)  -- 60 seconds TTL
+      local cached = shared:get("key")
+    severity: MEDIUM
+    docs_url: https://openresty.org/en/lua-nginx-module.html

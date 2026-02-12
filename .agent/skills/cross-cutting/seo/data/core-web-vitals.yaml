@@ -1,0 +1,93 @@
+# Core Web Vitals Data
+
+metrics:
+  - name: LCP
+    full_name: "Largest Contentful Paint"
+    measures: "Loading performance"
+    thresholds:
+      good: "≤ 2.5s"
+      needs_improvement: "≤ 4.0s"
+      poor: "> 4.0s"
+    optimizations:
+      - name: "Preload critical resources"
+        code: '<link rel="preload" as="image" href="/hero.webp">'
+        impact: high
+      - name: "Use CDN for static assets"
+        impact: high
+      - name: "Optimize images (WebP/AVIF)"
+        code: '<img src="hero.webp" width="800" height="400" loading="eager">'
+        impact: high
+      - name: "Eliminate render-blocking resources"
+        code: '<link rel="stylesheet" href="critical.css" media="all">'
+        impact: medium
+      - name: "Server-side render above-the-fold"
+        impact: medium
+
+  - name: INP
+    full_name: "Interaction to Next Paint"
+    measures: "Responsiveness (replaces FID in 2024)"
+    thresholds:
+      good: "≤ 200ms"
+      needs_improvement: "≤ 500ms"
+      poor: "> 500ms"
+    optimizations:
+      - name: "Break up long tasks"
+        code: |
+          // Split long task with scheduler.yield()
+          async function processData(items) {
+            for (const item of items) {
+              process(item);
+              await scheduler.yield(); // Let browser respond to input
+            }
+          }
+        impact: high
+      - name: "Debounce/throttle event handlers"
+        impact: medium
+      - name: "Use requestIdleCallback for non-urgent work"
+        impact: medium
+      - name: "Minimize main thread work"
+        impact: high
+
+  - name: CLS
+    full_name: "Cumulative Layout Shift"
+    measures: "Visual stability"
+    thresholds:
+      good: "≤ 0.1"
+      needs_improvement: "≤ 0.25"
+      poor: "> 0.25"
+    optimizations:
+      - name: "Set explicit dimensions on images/video"
+        code: '<img src="photo.jpg" width="640" height="480">'
+        impact: high
+      - name: "Use CSS aspect-ratio"
+        code: |
+          .image-container {
+            aspect-ratio: 16/9;
+            width: 100%;
+          }
+        impact: high
+      - name: "font-display: swap for web fonts"
+        code: "@font-face { font-display: swap; }"
+        impact: medium
+      - name: "Reserve space for ads/embeds"
+        impact: medium
+      - name: "Use contain-intrinsic-size for lazy content"
+        code: |
+          .lazy-section {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 500px;
+          }
+        impact: medium
+
+tools:
+  - name: "Chrome DevTools Performance tab"
+    usage: "Measure CWV in real-time"
+  - name: "PageSpeed Insights"
+    url: "https://pagespeed.web.dev/"
+  - name: "web-vitals library"
+    install: "npm install web-vitals"
+    code: |
+      import { onLCP, onINP, onCLS } from 'web-vitals';
+      onLCP(console.log);
+      onINP(console.log);
+      onCLS(console.log);

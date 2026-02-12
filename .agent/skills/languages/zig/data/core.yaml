@@ -1,0 +1,302 @@
+# =============================================================================
+# Zig Core Patterns (Feb 2026)
+# Version: Zig 0.14+
+# =============================================================================
+
+metadata:
+  skill: zig
+  domain: core
+  version: "0.14"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: zig001
+    name: Comptime
+    category: metaprogramming
+    version: "Zig"
+    description: |
+      Compile-time evaluation and metaprogramming.
+      Generic programming, type reflection.
+    text: comptime compile-time generics type reflection
+    example: |
+      const std = @import("std");
+
+      // ✅ Comptime function - runs at compile time
+      fn factorial(comptime n: u64) u64 {
+          return if (n == 0) 1 else n * factorial(n - 1);
+      }
+
+      // Computed at compile time
+      const result = factorial(10);  // 3628800
+
+      // ✅ Generic data structures with comptime
+      fn ArrayList(comptime T: type) type {
+          return struct {
+              items: []T,
+              allocator: std.mem.Allocator,
+              
+              const Self = @This();
+              
+              pub fn init(allocator: std.mem.Allocator) Self {
+                  return .{
+                      .items = &[_]T{},
+                      .allocator = allocator,
+                  };
+              }
+              
+              pub fn append(self: *Self, item: T) !void {
+                  // Implementation
+              }
+          };
+      }
+
+      const IntList = ArrayList(i32);
+
+      // ✅ Type reflection
+      fn debugPrint(comptime T: type, value: T) void {
+          const info = @typeInfo(T);
+          switch (info) {
+              .Int => std.debug.print("int: {}\n", .{value}),
+              .Float => std.debug.print("float: {d}\n", .{value}),
+              .Struct => |s| {
+                  inline for (s.fields) |field| {
+                      std.debug.print("{s}: {}\n", .{field.name, @field(value, field.name)});
+                  }
+              },
+              else => std.debug.print("other: {any}\n", .{value}),
+          }
+      }
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#comptime
+
+  - id: zig002
+    name: Error Unions
+    category: error-handling
+    version: "Zig"
+    description: |
+      Type-safe error handling with error unions.
+      Try expressions, error traces.
+    text: error union try catch error handling errorset
+    example: |
+      const std = @import("std");
+
+      // ✅ Define error set
+      const FileError = error{
+          NotFound,
+          PermissionDenied,
+          EndOfFile,
+      };
+
+      // ✅ Function returning error union
+      fn readFile(path: []const u8) FileError![]u8 {
+          const file = std.fs.cwd().openFile(path, .{}) catch |err| {
+              return switch (err) {
+                  error.FileNotFound => FileError.NotFound,
+                  else => FileError.PermissionDenied,
+              };
+          };
+          defer file.close();
+          
+          return file.readToEndAlloc(allocator, 1024 * 1024) catch FileError.EndOfFile;
+      }
+
+      // ✅ try expression - propagate errors
+      fn processFile(path: []const u8) !void {
+          const content = try readFile(path);  // Propagates error
+          defer allocator.free(content);
+          // Process content...
+      }
+
+      // ✅ catch with payload
+      fn safeRead(path: []const u8) []u8 {
+          return readFile(path) catch |err| {
+              std.debug.print("Error: {}\n", .{err});
+              return &[_]u8{};  // Return empty on error
+          };
+      }
+
+      // ✅ Error traces (debug builds)
+      // Automatically captured when errors propagate
+
+      // ✅ Inferred error sets
+      fn genericOp() !void {
+          // Error set inferred from function body
+          try doSomething();
+          try doSomethingElse();
+      }
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#Errors
+
+  - id: zig003
+    name: Optionals
+    category: null-safety
+    version: "Zig"
+    description: |
+      Null-safe programming with optionals.
+      orelse, if with payload capture.
+    text: optional null orelse unwrap nullable
+    example: |
+      const std = @import("std");
+
+      // ✅ Optional type syntax
+      var maybe_int: ?i32 = null;
+      maybe_int = 42;
+
+      // ✅ orelse for default values
+      const value = maybe_int orelse 0;
+
+      // ✅ if with payload capture
+      if (maybe_int) |val| {
+          std.debug.print("Got value: {}\n", .{val});
+      } else {
+          std.debug.print("No value\n", .{});
+      }
+
+      // ✅ Optional pointer
+      fn find(items: []const i32, target: i32) ?*const i32 {
+          for (items) |*item| {
+              if (item.* == target) return item;
+          }
+          return null;
+      }
+
+      // ✅ Unwrap with .? (will crash if null)
+      const definite = maybe_int.?;  // Only if you're certain
+
+      // ✅ Combine with while
+      var iter = getIterator();
+      while (iter.next()) |item| {
+          process(item);
+      }
+
+      // ✅ Optional fields in structs
+      const Config = struct {
+          host: []const u8,
+          port: ?u16 = null,  // Optional with default
+          timeout: ?u32 = null,
+      };
+
+      const config = Config{
+          .host = "localhost",
+          .port = 8080,  // timeout is null by default
+      };
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#Optionals
+
+  - id: zig004
+    name: Allocators
+    category: memory
+    version: "Zig"
+    description: |
+      Explicit allocator pattern.
+      GPA, Arena, Fixed Buffer allocators.
+    text: allocator memory gpa arena fixed buffer
+    example: |
+      const std = @import("std");
+
+      // ✅ General Purpose Allocator (GPA)
+      var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+      defer _ = gpa.deinit();  // Check for leaks
+      const allocator = gpa.allocator();
+
+      // ✅ Allocate and free
+      const buffer = try allocator.alloc(u8, 1024);
+      defer allocator.free(buffer);
+
+      // ✅ Arena Allocator - bulk free
+      var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+      defer arena.deinit();  // Frees all at once
+
+      const arena_allocator = arena.allocator();
+      const str1 = try arena_allocator.alloc(u8, 100);
+      const str2 = try arena_allocator.alloc(u8, 200);
+      // No need to free individually
+
+      // ✅ Fixed Buffer Allocator (stack-based)
+      var buf: [1024]u8 = undefined;
+      var fba = std.heap.FixedBufferAllocator.init(&buf);
+      const local_alloc = fba.allocator();
+
+      // ✅ Pass allocator to functions
+      fn createList(allocator: std.mem.Allocator) ![]i32 {
+          return allocator.alloc(i32, 100);
+      }
+
+      // ✅ Testing allocator (detects leaks in tests)
+      test "memory test" {
+          const testing_allocator = std.testing.allocator;
+          const data = try testing_allocator.alloc(u8, 10);
+          defer testing_allocator.free(data);
+          // Test will fail if memory not freed
+      }
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#Allocators
+
+  - id: zig005
+    name: Defer and Errdefer
+    category: resource-management
+    version: "Zig"
+    description: |
+      RAII-like cleanup with defer.
+      errdefer for error-path cleanup.
+    text: defer errdefer cleanup resource management raii
+    example: |
+      const std = @import("std");
+
+      // ✅ Basic defer - runs on scope exit
+      fn processFile(path: []const u8) !void {
+          const file = try std.fs.cwd().openFile(path, .{});
+          defer file.close();  // Always runs when function exits
+          
+          // Process file...
+      }
+
+      // ✅ Multiple defers - LIFO order
+      fn multiResource() !void {
+          const a = try allocateA();
+          defer freeA(a);
+          
+          const b = try allocateB();
+          defer freeB(b);
+          
+          const c = try allocateC();
+          defer freeC(c);
+          
+          // On exit: freeC, freeB, freeA (reverse order)
+      }
+
+      // ✅ errdefer - only runs if error is returned
+      fn createResource() !*Resource {
+          const resource = try allocator.create(Resource);
+          errdefer allocator.destroy(resource);  // Only on error
+          
+          resource.* = try initResource();  // If this fails, destroy
+          errdefer deinitResource(resource);
+          
+          try registerGlobally(resource);  // If this fails, deinit + destroy
+          
+          return resource;  // Success - no errdefer runs
+      }
+
+      // ✅ defer with capture
+      fn getConnection() !*Conn {
+          const conn = try pool.acquire();
+          errdefer pool.release(conn);
+          
+          try conn.authenticate();
+          return conn;
+      }
+
+      // ✅ Conditional defer
+      fn maybeAllocate(should_alloc: bool) !?[]u8 {
+          if (should_alloc) {
+              const buf = try allocator.alloc(u8, 100);
+              errdefer allocator.free(buf);
+              try validate(buf);
+              return buf;
+          }
+          return null;
+      }
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#defer

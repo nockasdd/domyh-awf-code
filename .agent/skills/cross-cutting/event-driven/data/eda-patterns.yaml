@@ -1,0 +1,120 @@
+# EDA Core Patterns - HSA Event-Driven Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: event-driven
+  domain: eda-patterns
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: eda001
+    name: pub_sub
+    category: pattern
+    description: Publish-Subscribe pattern for event distribution
+    text: pub sub publish subscribe topic fan-out broadcast
+    example: |
+      // Publisher
+      await producer.send({ topic: "order.created", messages: [{ value: JSON.stringify(order) }] });
+      // Subscriber
+      await consumer.subscribe({ topic: "order.created" });
+      await consumer.run({ eachMessage: async ({ message }) => { ... } });
+
+  - id: eda002
+    name: event_sourcing
+    category: pattern
+    description: Store state changes as immutable events
+    text: event sourcing immutable event log append only replay aggregate
+    example: |
+      // Append events (never update/delete)
+      await eventStore.append("order-123", [
+        { type: "OrderCreated", data: { items, total } },
+        { type: "PaymentReceived", data: { amount, method } },
+        { type: "OrderShipped", data: { trackingId } }
+      ]);
+      // Rebuild state by replaying events
+      const order = events.reduce(applyEvent, initialState);
+
+  - id: eda003
+    name: cqrs
+    category: pattern
+    description: Separate read and write models for optimization
+    text: CQRS command query responsibility segregation read write separate
+    example: |
+      // Write side: commands → events
+      async function placeOrder(cmd) {
+        validate(cmd);
+        const event = { type: "OrderPlaced", data: cmd };
+        await eventStore.append(cmd.orderId, [event]);
+        await eventBus.publish(event);
+      }
+      // Read side: projections
+      eventBus.on("OrderPlaced", async (event) => {
+        await readDb.upsert("orders", buildProjection(event));
+      });
+
+  - id: eda004
+    name: saga_orchestration
+    category: pattern
+    description: Centralized saga orchestrator for distributed transactions
+    text: saga orchestration distributed transaction compensate coordinator
+    example: |
+      class OrderSaga {
+        async execute(order) {
+          try {
+            await paymentService.charge(order);
+            await inventoryService.reserve(order);
+            await shippingService.create(order);
+          } catch (err) {
+            await this.compensate(order, err.failedStep);
+          }
+        }
+        async compensate(order, failedStep) {
+          if (failedStep >= 2) await inventoryService.release(order);
+          if (failedStep >= 1) await paymentService.refund(order);
+        }
+      }
+
+  - id: eda005
+    name: saga_choreography
+    category: pattern
+    description: Decentralized saga via event chain (no coordinator)
+    text: saga choreography decentralized event chain no coordinator
+    flow: "OrderCreated → PaymentCharged → InventoryReserved → OrderFulfilled"
+    compensate: "PaymentFailed → OrderCancelled (each service listens and compensates)"
+
+  - id: eda006
+    name: outbox_pattern
+    category: pattern
+    description: Transactional outbox for reliable event publishing
+    text: outbox pattern transactional publish reliable atomicity
+    example: |
+      // Within database transaction
+      await db.transaction(async (tx) => {
+        await tx.insert("orders", order);
+        await tx.insert("outbox", { topic: "order.created", payload: order });
+      });
+      // Separate process polls outbox → publishes to broker
+
+  - id: eda007
+    name: event_carried_state
+    category: pattern
+    description: Events carry all needed data (no callback queries)
+    text: event carried state transfer self-contained no callback query
+    example: |
+      // ✅ Self-contained event
+      { type: "OrderCreated", data: { orderId, userId, userName, items, total } }
+      // ❌ Event requiring callback
+      { type: "OrderCreated", data: { orderId } } // Consumer must query for details
+
+  - id: eda008
+    name: event_versioning
+    category: evolution
+    description: Event schema versioning strategies
+    text: event version schema evolution backward forward compatible
+    strategies:
+      - "v1 → v2: Add optional fields (backward compatible)"
+      - "Upcasting: Transform old events to new format on read"
+      - "Event version field: { version: 2, type: 'OrderCreated', ... }"
+      - "Schema registry: Central store for event schemas"

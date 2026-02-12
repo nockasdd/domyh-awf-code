@@ -1,0 +1,251 @@
+# =============================================================================
+# Kubernetes Workload Patterns (Feb 2026)
+# =============================================================================
+# Sidecar Containers, Jobs, CronJobs, StatefulSets
+
+metadata:
+  skill: kubernetes
+  domain: workloads
+  version: "1.33.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: k8s010
+    name: Native Sidecar Containers (1.29+)
+    category: workloads
+    version: "1.29+"
+    description: Built-in sidecar support with startup/shutdown ordering
+    text: sidecar container init container native lifecycle ordering
+    example: |
+      # Native sidecars (stable in K8s 1.32+)
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: app-with-sidecar
+      spec:
+        initContainers:
+          # Sidecar: restartPolicy = Always
+          - name: log-collector
+            image: fluentbit:latest
+            restartPolicy: Always  # This makes it a sidecar!
+            volumeMounts:
+              - name: logs
+                mountPath: /var/log/app
+
+          # Regular init container (runs once)
+          - name: db-migration
+            image: migrate:latest
+            command: ["./migrate", "up"]
+
+        containers:
+          - name: app
+            image: myapp:latest
+            volumeMounts:
+              - name: logs
+                mountPath: /var/log/app
+
+        volumes:
+          - name: logs
+            emptyDir: {}
+
+      # Benefits:
+      # - Sidecar starts BEFORE main containers
+      # - Sidecar terminates AFTER main containers
+      # - Proper lifecycle ordering (critical for logging)
+      # - No more Job completion issues with sidecars
+    severity: CRITICAL
+    docs_url: https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+
+  - id: k8s011
+    name: Jobs with Backoff Limit
+    category: workloads
+    version: "1.0+"
+    description: One-time batch processing with retry handling
+    text: job batch processing backoff limit completion parallel
+    example: |
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: data-processor
+      spec:
+        # Retry config
+        backoffLimit: 3
+        backoffLimitPerIndex: 1  # K8s 1.29+
+        activeDeadlineSeconds: 600
+
+        # Parallel execution
+        parallelism: 5
+        completions: 100
+        completionMode: Indexed  # Pod gets JOB_COMPLETION_INDEX
+
+        template:
+          spec:
+            restartPolicy: Never
+            containers:
+              - name: processor
+                image: processor:latest
+                env:
+                  - name: BATCH_INDEX
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+
+      # K8s 1.29+ features:
+      # - backoffLimitPerIndex: Fail fast per index
+      # - podFailurePolicy: Custom failure handling
+      # - successPolicy: Partial success definitions
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/workloads/controllers/job/
+
+  - id: k8s012
+    name: CronJobs with Timezone
+    category: workloads
+    version: "1.27+"
+    description: Scheduled jobs with timezone support
+    text: cronjob scheduled job timezone cron recurring
+    example: |
+      apiVersion: batch/v1
+      kind: CronJob
+      metadata:
+        name: nightly-backup
+      spec:
+        schedule: "0 2 * * *"  # 2 AM
+        timeZone: "America/New_York"  # K8s 1.27+ timezone support!
+
+        # Concurrency handling
+        concurrencyPolicy: Forbid  # Or: Allow, Replace
+        startingDeadlineSeconds: 200
+
+        # Job history
+        successfulJobsHistoryLimit: 3
+        failedJobsHistoryLimit: 3
+
+        jobTemplate:
+          spec:
+            template:
+              spec:
+                restartPolicy: OnFailure
+                containers:
+                  - name: backup
+                    image: backup-tool:latest
+                    envFrom:
+                      - secretRef:
+                          name: backup-secrets
+
+      # Common schedules:
+      # "0 * * * *"     - Every hour
+      # "*/15 * * * *"  - Every 15 minutes
+      # "0 0 * * 0"     - Weekly on Sunday
+      # "0 0 1 * *"     - Monthly on 1st
+    severity: MEDIUM
+    docs_url: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+
+  - id: k8s013
+    name: StatefulSets with VolumeClaimTemplates
+    category: workloads
+    version: "1.0+"
+    description: Stable network identity and persistent storage
+    text: statefulset persistent storage database stable identity
+    example: |
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: postgres
+      spec:
+        serviceName: postgres
+        replicas: 3
+        podManagementPolicy: Parallel  # Fast startup
+        updateStrategy:
+          type: RollingUpdate
+          rollingUpdate:
+            partition: 0
+
+        selector:
+          matchLabels:
+            app: postgres
+
+        template:
+          metadata:
+            labels:
+              app: postgres
+          spec:
+            containers:
+              - name: postgres
+                image: postgres:16
+                ports:
+                  - containerPort: 5432
+                volumeMounts:
+                  - name: data
+                    mountPath: /var/lib/postgresql/data
+                env:
+                  - name: POSTGRES_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: postgres-secret
+                        key: password
+
+        # Each pod gets its own PVC
+        volumeClaimTemplates:
+          - metadata:
+              name: data
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              storageClassName: fast-ssd
+              resources:
+                requests:
+                  storage: 100Gi
+
+      # Pods created: postgres-0, postgres-1, postgres-2
+      # PVCs created: data-postgres-0, data-postgres-1, data-postgres-2
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+
+  - id: k8s014
+    name: Pod Disruption Budgets
+    category: workloads
+    version: "1.0+"
+    description: Ensure availability during voluntary disruptions
+    text: pdb pod disruption budget availability maintenance
+    example: |
+      # Ensure at least 2 pods always running
+      apiVersion: policy/v1
+      kind: PodDisruptionBudget
+      metadata:
+        name: api-pdb
+      spec:
+        minAvailable: 2
+        selector:
+          matchLabels:
+            app: api
+
+      # Or: Allow max 1 unavailable
+      apiVersion: policy/v1
+      kind: PodDisruptionBudget
+      metadata:
+        name: worker-pdb
+      spec:
+        maxUnavailable: 1
+        selector:
+          matchLabels:
+            app: worker
+
+      # Or: Percentage based (K8s 1.25+)
+      apiVersion: policy/v1
+      kind: PodDisruptionBudget
+      metadata:
+        name: cache-pdb
+      spec:
+        minAvailable: "50%"
+        selector:
+          matchLabels:
+            app: cache
+        # K8s 1.27+: Unhealthy pod eviction policy
+        unhealthyPodEvictionPolicy: AlwaysAllow
+
+      # Use cases:
+      # - Node draining for maintenance
+      # - Cluster autoscaler scale-down
+      # - Voluntary pod evictions
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

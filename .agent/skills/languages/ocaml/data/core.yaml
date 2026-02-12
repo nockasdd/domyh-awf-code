@@ -1,0 +1,357 @@
+# =============================================================================
+# OCaml Core Patterns (Feb 2026)
+# Version: OCaml 5.2
+# =============================================================================
+
+metadata:
+  skill: ocaml
+  domain: core
+  version: "5.2"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: ocaml001
+    name: Algebraic Types
+    category: types
+    version: "OCaml5"
+    description: |
+      Sum and product types.
+      Variants, records, pattern matching.
+    text: type variant record match pattern
+    example: |
+      (* ✅ Variant types (sum types) *)
+      type color = Red | Green | Blue
+
+      type shape =
+        | Circle of float              (* radius *)
+        | Rectangle of float * float   (* width, height *)
+        | Triangle of { a: float; b: float; c: float }
+
+      let area = function
+        | Circle r -> Float.pi *. r *. r
+        | Rectangle (w, h) -> w *. h
+        | Triangle { a; b; c } ->
+            let s = (a +. b +. c) /. 2. in
+            Float.sqrt (s *. (s -. a) *. (s -. b) *. (s -. c))
+
+      (* ✅ Record types *)
+      type user = {
+        id: int;
+        name: string;
+        email: string;
+        mutable active: bool;  (* Mutable field *)
+      }
+
+      let create_user ~id ~name ~email =
+        { id; name; email; active = true }
+
+      (* Record update *)
+      let deactivate user = { user with active = false }
+
+      (* ✅ Parameterized types *)
+      type 'a option = None | Some of 'a
+      type ('a, 'e) result = Ok of 'a | Error of 'e
+
+      type 'a tree =
+        | Leaf
+        | Node of 'a tree * 'a * 'a tree
+
+      let rec size = function
+        | Leaf -> 0
+        | Node (l, _, r) -> 1 + size l + size r
+
+      (* ✅ Exhaustive pattern matching *)
+      let describe_result = function
+        | Ok value -> Printf.sprintf "Success: %s" value
+        | Error `NotFound -> "Not found"
+        | Error `InvalidInput -> "Invalid input"
+        | Error (`Custom msg) -> Printf.sprintf "Error: %s" msg
+    severity: HIGH
+    docs_url: https://ocaml.org/docs/data-types
+
+  - id: ocaml002
+    name: Modules and Functors
+    category: modules
+    version: "OCaml5"
+    description: |
+      Module system and abstraction.
+      Signatures, functors.
+    text: module sig functor struct include
+    example: |
+      (* ✅ Module signature (interface) *)
+      module type STACK = sig
+        type 'a t
+        val empty : 'a t
+        val push : 'a -> 'a t -> 'a t
+        val pop : 'a t -> ('a * 'a t) option
+        val is_empty : 'a t -> bool
+      end
+
+      (* ✅ Module implementation *)
+      module ListStack : STACK = struct
+        type 'a t = 'a list
+        
+        let empty = []
+        
+        let push x s = x :: s
+        
+        let pop = function
+          | [] -> None
+          | x :: xs -> Some (x, xs)
+        
+        let is_empty = function
+          | [] -> true
+          | _ -> false
+      end
+
+      (* ✅ Functor (parameterized module) *)
+      module type COMPARABLE = sig
+        type t
+        val compare : t -> t -> int
+      end
+
+      module MakeSet (Ord : COMPARABLE) : sig
+        type elt = Ord.t
+        type t
+        val empty : t
+        val add : elt -> t -> t
+        val member : elt -> t -> bool
+      end = struct
+        type elt = Ord.t
+        type t = elt list
+        
+        let empty = []
+        
+        let add x s =
+          if List.exists (fun y -> Ord.compare x y = 0) s
+          then s else x :: s
+        
+        let member x s =
+          List.exists (fun y -> Ord.compare x y = 0) s
+      end
+
+      (* ✅ Use functor *)
+      module IntSet = MakeSet(Int)
+
+      let set = IntSet.empty |> IntSet.add 1 |> IntSet.add 2
+      let has_one = IntSet.member 1 set  (* true *)
+
+      (* ✅ First-class modules *)
+      let pack_module (type a) (module M : COMPARABLE with type t = a) x y =
+        M.compare x y
+    severity: HIGH
+    docs_url: https://ocaml.org/docs/functors
+
+  - id: ocaml003
+    name: Effect Handlers (OCaml 5)
+    category: effects
+    version: "OCaml5.2"
+    description: |
+      Algebraic effects and handlers.
+      Direct style concurrency.
+    text: effect handler perform continue discontinue
+    example: |
+      open Effect
+      open Effect.Deep
+
+      (* ✅ Define effects *)
+      type _ Effect.t +=
+        | Log : string -> unit Effect.t
+        | GetConfig : string -> string option Effect.t
+
+      (* ✅ Perform effects *)
+      let process_data data =
+        perform (Log "Starting processing");
+        let config = perform (GetConfig "max_items") in
+        let max = Option.value ~default:"100" config |> int_of_string in
+        perform (Log (Printf.sprintf "Processing %d items" max));
+        List.take max data
+
+      (* ✅ Handle effects *)
+      let run_with_handlers action =
+        try_with action ()
+          { effc = fun (type a) (eff : a Effect.t) ->
+            match eff with
+            | Log msg ->
+                Some (fun (k : (a, _) continuation) ->
+                  print_endline msg;
+                  continue k ())
+            | GetConfig key ->
+                Some (fun k ->
+                  let value = Sys.getenv_opt key in
+                  continue k value)
+            | _ -> None
+          }
+
+      (* ✅ Concurrency with effects *)
+      type _ Effect.t +=
+        | Fork : (unit -> unit) -> unit Effect.t
+        | Yield : unit Effect.t
+
+      let fork f = perform (Fork f)
+      let yield () = perform Yield
+
+      (* Round-robin scheduler *)
+      let run_concurrent main =
+        let queue = Queue.create () in
+        let rec schedule () =
+          if not (Queue.is_empty queue) then begin
+            let k = Queue.pop queue in
+            exec k
+          end
+        and exec k =
+          try_with k ()
+            { effc = fun (type a) (eff : a Effect.t) ->
+              match eff with
+              | Fork f ->
+                  Some (fun (k : (a, _) continuation) ->
+                    Queue.push f queue;
+                    continue k ())
+              | Yield ->
+                  Some (fun k ->
+                    Queue.push (fun () -> continue k ()) queue;
+                    schedule ())
+              | _ -> None
+            }
+        in
+        exec main;
+        while not (Queue.is_empty queue) do schedule () done
+    severity: MEDIUM
+    docs_url: https://ocaml.org/manual/effects.html
+
+  - id: ocaml004
+    name: Error Handling
+    category: patterns
+    version: "OCaml5"
+    description: |
+      Result type and exceptions.
+      Monad-style error handling.
+    text: result option error exception try raise
+    example: |
+      (* ✅ Result type for recoverable errors *)
+      type error = 
+        | NotFound
+        | InvalidInput of string
+        | DatabaseError of string
+
+      let find_user id : (user, error) result =
+        if id <= 0 then Error (InvalidInput "ID must be positive")
+        else if id > 1000 then Error NotFound
+        else Ok { id; name = "John"; email = "john@email.com"; active = true }
+
+      (* ✅ Result combinators *)
+      let (let*) = Result.bind  (* Bind operator *)
+      let (let+) x f = Result.map f x  (* Map operator *)
+
+      let process_user id =
+        let* user = find_user id in
+        let* validated = validate_user user in
+        Ok (create_session validated)
+
+      (* ✅ Option for nullable *)
+      let safe_head = function
+        | [] -> None
+        | x :: _ -> Some x
+
+      let (let*?) = Option.bind
+
+      let get_first_admin users =
+        let*? first = safe_head users in
+        if first.active then Some first else None
+
+      (* ✅ Exceptions for unrecoverable errors *)
+      exception ParseError of string
+      exception ConnectionFailed
+
+      let parse_json str =
+        try Yojson.Safe.from_string str
+        with Yojson.Json_error msg ->
+          raise (ParseError msg)
+
+      (* ✅ Converting exceptions to results *)
+      let safe_parse str =
+        try Ok (parse_json str)
+        with ParseError msg -> Error msg
+
+      (* ✅ Pattern matching on Result *)
+      let handle_result = function
+        | Ok user -> Printf.printf "Got user: %s\n" user.name
+        | Error NotFound -> print_endline "User not found"
+        | Error (InvalidInput msg) -> Printf.printf "Invalid: %s\n" msg
+        | Error (DatabaseError _) -> print_endline "Database error"
+    severity: HIGH
+    docs_url: https://ocaml.org/docs/error-handling
+
+  - id: ocaml005
+    name: Dream Web Framework
+    category: web
+    version: "Dream"
+    description: |
+      Type-safe web development.
+      Routes, handlers, middleware.
+    text: dream handler route middleware html sql
+    example: |
+      open Dream
+
+      (* ✅ Basic handler *)
+      let hello_handler _ =
+        html "Hello, World!"
+
+      (* ✅ Route with parameters *)
+      let user_handler request =
+        let id = param request "id" in
+        match find_user (int_of_string id) with
+        | Ok user -> json (user_to_yojson user)
+        | Error _ -> json ~status:`Not_Found {|{"error": "Not found"}|}
+
+      (* ✅ POST with body *)
+      let create_user_handler request =
+        let%lwt body = body request in
+        match user_of_yojson (Yojson.Safe.from_string body) with
+        | Ok user -> 
+            let%lwt saved = save_user user in
+            json ~status:`Created (user_to_yojson saved)
+        | Error msg ->
+            json ~status:`Bad_Request (Printf.sprintf {|{"error": "%s"}|} msg)
+
+      (* ✅ Routes *)
+      let () =
+        run
+        @@ logger
+        @@ router [
+          get "/" hello_handler;
+          get "/users" list_users_handler;
+          get "/users/:id" user_handler;
+          post "/users" create_user_handler;
+          put "/users/:id" update_user_handler;
+          delete "/users/:id" delete_user_handler;
+        ]
+
+      (* ✅ Custom middleware *)
+      let auth_middleware inner_handler request =
+        match header request "Authorization" with
+        | None -> json ~status:`Unauthorized {|{"error": "No token"}|}
+        | Some token ->
+            match verify_token token with
+            | Some user ->
+                let request = with_local user_local user request in
+                inner_handler request
+            | None ->
+                json ~status:`Unauthorized {|{"error": "Invalid token"}|}
+
+      (* ✅ SQL with Caqti *)
+      let list_users_query =
+        Caqti_request.collect
+          Caqti_type.unit
+          Caqti_type.(t3 int string string)
+          "SELECT id, name, email FROM users"
+
+      let list_users request =
+        let%lwt users = sql request (fun db ->
+          let%lwt rows = Caqti_lwt.collect_list list_users_query () db in
+          Lwt.return rows
+        ) in
+        json (users_to_json users)
+    severity: MEDIUM
+    docs_url: https://aantron.github.io/dream/

@@ -1,14 +1,14 @@
 ---
 name: bun
-detect: ["bun.lockb", "bunfig.toml"]
-version: "6.1.2"
+detect: ["bun.lockb", "bunfig.toml", "bun.lock"]
+version: "6.2.1"
 category: runtime
 tier: 2
 ---
 
-# Bun Patterns — DOMYH Awesome Code v6.1.2
+# Bun Patterns — DOMYH Awesome Code
 
-> **Version**: Bun 1.1+ (2025-2026)
+> **Version**: Bun 1.3.7 (2025-2026)
 > **Framework**: Elysia, Hono
 > **Philosophy**: Speed-first, all-in-one
 
@@ -21,15 +21,16 @@ Use for: Fast APIs, bundling, scripts, Node.js replacement.
 
 ---
 
-## 📦 Why Bun?
+## 📦 What's New in Bun 1.3 (2026)
 
-| Feature     | Bun         | Node.js  | Deno     |
-| ----------- | ----------- | -------- | -------- |
-| Speed       | Fastest 🏆  | Baseline | Fast     |
-| npm compat  | Full 🏆     | N/A      | Full     |
-| Bundler     | Built-in 🏆 | webpack  | None     |
-| Test runner | Built-in 🏆 | Jest     | Built-in |
-| TS support  | Native      | Via tsc  | Native   |
+| Feature               | Description                |
+| --------------------- | -------------------------- |
+| **Bun.sql**           | Built-in PostgreSQL client |
+| **Bun.S3**            | Native S3 object storage   |
+| **HTML Imports**      | Zero-config frontend dev   |
+| **Bun.Archive**       | Tarball create/extract     |
+| **Bun.JSON5/JSONL**   | Extended JSON parsing      |
+| **50% faster Buffer** | Performance boost          |
 
 ---
 
@@ -43,11 +44,11 @@ bun init
 bun add elysia
 bun add -d @types/bun
 
-# Run
-bun run index.ts
+# Run (with hot reload)
+bun --watch run index.ts
 
 # Build
-bun build ./index.ts --outdir ./dist
+bun build ./index.ts --outdir ./dist --minify
 ```
 
 ### package.json
@@ -78,7 +79,6 @@ bun build ./index.ts --outdir ./dist
 ### HTTP Server with Elysia
 
 ```typescript
-// index.ts
 import { Elysia, t } from "elysia";
 import { cors } from "@elysiajs/cors";
 
@@ -86,13 +86,7 @@ const app = new Elysia()
   .use(cors())
   .state("version", "1.0.0")
 
-  // GET with validation
-  .get("/", () => "Hello Bun!")
-
-  .get("/users", async () => {
-    const users = await getUsers();
-    return users;
-  })
+  .get("/", () => "Hello Bun 1.3!")
 
   .get(
     "/users/:id",
@@ -102,18 +96,14 @@ const app = new Elysia()
       return user;
     },
     {
-      params: t.Object({
-        id: t.String(),
-      }),
+      params: t.Object({ id: t.String() }),
     },
   )
 
-  // POST with body validation
   .post(
     "/users",
     async ({ body }) => {
-      const user = await createUser(body);
-      return user;
+      return await createUser(body);
     },
     {
       body: t.Object({
@@ -128,29 +118,70 @@ const app = new Elysia()
 console.log(`🦊 Elysia running at ${app.server?.url}`);
 ```
 
-### File Operations
+### 🆕 Bun.sql (PostgreSQL)
 
 ```typescript
-// ✅ Fast file reading
-const file = Bun.file("./data.json");
+// ✅ Built-in PostgreSQL client (Bun 1.2+)
+const db = Bun.sql`postgresql://user:pass@localhost/mydb`;
+
+// Query with tagged template
+const users = await db`SELECT * FROM users WHERE active = true`;
+
+// Parameterized queries (safe from SQL injection)
+const userId = 123;
+const user = await db`SELECT * FROM users WHERE id = ${userId}`;
+
+// Transactions
+await db.transaction(async (tx) => {
+  await tx`INSERT INTO users (name) VALUES ('Alice')`;
+  await tx`INSERT INTO logs (action) VALUES ('user_created')`;
+});
+```
+
+### 🆕 Bun.S3 (Object Storage)
+
+```typescript
+// ✅ Native S3 support (Bun 1.2+)
+const bucket = Bun.s3("my-bucket");
+
+// Read file
+const file = bucket.file("data.json");
 const data = await file.json();
 
-// ✅ Fast file writing
-await Bun.write("./output.json", JSON.stringify(data, null, 2));
+// Write file
+await bucket.write("output.json", JSON.stringify(data));
 
-// ✅ Streaming large files
-const bigFile = Bun.file("./large.csv");
-const stream = bigFile.stream();
-
+// Stream large files
+const stream = bucket.file("large.csv").stream();
 for await (const chunk of stream) {
   process(chunk);
 }
 
-// ✅ Glob patterns
-const glob = new Bun.Glob("**/*.ts");
-for await (const file of glob.scan(".")) {
-  console.log(file);
-}
+// List files
+const files = await bucket.list({ prefix: "uploads/" });
+```
+
+### 🆕 HTML Imports (Zero-Config Frontend)
+
+```bash
+# Run HTML directly - Bun handles JS/CSS/React transpilation
+bun ./index.html
+
+# With hot reload
+bun --hot ./index.html
+```
+
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module" src="./app.tsx"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
 ```
 
 ### SQLite (Built-in)
@@ -160,53 +191,54 @@ import { Database } from "bun:sqlite";
 
 const db = new Database("app.db");
 
-// ✅ Create table
+// Create table
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    email TEXT UNIQUE NOT NULL
   )
 `);
 
-// ✅ Prepared statements (fast!)
+// Prepared statements (fast!)
 const insertUser = db.prepare(`
   INSERT INTO users (name, email) VALUES ($name, $email)
 `);
 
-const getUser = db.prepare(`
-  SELECT * FROM users WHERE id = ?
-`);
-
-const listUsers = db.prepare(`
-  SELECT * FROM users ORDER BY created_at DESC LIMIT ?
-`);
-
-// Usage
 insertUser.run({ $name: "John", $email: "john@example.com" });
-const user = getUser.get(1);
-const users = listUsers.all(10);
 
-// ✅ Transactions
+// Transactions
 db.transaction(() => {
   insertUser.run({ $name: "Alice", $email: "alice@example.com" });
   insertUser.run({ $name: "Bob", $email: "bob@example.com" });
 })();
 ```
 
-### Password Hashing (Built-in)
+### 🆕 Archive API
 
 ```typescript
-// ✅ Hash password
-const hash = await Bun.password.hash("mypassword", {
-  algorithm: "argon2id",
-  memoryCost: 65536,
-  timeCost: 3,
+// ✅ Create tarball (Bun 1.3.6+)
+const archive = await Bun.Archive.create("dist.tar.gz", {
+  files: ["./dist"],
+  compression: "gzip",
 });
 
-// ✅ Verify password
-const isValid = await Bun.password.verify("mypassword", hash);
+// Extract tarball
+await Bun.Archive.extract("dist.tar.gz", "./output");
+```
+
+### 🆕 Extended JSON
+
+```typescript
+// JSON5 (comments, trailing commas)
+const config = Bun.JSON5.parse(`{
+  // This is a comment
+  "name": "app",
+  "debug": true,
+}`);
+
+// JSONL (line-delimited)
+const lines = Bun.JSONL.parse(await Bun.file("logs.jsonl").text());
 ```
 
 ---
@@ -214,7 +246,6 @@ const isValid = await Bun.password.verify("mypassword", hash);
 ## 📦 Bundling
 
 ```typescript
-// build.ts
 const result = await Bun.build({
   entrypoints: ["./src/index.ts"],
   outdir: "./dist",
@@ -231,11 +262,6 @@ if (!result.success) {
   console.error("Build failed:", result.logs);
   process.exit(1);
 }
-
-console.log("Build complete!");
-for (const output of result.outputs) {
-  console.log(`  ${output.path} (${output.size} bytes)`);
-}
 ```
 
 ---
@@ -243,23 +269,13 @@ for (const output of result.outputs) {
 ## 🧪 Testing
 
 ```typescript
-// user.test.ts
-import { describe, expect, test, beforeAll, afterAll } from "bun:test";
-import { app } from "./index";
+import { describe, expect, test, beforeAll } from "bun:test";
 
 describe("User API", () => {
-  beforeAll(() => {
-    // Setup
-  });
-
-  afterAll(() => {
-    // Cleanup
-  });
-
   test("GET / returns hello", async () => {
     const res = await app.handle(new Request("http://localhost/"));
     expect(res.status).toBe(200);
-    expect(await res.text()).toBe("Hello Bun!");
+    expect(await res.text()).toBe("Hello Bun 1.3!");
   });
 
   test("POST /users creates user", async () => {
@@ -267,44 +283,33 @@ describe("User API", () => {
       new Request("http://localhost/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Test User",
-          email: "test@example.com",
-        }),
+        body: JSON.stringify({ name: "Test", email: "test@example.com" }),
       }),
     );
-
     expect(res.status).toBe(200);
-    const user = await res.json();
-    expect(user.name).toBe("Test User");
-  });
-
-  test("POST /users validates email", async () => {
-    const res = await app.handle(
-      new Request("http://localhost/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Test",
-          email: "invalid",
-        }),
-      }),
-    );
-
-    expect(res.status).toBe(422);
   });
 });
 ```
 
 ```bash
-# Run tests
-bun test
+bun test              # Run tests
+bun test --watch      # Watch mode
+bun test --coverage   # Coverage report
+```
 
-# Watch mode
-bun test --watch
+---
 
-# Coverage
-bun test --coverage
+## 🔧 CLI Commands (1.3+)
+
+```bash
+# Interactive dependency update
+bun update --interactive
+
+# Explain dependency chain
+bun why lodash
+
+# Security scan
+bun x socket scan
 ```
 
 ---
@@ -313,7 +318,7 @@ bun test --coverage
 
 ### Performance
 
-- [ ] Using bun:sqlite for DB
+- [ ] Using Bun.sql for PostgreSQL
 - [ ] Prepared statements cached
 - [ ] Bun.file for I/O
 - [ ] Production build minified
@@ -321,15 +326,28 @@ bun test --coverage
 ### Quality
 
 - [ ] TypeScript strict mode
-- [ ] Tests passing
+- [ ] Tests passing (bun test)
 - [ ] No type errors
 
 ### Deploy
 
-- [ ] Docker with oven/bun image
-- [ ] bun.lockb committed
+- [ ] Docker with oven/bun:1.3 image
+- [ ] bun.lock committed (text-based)
 - [ ] Health check endpoint
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Bun 1.1+_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine:
+
+| Domain  | Query Examples                       |
+| ------- | ------------------------------------ |
+| API     | "Bun.sql PostgreSQL tagged template" |
+| Storage | "Bun.S3 upload stream"               |
+| Build   | "Bun.build minify splitting target"  |
+| Runtime | "Elysia HTTP server validation"      |
+
+---
+
+_DOMYH Awesome Code • Bun 1.3.7 • 2026_

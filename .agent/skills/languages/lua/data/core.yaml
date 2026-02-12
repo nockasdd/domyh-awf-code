@@ -1,0 +1,264 @@
+# =============================================================================
+# Lua Core Patterns (Feb 2026)
+# Version: Lua 5.4 / LuaJIT
+# =============================================================================
+
+metadata:
+  skill: lua
+  domain: core
+  version: "5.4"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: lua001
+    name: Tables
+    category: data
+    version: "Lua"
+    description: |
+      Tables as universal data structure.
+      Arrays, dictionaries, objects.
+    text: table array dictionary hash associative
+    example: |
+      -- ✅ Array-style table (1-indexed!)
+      local fruits = {"apple", "banana", "cherry"}
+      print(fruits[1])  -- "apple" (not [0]!)
+
+      for i, fruit in ipairs(fruits) do
+        print(i, fruit)
+      end
+
+      -- ✅ Dictionary-style table
+      local person = {
+        name = "Alice",
+        age = 30,
+        ["full-name"] = "Alice Smith"  -- Keys with special chars
+      }
+
+      print(person.name)
+      print(person["full-name"])
+
+      -- ✅ Mixed table
+      local mixed = {
+        "first",    -- [1] = "first"
+        "second",   -- [2] = "second"
+        key = "value"
+      }
+
+      -- ✅ Iterate all keys
+      for k, v in pairs(person) do
+        print(k, v)
+      end
+
+      -- ✅ Table length
+      print(#fruits)  -- 3 (array portion only)
+
+      -- ✅ Table manipulation
+      table.insert(fruits, "date")
+      table.remove(fruits, 1)
+      table.sort(fruits)
+
+      -- ✅ Copy table (shallow)
+      local function copy(t)
+        local new = {}
+        for k, v in pairs(t) do
+          new[k] = v
+        end
+        return new
+      end
+    severity: HIGH
+    docs_url: https://www.lua.org/manual/5.4/manual.html#3.4.9
+
+  - id: lua002
+    name: Metatables
+    category: oop
+    version: "Lua"
+    description: |
+      Operator overloading and OOP with metatables.
+      __index, __newindex, metamethods.
+    text: metatable metamethod __index operator overloading
+    example: |
+      -- ✅ Basic metatable
+      local Vector = {}
+      Vector.__index = Vector
+
+      function Vector.new(x, y)
+        local self = setmetatable({}, Vector)
+        self.x = x or 0
+        self.y = y or 0
+        return self
+      end
+
+      function Vector:magnitude()
+        return math.sqrt(self.x^2 + self.y^2)
+      end
+
+      -- ✅ Operator overloading
+      function Vector.__add(a, b)
+        return Vector.new(a.x + b.x, a.y + b.y)
+      end
+
+      function Vector.__tostring(v)
+        return string.format("(%g, %g)", v.x, v.y)
+      end
+
+      local v1 = Vector.new(3, 4)
+      local v2 = Vector.new(1, 2)
+      local v3 = v1 + v2
+      print(v3)  -- (4, 6)
+
+      -- ✅ __index for default values
+      local defaults = {timeout = 30, retries = 3}
+      local config = setmetatable({}, {__index = defaults})
+      print(config.timeout)  -- 30 (from defaults)
+
+      -- ✅ __newindex for tracking changes
+      local watched = {}
+      setmetatable(watched, {
+        __newindex = function(t, k, v)
+          print("Setting " .. k .. " to " .. tostring(v))
+          rawset(t, k, v)
+        end
+      })
+      watched.name = "Test"  -- Prints: Setting name to Test
+
+      -- ✅ Common metamethods
+      -- __add, __sub, __mul, __div, __eq, __lt, __le
+      -- __call, __len, __tostring, __gc
+    severity: HIGH
+    docs_url: https://www.lua.org/manual/5.4/manual.html#2.4
+
+  - id: lua003
+    name: Closures
+    category: functional
+    version: "Lua"
+    description: |
+      First-class functions and closures.
+      Upvalues, higher-order functions.
+    text: closure function upvalue lambda callback
+    example: |
+      -- ✅ Basic closure
+      local function makeCounter()
+        local count = 0  -- Upvalue
+        return function()
+          count = count + 1
+          return count
+        end
+      end
+
+      local counter = makeCounter()
+      print(counter())  -- 1
+      print(counter())  -- 2
+
+      -- ✅ Functions as arguments
+      local function map(array, func)
+        local result = {}
+        for i, v in ipairs(array) do
+          result[i] = func(v)
+        end
+        return result
+      end
+
+      local doubled = map({1, 2, 3}, function(x) return x * 2 end)
+
+      -- ✅ Functions as return values
+      local function multiplier(n)
+        return function(x)
+          return x * n
+        end
+      end
+
+      local double = multiplier(2)
+      print(double(5))  -- 10
+
+      -- ✅ Partial application
+      local function partial(func, arg1)
+        return function(...)
+          return func(arg1, ...)
+        end
+      end
+
+      local function greet(greeting, name)
+        return greeting .. ", " .. name
+      end
+
+      local sayHello = partial(greet, "Hello")
+      print(sayHello("World"))  -- "Hello, World"
+
+      -- ✅ Memoization
+      local function memoize(func)
+        local cache = {}
+        return function(arg)
+          if cache[arg] == nil then
+            cache[arg] = func(arg)
+          end
+          return cache[arg]
+        end
+      end
+    severity: MEDIUM
+    docs_url: https://www.lua.org/pil/6.1.html
+
+  - id: lua004
+    name: Coroutines
+    category: concurrency
+    version: "Lua"
+    description: |
+      Cooperative multitasking with coroutines.
+      Yield, resume, producer/consumer.
+    text: coroutine yield resume cooperative async
+    example: |
+      -- ✅ Basic coroutine
+      local co = coroutine.create(function()
+        print("Hello")
+        coroutine.yield()
+        print("World")
+      end)
+
+      coroutine.resume(co)  -- Prints "Hello"
+      coroutine.resume(co)  -- Prints "World"
+
+      -- ✅ Passing values
+      local co = coroutine.create(function(x)
+        while true do
+          x = coroutine.yield(x * 2)
+        end
+      end)
+
+      print(coroutine.resume(co, 10))  -- true, 20
+      print(coroutine.resume(co, 5))   -- true, 10
+
+      -- ✅ Generator pattern
+      local function range(from, to)
+        return coroutine.wrap(function()
+          for i = from, to do
+            coroutine.yield(i)
+          end
+        end)
+      end
+
+      for i in range(1, 5) do
+        print(i)
+      end
+
+      -- ✅ Producer-Consumer
+      local function producer()
+        return coroutine.create(function()
+          while true do
+            local value = io.read()
+            coroutine.yield(value)
+          end
+        end)
+      end
+
+      local function consumer(prod)
+        while true do
+          local status, value = coroutine.resume(prod)
+          if not status then break end
+          print("Consumed:", value)
+        end
+      end
+
+      -- ✅ Coroutine status
+      print(coroutine.status(co))  -- "suspended", "running", "dead"
+    severity: MEDIUM
+    docs_url: https://www.lua.org/manual/5.4/manual.html#2.6

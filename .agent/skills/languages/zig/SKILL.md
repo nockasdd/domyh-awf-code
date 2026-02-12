@@ -1,12 +1,12 @@
 ---
 name: zig
 detect: ["*.zig", "build.zig", "build.zig.zon"]
-version: "6.1.2"
+version: "6.2.1"
 category: systems
 tier: 2
 ---
 
-# Zig Patterns — DOMYH Awesome Code v6.1.2
+# Zig Patterns — DOMYH Awesome Code
 
 > **Version**: Zig 0.13+ (2025-2026)
 > **Focus**: Systems programming, C interop, WebAssembly
@@ -351,4 +351,4 @@ zig build test
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Zig 0.13+_
+_DOMYH Awesome Code • Zig 0.13+_

@@ -1,14 +1,14 @@
 ---
 name: nuxt
 detect: ["nuxt.config.ts", "nuxt.config.js", ".nuxtrc", "app.vue"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# Nuxt Patterns — DOMYH Awesome Code v6.1.2
+# Nuxt Patterns — DOMYH Awesome Code
 
-> **Version**: Nuxt 4 (2025-2026)
+> **Version**: Nuxt 4.x (4.0 Jul 2025, latest 4.3.1)
 > **Philosophy**: Full-stack Vue, hybrid rendering, DX-first
 
 ---
@@ -280,4 +280,4 @@ export default defineNuxtConfig({
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Nuxt 4_
+_DOMYH Awesome Code • Nuxt 4_

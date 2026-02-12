@@ -1,0 +1,176 @@
+# WebSocket Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: WS-001
+    name: Connection with Reconnection
+    category: connection
+    description: |
+      WebSocket connection with exponential backoff reconnection.
+    example: |
+      class ReconnectingWebSocket {
+        private ws: WebSocket | null = null;
+        private retries = 0;
+        private maxRetries = 10;
+        
+        connect(url: string) {
+          this.ws = new WebSocket(url);
+          
+          this.ws.onopen = () => {
+            console.log("Connected");
+            this.retries = 0;
+          };
+          
+          this.ws.onclose = (event) => {
+            if (!event.wasClean && this.retries < this.maxRetries) {
+              const delay = Math.min(1000 * Math.pow(2, this.retries++), 30000);
+              const jitter = delay * 0.1 * Math.random();
+              setTimeout(() => this.connect(url), delay + jitter);
+            }
+          };
+          
+          this.ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            this.handleMessage(data);
+          };
+          
+          this.ws.onerror = (error) => console.error("WS Error:", error);
+        }
+        
+        send(data: unknown) {
+          if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify(data));
+          }
+        }
+      }
+
+  - id: WS-002
+    name: Authentication Patterns
+    category: security
+    description: |
+      Authenticate WebSocket connections.
+    text: |
+      Option 1: Token in URL query (simple, exposed in logs)
+      Option 2: Token in first message (preferred)
+      Option 3: Cookie-based (automatic, same-origin only)
+      Option 4: Upgrade header (server-side only)
+    example: |
+      // Option 2: Token in first message (recommended)
+      const ws = new WebSocket("wss://api.example.com/ws");
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ type: "auth", token: jwtToken }));
+      };
+
+      // Server-side validation
+      ws.on("message", (data) => {
+        const msg = JSON.parse(data);
+        if (msg.type === "auth") {
+          const user = verifyJWT(msg.token);
+          if (!user) { ws.close(4001, "Unauthorized"); return; }
+          ws.userId = user.id;
+          ws.authenticated = true;
+        } else if (!ws.authenticated) {
+          ws.close(4001, "Not authenticated");
+        }
+      });
+
+  - id: WS-003
+    name: Heartbeat Pattern
+    category: connection
+    description: |
+      Keep connections alive and detect stale connections.
+    example: |
+      // Server-side heartbeat
+      const HEARTBEAT_INTERVAL = 30000;
+      const HEARTBEAT_TIMEOUT = 10000;
+
+      wss.on("connection", (ws) => {
+        ws.isAlive = true;
+        ws.on("pong", () => { ws.isAlive = true; });
+      });
+
+      setInterval(() => {
+        wss.clients.forEach((ws) => {
+          if (!ws.isAlive) { ws.terminate(); return; }
+          ws.isAlive = false;
+          ws.ping();
+        });
+      }, HEARTBEAT_INTERVAL);
+
+  - id: WS-004
+    name: Message Protocol
+    category: protocol
+    description: |
+      Structured message format for WebSocket communication.
+    text: |
+      Standard format:
+      { type: "event_name", payload: {...}, id?: "uuid", timestamp?: "ISO" }
+
+      Common types:
+      - subscribe/unsubscribe: Channel management
+      - message: Application data
+      - error: Error responses
+      - ack: Delivery confirmation
+    example: |
+      // Message types
+      type WSMessage = 
+        | { type: "subscribe"; payload: { channel: string } }
+        | { type: "unsubscribe"; payload: { channel: string } }
+        | { type: "message"; payload: { channel: string; data: unknown }; id: string }
+        | { type: "ack"; payload: { id: string } }
+        | { type: "error"; payload: { code: number; message: string } };
+
+  - id: WS-005
+    name: Binary Data
+    category: advanced
+    description: |
+      Send binary data (ArrayBuffer, Blob) over WebSocket.
+    text: |
+      Use cases: File transfer, audio/video streaming, game state
+      Set binaryType: "arraybuffer" or "blob" on client
+    example: |
+      ws.binaryType = "arraybuffer";
+      ws.onmessage = (event) => {
+        if (event.data instanceof ArrayBuffer) {
+          const view = new DataView(event.data);
+          // Process binary data
+        }
+      };
+
+  - id: WS-006
+    name: NGINX WebSocket Proxy
+    category: infrastructure
+    description: |
+      NGINX configuration for WebSocket proxying.
+    example: |
+      # nginx.conf
+      location /ws {
+        proxy_pass http://backend:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 86400;  # 24h keep-alive
+      }
+
+  - id: WS-007
+    name: Scaling Patterns
+    category: infrastructure
+    description: |
+      Scale WebSocket across multiple server instances.
+    text: |
+      Challenge: WebSocket connections are stateful
+
+      Solutions:
+      1. Sticky sessions (IP hash / cookie-based)
+      2. Redis Pub/Sub for cross-instance messaging
+      3. NATS/Kafka as message bus
+      4. Dedicated WebSocket gateway (separate from API)
+
+      NGINX sticky sessions:
+      upstream backend {
+        ip_hash;
+        server backend1:3000;
+        server backend2:3000;
+      }

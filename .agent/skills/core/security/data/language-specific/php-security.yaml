@@ -1,0 +1,219 @@
+metadata:
+  skill: security
+  domain: php_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: php-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_vuln
+    - example_fix
+patterns:
+  - id: PHP-01
+    name: SQL Injection
+    severity: CRITICAL
+    category: Injection
+    description: Variable interpolation in SQL queries
+    detection_pattern: (mysql_query|mysqli_query|->query).*\\$(?!.*prepare|bindParam)
+    fix_pattern: Use PDO with prepared statements
+    cwe: CWE-89
+    example_vuln: mysqli_query($conn, \SELECT * FROM users WHERE id = $id\");"
+    example_fix: $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');\n$stmt->execute([$id]);
+  - id: PHP-02
+    name: XSS Output
+    severity: HIGH
+    category: XSS
+    description: User input echoed without htmlspecialchars
+    detection_pattern: echo.*\\$_(GET|POST|REQUEST)(?!.*htmlspecialchars)
+    fix_pattern: Use htmlspecialchars with ENT_QUOTES
+    cwe: CWE-79
+    example_vuln: echo $_GET['name'];
+    example_fix: echo htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8');
+  - id: PHP-03
+    name: Command Injection
+    severity: CRITICAL
+    category: Injection
+    description: User input in shell_exec or system
+    detection_pattern: (shell_exec|system|exec|passthru).*\\$(?!.*escapeshellarg)
+    fix_pattern: Use escapeshellarg and escapeshellcmd
+    cwe: CWE-78
+    example_vuln: system('ping ' . $_GET['host']);
+    example_fix: system('ping ' . escapeshellarg($_GET['host']));
+  - id: PHP-04
+    name: File Inclusion
+    severity: CRITICAL
+    category: LFI
+    description: User input in include or require
+    detection_pattern: (include|require|include_once|require_once).*\\$(?!.*whitelist)
+    fix_pattern: Use whitelist validate against allowed files
+    cwe: CWE-98
+    example_vuln: include($_GET['page'] . '.php');
+    example_fix: $allowed = ['home', 'about'];\nif (in_array($page, $allowed)) include($page . '.php');
+  - id: PHP-05
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User input in file functions
+    detection_pattern: (file_get_contents|fopen|readfile).*\\$(?!.*realpath|basename)
+    fix_pattern: Use realpath and validate against base directory
+    cwe: CWE-22
+    example_vuln: readfile('uploads/' . $_GET['file']);
+    example_fix: $path = realpath('uploads/' . $_GET['file']);\nif (strpos($path, realpath('uploads/')) !== 0) die('Invalid');
+  - id: PHP-06
+    name: Insecure Deserialization
+    severity: CRITICAL
+    category: Deserialization
+    description: unserialize on user input
+    detection_pattern: unserialize.*\\$_(GET|POST|REQUEST|COOKIE)
+    fix_pattern: Use JSON or restrict allowed classes
+    cwe: CWE-502
+    example_vuln: $data = unserialize($_POST['data']);
+    example_fix: '$data = unserialize($_POST[''data''], [''allowed_classes'' => false]);\n// Or: $data = json_decode($_POST[''data'']);'
+  - id: PHP-07
+    name: Weak Password Hash
+    severity: HIGH
+    category: Crypto
+    description: MD5 or SHA1 for password hashing
+    detection_pattern: (md5|sha1).*password|\\$_POST\\['password'\\]
+    fix_pattern: Use password_hash with PASSWORD_DEFAULT
+    cwe: CWE-327
+    example_vuln: $hash = md5($password);
+    example_fix: '$hash = password_hash($password, PASSWORD_DEFAULT);\n// Verify: password_verify($input, $hash)'
+  - id: PHP-08
+    name: CSRF Missing
+    severity: HIGH
+    category: CSRF
+    description: Form without CSRF token validation
+    detection_pattern: \\$_POST(?!.*csrf|token.*verify)
+    fix_pattern: Implement CSRF tokens validate on submit
+    cwe: CWE-352
+    example_vuln: if ($_POST['action'] == 'delete') { /* delete */ }
+    example_fix: if (!hash_equals($_SESSION['csrf'], $_POST['csrf'])) die('Invalid');
+  - id: PHP-09
+    name: Session Fixation
+    severity: HIGH
+    category: Session
+    description: Session ID not regenerated on login
+    detection_pattern: session_start(?!.*session_regenerate_id)
+    fix_pattern: Call session_regenerate_id after authentication
+    cwe: CWE-384
+    example_vuln: session_start();\n$_SESSION['user'] = $user;
+    example_fix: session_start();\nsession_regenerate_id(true);\n$_SESSION['user'] = $user;
+  - id: PHP-10
+    name: Insecure Cookie
+    severity: HIGH
+    category: Session
+    description: Cookies without security flags
+    detection_pattern: setcookie.*(?!.*httponly|secure|samesite)
+    fix_pattern: Set httponly secure samesite flags
+    cwe: CWE-614
+    example_vuln: setcookie('session', $token);
+    example_fix: setcookie('session', $token, [\n  'httponly' => true,\n  'secure' => true,\n  'samesite' => 'Strict'\n]);
+  - id: PHP-11
+    name: Open Redirect
+    severity: MEDIUM
+    category: Redirect
+    description: User input in header redirect
+    detection_pattern: header.*Location.*\\$(?!.*allowlist)
+    fix_pattern: Validate redirect URLs against allowlist
+    cwe: CWE-601
+    example_vuln: "header('Location: ' . $_GET['url']);"
+    example_fix: '$allowed = [''/'', ''/dashboard''];\nif (in_array($url, $allowed)) header(''Location: '' . $url);'
+  - id: PHP-12
+    name: XML External Entity
+    severity: CRITICAL
+    category: XXE
+    description: XML parsing with external entities
+    detection_pattern: libxml_disable_entity_loader.*false|DOMDocument(?!.*LIBXML_NOENT)
+    fix_pattern: Disable external entity loading
+    cwe: CWE-611
+    example_vuln: $doc = new DOMDocument();\n$doc->loadXML($xml);
+    example_fix: libxml_disable_entity_loader(true);\n$doc = new DOMDocument();\n$doc->loadXML($xml, LIBXML_NOENT | LIBXML_DTDLOAD);
+  - id: PHP-13
+    name: Information Exposure
+    severity: MEDIUM
+    category: Info
+    description: Error display enabled in production
+    detection_pattern: display_errors.*On|error_reporting.*E_ALL
+    fix_pattern: Disable display_errors log to file instead
+    cwe: CWE-209
+    example_vuln: display_errors = On
+    example_fix: display_errors = Off\nlog_errors = On
+  - id: PHP-14
+    name: Unsafe File Upload
+    severity: CRITICAL
+    category: Upload
+    description: File upload without validation
+    detection_pattern: move_uploaded_file(?!.*mime|extension.*whitelist)
+    fix_pattern: Validate MIME type extension and scan content
+    cwe: CWE-434
+    example_vuln: move_uploaded_file($_FILES['f']['tmp_name'], $target);
+    example_fix: $allowed = ['image/jpeg', 'image/png'];\nif (!in_array($_FILES['f']['type'], $allowed)) die();
+  - id: PHP-15
+    name: Eval Injection
+    severity: CRITICAL
+    category: Injection
+    description: User input in eval or create_function
+    detection_pattern: (eval|create_function|assert).*\\$
+    fix_pattern: Never use eval with user input use alternatives
+    cwe: CWE-94
+    example_vuln: eval('$result = ' . $_GET['expr'] . ';');
+    example_fix: // Use a math parser library instead of eval
+  - id: PHP-16
+    name: Preg Callback Injection
+    severity: HIGH
+    category: Injection
+    description: PREG_REPLACE_EVAL or preg_replace with /e modifier
+    detection_pattern: preg_replace.*\\/e|PREG_REPLACE_EVAL
+    fix_pattern: Use preg_replace_callback instead
+    cwe: CWE-94
+    example_vuln: preg_replace('/.*/e', $_GET['code'], $input);
+    example_fix: preg_replace_callback('/.*/', function($m) { /* safe */ }, $input);
+  - id: PHP-17
+    name: Type Juggling
+    severity: HIGH
+    category: Auth
+    description: Loose comparison with user input
+    detection_pattern: ==.*\\$_(GET|POST)|\\$_(GET|POST).*==
+    fix_pattern: Use strict comparison === or hash_equals
+    cwe: CWE-697
+    example_vuln: if ($_POST['token'] == $secret) { /* bypass */ }
+    example_fix: if (hash_equals($secret, $_POST['token'])) { }
+  - id: PHP-18
+    name: Unvalidated Redirect
+    severity: MEDIUM
+    category: Redirect
+    description: header() with unvalidated user input
+    detection_pattern: header\\s*\\(.*\\$(?!.*parse_url|filter_var)
+    fix_pattern: Validate URL format and domain
+    cwe: CWE-601
+    example_vuln: "header('Refresh: 0; url=' . $_GET['url']);"
+    example_fix: '$url = filter_var($_GET[''url''], FILTER_VALIDATE_URL);\nif ($url && parse_url($url, PHP_URL_HOST) === ''example.com'') header(''Location: '' . $url);'
+  - id: PHP-19
+    name: Insecure Random
+    severity: HIGH
+    category: Crypto
+    description: Using rand() or mt_rand() for security
+    detection_pattern: (rand|mt_rand|uniqid)\\(\\)(?!.*random_bytes)
+    fix_pattern: Use random_bytes or random_int for security
+    cwe: CWE-338
+    example_vuln: $token = md5(mt_rand());
+    example_fix: $token = bin2hex(random_bytes(32));
+  - id: PHP-20
+    name: Register Globals Style
+    severity: HIGH
+    category: Config
+    description: Direct use of uninitialized variables
+    detection_pattern: \\$(?!_(GET|POST|SESSION|SERVER|FILES))\\w+(?!.*=).*\\$_(GET|POST)
+    fix_pattern: Always initialize variables validate input
+    cwe: CWE-94
+    example_vuln: if ($admin) { /* bypass if $admin in GET */ }
+    example_fix: $admin = false;\n$admin = isset($_SESSION['admin']) && $_SESSION['admin'];

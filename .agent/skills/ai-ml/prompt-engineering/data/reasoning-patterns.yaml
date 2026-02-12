@@ -1,0 +1,86 @@
+# Reasoning Patterns for Prompt Engineering
+
+patterns:
+  - name: zero-shot
+    description: "Direct instruction without examples"
+    when: "Simple, well-defined tasks"
+    template: |
+      [Task description]
+      [Input]
+      [Output format]
+
+  - name: few-shot
+    description: "Provide 1-5 examples of desired I/O"
+    when: "Pattern matching, specific format, classification"
+    template: |
+      [Task description]
+      Example 1: Input → Output
+      Example 2: Input → Output
+      Now process: [new input]
+    tips:
+      - "Use 3-5 diverse, representative examples"
+      - "Order examples from simple to complex"
+      - "Include edge cases in examples"
+
+  - name: chain-of-thought
+    description: "Instruct model to show reasoning steps"
+    when: "Math, logic, multi-step reasoning"
+    variants:
+      basic: "Think step by step before answering."
+      detailed: "Break down your reasoning into numbered steps. Show your work."
+      structured: |
+        Analyze this problem:
+        1. Identify the key information
+        2. Determine the approach
+        3. Execute step by step
+        4. Verify the answer
+
+  - name: self-consistency
+    description: "Generate N answers, pick majority/best"
+    when: "High-stakes decisions, uncertain answers"
+    process:
+      - "Ask same question N times (N=5-10) with temperature > 0"
+      - "Collect all answers"
+      - "Pick answer that appears most frequently"
+      - "Or use a judge prompt to select best answer"
+
+  - name: react-pattern
+    description: "Interleave Reasoning, Action, Observation"
+    when: "Tool use, research, multi-step execution"
+    format: |
+      Thought: I need to find the user's order
+      Action: search_orders(user_id="123")
+      Observation: Found 3 orders: [...]
+      Thought: Now I need to check the latest
+      Action: get_order(id="order_789")
+      Observation: Order #789, status: shipped
+      Answer: Your latest order #789 is shipped.
+
+  - name: tree-of-thought
+    description: "Explore multiple reasoning paths, evaluate, prune"
+    when: "Creative tasks, complex planning, ambiguous problems"
+    process:
+      - "Generate 3-5 initial approaches"
+      - "Evaluate each approach (score 1-10)"
+      - "Expand top 2-3 approaches"
+      - "Evaluate again"
+      - "Select best path"
+
+  - name: meta-prompting
+    description: "Ask model to improve its own prompt"
+    template: |
+      Given this task: [description]
+      Write the optimal prompt that would produce the best result.
+      Consider: clarity, specificity, format, and examples needed.
+
+  - name: role-playing
+    description: "Assign expert role for domain-specific responses"
+    template: |
+      You are a senior [role] with 15+ years experience in [domain].
+      Your expertise includes: [specific areas].
+      Approach this as you would in a professional setting.
+    effective_roles:
+      - "Senior security architect"
+      - "Staff software engineer at Google"
+      - "Academic researcher in [field]"
+      - "Expert debugger / troubleshooter"

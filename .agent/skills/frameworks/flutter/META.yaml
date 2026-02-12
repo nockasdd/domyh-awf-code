@@ -1,44 +1,78 @@
 name: flutter
-version: "6.1.2"
-display: Flutter
+version: "6.2.1"
+display: "Flutter & Dart Patterns"
 category: mobile
 tier: 1
-priority: 1
+priority: 3
 
-description: |
-  Cross-platform development with Flutter 3.24+ and Dart 3.5+.
-  Covers Widgets, State (Riverpod, BLoC), Platform Channels.
+desc: "Flutter 3.29+ & Dart 3.7+ development patterns (2025-2026). Impeller default, main thread Dart, Material 3."
+
+caps:
+  - widget-system
+  - state-management
+  - platform-integration
+  - impeller-rendering
+  - dart-patterns
+  - material-design-3
+
+data_files:
+  - data/core.yaml
+  - data/state.yaml
+  - data/platform.yaml
+
+patterns:
+  total: 16
+  domains:
+    core: 6
+    state: 4
+    platform: 6
+
+    - search_flutter_patterns
+    - get_flutter_widget
 
 triggers:
   file_patterns:
     - "pubspec.yaml"
     - "*.dart"
-    - "lib/"
+    - "lib/main.dart"
+    - "analysis_options.yaml"
   keywords:
-    # Core
+    # Flutter
     - flutter
+    - widget
+    - statelesswidget
+    - statefulwidget
+    - material
+    - scaffold
+    # Dart
     - dart
-    # State Management
+    - sealed class
+    - pattern matching
+    - record
+    - freezed
+    # State
     - riverpod
     - bloc
+    - cubit
     - provider
-    # Widgets
-    - stateful widget
-    - scaffold
-    - material
+    - changenotifier
+    # Platform
+    - impeller
+    - backdrop filter
+    - isolate
+    - platform channel
   intents:
-    - flutter app
-    - dart code
+    - flutter widget
+    - flutter state
+    - dart pattern
+    - flutter performance
     - mobile app
 
 related_skills:
-  - kotlin
-  - swift
-  - react-native
+  - dart
+  - riverpod
+  - firebase
 
-caps:
-  - Flutter 3.24+
-  - Dart 3.5+
-  - Riverpod/BLoC
-  - Platform Channels
-  - Impeller renderer
+prevent_confusion_with:
+  - react_native: "Flutter uses Dart, React Native uses JavaScript/TypeScript"
+  - kotlin_android: "Flutter is cross-platform, Kotlin Android is native Android"

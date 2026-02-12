@@ -1,0 +1,240 @@
+metadata:
+  skill: security
+  domain: rust_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: rust-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: RS-01
+    name: Windows Command Injection
+    severity: CRITICAL
+    category: Injection
+    description: Command::new on Windows with .bat/.cmd allows injection
+    detection_pattern: Command::new.*\\.(bat|cmd)(?!.*escape)
+    fix_pattern: Upgrade Rust 1.77.2+ properly escape batch arguments
+    cwe: CWE-78
+    cve_reference: CVE-2024-24576
+    example_vuln: Command::new('script.bat').arg(user_input)
+    example_fix: '// Rust 1.77.2+ fixed\n// Or use: Command::new(''cmd'').args([''/C'', &escaped])'
+  - id: RS-02
+    name: Command Injection Whitespace Bypass
+    severity: CRITICAL
+    category: Injection
+    description: CVE-2024-24576 fix bypassed with trailing whitespace
+    detection_pattern: Command::new.*bat.*\\s+['\](?!.*trim)"
+    fix_pattern: Upgrade Rust 1.81.0+ trim trailing whitespace from filenames
+    cwe: CWE-78
+    cve_reference: CVE-2024-43402
+    example_vuln: Command::new('script.bat  ').arg(user)
+    example_fix: let cmd = cmd_name.trim_end(); Command::new(cmd)
+  - id: RS-03
+    name: Unsafe Block Misuse
+    severity: HIGH
+    category: Memory
+    description: unsafe block without documented safety invariants
+    detection_pattern: unsafe\\s*\\{(?!.*// SAFETY:)
+    fix_pattern: Document safety invariants for every unsafe block
+    cwe: CWE-787
+    cve_reference: n/a
+    example_vuln: unsafe { *ptr = 42; }
+    example_fix: 'unsafe {\n    // SAFETY: ptr is valid and aligned\n    *ptr = 42;\n}'
+  - id: RS-04
+    name: FFI Null Pointer
+    severity: CRITICAL
+    category: Memory
+    description: FFI with potential null pointer dereference
+    detection_pattern: extern.*fn.*\\*(?!.*NonNull|Option)
+    fix_pattern: Use NonNull or Option<> for FFI pointers
+    cwe: CWE-476
+    cve_reference: n/a
+    example_vuln: "extern fn process(ptr: *const u8)"
+    example_fix: "extern fn process(ptr: Option<NonNull<u8>>)"
+  - id: RS-05
+    name: Integer Overflow Release
+    severity: HIGH
+    category: Math
+    description: Integer overflow in release mode causes wrap
+    detection_pattern: \\+|\\-|\\*(?!.*checked|saturating|wrapping)
+    fix_pattern: Use checked_* saturating_* or enable overflow-checks in release
+    cwe: CWE-190
+    cve_reference: n/a
+    example_vuln: let result = a + b; // May wrap in release
+    example_fix: let result = a.checked_add(b).unwrap_or(MAX);
+  - id: RS-06
+    name: Race Condition Static Mut
+    severity: CRITICAL
+    category: Concurrency
+    description: static mut accessed from multiple threads without sync
+    detection_pattern: static\\s+mut\\s+\\w+(?!.*Mutex|RwLock)
+    fix_pattern: Use Mutex Atomic or once_cell::sync::Lazy
+    cwe: CWE-362
+    cve_reference: n/a
+    example_vuln: "static mut COUNTER: u32 = 0;"
+    example_fix: 'use std::sync::atomic::AtomicU32;\nstatic COUNTER: AtomicU32 = AtomicU32::new(0);'
+  - id: RS-07
+    name: Uninitialized Memory Use
+    severity: CRITICAL
+    category: Memory
+    description: MaybeUninit used before proper initialization
+    detection_pattern: MaybeUninit::uninit\\(\\).*assume_init(?!.*write)
+    fix_pattern: Initialize memory before calling assume_init
+    cwe: CWE-908
+    cve_reference: n/a
+    example_vuln: let x = MaybeUninit::uninit().assume_init();
+    example_fix: let mut x = MaybeUninit::uninit();\nx.write(0);\nlet x = x.assume_init();
+  - id: RS-08
+    name: Double Free via ManuallyDrop
+    severity: CRITICAL
+    category: Memory
+    description: ManuallyDrop dropped multiple times
+    detection_pattern: ManuallyDrop::drop\\(&mut.*\\).*drop
+    fix_pattern: Track drop state or use take() instead
+    cwe: CWE-415
+    cve_reference: n/a
+    example_vuln: ManuallyDrop::drop(&mut x);\nManuallyDrop::drop(&mut x);
+    example_fix: let val = ManuallyDrop::take(&mut x); // Takes ownership
+  - id: RS-09
+    name: Use After Free
+    severity: CRITICAL
+    category: Memory
+    description: Raw pointer used after memory freed
+    detection_pattern: drop\\(.*\\).*\\*.*ptr|free.*then.*deref
+    fix_pattern: Ensure lifetime validity null after free
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: drop(Box::from_raw(ptr));\nprintln!(\{}\"
+    example_fix: '*ptr);"'
+  - id: RS-10
+    name: Buffer Overflow slice
+    severity: HIGH
+    category: Memory
+    description: Slice index without bounds check in unsafe
+    detection_pattern: get_unchecked(?!.*bounds)
+    fix_pattern: Use get() with Option or check bounds first
+    cwe: CWE-787
+    cve_reference: n/a
+    example_vuln: unsafe { *arr.get_unchecked(i) }
+    example_fix: arr.get(i).copied() // Safe, returns Option
+  - id: RS-11
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User input in PathBuf without canonicalization
+    detection_pattern: PathBuf::from.*input(?!.*canonicalize)
+    fix_pattern: Use canonicalize() and validate against base dir
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: let path = PathBuf::from(user_input);
+    example_fix: let path = PathBuf::from(user_input).canonicalize()?;\nif !path.starts_with(base) { return Err(...) }
+  - id: RS-12
+    name: Panic in FFI Boundary
+    severity: HIGH
+    category: FFI
+    description: panic! or unwrap() in extern fn causes UB
+    detection_pattern: extern.*fn[^}]+unwrap|extern.*fn[^}]+panic
+    fix_pattern: Use catch_unwind or return Result codes at FFI boundary
+    cwe: CWE-248
+    cve_reference: n/a
+    example_vuln: extern fn handler() {\n    x.unwrap(); // Panic = UB\n}
+    example_fix: extern fn handler() -> i32 {\n    match std::panic::catch_unwind(|| x) {\n        Ok(_) => 0,\n        Err(_) => -1,\n    }\n}
+  - id: RS-13
+    name: Format String Injection
+    severity: MEDIUM
+    category: Injection
+    description: User input in format! macro with untrusted format
+    detection_pattern: format!\\(.*input.*\\{
+    fix_pattern: Sanitize input or use positional/named args only
+    cwe: CWE-134
+    cve_reference: n/a
+    example_vuln: format!(user_fmt, val) // fmt is untrusted
+    example_fix: format!(\{}\"
+  - id: RS-14
+    name: SQL Injection sqlx
+    severity: HIGH
+    category: Injection
+    description: query() with string interpolation
+    detection_pattern: query\\(.*f!|query\\(.*\\+.*input
+    fix_pattern: Use query!() macro or bind parameters with query()
+    cwe: CWE-89
+    cve_reference: n/a
+    example_vuln: sqlx::query(&format!(\SELECT * WHERE id={}\"
+    example_fix: id))"
+  - id: RS-15
+    name: Insecure Random
+    severity: HIGH
+    category: Cryptography
+    description: rand crate StdRng used without proper seeding
+    detection_pattern: StdRng::from_entropy(?!.*crypto)|thread_rng.*secret
+    fix_pattern: Use rand::rngs::OsRng for cryptographic purposes
+    cwe: CWE-330
+    cve_reference: n/a
+    example_vuln: 'let mut rng = thread_rng();\nlet key: [u8; 32] = rng.gen();'
+    example_fix: 'use rand::rngs::OsRng;\nlet key: [u8; 32] = OsRng.gen();'
+  - id: RS-16
+    name: TOCTOU File Race
+    severity: HIGH
+    category: File
+    description: File checked then opened without atomic operation
+    detection_pattern: Path::exists.*File::open|metadata.*then.*open
+    fix_pattern: Use atomic file operations or proper locking
+    cwe: CWE-367
+    cve_reference: n/a
+    example_vuln: if path.exists() {\n    File::open(path)?;\n}
+    example_fix: File::options().create_new(true).open(path)?
+  - id: RS-17
+    name: Deadlock Potential
+    severity: MEDIUM
+    category: Concurrency
+    description: Multiple locks acquired in different order
+    detection_pattern: lock\\(\\).*lock\\(\\)(?!.*try_lock)
+    fix_pattern: Always acquire locks in consistent order or use try_lock
+    cwe: CWE-833
+    cve_reference: n/a
+    example_vuln: 'let _a = mutex_a.lock();\nlet _b = mutex_b.lock(); // Other thread: b then a'
+    example_fix: '// Always lock in same order: a then b\n// Or use try_lock with backoff'
+  - id: RS-18
+    name: Unsound Send/Sync
+    severity: CRITICAL
+    category: Concurrency
+    description: unsafe impl Send/Sync without proper invariants
+    detection_pattern: unsafe\\s+impl\\s+(Send|Sync)(?!.*// SAFETY:)
+    fix_pattern: Document safety requirements verify thread-safety
+    cwe: CWE-362
+    cve_reference: n/a
+    example_vuln: unsafe impl Send for MyPtr {}
+    example_fix: '// SAFETY: MyPtr only contains thread-safe atomics\nunsafe impl Send for MyPtr {}'
+  - id: RS-19
+    name: env::var Injection
+    severity: MEDIUM
+    category: Environment
+    description: Environment variable used without validation
+    detection_pattern: env::var.*unwrap.*then.*execute
+    fix_pattern: Validate environment variables before use in commands
+    cwe: CWE-88
+    cve_reference: n/a
+    example_vuln: let path = env::var(\PATH\").unwrap();\nCommand::new(path)"
+    example_fix: let path = env::var(\SAFE_PATH\").ok().filter(|p| ALLOWED.contains(p));"
+  - id: RS-20
+    name: Regex DoS
+    severity: HIGH
+    category: DoS
+    description: Regex with user input without timeout
+    detection_pattern: Regex::new.*input(?!.*size_limit)
+    fix_pattern: Use regex crate with size_limit or validate pattern
+    cwe: CWE-400
+    cve_reference: n/a
+    example_vuln: let re = Regex::new(&user_pattern)?;
+    example_fix: let re = RegexBuilder::new(&user_pattern)\n    .size_limit(1024)\n    .build()?;

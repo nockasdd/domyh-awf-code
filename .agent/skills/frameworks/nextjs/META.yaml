@@ -1,11 +1,34 @@
 name: nextjs
-version: "6.1.2"
+version: "6.2.1"
+display: "Next.js Patterns"
 category: frontend
 tier: 1
+priority: 2
 
-description: |
-  React meta-framework patterns for Next.js 15/16.
-  Covers App Router, Server Components, Turbopack, Server Actions.
+desc: "Next.js 16+ development patterns (Oct 2025+). Turbopack default, Cache Components, React 19.2."
+
+caps:
+  - app-router
+  - server-components
+  - server-functions
+  - caching-strategies
+  - turbopack
+  - edge-runtime
+
+data_files:
+  - data/core.yaml
+  - data/caching.yaml
+  - data/server.yaml
+
+patterns:
+  total: 16
+  domains:
+    core: 6
+    caching: 5
+    server: 5
+
+    - search_nextjs_patterns
+    - get_nextjs_route
 
 triggers:
   file_patterns:
@@ -18,65 +41,41 @@ triggers:
     # Core
     - nextjs
     - next.js
-    - next js
     - app router
-    - pages router
-    - next/image
-    - next/link
-    - next/font
-    # Server Components
     - server component
     - client component
+    # Rendering
+    - turbopack
     - use client
     - use server
-    - rsc
-    - react server component
-    # Data Fetching
-    - server action
-    - server actions
-    - revalidatePath
+    - server function
+    # Caching
+    - use cache
     - revalidateTag
+    - revalidatePath
     - unstable_cache
-    - fetch next
-    # Build
-    - turbopack
-    - next build
-    - next dev
-    - next start
-    # Routing
-    - dynamic route
+    - isr
+    # API
     - route handler
-    - middleware next
-    - generateStaticParams
-    - generateMetadata
-    # Features
-    - loading.tsx
-    - error.tsx
-    - not-found.tsx
-    - layout.tsx
-    - template.tsx
-    - parallel routes
-    - intercepting routes
-    # Auth
-    - nextauth
-    - next-auth
-    - clerk nextjs
-    # Deployment
-    - vercel
-    - next deploy
-    - static export
+    - middleware
+    - proxy.ts
+    # React
+    - react 19
+    - useOptimistic
+    - react compiler
   intents:
-    - create next.js app
-    - setup app router
-    - server component data
-    - next.js deployment
-    - next.js middleware
+    - next.js app
+    - server component
+    - server function
+    - next.js caching
+    - next.js api
 
 related_skills:
   - react
   - typescript
-  - tailwind-patterns
+  - tailwind
+  - prisma
 
 prevent_confusion_with:
-  - react: "Next.js is meta-framework, React is library"
-  - nodejs: "Next.js has built-in server, use for full-stack"
+  - nuxt: "Next.js uses React, Nuxt uses Vue"
+  - react: "Next.js is a React meta-framework with SSR/SSG"

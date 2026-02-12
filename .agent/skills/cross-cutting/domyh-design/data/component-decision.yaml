@@ -1,0 +1,287 @@
+metadata:
+  skill: domyh-design
+  domain: component_decision
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: component-decision.yaml
+  patterns_count: 30
+  columns:
+    - component_type
+    - custom_score
+    - library_score
+    - headless_score
+    - decision_factors
+    - primary_recommendation
+    - accessibility_priority
+    - complexity_level
+patterns:
+  - id: item_001
+    component_type: Button
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "5"
+    decision_factors: Brand differentiation + Variants needed
+    primary_recommendation: Headless (Radix) + Tailwind styling
+    accessibility_priority: HIGH
+    complexity_level: Low
+  - id: item_002
+    component_type: Input
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "5"
+    decision_factors: Validation + Accessibility
+    primary_recommendation: Headless + Custom validation
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_003
+    component_type: Modal/Dialog
+    custom_score: "1"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Focus trap + A11y + Animation
+    primary_recommendation: Headless (Radix Dialog)
+    accessibility_priority: HIGH
+    complexity_level: High
+  - id: item_004
+    component_type: Dropdown/Select
+    custom_score: "1"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Keyboard nav + Search + Multi-select
+    primary_recommendation: Headless (Radix Select)
+    accessibility_priority: HIGH
+    complexity_level: High
+  - id: item_005
+    component_type: Table
+    custom_score: "3"
+    library_score: "5"
+    headless_score: "2"
+    decision_factors: Sorting + Pagination + Virtualization
+    primary_recommendation: Library (TanStack Table) + Custom UI
+    accessibility_priority: MEDIUM
+    complexity_level: Very High
+  - id: item_006
+    component_type: Form
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "4"
+    decision_factors: Validation + Submission + Error handling
+    primary_recommendation: React Hook Form + shadcn inputs
+    accessibility_priority: HIGH
+    complexity_level: High
+  - id: item_007
+    component_type: Toast/Notification
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "4"
+    decision_factors: Queue + Animation + Position
+    primary_recommendation: Headless (Sonner) or Library
+    accessibility_priority: LOW
+    complexity_level: Medium
+  - id: item_008
+    component_type: Tabs
+    custom_score: "2"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Keyboard nav + URL sync
+    primary_recommendation: Headless (Radix Tabs)
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_009
+    component_type: Accordion
+    custom_score: "2"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Animation + Multi-expand
+    primary_recommendation: Headless (Radix Accordion)
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_010
+    component_type: Menu/Context
+    custom_score: "1"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Positioning + Keyboard
+    primary_recommendation: Headless (Radix Menu)
+    accessibility_priority: HIGH
+    complexity_level: High
+  - id: item_011
+    component_type: Tooltip
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "4"
+    decision_factors: Positioning + Delay
+    primary_recommendation: Headless or Library
+    accessibility_priority: LOW
+    complexity_level: Medium
+  - id: item_012
+    component_type: Card
+    custom_score: "4"
+    library_score: "3"
+    headless_score: "2"
+    decision_factors: Brand specific + Variants
+    primary_recommendation: Custom with design tokens
+    accessibility_priority: LOW
+    complexity_level: Low
+  - id: item_013
+    component_type: Avatar
+    custom_score: "4"
+    library_score: "4"
+    headless_score: "2"
+    decision_factors: Fallback + Loading
+    primary_recommendation: Custom or shadcn
+    accessibility_priority: LOW
+    complexity_level: Low
+  - id: item_014
+    component_type: Badge
+    custom_score: "5"
+    library_score: "3"
+    headless_score: "1"
+    decision_factors: Simple + Brand colors
+    primary_recommendation: Custom (utility class)
+    accessibility_priority: LOW
+    complexity_level: Very Low
+  - id: item_015
+    component_type: Skeleton
+    custom_score: "4"
+    library_score: "4"
+    headless_score: "2"
+    decision_factors: Animation style
+    primary_recommendation: Custom or shadcn
+    accessibility_priority: LOW
+    complexity_level: Low
+  - id: item_016
+    component_type: Progress
+    custom_score: "3"
+    library_score: "4"
+    headless_score: "3"
+    decision_factors: Animation + Accessibility
+    primary_recommendation: Library or Headless
+    accessibility_priority: MEDIUM
+    complexity_level: Low
+  - id: item_017
+    component_type: Slider
+    custom_score: "1"
+    library_score: "3"
+    headless_score: "5"
+    decision_factors: Touch + Keyboard + Range
+    primary_recommendation: Headless (Radix Slider)
+    accessibility_priority: HIGH
+    complexity_level: High
+  - id: item_018
+    component_type: Switch/Toggle
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "5"
+    decision_factors: Accessibility + Animation
+    primary_recommendation: Headless (Radix Switch)
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_019
+    component_type: Checkbox
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "5"
+    decision_factors: Accessibility + Indeterminate
+    primary_recommendation: Headless (Radix Checkbox)
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_020
+    component_type: Radio Group
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "5"
+    decision_factors: Accessibility + Group handling
+    primary_recommendation: Headless (Radix Radio)
+    accessibility_priority: HIGH
+    complexity_level: Medium
+  - id: item_021
+    component_type: Date Picker
+    custom_score: "1"
+    library_score: "5"
+    headless_score: "2"
+    decision_factors: Timezone + Locale + Range
+    primary_recommendation: Library (react-day-picker)
+    accessibility_priority: HIGH
+    complexity_level: Very High
+  - id: item_022
+    component_type: Color Picker
+    custom_score: "2"
+    library_score: "5"
+    headless_score: "2"
+    decision_factors: Formats + Accessibility
+    primary_recommendation: Library (react-colorful)
+    accessibility_priority: MEDIUM
+    complexity_level: High
+  - id: item_023
+    component_type: Rich Text Editor
+    custom_score: "1"
+    library_score: "5"
+    headless_score: "1"
+    decision_factors: Collaboration + Plugins
+    primary_recommendation: Library (TipTap/Slate)
+    accessibility_priority: MEDIUM
+    complexity_level: Very High
+  - id: item_024
+    component_type: Carousel/Slider
+    custom_score: "2"
+    library_score: "4"
+    headless_score: "3"
+    decision_factors: Touch + Animation + A11y
+    primary_recommendation: Library (Embla) or Headless
+    accessibility_priority: MEDIUM
+    complexity_level: High
+  - id: item_025
+    component_type: Stepper/Wizard
+    custom_score: "3"
+    library_score: "4"
+    headless_score: "3"
+    decision_factors: State management + Validation
+    primary_recommendation: Custom with state machine
+    accessibility_priority: MEDIUM
+    complexity_level: High
+  - id: item_026
+    component_type: Sidebar/Nav
+    custom_score: "4"
+    library_score: "3"
+    headless_score: "3"
+    decision_factors: Responsive + Collapse
+    primary_recommendation: Custom with Headless primitives
+    accessibility_priority: MEDIUM
+    complexity_level: Medium
+  - id: item_027
+    component_type: Header/Navbar
+    custom_score: "4"
+    library_score: "3"
+    headless_score: "2"
+    decision_factors: Brand specific + Responsive
+    primary_recommendation: Custom component
+    accessibility_priority: MEDIUM
+    complexity_level: Medium
+  - id: item_028
+    component_type: Footer
+    custom_score: "5"
+    library_score: "2"
+    headless_score: "1"
+    decision_factors: Static + Brand specific
+    primary_recommendation: Custom component
+    accessibility_priority: LOW
+    complexity_level: Very Low
+  - id: item_029
+    component_type: Pagination
+    custom_score: "3"
+    library_score: "4"
+    headless_score: "3"
+    decision_factors: URL sync + Accessibility
+    primary_recommendation: Library or Headless + Custom
+    accessibility_priority: MEDIUM
+    complexity_level: Medium
+  - id: item_030
+    component_type: Breadcrumb
+    custom_score: "4"
+    library_score: "4"
+    headless_score: "2"
+    decision_factors: Routing integration
+    primary_recommendation: Custom or shadcn
+    accessibility_priority: MEDIUM
+    complexity_level: Low

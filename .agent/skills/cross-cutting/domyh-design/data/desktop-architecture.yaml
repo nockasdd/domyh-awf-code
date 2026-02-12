@@ -1,0 +1,140 @@
+metadata:
+  skill: domyh-design
+  domain: desktop_architecture
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: desktop-architecture.yaml
+  patterns_count: 11
+  columns:
+    - pattern
+    - full_name
+    - best_for
+    - data_binding
+    - testability
+    - coupling
+    - languages
+    - example_structure
+    - key_components
+    - anti_patterns
+patterns:
+  - id: item_001
+    pattern: mvvm
+    full_name: Model-View-ViewModel
+    best_for: Complex data-driven UIs
+    data_binding: Auto two-way binding
+    testability: High - ViewModel testable without UI
+    coupling: Low - View knows ViewModel only
+    languages: C# WPF/WinUI/MAUI/Avalonia
+    example_structure: Models/ ViewModels/ Views/ Services/
+    key_components: Model (data/logic), View (XAML), ViewModel (INotifyPropertyChanged), Commands (ICommand)
+    anti_patterns: Fat ViewModel, View logic in codebehind, Direct Model-View coupling
+  - id: item_002
+    pattern: mvp
+    full_name: Model-View-Presenter
+    best_for: Desktop apps requiring testability
+    data_binding: Manual via Presenter
+    testability: Very High - Presenter interface-driven
+    coupling: Low - View interface abstraction
+    languages: C++ Qt/wxWidgets/WinForms Java Swing
+    example_structure: Models/ Views/ Presenters/ Interfaces/
+    key_components: Model (data), View (IView interface), Presenter (business logic)
+    anti_patterns: Presenter calling View directly, Missing View interface, Business logic in View
+  - id: item_003
+    pattern: mvc
+    full_name: Model-View-Controller
+    best_for: Simple applications
+    data_binding: Manual via Controller
+    testability: Medium - Controller testable
+    coupling: Medium - View can access Model
+    languages: C++ Qt MFC legacy apps
+    example_structure: Models/ Views/ Controllers/
+    key_components: Model (notifies View), View (displays), Controller (handles input)
+    anti_patterns: Massive Controller, View modifying Model, Tight coupling
+  - id: item_004
+    pattern: flux
+    full_name: Flux/Redux Pattern
+    best_for: Complex state management
+    data_binding: Unidirectional via Store
+    testability: High - Predictable state
+    coupling: Low - Components subscribe to Store
+    languages: JS/TS React Electron
+    example_structure: store/ actions/ reducers/ components/
+    key_components: Actions, Dispatcher, Store, Components
+    anti_patterns: Mutating state directly, Side effects in reducers, Prop drilling
+  - id: item_005
+    pattern: clean
+    full_name: Clean Architecture
+    best_for: Large maintainable systems
+    data_binding: Dependency injection
+    testability: Very High - All layers testable
+    coupling: Very Low - Dependency Rule
+    languages: Any language Qt .NET
+    example_structure: domain/ application/ infrastructure/ presentation/
+    key_components: Entities, Use Cases, Interface Adapters, Frameworks
+    anti_patterns: Dependencies pointing inward, Business logic in UI, Database in core
+  - id: item_006
+    pattern: di
+    full_name: Dependency Injection
+    best_for: Decoupled systems
+    data_binding: Via injected services
+    testability: High - Mock dependencies
+    coupling: Very Low - Interface-based
+    languages: C# .NET C++ with containers
+    example_structure: Interfaces/ Implementations/ Composition Root
+    key_components: IServiceProvider, Constructor injection, Lifetime scopes
+    anti_patterns: Service Locator anti-pattern, Hidden dependencies, Tight coupling
+  - id: item_007
+    pattern: observer
+    full_name: Observer Pattern
+    best_for: Event-driven updates
+    data_binding: Publish/Subscribe
+    testability: Medium
+    coupling: Low - Loose coupling
+    languages: C++ Qt Signals/Slots C# events
+    example_structure: Subjects (Observables) Observers (Listeners)
+    key_components: Subject maintains list, Notify on change, Observer registers/unregisters
+    anti_patterns: Memory leaks (no unsubscribe), Excessive notifications, Chain reactions
+  - id: item_008
+    pattern: command
+    full_name: Command Pattern
+    best_for: Undo/Redo UI actions
+    data_binding: Commands encapsulate action
+    testability: High - Commands testable
+    coupling: Low - Invoker knows Command interface
+    languages: C# WPF ICommand C++ Qt QAction
+    example_structure: Commands/ Invokers/ Receivers/
+    key_components: Command interface (Execute/CanExecute), Invoker, Receiver
+    anti_patterns: Logic in CanExecute, Non-undoable commands for undoable actions
+  - id: item_009
+    pattern: repository
+    full_name: Repository Pattern
+    best_for: Data access abstraction
+    data_binding: Via repository interface
+    testability: High - Mock data access
+    coupling: Low - Business logic isolated
+    languages: Any with database access
+    example_structure: Repositories/ Entities/ DataContext/
+    key_components: IRepository<T>, Add/Remove/Find methods, Unit of Work
+    anti_patterns: Fat repository, Business logic in repository, Leaky abstractions
+  - id: item_010
+    pattern: singleton
+    full_name: Singleton Pattern
+    best_for: Global state management
+    data_binding: Direct access
+    testability: Low - Hard to mock
+    coupling: High - Global dependency
+    languages: Any language
+    example_structure: AppState.Instance, Logger.Instance
+    key_components: Private constructor, Static instance, Thread-safe initialization
+    anti_patterns: Overuse, Hidden dependencies, Global mutable state
+  - id: item_011
+    pattern: factory
+    full_name: Factory Pattern
+    best_for: Object creation abstraction
+    data_binding: Via factory
+    testability: High - Mock object creation
+    coupling: Low - Client knows interface only
+    languages: C++ C# Python
+    example_structure: Factories/ Products/
+    key_components: IFactory, Create methods, Product interfaces
+    anti_patterns: God factory, Factory knowing implementation details

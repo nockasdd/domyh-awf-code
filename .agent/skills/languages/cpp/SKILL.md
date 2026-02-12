@@ -1,12 +1,12 @@
 ---
 name: cpp
 detect: ["CMakeLists.txt", "*.cpp", "*.cxx", "*.cc", "*.hpp", "*.hxx", "*.h"]
-version: "6.1.2"
+version: "6.2.1"
 category: language
 tier: 1
 ---
 
-# C++ Development Patterns — DOMYH Awesome Code v6.1.2
+# C++ Development Patterns — DOMYH Awesome Code
 
 > Modern C++ (C++20/23/26) patterns — NOT Pure C
 
@@ -933,4 +933,4 @@ inline void sleep_ms(int ms) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • C++ Development (C++20/23/26) • 2025-2026_
+_DOMYH Awesome Code • C++ Development (C++20/23/26) • 2025-2026_

@@ -1,9 +1,9 @@
 {
-  "name": "DOMYH Awesome Code v6.1.2",
-  "version": "v6.1.2",
+  "name": "DOMYH Awesome Code ",
+  "version": "v6.2.1",
   
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/deploy", "/init", "/migrate", "/doc", "/hsa"],
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/deploy", "/init", "/fix", "/refactor", "/review", "/status", "/migrate", "/git", "/doc", "/security", "/hsa"],
     "file_patterns": ["*.go", "*.py", "*.ts", "*.tsx", "*.vue"],
     "auto_detect": true
   },
@@ -29,10 +29,15 @@
 
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v5.0 Context Management",
-      "command": "node",
-      "args": [".agent/mcp/hsa-server/dist/index.js"],
-      "auto_start": true
+      "description": "HSA v1.0.0 Context Management",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
     }
   }
 }

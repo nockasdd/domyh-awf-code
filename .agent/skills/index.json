@@ -1,14 +1,18 @@
 {
-  "version": "7.0.0",
+  "version": "6.2.1",
   "changelog": [
-    "v7.0.0: Hierarchical skill organization with category folders",
-    "New structure: languages/, frameworks/, devops/, core/, cross-cutting/",
-    "51 total skills organized into 5 categories",
+    "v6.3.0: Added 15 new skills across 2 new categories (tooling, ai-ml)",
+    "Migrated prompt-engineering + rag-patterns from cross-cutting → ai-ml",
+    "New: mcp, api-protocols, ide-extension, cli-dev, browser-agent (tooling)",
+    "New: ai-agents, vector-search, gemini-media-gen, gemini-tts, gemini-live (ai-ml)",
+    "New: terraform, gcp, azure (devops)",
+    "New: tauri, real-time, wasm, event-driven, playwright (cross-cutting)",
     "Smart routing via _router.yaml",
-    "Token savings: 90% baseline reduction (5,100 → 500)"
+    "Token savings: 90% baseline reduction (5,100 → 500)",
+    "82 total skills organized into 7 categories"
   ],
   "schema": "hierarchical",
-  "total": 51,
+  "total": 82,
 
   "tiers": {
     "T1_META": "META.yaml (~100 tokens) - Always available",
@@ -18,12 +22,12 @@
 
   "categories": {
     "core": {
-      "description": "Security rules - always active",
+      "description": "Core patterns - security, API, errors, logging, observability, auth",
       "path": "skills/core/",
       "priority": 0,
       "always_load": true,
-      "count": 1,
-      "skills": ["security"]
+      "count": 6,
+      "skills": ["security", "api-design", "error-handling", "logging", "observability", "authentication"]
     },
     "languages": {
       "description": "Programming languages",
@@ -45,23 +49,40 @@
       "skills": ["react", "vue", "angular", "svelte", "nextjs", "nuxt", "flutter", "react-native"]
     },
     "devops": {
-      "description": "Infrastructure and deployment",
+      "description": "Infrastructure, deployment, and cloud platforms",
       "path": "skills/devops/",
       "priority": 3,
-      "count": 4,
-      "skills": ["docker", "kubernetes", "aws", "ci-cd"]
+      "count": 7,
+      "skills": ["docker", "kubernetes", "aws", "ci-cd", "terraform", "gcp", "azure"]
     },
     "cross-cutting": {
       "description": "Cross-cutting concerns and utilities",
       "path": "skills/cross-cutting/",
       "priority": 4,
-      "count": 10,
-      "skills": ["testing", "database", "sql", "tailwind", "electron", "coding-rules", "ui-ux-pro-max", "web-perf", "deno", "bun"]
+      "count": 21,
+      "skills": ["testing", "database", "sql", "tailwind", "electron", "coding-rules", "domyh-design", "web-perf", "deno", "bun", "audit-pro", "tdd-workflow", "accessibility", "seo", "microservices", "monorepo", "event-driven", "tauri", "real-time", "wasm", "playwright"]
+    },
+    "tooling": {
+      "description": "Developer tooling: MCP, API protocols, IDE extensions, CLI, browser agent",
+      "path": "skills/tooling/",
+      "priority": 5,
+      "count": 5,
+      "skills": ["mcp", "api-protocols", "ide-extension", "cli-dev", "browser-agent"]
+    },
+    "ai-ml": {
+      "description": "AI/ML: agents, prompt engineering, RAG, vector search, Gemini APIs",
+      "path": "skills/ai-ml/",
+      "priority": 6,
+      "count": 7,
+      "skills": ["ai-agents", "prompt-engineering", "rag-patterns", "vector-search", "gemini-media-gen", "gemini-tts", "gemini-live"]
     }
   },
 
   "skills": [
     {"id": "security", "path": "skills/core/security/", "category": "core", "always_load_meta": true},
+    {"id": "api-design", "path": "skills/core/api-design/", "category": "core", "always_load_meta": true},
+    {"id": "error-handling", "path": "skills/core/error-handling/", "category": "core", "always_load_meta": true},
+    {"id": "logging", "path": "skills/core/logging/", "category": "core", "always_load_meta": true},
     
     {"id": "python", "path": "skills/languages/python/", "category": "languages"},
     {"id": "go", "path": "skills/languages/go/", "category": "languages"},
@@ -105,6 +126,9 @@
     {"id": "kubernetes", "path": "skills/devops/kubernetes/", "category": "devops"},
     {"id": "aws", "path": "skills/devops/aws/", "category": "devops"},
     {"id": "ci-cd", "path": "skills/devops/ci-cd/", "category": "devops"},
+    {"id": "terraform", "path": "skills/devops/terraform/", "category": "devops"},
+    {"id": "gcp", "path": "skills/devops/gcp/", "category": "devops"},
+    {"id": "azure", "path": "skills/devops/azure/", "category": "devops"},
     
     {"id": "testing", "path": "skills/cross-cutting/testing/", "category": "cross-cutting"},
     {"id": "database", "path": "skills/cross-cutting/database/", "category": "cross-cutting"},
@@ -112,10 +136,35 @@
     {"id": "tailwind", "path": "skills/cross-cutting/tailwind/", "category": "cross-cutting"},
     {"id": "electron", "path": "skills/cross-cutting/electron/", "category": "cross-cutting"},
     {"id": "coding-rules", "path": "skills/cross-cutting/coding-rules/", "category": "cross-cutting"},
-    {"id": "ui-ux-pro-max", "path": "skills/cross-cutting/ui-ux-pro-max/", "category": "cross-cutting"},
+    {"id": "domyh-design", "path": "skills/cross-cutting/domyh-design/", "category": "cross-cutting"},
     {"id": "web-perf", "path": "skills/cross-cutting/web-perf/", "category": "cross-cutting"},
     {"id": "deno", "path": "skills/cross-cutting/deno/", "category": "cross-cutting"},
-    {"id": "bun", "path": "skills/cross-cutting/bun/", "category": "cross-cutting"}
+    {"id": "bun", "path": "skills/cross-cutting/bun/", "category": "cross-cutting"},
+    {"id": "audit-pro", "path": "skills/cross-cutting/audit-pro/", "category": "cross-cutting"},
+    {"id": "tdd-workflow", "path": "skills/cross-cutting/tdd-workflow/", "category": "cross-cutting"},
+    {"id": "accessibility", "path": "skills/cross-cutting/accessibility/", "category": "cross-cutting"},
+    {"id": "seo", "path": "skills/cross-cutting/seo/", "category": "cross-cutting"},
+    {"id": "microservices", "path": "skills/cross-cutting/microservices/", "category": "cross-cutting"},
+    {"id": "monorepo", "path": "skills/cross-cutting/monorepo/", "category": "cross-cutting"},
+    {"id": "event-driven", "path": "skills/cross-cutting/event-driven/", "category": "cross-cutting"},
+    {"id": "tauri", "path": "skills/cross-cutting/tauri/", "category": "cross-cutting"},
+    {"id": "real-time", "path": "skills/cross-cutting/real-time/", "category": "cross-cutting"},
+    {"id": "wasm", "path": "skills/cross-cutting/wasm/", "category": "cross-cutting"},
+    {"id": "playwright", "path": "skills/cross-cutting/playwright/", "category": "cross-cutting"},
+    
+    {"id": "mcp", "path": "skills/tooling/mcp/", "category": "tooling"},
+    {"id": "api-protocols", "path": "skills/tooling/api-protocols/", "category": "tooling"},
+    {"id": "ide-extension", "path": "skills/tooling/ide-extension/", "category": "tooling"},
+    {"id": "cli-dev", "path": "skills/tooling/cli-dev/", "category": "tooling"},
+    {"id": "browser-agent", "path": "skills/tooling/browser-agent/", "category": "tooling"},
+    
+    {"id": "ai-agents", "path": "skills/ai-ml/ai-agents/", "category": "ai-ml"},
+    {"id": "prompt-engineering", "path": "skills/ai-ml/prompt-engineering/", "category": "ai-ml"},
+    {"id": "rag-patterns", "path": "skills/ai-ml/rag-patterns/", "category": "ai-ml"},
+    {"id": "vector-search", "path": "skills/ai-ml/vector-search/", "category": "ai-ml"},
+    {"id": "gemini-media-gen", "path": "skills/ai-ml/gemini-media-gen/", "category": "ai-ml"},
+    {"id": "gemini-tts", "path": "skills/ai-ml/gemini-tts/", "category": "ai-ml"},
+    {"id": "gemini-live", "path": "skills/ai-ml/gemini-live/", "category": "ai-ml"}
   ],
 
   "aliases": {
@@ -127,7 +176,14 @@
     "vue": "frameworks/vue",
     "docker": "devops/docker",
     "security": "core/security",
-    "testing": "cross-cutting/testing"
+    "testing": "cross-cutting/testing",
+    "mcp": "tooling/mcp",
+    "ai-agents": "ai-ml/ai-agents",
+    "prompt-engineering": "ai-ml/prompt-engineering",
+    "rag-patterns": "ai-ml/rag-patterns",
+    "terraform": "devops/terraform",
+    "gcp": "devops/gcp",
+    "azure": "devops/azure"
   },
 
   "token_budget": {

@@ -1,0 +1,156 @@
+metadata:
+  skill: logging
+  domain: language_swift
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-swift.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: SW-001
+    category: oslog
+    library: OSLog
+    name: Logger
+    description: Create OSLog Logger
+    example: 'let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "network")'
+    when_to_use: iOS/macOS apps
+  - id: SW-002
+    category: oslog
+    library: OSLog
+    name: log.info
+    description: Log at info level
+    example: logger.info("User \(userId) logged in")
+    when_to_use: General events
+  - id: SW-003
+    category: oslog
+    library: OSLog
+    name: log.debug
+    description: Log at debug level
+    example: logger.debug("Processing item \(item)")
+    when_to_use: Debugging
+  - id: SW-004
+    category: oslog
+    library: OSLog
+    name: log.error
+    description: Log errors
+    example: 'logger.error("Failed to fetch data: \(error.localizedDescription)")'
+    when_to_use: Error handling
+  - id: SW-005
+    category: oslog
+    library: OSLog
+    name: log.warning
+    description: Log warnings
+    example: 'logger.warning("Network response slow: \(duration)ms")'
+    when_to_use: Potential issues
+  - id: SW-006
+    category: oslog
+    library: OSLog
+    name: log.critical
+    description: Log critical errors
+    example: logger.critical("Database corruption detected")
+    when_to_use: Severe issues
+  - id: SW-007
+    category: oslog
+    library: OSLog
+    name: log.trace
+    description: Trace-level logging
+    example: logger.trace("Entering function")
+    when_to_use: Fine-grained debug
+  - id: SW-008
+    category: oslog
+    library: OSLog
+    name: Privacy
+    description: Mark data as private
+    example: 'logger.info("Email: \(email, privacy: .private)")'
+    when_to_use: Privacy protection
+  - id: SW-009
+    category: oslog
+    library: OSLog
+    name: Public Privacy
+    description: Mark data as public
+    example: 'logger.info("Count: \(count, privacy: .public)")'
+    when_to_use: Visible in Console
+  - id: SW-010
+    category: oslog
+    library: OSLog
+    name: Sensitive Privacy
+    description: Extra sensitive data
+    example: 'logger.info("Token: \(token, privacy: .sensitive)")'
+    when_to_use: Highly sensitive
+  - id: SW-011
+    category: oslog
+    library: OSLog
+    name: Subsystem
+    description: Organize by subsystem
+    example: 'subsystem: "com.example.myapp"'
+    when_to_use: Log organization
+  - id: SW-012
+    category: oslog
+    library: OSLog
+    name: Category
+    description: Organize by category
+    example: 'category: "networking"'
+    when_to_use: Log filtering
+  - id: SW-013
+    category: oslog
+    library: OSLog
+    name: OSLogStore
+    description: Read logs programmatically
+    example: "let store = try OSLogStore(scope: .currentProcessIdentifier)"
+    when_to_use: Log export
+  - id: SW-014
+    category: oslog
+    library: OSLog
+    name: Console.app
+    description: View logs in Console
+    example: Filter by subsystem in Console.app
+    when_to_use: Development debugging
+  - id: SW-015
+    category: oslog
+    library: OSLog
+    name: Signpost
+    description: Performance intervals
+    example: 'os_signpost(.begin, log: log, name: "Network Request")'
+    when_to_use: Performance profiling
+  - id: SW-016
+    category: swift-log
+    library: swift-log
+    name: LogHandler
+    description: Server-side logging protocol
+    example: "struct MyHandler: LogHandler { ... }"
+    when_to_use: Vapor/server Swift
+  - id: SW-017
+    category: swift-log
+    library: swift-log
+    name: Logger
+    description: Server logger
+    example: 'var logger = Logger(label: "com.example.app")'
+    when_to_use: Server applications
+  - id: SW-018
+    category: swift-log
+    library: swift-log
+    name: Metadata
+    description: Log metadata
+    example: 'logger[metadataKey: "requestId"] = "\(requestId)"'
+    when_to_use: Request context
+  - id: SW-019
+    category: swift-log
+    library: swift-log
+    name: Bootstrap
+    description: Configure logging
+    example: LoggingSystem.bootstrap(StreamLogHandler.standardOutput)
+    when_to_use: Server logging setup
+  - id: SW-020
+    category: swift-log
+    library: swift-log
+    name: Log Level
+    description: Set log level
+    example: logger.logLevel = .debug
+    when_to_use: Verbosity control

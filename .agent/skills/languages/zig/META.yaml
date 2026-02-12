@@ -1,11 +1,11 @@
 name: zig
-version: "6.1.2"
-category: systems
-tier: 2
+version: "6.2.1"
+display: Zig
+category: languages
+tier: 3
+priority: 3
 
-description: |
-  Zig development patterns for Zig 0.13+.
-  Covers systems programming, comptime, C interop, WebAssembly.
+desc: "Zig development patterns for Zig 0.14+. Comptime, allocators, error unions, C interop, build.zig."
 
 triggers:
   file_patterns:

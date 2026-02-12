@@ -1,0 +1,96 @@
+# =============================================================================
+# locator-patterns.yaml — Priority-Ordered Locator Strategies
+# =============================================================================
+
+version: "1.0.0"
+
+priority_order:
+  - priority: 1
+    method: "getByRole()"
+    type: "Semantic (ARIA role)"
+    use_case: "Buttons, links, headings, navigation — preferred for ALL interactive elements"
+    examples:
+      - 'page.getByRole("button", { name: "Submit" })'
+      - 'page.getByRole("link", { name: "Home" })'
+      - 'page.getByRole("heading", { level: 1 })'
+      - 'page.getByRole("navigation")'
+      - 'page.getByRole("dialog")'
+      - 'page.getByRole("combobox")'
+      - 'page.getByRole("menuitem", { name: "Settings" })'
+    why_best: "Matches how users and assistive tech find elements. Resilient to style/class changes."
+    avoid_when: "Element has no ARIA role (rare in modern frameworks)"
+
+  - priority: 2
+    method: "getByLabel()"
+    type: "Form label association"
+    use_case: "Form inputs, textareas, selects — via linked label element"
+    examples:
+      - 'page.getByLabel("Email")'
+      - 'page.getByLabel("Password")'
+      - 'page.getByLabel("Remember me")'
+    why_best: "Matches user-visible label text. Natural and readable."
+    avoid_when: "Element has no associated label"
+
+  - priority: 3
+    method: "getByTestId()"
+    type: "Explicit test marker"
+    use_case: "When no semantic way to identify — use data-testid attribute"
+    examples:
+      - 'page.getByTestId("submit-button")'
+      - 'page.getByTestId("user-avatar")'
+      - 'page.getByTestId("sidebar-nav")'
+    setup: |
+      <!-- HTML -->
+      <button data-testid="submit-button">Submit</button>
+
+      // playwright.config.ts
+      use: { testIdAttribute: 'data-testid' }
+    why_best: "Explicit, stable, won't change with CSS refactors."
+    avoid_when: "Semantic locator available (role or label)"
+
+  - priority: 4
+    method: "getByText()"
+    type: "Visible text content"
+    use_case: "Static text, paragraph content, error messages"
+    examples:
+      - 'page.getByText("Welcome back")'
+      - 'page.getByText("Error: invalid email", { exact: true })'
+      - 'page.getByText(/total: \$[\d.]+/)'
+    why_best: "Simple, matches what user sees."
+    avoid_when: "Text is dynamic or duplicated across elements"
+
+  - priority: 5
+    method: "locator() CSS"
+    type: "CSS selector"
+    use_case: "LAST RESORT — complex DOM traversal, nth-child, attribute selectors"
+    examples:
+      - 'page.locator(".card:first-child .title")'
+      - 'page.locator("[data-status=active]")'
+      - 'page.locator("table >> tr:nth-child(3)")'
+    why_best: "Maximum flexibility for complex structures."
+    avoid_when: "ALWAYS try priorities 1-4 first"
+    warning: "Brittle — breaks on CSS refactors"
+
+anti_patterns:
+  - pattern: 'page.locator("#app > div > div:nth-child(3) > button")'
+    problem: "Fragile path-based selector, breaks on any DOM change"
+    fix: 'page.getByRole("button", { name: "Submit" })'
+
+  - pattern: 'page.locator(".btn-primary.submit-btn")'
+    problem: "CSS class names change during refactors"
+    fix: 'page.getByRole("button", { name: "Submit" })'
+
+  - pattern: 'page.locator("//button[@class=\"submit\"]")'
+    problem: "XPath is verbose and brittle"
+    fix: 'page.getByRole("button", { name: "Submit" })'
+
+# For MCP browser_snapshot:
+# - Snapshot returns refs (e.g., "ref=submit-btn")
+# - Use these refs directly in browser_click, browser_type, etc.
+# - No need to manually construct locators when using MCP tools
+mcp_note: |
+  When using Playwright MCP tools, browser_snapshot returns element refs.
+  Use these refs directly: browser_click(ref="S3E2") instead of constructing locators.
+  The refs are from the accessibility tree — already the best locator strategy.
+
+# _DOMYH Awesome Code • Locator Patterns v1.0.0_

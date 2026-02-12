@@ -1,0 +1,105 @@
+# Coverage Strategies
+# Test coverage targets, mutation testing, and coverage metrics
+
+strategies:
+  - name: coverage-pyramid
+    description: "Test pyramid — more unit, fewer E2E"
+    layers:
+      - level: unit
+        target: "80%+"
+        speed: fast
+        count: "70% of all tests"
+      - level: integration
+        target: "60%+"
+        speed: medium
+        count: "20% of all tests"
+      - level: e2e
+        target: "critical paths only"
+        speed: slow
+        count: "10% of all tests"
+
+  - name: coverage-metrics
+    description: "Types of code coverage"
+    metrics:
+      - name: line-coverage
+        measures: "Lines executed"
+        minimum: "80%"
+        note: "Most basic — can be misleading"
+      - name: branch-coverage
+        measures: "If/else branches taken"
+        minimum: "75%"
+        note: "Better than line coverage"
+      - name: condition-coverage
+        measures: "Boolean sub-expressions"
+        minimum: "70%"
+        note: "Catches compound condition gaps"
+      - name: path-coverage
+        measures: "Unique execution paths"
+        minimum: "60%"
+        note: "Most thorough but exponential"
+      - name: mutation-score
+        measures: "% of mutants killed"
+        minimum: "70%"
+        note: "Best quality indicator"
+
+  - name: mutation-testing
+    description: "Verify test quality by introducing bugs"
+    concept: "If tests are good, mutating code should make tests fail"
+    tools:
+      typescript: "Stryker Mutator"
+      python: "mutmut, cosmic-ray"
+      java: "PIT (pitest)"
+      go: "go-mutesting"
+      rust: "cargo-mutants"
+      csharp: "Stryker.NET"
+    mutations:
+      - "Replace + with -"
+      - "Replace > with >="
+      - "Remove method call"
+      - "Replace true with false"
+      - "Remove conditional"
+
+  - name: coverage-anti-patterns
+    description: "Common mistakes in coverage strategy"
+    anti_patterns:
+      - name: "100% coverage obsession"
+        problem: "Diminishing returns past 85%"
+        solution: "Focus on critical path and mutation score"
+      - name: "Coverage without assertions"
+        problem: "Code executes but nothing is verified"
+        solution: "Every test must have meaningful assertions"
+      - name: "Testing getters/setters"
+        problem: "Covering trivial code inflates metrics"
+        solution: "Focus coverage on business logic"
+      - name: "Ignoring edge cases"
+        problem: "High coverage but missing boundaries"
+        solution: "Add boundary value analysis tests"
+
+  - name: what-to-test
+    description: "Priority of what to test"
+    priority:
+      - level: critical
+        items:
+          [
+            "Business logic",
+            "Validation rules",
+            "Security checks",
+            "Financial calculations",
+          ]
+      - level: important
+        items:
+          [
+            "Data transformations",
+            "API contracts",
+            "Error handling",
+            "State transitions",
+          ]
+      - level: nice_to_have
+        items: ["UI rendering", "Configuration loading", "Logging"]
+      - level: skip
+        items:
+          [
+            "Generated code",
+            "Third-party library internals",
+            "Simple getters/setters",
+          ]

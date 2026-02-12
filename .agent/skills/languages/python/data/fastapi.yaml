@@ -1,0 +1,296 @@
+# =============================================================================
+# Python FastAPI Patterns (Feb 2026)
+# Version: FastAPI 0.115+ / Pydantic V2
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: fastapi
+  version: "0.115"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: py201
+    name: Dependency Injection
+    category: architecture
+    version: "fastapi"
+    description: |
+      FastAPI's Depends() for clean dependency injection.
+      Database sessions, auth, services.
+    text: dependency injection depends di services database session
+    example: |
+      from typing import Annotated
+      from fastapi import Depends, HTTPException, status
+      from sqlalchemy.ext.asyncio import AsyncSession
+
+      # ✅ Database session dependency
+      async def get_db() -> AsyncGenerator[AsyncSession, None]:
+          async with async_session_maker() as session:
+              try:
+                  yield session
+                  await session.commit()
+              except Exception:
+                  await session.rollback()
+                  raise
+
+      # Type alias for cleaner signatures
+      DbSession = Annotated[AsyncSession, Depends(get_db)]
+
+      # ✅ Service dependency
+      class UserService:
+          def __init__(self, db: DbSession) -> None:
+              self.db = db
+          
+          async def get_user(self, user_id: int) -> User | None:
+              return await self.db.get(User, user_id)
+
+      async def get_user_service(db: DbSession) -> UserService:
+          return UserService(db)
+
+      UserServiceDep = Annotated[UserService, Depends(get_user_service)]
+
+      # ✅ Auth dependency
+      async def get_current_user(
+          token: Annotated[str, Depends(oauth2_scheme)],
+          db: DbSession,
+      ) -> User:
+          payload = decode_token(token)
+          user = await db.get(User, payload["sub"])
+          if not user:
+              raise HTTPException(status_code=401)
+          return user
+
+      CurrentUser = Annotated[User, Depends(get_current_user)]
+
+      # ✅ Using in route
+      @router.get("/users/{user_id}")
+      async def get_user(
+          user_id: int,
+          service: UserServiceDep,
+          current_user: CurrentUser,
+      ) -> UserResponse:
+          user = await service.get_user(user_id)
+          if not user:
+              raise HTTPException(status_code=404)
+          return UserResponse.model_validate(user)
+    severity: HIGH
+    docs_url: https://fastapi.tiangolo.com/tutorial/dependencies/
+
+  - id: py202
+    name: Pydantic V2 Models
+    category: validation
+    version: "pydantic 2.0+"
+    description: |
+      Pydantic V2 schema patterns with model_config.
+      Validation, serialization, computed fields.
+    text: pydantic schema validation model v2 field validator
+    example: |
+      from datetime import datetime
+      from pydantic import (
+          BaseModel, 
+          ConfigDict, 
+          Field, 
+          field_validator,
+          model_validator,
+          computed_field,
+          EmailStr,
+      )
+      from typing import Annotated, Self
+
+      # ✅ Input schema (strict validation)
+      class UserCreate(BaseModel):
+          model_config = ConfigDict(
+              strict=True,
+              str_strip_whitespace=True,
+          )
+          
+          email: EmailStr
+          password: Annotated[str, Field(min_length=8, max_length=100)]
+          name: str = Field(max_length=100)
+          
+          @field_validator("password")
+          @classmethod
+          def password_strength(cls, v: str) -> str:
+              if not any(c.isupper() for c in v):
+                  raise ValueError("Password must have uppercase")
+              return v
+
+      # ✅ Response schema (from ORM)
+      class UserResponse(BaseModel):
+          model_config = ConfigDict(from_attributes=True)
+          
+          id: int
+          email: EmailStr
+          name: str
+          created_at: datetime
+          
+          @computed_field
+          @property
+          def display_name(self) -> str:
+              return self.name or self.email.split("@")[0]
+
+      # ✅ Model-level validation
+      class DateRange(BaseModel):
+          start: datetime
+          end: datetime
+          
+          @model_validator(mode="after")
+          def validate_range(self) -> Self:
+              if self.end <= self.start:
+                  raise ValueError("end must be after start")
+              return self
+
+      # ✅ Nested models
+      class OrderItem(BaseModel):
+          product_id: int
+          quantity: int = Field(gt=0)
+          
+      class Order(BaseModel):
+          items: list[OrderItem] = Field(min_length=1)
+          
+          @computed_field
+          @property
+          def total_items(self) -> int:
+              return sum(item.quantity for item in self.items)
+    severity: HIGH
+    docs_url: https://docs.pydantic.dev/latest/
+
+  - id: py203
+    name: Background Tasks
+    category: async
+    version: "fastapi"
+    description: |
+      FastAPI BackgroundTasks for fire-and-forget operations.
+      Use for emails, notifications, logging.
+    text: background tasks async fire forget email notification
+    example: |
+      from fastapi import BackgroundTasks, Depends
+      from typing import Annotated
+
+      # ✅ Simple background task
+      async def send_welcome_email(email: str, name: str) -> None:
+          await email_service.send(
+              to=email,
+              subject="Welcome!",
+              body=f"Hello {name}, welcome to our platform!"
+          )
+
+      @router.post("/users")
+      async def create_user(
+          data: UserCreate,
+          background_tasks: BackgroundTasks,
+          db: DbSession,
+      ) -> UserResponse:
+          user = await create_user_in_db(db, data)
+          
+          # ✅ Add task (runs after response)
+          background_tasks.add_task(
+              send_welcome_email,
+              email=user.email,
+              name=user.name,
+          )
+          
+          return UserResponse.model_validate(user)
+
+      # ✅ Dependency with background tasks
+      async def log_request(
+          request: Request,
+          background_tasks: BackgroundTasks,
+      ):
+          async def _log():
+              await audit_log.create(
+                  path=str(request.url),
+                  method=request.method,
+              )
+          background_tasks.add_task(_log)
+          return None
+
+      # ✅ For heavy tasks, use Celery/ARQ instead
+      # background_tasks is for lightweight, fire-and-forget
+
+      # Heavy task → use task queue
+      @router.post("/reports")
+      async def generate_report(data: ReportRequest) -> dict:
+          # Enqueue to Celery/ARQ
+          task = celery_app.send_task(
+              "generate_report",
+              args=[data.model_dump()],
+          )
+          return {"task_id": task.id, "status": "queued"}
+    severity: MEDIUM
+    docs_url: https://fastapi.tiangolo.com/tutorial/background-tasks/
+
+  - id: py204
+    name: Error Handling
+    category: errors
+    version: "fastapi"
+    description: |
+      Structured error handling with HTTPException and custom handlers.
+      Consistent API error responses.
+    text: error handling exception http status validation error
+    example: |
+      from fastapi import FastAPI, HTTPException, Request, status
+      from fastapi.responses import JSONResponse
+      from fastapi.exceptions import RequestValidationError
+      from pydantic import BaseModel
+
+      # ✅ Custom error schema
+      class ErrorResponse(BaseModel):
+          error: str
+          detail: str | None = None
+          code: str | None = None
+
+      # ✅ Custom exception
+      class AppError(Exception):
+          def __init__(
+              self,
+              message: str,
+              code: str = "INTERNAL_ERROR",
+              status_code: int = 500,
+          ):
+              self.message = message
+              self.code = code
+              self.status_code = status_code
+
+      class NotFoundError(AppError):
+          def __init__(self, resource: str, id: int | str):
+              super().__init__(
+                  message=f"{resource} with id {id} not found",
+                  code="NOT_FOUND",
+                  status_code=404,
+              )
+
+      # ✅ Exception handlers
+      app = FastAPI()
+
+      @app.exception_handler(AppError)
+      async def app_error_handler(request: Request, exc: AppError):
+          return JSONResponse(
+              status_code=exc.status_code,
+              content=ErrorResponse(
+                  error=exc.message,
+                  code=exc.code,
+              ).model_dump(),
+          )
+
+      @app.exception_handler(RequestValidationError)
+      async def validation_handler(request: Request, exc: RequestValidationError):
+          return JSONResponse(
+              status_code=422,
+              content=ErrorResponse(
+                  error="Validation error",
+                  detail=str(exc.errors()),
+                  code="VALIDATION_ERROR",
+              ).model_dump(),
+          )
+
+      # ✅ Usage in routes
+      @router.get("/users/{user_id}")
+      async def get_user(user_id: int, service: UserServiceDep) -> UserResponse:
+          user = await service.get_user(user_id)
+          if not user:
+              raise NotFoundError("User", user_id)
+          return UserResponse.model_validate(user)
+    severity: HIGH
+    docs_url: https://fastapi.tiangolo.com/tutorial/handling-errors/

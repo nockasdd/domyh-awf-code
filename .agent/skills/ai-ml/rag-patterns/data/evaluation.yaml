@@ -1,0 +1,92 @@
+# =============================================================================
+# evaluation.yaml — RAG Evaluation Framework
+# =============================================================================
+
+version: "1.0.0"
+
+ragas:
+  description: "Reference-free RAG evaluation framework"
+  metrics:
+    - name: faithfulness
+      description: "Are claims supported by retrieved context?"
+      range: "0.0 - 1.0"
+      formula: "supported_claims / total_claims"
+
+    - name: answer_relevancy
+      description: "Is the answer relevant to the question?"
+      range: "0.0 - 1.0"
+      method: "Generate N questions from answer, compare to original"
+
+    - name: context_precision
+      description: "Are relevant chunks ranked higher?"
+      range: "0.0 - 1.0"
+
+    - name: context_recall
+      description: "Are all relevant facts retrieved?"
+      range: "0.0 - 1.0"
+
+  example_python: |
+    from ragas import evaluate
+    from ragas.metrics import faithfulness, answer_relevancy, context_precision
+
+    result = evaluate(
+        dataset,
+        metrics=[faithfulness, answer_relevancy, context_precision],
+    )
+    print(result)
+    # {'faithfulness': 0.85, 'answer_relevancy': 0.92, 'context_precision': 0.78}
+
+custom_metrics:
+  - name: "Answer Correctness"
+    description: "Does the answer match the ground truth?"
+    method: "LLM-as-judge or exact match"
+
+  - name: "Hallucination Rate"
+    description: "% of claims not supported by context"
+    formula: "unsupported_claims / total_claims"
+    target: "< 5%"
+
+  - name: "Retrieval Hit Rate"
+    description: "% of queries where correct doc is in top-K"
+    formula: "queries_with_hit / total_queries"
+    target: "> 90%"
+
+  - name: "Latency"
+    description: "End-to-end response time"
+    components:
+      - "Embedding: ~50ms"
+      - "Vector search: ~20ms"
+      - "Reranking: ~200ms"
+      - "LLM generation: ~1-3s"
+    target: "< 3s total"
+
+evaluation_dataset:
+  creation: |
+    1. Collect 50-100 representative queries
+    2. For each query, identify correct source documents
+    3. Write expected answers (ground truth)
+    4. Include edge cases and ambiguous queries
+
+  format: |
+    {
+      "question": "What is the return policy?",
+      "ground_truth": "30-day return policy for unused items",
+      "contexts": ["Retrieved chunk 1", "Retrieved chunk 2"],
+      "answer": "RAG-generated answer"
+    }
+
+testing_pipeline:
+  stages:
+    - name: "Retrieval Quality"
+      metrics: ["context_precision", "context_recall", "hit_rate"]
+      test: "Does the retriever find relevant chunks?"
+
+    - name: "Generation Quality"
+      metrics: ["faithfulness", "answer_relevancy", "correctness"]
+      test: "Does the LLM use context correctly?"
+
+    - name: "End-to-End"
+      metrics: ["latency", "user_satisfaction"]
+      test: "Is the full pipeline acceptable?"
+
+# _DOMYH Awesome Code • RAG Evaluation_

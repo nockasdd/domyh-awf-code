@@ -1,0 +1,616 @@
+metadata:
+  skill: domyh-design
+  domain: shadcn
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: shadcn.yaml
+  patterns_count: 60
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Setup
+    guideline: Use CLI for installation
+    description: Install components via shadcn CLI for proper setup
+    do: npx shadcn@latest add component-name
+    don_t: Manual copy-paste from docs
+    code_good: npx shadcn@latest add button
+    code_bad: Copy component code manually
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/cli
+  - id: "2"
+    category: Setup
+    guideline: Initialize project properly
+    description: Run init command to set up components.json and globals.css
+    do: npx shadcn@latest init before adding components
+    don_t: Skip init and add components directly
+    code_good: npx shadcn@latest init
+    code_bad: npx shadcn@latest add button (without init)
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/installation
+  - id: "3"
+    category: Setup
+    guideline: Configure path aliases
+    description: Set up proper import aliases in tsconfig and components.json
+    do: Use @/components/ui path aliases
+    don_t: Relative imports like ../../components
+    code_good: import { Button } from "@/components/ui/button"
+    code_bad: import { Button } from "../../components/ui/button"
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/installation
+  - id: "4"
+    category: Theming
+    guideline: Use CSS variables for colors
+    description: Define colors as CSS variables in globals.css for theming
+    do: CSS variables in :root and .dark
+    don_t: Hardcoded color values in components
+    code_good: bg-primary text-primary-foreground
+    code_bad: bg-blue-500 text-white
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/theming
+  - id: "5"
+    category: Theming
+    guideline: Follow naming convention
+    description: Use semantic color names with foreground pattern
+    do: primary/primary-foreground secondary/secondary-foreground
+    don_t: Generic color names
+    code_good: --primary --primary-foreground
+    code_bad: --blue --light-blue
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/theming
+  - id: "6"
+    category: Theming
+    guideline: Support dark mode
+    description: Include .dark class styles for all custom CSS
+    do: Define both :root and .dark color schemes
+    don_t: Only light mode colors
+    code_good: ".dark { --background: 240 10% 3.9%; }"
+    code_bad: No .dark class styles
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/dark-mode
+  - id: "7"
+    category: Components
+    guideline: Use component variants
+    description: Leverage cva variants for consistent styling
+    do: Use variant prop for different styles
+    don_t: Inline conditional classes
+    code_good: <Button variant="destructive">
+    code_bad: '<Button className={isError ? "bg-red-500" : "bg-blue-500"}>'
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "8"
+    category: Components
+    guideline: Compose with className
+    description: Add custom classes via className prop for overrides
+    do: Extend with className for one-off customizations
+    don_t: Modify component source directly
+    code_good: <Button className="w-full">
+    code_bad: Edit button.tsx to add w-full
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "9"
+    category: Components
+    guideline: Use size variants consistently
+    description: Apply size prop for consistent sizing across components
+    do: size="sm" size="lg" for sizing
+    don_t: Mix size classes inconsistently
+    code_good: <Button size="lg">
+    code_bad: <Button className="text-lg px-8 py-4">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "10"
+    category: Components
+    guideline: Prefer compound components
+    description: Use provided sub-components for complex UI
+    do: Card + CardHeader + CardContent pattern
+    don_t: Single component with many props
+    code_good: <Card><CardHeader><CardTitle>
+    code_bad: <Card title="x" content="y" footer="z">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/card
+  - id: "11"
+    category: Dialog
+    guideline: Use Dialog for modal content
+    description: Dialog component for overlay modal windows
+    do: Dialog for confirmations forms details
+    don_t: Alert for modal content
+    code_good: <Dialog><DialogContent>
+    code_bad: <Alert> styled as modal
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/dialog
+  - id: "12"
+    category: Dialog
+    guideline: Handle dialog state properly
+    description: Use open and onOpenChange for controlled dialogs
+    do: Controlled state with useState
+    don_t: Uncontrolled with default open only
+    code_good: <Dialog open={open} onOpenChange={setOpen}>
+    code_bad: <Dialog defaultOpen={true}>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/dialog
+  - id: "13"
+    category: Dialog
+    guideline: Include proper dialog structure
+    description: Use DialogHeader DialogTitle DialogDescription
+    do: Complete semantic structure
+    don_t: Missing title or description
+    code_good: <DialogHeader><DialogTitle><DialogDescription>
+    code_bad: <DialogContent><p>Content</p></DialogContent>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/dialog
+  - id: "14"
+    category: Sheet
+    guideline: Use Sheet for side panels
+    description: Sheet component for slide-out panels and drawers
+    do: Sheet for navigation filters settings
+    don_t: Dialog for side content
+    code_good: <Sheet side="right">
+    code_bad: <Dialog> with slide animation
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/sheet
+  - id: "15"
+    category: Sheet
+    guideline: Specify sheet side
+    description: Set side prop for sheet slide direction
+    do: Explicit side="left" or side="right"
+    don_t: Default side without consideration
+    code_good: <Sheet><SheetContent side="left">
+    code_bad: <Sheet><SheetContent>
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/sheet
+  - id: "16"
+    category: Form
+    guideline: Use Form with react-hook-form
+    description: Integrate Form component with react-hook-form for validation
+    do: useForm + Form + FormField pattern
+    don_t: Custom form handling without Form
+    code_good: <Form {...form}><FormField control={form.control}>
+    code_bad: <form onSubmit={handleSubmit}>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/form
+  - id: "17"
+    category: Form
+    guideline: Use FormField for inputs
+    description: Wrap inputs in FormField for proper labeling and errors
+    do: FormField + FormItem + FormLabel + FormControl
+    don_t: Input without FormField wrapper
+    code_good: <FormField><FormItem><FormLabel><FormControl><Input>
+    code_bad: <Input onChange={...}>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/form
+  - id: "18"
+    category: Form
+    guideline: Display form messages
+    description: Use FormMessage for validation error display
+    do: FormMessage after FormControl
+    don_t: Custom error text without FormMessage
+    code_good: <FormControl><Input/></FormControl><FormMessage/>
+    code_bad: <Input/>{error && <span>{error}</span>}
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/form
+  - id: "19"
+    category: Form
+    guideline: Use Zod for validation
+    description: Define form schema with Zod for type-safe validation
+    do: zodResolver with form schema
+    don_t: Manual validation logic
+    code_good: zodResolver(formSchema)
+    code_bad: "validate: (values) => { if (!values.email) }"
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/form
+  - id: "20"
+    category: Select
+    guideline: Use Select for dropdowns
+    description: Select component for option selection
+    do: Select for choosing from list
+    don_t: Native select element
+    code_good: <Select><SelectTrigger><SelectContent>
+    code_bad: <select><option>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/select
+  - id: "21"
+    category: Select
+    guideline: Structure Select properly
+    description: Include Trigger Value Content and Items
+    do: Complete Select structure
+    don_t: Missing SelectValue or SelectContent
+    code_good: <SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem>
+    code_bad: <Select><option>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/select
+  - id: "22"
+    category: Command
+    guideline: Use Command for search
+    description: Command component for searchable lists and palettes
+    do: Command for command palette search
+    don_t: Input with custom dropdown
+    code_good: <Command><CommandInput><CommandList>
+    code_bad: <Input><div className="dropdown">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/command
+  - id: "23"
+    category: Command
+    guideline: Group command items
+    description: Use CommandGroup for categorized items
+    do: CommandGroup with heading for sections
+    don_t: Flat list without grouping
+    code_good: <CommandGroup heading="Suggestions"><CommandItem>
+    code_bad: <CommandItem> without groups
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/command
+  - id: "24"
+    category: Table
+    guideline: Use Table for data display
+    description: Table component for structured data
+    do: Table for tabular data display
+    don_t: Div grid for table-like layouts
+    code_good: <Table><TableHeader><TableBody><TableRow>
+    code_bad: <div className="grid">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/table
+  - id: "25"
+    category: Table
+    guideline: Include proper table structure
+    description: Use TableHeader TableBody TableRow TableCell
+    do: Semantic table structure
+    don_t: Missing thead or tbody
+    code_good: <TableHeader><TableRow><TableHead>
+    code_bad: <Table><TableRow> without header
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/table
+  - id: "26"
+    category: DataTable
+    guideline: Use DataTable for complex tables
+    description: Combine Table with TanStack Table for features
+    do: DataTable pattern for sorting filtering pagination
+    don_t: Custom table implementation
+    code_good: useReactTable + Table components
+    code_bad: Custom sort filter pagination logic
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/data-table
+  - id: "27"
+    category: Tabs
+    guideline: Use Tabs for content switching
+    description: Tabs component for tabbed interfaces
+    do: Tabs for related content sections
+    don_t: Custom tab implementation
+    code_good: <Tabs><TabsList><TabsTrigger><TabsContent>
+    code_bad: <div onClick={() => setTab(...)}
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/tabs
+  - id: "28"
+    category: Tabs
+    guideline: Set default tab value
+    description: Specify defaultValue for initial tab
+    do: defaultValue on Tabs component
+    don_t: No default leaving first tab
+    code_good: <Tabs defaultValue="account">
+    code_bad: <Tabs> without defaultValue
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/tabs
+  - id: "29"
+    category: Accordion
+    guideline: Use Accordion for collapsible
+    description: Accordion for expandable content sections
+    do: Accordion for FAQ settings panels
+    don_t: Custom collapse implementation
+    code_good: <Accordion><AccordionItem><AccordionTrigger>
+    code_bad: <div onClick={() => setOpen(!open)}>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/accordion
+  - id: "30"
+    category: Accordion
+    guideline: Choose accordion type
+    description: Use type="single" or type="multiple" appropriately
+    do: type="single" for one open type="multiple" for many
+    don_t: Default type without consideration
+    code_good: <Accordion type="single" collapsible>
+    code_bad: <Accordion> without type
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/accordion
+  - id: "31"
+    category: Toast
+    guideline: Use Sonner for toasts
+    description: Sonner integration for toast notifications
+    do: toast() from sonner for notifications
+    don_t: Custom toast implementation
+    code_good: toast("Event created")
+    code_bad: setShowToast(true)
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/sonner
+  - id: "32"
+    category: Toast
+    guideline: Add Toaster to layout
+    description: Include Toaster component in root layout
+    do: <Toaster /> in app layout
+    don_t: Toaster in individual pages
+    code_good: "app/layout.tsx: <Toaster />"
+    code_bad: "page.tsx: <Toaster />"
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/sonner
+  - id: "33"
+    category: Toast
+    guideline: Use toast variants
+    description: Apply toast.success toast.error for context
+    do: Semantic toast methods
+    don_t: Generic toast for all messages
+    code_good: toast.success("Saved!") toast.error("Failed")
+    code_bad: toast("Saved!") toast("Failed")
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/sonner
+  - id: "34"
+    category: Popover
+    guideline: Use Popover for floating content
+    description: Popover for dropdown menus and floating panels
+    do: Popover for contextual actions
+    don_t: Absolute positioned divs
+    code_good: <Popover><PopoverTrigger><PopoverContent>
+    code_bad: <div className="relative"><div className="absolute">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/popover
+  - id: "35"
+    category: Popover
+    guideline: Handle popover alignment
+    description: Use align and side props for positioning
+    do: Explicit alignment configuration
+    don_t: Default alignment for all
+    code_good: <PopoverContent align="start" side="bottom">
+    code_bad: <PopoverContent>
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/popover
+  - id: "36"
+    category: DropdownMenu
+    guideline: Use DropdownMenu for actions
+    description: DropdownMenu for action lists and context menus
+    do: DropdownMenu for user menu actions
+    don_t: Popover for action lists
+    code_good: <DropdownMenu><DropdownMenuTrigger><DropdownMenuContent>
+    code_bad: <Popover> for menu actions
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/dropdown-menu
+  - id: "37"
+    category: DropdownMenu
+    guideline: Group menu items
+    description: Use DropdownMenuGroup and DropdownMenuSeparator
+    do: Organized menu with separators
+    don_t: Flat list of items
+    code_good: <DropdownMenuGroup><DropdownMenuItem><DropdownMenuSeparator>
+    code_bad: <DropdownMenuItem> without organization
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/dropdown-menu
+  - id: "38"
+    category: Tooltip
+    guideline: Use Tooltip for hints
+    description: Tooltip for icon buttons and truncated text
+    do: Tooltip for additional context
+    don_t: Title attribute for tooltips
+    code_good: <Tooltip><TooltipTrigger><TooltipContent>
+    code_bad: <button title="Delete">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/tooltip
+  - id: "39"
+    category: Tooltip
+    guideline: Add TooltipProvider
+    description: Wrap app or section in TooltipProvider
+    do: TooltipProvider at app level
+    don_t: TooltipProvider per tooltip
+    code_good: <TooltipProvider><App/></TooltipProvider>
+    code_bad: <Tooltip><TooltipProvider>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/tooltip
+  - id: "40"
+    category: Skeleton
+    guideline: Use Skeleton for loading
+    description: Skeleton component for loading placeholders
+    do: Skeleton matching content layout
+    don_t: Spinner for content loading
+    code_good: <Skeleton className="h-4 w-[200px]"/>
+    code_bad: <Spinner/> for card loading
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/skeleton
+  - id: "41"
+    category: Skeleton
+    guideline: Match skeleton dimensions
+    description: Size skeleton to match loaded content
+    do: Skeleton same size as expected content
+    don_t: Generic skeleton size
+    code_good: <Skeleton className="h-12 w-12 rounded-full"/>
+    code_bad: <Skeleton/> without sizing
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/skeleton
+  - id: "42"
+    category: AlertDialog
+    guideline: Use AlertDialog for confirms
+    description: AlertDialog for destructive action confirmation
+    do: AlertDialog for delete confirmations
+    don_t: Dialog for confirmations
+    code_good: <AlertDialog><AlertDialogTrigger><AlertDialogContent>
+    code_bad: <Dialog> for delete confirmation
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/alert-dialog
+  - id: "43"
+    category: AlertDialog
+    guideline: Include action buttons
+    description: Use AlertDialogAction and AlertDialogCancel
+    do: Standard confirm/cancel pattern
+    don_t: Custom buttons in AlertDialog
+    code_good: <AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction>
+    code_bad: <Button>Cancel</Button><Button>Confirm</Button>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/alert-dialog
+  - id: "44"
+    category: Sidebar
+    guideline: Use Sidebar for navigation
+    description: Sidebar component for app navigation
+    do: Sidebar for main app navigation
+    don_t: Custom sidebar implementation
+    code_good: <SidebarProvider><Sidebar><SidebarContent>
+    code_bad: <div className="w-64 fixed">
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/sidebar
+  - id: "45"
+    category: Sidebar
+    guideline: Wrap in SidebarProvider
+    description: Use SidebarProvider for sidebar state management
+    do: SidebarProvider at layout level
+    don_t: Sidebar without provider
+    code_good: <SidebarProvider><Sidebar></SidebarProvider>
+    code_bad: <Sidebar> without provider
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/sidebar
+  - id: "46"
+    category: Sidebar
+    guideline: Use SidebarTrigger
+    description: Include SidebarTrigger for mobile toggle
+    do: SidebarTrigger for responsive toggle
+    don_t: Custom toggle button
+    code_good: <SidebarTrigger/>
+    code_bad: <Button onClick={() => toggleSidebar()}>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/sidebar
+  - id: "47"
+    category: Chart
+    guideline: Use Chart for data viz
+    description: Chart component with Recharts integration
+    do: Chart component for dashboards
+    don_t: Direct Recharts without wrapper
+    code_good: <ChartContainer config={chartConfig}>
+    code_bad: <ResponsiveContainer><BarChart>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/chart
+  - id: "48"
+    category: Chart
+    guideline: Define chart config
+    description: Create chartConfig for consistent theming
+    do: chartConfig with color definitions
+    don_t: Inline colors in charts
+    code_good: '{ desktop: { label: "Desktop", color: "#2563eb" } }'
+    code_bad: <Bar fill="#2563eb"/>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/chart
+  - id: "49"
+    category: Chart
+    guideline: Use ChartTooltip
+    description: Apply ChartTooltip for interactive charts
+    do: ChartTooltip with ChartTooltipContent
+    don_t: Recharts Tooltip directly
+    code_good: <ChartTooltip content={<ChartTooltipContent/>}/>
+    code_bad: <Tooltip/> from recharts
+    severity: Low
+    docs_url: https://ui.shadcn.com/docs/components/chart
+  - id: "50"
+    category: Blocks
+    guideline: Use blocks for scaffolding
+    description: Start from shadcn blocks for common layouts
+    do: npx shadcn@latest add dashboard-01
+    don_t: Build dashboard from scratch
+    code_good: npx shadcn@latest add login-01
+    code_bad: Custom login page from scratch
+    severity: Medium
+    docs_url: https://ui.shadcn.com/blocks
+  - id: "51"
+    category: Blocks
+    guideline: Customize block components
+    description: Modify copied block code to fit needs
+    do: Edit block files after installation
+    don_t: Use blocks without modification
+    code_good: Customize dashboard-01 layout
+    code_bad: Use dashboard-01 as-is
+    severity: Low
+    docs_url: https://ui.shadcn.com/blocks
+  - id: "52"
+    category: A11y
+    guideline: Use semantic components
+    description: Shadcn components have built-in ARIA
+    do: Rely on component accessibility
+    don_t: Override ARIA attributes
+    code_good: <Button> has button role
+    code_bad: <div role="button">
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "53"
+    category: A11y
+    guideline: Maintain focus management
+    description: Dialog Sheet handle focus automatically
+    do: Let components manage focus
+    don_t: Custom focus handling
+    code_good: <Dialog> traps focus
+    code_bad: document.querySelector().focus()
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/dialog
+  - id: "54"
+    category: A11y
+    guideline: Provide labels
+    description: Use FormLabel and aria-label appropriately
+    do: FormLabel for form inputs
+    don_t: Placeholder as only label
+    code_good: <FormLabel>Email</FormLabel><Input/>
+    code_bad: <Input placeholder="Email"/>
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/form
+  - id: "55"
+    category: Performance
+    guideline: Import components individually
+    description: Import only needed components
+    do: Named imports from component files
+    don_t: Import all from index
+    code_good: import { Button } from "@/components/ui/button"
+    code_bad: import { Button Card Dialog } from "@/components/ui"
+    severity: Medium
+  - id: "56"
+    category: Performance
+    guideline: Lazy load dialogs
+    description: Dynamic import for heavy dialog content
+    do: React.lazy for dialog content
+    don_t: Import all dialogs upfront
+    code_good: const HeavyContent = lazy(() => import('./Heavy'))
+    code_bad: import HeavyContent from './Heavy'
+    severity: Medium
+  - id: "57"
+    category: Customization
+    guideline: Extend variants with cva
+    description: Add new variants using class-variance-authority
+    do: Extend buttonVariants for new styles
+    don_t: Inline classes for variants
+    code_good: 'variants: { size: { xl: "h-14 px-8" } }'
+    code_bad: className="h-14 px-8"
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "58"
+    category: Customization
+    guideline: Create custom components
+    description: Build new components following shadcn patterns
+    do: Use cn() and cva for custom components
+    don_t: Different patterns for custom
+    code_good: const Custom = ({ className }) => <div className={cn("base" className)}>
+    code_bad: const Custom = ({ style }) => <div style={style}>
+    severity: Medium
+  - id: "59"
+    category: Patterns
+    guideline: Use asChild for composition
+    description: asChild prop for component composition
+    do: Slot pattern with asChild
+    don_t: Wrapper divs for composition
+    code_good: <Button asChild><Link href="/">
+    code_bad: <Button><Link href="/"></Link></Button>
+    severity: Medium
+    docs_url: https://ui.shadcn.com/docs/components/button
+  - id: "60"
+    category: Patterns
+    guideline: Combine with React Hook Form
+    description: Form + useForm for complete forms
+    do: RHF Controller with shadcn inputs
+    don_t: Custom form state management
+    code_good: <FormField control={form.control} name="email">
+    code_bad: <Input value={email} onChange={(e) => setEmail(e.target.value)}
+    severity: High
+    docs_url: https://ui.shadcn.com/docs/components/form

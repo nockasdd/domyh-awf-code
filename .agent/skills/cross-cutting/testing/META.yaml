@@ -1,29 +1,45 @@
 name: testing
-version: "6.1.2"
+version: "6.2.1"
 display: Testing
 category: support
 tier: 1
 priority: 2
+
 desc: "Testing patterns: unit tests, integration tests, mocking, TDD, coverage, e2e"
-keywords:
-  [
-    test,
-    testing,
-    unit,
-    integration,
-    mock,
-    tdd,
-    coverage,
-    e2e,
-    fixture,
-    assertion,
-  ]
-detect: [tests/, test/, "*_test.*", "*.test.*", "*.spec.*"]
+
+triggers:
+  file_patterns:
+    - "tests/"
+    - "test/"
+    - "*_test.*"
+    - "*.test.*"
+    - "*.spec.*"
+  keywords:
+    - test
+    - testing
+    - unit
+    - integration
+    - mock
+    - tdd
+    - coverage
+    - e2e
+    - fixture
+    - assertion
+  intents:
+    - write tests
+    - test coverage
+    - integration testing
+    - mock setup
+
 caps:
-  [
-    Unit testing patterns,
-    Integration testing,
-    Mocking strategies,
-    Test-driven development,
-  ]
-data_files: [frameworks.csv, patterns.csv]
+  - Unit testing patterns
+  - Integration testing
+  - Mocking strategies
+  - Test-driven development
+
+    - search_testing_patterns
+    - get_framework_patterns
+
+data_files:
+  - data/frameworks.yaml
+  - data/patterns.yaml

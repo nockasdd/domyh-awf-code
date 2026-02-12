@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_java
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-java.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: JV-001
+    category: slf4j
+    library: SLF4J
+    name: LoggerFactory
+    description: Get SLF4J logger
+    example: Logger logger = LoggerFactory.getLogger(MyClass.class)
+    when_to_use: Every Java class
+  - id: JV-002
+    category: slf4j
+    library: SLF4J
+    name: Parameterized Logging
+    description: Use {} placeholders
+    example: logger.info("User {} logged in from {}", userId, ip)
+    when_to_use: Performance-safe logging
+  - id: JV-003
+    category: slf4j
+    library: SLF4J
+    name: Exception Logging
+    description: Log exceptions properly
+    example: logger.error("Failed to process", exception)
+    when_to_use: Error handling
+  - id: JV-004
+    category: slf4j
+    library: SLF4J
+    name: isDebugEnabled
+    description: Guard expensive logging
+    example: if (logger.isDebugEnabled()) { logger.debug(expensive()) }
+    when_to_use: Performance
+  - id: JV-005
+    category: slf4j
+    library: SLF4J
+    name: MDC.put
+    description: Add context to MDC
+    example: MDC.put("requestId", requestId)
+    when_to_use: Request context
+  - id: JV-006
+    category: slf4j
+    library: SLF4J
+    name: MDC.clear
+    description: Clear MDC after request
+    example: try { ... } finally { MDC.clear() }
+    when_to_use: Cleanup
+  - id: JV-007
+    category: slf4j
+    library: SLF4J
+    name: MDC.getCopyOfContextMap
+    description: Copy MDC for async
+    example: Map<String, String> ctx = MDC.getCopyOfContextMap()
+    when_to_use: Async propagation
+  - id: JV-008
+    category: log4j2
+    library: Log4j2
+    name: LogManager.getLogger
+    description: Get Log4j2 logger
+    example: Logger logger = LogManager.getLogger(MyClass.class)
+    when_to_use: Log4j2 projects
+  - id: JV-009
+    category: log4j2
+    library: Log4j2
+    name: Async Loggers
+    description: Configure async logging
+    example: <AsyncLogger name="com.example" level="info"/>
+    when_to_use: High-performance
+  - id: JV-010
+    category: log4j2
+    library: Log4j2
+    name: JSON Layout
+    description: JSON output layout
+    example: <JsonLayout compact="true" eventEol="true"/>
+    when_to_use: Structured logging
+  - id: JV-011
+    category: log4j2
+    library: Log4j2
+    name: Rolling File
+    description: Log rotation appender
+    example: <RollingFile fileName="app.log" filePattern="app-%d.log"/>
+    when_to_use: File management
+  - id: JV-012
+    category: log4j2
+    library: Log4j2
+    name: Pattern Layout
+    description: Custom pattern layout
+    example: <PatternLayout pattern="%d{ISO8601} %-5level %logger - %msg%n"/>
+    when_to_use: Custom formatting
+  - id: JV-013
+    category: log4j2
+    library: Log4j2
+    name: Lookup
+    description: Dynamic value lookup
+    example: ${ctx:requestId}
+    when_to_use: MDC in patterns
+  - id: JV-014
+    category: log4j2
+    library: Log4j2
+    name: Filters
+    description: Log filtering
+    example: <ThresholdFilter level="WARN"/>
+    when_to_use: Conditional logging
+  - id: JV-015
+    category: logback
+    library: Logback
+    name: Configuration
+    description: logback.xml setup
+    example: <configuration><appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"/>
+    when_to_use: Logback projects
+  - id: JV-016
+    category: logback
+    library: Logback
+    name: Encoder
+    description: Pattern encoder
+    example: <encoder><pattern>%d{ISO8601} %msg%n</pattern></encoder>
+    when_to_use: Output formatting
+  - id: JV-017
+    category: logback
+    library: Logback
+    name: Rolling Policy
+    description: Time-based rolling
+    example: <rollingPolicy class="TimeBasedRollingPolicy"/>
+    when_to_use: Log rotation
+  - id: JV-018
+    category: logback
+    library: Logback
+    name: Async Appender
+    description: Async logging
+    example: <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender"/>
+    when_to_use: Performance
+  - id: JV-019
+    category: logback
+    library: Logback
+    name: MDC Discriminator
+    description: MDC-based log separation
+    example: <sift>...</sift>
+    when_to_use: Multi-tenant logging
+  - id: JV-020
+    category: logback
+    library: Logback
+    name: JSON Encoder
+    description: JSON output
+    example: <encoder class="ch.qos.logback.contrib.json.classic.JsonLayout"/>
+    when_to_use: Structured logging
+  - id: JV-021
+    category: general
+    library: any
+    name: Marker
+    description: Log categorization
+    example: Marker marker = MarkerFactory.getMarker("AUDIT"); logger.info(marker, "msg")
+    when_to_use: Log categorization
+  - id: JV-022
+    category: general
+    library: any
+    name: Spring Boot Logging
+    description: Spring Boot config
+    example: logging.level.com.example=DEBUG in application.properties
+    when_to_use: Spring applications
+  - id: JV-023
+    category: general
+    library: any
+    name: Correlation ID Filter
+    description: HTTP filter for correlation
+    example: "@Component public class CorrelationFilter implements Filter"
+    when_to_use: Web apps
+  - id: JV-024
+    category: general
+    library: any
+    name: Feign Logging
+    description: Feign client logging
+    example: "@Bean Logger.Level feignLoggerLevel() { return Logger.Level.FULL; }"
+    when_to_use: API client logging
+  - id: JV-025
+    category: general
+    library: any
+    name: Thread Context
+    description: ThreadLocal context
+    example: ThreadContext.put("userId", userId)
+    when_to_use: Thread-safe context

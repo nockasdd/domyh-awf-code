@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_csharp
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-csharp.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: CS-001
+    pattern_name: ASP.NET Core Identity
+    description: Built-in identity system
+    library: Microsoft.AspNetCore.Identity
+    security_level: high
+    keywords:
+      - identity
+      - aspnet
+  - id: CS-002
+    pattern_name: IdentityDbContext
+    description: EF Core identity storage
+    library: Microsoft.AspNetCore.Identity.EntityFrameworkCore
+    security_level: high
+    keywords:
+      - ef
+      - database
+  - id: CS-003
+    pattern_name: UserManager
+    description: User CRUD operations
+    library: Microsoft.AspNetCore.Identity
+    security_level: high
+    keywords:
+      - user
+      - manager
+  - id: CS-004
+    pattern_name: SignInManager
+    description: Sign in sign out handling
+    library: Microsoft.AspNetCore.Identity
+    security_level: high
+    keywords:
+      - signin
+      - manager
+  - id: CS-005
+    pattern_name: JWT Bearer Authentication
+    description: Token-based API auth
+    library: Microsoft.AspNetCore.Authentication.JwtBearer
+    security_level: high
+    keywords:
+      - jwt
+      - bearer
+  - id: CS-006
+    pattern_name: AddJwtBearer
+    description: Configure JWT validation
+    library: Microsoft.AspNetCore.Authentication.JwtBearer
+    security_level: high
+    keywords:
+      - config
+      - bearer
+  - id: CS-007
+    pattern_name: JwtSecurityTokenHandler
+    description: Token creation and validation
+    library: System.IdentityModel.Tokens.Jwt
+    security_level: high
+    keywords:
+      - handler
+      - jwt
+  - id: CS-008
+    pattern_name: TokenValidationParameters
+    description: Configure token validation
+    library: Microsoft.IdentityModel.Tokens
+    security_level: critical
+    keywords:
+      - validation
+      - params
+  - id: CS-009
+    pattern_name: OAuth2 Authentication
+    description: OAuth2 with external providers
+    library: Microsoft.AspNetCore.Authentication.OAuth
+    security_level: high
+    keywords:
+      - oauth2
+      - providers
+  - id: CS-010
+    pattern_name: OIDC Authentication
+    description: OpenID Connect integration
+    library: Microsoft.AspNetCore.Authentication.OpenIdConnect
+    security_level: high
+    keywords:
+      - oidc
+      - openid
+  - id: CS-011
+    pattern_name: Cookie Authentication
+    description: Cookie-based session auth
+    library: Microsoft.AspNetCore.Authentication.Cookies
+    security_level: high
+    keywords:
+      - cookie
+      - session
+  - id: CS-012
+    pattern_name: MSAL.NET
+    description: Microsoft identity platform
+    library: Microsoft.Identity.Client
+    security_level: high
+    keywords:
+      - msal
+      - azure
+  - id: CS-013
+    pattern_name: Microsoft Identity Web
+    description: Azure AD integration
+    library: Microsoft.Identity.Web
+    security_level: high
+    keywords:
+      - azure
+      - ad
+  - id: CS-014
+    pattern_name: Azure AD B2C
+    description: Consumer identity (deprecated May 2025)
+    library: Microsoft.Identity.Web
+    security_level: medium
+    keywords:
+      - b2c
+      - consumer
+  - id: CS-015
+    pattern_name: Entra External ID
+    description: Customer identity replacement
+    library: Microsoft.Identity.Web
+    security_level: high
+    keywords:
+      - entra
+      - external
+  - id: CS-016
+    pattern_name: Data Protection API
+    description: Key management and encryption
+    library: Microsoft.AspNetCore.DataProtection
+    security_level: critical
+    keywords:
+      - dpapi
+      - keys
+  - id: CS-017
+    pattern_name: BCrypt.Net-Next
+    description: Password hashing library
+    library: BCrypt.Net
+    security_level: critical
+    keywords:
+      - bcrypt
+      - hash
+  - id: CS-018
+    pattern_name: PasswordHasher
+    description: Identity password hashing
+    library: Microsoft.AspNetCore.Identity
+    security_level: critical
+    keywords:
+      - hash
+      - password
+  - id: CS-019
+    pattern_name: Policy-Based Authorization
+    description: Custom authorization policies
+    library: Microsoft.AspNetCore.Authorization
+    security_level: high
+    keywords:
+      - policy
+      - authz
+  - id: CS-020
+    pattern_name: Role-Based Authorization
+    description: Role checks for routes
+    library: Microsoft.AspNetCore.Authorization
+    security_level: high
+    keywords:
+      - roles
+      - rbac
+  - id: CS-021
+    pattern_name: Claims-Based Identity
+    description: Claims principal handling
+    library: System.Security.Claims
+    security_level: high
+    keywords:
+      - claims
+      - principal
+  - id: CS-022
+    pattern_name: AntiForgery
+    description: CSRF protection middleware
+    library: Microsoft.AspNetCore.Antiforgery
+    security_level: critical
+    keywords:
+      - csrf
+      - antiforgery
+  - id: CS-023
+    pattern_name: Rate Limiting Middleware
+    description: AspNetCoreRateLimit package
+    library: AspNetCoreRateLimit
+    security_level: high
+    keywords:
+      - ratelimit
+      - api
+  - id: CS-024
+    pattern_name: FIDO2 Server
+    description: WebAuthn server library
+    library: Fido2.AspNet
+    security_level: critical
+    keywords:
+      - fido2
+      - webauthn
+  - id: CS-025
+    pattern_name: IdentityServer
+    description: OpenID Connect server
+    library: Duende.IdentityServer
+    security_level: high
+    keywords:
+      - oidc
+      - server

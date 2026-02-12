@@ -1,0 +1,282 @@
+# =============================================================================
+# Vue Core Patterns (Feb 2026)
+# =============================================================================
+# Composition API, Reactivity, defineModel
+
+metadata:
+  skill: vue
+  domain: core
+  version: "3.6"
+  updated: "2026-02-11"
+  patterns_count: 6
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: vue001
+    name: Composition API
+    category: architecture
+    version: "3.0+"
+    description: Modern Vue development with setup function
+    text: composition api setup ref reactive script setup
+    example: |
+      <script setup lang="ts">
+      import { ref, reactive, computed, onMounted } from 'vue';
+
+      // ✅ Refs for primitives
+      const count = ref(0);
+      const message = ref('Hello');
+
+      // ✅ Reactive for objects
+      const user = reactive({
+        name: 'John',
+        email: 'john@example.com',
+      });
+
+      // ✅ Computed properties
+      const doubleCount = computed(() => count.value * 2);
+
+      // ✅ Methods
+      function increment() {
+        count.value++;
+      }
+
+      // ✅ Lifecycle hooks
+      onMounted(() => {
+        console.log('Component mounted');
+      });
+      </script>
+
+      <template>
+        <div>
+          <p>Count: {{ count }}</p>
+          <p>Double: {{ doubleCount }}</p>
+          <button @click="increment">+1</button>
+        </div>
+      </template>
+    severity: CRITICAL
+    docs_url: https://vuejs.org/guide/extras/composition-api-faq.html
+
+  - id: vue002
+    name: defineModel (Vue 3.5+)
+    category: component
+    version: "3.5+"
+    description: Simplified two-way binding macro
+    text: defineModel v-model two-way binding macro emit
+    example: |
+      <!-- ✅ Vue 3.5+: defineModel replaces defineProps + defineEmits -->
+      <script setup lang="ts">
+      // Old way:
+      // const props = defineProps<{ modelValue: string }>();
+      // const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
+
+      // ✅ New way: defineModel
+      const model = defineModel<string>();
+
+      // ✅ With default value
+      const count = defineModel<number>('count', { default: 0 });
+
+      // ✅ Multiple v-models
+      const firstName = defineModel<string>('firstName');
+      const lastName = defineModel<string>('lastName');
+      </script>
+
+      <template>
+        <input v-model="model" />
+        <input type="number" v-model="count" />
+      </template>
+
+      <!-- Usage in parent -->
+      <!-- <TextInput v-model="searchQuery" v-model:count="itemCount" /> -->
+
+      <!-- ✅ Benefits:
+      - Cleaner syntax
+      - Auto-generates props and emits
+      - Full TypeScript support
+      - Reduces boilerplate significantly -->
+    severity: HIGH
+    docs_url: https://vuejs.org/api/sfc-script-setup.html#definemodel
+
+  - id: vue003
+    name: Deep Reactivity
+    category: reactivity
+    version: "3.5+"
+    description: |
+      Improved reactivity with version counting algorithm.
+      15% smaller bundles, better tree-shaking.
+    text: reactivity deep nested object array tracking
+    example: |
+      <script setup>
+      import { reactive, ref, watch } from 'vue';
+
+      // ✅ Vue 3.5: Enhanced deep reactivity
+      const user = reactive({
+        profile: {
+          settings: {
+            theme: 'dark',
+            notifications: {
+              email: true,
+              push: false,
+            },
+          },
+        },
+      });
+
+      // ✅ Deep mutations trigger updates automatically
+      function togglePush() {
+        user.profile.settings.notifications.push = 
+          !user.profile.settings.notifications.push;
+      }
+
+      // ✅ Watch deep changes
+      watch(
+        () => user.profile.settings,
+        (newVal) => {
+          console.log('Settings changed:', newVal);
+        },
+        { deep: true }
+      );
+
+      // ✅ shallowRef for performance when deep reactivity not needed
+      import { shallowRef } from 'vue';
+      const largeList = shallowRef([...items]);
+      // Only triggers when ref.value is reassigned, not on mutations
+      </script>
+    severity: MEDIUM
+    docs_url: https://vuejs.org/guide/essentials/reactivity-fundamentals.html
+
+  - id: vue004
+    name: Suspense & Async Components
+    category: async
+    version: "3.5+"
+    description: Handle async components with loading states
+    text: suspense async await loading fallback lazy
+    example: |
+      <script setup>
+      import { defineAsyncComponent, Suspense } from 'vue';
+
+      // ✅ Async component with loading/error states
+      const AsyncDashboard = defineAsyncComponent({
+        loader: () => import('./Dashboard.vue'),
+        loadingComponent: LoadingSpinner,
+        errorComponent: ErrorComponent,
+        delay: 200,
+        timeout: 3000,
+      });
+      </script>
+
+      <template>
+        <!-- ✅ Suspense for async setup() -->
+        <Suspense>
+          <template #default>
+            <AsyncDashboard />
+          </template>
+          <template #fallback>
+            <LoadingSpinner />
+          </template>
+        </Suspense>
+      </template>
+
+      <!-- Child component with async setup -->
+      <script setup>
+      // ✅ Async setup - Suspense handles loading
+      const user = await fetchUser();
+      const posts = await fetchPosts(user.id);
+      </script>
+
+      <template>
+        <h1>{{ user.name }}</h1>
+        <PostList :posts="posts" />
+      </template>
+    severity: MEDIUM
+    docs_url: https://vuejs.org/guide/built-ins/suspense.html
+
+  - id: vue005
+    name: Composables (Custom Hooks)
+    category: patterns
+    version: "3.0+"
+    description: Reusable composition functions
+    text: composable hook reusable logic extract function
+    example: |
+      // composables/useFetch.ts
+      import { ref, Ref } from 'vue';
+
+      interface UseFetchReturn<T> {
+        data: Ref<T | null>;
+        error: Ref<Error | null>;
+        loading: Ref<boolean>;
+        refresh: () => Promise<void>;
+      }
+
+      export function useFetch<T>(url: string): UseFetchReturn<T> {
+        const data = ref<T | null>(null);
+        const error = ref<Error | null>(null);
+        const loading = ref(false);
+
+        async function refresh() {
+          loading.value = true;
+          error.value = null;
+          try {
+            const response = await fetch(url);
+            data.value = await response.json();
+          } catch (e) {
+            error.value = e as Error;
+          } finally {
+            loading.value = false;
+          }
+        }
+
+        refresh();
+
+        return { data, error, loading, refresh };
+      }
+
+      // Usage in component
+      <script setup>
+      import { useFetch } from '@/composables/useFetch';
+
+      const { data: users, loading, error, refresh } = useFetch('/api/users');
+      </script>
+    severity: HIGH
+    docs_url: https://vuejs.org/guide/reusability/composables.html
+
+  - id: vue006
+    name: SSR Hydration Mismatch
+    category: ssr
+    version: "3.5+"
+    description: Handle client/server mismatch warnings
+    text: ssr hydration mismatch data-allow-mismatch server
+    example: |
+      <!-- ✅ Vue 3.5: data-allow-mismatch attribute -->
+      <template>
+        <!-- Silence mismatch for dynamic content -->
+        <span data-allow-mismatch>{{ currentTime }}</span>
+
+        <!-- ✅ Mismatch types -->
+        <span data-allow-mismatch="text">{{ randomText }}</span>
+        <div data-allow-mismatch="children">
+          <DynamicContent />
+        </div>
+        <div data-allow-mismatch="class" :class="dynamicClass">
+          Styled content
+        </div>
+        <input data-allow-mismatch="attribute" :value="clientValue" />
+      </template>
+
+      <!-- ✅ Use cases:
+      - Time-based content
+      - Random content
+      - User-specific data
+      - Client-only features -->
+    severity: LOW
+    docs_url: https://vuejs.org/guide/scaling-up/ssr.html

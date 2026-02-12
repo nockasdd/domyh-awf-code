@@ -1,0 +1,105 @@
+metadata:
+  skill: error-handling
+  domain: anti_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: anti-patterns.yaml
+  patterns_count: 15
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - impact
+    - fix
+patterns:
+  - id: ANTI-001
+    pattern: Silent Failure
+    description: Catching exception but doing nothing
+    example: catch (e) { }
+    impact: Debugging impossible
+    fix: Log or rethrow the error
+  - id: ANTI-002
+    pattern: Swallowing Exception
+    description: Catching and returning null
+    example: try { return parse(); } catch { return null; }
+    impact: Lost error context
+    fix: Use Result pattern or rethrow
+  - id: ANTI-003
+    pattern: Generic Catch-All
+    description: Catching Exception or Throwable
+    example: catch (Exception e) { }
+    impact: Catches unexpected errors
+    fix: Catch specific exception types
+  - id: ANTI-004
+    pattern: Empty Error Message
+    description: Throwing without message
+    example: throw new Error();
+    impact: No debugging info
+    fix: Always include descriptive message
+  - id: ANTI-005
+    pattern: Log and Throw
+    description: Logging then throwing same error
+    example: log(e); throw e;
+    impact: Duplicate logs
+    fix: Either log or throw not both
+  - id: ANTI-006
+    pattern: String Error Types
+    description: Using strings instead of types
+    example: throw 'error';
+    impact: No type checking
+    fix: Use Error classes
+  - id: ANTI-007
+    pattern: Error Code Reuse
+    description: Same code for different errors
+    example: return -1 for all errors
+    impact: Cannot distinguish errors
+    fix: Use specific error codes
+  - id: ANTI-008
+    pattern: Ignoring Return Value
+    description: Not checking error return
+    example: riskyOperation(); // no check
+    impact: Missing errors
+    fix: Always check error returns
+  - id: ANTI-009
+    pattern: Panic for Flow Control
+    description: Using panic for expected cases
+    example: if notFound { panic() }
+    impact: Process crashes
+    fix: Use Result or error return
+  - id: ANTI-010
+    pattern: Exception for Flow
+    description: Using exception for control flow
+    example: try { find() } catch { create() }
+    impact: Performance overhead
+    fix: Use conditional logic
+  - id: ANTI-011
+    pattern: Leaking Stack Trace
+    description: Showing trace to users
+    example: res.send(error.stack);
+    impact: Security vulnerability
+    fix: Show user-friendly message only
+  - id: ANTI-012
+    pattern: Hardcoded Messages
+    description: Non-localizable error text
+    example: throw new Error('Invalid password');
+    impact: Cannot translate
+    fix: Use error codes with i18n
+  - id: ANTI-013
+    pattern: Untyped Catch
+    description: Catching unknown type
+    example: catch (e) { e.message }
+    impact: Runtime errors
+    fix: Type guard or instanceof check
+  - id: ANTI-014
+    pattern: Missing Finally
+    description: Not cleaning up resources
+    example: try { open() } catch {}; close() after
+    impact: Resource leaks
+    fix: Use finally or with/using
+  - id: ANTI-015
+    pattern: Rethrowing Without Context
+    description: Rethrowing original error
+    example: catch (e) { throw e; }
+    impact: Lost context
+    fix: Wrap with additional context

@@ -1,0 +1,208 @@
+# =============================================================================
+# element-discovery.yaml — Element Categorization from Accessibility Tree
+# =============================================================================
+
+version: "1.0.0"
+
+# How to discover and categorize interactive elements from browser_snapshot
+
+discovery_source: "browser_snapshot (accessibility tree)"
+
+element_types:
+  # =========================================================================
+  # SIMPLE INTERACTIVE ELEMENTS
+  # =========================================================================
+  interactive:
+    - type: button
+      detection:
+        roles: ["button"]
+        attributes: ["type=button", "type=submit", "type=reset"]
+        patterns: ["<button>", 'role="button"']
+      test_actions:
+        - "Click → verify action"
+        - "Check disabled state"
+        - "Verify loading state"
+        - "Tab focus + Enter activation"
+      mcp_tools: ["browser_click", "browser_press_key", "browser_snapshot"]
+      checklist_ref: "BT-F01 through BT-A04"
+
+    - type: link
+      detection:
+        roles: ["link"]
+        attributes: ["href"]
+        patterns: ["<a href>"]
+      test_actions:
+        - "Click → verify navigation"
+        - "Check target URL"
+        - "Verify opens in correct target (_blank, _self)"
+      mcp_tools: ["browser_click", "browser_snapshot"]
+
+    - type: text_input
+      detection:
+        roles: ["textbox", "searchbox"]
+        attributes: ["type=text", "type=email", "type=password", "type=search"]
+        patterns: ['<input type="text">', "<textarea>"]
+      test_actions:
+        - "Click to focus"
+        - "Type text → verify value"
+        - "Clear → verify empty"
+        - "Validation on blur"
+      mcp_tools: ["browser_click", "browser_type", "browser_snapshot"]
+
+    - type: checkbox
+      detection:
+        roles: ["checkbox"]
+        attributes: ["type=checkbox"]
+        patterns: ['<input type="checkbox">']
+      test_actions:
+        - "Click → toggle state"
+        - "Verify checked/unchecked"
+        - "Space key toggles"
+      mcp_tools: ["browser_click", "browser_press_key", "browser_snapshot"]
+
+    - type: radio
+      detection:
+        roles: ["radio"]
+        attributes: ["type=radio"]
+        patterns: ['<input type="radio">']
+      test_actions:
+        - "Click → select only one"
+        - "Arrow keys navigate group"
+        - "Verify mutual exclusivity"
+      mcp_tools: ["browser_click", "browser_press_key", "browser_snapshot"]
+
+    - type: switch
+      detection:
+        roles: ["switch"]
+        attributes: ["role=switch"]
+      test_actions:
+        - "Click → toggle on/off"
+        - "Space key toggles"
+        - "Verify visual state matches"
+      mcp_tools: ["browser_click", "browser_snapshot"]
+
+  # =========================================================================
+  # COMPOUND INTERACTIVE ELEMENTS (require multiple interactions)
+  # =========================================================================
+  compound:
+    - type: dropdown_native
+      detection:
+        roles: ["combobox", "listbox"]
+        patterns: ["<select>"]
+      test_actions:
+        - "Click → open options"
+        - "Select option → verify value"
+        - "Arrow keys navigate"
+        - "Escape closes"
+      mcp_tools: ["browser_click", "browser_select_option", "browser_press_key"]
+      checklist_ref: "DD-F01 through DD-VA03"
+
+    - type: dropdown_custom
+      detection:
+        roles: ["combobox"]
+        attributes: ["aria-haspopup=listbox", "aria-expanded"]
+      test_actions:
+        - "Click trigger → open list"
+        - "Click option → verify selection"
+        - "Keyboard: Enter open, arrows navigate, Escape close"
+        - "Search/filter (if available)"
+      mcp_tools:
+        [
+          "browser_click",
+          "browser_press_key",
+          "browser_type",
+          "browser_snapshot",
+        ]
+      checklist_ref: "DD-F01 through DD-VA03"
+
+    - type: modal
+      detection:
+        roles: ["dialog"]
+        attributes: ["aria-modal=true", "aria-haspopup=dialog"]
+      test_actions:
+        - "Click trigger → open modal"
+        - "Verify overlay and centered"
+        - "Focus trap: Tab stays inside"
+        - "Escape closes, focus returns"
+        - "Form inside: fill and submit"
+      mcp_tools:
+        [
+          "browser_click",
+          "browser_press_key",
+          "browser_fill_form",
+          "browser_snapshot",
+        ]
+      checklist_ref: "MD-TD01 through MD-FM04"
+
+    - type: accordion
+      detection:
+        attributes: ["aria-expanded"]
+        patterns: ["accordion", "collapsible"]
+      test_actions:
+        - "Click header → expand/collapse"
+        - "Verify content visibility"
+        - "Multiple open vs single open"
+      mcp_tools: ["browser_click", "browser_snapshot"]
+
+    - type: tabs
+      detection:
+        roles: ["tab", "tablist", "tabpanel"]
+      test_actions:
+        - "Click tab → show panel"
+        - "Arrow keys switch tabs"
+        - "Verify panel content"
+      mcp_tools: ["browser_click", "browser_press_key", "browser_snapshot"]
+
+    - type: menu
+      detection:
+        roles: ["menu", "menubar", "menuitem"]
+        attributes: ["aria-haspopup=menu"]
+      test_actions:
+        - "Click/hover → open menu"
+        - "Click item → action"
+        - "Arrow keys navigate"
+        - "Escape closes"
+      mcp_tools:
+        [
+          "browser_click",
+          "browser_hover",
+          "browser_press_key",
+          "browser_snapshot",
+        ]
+
+  # =========================================================================
+  # VISUAL INTERACTIVE ELEMENTS
+  # =========================================================================
+  visual:
+    - type: tooltip
+      detection:
+        attributes: ["aria-describedby", "data-tooltip"]
+        patterns: ["title="]
+      test_actions:
+        - "Hover → tooltip appears"
+        - "Focus → tooltip appears (keyboard)"
+        - "Content readable"
+        - "No layout shift"
+      mcp_tools: ["browser_hover", "browser_press_key", "browser_snapshot"]
+      checklist_ref: "HV-T01 through HV-TE02"
+
+    - type: carousel
+      detection:
+        attributes: ["role=region"]
+        patterns: ["carousel", "slider", "swiper"]
+      test_actions:
+        - "Next/prev buttons work"
+        - "Dots/indicators sync"
+        - "Auto-play pauses on hover"
+      mcp_tools: ["browser_click", "browser_hover", "browser_snapshot"]
+
+# Discovery Workflow
+workflow:
+  - step: "Call browser_snapshot"
+  - step: "Parse accessibility tree output"
+  - step: "For each element with an interactive role, add to test list"
+  - step: "For compound elements (aria-haspopup, aria-expanded), add enhanced tests"
+  - step: "Sort by priority: forms > modals > dropdowns > buttons > tooltips"
+  - step: "Generate Phase 3 test plan"
+
+# _DOMYH Awesome Code • Element Discovery Patterns v1.0.0_

@@ -1,0 +1,135 @@
+metadata:
+  skill: error-handling
+  domain: ui_error_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: ui-error-patterns.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - framework
+    - level
+patterns:
+  - id: UI-001
+    pattern: React Error Boundary
+    description: Catch errors in component tree
+    example: class ErrorBoundary extends React.Component { componentDidCatch() }
+    framework: React
+    level: INTERMEDIATE
+  - id: UI-002
+    pattern: React getDerivedStateFromError
+    description: Update state on error
+    example: "static getDerivedStateFromError(error) { return { hasError: true }; }"
+    framework: React
+    level: INTERMEDIATE
+  - id: UI-003
+    pattern: React componentDidCatch
+    description: Log error info
+    example: componentDidCatch(error, errorInfo) { logError(error, errorInfo); }
+    framework: React
+    level: INTERMEDIATE
+  - id: UI-004
+    pattern: React Fallback UI
+    description: Show fallback on error
+    example: <ErrorBoundary fallback={<ErrorPage />}><App /></ErrorBoundary>
+    framework: React
+    level: BASIC
+  - id: UI-005
+    pattern: React useErrorBoundary Hook
+    description: Hook-based error boundary
+    example: const { error, resetBoundary } = useErrorBoundary();
+    framework: React
+    level: INTERMEDIATE
+  - id: UI-006
+    pattern: Vue errorCaptured
+    description: Capture child component errors
+    example: errorCaptured(err, vm, info) { return false; }
+    framework: Vue
+    level: INTERMEDIATE
+  - id: UI-007
+    pattern: Vue app.config.errorHandler
+    description: Global error handler
+    example: app.config.errorHandler = (err, vm, info) => { }
+    framework: Vue
+    level: INTERMEDIATE
+  - id: UI-008
+    pattern: Vue onErrorCaptured
+    description: Composition API error handling
+    example: onErrorCaptured((err, instance, info) => { })
+    framework: Vue
+    level: INTERMEDIATE
+  - id: UI-009
+    pattern: Angular ErrorHandler
+    description: Global error service
+    example: class MyErrorHandler implements ErrorHandler { handleError(error) {} }
+    framework: Angular
+    level: INTERMEDIATE
+  - id: UI-010
+    pattern: Global window.onerror
+    description: Catch unhandled errors
+    example: window.onerror = (msg, url, line) => { }
+    framework: Vanilla JS
+    level: BASIC
+  - id: UI-011
+    pattern: Global unhandledrejection
+    description: Catch promise rejections
+    example: window.addEventListener('unhandledrejection', (e) => { })
+    framework: Vanilla JS
+    level: BASIC
+  - id: UI-012
+    pattern: Toast Notification
+    description: Show error as toast
+    example: toast.error('Operation failed');
+    framework: Any
+    level: BASIC
+  - id: UI-013
+    pattern: Inline Error Message
+    description: Show error near input
+    example: <input /><span class='error'>Invalid email</span>
+    framework: Any
+    level: BASIC
+  - id: UI-014
+    pattern: Error Banner
+    description: Full-width error display
+    example: <div class='error-banner'>System Error</div>
+    framework: Any
+    level: BASIC
+  - id: UI-015
+    pattern: Error Modal
+    description: Modal dialog for errors
+    example: <Modal open={hasError}><ErrorContent /></Modal>
+    framework: Any
+    level: INTERMEDIATE
+  - id: UI-016
+    pattern: Error Page
+    description: Dedicated error page
+    example: /error?code=500 route
+    framework: Any
+    level: BASIC
+  - id: UI-017
+    pattern: Retry Button
+    description: Allow user to retry
+    example: <button onClick={retry}>Try Again</button>
+    framework: Any
+    level: BASIC
+  - id: UI-018
+    pattern: Loading State Error
+    description: Error during loading
+    example: if (error) return <ErrorMessage />; if (loading) return <Loading />;
+    framework: Any
+    level: BASIC
+  - id: UI-019
+    pattern: Form Validation Error
+    description: Show validation errors
+    example: errors.email && <span>{errors.email}</span>
+    framework: Any
+    level: BASIC
+  - id: UI-020
+    pattern: Error List
+    description: List all errors
+    example: <ul>{errors.map(e => <li>{e}</li>)}</ul>
+    framework: Any
+    level: INTERMEDIATE

@@ -1,0 +1,72 @@
+name: ide-extension
+version: "1.0.0"
+display: IDE Extension Development
+category: tooling
+tier: 1
+priority: 2
+
+desc: "Multi-IDE extension development. VS Code (Extension Host, Contribution Points, LSP, DAP), JetBrains (IntelliJ Plugin SDK, PSI), Neovim (Lua API, lazy.nvim). Cross-platform patterns."
+
+  ### Data Files (3 domains, ~21 patterns)
+  - vscode-patterns.yaml: Extension Host, contribution points, webview (8)
+  - lsp-patterns.yaml: Language Server Protocol, diagnostics, code actions (7)
+  - jetbrains-patterns.yaml: Plugin SDK, PSI, remote dev (6)
+
+triggers:
+  file_patterns:
+    # VS Code
+    - "extension.ts"
+    - "extension.js"
+    - "*.vsix"
+    - ".vscode/launch.json"
+    - "**/contributes/**"
+    # JetBrains
+    - "plugin.xml"
+    - "build.gradle.kts:intellij"
+    # Neovim
+    - "lua/*/init.lua"
+    - "plugin/**/*.vim"
+  keywords:
+    - vscode extension
+    - vs code extension
+    - jetbrains plugin
+    - intellij plugin
+    - neovim plugin
+    - neovim lua
+    - language server
+    - LSP
+    - language server protocol
+    - DAP
+    - debug adapter
+    - activation events
+    - contribution points
+    - webview
+    - Extension Host
+    - extension development host
+    - vscode api
+    - TextDocument
+    - CompletionProvider
+    - DiagnosticCollection
+
+caps:
+  - VS Code Extension Host architecture (isolated process)
+  - package.json contribution points (commands, views, keybindings)
+  - Activation events (onLanguage, onCommand, workspaceContains)
+  - Language Server Protocol (LSP) implementation
+  - Debug Adapter Protocol (DAP) implementation
+  - Webview panels (React/Vue in VS Code sidebar/editor)
+  - JetBrains IntelliJ Plugin SDK 2.x
+  - PSI (Program Structure Interface) tree traversal
+  - Neovim Lua 5.1 plugin architecture
+  - lazy.nvim plugin management
+  - Extension testing (Extension Development Host)
+  - Publishing (VSIX, JetBrains Marketplace, Neovim package managers)
+
+related_skills:
+  - typescript
+  - mcp
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/tooling/ide-extension/data"
+  preload_data: true

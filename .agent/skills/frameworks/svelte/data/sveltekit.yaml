@@ -1,0 +1,244 @@
+# =============================================================================
+# SvelteKit Patterns (Feb 2026)
+# =============================================================================
+# Routing, Load functions, Form Actions, SSR
+
+metadata:
+  skill: svelte
+  domain: sveltekit
+  version: "2.x"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: sve007
+    name: Page with Load Function
+    category: routing
+    version: "1.0+"
+    description: Data loading for pages with typed load functions
+    text: page load fetch data params server client
+    example: |
+      <!-- +page.svelte -->
+      <script>
+        let { data } = $props();
+      </script>
+
+      <h1>{data.user.name}</h1>
+      <ul>
+        {#each data.posts as post}
+          <li>{post.title}</li>
+        {/each}
+      </ul>
+
+      // +page.ts (runs on both client & server)
+      import type { PageLoad } from './$types';
+
+      export const load: PageLoad = async ({ params, fetch }) => {
+        const user = await fetch(`/api/users/${params.id}`)
+          .then(r => r.json());
+        const posts = await fetch(`/api/users/${params.id}/posts`)
+          .then(r => r.json());
+
+        return { user, posts };
+      };
+    severity: CRITICAL
+    docs_url: https://kit.svelte.dev/docs/load
+
+  - id: sve008
+    name: Server Load (+page.server.ts)
+    category: routing
+    version: "1.0+"
+    description: Server-only data loading with database access
+    text: server load database secret secure sensitive
+    example: |
+      // +page.server.ts (runs ONLY on server)
+      import type { PageServerLoad } from './$types';
+      import { db } from '$lib/server/db';
+      import { error } from '@sveltejs/kit';
+
+      export const load: PageServerLoad = async ({ params }) => {
+        const user = await db.user.findUnique({
+          where: { id: params.id },
+        });
+
+        if (!user) {
+          throw error(404, 'User not found');
+        }
+
+        return { user };
+      };
+
+      // ✅ Benefits:
+      // - Direct database access
+      // - Secrets never exposed
+      // - Faster initial load
+      // - Smaller bundle (db code not sent to client)
+    severity: HIGH
+    docs_url: https://kit.svelte.dev/docs/load#universal-vs-server
+
+  - id: sve009
+    name: Form Actions
+    category: forms
+    version: "1.0+"
+    description: Server-side form handling with progressive enhancement
+    text: form action submit enhance progressive validation
+    example: |
+      <!-- +page.svelte -->
+      <script>
+        import { enhance } from '$app/forms';
+      </script>
+
+      <form method="POST" action="?/create" use:enhance>
+        <input name="title" required />
+        <button>Create</button>
+      </form>
+
+      // +page.server.ts
+      import type { Actions } from './$types';
+      import { fail, redirect } from '@sveltejs/kit';
+
+      export const actions: Actions = {
+        create: async ({ request }) => {
+          const data = await request.formData();
+          const title = data.get('title');
+
+          if (!title) {
+            return fail(400, { title, missing: true });
+          }
+
+          const post = await db.post.create({ data: { title } });
+          throw redirect(303, `/posts/${post.id}`);
+        },
+
+        delete: async ({ request }) => {
+          const data = await request.formData();
+          const id = data.get('id');
+          await db.post.delete({ where: { id } });
+          return { success: true };
+        },
+      };
+    severity: HIGH
+    docs_url: https://kit.svelte.dev/docs/form-actions
+
+  - id: sve010
+    name: Layouts
+    category: routing
+    version: "1.0+"
+    description: Shared layouts with nested routing
+    text: layout nested children render shared navigation
+    example: |
+      <!-- +layout.svelte -->
+      <script>
+        let { data, children } = $props();
+      </script>
+
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        {#if data.user}
+          <span>{data.user.name}</span>
+        {/if}
+      </nav>
+
+      <main>
+        {@render children()}
+      </main>
+
+      // +layout.ts
+      import type { LayoutLoad } from './$types';
+
+      export const load: LayoutLoad = async ({ fetch }) => {
+        const user = await fetch('/api/me').then(r => r.json());
+        return { user };
+      };
+
+      // ✅ Route groups for shared layouts
+      // (auth)/login/+page.svelte
+      // (auth)/register/+page.svelte
+      // (auth)/+layout.svelte  <- Shared auth layout
+    severity: HIGH
+    docs_url: https://kit.svelte.dev/docs/routing#layout
+
+  - id: sve011
+    name: Snippets (Svelte 5)
+    category: components
+    version: "5.0+"
+    description: Reusable template snippets replacing slots
+    text: snippet slot render template reusable component
+    example: |
+      <script>
+        // 🆕 Snippets replace slots
+        let { header, children } = $props();
+      </script>
+
+      {#snippet defaultHeader()}
+        <h1>Default Header</h1>
+      {/snippet}
+
+      <header>
+        {@render header?.() ?? defaultHeader()}
+      </header>
+
+      <main>
+        {@render children()}
+      </main>
+
+      <!-- Usage -->
+      <Card>
+        {#snippet header()}
+          <h2>Custom Header</h2>
+        {/snippet}
+
+        <p>Content here</p>
+      </Card>
+
+      <!-- ✅ Snippets with parameters -->
+      {#snippet item(todo)}
+        <li class:done={todo.done}>{todo.text}</li>
+      {/snippet}
+
+      <ul>
+        {#each todos as todo}
+          {@render item(todo)}
+        {/each}
+      </ul>
+    severity: MEDIUM
+    docs_url: https://svelte.dev/docs/svelte/snippet
+
+  - id: sve012
+    name: Async SSR & CSP
+    category: ssr
+    version: "2.x"
+    description: Async server-side rendering and CSP hydration
+    text: async ssr streaming csp security hydration
+    example: |
+      // ✅ SvelteKit 2.x: Async server-side rendering
+      // svelte.config.js
+      export default {
+        kit: {
+          experimental: {
+            asyncSSR: true, // ✅ Enable async SSR
+          },
+        },
+      };
+
+      // ✅ Content Security Policy support for hydration
+      export default {
+        kit: {
+          csp: {
+            mode: 'hash', // 'hash' | 'nonce' | 'auto'
+            directives: {
+              'script-src': ['self'],
+              'style-src': ['self', 'unsafe-inline'],
+            },
+          },
+        },
+      };
+
+      // Benefits of async SSR:
+      // - Streaming responses
+      // - Progressive loading
+      // - Better TTFB
+      // - Suspense-like behavior
+    severity: MEDIUM
+    docs_url: https://kit.svelte.dev/docs/configuration

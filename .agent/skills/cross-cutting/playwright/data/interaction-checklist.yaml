@@ -1,0 +1,398 @@
+# =============================================================================
+# interaction-checklist.yaml — 58 Mandatory UI Interaction Checkpoints
+# =============================================================================
+# Agent MUST verify ALL applicable checkpoints for comprehensive testing.
+# Each checkpoint maps to specific MCP tools for execution.
+# =============================================================================
+
+version: "1.0.0"
+total_checkpoints: 58
+
+# =============================================================================
+# DROPDOWN (18 checkpoints)
+# =============================================================================
+dropdown:
+  count: 18
+
+  functional:
+    - id: DD-F01
+      check: "Click opens option list"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "browser_snapshot → options visible"
+
+    - id: DD-F02
+      check: "All options present in correct order"
+      mcp_tool: browser_snapshot
+      severity: critical
+      verify: "Count options, verify order"
+
+    - id: DD-F03
+      check: "Selecting option updates displayed value"
+      mcp_tool: browser_select_option
+      severity: critical
+      verify: "browser_snapshot → selected value shown"
+
+    - id: DD-F04
+      check: "Default value displayed on load"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "Check initial state matches expected default"
+
+    - id: DD-F05
+      check: "Dependent dropdowns load correct options"
+      mcp_tool: browser_select_option
+      severity: high
+      verify: "Select parent → browser_snapshot child options"
+
+    - id: DD-F06
+      check: "Multi-select works (if applicable)"
+      mcp_tool: browser_select_option
+      severity: medium
+      verify: "Select multiple → verify all shown"
+
+    - id: DD-F07
+      check: "Search/filter functionality (if applicable)"
+      mcp_tool: browser_type
+      severity: medium
+      verify: "Type filter text → options filtered"
+
+  keyboard:
+    - id: DD-K01
+      check: "Tab key moves focus to dropdown"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Press Tab → browser_snapshot focus state"
+
+    - id: DD-K02
+      check: "Enter/Space opens dropdown"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Press Enter → options visible"
+
+    - id: DD-K03
+      check: "Up/Down arrows navigate options"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Press ArrowDown → highlight moves"
+
+    - id: DD-K04
+      check: "Typing letter jumps to matching option"
+      mcp_tool: browser_press_key
+      severity: medium
+      verify: "Press 'V' → jumps to 'Vietnam'"
+
+    - id: DD-K05
+      check: "Escape closes dropdown"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Press Escape → options hidden"
+
+  visual:
+    - id: DD-V01
+      check: "Text not truncated in dropdown"
+      mcp_tool: browser_snapshot
+      severity: medium
+      verify: "All text fully visible"
+
+    - id: DD-V02
+      check: "Scrolling works for long lists"
+      mcp_tool: browser_evaluate
+      severity: medium
+      verify: "Check scrollHeight > clientHeight"
+
+    - id: DD-V03
+      check: "No layout shift on open/close"
+      mcp_tool: browser_take_screenshot
+      severity: medium
+      verify: "Compare before/after screenshots"
+
+  validation:
+    - id: DD-VA01
+      check: "Required field shows error when empty"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Submit empty → browser_snapshot error message"
+
+    - id: DD-VA02
+      check: "Invalid input blocked (if editable)"
+      mcp_tool: browser_type
+      severity: high
+      verify: "Type invalid → blocked or error shown"
+
+    - id: DD-VA03
+      check: "Error message clear and informative"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "Read error text, verify helpful"
+
+# =============================================================================
+# MODAL (16 checkpoints)
+# =============================================================================
+modal:
+  count: 16
+
+  trigger_and_display:
+    - id: MD-TD01
+      check: "Trigger action opens modal"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Click trigger → browser_snapshot → modal visible"
+
+    - id: MD-TD02
+      check: "Modal centered with overlay"
+      mcp_tool: browser_take_screenshot
+      severity: high
+      verify: "Visual check: centered, overlay behind"
+
+    - id: MD-TD03
+      check: "Background interaction blocked"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Try clicking background element → should fail"
+
+    - id: MD-TD04
+      check: "Content fully visible, not cut off"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "All expected content in accessibility tree"
+
+  close_behavior:
+    - id: MD-CB01
+      check: "Close button (X) works"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Click X → browser_snapshot → modal gone"
+
+    - id: MD-CB02
+      check: "Overlay click closes (if designed)"
+      mcp_tool: browser_click
+      severity: high
+      verify: "Click overlay → modal closes"
+
+    - id: MD-CB03
+      check: "Escape key closes modal"
+      mcp_tool: browser_press_key
+      severity: critical
+      verify: "Press Escape → browser_snapshot → modal gone"
+
+    - id: MD-CB04
+      check: "Focus returns to trigger element"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "After close → focus on original trigger"
+
+  keyboard_accessibility:
+    - id: MD-KA01
+      check: "Tab cycles only within modal"
+      mcp_tool: browser_press_key
+      severity: critical
+      verify: "Tab multiple times → stays inside modal"
+
+    - id: MD-KA02
+      check: "Shift+Tab moves backward within modal"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Shift+Tab → reverse cycle within modal"
+
+    - id: MD-KA03
+      check: "Focus cannot escape to background"
+      mcp_tool: browser_press_key
+      severity: critical
+      verify: "Tab exhaustively → never reaches background"
+
+    - id: MD-KA04
+      check: "Screen reader announces as dialog"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "Accessibility tree: role=dialog"
+
+  form_inside_modal:
+    - id: MD-FM01
+      check: "Form submit works within modal"
+      mcp_tool: browser_fill_form
+      severity: critical
+      verify: "Fill + submit → success state"
+
+    - id: MD-FM02
+      check: "Validation works inside modal"
+      mcp_tool: browser_click
+      severity: high
+      verify: "Submit empty → error messages visible"
+
+    - id: MD-FM03
+      check: "Success state displays correctly"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "After submit → success message/redirect"
+
+    - id: MD-FM04
+      check: "Error state displays correctly"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "On error → clear error message shown"
+
+# =============================================================================
+# BUTTON (14 checkpoints)
+# =============================================================================
+button:
+  count: 14
+
+  functional:
+    - id: BT-F01
+      check: "Click performs expected action"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Click → browser_snapshot → action happened"
+
+    - id: BT-F02
+      check: "State changes correctly (disabled, loading)"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "After action → state updated"
+
+    - id: BT-F03
+      check: "Rapid clicks don't duplicate (rage-click safe)"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Click 3x fast → only 1 action"
+
+    - id: BT-F04
+      check: "Disabled state not clickable"
+      mcp_tool: browser_click
+      severity: high
+      verify: "Click disabled → no action"
+
+    - id: BT-F05
+      check: "Navigation goes to correct page"
+      mcp_tool: browser_click
+      severity: critical
+      verify: "Click nav button → URL correct"
+
+    - id: BT-F06
+      check: "Toggle state works (if applicable)"
+      mcp_tool: browser_click
+      severity: medium
+      verify: "Click toggle → state flips"
+
+  visual:
+    - id: BT-V01
+      check: "Design consistent with design system"
+      mcp_tool: browser_take_screenshot
+      severity: medium
+      verify: "Visual matches expected style"
+
+    - id: BT-V02
+      check: "Clickable area (hitbox) accurate"
+      mcp_tool: browser_evaluate
+      severity: medium
+      verify: "Check element bounds match visual"
+
+    - id: BT-V03
+      check: "Text meaningful and clear"
+      mcp_tool: browser_snapshot
+      severity: medium
+      verify: "Button text describes action"
+
+    - id: BT-V04
+      check: "Responsive - no text truncation"
+      mcp_tool: browser_resize
+      severity: medium
+      verify: "Resize viewport → text still visible"
+
+  accessibility:
+    - id: BT-A01
+      check: "Tab order correct"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Tab → reaches button in logical order"
+
+    - id: BT-A02
+      check: "Enter/Space activates button"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Focus + Enter → action triggered"
+
+    - id: BT-A03
+      check: "Focus state visible"
+      mcp_tool: browser_take_screenshot
+      severity: high
+      verify: "Tab to button → visible outline/highlight"
+
+    - id: BT-A04
+      check: "Screen reader announces name correctly"
+      mcp_tool: browser_snapshot
+      severity: high
+      verify: "Accessibility tree: name matches purpose"
+
+# =============================================================================
+# HOVER STATE (10 checkpoints)
+# =============================================================================
+hover:
+  count: 10
+
+  trigger:
+    - id: HV-T01
+      check: "Hover triggers visual state change"
+      mcp_tool: browser_hover
+      severity: high
+      verify: "Hover → browser_take_screenshot → visual changed"
+
+    - id: HV-T02
+      check: "Hover content persists while hovering"
+      mcp_tool: browser_hover
+      severity: high
+      verify: "Hover → tooltip/menu stays visible"
+
+    - id: HV-T03
+      check: "Keyboard focus triggers equivalent state"
+      mcp_tool: browser_press_key
+      severity: high
+      verify: "Tab to element → same visual as hover"
+
+  content:
+    - id: HV-C01
+      check: "Hover content readable and formatted"
+      mcp_tool: browser_snapshot
+      severity: medium
+      verify: "Content text is clear and complete"
+
+    - id: HV-C02
+      check: "No layout shift (CLS) caused"
+      mcp_tool: browser_take_screenshot
+      severity: medium
+      verify: "Compare layout before/after hover"
+
+    - id: HV-C03
+      check: "Hover content doesn't obstruct other elements"
+      mcp_tool: browser_snapshot
+      severity: medium
+      verify: "No critical elements hidden"
+
+  dismiss:
+    - id: HV-D01
+      check: "Escape dismisses hover content"
+      mcp_tool: browser_press_key
+      severity: medium
+      verify: "Press Escape → hover content gone"
+
+    - id: HV-D02
+      check: "No interference with other elements"
+      mcp_tool: browser_click
+      severity: medium
+      verify: "Click elsewhere → hover dismissed cleanly"
+
+  technical:
+    - id: HV-TE01
+      check: "CSS :hover/:focus states correct"
+      mcp_tool: browser_evaluate
+      severity: medium
+      verify: "getComputedStyle check for hover/focus states"
+
+    - id: HV-TE02
+      check: "JavaScript hover handlers work"
+      mcp_tool: browser_hover
+      severity: high
+      verify: "Hover → JS-driven content appears"
+
+# _DOMYH Awesome Code • 58-Checkpoint Interaction Checklist v1.0.0_

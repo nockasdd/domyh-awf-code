@@ -1,0 +1,155 @@
+# Vector Databases Comparison — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: VDB-001
+    name: Pinecone
+    category: managed
+    description: |
+      Fully managed vector database.
+    text: |
+      Type: Cloud-only (managed)
+      Scale: Billions of vectors
+      Index: Proprietary (optimized HNSW)
+      Pricing: Pay per pod/serverless
+
+      Pros: Zero-ops, fastest setup, serverless option
+      Cons: Cloud-only, vendor lock-in, cost at scale
+
+      Best for: Production SaaS, teams without infra expertise
+    example: |
+      import { Pinecone } from "@pinecone-database/pinecone";
+      const pc = new Pinecone({ apiKey: "..." });
+      const index = pc.index("my-index");
+
+      // Upsert
+      await index.upsert([
+        { id: "doc1", values: [0.1, 0.2, ...], metadata: { source: "readme" } }
+      ]);
+
+      // Query
+      const results = await index.query({
+        vector: queryEmbedding,
+        topK: 10,
+        filter: { source: { $eq: "readme" } },
+        includeMetadata: true
+      });
+
+  - id: VDB-002
+    name: Weaviate
+    category: self-hosted
+    description: |
+      Open-source vector database with built-in vectorizers.
+    text: |
+      Type: Self-hosted / Cloud (WCS)
+      Scale: Millions of vectors
+      Index: HNSW
+      Special: Built-in vectorizer modules, hybrid search native
+
+      Pros: Hybrid search (BM25+vector), multi-modal, GraphQL API
+      Cons: Complex setup, resource-heavy
+
+      Best for: Hybrid search requirements, multi-modal data
+    example: |
+      import weaviate from "weaviate-client";
+      const client = await weaviate.connectToLocal();
+
+      // Hybrid search
+      const result = await client.collections.get("Document")
+        .query.hybrid("machine learning", { alpha: 0.5, limit: 10 });
+
+  - id: VDB-003
+    name: Qdrant
+    category: self-hosted
+    description: |
+      High-performance vector database written in Rust.
+    text: |
+      Type: Self-hosted / Cloud
+      Scale: Millions of vectors
+      Index: HNSW with modifications
+      Language: Rust (fast, memory-efficient)
+
+      Pros: Fast filtering, payload indexing, batch operations
+      Cons: Newer ecosystem
+
+      Best for: Performance-critical apps, complex filtering
+    example: |
+      import { QdrantClient } from "@qdrant/js-client-rest";
+      const client = new QdrantClient({ url: "http://localhost:6333" });
+
+      await client.upsert("my_collection", {
+        points: [
+          { id: 1, vector: [0.1, 0.2, ...], payload: { title: "Doc 1" } }
+        ]
+      });
+
+  - id: VDB-004
+    name: ChromaDB
+    category: embedded
+    description: |
+      Simple, developer-friendly vector database.
+    text: |
+      Type: Embedded / Self-hosted
+      Scale: Thousands to low millions
+      Index: HNSW
+
+      Pros: Simplest setup, Python-native, great for prototyping
+      Cons: Not for production scale, single-node
+
+      Best for: Prototypes, RAG development, local testing
+
+  - id: VDB-005
+    name: pgvector
+    category: extension
+    description: |
+      PostgreSQL extension for vector similarity search.
+    text: |
+      Type: PostgreSQL extension
+      Scale: Millions (with proper indexing)
+      Index: HNSW, IVFFlat
+
+      Pros: Use existing PostgreSQL, no new infra, SQL queries
+      Cons: Performance ceiling vs dedicated vector DB
+
+      Best for: Already using PostgreSQL, moderate scale
+    example: |
+      CREATE EXTENSION vector;
+      CREATE TABLE items (
+        id SERIAL PRIMARY KEY,
+        content TEXT,
+        embedding vector(1536)
+      );
+      CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops);
+
+      SELECT content, 1 - (embedding <=> $1) AS similarity
+      FROM items ORDER BY embedding <=> $1 LIMIT 10;
+
+  - id: VDB-006
+    name: Milvus
+    category: self-hosted
+    description: |
+      Enterprise-grade, GPU-accelerated vector database.
+    text: |
+      Type: Self-hosted / Cloud (Zilliz)
+      Scale: Billions of vectors
+      Index: HNSW, IVF, PQ, GPU-IVF
+
+      Pros: GPU acceleration, massive scale, multi-vector
+      Cons: Complex deployment, heavy resources
+
+      Best for: Enterprise, GPU-accelerated workloads
+
+  - id: VDB-007
+    name: Selection Decision Matrix
+    category: comparison
+    description: |
+      How to choose the right vector database.
+    text: |
+      Decision flow:
+      1. Already using PostgreSQL? → pgvector
+      2. Budget: zero? → ChromaDB (dev), Qdrant (prod)
+      3. Need hybrid search? → Weaviate
+      4. Zero infrastructure? → Pinecone
+      5. Maximum performance? → Qdrant
+      6. Billions of vectors? → Pinecone or Milvus
+      7. GPU available? → Milvus

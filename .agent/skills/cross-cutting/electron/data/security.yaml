@@ -1,0 +1,89 @@
+# Electron Security Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: security
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 8
+
+patterns:
+  - id: sec001
+    name: contextBridge
+    category: security
+    version: "12+"
+    description: Safe API exposure from preload to renderer via isolated world
+    text: context bridge expose ipc renderer preload safe api isolated world
+    example: "contextBridge.exposeInMainWorld('api', { ... })"
+    severity: CRITICAL
+    docs_url: https://www.electronjs.org/docs/latest/api/context-bridge
+
+  - id: sec002
+    name: contextIsolation
+    category: security
+    version: "12+"
+    description: Isolate preload scripts from renderer's JavaScript context
+    text: context isolation sandbox security node separate worlds renderer
+    example: "webPreferences: { contextIsolation: true }"
+    severity: CRITICAL
+    default: true
+
+  - id: sec003
+    name: preload
+    category: security
+    version: all
+    description: Preload scripts run before renderer with limited Node.js access
+    text: preload script context isolation node integration safe bridge
+    example: "preload: path.join(__dirname, 'preload.js')"
+    severity: CRITICAL
+
+  - id: sec004
+    name: executeInMainWorld
+    category: security
+    version: "35+"
+    description: Safe cross-world code execution (experimental in Electron 35)
+    text: execute main world experimental cross boundary safe injection
+    example: "contextBridge.executeInMainWorld(() => { ... })"
+    severity: MEDIUM
+    experimental: true
+
+  - id: sec005
+    name: Content-Security-Policy
+    category: security
+    version: all
+    description: CSP headers to prevent XSS and code injection attacks
+    text: content security policy csp header strict xss protection script src
+    example: "Content-Security-Policy: default-src 'self'; script-src 'self'"
+    severity: HIGH
+
+  - id: sec006
+    name: sandbox
+    category: security
+    version: "20+"
+    description: Process sandboxing for renderer processes
+    text: sandbox process isolation security chromium renderer restrict
+    example: "webPreferences: { sandbox: true }"
+    severity: HIGH
+    default: true
+
+  - id: sec007
+    name: nodeIntegration
+    category: security
+    version: all
+    description: Disable Node.js integration in renderer (MUST be false)
+    text: node integration disable security renderer process require
+    example: "webPreferences: { nodeIntegration: false }"
+    severity: CRITICAL
+    default: false
+
+  - id: sec008
+    name: fuses
+    category: security
+    version: "27+"
+    description: Compile-time security flags for hardening Electron apps
+    text: fuses compile time security flags hardening electron toggle
+    example: "npx @electron/fuses read/write <app>"
+    severity: MEDIUM
+    docs_url: https://www.electronjs.org/docs/latest/tutorial/fuses

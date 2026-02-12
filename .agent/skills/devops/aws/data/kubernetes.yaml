@@ -1,0 +1,199 @@
+# =============================================================================
+# AWS EKS Kubernetes Patterns (Feb 2026)
+# =============================================================================
+# EKS Capabilities, Pod Identity, Argo CD from re:Invent 2025+
+
+metadata:
+  skill: aws
+  domain: kubernetes
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: aws020
+    name: EKS Capabilities
+    category: eks
+    version: "2026+"
+    description: Fully managed platform features in AWS-owned infrastructure
+    text: eks capabilities managed platform argo kro ack
+    example: |
+      # EKS Capabilities run in AWS infrastructure
+      # No pods in your cluster for management overhead
+
+      eksctl enable capability \
+        --cluster=my-cluster \
+        --name=argo-cd
+
+      # Available capabilities (Feb 2026):
+      # - argo-cd: Continuous deployment
+      # - ack: AWS Controllers for Kubernetes
+      # - kro: Kube Resource Orchestrator
+
+      # Benefits:
+      # - Managed by AWS (patching, scaling)
+      # - No compute cost in your cluster
+      # - Seamless integration with EKS
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/eks/latest/userguide/eks-capabilities.html
+
+  - id: aws021
+    name: EKS Pod Identity
+    category: eks
+    version: "2023+"
+    description: Simpler and faster IAM authentication than IRSA
+    text: eks pod identity iam authentication irsa replacement
+    example: |
+      # Pod Identity replaces IRSA (IAM Roles for Service Accounts)
+      # Faster pod startup, simpler configuration
+
+      # 1. Create IAM role with trust policy
+      aws iam create-role \
+        --role-name my-pod-role \
+        --assume-role-policy-document file://trust-policy.json
+
+      # 2. Create Pod Identity Association
+      aws eks create-pod-identity-association \
+        --cluster-name my-cluster \
+        --namespace default \
+        --service-account my-sa \
+        --role-arn arn:aws:iam::123456789:role/my-pod-role
+
+      # 3. Use in pods (automatic credential injection)
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: my-sa
+      ---
+      apiVersion: v1
+      kind: Pod
+      spec:
+        serviceAccountName: my-sa
+        # Credentials injected automatically!
+    severity: CRITICAL
+    docs_url: https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html
+
+  - id: aws022
+    name: EKS Argo CD Capability
+    category: eks
+    version: "2026+"
+    description: Managed Argo CD for GitOps continuous deployment
+    text: eks argo cd gitops deployment continuous managed
+    example: |
+      # Enable Argo CD capability
+      eksctl enable capability \
+        --cluster=my-cluster \
+        --name=argo-cd \
+        --configuration='{"repoUrl": "git@github.com:org/manifests.git"}'
+
+      # Access Argo CD UI
+      kubectl get svc -n argocd
+
+      # Create Application CRD
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: my-app
+        namespace: argocd
+      spec:
+        project: default
+        source:
+          repoURL: 'git@github.com:org/manifests.git'
+          path: apps/my-app
+          targetRevision: main
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: production
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/eks/latest/userguide/argo-cd.html
+
+  - id: aws023
+    name: EKS ACK Controllers
+    category: eks
+    version: "2023+"
+    description: Manage AWS resources using Kubernetes CRDs
+    text: eks ack aws controllers kubernetes crd s3 rds dynamodb
+    example: |
+      # Install ACK controller for S3
+      eksctl enable capability \
+        --cluster=my-cluster \
+        --name=ack \
+        --configuration='{"services": ["s3", "rds", "dynamodb"]}'
+
+      # Create S3 bucket using K8s CRD
+      apiVersion: s3.services.k8s.aws/v1alpha1
+      kind: Bucket
+      metadata:
+        name: my-app-bucket
+      spec:
+        name: my-app-data-bucket
+        versioning:
+          status: Enabled
+
+      # Create RDS instance
+      apiVersion: rds.services.k8s.aws/v1alpha1
+      kind: DBInstance
+      metadata:
+        name: my-db
+      spec:
+        engine: postgres
+        engineVersion: "15"
+        dbInstanceClass: db.t4g.micro
+        masterUsername: admin
+        masterUserPassword:
+          secretKeyRef:
+            name: db-creds
+            key: password
+    severity: HIGH
+    docs_url: https://aws-controllers-k8s.github.io/community/
+
+  - id: aws024
+    name: EKS KRO Custom Resources
+    category: eks
+    version: "2026+"
+    description: Create custom Kubernetes resources with Kube Resource Orchestrator
+    text: eks kro kube resource orchestrator custom resources crd
+    example: |
+      # KRO = Kube Resource Orchestrator
+      # Create custom resources that expand to multiple K8s objects
+
+      eksctl enable capability \
+        --cluster=my-cluster \
+        --name=kro
+
+      # Define custom resource
+      apiVersion: kro.aws.io/v1alpha1
+      kind: ResourceDefinition
+      metadata:
+        name: web-application
+      spec:
+        apiVersion: apps.example.com/v1
+        kind: WebApplication
+        schema:
+          properties:
+            image: { type: string }
+            replicas: { type: integer }
+        template:
+          - apiVersion: apps/v1
+            kind: Deployment
+            spec:
+              replicas: "{{ .replicas }}"
+          - apiVersion: v1
+            kind: Service
+          - apiVersion: networking.k8s.io/v1
+            kind: Ingress
+
+      # Use custom resource
+      apiVersion: apps.example.com/v1
+      kind: WebApplication
+      metadata:
+        name: my-app
+      spec:
+        image: nginx:latest
+        replicas: 3
+    severity: MEDIUM
+    docs_url: https://docs.aws.amazon.com/eks/latest/userguide/kro.html

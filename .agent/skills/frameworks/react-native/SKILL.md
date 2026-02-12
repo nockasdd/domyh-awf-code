@@ -1,12 +1,12 @@
 ---
 name: react-native
 detect: ["metro.config.js", "app.json:expo", "react-native.config.js"]
-version: "6.1.2"
+version: "6.2.1"
 category: mobile
 tier: 1
 ---
 
-# React Native Patterns — DOMYH Awesome Code v6.1.2
+# React Native Patterns — DOMYH Awesome Code
 
 > **Version**: React Native 0.76+ (2025-2026)
 > **Philosophy**: New Architecture, Fabric, Turbo Modules, Expo
@@ -298,4 +298,4 @@ const handlePress = useCallback(
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • React Native 0.76+_
+_DOMYH Awesome Code • React Native 0.76+_

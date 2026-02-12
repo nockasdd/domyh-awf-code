@@ -1,0 +1,344 @@
+# DOMYH Awesome Code — Active Memory Management v6.2.1
+# Self-directing memory inspired by Letta/MemGPT architecture
+# Agent decides what to remember, forget, update, emphasize
+
+version: "6.2.1"
+engine: active_memory_manager
+
+# =============================================================================
+# CORE PHILOSOPHY
+# =============================================================================
+
+# "Agents actively manage their memory, deciding what information to 
+# retain, update, or search for, rather than passively retrieving it."
+# — Letta Cognitive Architecture (2025)
+
+philosophy:
+  principle: "Agent owns its memory"
+  inspiration: "Human cognitive memory management"
+  difference: "Passive (old) → Active (new)"
+  goal: "Self-improving memory that gets smarter over time"
+
+# =============================================================================
+# MEMORY ACTIONS
+# =============================================================================
+
+actions:
+  # Agent can REMEMBER new information
+  remember:
+    description: "Store new important information"
+    syntax: "@memory remember: {content}"
+    examples:
+      - "@memory remember: User prefers concise responses"
+      - "@memory remember: Project uses PostgreSQL, not MySQL"
+      - "@memory remember: Always run tests before commit"
+    storage:
+      location: memory/active_memories.json
+      categorize: auto
+      weight: 1.0
+      
+  # Agent can FORGET outdated information
+  forget:
+    description: "Mark information as outdated/irrelevant"
+    syntax: "@memory forget: {content_id}"
+    examples:
+      - "@memory forget: old_api_pattern_001"
+      - "@memory forget: deprecated_workflow"
+    action:
+      type: soft_delete  # Move to archive, don't hard delete
+      location: memory/archive/forgotten/
+      reason_required: true
+      
+  # Agent can UPDATE existing memories
+  update:
+    description: "Modify existing memory with new information"
+    syntax: "@memory update: {content_id} -> {new_content}"
+    examples:
+      - "@memory update: db_type -> Now using PostgreSQL 16"
+      - "@memory update: api_version -> Upgraded to v3"
+    action:
+      preserve_history: true
+      log_change: true
+      
+  # Agent can EMPHASIZE important memories
+  emphasize:
+    description: "Increase weight of important memory"
+    syntax: "@memory emphasize: {content_id}"
+    examples:
+      - "@memory emphasize: security_first_principle"
+      - "@memory emphasize: test_coverage_requirement"
+    action:
+      weight_increase: 0.2
+      max_weight: 2.0
+      
+  # Agent can CONNECT related memories
+  connect:
+    description: "Link related memories together"
+    syntax: "@memory connect: {id1} <-> {id2}"
+    examples:
+      - "@memory connect: auth_decision <-> security_audit"
+    action:
+      create_bidirectional_link: true
+
+# =============================================================================
+# AUTO-TRIGGERS
+# =============================================================================
+
+auto_triggers:
+  # User correction triggers memory update
+  on_user_correction:
+    detect: "Actually", "No,", "That's wrong", "Not quite"
+    action: |
+      1. Identify incorrect memory
+      2. Update with correct information
+      3. Remember the correction pattern
+    auto: true
+    
+  # Repeated question triggers memory strengthen
+  on_repeated_question:
+    detect: similar_question_in_last_5
+    action: |
+      1. Identify related memory
+      2. Emphasize that memory
+      3. Consider creating shortcut
+    auto: true
+    
+  # Outdated info detected triggers review
+  on_outdated_detection:
+    detect: version_mismatch, deprecated_api, old_pattern
+    action: |
+      1. Flag memory for review
+      2. Query for updated information
+      3. Propose update or forget
+    auto: true
+    
+  # Success pattern triggers memory
+  on_success_pattern:
+    detect: workflow_completed, test_passed, issue_resolved
+    action: |
+      1. Extract success pattern
+      2. Remember what worked
+      3. Link to similar future tasks
+    auto: true
+    
+  # Error pattern triggers memory
+  on_error_pattern:
+    detect: error_repeated, same_mistake
+    action: |
+      1. Remember error pattern
+      2. Remember solution
+      3. Create prevention rule
+    auto: true
+
+# =============================================================================
+# MEMORY CATEGORIES
+# =============================================================================
+
+categories:
+  preferences:
+    description: "User and project preferences"
+    importance: high
+    examples:
+      - response_style
+      - coding_conventions
+      - tool_preferences
+    retention: permanent
+    
+  decisions:
+    description: "Architectural and technical decisions"
+    importance: high
+    examples:
+      - database_choice
+      - api_design
+      - library_selection
+    retention: long_term
+    sync_to: memory/decisions.md
+    
+  patterns:
+    description: "Recurring code and workflow patterns"
+    importance: medium
+    examples:
+      - error_handling_pattern
+      - test_structure
+      - naming_conventions
+    retention: long_term
+    
+  corrections:
+    description: "User corrections and clarifications"
+    importance: high
+    examples:
+      - wrong_assumption_fixed
+      - terminology_correction
+    retention: permanent
+    weight_boost: 1.5
+    
+  contexts:
+    description: "Project and task contexts"
+    importance: medium
+    examples:
+      - current_project_state
+      - active_features
+    retention: session_based
+    
+  insights:
+    description: "Agent-generated insights"
+    importance: medium
+    examples:
+      - performance_bottleneck
+      - improvement_opportunity
+    retention: long_term
+    review_needed: true
+
+# =============================================================================
+# SELF-REFLECTION
+# =============================================================================
+
+reflection:
+  enabled: true
+  
+  # Periodic self-review
+  schedule:
+    trigger: every_10_interactions
+    max_duration_tokens: 500
+    
+  # Review process
+  process:
+    1_review_recent:
+      action: "Review last 5 memory actions"
+      check: "Were they accurate and helpful?"
+      
+    2_consolidate:
+      action: "Merge similar memories"
+      check: "Are there redundancies?"
+      
+    3_prune:
+      action: "Identify stale memories"
+      check: "Are any memories outdated?"
+      
+    4_strengthen:
+      action: "Emphasize frequently-used memories"
+      check: "What's accessed most often?"
+      
+    5_generate_insights:
+      action: "Derive patterns from memories"
+      output: memory/insights.md
+      
+  # Output
+  output:
+    insights_file: memory/insights.md
+    reflection_log: memory/reflection_log.json
+
+# =============================================================================
+# MEMORY CONSOLIDATION
+# =============================================================================
+
+consolidation:
+  # When to consolidate
+  triggers:
+    - memory_count > 50
+    - session_end
+    - decision_count > 20
+    - explicit_command: "/mem consolidate"
+    
+  # How to consolidate
+  strategies:
+    merge_similar:
+      method: semantic_similarity
+      threshold: 0.85
+      keep: most_recent
+      
+    collapse_sequences:
+      method: temporal_proximity
+      threshold: 5_minutes
+      action: create_summary
+      
+    hierarchy_building:
+      method: topic_clustering
+      levels: [category, topic, detail]
+      
+  # Output
+  output:
+    consolidated_view: memory/consolidated.md
+    full_backup: memory/archive/consolidation/
+
+# =============================================================================
+# MEMORY STORAGE
+# =============================================================================
+
+storage:
+  # Primary storage
+  active_memories:
+    path: memory/active_memories.json
+    format: json
+    max_entries: 100
+    
+  schema:
+    id: uuid
+    content: string
+    category: enum
+    weight: float
+    created_at: timestamp
+    updated_at: timestamp
+    accessed_count: int
+    last_accessed: timestamp
+    links: array[uuid]
+    metadata:
+      source: string
+      confidence: float
+      reviewed: boolean
+      
+  # Indexing
+  indexes:
+    - category
+    - weight_desc
+    - last_accessed_desc
+    - content_embedding  # For semantic search
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  # Workflow hooks
+  workflows:
+    on_workflow_start:
+      load: relevant_memories_by_workflow
+      max_tokens: 300
+      
+    on_workflow_end:
+      action: remember_outcomes
+      consolidate: if_needed
+      
+  # Memory engine
+  memory_engine:
+    sync_decisions: true
+    sync_errors: true
+    sync_audits: true
+    
+  # Semantic engine
+  semantic_engine:
+    index_on_remember: true
+    search_on_recall: true
+
+# =============================================================================
+# SAFETY
+# =============================================================================
+
+safety:
+  # Never auto-forget
+  protected_categories:
+    - preferences
+    - corrections
+    - security_related
+    
+  # Require confirmation for
+  confirm_required:
+    - forget_permanent
+    - bulk_update
+    - clear_category
+    
+  # Backup before destructive
+  backup:
+    on_forget: true
+    on_bulk_update: true
+    location: memory/archive/safety_backups/

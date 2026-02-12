@@ -1,0 +1,360 @@
+# =============================================================================
+# Perl Core Patterns (Feb 2026)
+# Version: Perl 5.40
+# =============================================================================
+
+metadata:
+  skill: perl
+  domain: core
+  version: "5.40"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: perl001
+    name: Modern Perl Syntax
+    category: language
+    version: "Perl5.40"
+    description: |
+      Perl 5.40+ modern features.
+      Signatures, class keyword, try-catch.
+    text: signature class try defer feature
+    example: |
+      use v5.40;
+      use feature 'signatures';
+      use feature 'class';
+      use feature 'try';
+      use feature 'defer';
+
+      # ✅ Function signatures (stable in 5.40)
+      sub greet($name, $greeting = "Hello") {
+          say "$greeting, $name!";
+      }
+
+      # ✅ New class syntax (5.38+)
+      class User {
+          field $name :param;
+          field $email :param;
+          field $id :reader = generate_id();
+          
+          method fullname() {
+              return $name;
+          }
+          
+          method update_email($new_email) {
+              $email = $new_email;
+          }
+      }
+
+      my $user = User->new(name => "John", email => "john@example.com");
+
+      # ✅ Try-catch (native, no Try::Tiny needed)
+      try {
+          my $result = dangerous_operation();
+          say "Success: $result";
+      }
+      catch ($e) {
+          warn "Error: $e";
+      }
+
+      # ✅ Defer blocks (cleanup)
+      sub process_file($path) {
+          open my $fh, '<', $path or die "Cannot open: $!";
+          defer { close $fh; }
+          
+          # $fh is closed when scope exits
+          return process_contents($fh);
+      }
+
+      # ✅ Named arguments with signatures
+      sub create_user(%args) {
+          my $name = $args{name} // die "name required";
+          my $email = $args{email} // die "email required";
+          return { name => $name, email => $email };
+      }
+    severity: HIGH
+    docs_url: https://perldoc.perl.org/perlop
+
+  - id: perl002
+    name: Regex Power
+    category: regex
+    version: "Perl"
+    description: |
+      Advanced Perl regex patterns.
+      Named captures, modifiers, code execution.
+    text: regex match substitute capture lookahead
+    example: |
+      use v5.40;
+
+      # ✅ Basic matching with modifiers
+      my $text = "Hello World";
+      if ($text =~ /hello/i) {  # Case insensitive
+          say "Found hello";
+      }
+
+      # ✅ Named captures
+      my $log = '2026-02-05 10:30:45 ERROR Connection failed';
+      if ($log =~ /(?<date>\d{4}-\d{2}-\d{2}) (?<time>\d{2}:\d{2}:\d{2}) (?<level>\w+) (?<msg>.+)/) {
+          say "Date: $+{date}";
+          say "Level: $+{level}";
+          say "Message: $+{msg}";
+      }
+
+      # ✅ Substitution with modifiers
+      my $html = '<p>Some <b>bold</b> text</p>';
+      $html =~ s/<[^>]+>//g;  # Strip tags: "Some bold text"
+
+      # Global replace with callback
+      my $text = 'price: 100, tax: 20';
+      $text =~ s/(\d+)/ $1 * 1.1 /ge;  # Evaluate as code
+
+      # ✅ Lookahead and lookbehind
+      my $password = 'MyPass123!';
+
+      # Positive lookahead: must contain digit
+      my $has_digit = $password =~ /(?=.*\d)/;
+
+      # Negative lookahead: must not start with 'admin'
+      my $not_admin = $password =~ /^(?!admin)/i;
+
+      # Lookbehind: get value after 'price:'
+      my $price = $text =~ /(?<=price:\s)\d+/;
+
+      # ✅ Non-capturing groups and alternation
+      my $phone = '(123) 456-7890';
+      if ($phone =~ /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/) {
+          say "Valid phone";
+      }
+
+      # ✅ Split with regex
+      my @words = split /\s+/, "hello   world   test";
+      my @parts = split /,\s*/, "a, b,c,  d";
+    severity: HIGH
+    docs_url: https://perldoc.perl.org/perlre
+
+  - id: perl003
+    name: Moose OOP
+    category: oop
+    version: "Moose"
+    description: |
+      Modern OOP with Moose.
+      Attributes, roles, type constraints.
+    text: moose attribute role type builder
+    example: |
+      use v5.40;
+
+      # ✅ Moose class
+      package User {
+          use Moose;
+          use namespace::autoclean;
+          
+          has 'name' => (
+              is       => 'ro',
+              isa      => 'Str',
+              required => 1,
+          );
+          
+          has 'email' => (
+              is      => 'rw',
+              isa     => 'Str',
+              trigger => sub {
+                  my ($self, $new, $old) = @_;
+                  say "Email changed from $old to $new" if $old;
+              },
+          );
+          
+          has 'created_at' => (
+              is      => 'ro',
+              isa     => 'DateTime',
+              lazy    => 1,
+              builder => '_build_created_at',
+          );
+          
+          sub _build_created_at {
+              return DateTime->now;
+          }
+          
+          __PACKAGE__->meta->make_immutable;
+      }
+
+      # ✅ Roles (composable behaviors)
+      package Printable {
+          use Moose::Role;
+          
+          requires 'to_string';
+          
+          sub print {
+              my $self = shift;
+              say $self->to_string;
+          }
+      }
+
+      package Document {
+          use Moose;
+          with 'Printable';
+          
+          has 'content' => (is => 'ro', isa => 'Str');
+          
+          sub to_string {
+              my $self = shift;
+              return $self->content;
+          }
+          
+          __PACKAGE__->meta->make_immutable;
+      }
+
+      # ✅ Type constraints
+      use Moose::Util::TypeConstraints;
+
+      subtype 'Email',
+          as 'Str',
+          where { /^[\w.]+@[\w.]+$/ },
+          message { "Invalid email format" };
+
+      coerce 'Email',
+          from 'Str',
+          via { lc $_ };
+    severity: MEDIUM
+    docs_url: https://metacpan.org/pod/Moose
+
+  - id: perl004
+    name: CPAN Ecosystem
+    category: ecosystem
+    version: "CPAN"
+    description: |
+      Essential CPAN modules.
+      DBI, LWP, JSON, Path::Tiny.
+    text: cpan dbi lwp json path mojo
+    example: |
+      use v5.40;
+
+      # ✅ Database with DBI
+      use DBI;
+
+      my $dbh = DBI->connect(
+          "dbi:Pg:dbname=mydb;host=localhost",
+          $user, $pass,
+          { RaiseError => 1, AutoCommit => 1 }
+      );
+
+      # Prepared statement (SQL injection safe)
+      my $sth = $dbh->prepare("SELECT * FROM users WHERE id = ?");
+      $sth->execute($user_id);
+      while (my $row = $sth->fetchrow_hashref) {
+          say "$row->{name}: $row->{email}";
+      }
+
+      # ✅ HTTP with LWP
+      use LWP::UserAgent;
+      use JSON::XS;
+
+      my $ua = LWP::UserAgent->new(timeout => 10);
+      my $response = $ua->get('https://api.example.com/users');
+
+      if ($response->is_success) {
+          my $data = decode_json($response->decoded_content);
+          say $_->{name} for @{$data->{users}};
+      }
+
+      # ✅ File handling with Path::Tiny
+      use Path::Tiny;
+
+      my $file = path('data.txt');
+      my $content = $file->slurp_utf8;
+      $file->spew_utf8("New content\n");
+
+      # Iterate directory
+      for my $child (path('src')->children(qr/\.pl$/)) {
+          say "Found: $child";
+      }
+
+      # ✅ JSON handling
+      use JSON::XS;
+
+      my $data = { name => "John", items => [1, 2, 3] };
+      my $json = encode_json($data);
+      my $decoded = decode_json($json);
+
+      # ✅ DateTime
+      use DateTime;
+
+      my $now = DateTime->now(time_zone => 'UTC');
+      my $formatted = $now->strftime('%Y-%m-%d %H:%M:%S');
+      my $future = $now->add(days => 7);
+    severity: MEDIUM
+    docs_url: https://metacpan.org/
+
+  - id: perl005
+    name: Mojolicious Web
+    category: web
+    version: "Mojo"
+    description: |
+      Real-time web framework.
+      Routes, templates, websockets.
+    text: mojo route controller websocket morbo
+    example: |
+      use v5.40;
+      use Mojolicious::Lite -signatures;
+
+      # ✅ Basic routes
+      get '/' => sub ($c) {
+          $c->render(text => 'Hello World!');
+      };
+
+      get '/hello/:name' => sub ($c) {
+          my $name = $c->param('name');
+          $c->render(text => "Hello, $name!");
+      };
+
+      # ✅ JSON API
+      get '/api/users' => sub ($c) {
+          my @users = get_all_users();
+          $c->render(json => { users => \@users });
+      };
+
+      post '/api/users' => sub ($c) {
+          my $data = $c->req->json;
+          my $user = create_user($data);
+          $c->render(json => $user, status => 201);
+      };
+
+      # ✅ Templates
+      get '/page' => sub ($c) {
+          $c->stash(title => 'My Page', items => [1, 2, 3]);
+          $c->render(template => 'page');
+      };
+
+      # ✅ WebSocket
+      websocket '/ws' => sub ($c) {
+          $c->on(message => sub ($c, $msg) {
+              $c->send("Echo: $msg");
+          });
+          
+          $c->on(finish => sub ($c, $code, $reason) {
+              say "WebSocket closed: $code";
+          });
+      };
+
+      # ✅ Async operations
+      get '/async' => sub ($c) {
+          $c->render_later;
+          
+          $c->ua->get('https://api.example.com/data' => sub ($ua, $tx) {
+              my $data = $tx->result->json;
+              $c->render(json => $data);
+          });
+      };
+
+      app->start;
+
+      __DATA__
+      @@ page.html.ep
+      <!DOCTYPE html>
+      <title><%= $title %></title>
+      <ul>
+      % for my $item (@$items) {
+          <li><%= $item %></li>
+      % }
+      </ul>
+    severity: MEDIUM
+    docs_url: https://docs.mojolicious.org/

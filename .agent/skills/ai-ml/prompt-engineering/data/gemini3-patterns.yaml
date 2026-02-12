@@ -1,0 +1,170 @@
+# =============================================================================
+# gemini3-patterns.yaml — Gemini 3 Agentic Prompt Patterns
+# =============================================================================
+# 20 patterns for Gemini 3 agentic system instructions, thinking, and output
+# Source: https://ai.google.dev/gemini-api/docs/prompting-strategies
+# =============================================================================
+
+version: "2.0.0"
+total_patterns: 20
+
+# =============================================================================
+# AGENTIC SYSTEM INSTRUCTIONS
+# =============================================================================
+
+agentic_template:
+  description: "Google's official 9-rule agentic system instruction format"
+  xml_tags:
+    - role: "Agent identity and primary goal"
+    - instructions: "Numbered step-by-step instructions"
+    - constraints: "Boundaries and limitations"
+    - output_format: "Expected response structure"
+    - context: "Background information and domain knowledge"
+    - task: "Specific task to complete"
+  best_practices:
+    - "Use XML tags for structured sections"
+    - "Positive patterns over negative: 'do X' not 'don't do Y'"
+    - "Put examples WITHIN output_format for few-shot"
+    - "Use completion strategy: give output prefix to guide direction"
+    - "Be specific: 'summarize in 3 bullet points' > 'summarize'"
+
+system_instruction_rules:
+  - rule: identity
+    desc: "Define agent's role, expertise, and personality"
+    example: "<role>You are a senior software architect specializing in distributed systems.</role>"
+  - rule: task_scope
+    desc: "Define what the agent should and should NOT do"
+    example: "Focus on architectural patterns. Do not write implementation code."
+  - rule: output_format
+    desc: "Specify exact format with examples"
+    example: '<output_format>Respond in JSON: {"pattern": "...", "pros": [...], "cons": [...]}</output_format>'
+  - rule: constraints
+    desc: "Set boundaries: length, tone, style, safety"
+    example: "<constraints>Max 200 words. Professional tone. No speculation.</constraints>"
+  - rule: context
+    desc: "Provide domain-specific knowledge"
+    example: "<context>The system uses PostgreSQL 16, Go 1.23, and gRPC.</context>"
+  - rule: examples
+    desc: "Include 2-3 examples of expected output"
+    example: "Input: X → Output: Y (embedded in output_format section)"
+  - rule: fallback
+    desc: "Define behavior when uncertain or unable"
+    example: "If you're unsure, say 'I need more context about X' instead of guessing."
+  - rule: iteration
+    desc: "Allow self-correction and multi-step reasoning"
+    example: "Think step by step. If initial approach seems wrong, reconsider."
+  - rule: safety
+    desc: "Set safety guardrails for harmful content"
+    example: "Never provide advice on harmful activities."
+
+# =============================================================================
+# THINKING CONTROLS
+# =============================================================================
+
+thinking_levels:
+  description: "Gemini 3 thinking level controls"
+  levels:
+    - name: "off"
+      desc: "No internal reasoning"
+      use_case: "Simple lookups, classification"
+      latency: "Fastest"
+    - name: "low"
+      desc: "Minimal reasoning"
+      use_case: "Formatting, translation"
+      latency: "Fast"
+    - name: "medium"
+      desc: "Balanced reasoning (default)"
+      use_case: "General tasks, Q&A"
+      latency: "Moderate"
+    - name: "high"
+      desc: "Deep reasoning"
+      use_case: "Math, code analysis, debugging"
+      latency: "Slower"
+    - name: "max"
+      desc: "Maximum reasoning effort"
+      use_case: "Research, complex multi-step problems"
+      latency: "Slowest"
+
+thinking_budgets:
+  description: "Token budget for thinking process"
+  config:
+    python: |
+      generation_config={"thinking_config": {"thinking_budget": 8192}}
+    javascript: |
+      generationConfig: { thinkingConfig: { thinkingBudget: 8192 } }
+  guidelines:
+    - "Set budget=0 to disable thinking"
+    - "Budget acts as upper limit, model may use less"
+    - "Higher budget ≠ always better (diminishing returns)"
+    - "Use thought summaries for transparency"
+
+thought_summaries:
+  description: "Access model's reasoning process"
+  usage: "Check response.candidates[0].content.parts for thought parts"
+  billing: "Thinking tokens are billed as output tokens"
+  signatures: "Opaque signature string for conversation continuity"
+
+# =============================================================================
+# STRUCTURED OUTPUT
+# =============================================================================
+
+structured_output:
+  description: "Type-safe JSON output with schema enforcement"
+  schema_tools:
+    - name: "Pydantic"
+      language: "Python"
+      example: "response_schema=list[Recipe]"
+    - name: "Zod"
+      language: "JavaScript/TypeScript"
+      example: "responseMimeType: 'application/json', responseSchema: schema"
+    - name: "JSON Schema"
+      language: "REST API"
+      example: "type: OBJECT, properties: {...}"
+  best_practices:
+    - "Use description field in schema for model guidance"
+    - "Strong typing (integer, enum) > loose typing (string)"
+    - "Validate semantically even if syntactically correct"
+    - "Use propertyOrdering for Gemini 2.0 compatibility"
+  supported_types:
+    - "STRING, INTEGER, NUMBER, BOOLEAN"
+    - "ARRAY (with items)"
+    - "OBJECT (with properties)"
+    - "Enum (restricted values)"
+    - "Nullable fields"
+
+# =============================================================================
+# PROMPTING STRATEGIES
+# =============================================================================
+
+prompting_strategies:
+  few_shot:
+    desc: "Include 2-5 examples of expected input → output"
+    tips:
+      - "Examples should cover edge cases"
+      - "Few-shot > zero-shot for formatting tasks"
+      - "Include reasoning steps in examples for CoT"
+
+  completion:
+    desc: "Provide partial output to guide model direction"
+    tips:
+      - "Start JSON response with opening brace"
+      - "Begin sentence to set tone and style"
+      - "Works across all providers"
+
+  positive_framing:
+    desc: "Tell model what TO do, not what NOT to do"
+    tips:
+      - "'Respond in formal English' > 'Don't use slang'"
+      - "'Output exactly 3 items' > 'Don't output more than 3'"
+
+  iterative_refinement:
+    desc: "Chain prompts for complex tasks"
+    steps:
+      - "Generate initial draft"
+      - "Self-critique the draft"
+      - "Refine based on critique"
+      - "Final quality check"
+
+# =============================================================================
+# _DOMYH Awesome Code • Gemini 3 Patterns v2.0_
+# =============================================================================

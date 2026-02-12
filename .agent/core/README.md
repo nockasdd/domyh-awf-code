@@ -1,8 +1,8 @@
-# DOMYH Awesome Code Core v6.1.2
+# ⚙️ DOMYH Awesome Code Core v6.2.1
 
 Core system files (always loaded).
 
-## Files (36 total)
+## Files (44 total)
 
 ### Engine Files
 
@@ -77,15 +77,15 @@ Tier 3: ADVANCED.md (~4,000 tokens) → Referenced only
 
 ## Token Budget
 
-| State            | Tokens  | Reference              |
-| ---------------- | ------- | ---------------------- |
-| Idle baseline    | ~2,500  | manifest.yaml:372      |
-| 1 skill active   | ~5,000  | manifest.yaml:373      |
-| Peak (3 skills)  | ~10,000 | manifest.yaml:374      |
-| + Semantic layer | +2,500  | TOKEN_BUDGETS.yaml:119 |
+| State            | Tokens | Reference              |
+| ---------------- | ------ | ---------------------- |
+| Idle baseline    | ~2,100 | 21 × META.yaml         |
+| 1 skill active   | ~3,600 | +1,500 SKILL.md        |
+| Peak (3 skills)  | ~6,600 | 3 × SKILL.md           |
+| + Semantic layer | +2,500 | TOKEN_BUDGETS.yaml:119 |
 
 > **Note**: Semantic layer is disabled by default. Enable in `MEMORY_ENGINE.yaml`.
 
 ---
 
-_DOMYH Awesome Code v6.1_
+_DOMYH Awesome Code • Core System_

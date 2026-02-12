@@ -1,94 +1,72 @@
 name: react-native
-version: "6.1.2"
+version: "6.2.1"
+display: "React Native Patterns"
 category: mobile
 tier: 1
+priority: 3
 
-description: |
-  Cross-platform mobile framework for React Native 0.76+.
-  Covers New Architecture, Fabric, Turbo Modules, Expo.
+desc: "React Native 0.76-0.77+ development patterns (2025-2026). New Architecture default, Fabric, Turbo Modules, JSI."
+
+caps:
+  - new-architecture
+  - fabric-renderer
+  - turbo-modules
+  - jsi-bridge
+  - expo-router
+  - platform-specific
+
+data_files:
+  - data/core.yaml
+  - data/platform.yaml
+
+patterns:
+  total: 10
+  domains:
+    core: 5
+    platform: 5
+
+    - search_rn_patterns
+    - get_rn_component
 
 triggers:
   file_patterns:
-    - "metro.config.js"
+    - "*.tsx"
+    - "*.jsx"
     - "app.json"
+    - "metro.config.js"
     - "react-native.config.js"
-    - "*.tsx:react-native"
-    - "android/"
-    - "ios/"
   keywords:
     # Core
     - react native
     - react-native
-    - rn
-    - react native 0.76
-    # New Architecture
-    - new architecture
-    - Fabric
-    - Turbo Modules
-    - JSI
-    - Hermes
-    - Codegen
-    # Components
-    - View
-    - Text
-    - Image
-    - ScrollView
-    - FlatList
-    - FlashList
-    - Pressable
-    - TouchableOpacity
-    # Navigation
-    - react navigation
-    - Stack.Navigator
-    - Tab.Navigator
-    - NavigationContainer
-    - expo router
-    # State
-    - useState react native
-    - zustand rn
-    - redux toolkit rn
-    # Expo
     - expo
-    - expo go
-    - eas build
-    - expo-camera
-    - expo-notifications
-    - expo-router
-    - expo-updates
-    # Animation
-    - react-native-reanimated
-    - Animated
-    - useAnimatedStyle
-    - withSpring
-    # Styling
-    - StyleSheet
-    - StyleSheet.create
-    - nativewind
+    - expo router
+    # Architecture
+    - new architecture
+    - fabric
+    - turbo module
+    - jsi
+    - hermes
     # Platform
-    - Platform.OS
     - ios
     - android
-    # Build
-    - metro bundler
-    - npx react-native run-ios
-    - npx react-native run-android
-    # Native Modules
-    - native module
-    - native component
-    - react-native-gesture-handler
+    - platform specific
+    # Navigation
+    - react-navigation
+    - stack navigator
+    - tab navigator
   intents:
     - react native app
     - mobile app
     - ios android
-    - expo project
-    - cross platform mobile
+    - expo app
+    - native module
 
 related_skills:
   - react
   - typescript
-  - swift
-  - kotlin
+  - expo
 
 prevent_confusion_with:
+  - flutter: "React Native uses JavaScript/TypeScript, Flutter uses Dart"
   - react: "React Native is for mobile, React is for web"
-  - flutter: "RN uses JavaScript, Flutter uses Dart"

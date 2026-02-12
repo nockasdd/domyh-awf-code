@@ -1,0 +1,168 @@
+# =============================================================================
+# Deno 2.1+ Security & Permissions Patterns (Feb 2026)
+# =============================================================================
+# Security-first permission model
+
+metadata:
+  skill: deno
+  domain: security
+  version: "2.1.0"
+  updated: "2026-02-05"
+  patterns_count: 9
+
+patterns:
+  - id: deno010
+    name: Permission Flags
+    category: permissions
+    version: "1.0+"
+    description: Explicit permission grants for file, network, environment access
+    text: permissions allow net read write env run ffi flags security
+    example: |
+      # Allow network access to specific hosts
+      deno run --allow-net=api.example.com,localhost:3000 server.ts
+
+      # Allow read access to specific directory
+      deno run --allow-read=/app/data config.ts
+
+      # Allow environment variables
+      deno run --allow-env=DATABASE_URL,API_KEY app.ts
+    severity: CRITICAL
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions
+
+  - id: deno011
+    name: --allow-net
+    category: permissions
+    version: "1.0+"
+    description: Network access permission with host/port restrictions
+    text: allow net network http fetch websocket permission
+    example: |
+      # Unrestricted network access (dangerous)
+      deno run --allow-net app.ts
+
+      # Restricted to specific hosts
+      deno run --allow-net=api.example.com app.ts
+
+      # Restricted to specific ports
+      deno run --allow-net=:8080 app.ts
+    severity: CRITICAL
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions#network-access
+
+  - id: deno012
+    name: --allow-read/write
+    category: permissions
+    version: "1.0+"
+    description: File system access permissions with path restrictions
+    text: allow read write file filesystem permission directory
+    example: |
+      # Read specific files/directories
+      deno run --allow-read=./config,./data app.ts
+
+      # Write to specific directory
+      deno run --allow-write=./output,./logs app.ts
+
+      # Combine read and write
+      deno run --allow-read=./src --allow-write=./dist build.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions#file-system-access
+
+  - id: deno013
+    name: --allow-env
+    category: permissions
+    version: "1.0+"
+    description: Environment variable access with wildcards (2.1+)
+    text: allow env environment variable permission wildcard
+    example: |
+      # Specific variables
+      deno run --allow-env=DATABASE_URL,API_KEY app.ts
+
+      # Wildcard patterns (Deno 2.1+)
+      deno run --allow-env=AWS_* app.ts
+
+      # All env vars (dangerous)
+      deno run --allow-env app.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions#environment-variables
+
+  - id: deno014
+    name: --allow-run
+    category: permissions
+    version: "1.0+"
+    description: Subprocess execution permission (potential privilege escalation)
+    text: allow run subprocess execute command shell permission
+    example: |
+      # Allow specific commands
+      deno run --allow-run=git,npm script.ts
+
+      # WARNING: Unrestricted run can escalate privileges
+      # deno run --allow-run script.ts  # Dangerous!
+
+      // In code:
+      const cmd = new Deno.Command("git", { args: ["status"] });
+      const output = await cmd.output();
+    severity: CRITICAL
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions#running-subprocesses
+
+  - id: deno015
+    name: deno audit
+    category: security
+    version: "2.0+"
+    description: Audit dependencies for known vulnerabilities
+    text: audit security vulnerability scan dependencies check
+    example: |
+      # Audit all dependencies
+      deno audit
+
+      # Check specific lock file
+      deno audit --lock=deno.lock
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/tools/dependency_inspector
+
+  - id: deno016
+    name: Permission Prompts
+    category: permissions
+    version: "2.1+"
+    description: Interactive permission prompts with stack traces for debugging
+    text: permission prompt interactive stack trace debug
+    example: |
+      # Run without --allow flags to get interactive prompts
+      deno run server.ts
+
+      # Deno will ask:
+      # ⚠️ Deno requests net access to "api.example.com".
+      #    at server.ts:5:20
+      # Allow? [y/n/A] (y = yes, n = no, A = allow all)
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions
+
+  - id: deno017
+    name: Deny Permissions
+    category: permissions
+    version: "2.0+"
+    description: Explicitly deny specific permissions
+    text: deny permission restrict block security
+    example: |
+      # Deny network but allow other permissions
+      deno run --allow-all --deny-net=evil.com app.ts
+
+      # Deny write to system directories
+      deno run --allow-write --deny-write=/etc,/system app.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions#denying-access
+
+  - id: deno018
+    name: DENO_AUDIT_PERMISSIONS
+    category: security
+    version: "2.0+"
+    description: Generate audit log of all permission requests for security review
+    text: audit permissions log security trace monitoring env variable
+    example: |
+      # Enable permission audit logging
+      export DENO_AUDIT_PERMISSIONS=1
+      deno run server.ts
+
+      # Output shows all permission requests with stack traces:
+      # [audit] read: ./config.json at main.ts:5:10
+      # [audit] net: api.example.com at server.ts:15:3
+      # [audit] env: DATABASE_URL at db.ts:8:12
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/basics/permissions

@@ -1,0 +1,202 @@
+metadata:
+  skill: domyh-design
+  domain: image-generation-workflows
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: >
+    Multi-step workflows for AI image generation in IDE environments.
+    Covers single image, multi-screen consistency, iterative refinement,
+    and responsive breakpoint workflows.
+
+# --- Workflow 1: Single Image Generation ---
+single_image:
+  name: "Single UI Mockup"
+  description: "Generate one high-quality UI mockup from requirements"
+  total_steps: 6
+  steps:
+    1_platform_detection:
+      action: "Detect target platform from user context"
+      inputs: ["user description", "project type", "device target"]
+      output: "platform_preset key from image-gen-prompts.yaml"
+      auto_detect_rules:
+        - keyword: ["dashboard", "admin", "analytics"]
+          preset: desktop_dashboard
+        - keyword: ["mobile", "app", "ios", "android"]
+          preset: mobile_app
+        - keyword: ["tablet", "ipad"]
+          preset: tablet_app
+        - keyword: ["landing", "marketing", "homepage"]
+          preset: landing_page_hero
+        - keyword: ["component", "button", "card", "widget"]
+          preset: component_preview
+        - keyword: ["email", "newsletter"]
+          preset: email_template
+
+    2_style_selection:
+      action: "Match design style from prompts.yaml or user preferences"
+      inputs: ["user style keywords", "project brand", "industry"]
+      output: "style_variant key + CSS properties"
+      sources:
+        - "data/prompts.yaml — 23 style patterns with CSS keywords"
+        - "data/styles.yaml — 50+ UI styles"
+        - "data/colors.yaml — 130+ palettes by industry"
+
+    3_prompt_construction:
+      action: "Assemble prompt using PRISM framework"
+      method: "Concatenate: persona + reference + intent + structure + modifiers"
+      template: >
+        {persona_template}
+        {realism_booster} of a {intent_description}.
+        {structure_description}.
+        {style_modifiers}.
+      max_length: "50-80 words for Nano Banana Pro"
+      tip: "Set enhancePrompt=false when prompt exceeds 30 words"
+
+    4_negative_prompt:
+      action: "Append negative prompt phrases"
+      method: "Combine always_apply + component-specific preset"
+      auto_append: true
+      model_check: "IF model supports negative_prompt (Nano Banana Pro) THEN append. ELSE reframe as positive instructions."
+
+    5_generation:
+      action: "Call generate_image with assembled params"
+      params:
+        prompt: "{assembled_prompt}"
+        aspect_ratio: "{from platform_preset}"
+        image_size: "{from platform_preset}"
+      fallback: "If image generation fails, generate as HTML/CSS web page mockup"
+
+    6_review:
+      action: "Evaluate generated image against checklist"
+      checklist:
+        - "Layout matches requested structure?"
+        - "Color scheme consistent with specifications?"
+        - "Text readable and not gibberish?"
+        - "No device frames or watermarks?"
+        - "Visual hierarchy clear (headline > subtext > body)?"
+        - "Components properly sized and spaced?"
+
+# --- Workflow 2: Multi-Screen Consistency ---
+multi_screen:
+  name: "Multi-Screen Design System"
+  description: "Generate consistent UI across multiple screens (e.g., app flow) "
+  total_steps: 5
+  strategy:
+    seed_management:
+      description: "Use identical seed value across all generations for style consistency"
+      tip: "seed param unavailable when addWatermark=true in Nano Banana Pro"
+    style_anchoring:
+      description: "Define exact style keywords once, reuse verbatim in all prompts"
+      example: "dark mode, Inter font, #3b82f6 accent, 12px rounded corners"
+    color_pinning:
+      description: "Specify exact hex colors in every prompt — never use vague color names"
+      example: "primary blue #3b82f6, background #0f172a, text #f1f5f9, border #334155"
+    font_pinning:
+      description: "Name exact font family in every prompt for cross-screen consistency"
+      example: "'Inter font family' NOT 'clean modern font'"
+
+  steps:
+    1_define_brand:
+      action: "Lock visual identity parameters"
+      outputs:
+        colors: "List of 5-6 hex colors (primary, secondary, background, surface, text, accent)"
+        typography: "Font family, weights, sizes"
+        style: "Exact style description (copy-paste ready)"
+        corners: "Border radius value"
+        spacing: "Grid system (4px, 8px)"
+
+    2_generate_hero:
+      action: "Generate the most important screen first (usually dashboard or home)"
+      tip: "This establishes the visual anchor for all other screens"
+
+    3_reference_chain:
+      action: "Use previously generated image as reference for next screen"
+      method: "Pass hero image as reference_image alongside text prompt"
+      benefit: "AI maintains visual consistency from reference"
+
+    4_generate_secondary:
+      action: "Generate remaining screens with same style + seed"
+      prompt_prefix: "(append to each) Same visual design language as the primary screen."
+
+    5_verify_consistency:
+      action: "Review all screens together for visual consistency"
+      checklist:
+        - "Same color palette across all screens?"
+        - "Typography hierarchy consistent?"
+        - "Component styles match (buttons, cards, inputs)?"
+        - "Spacing and grid alignment consistent?"
+        - "Icon style consistent (outlined vs filled)?"
+
+# --- Workflow 3: Iterative Refinement ---
+iterative_refinement:
+  name: "Progressive Mockup Refinement"
+  description: "Start with broad layout, refine incrementally"
+  total_steps: 4
+  techniques:
+    focus_area:
+      description: "Regenerate specific section while keeping overall layout"
+      example: "Keep the sidebar but redesign the main content area with a different chart layout"
+
+    style_transfer:
+      description: "Upload reference image + describe desired style changes"
+      example: "Apply the color scheme from this reference to the dashboard mockup"
+
+    detail_enhancement:
+      description: "Start with broad layout → progressively add specific details"
+      progression:
+        - level_1: "Overall layout and major sections"
+        - level_2: "Component placement and sizing"
+        - level_3: "Typography, colors, and spacing"
+        - level_4: "Micro-details: icons, badges, avatars, states"
+
+  follow_up_templates:
+    layout:
+      - "Make the sidebar narrower (200px) and add icon-only collapsed state"
+      - "Change from 3-column to 4-column card grid in the main area"
+      - "Move the search bar from sidebar to the top header"
+      - "Add a secondary navigation tab bar below the header"
+    color_style:
+      - "Change the accent color to {hex_color}"
+      - "Switch to dark mode while keeping the same layout"
+      - "Make the background warmer (off-white #faf9f6 instead of pure white)"
+      - "Add a subtle gradient to the header area"
+    content:
+      - "Replace the bar chart with a line chart showing trend data"
+      - "Add a notification badge (red dot) to the bell icon"
+      - "Show an error state on the third form field"
+      - "Add user avatars to the activity feed items"
+    detail:
+      - "Increase whitespace between sections by 50%"
+      - "Round the corners of all cards to 16px"
+      - "Add a subtle drop shadow to the floating action button"
+
+# --- Workflow 4: Responsive Breakpoint Set ---
+responsive_breakpoints:
+  name: "Responsive Design Mockup Set"
+  description: "Generate UI at multiple breakpoints for responsive design review"
+  breakpoints:
+    mobile:
+      width: "375px"
+      aspect_ratio: "9:16"
+      adaptation: "Single column, stacked layout, hamburger menu, bottom nav"
+    tablet:
+      width: "768px"
+      aspect_ratio: "4:3"
+      adaptation: "2-column grid, collapsible sidebar, adapted navigation"
+    desktop:
+      width: "1440px"
+      aspect_ratio: "16:9"
+      adaptation: "Full layout, expanded sidebar, multi-column grids"
+
+  prompt_suffix_by_breakpoint:
+    mobile: ", mobile-first single column layout, bottom tab navigation, touch-optimized 44px tap targets"
+    tablet: ", tablet layout with 2-column grid, collapsible sidebar, medium touch targets"
+    desktop: ", desktop widescreen layout, full sidebar navigation, hover states visible"
+
+  steps:
+    1_design_desktop: "Generate desktop version first — fullest expression of the design"
+    2_adapt_tablet: "Generate tablet with same brand, adapted layout"
+    3_adapt_mobile: "Generate mobile with same brand, stacked layout, simplified UI"
+    4_review_set: "Compare all 3 for visual consistency and adaptive behavior"
+
+  integration_note: "Use the same component_template (e.g., dashboard) for all breakpoints and append the breakpoint-specific prompt_suffix."

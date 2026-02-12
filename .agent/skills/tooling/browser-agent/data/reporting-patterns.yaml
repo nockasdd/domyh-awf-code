@@ -1,0 +1,97 @@
+# =============================================================================
+# reporting-patterns.yaml — Evidence-Based Reporting Templates
+# =============================================================================
+
+version: "1.0.0"
+
+templates:
+  summary_table:
+    name: "Pass/Fail Summary Table"
+    when: "Summarizing test results for all elements"
+    format: |
+      ## Frontend Verification Report
+
+      | # | Element | Type | Test | Status | Notes |
+      |---|---------|------|------|--------|-------|
+      | 1 | Submit button | button | click → action | ✅ PASS | Navigates to /success |
+      | 2 | Country dropdown | dropdown | open → select | ✅ PASS | 195 options loaded |
+      | 3 | Settings modal | modal | open → Escape close | ✅ PASS | Focus returns to trigger |
+      | 4 | Delete button | button | disabled state | ❌ FAIL | Disabled but still clickable |
+
+      **Summary**: 3/4 passed (75%)
+      **Console Errors**: 0
+      **Network Failures**: 0
+    required_fields: ["element", "type", "test", "status", "notes"]
+
+  issue_report:
+    name: "Issue Detail Report"
+    when: "Documenting a specific failing element"
+    format: |
+      ### ❌ Issue: {Element Name} — {Test Name}
+
+      **Element**: {element description and location}
+      **Type**: {button | dropdown | modal | hover}
+      **Severity**: {Critical | High | Medium | Low}
+
+      **Expected**: {What should happen}
+      **Actual**: {What actually happens}
+
+      **Steps to Reproduce**:
+      1. Navigate to {URL}
+      2. {Action 1}
+      3. {Action 2}
+      4. Observe: {What goes wrong}
+
+      **Evidence**: ![screenshot](file:///path/to/screenshot.png)
+
+      **Possible Cause**: {If identifiable}
+    required_fields:
+      ["element", "severity", "expected", "actual", "steps", "evidence"]
+
+  interaction_log:
+    name: "Interaction Log"
+    when: "Detailed log of all interactions performed"
+    format: |
+      ## Interaction Log — {URL}
+
+      | Time | Action | Element | Result |
+      |------|--------|---------|--------|
+      | 0:00 | navigate | {URL} | ✅ HTTP 200 |
+      | 0:02 | snapshot | page | 12 buttons, 3 dropdowns, 1 modal |
+      | 0:03 | click | Submit button | ✅ Form submitted |
+      | 0:04 | snapshot | result page | Success message visible |
+      | 0:05 | click | Country dropdown | ✅ Options opened |
+      | 0:06 | select | "Vietnam" | ✅ Value updated |
+      | 0:07 | press_key | Escape | ✅ Dropdown closed |
+    note: "This format is useful for reproducing exact test sequences"
+
+  accessibility_scorecard:
+    name: "Accessibility Scorecard"
+    when: "Reporting accessibility-specific results"
+    format: |
+      ## Accessibility Scorecard
+
+      | Category | Check | Status |
+      |----------|-------|--------|
+      | **Keyboard** | All elements reachable via Tab | ✅ |
+      | **Keyboard** | Enter activates buttons | ✅ |
+      | **Keyboard** | Escape closes modals/dropdowns | ✅ |
+      | **Keyboard** | Arrow keys navigate lists | ❌ |
+      | **Focus** | Visible focus indicator | ✅ |
+      | **Focus** | Focus trap in modals | ✅ |
+      | **Focus** | Focus returns after close | ❌ |
+      | **ARIA** | Roles correctly assigned | ✅ |
+      | **ARIA** | Labels present | ✅ |
+      | **Screen Reader** | Content announced correctly | ⚠️ Not tested |
+
+      **Score**: 7/9 passed (78%)
+      **Needs Attention**: Arrow key navigation, focus return
+    categories: ["keyboard", "focus", "aria", "screen_reader", "color_contrast"]
+
+# Recommended Report Structure:
+# 1. Summary table (always include)
+# 2. Issue reports (for each failure)
+# 3. Interaction log (optional, for debugging)
+# 4. Accessibility scorecard (if a11y testing performed)
+
+# _DOMYH Awesome Code • Reporting Patterns v1.0.0_

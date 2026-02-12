@@ -1,0 +1,139 @@
+name: domyh-design
+version: "6.2.1"
+display: UI/UX Pro Max
+category: cross-cutting
+tier: 1
+priority: 2
+
+desc: "UI/UX design intelligence with 50+ styles, 130+ color palettes, 57 font pairings, 250+ animation patterns, AI image gen prompt optimization (PRISM framework). Covers React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, WebView2, Tauri, Qt."
+
+triggers:
+  file_patterns:
+    - "*.html"
+    - "*.css"
+    - "*.scss"
+    - "*.tsx"
+    - "*.vue"
+    - "*.svelte"
+    - "tailwind.config.*"
+    - "components.json"
+  keywords:
+    # Design
+    - ui design
+    - ux design
+    - user interface
+    - user experience
+    - landing page
+    - dashboard
+    - admin panel
+    # Styles
+    - glassmorphism
+    - neumorphism
+    - minimalism
+    - brutalism
+    - bento grid
+    - dark mode
+    - responsive
+    # Elements
+    - button
+    - modal
+    - navbar
+    - sidebar
+    - card
+    - table
+    - form
+    - chart
+    # Topics
+    - color palette
+    - typography
+    - font pairing
+    - accessibility
+    - animation
+    - layout
+    - spacing
+    - shadow
+    - gradient
+    # Animation
+    - micro interaction
+    - scroll animation
+    - parallax
+    - gsap
+    - framer motion
+    - lottie
+    - webview animation
+    - css animation
+    - transition effect
+    # AI Image Generation
+    - image generation
+    - mockup
+    - prompt optimization
+    - ai design
+    - PRISM framework
+    - generate screenshot
+    - design system prompt
+  intents:
+    - design ui
+    - create landing page
+    - build dashboard
+    - improve ux
+    - choose colors
+    - pick fonts
+    - add animation
+    - animate component
+    - generate mockup
+    - create ui screenshot
+    - design visualization
+
+caps:
+  - UI component design
+  - Color palette selection
+  - Typography pairing
+  - Accessibility review
+  - Animation patterns
+  - Scroll animation
+  - Micro-interaction design
+  - WebView optimization
+  - AI image generation prompt optimization
+  - Multi-screen design consistency
+
+related_skills:
+  - react
+  - vue
+  - tailwind
+  - nextjs
+
+data_files:
+  - data/styles.yaml
+  - data/colors.yaml
+  - data/typography.yaml
+  - data/charts.yaml
+  - data/icons.yaml
+  - data/landing.yaml
+  - data/products.yaml
+  - data/prompts.yaml
+  - data/design-tokens.yaml
+  - data/ux-guidelines.yaml
+  - data/ui-reasoning.yaml
+  - data/web-interface.yaml
+  - data/component-decision.yaml
+  - data/component-mapping.yaml
+  - data/implementation-strategy.yaml
+  - data/directory-structure.yaml
+  - data/react-performance.yaml
+  - data/platform-frameworks.yaml
+  - data/platform-guidelines.yaml
+  - data/desktop-animation.yaml
+  - data/desktop-architecture.yaml
+  - data/desktop-colors.yaml
+  # Animation & Visual
+  - data/web-animation-libraries.yaml
+  - data/component-effects.yaml
+  - data/micro-interactions.yaml
+  - data/scroll-animation-patterns.yaml
+  - data/tailwind-animation-plugins.yaml
+  - data/animation-ui-kits.yaml
+  - data/webview-animation-optimization.yaml
+  # AI Image Generation
+  - data/image-gen-prompts.yaml
+  - data/image-gen-workflows.yaml
+  - data/design-system-prompts.yaml

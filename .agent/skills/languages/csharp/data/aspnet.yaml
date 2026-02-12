@@ -1,0 +1,448 @@
+# =============================================================================
+# C# ASP.NET Core Patterns (Feb 2026)
+# Version: ASP.NET Core 9
+# =============================================================================
+
+metadata:
+  skill: csharp
+  domain: aspnet
+  version: "9"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: cs101
+    name: Minimal APIs
+    category: web
+    version: "ASPNETCore9"
+    description: |
+      Lightweight API endpoints.
+      Route handlers, parameter binding, filters.
+    text: minimal api endpoint mapget mappost filter
+    example: |
+      // ✅ Basic minimal API
+      var builder = WebApplication.CreateBuilder(args);
+
+      builder.Services.AddSingleton<IUserService, UserService>();
+
+      var app = builder.Build();
+
+      // ✅ Route handlers
+      app.MapGet("/", () => "Hello World!");
+
+      app.MapGet("/users/{id:int}", async (int id, IUserService service) =>
+      {
+          var user = await service.GetByIdAsync(id);
+          return user is not null ? Results.Ok(user) : Results.NotFound();
+      });
+
+      app.MapPost("/users", async (CreateUserRequest request, IUserService service) =>
+      {
+          var user = await service.CreateAsync(request);
+          return Results.Created($"/users/{user.Id}", user);
+      });
+
+      // ✅ Route groups
+      var usersApi = app.MapGroup("/api/users")
+          .RequireAuthorization()
+          .WithTags("Users");
+
+      usersApi.MapGet("/", GetUsers);
+      usersApi.MapGet("/{id}", GetUser);
+      usersApi.MapPost("/", CreateUser);
+      usersApi.MapPut("/{id}", UpdateUser);
+      usersApi.MapDelete("/{id}", DeleteUser);
+
+      // ✅ Endpoint filters
+      app.MapPost("/users", CreateUser)
+          .AddEndpointFilter(async (context, next) =>
+          {
+              var request = context.GetArgument<CreateUserRequest>(0);
+              if (string.IsNullOrEmpty(request.Email))
+                  return Results.BadRequest("Email is required");
+              return await next(context);
+          });
+
+      // ✅ TypedResults for OpenAPI
+      app.MapGet("/users/{id}", async Task<Results<Ok<User>, NotFound>> (int id, IUserService svc) =>
+      {
+          var user = await svc.GetByIdAsync(id);
+          return user is not null ? TypedResults.Ok(user) : TypedResults.NotFound();
+      });
+
+      app.Run();
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
+
+  - id: cs102
+    name: Entity Framework Core
+    category: data
+    version: "EFCore9"
+    description: |
+      ORM patterns with EF Core.
+      DbContext, entities, migrations, querying.
+    text: efcore dbcontext entity migration query linq
+    example: |
+      // ✅ DbContext
+      public class AppDbContext(DbContextOptions<AppDbContext> options) 
+          : DbContext(options)
+      {
+          public DbSet<User> Users => Set<User>();
+          public DbSet<Order> Orders => Set<Order>();
+          
+          protected override void OnModelCreating(ModelBuilder modelBuilder)
+          {
+              modelBuilder.Entity<User>(entity =>
+              {
+                  entity.HasKey(e => e.Id);
+                  entity.HasIndex(e => e.Email).IsUnique();
+                  entity.Property(e => e.Name).HasMaxLength(100);
+                  
+                  entity.HasMany(e => e.Orders)
+                      .WithOne(o => o.User)
+                      .HasForeignKey(o => o.UserId);
+              });
+          }
+      }
+
+      // ✅ Entity
+      public class User
+      {
+          public int Id { get; set; }
+          public required string Name { get; set; }
+          public required string Email { get; set; }
+          public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+          public List<Order> Orders { get; set; } = [];
+      }
+
+      // ✅ Repository pattern
+      public class UserRepository(AppDbContext context) : IUserRepository
+      {
+          public async Task<User?> GetByIdAsync(int id, CancellationToken ct = default)
+          {
+              return await context.Users
+                  .Include(u => u.Orders)
+                  .FirstOrDefaultAsync(u => u.Id == id, ct);
+          }
+          
+          public async Task<List<User>> GetActiveUsersAsync(CancellationToken ct = default)
+          {
+              return await context.Users
+                  .Where(u => u.IsActive)
+                  .OrderBy(u => u.Name)
+                  .ToListAsync(ct);
+          }
+          
+          public async Task<User> CreateAsync(User user, CancellationToken ct = default)
+          {
+              context.Users.Add(user);
+              await context.SaveChangesAsync(ct);
+              return user;
+          }
+      }
+
+      // ✅ Compiled queries for performance
+      private static readonly Func<AppDbContext, string, Task<User?>> GetByEmail =
+          EF.CompileAsyncQuery((AppDbContext ctx, string email) =>
+              ctx.Users.FirstOrDefault(u => u.Email == email));
+
+      // ✅ Raw SQL when needed
+      var users = await context.Users
+          .FromSqlInterpolated($"SELECT * FROM Users WHERE Name LIKE {searchTerm}")
+          .ToListAsync();
+
+      // ✅ Transactions
+      await using var transaction = await context.Database.BeginTransactionAsync();
+      try
+      {
+          // Multiple operations
+          await context.SaveChangesAsync();
+          await transaction.CommitAsync();
+      }
+      catch
+      {
+          await transaction.RollbackAsync();
+          throw;
+      }
+    severity: HIGH
+    docs_url: https://docs.microsoft.com/en-us/ef/core/
+
+  - id: cs103
+    name: Dependency Injection
+    category: di
+    version: "ASPNETCore"
+    description: |
+      Built-in DI container patterns.
+      Service lifetimes, registration, resolution.
+    text: di dependency injection services scoped singleton transient
+    example: |
+      var builder = WebApplication.CreateBuilder(args);
+
+      // ✅ Service lifetimes
+      builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+      builder.Services.AddScoped<IUserService, UserService>();
+      builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+
+      // ✅ Interface + Implementation
+      builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+      // ✅ Factory registration
+      builder.Services.AddScoped<IHttpClient>(sp =>
+      {
+          var config = sp.GetRequiredService<IConfiguration>();
+          return new HttpClient { BaseAddress = new Uri(config["ApiUrl"]!) };
+      });
+
+      // ✅ Options pattern
+      builder.Services.Configure<EmailSettings>(
+          builder.Configuration.GetSection("Email"));
+
+      public class EmailService(IOptions<EmailSettings> options)
+      {
+          private readonly EmailSettings _settings = options.Value;
+      }
+
+      // ✅ Named options
+      builder.Services.Configure<ApiSettings>("GitHub", 
+          builder.Configuration.GetSection("GitHub"));
+      builder.Services.Configure<ApiSettings>("Azure", 
+          builder.Configuration.GetSection("Azure"));
+
+      public class ApiFactory(IOptionsSnapshot<ApiSettings> options)
+      {
+          public ApiClient GetClient(string name) =>
+              new(options.Get(name));
+      }
+
+      // ✅ Keyed services (NET 8+)
+      builder.Services.AddKeyedSingleton<INotifier, EmailNotifier>("email");
+      builder.Services.AddKeyedSingleton<INotifier, SmsNotifier>("sms");
+
+      public class NotificationService(
+          [FromKeyedServices("email")] INotifier emailNotifier)
+      {
+          // Use emailNotifier
+      }
+
+      // ✅ Background services
+      builder.Services.AddHostedService<BackgroundWorker>();
+
+      public class BackgroundWorker(ILogger<BackgroundWorker> logger) 
+          : BackgroundService
+      {
+          protected override async Task ExecuteAsync(CancellationToken ct)
+          {
+              while (!ct.IsCancellationRequested)
+              {
+                  logger.LogInformation("Working...");
+                  await Task.Delay(TimeSpan.FromMinutes(1), ct);
+              }
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
+
+  - id: cs104
+    name: Blazor
+    category: ui
+    version: "Blazor9"
+    description: |
+      Interactive web UI with C#.
+      Components, state, interop.
+    text: blazor component razor state interop wasm server
+    example: |
+      @* ✅ Basic component *@
+      @page "/counter"
+
+      <h1>Counter</h1>
+      <p>Current count: @currentCount</p>
+      <button class="btn btn-primary" @onclick="IncrementCount">
+          Click me
+      </button>
+
+      @code {
+          private int currentCount = 0;
+          
+          private void IncrementCount() => currentCount++;
+      }
+
+      @* ✅ Component with parameters *@
+      <UserCard User="@user" OnDelete="HandleDelete" />
+
+      @code {
+          [Parameter]
+          public User User { get; set; } = default!;
+          
+          [Parameter]
+          public EventCallback<User> OnDelete { get; set; }
+          
+          private async Task HandleDeleteClick()
+          {
+              await OnDelete.InvokeAsync(User);
+          }
+      }
+
+      @* ✅ Data binding *@
+      <input @bind="searchTerm" @bind:event="oninput" />
+      <input type="checkbox" @bind="isChecked" />
+      <select @bind="selectedOption">
+          @foreach (var option in options)
+          {
+              <option value="@option.Value">@option.Text</option>
+          }
+      </select>
+
+      @* ✅ Lifecycle methods *@
+      @code {
+          [Parameter]
+          public int UserId { get; set; }
+          
+          private User? user;
+          
+          protected override async Task OnInitializedAsync()
+          {
+              user = await UserService.GetByIdAsync(UserId);
+          }
+          
+          protected override async Task OnParametersSetAsync()
+          {
+              // Called when parameters change
+          }
+      }
+
+      @* ✅ State management with cascading values *@
+      <CascadingValue Value="@theme">
+          <Router AppAssembly="@typeof(App).Assembly" />
+      </CascadingValue>
+
+      @* In child component *@
+      @code {
+          [CascadingParameter]
+          public Theme Theme { get; set; } = default!;
+      }
+
+      @* ✅ JS Interop *@
+      @inject IJSRuntime JS
+
+      @code {
+          private async Task ShowAlert()
+          {
+              await JS.InvokeVoidAsync("alert", "Hello from Blazor!");
+          }
+          
+          private async Task<string> GetValue()
+          {
+              return await JS.InvokeAsync<string>("localStorage.getItem", "key");
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.microsoft.com/en-us/aspnet/core/blazor/
+
+  - id: cs105
+    name: ASP.NET Core Testing
+    category: testing
+    version: "ASPNETCore9"
+    description: |
+      Testing patterns with xUnit.
+      Integration tests, mocking, WebApplicationFactory.
+    text: xunit testing mock integration webapplicationfactory
+    example: |
+      using Xunit;
+      using Moq;
+      using Microsoft.AspNetCore.Mvc.Testing;
+
+      // ✅ Unit test with mocking
+      public class UserServiceTests
+      {
+          private readonly Mock<IUserRepository> _repositoryMock = new();
+          private readonly UserService _sut;
+          
+          public UserServiceTests()
+          {
+              _sut = new UserService(_repositoryMock.Object);
+          }
+          
+          [Fact]
+          public async Task GetUser_ReturnsNull_WhenNotFound()
+          {
+              // Arrange
+              _repositoryMock
+                  .Setup(r => r.GetByIdAsync(It.IsAny<int>(), default))
+                  .ReturnsAsync((User?)null);
+              
+              // Act
+              var result = await _sut.GetUserAsync(1);
+              
+              // Assert
+              Assert.Null(result);
+          }
+          
+          [Theory]
+          [InlineData("test@email.com", true)]
+          [InlineData("invalid", false)]
+          public void IsValidEmail_ReturnsExpected(string email, bool expected)
+          {
+              var result = UserValidator.IsValidEmail(email);
+              Assert.Equal(expected, result);
+          }
+      }
+
+      // ✅ Integration test with WebApplicationFactory
+      public class UsersApiTests : IClassFixture<WebApplicationFactory<Program>>
+      {
+          private readonly HttpClient _client;
+          
+          public UsersApiTests(WebApplicationFactory<Program> factory)
+          {
+              _client = factory.WithWebHostBuilder(builder =>
+              {
+                  builder.ConfigureServices(services =>
+                  {
+                      // Replace real DB with in-memory
+                      services.AddDbContext<AppDbContext>(options =>
+                          options.UseInMemoryDatabase("Test"));
+                  });
+              }).CreateClient();
+          }
+          
+          [Fact]
+          public async Task GetUsers_ReturnsOk()
+          {
+              var response = await _client.GetAsync("/api/users");
+              
+              response.EnsureSuccessStatusCode();
+              Assert.Equal("application/json", 
+                  response.Content.Headers.ContentType?.MediaType);
+          }
+          
+          [Fact]
+          public async Task CreateUser_ReturnsCreated()
+          {
+              var request = new { Name = "John", Email = "john@email.com" };
+              var content = JsonContent.Create(request);
+              
+              var response = await _client.PostAsync("/api/users", content);
+              
+              Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+          }
+      }
+
+      // ✅ Test containers for real DB
+      public class DatabaseTests : IAsyncLifetime
+      {
+          private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
+              .WithImage("postgres:16")
+              .Build();
+          
+          public async Task InitializeAsync() => await _postgres.StartAsync();
+          public async Task DisposeAsync() => await _postgres.DisposeAsync();
+          
+          [Fact]
+          public async Task CanQueryDatabase()
+          {
+              var connectionString = _postgres.GetConnectionString();
+              // Test with real Postgres
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests

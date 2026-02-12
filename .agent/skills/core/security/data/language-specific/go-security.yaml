@@ -1,0 +1,219 @@
+metadata:
+  skill: security
+  domain: go_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: go-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_vuln
+    - example_fix
+patterns:
+  - id: GO-01
+    name: Unchecked Error Return
+    severity: HIGH
+    category: Error
+    description: Error return value ignored allowing silent failures
+    detection_pattern: err\\s*:?=.*\\n(?!.*if\\s+err|.*err\\s*!=)
+    fix_pattern: Always check error returns handle or propagate
+    cwe: CWE-252
+    example_vuln: result, _ := doSomething()
+    example_fix: result, err := doSomething()\nif err != nil { return err }
+  - id: GO-02
+    name: Race Condition
+    severity: CRITICAL
+    category: Concurrency
+    description: Concurrent map access or shared state without sync
+    detection_pattern: (map\\[.*\\].*go\\s+func|go\\s+func.*map\\[)(?!.*sync|mutex|atomic)
+    fix_pattern: Use sync.Mutex sync.Map or channels for shared state
+    cwe: CWE-362
+    example_vuln: var cache map[string]int\ngo func() { cache['key'] = val }()
+    example_fix: var mu sync.Mutex\nmu.Lock()\ncache['key'] = val\nmu.Unlock()
+  - id: GO-03
+    name: Command Injection
+    severity: CRITICAL
+    category: Injection
+    description: User input used in exec.Command without sanitization
+    detection_pattern: exec\\.Command\\(.*\\+|fmt\\.Sprintf.*exec\\.Command
+    fix_pattern: Use argument arrays never shell strings validate input
+    cwe: CWE-78
+    example_vuln: exec.Command('sh', '-c', 'echo ' + userInput)
+    example_fix: exec.Command('echo', userInput) // No shell
+  - id: GO-04
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User input in filepath.Join without sanitization
+    detection_pattern: filepath\\.Join.*req\\.|os\\.Open.*\\+|ioutil\\.ReadFile.*\\+
+    fix_pattern: Use filepath.Clean validate path is within allowed dir
+    cwe: CWE-22
+    example_vuln: filepath.Join(baseDir, req.URL.Query().Get('file'))
+    example_fix: clean := filepath.Clean(userPath)\nif !strings.HasPrefix(clean, baseDir) { return err }
+  - id: GO-05
+    name: SQL Injection
+    severity: CRITICAL
+    category: Injection
+    description: String concatenation in SQL queries
+    detection_pattern: (db\\.Query|db\\.Exec)\\(.*\\+|fmt\\.Sprintf.*Query
+    fix_pattern: Use parameterized queries with db.Query(query args...)
+    cwe: CWE-89
+    example_vuln: db.Query('SELECT * FROM users WHERE id = ' + id)
+    example_fix: db.Query('SELECT * FROM users WHERE id = ?', id)
+  - id: GO-06
+    name: Weak TLS Config
+    severity: HIGH
+    category: Crypto
+    description: TLS config allows weak versions or insecure settings
+    detection_pattern: MinVersion.*tls\\.VersionTLS1[01]|InsecureSkipVerify.*true
+    fix_pattern: Enforce TLS 1.2+ verify certificates
+    cwe: CWE-327
+    example_vuln: "&tls.Config{MinVersion: tls.VersionTLS10}"
+    example_fix: "&tls.Config{MinVersion: tls.VersionTLS12}"
+  - id: GO-07
+    name: Unsafe Pointer Use
+    severity: HIGH
+    category: Memory
+    description: Unsafe pointer operations risking memory corruption
+    detection_pattern: unsafe\\.Pointer|uintptr(?!.*reflect\\.SliceHeader)
+    fix_pattern: Avoid unsafe unless absolutely necessary add bounds checks
+    cwe: CWE-119
+    example_vuln: ptr := unsafe.Pointer(&data)\n*(*int)(ptr) = 42
+    example_fix: // Use safe alternatives or add extensive validation
+  - id: GO-08
+    name: Missing Timeout
+    severity: HIGH
+    category: Reliability
+    description: HTTP client or context without timeout
+    detection_pattern: http\\.DefaultClient|context\\.Background\\(\\)(?!.*WithTimeout)
+    fix_pattern: Always set timeouts on HTTP clients and contexts
+    cwe: CWE-400
+    example_vuln: resp, err := http.Get(url)
+    example_fix: ctx, cancel := context.WithTimeout(ctx, 10*time.Second)\nreq = req.WithContext(ctx)
+  - id: GO-09
+    name: Goroutine Leak
+    severity: MEDIUM
+    category: Memory
+    description: Goroutines started without cancellation mechanism
+    detection_pattern: go\\s+func\\(\\)(?!.*context|done|cancel)
+    fix_pattern: Use context for cancellation or done channels
+    cwe: CWE-400
+    example_vuln: go func() { for { process() } }()
+    example_fix: "go func() { for { select { case <-ctx.Done(): return } } }()"
+  - id: GO-10
+    name: Template Injection
+    severity: HIGH
+    category: Injection
+    description: User input in HTML templates without escaping
+    detection_pattern: template\\.HTML\\(.*req|text/template.*user
+    fix_pattern: Use html/template package always escape user data
+    cwe: CWE-79
+    example_vuln: template.HTML(userInput)
+    example_fix: // html/template auto-escapes\ntmpl.Execute(w, data) // data is escaped
+  - id: GO-11
+    name: SSRF Via HTTP Client
+    severity: CRITICAL
+    category: Network
+    description: User-controlled URLs fetched without validation
+    detection_pattern: http\\.(Get|Post|Do).*req\\.(URL|Body|Query)
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    cwe: CWE-918
+    example_vuln: http.Get(req.Query.Get('url'))
+    example_fix: url := req.Query.Get('url')\nif !isAllowed(url) { return }\nhttp.Get(url)
+  - id: GO-12
+    name: Crypto Rand Misuse
+    severity: HIGH
+    category: Crypto
+    description: Using math/rand instead of crypto/rand for security
+    detection_pattern: math/rand(?!.*seed)|rand\\.(Int|Read)(?!.*crypto)
+    fix_pattern: Use crypto/rand for security-sensitive random values
+    cwe: CWE-338
+    example_vuln: import 'math/rand'\ntoken := rand.Int()
+    example_fix: import 'crypto/rand'\nrand.Read(token)
+  - id: GO-13
+    name: Defer in Loop
+    severity: MEDIUM
+    category: Resource
+    description: Defer statement inside loop causing resource accumulation
+    detection_pattern: for.*\\{[^}]*defer
+    fix_pattern: Move defer outside loop or use explicit close
+    cwe: CWE-400
+    example_vuln: for _, f := range files { defer f.Close() }
+    example_fix: for _, f := range files { f.Close() }
+  - id: GO-14
+    name: Missing Input Validation
+    severity: HIGH
+    category: Input
+    description: No validation on struct fields from HTTP request
+    detection_pattern: json\\.Unmarshal.*req\\.Body(?!.*valid)
+    fix_pattern: Use validator package validate before processing
+    cwe: CWE-20
+    example_vuln: json.Unmarshal(body, &req)
+    example_fix: json.Unmarshal(body, &req)\nif err := validate.Struct(req); err != nil { return err }
+  - id: GO-15
+    name: Hardcoded Credentials
+    severity: CRITICAL
+    category: Secrets
+    description: Passwords or API keys hardcoded in source
+    detection_pattern: (password|apikey|secret)\\s*[:=]\\s*['\][^'\"]+['\"]"
+    fix_pattern: Use environment variables or secrets manager
+    cwe: CWE-798
+    example_vuln: dbPassword := 'mypassword123'
+    example_fix: dbPassword := os.Getenv('DB_PASSWORD')
+  - id: GO-16
+    name: Integer Overflow
+    severity: HIGH
+    category: Math
+    description: Integer operations without overflow check
+    detection_pattern: \\+\\+|\\+=|\\*=(?!.*overflow|check)
+    fix_pattern: Use math.MaxInt checks or safe math libraries
+    cwe: CWE-190
+    example_vuln: total := a + b // May overflow
+    example_fix: if a > math.MaxInt64-b { return ErrOverflow }\ntotal := a + b
+  - id: GO-17
+    name: Missing CSRF Protection
+    severity: HIGH
+    category: Web
+    description: Form handlers without CSRF token validation
+    detection_pattern: http\\.HandleFunc.*/.*POST(?!.*csrf)
+    fix_pattern: Implement CSRF tokens for all state-changing requests
+    cwe: CWE-352
+    example_vuln: http.HandleFunc('/transfer', transferHandler)
+    example_fix: // Use gorilla/csrf middleware\nhttp.Handle('/transfer', csrf.Protect(key)(handler))
+  - id: GO-18
+    name: Open Redirect
+    severity: MEDIUM
+    category: Web
+    description: Redirect destination from user input without validation
+    detection_pattern: http\\.Redirect.*req\\.(URL|Query|Form)
+    fix_pattern: Validate redirect URLs against allowlist
+    cwe: CWE-601
+    example_vuln: http.Redirect(w, r, r.Query.Get('next'), 302)
+    example_fix: next := r.Query.Get('next')\nif !isInternal(next) { next = '/' }\nhttp.Redirect(w, r, next, 302)
+  - id: GO-19
+    name: Nil Pointer Dereference
+    severity: HIGH
+    category: Runtime
+    description: Pointer usage without nil check
+    detection_pattern: (\\*\\w+)\\.(\\w+)(?<!if.*!=.*nil.*\\{)
+    fix_pattern: Check for nil before dereferencing pointers
+    cwe: CWE-476
+    example_vuln: user.Name // user may be nil
+    example_fix: if user == nil { return ErrNotFound }\nname := user.Name
+  - id: GO-20
+    name: Sync Once Misuse
+    severity: MEDIUM
+    category: Concurrency
+    description: sync.Once with closure over wrong variable
+    detection_pattern: sync\\.Once.*Do.*func.*\\{.*rangeVar
+    fix_pattern: Capture loop variable correctly in closure
+    cwe: CWE-362
+    example_vuln: for _, v := range items { once.Do(func() { use(v) }) }
+    example_fix: for _, v := range items { v := v; once.Do(func() { use(v) }) }

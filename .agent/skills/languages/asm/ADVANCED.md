@@ -1,6 +1,6 @@
 # Assembly — Advanced Patterns
 
-# DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -747,4 +747,4 @@ workflow: 1. Initial analysis in Ghidra (free)
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Advanced Assembly Reference_
+_DOMYH Awesome Code — Advanced Assembly Reference_

@@ -1,0 +1,202 @@
+# =============================================================================
+# LCP Optimization Patterns (Feb 2026)
+# =============================================================================
+# Largest Contentful Paint optimization techniques
+
+metadata:
+  skill: web-perf
+  domain: lcp-optimization
+  version: "2025.1"
+  updated: "2026-02-05"
+  patterns_count: 8
+
+patterns:
+  - id: lcp001
+    name: Preload LCP Image
+    category: LCP
+    impact: HIGH
+    description: Preload the hero/main image with high priority
+    text: preload lcp image hero fetchpriority high load performance
+    example: |
+      <!-- Preload in <head> -->
+      <link 
+        rel="preload" 
+        href="/images/hero.webp" 
+        as="image"
+        fetchpriority="high"
+      >
+
+      <!-- In body -->
+      <img 
+        src="/images/hero.webp"
+        fetchpriority="high"
+        decoding="async"
+        width="1200"
+        height="600"
+        alt="Hero banner"
+      >
+    severity: HIGH
+    docs_url: https://web.dev/optimize-lcp/
+
+  - id: lcp002
+    name: Use Modern Image Formats
+    category: LCP
+    impact: HIGH
+    description: Use WebP/AVIF for smaller file sizes (30-50% vs JPEG)
+    text: webp avif image format modern compression optimization
+    example: |
+      <!-- Picture element with fallbacks -->
+      <picture>
+        <source srcset="hero.avif" type="image/avif">
+        <source srcset="hero.webp" type="image/webp">
+        <img src="hero.jpg" alt="Hero" width="1200" height="600">
+      </picture>
+
+      /* Next.js config */
+      module.exports = {
+        images: {
+          formats: ['image/avif', 'image/webp'],
+        },
+      };
+    severity: HIGH
+    docs_url: https://web.dev/serve-images-webp/
+
+  - id: lcp003
+    name: Avoid Lazy Loading LCP
+    category: LCP
+    impact: CRITICAL
+    description: Never lazy-load the main content element
+    text: lazy load lcp defer avoid above fold hero main
+    example: |
+      <!-- WRONG: Lazy loading LCP element -->
+      <img loading="lazy" src="hero.webp" alt="Hero">
+
+      <!-- CORRECT: No lazy loading for LCP -->
+      <img 
+        src="hero.webp"
+        fetchpriority="high"
+        loading="eager"
+        alt="Hero"
+      >
+
+      <!-- Lazy load ONLY below-the-fold images -->
+      <img loading="lazy" src="gallery-1.webp" alt="Gallery 1">
+    severity: CRITICAL
+    docs_url: https://web.dev/lcp-lazy-loading/
+
+  - id: lcp004
+    name: Inline Critical CSS
+    category: LCP
+    impact: HIGH
+    description: Inline CSS needed for above-the-fold content
+    text: critical css inline render blocking above fold style
+    example: |
+      <head>
+        <!-- Critical CSS inlined -->
+        <style>
+          :root { --primary: #3b82f6; }
+          .hero { 
+            min-height: 100vh;
+            background: var(--primary);
+          }
+        </style>
+        
+        <!-- Non-critical CSS deferred -->
+        <link 
+          rel="preload" 
+          href="/styles.css" 
+          as="style" 
+          onload="this.rel='stylesheet'"
+        >
+      </head>
+    severity: HIGH
+    docs_url: https://web.dev/extract-critical-css/
+
+  - id: lcp005
+    name: Reduce Server Response Time
+    category: LCP
+    impact: HIGH
+    description: Optimize TTFB with CDN, caching, and server-side rendering
+    text: ttfb cdn cache ssr edge server response time
+    example: |
+      # CDN Configuration (Cloudflare)
+      Cache-Control: public, max-age=31536000, immutable
+
+      # Vercel/Next.js Edge Runtime
+      export const config = {
+        runtime: 'edge',
+      };
+
+      # Database optimization
+      - Add indexes for common queries
+      - Use connection pooling
+      - Enable query caching
+    severity: HIGH
+    docs_url: https://web.dev/optimize-ttfb/
+
+  - id: lcp006
+    name: Preconnect to Origins
+    category: LCP
+    impact: MEDIUM
+    description: Establish early connections to required third-party origins
+    text: preconnect dns prefetch third party origin resource hints
+    example: |
+      <head>
+        <!-- Preconnect to critical origins -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://cdn.example.com">
+        
+        <!-- DNS prefetch for less critical -->
+        <link rel="dns-prefetch" href="https://analytics.example.com">
+      </head>
+    severity: MEDIUM
+    docs_url: https://web.dev/uses-rel-preconnect/
+
+  - id: lcp007
+    name: Shorten Request Chains
+    category: LCP
+    impact: HIGH
+    description: Reduce the critical request chain depth
+    text: request chain critical path waterfall network dependency
+    example: |
+      <!-- AVOID: Chained requests -->
+      HTML → CSS → Font → Background Image
+
+      <!-- BETTER: Parallel loading -->
+      <link rel="preload" href="font.woff2" as="font" crossorigin>
+      <link rel="preload" href="hero.webp" as="image">
+
+      /* CSS with inlined base64 small assets */
+      .icon { 
+        background: url('data:image/svg+xml,...');
+      }
+    severity: HIGH
+    docs_url: https://web.dev/critical-request-chains/
+
+  - id: lcp008
+    name: Optimize Web Fonts
+    category: LCP
+    impact: MEDIUM
+    description: Use font-display:swap and preload critical fonts
+    text: font display swap preload woff2 web font foit fout
+    example: |
+      <head>
+        <link 
+          rel="preload" 
+          href="/fonts/inter.woff2" 
+          as="font" 
+          type="font/woff2" 
+          crossorigin
+        >
+      </head>
+
+      <style>
+        @font-face {
+          font-family: 'Inter';
+          font-display: swap;
+          src: url('/fonts/inter.woff2') format('woff2');
+        }
+      </style>
+    severity: MEDIUM
+    docs_url: https://web.dev/optimize-webfont-loading/

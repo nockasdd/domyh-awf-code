@@ -1,0 +1,599 @@
+metadata:
+  skill: domyh-design
+  domain: nuxtjs
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: nuxtjs.yaml
+  patterns_count: 58
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Routing
+    guideline: Use file-based routing
+    description: Create routes by adding files in pages directory
+    do: pages/ directory with index.vue
+    don_t: Manual route configuration
+    code_good: pages/dashboard/index.vue
+    code_bad: Custom router setup
+    severity: Medium
+    docs_url: https://nuxt.com/docs/getting-started/routing
+  - id: "2"
+    category: Routing
+    guideline: Use dynamic route parameters
+    description: Create dynamic routes with bracket syntax
+    do: "[id].vue for dynamic params"
+    don_t: Hardcoded routes for dynamic content
+    code_good: pages/posts/[id].vue
+    code_bad: pages/posts/post1.vue
+    severity: Medium
+    docs_url: https://nuxt.com/docs/getting-started/routing
+  - id: "3"
+    category: Routing
+    guideline: Use catch-all routes
+    description: Handle multiple path segments with [...slug]
+    do: "[...slug].vue for catch-all"
+    don_t: Multiple nested dynamic routes
+    code_good: pages/[...slug].vue
+    code_bad: pages/[a]/[b]/[c].vue
+    severity: Low
+    docs_url: https://nuxt.com/docs/getting-started/routing
+  - id: "4"
+    category: Routing
+    guideline: Define page metadata with definePageMeta
+    description: Set page-level configuration and middleware
+    do: definePageMeta for layout middleware title
+    don_t: Manual route meta configuration
+    code_good: "definePageMeta({ layout: 'admin', middleware: 'auth' })"
+    code_bad: router.beforeEach for page config
+    severity: High
+    docs_url: https://nuxt.com/docs/api/utils/define-page-meta
+  - id: "5"
+    category: Routing
+    guideline: Use validate for route params
+    description: Validate dynamic route parameters before rendering
+    do: validate function in definePageMeta
+    don_t: Manual validation in setup
+    code_good: 'definePageMeta({ validate: (route) => /^\d+$/.test(route.params.id) })'
+    code_bad: if (!valid) navigateTo('/404')
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/utils/define-page-meta
+  - id: "6"
+    category: Rendering
+    guideline: Use SSR by default
+    description: Server-side rendering is enabled by default
+    do: "Keep ssr: true (default)"
+    don_t: Disable SSR unnecessarily
+    code_good: "ssr: true (default)"
+    code_bad: "ssr: false for all pages"
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/concepts/rendering
+  - id: "7"
+    category: Rendering
+    guideline: Use .client suffix for client-only components
+    description: Mark components to render only on client
+    do: ComponentName.client.vue suffix
+    don_t: v-if with process.client check
+    code_good: Comments.client.vue
+    code_bad: <div v-if="process.client"><Comments/></div>
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/components
+  - id: "8"
+    category: Rendering
+    guideline: Use .server suffix for server-only components
+    description: Mark components to render only on server
+    do: ComponentName.server.vue suffix
+    don_t: Manual server check
+    code_good: HeavyMarkdown.server.vue
+    code_bad: v-if="process.server"
+    severity: Low
+    docs_url: https://nuxt.com/docs/guide/directory-structure/components
+  - id: "9"
+    category: DataFetching
+    guideline: Use useFetch for simple data fetching
+    description: Wrapper around useAsyncData for URL fetching
+    do: useFetch for API calls
+    don_t: $fetch in onMounted
+    code_good: const { data } = await useFetch('/api/posts')
+    code_bad: onMounted(async () => { data.value = await $fetch('/api/posts') })
+    severity: High
+    docs_url: https://nuxt.com/docs/api/composables/use-fetch
+  - id: "10"
+    category: DataFetching
+    guideline: Use useAsyncData for complex fetching
+    description: Fine-grained control over async data
+    do: useAsyncData for CMS or custom fetching
+    don_t: useFetch for non-URL data sources
+    code_good: const { data } = await useAsyncData('posts', () => cms.getPosts())
+    code_bad: const { data } = await useFetch(() => cms.getPosts())
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-async-data
+  - id: "11"
+    category: DataFetching
+    guideline: Use $fetch for non-reactive requests
+    description: $fetch for event handlers and non-component code
+    do: $fetch in event handlers or server routes
+    don_t: useFetch in click handlers
+    code_good: "async function submit() { await $fetch('/api/submit', { method: 'POST' }) }"
+    code_bad: async function submit() { await useFetch('/api/submit') }
+    severity: High
+    docs_url: https://nuxt.com/docs/api/utils/dollarfetch
+  - id: "12"
+    category: DataFetching
+    guideline: Use lazy option for non-blocking fetch
+    description: Defer data fetching for better initial load
+    do: "lazy: true for below-fold content"
+    don_t: Blocking fetch for non-critical data
+    code_good: "useFetch('/api/comments', { lazy: true })"
+    code_bad: await useFetch('/api/comments') for footer
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-fetch
+  - id: "13"
+    category: DataFetching
+    guideline: Use server option to control fetch location
+    description: Choose where data is fetched
+    do: "server: false for client-only data"
+    don_t: Server fetch for user-specific client data
+    code_good: "useFetch('/api/user-preferences', { server: false })"
+    code_bad: useFetch for localStorage-dependent data
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-fetch
+  - id: "14"
+    category: DataFetching
+    guideline: Use pick to reduce payload size
+    description: Select only needed fields from response
+    do: pick option for large responses
+    don_t: Fetching entire objects when few fields needed
+    code_good: "useFetch('/api/user', { pick: ['id', 'name'] })"
+    code_bad: useFetch('/api/user') then destructure
+    severity: Low
+    docs_url: https://nuxt.com/docs/api/composables/use-fetch
+  - id: "15"
+    category: DataFetching
+    guideline: Use transform for data manipulation
+    description: Transform data before storing in state
+    do: transform option for data shaping
+    don_t: Manual transformation after fetch
+    code_good: "useFetch('/api/posts', { transform: (posts) => posts.map(p => p.title) })"
+    code_bad: const titles = data.value.map(p => p.title)
+    severity: Low
+    docs_url: https://nuxt.com/docs/api/composables/use-fetch
+  - id: "16"
+    category: DataFetching
+    guideline: Handle loading and error states
+    description: Always handle pending and error states
+    do: Check status pending error refs
+    don_t: Ignoring loading states
+    code_good: <div v-if="status === 'pending'">Loading...</div>
+    code_bad: No loading indicator
+    severity: High
+    docs_url: https://nuxt.com/docs/getting-started/data-fetching
+  - id: "17"
+    category: Lifecycle
+    guideline: Avoid side effects in script setup root
+    description: Move side effects to lifecycle hooks
+    do: Side effects in onMounted
+    don_t: setInterval in root script setup
+    code_good: onMounted(() => { interval = setInterval(...) })
+    code_bad: <script setup>setInterval(...)</script>
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/concepts/nuxt-lifecycle
+  - id: "18"
+    category: Lifecycle
+    guideline: Use onMounted for DOM access
+    description: Access DOM only after component is mounted
+    do: onMounted for DOM manipulation
+    don_t: Direct DOM access in setup
+    code_good: onMounted(() => { document.getElementById('el') })
+    code_bad: <script setup>document.getElementById('el')</script>
+    severity: High
+    docs_url: https://nuxt.com/docs/api/composables/on-mounted
+  - id: "19"
+    category: Lifecycle
+    guideline: Use nextTick for post-render access
+    description: Wait for DOM updates before accessing elements
+    do: await nextTick() after state changes
+    don_t: Immediate DOM access after state change
+    code_good: count.value++; await nextTick(); el.value.focus()
+    code_bad: count.value++; el.value.focus()
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/utils/next-tick
+  - id: "20"
+    category: Lifecycle
+    guideline: Use onPrehydrate for pre-hydration logic
+    description: Run code before Nuxt hydrates the page
+    do: onPrehydrate for client setup
+    don_t: onMounted for hydration-critical code
+    code_good: onPrehydrate(() => { console.log(window) })
+    code_bad: onMounted for pre-hydration needs
+    severity: Low
+    docs_url: https://nuxt.com/docs/api/composables/on-prehydrate
+  - id: "21"
+    category: Server
+    guideline: Use server/api for API routes
+    description: Create API endpoints in server/api directory
+    do: server/api/users.ts for /api/users
+    don_t: Manual Express setup
+    code_good: server/api/hello.ts -> /api/hello
+    code_bad: app.get('/api/hello')
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+  - id: "22"
+    category: Server
+    guideline: Use defineEventHandler for handlers
+    description: Define server route handlers
+    do: defineEventHandler for all handlers
+    don_t: export default function
+    code_good: "export default defineEventHandler((event) => { return { hello: 'world' } })"
+    code_bad: export default function(req, res) {}
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+  - id: "23"
+    category: Server
+    guideline: Use server/routes for non-api routes
+    description: Routes without /api prefix
+    do: server/routes for custom paths
+    don_t: server/api for non-api routes
+    code_good: server/routes/sitemap.xml.ts
+    code_bad: server/api/sitemap.xml.ts
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+  - id: "24"
+    category: Server
+    guideline: Use getQuery and readBody for input
+    description: Access query params and request body
+    do: getQuery(event) readBody(event)
+    don_t: Direct event access
+    code_good: const { id } = getQuery(event)
+    code_bad: event.node.req.query
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+  - id: "25"
+    category: Server
+    guideline: Validate server input
+    description: Always validate input in server handlers
+    do: Zod or similar for validation
+    don_t: Trust client input
+    code_good: const body = await readBody(event); schema.parse(body)
+    code_bad: const body = await readBody(event)
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/directory-structure/server
+  - id: "26"
+    category: State
+    guideline: Use useState for shared reactive state
+    description: SSR-friendly shared state across components
+    do: useState for cross-component state
+    don_t: ref for shared state
+    code_good: const count = useState('count', () => 0)
+    code_bad: const count = ref(0) in composable
+    severity: High
+    docs_url: https://nuxt.com/docs/api/composables/use-state
+  - id: "27"
+    category: State
+    guideline: Use unique keys for useState
+    description: Prevent state conflicts with unique keys
+    do: Descriptive unique keys for each state
+    don_t: Generic or duplicate keys
+    code_good: useState('user-preferences', () => ({}))
+    code_bad: useState('data') in multiple places
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-state
+  - id: "28"
+    category: State
+    guideline: Use Pinia for complex state
+    description: Pinia for advanced state management
+    do: "@pinia/nuxt for complex apps"
+    don_t: Custom state management
+    code_good: useMainStore() with Pinia
+    code_bad: Custom reactive store implementation
+    severity: Medium
+    docs_url: https://nuxt.com/docs/getting-started/state-management
+  - id: "29"
+    category: State
+    guideline: Use callOnce for one-time async operations
+    description: Ensure async operations run only once
+    do: callOnce for store initialization
+    don_t: Direct await in component
+    code_good: await callOnce(store.fetch)
+    code_bad: await store.fetch() on every render
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/utils/call-once
+  - id: "30"
+    category: SEO
+    guideline: Use useSeoMeta for SEO tags
+    description: Type-safe SEO meta tag management
+    do: useSeoMeta for meta tags
+    don_t: useHead for simple meta
+    code_good: "useSeoMeta({ title: 'Home', ogTitle: 'Home', description: '...' })"
+    code_bad: "useHead({ meta: [{ name: 'description', content: '...' }] })"
+    severity: High
+    docs_url: https://nuxt.com/docs/api/composables/use-seo-meta
+  - id: "31"
+    category: SEO
+    guideline: Use reactive values in useSeoMeta
+    description: Dynamic SEO tags with refs or getters
+    do: Computed getters for dynamic values
+    don_t: Static values for dynamic content
+    code_good: "useSeoMeta({ title: () => post.value.title })"
+    code_bad: "useSeoMeta({ title: post.value.title })"
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-seo-meta
+  - id: "32"
+    category: SEO
+    guideline: Use useHead for non-meta head elements
+    description: Scripts styles links in head
+    do: useHead for scripts and links
+    don_t: useSeoMeta for scripts
+    code_good: "useHead({ script: [{ src: '/analytics.js' }] })"
+    code_bad: "useSeoMeta({ script: '...' })"
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-head
+  - id: "33"
+    category: SEO
+    guideline: Include OpenGraph tags
+    description: Add OG tags for social sharing
+    do: ogTitle ogDescription ogImage
+    don_t: Missing social preview
+    code_good: "useSeoMeta({ ogImage: '/og.png', twitterCard: 'summary_large_image' })"
+    code_bad: No OG configuration
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-seo-meta
+  - id: "34"
+    category: Middleware
+    guideline: Use defineNuxtRouteMiddleware
+    description: Define route middleware properly
+    do: defineNuxtRouteMiddleware wrapper
+    don_t: export default function
+    code_good: export default defineNuxtRouteMiddleware((to, from) => {})
+    code_bad: export default function(to, from) {}
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/directory-structure/middleware
+  - id: "35"
+    category: Middleware
+    guideline: Use navigateTo for redirects
+    description: Redirect in middleware with navigateTo
+    do: return navigateTo('/login')
+    don_t: router.push in middleware
+    code_good: if (!auth) return navigateTo('/login')
+    code_bad: if (!auth) router.push('/login')
+    severity: High
+    docs_url: https://nuxt.com/docs/api/utils/navigate-to
+  - id: "36"
+    category: Middleware
+    guideline: Reference middleware in definePageMeta
+    description: Apply middleware to specific pages
+    do: middleware array in definePageMeta
+    don_t: Global middleware for page-specific
+    code_good: "definePageMeta({ middleware: ['auth'] })"
+    code_bad: Global auth check for one page
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/middleware
+  - id: "37"
+    category: Middleware
+    guideline: Use .global suffix for global middleware
+    description: Apply middleware to all routes
+    do: auth.global.ts for app-wide auth
+    don_t: Manual middleware on every page
+    code_good: middleware/auth.global.ts
+    code_bad: "middleware: ['auth'] on every page"
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/middleware
+  - id: "38"
+    category: ErrorHandling
+    guideline: Use createError for errors
+    description: Create errors with proper status codes
+    do: createError with statusCode
+    don_t: throw new Error
+    code_good: "throw createError({ statusCode: 404, statusMessage: 'Not Found' })"
+    code_bad: throw new Error('Not Found')
+    severity: High
+    docs_url: https://nuxt.com/docs/api/utils/create-error
+  - id: "39"
+    category: ErrorHandling
+    guideline: Use NuxtErrorBoundary for local errors
+    description: Handle errors within component subtree
+    do: NuxtErrorBoundary for component errors
+    don_t: Global error page for local errors
+    code_good: '<NuxtErrorBoundary @error="log"><template #error="{ error }">'
+    code_bad: error.vue for component errors
+    severity: Medium
+    docs_url: https://nuxt.com/docs/getting-started/error-handling
+  - id: "40"
+    category: ErrorHandling
+    guideline: Use clearError to recover from errors
+    description: Clear error state and optionally redirect
+    do: "clearError({ redirect: '/' })"
+    don_t: Manual error state reset
+    code_good: "clearError({ redirect: '/home' })"
+    code_bad: error.value = null
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/utils/clear-error
+  - id: "41"
+    category: ErrorHandling
+    guideline: Use short statusMessage
+    description: Keep statusMessage brief for security
+    do: Short generic messages
+    don_t: Detailed error info in statusMessage
+    code_good: "createError({ statusCode: 400, statusMessage: 'Bad Request' })"
+    code_bad: "createError({ statusMessage: 'Invalid user ID: 123' })"
+    severity: High
+    docs_url: https://nuxt.com/docs/getting-started/error-handling
+  - id: "42"
+    category: Link
+    guideline: Use NuxtLink for internal navigation
+    description: Client-side navigation with prefetching
+    do: <NuxtLink to> for internal links
+    don_t: <a href> for internal links
+    code_good: <NuxtLink to="/about">About</NuxtLink>
+    code_bad: <a href="/about">About</a>
+    severity: High
+    docs_url: https://nuxt.com/docs/api/components/nuxt-link
+  - id: "43"
+    category: Link
+    guideline: Configure prefetch behavior
+    description: Control when prefetching occurs
+    do: prefetchOn for interaction-based
+    don_t: Default prefetch for low-priority
+    code_good: <NuxtLink prefetch-on="interaction">
+    code_bad: Always default prefetch
+    severity: Low
+    docs_url: https://nuxt.com/docs/api/components/nuxt-link
+  - id: "44"
+    category: Link
+    guideline: Use useRouter for programmatic navigation
+    description: Navigate programmatically
+    do: useRouter().push() for navigation
+    don_t: Direct window.location
+    code_good: const router = useRouter(); router.push('/dashboard')
+    code_bad: window.location.href = '/dashboard'
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-router
+  - id: "45"
+    category: Link
+    guideline: Use navigateTo in composables
+    description: Navigate outside components
+    do: navigateTo() in middleware or plugins
+    don_t: useRouter in non-component code
+    code_good: return navigateTo('/login')
+    code_bad: router.push in middleware
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/utils/navigate-to
+  - id: "46"
+    category: AutoImports
+    guideline: Leverage auto-imports
+    description: Use auto-imported composables directly
+    do: Direct use of ref computed useFetch
+    don_t: Manual imports for Nuxt composables
+    code_good: const count = ref(0)
+    code_bad: import { ref } from 'vue'; const count = ref(0)
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/concepts/auto-imports
+  - id: "47"
+    category: AutoImports
+    guideline: "Use #imports for explicit imports"
+    description: Explicit imports when needed
+    do: "#imports for clarity or disabled auto-imports"
+    don_t: import from 'vue' when auto-import enabled
+    code_good: import { ref } from '#imports'
+    code_bad: import { ref } from 'vue'
+    severity: Low
+    docs_url: https://nuxt.com/docs/guide/concepts/auto-imports
+  - id: "48"
+    category: AutoImports
+    guideline: Configure third-party auto-imports
+    description: Add external package auto-imports
+    do: imports.presets in nuxt.config
+    don_t: Manual imports everywhere
+    code_good: "imports: { presets: [{ from: 'vue-i18n', imports: ['useI18n'] }] }"
+    code_bad: import { useI18n } everywhere
+    severity: Low
+    docs_url: https://nuxt.com/docs/guide/concepts/auto-imports
+  - id: "49"
+    category: Plugins
+    guideline: Use defineNuxtPlugin
+    description: Define plugins properly
+    do: defineNuxtPlugin wrapper
+    don_t: export default function
+    code_good: export default defineNuxtPlugin((nuxtApp) => {})
+    code_bad: export default function(ctx) {}
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/directory-structure/plugins
+  - id: "50"
+    category: Plugins
+    guideline: Use provide for injection
+    description: Provide helpers across app
+    do: "return { provide: {} } for type safety"
+    don_t: nuxtApp.provide without types
+    code_good: "return { provide: { hello: (name) => `Hello ${name}!` } }"
+    code_bad: nuxtApp.provide('hello', fn)
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/plugins
+  - id: "51"
+    category: Plugins
+    guideline: Use .client or .server suffix
+    description: Control plugin execution environment
+    do: plugin.client.ts for client-only
+    don_t: if (process.client) checks
+    code_good: analytics.client.ts
+    code_bad: if (process.client) { // analytics }
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/plugins
+  - id: "52"
+    category: Environment
+    guideline: Use runtimeConfig for env vars
+    description: Access environment variables safely
+    do: runtimeConfig in nuxt.config
+    don_t: process.env directly
+    code_good: "runtimeConfig: { apiSecret: '', public: { apiBase: '' } }"
+    code_bad: process.env.API_SECRET in components
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/going-further/runtime-config
+  - id: "53"
+    category: Environment
+    guideline: Use NUXT_ prefix for env override
+    description: Override config with environment variables
+    do: NUXT_API_SECRET NUXT_PUBLIC_API_BASE
+    don_t: Custom env var names
+    code_good: NUXT_PUBLIC_API_BASE=https://api.example.com
+    code_bad: API_BASE=https://api.example.com
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/going-further/runtime-config
+  - id: "54"
+    category: Environment
+    guideline: Access public config with useRuntimeConfig
+    description: Get public config in components
+    do: useRuntimeConfig().public
+    don_t: Direct process.env access
+    code_good: const config = useRuntimeConfig(); config.public.apiBase
+    code_bad: process.env.NUXT_PUBLIC_API_BASE
+    severity: High
+    docs_url: https://nuxt.com/docs/api/composables/use-runtime-config
+  - id: "55"
+    category: Environment
+    guideline: Keep secrets in private config
+    description: Server-only secrets in runtimeConfig root
+    do: runtimeConfig.apiSecret (server only)
+    don_t: Secrets in public config
+    code_good: "runtimeConfig: { dbPassword: '' }"
+    code_bad: "runtimeConfig: { public: { dbPassword: '' } }"
+    severity: High
+    docs_url: https://nuxt.com/docs/guide/going-further/runtime-config
+  - id: "56"
+    category: Performance
+    guideline: Use Lazy prefix for code splitting
+    description: Lazy load components with Lazy prefix
+    do: <LazyComponent> for below-fold
+    don_t: Eager load all components
+    code_good: <LazyMountainsList v-if="show"/>
+    code_bad: <MountainsList/> for hidden content
+    severity: Medium
+    docs_url: https://nuxt.com/docs/guide/directory-structure/components
+  - id: "57"
+    category: Performance
+    guideline: Use useLazyFetch for non-blocking data
+    description: "Alias for useFetch with lazy: true"
+    do: useLazyFetch for secondary data
+    don_t: useFetch for all requests
+    code_good: const { data } = useLazyFetch('/api/comments')
+    code_bad: await useFetch for comments section
+    severity: Medium
+    docs_url: https://nuxt.com/docs/api/composables/use-lazy-fetch
+  - id: "58"
+    category: Performance
+    guideline: Use lazy hydration for interactivity
+    description: Delay component hydration until needed
+    do: LazyComponent with hydration strategy
+    don_t: Immediate hydration for all
+    code_good: <LazyModal hydrate-on-visible/>
+    code_bad: <Modal/> in footer
+    severity: Low
+    docs_url: https://nuxt.com/docs/guide/going-further/experimental-features

@@ -1,15 +1,15 @@
 ---
 name: svelte
 detect: ["svelte.config.js", "*.svelte", "+page.svelte", "+layout.svelte"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# Svelte Patterns — DOMYH Awesome Code v6.1.2
+# Svelte Patterns — DOMYH Awesome Code
 
-> **Version**: Svelte 5 / SvelteKit 2 (2025-2026)
-> **Philosophy**: Compiled, runes-based reactivity, minimal runtime
+> **Version**: Svelte 5.x / SvelteKit 2.x (Feb 2026)
+> **Philosophy**: Compiled reactivity, runes, zero overhead
 
 ---
 
@@ -308,6 +308,7 @@ export const actions: Actions = {
 - [ ] Use $effect.pre for sync updates
 - [ ] Lazy load routes
 - [ ] SSR for initial load
+- [ ] Enable async SSR for streaming
 
 ### SvelteKit
 
@@ -315,7 +316,83 @@ export const actions: Actions = {
 - [ ] Implement form actions
 - [ ] Handle errors properly
 - [ ] Use enhance for progressive enhancement
+- [ ] Configure CSP hydration
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Svelte 5 / SvelteKit 2_
+## 🆕 Svelte 5.x Feb 2026 Features
+
+### $inspect (Development Mode)
+
+```svelte
+<script>
+  let count = $state(0);
+  let user = $state({ name: 'Alice', age: 25 });
+
+  // ✅ $inspect - reactive console.log for development
+  $inspect(count);           // Logs whenever count changes
+  $inspect(user).with(fn);   // Custom handler
+
+  // ✅ Chainable with custom handlers
+  $inspect(user).with((type, newVal, oldVal) => {
+    console.log(`${type}: ${oldVal} → ${newVal}`);
+  });
+</script>
+```
+
+### Async SSR (Experimental)
+
+```javascript
+// ✅ SvelteKit 2.x: Async server-side rendering
+// svelte.config.js
+export default {
+  kit: {
+    experimental: {
+      asyncSSR: true, // ✅ Enable async SSR
+    },
+  },
+};
+```
+
+### CSP Hydration
+
+```javascript
+// ✅ Content Security Policy support for hydration
+// svelte.config.js
+export default {
+  kit: {
+    csp: {
+      mode: "hash", // 'hash' | 'nonce' | 'auto'
+      directives: {
+        "script-src": ["self"],
+        "style-src": ["self", "unsafe-inline"],
+      },
+    },
+  },
+};
+```
+
+### Deep Reactivity
+
+```svelte
+<script>
+  // ✅ Svelte 5: Automatic deep reactivity for objects/arrays
+  let items = $state([{ name: 'Item 1', done: false }]);
+
+  function toggle(index) {
+    // ✅ This triggers reactive update automatically
+    items[index].done = !items[index].done;
+  }
+
+  // ✅ Nested objects work too
+  let user = $state({
+    profile: { settings: { theme: 'dark' } }
+  });
+
+  user.profile.settings.theme = 'light'; // ✅ Reactive!
+</script>
+```
+
+---
+
+_DOMYH Awesome Code • Svelte 5.x / SvelteKit 2.x • Feb 2026_

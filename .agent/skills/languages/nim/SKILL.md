@@ -1,12 +1,12 @@
 ---
 name: nim
 detect: ["*.nim", "*.nimble", "nim.cfg"]
-version: "6.1.2"
+version: "6.2.1"
 category: systems
 tier: 3
 ---
 
-# Nim Patterns — DOMYH Awesome Code v6.1.2
+# Nim Patterns — DOMYH Awesome Code
 
 > **Version**: Nim 2.0+ (2025-2026)
 > **Focus**: Python-like syntax, C-like performance
@@ -113,4 +113,4 @@ waitFor main()
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Nim 2.0+_
+_DOMYH Awesome Code • Nim 2.0+_

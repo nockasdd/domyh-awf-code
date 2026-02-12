@@ -1,0 +1,519 @@
+metadata:
+  skill: domyh-design
+  domain: nuxt_ui
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: nuxt-ui.yaml
+  patterns_count: 50
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Installation
+    guideline: Add Nuxt UI module
+    description: Install and configure Nuxt UI in your Nuxt project
+    do: pnpm add @nuxt/ui and add to modules
+    don_t: Manual component imports
+    code_good: "modules: ['@nuxt/ui']"
+    code_bad: import { UButton } from '@nuxt/ui'
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/getting-started/installation/nuxt
+  - id: "2"
+    category: Installation
+    guideline: Import Tailwind and Nuxt UI CSS
+    description: Required CSS imports in main.css file
+    do: "@import tailwindcss and @import @nuxt/ui"
+    don_t: Skip CSS imports
+    code_good: '@import "tailwindcss"; @import "@nuxt/ui";'
+    code_bad: No CSS imports
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/getting-started/installation/nuxt
+  - id: "3"
+    category: Installation
+    guideline: Wrap app with UApp component
+    description: UApp provides global configs for Toast Tooltip and overlays
+    do: <UApp> wrapper in app.vue
+    don_t: Skip UApp wrapper
+    code_good: <UApp><NuxtPage/></UApp>
+    code_bad: <NuxtPage/> without wrapper
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/components/app
+  - id: "4"
+    category: Components
+    guideline: Use U prefix for components
+    description: All Nuxt UI components use U prefix by default
+    do: UButton UInput UModal
+    don_t: Button Input Modal
+    code_good: <UButton>Click</UButton>
+    code_bad: <Button>Click</Button>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/installation/nuxt
+  - id: "5"
+    category: Components
+    guideline: Use semantic color props
+    description: Use semantic colors like primary secondary error
+    do: color="primary" color="error"
+    don_t: Hardcoded colors
+    code_good: <UButton color="primary">
+    code_bad: <UButton class="bg-green-500">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/design-system
+  - id: "6"
+    category: Components
+    guideline: Use variant prop for styling
+    description: Nuxt UI provides solid outline soft subtle ghost link variants
+    do: variant="soft" variant="outline"
+    don_t: Custom button classes
+    code_good: <UButton variant="soft">
+    code_bad: <UButton class="border bg-transparent">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/button
+  - id: "7"
+    category: Components
+    guideline: Use size prop consistently
+    description: Components support xs sm md lg xl sizes
+    do: size="sm" size="lg"
+    don_t: Arbitrary sizing classes
+    code_good: <UButton size="lg">
+    code_bad: <UButton class="text-xl px-6">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/button
+  - id: "8"
+    category: Icons
+    guideline: Use icon prop with Iconify format
+    description: Nuxt UI supports Iconify icons via icon prop
+    do: icon="lucide:home" icon="heroicons:user"
+    don_t: i-lucide-home format
+    code_good: <UButton icon="lucide:home">
+    code_bad: <UButton icon="i-lucide-home">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/integrations/icons/nuxt
+  - id: "9"
+    category: Icons
+    guideline: Use leadingIcon and trailingIcon
+    description: Position icons with dedicated props for clarity
+    do: leadingIcon="lucide:plus" trailingIcon="lucide:arrow-right"
+    don_t: Manual icon positioning
+    code_good: <UButton leadingIcon="lucide:plus">
+    code_bad: <UButton><Icon name="lucide:plus"/>Add</UButton>
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/button
+  - id: "10"
+    category: Theming
+    guideline: Configure colors in app.config.ts
+    description: Runtime color configuration without restart
+    do: ui.colors.primary in app.config.ts
+    don_t: Hardcoded colors in components
+    code_good: "defineAppConfig({ ui: { colors: { primary: 'blue' } } })"
+    code_bad: <UButton class="bg-blue-500">
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/design-system
+  - id: "11"
+    category: Theming
+    guideline: Use @theme directive for custom colors
+    description: Define design tokens in CSS with Tailwind @theme
+    do: "@theme { --color-brand-500: #xxx }"
+    don_t: Inline color definitions
+    code_good: "@theme { --color-brand-500: #ef4444; }"
+    code_bad: ':style="{ color: ''#ef4444'' }"'
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/design-system
+  - id: "12"
+    category: Theming
+    guideline: Extend semantic colors in nuxt.config
+    description: Register new colors like tertiary in theme.colors
+    do: theme.colors array in ui config
+    don_t: Use undefined colors
+    code_good: "ui: { theme: { colors: ['primary', 'tertiary'] } }"
+    code_bad: <UButton color="tertiary"> without config
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/design-system
+  - id: "13"
+    category: Forms
+    guideline: Use UForm with schema validation
+    description: UForm supports Zod Yup Joi Valibot schemas
+    do: :schema prop with validation schema
+    don_t: Manual form validation
+    code_good: <UForm :schema="schema" :state="state">
+    code_bad: Manual @blur validation
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/components/form
+  - id: "14"
+    category: Forms
+    guideline: Use UFormField for field wrapper
+    description: Provides label error message and validation display
+    do: UFormField with name prop
+    don_t: Manual error handling
+    code_good: <UFormField name="email" label="Email">
+    code_bad: <div><label>Email</label><UInput/><span>error</span></div>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/form-field
+  - id: "15"
+    category: Forms
+    guideline: Handle form submit with @submit
+    description: UForm emits submit event with validated data
+    do: "@submit handler on UForm"
+    don_t: "@click on submit button"
+    code_good: <UForm @submit="onSubmit">
+    code_bad: <UButton @click="onSubmit">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/form
+  - id: "16"
+    category: Forms
+    guideline: Use validateOn prop for validation timing
+    description: Control when validation triggers (blur change input)
+    do: validateOn="['blur']" for performance
+    don_t: Always validate on input
+    code_good: <UForm :validateOn="['blur', 'change']">
+    code_bad: <UForm> (validates on every keystroke)
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/form
+  - id: "17"
+    category: Overlays
+    guideline: Use v-model:open for overlay control
+    description: Modal Slideover Drawer use v-model:open
+    do: v-model:open for controlled state
+    don_t: Manual show/hide logic
+    code_good: <UModal v-model:open="isOpen">
+    code_bad: <UModal v-if="isOpen">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/modal
+  - id: "18"
+    category: Overlays
+    guideline: Use useOverlay composable for programmatic overlays
+    description: Open overlays programmatically without template refs
+    do: useOverlay().open(MyModal)
+    don_t: Template ref and manual control
+    code_good: const overlay = useOverlay(); overlay.open(MyModal, { props })
+    code_bad: const modal = ref(); modal.value.open()
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/modal
+  - id: "19"
+    category: Overlays
+    guideline: Use title and description props
+    description: Built-in header support for overlays
+    do: title="Confirm" description="Are you sure?"
+    don_t: Manual header content
+    code_good: <UModal title="Confirm" description="Are you sure?">
+    code_bad: "<UModal><template #header><h2>Confirm</h2></template>"
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/modal
+  - id: "20"
+    category: Dashboard
+    guideline: Use UDashboardSidebar for navigation
+    description: Provides collapsible resizable sidebar with mobile support
+    do: UDashboardSidebar with header default footer slots
+    don_t: Custom sidebar implementation
+    code_good: "<UDashboardSidebar><template #header>...</template></UDashboardSidebar>"
+    code_bad: <aside class="w-64 border-r">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/dashboard-sidebar
+  - id: "21"
+    category: Dashboard
+    guideline: Use UDashboardGroup for layout
+    description: Wraps dashboard components with sidebar state management
+    do: UDashboardGroup > UDashboardSidebar + UDashboardPanel
+    don_t: Manual layout flex containers
+    code_good: <UDashboardGroup><UDashboardSidebar/><UDashboardPanel/></UDashboardGroup>
+    code_bad: <div class="flex"><aside/><main/></div>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/dashboard-group
+  - id: "22"
+    category: Dashboard
+    guideline: Use UDashboardNavbar for top navigation
+    description: Responsive navbar with mobile menu support
+    do: UDashboardNavbar in dashboard layout
+    don_t: Custom navbar implementation
+    code_good: <UDashboardNavbar :links="navLinks"/>
+    code_bad: <nav class="border-b">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/dashboard-navbar
+  - id: "23"
+    category: Tables
+    guideline: Use UTable with data and columns props
+    description: Powered by TanStack Table with built-in features
+    do: :data and :columns props
+    don_t: Manual table markup
+    code_good: <UTable :data="users" :columns="columns"/>
+    code_bad: <table><tr v-for="user in users">
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/components/table
+  - id: "24"
+    category: Tables
+    guideline: Define columns with accessorKey
+    description: Column definitions use accessorKey for data binding
+    do: "accessorKey: 'email' in column def"
+    don_t: String column names only
+    code_good: "{ accessorKey: 'email', header: 'Email' }"
+    code_bad: "['name', 'email']"
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/table
+  - id: "25"
+    category: Tables
+    guideline: Use cell slot for custom rendering
+    description: Customize cell content with scoped slots
+    do: "#cell-columnName slot"
+    don_t: Override entire table
+    code_good: '<template #cell-status="{ row }">'
+    code_bad: Manual column render function
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/table
+  - id: "26"
+    category: Tables
+    guideline: Enable sorting with sortable column option
+    description: "Add sortable: true to column definition"
+    do: "sortable: true in column"
+    don_t: Manual sort implementation
+    code_good: "{ accessorKey: 'name', sortable: true }"
+    code_bad: '@click="sortBy(''name'')"'
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/table
+  - id: "27"
+    category: Navigation
+    guideline: Use UNavigationMenu for nav links
+    description: Horizontal or vertical navigation with dropdown support
+    do: UNavigationMenu with items array
+    don_t: Manual nav with v-for
+    code_good: <UNavigationMenu :items="navItems"/>
+    code_bad: <nav><a v-for="item in items">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/navigation-menu
+  - id: "28"
+    category: Navigation
+    guideline: Use UBreadcrumb for page hierarchy
+    description: Automatic breadcrumb with NuxtLink support
+    do: :items array with label and to
+    don_t: Manual breadcrumb links
+    code_good: <UBreadcrumb :items="breadcrumbs"/>
+    code_bad: <nav><span v-for="crumb in crumbs">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/breadcrumb
+  - id: "29"
+    category: Navigation
+    guideline: Use UTabs for tabbed content
+    description: Tab navigation with content panels
+    do: UTabs with items containing slot content
+    don_t: Manual tab state
+    code_good: <UTabs :items="tabs"/>
+    code_bad: <div><button @click="tab=1">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/tabs
+  - id: "30"
+    category: Feedback
+    guideline: Use useToast for notifications
+    description: Composable for toast notifications
+    do: useToast().add({ title description })
+    don_t: Alert components for toasts
+    code_good: "const toast = useToast(); toast.add({ title: 'Saved' })"
+    code_bad: <UAlert v-if="showSuccess">
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/components/toast
+  - id: "31"
+    category: Feedback
+    guideline: Use UAlert for inline messages
+    description: Static alert messages with icon and actions
+    do: UAlert with title description color
+    don_t: Toast for static messages
+    code_good: <UAlert title="Warning" color="warning"/>
+    code_bad: useToast for inline alerts
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/alert
+  - id: "32"
+    category: Feedback
+    guideline: Use USkeleton for loading states
+    description: Placeholder content during data loading
+    do: USkeleton with appropriate size
+    don_t: Spinner for content loading
+    code_good: <USkeleton class="h-4 w-32"/>
+    code_bad: <UIcon name="lucide:loader" class="animate-spin"/>
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/skeleton
+  - id: "33"
+    category: Color Mode
+    guideline: Use UColorModeButton for theme toggle
+    description: Built-in light/dark mode toggle button
+    do: UColorModeButton component
+    don_t: Manual color mode logic
+    code_good: <UColorModeButton/>
+    code_bad: <button @click="toggleColorMode">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/color-mode-button
+  - id: "34"
+    category: Color Mode
+    guideline: Use UColorModeSelect for theme picker
+    description: Dropdown to select system light or dark mode
+    do: UColorModeSelect component
+    don_t: Custom select for theme
+    code_good: <UColorModeSelect/>
+    code_bad: <USelect v-model="colorMode" :items="modes"/>
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/color-mode-select
+  - id: "35"
+    category: Customization
+    guideline: Use ui prop for component styling
+    description: Override component styles via ui prop
+    do: ui prop with slot class overrides
+    don_t: Global CSS overrides
+    code_good: '<UButton :ui="{ base: ''rounded-full'' }"/>'
+    code_bad: <UButton class="!rounded-full"/>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/components
+  - id: "36"
+    category: Customization
+    guideline: Configure default variants in nuxt.config
+    description: Set default color and size for all components
+    do: theme.defaultVariants in ui config
+    don_t: Repeat props on every component
+    code_good: "ui: { theme: { defaultVariants: { color: 'neutral' } } }"
+    code_bad: <UButton color="neutral"> everywhere
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/installation/nuxt
+  - id: "37"
+    category: Customization
+    guideline: Use app.config.ts for theme overrides
+    description: Runtime theme customization
+    do: defineAppConfig with ui key
+    don_t: nuxt.config for runtime values
+    code_good: "defineAppConfig({ ui: { button: { defaultVariants: { size: 'sm' } } } })"
+    code_bad: "nuxt.config ui.button.size: 'sm'"
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/getting-started/theme/components
+  - id: "38"
+    category: Performance
+    guideline: Enable component detection
+    description: Tree-shake unused component CSS
+    do: "experimental.componentDetection: true"
+    don_t: Include all component CSS
+    code_good: "ui: { experimental: { componentDetection: true } }"
+    code_bad: "ui: {} (includes all CSS)"
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/getting-started/installation/nuxt
+  - id: "39"
+    category: Performance
+    guideline: Use UTable virtualize for large data
+    description: Enable virtualization for 1000+ rows
+    do: :virtualize prop on UTable
+    don_t: Render all rows
+    code_good: <UTable :data="largeData" virtualize/>
+    code_bad: <UTable :data="largeData"/>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/table
+  - id: "40"
+    category: Accessibility
+    guideline: Use semantic component props
+    description: Components have built-in ARIA support
+    do: Use title description label props
+    don_t: Skip accessibility props
+    code_good: <UModal title="Settings">
+    code_bad: <UModal><h2>Settings</h2>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/modal
+  - id: "41"
+    category: Accessibility
+    guideline: Use UFormField for form accessibility
+    description: Automatic label-input association
+    do: UFormField wraps inputs
+    don_t: Manual id and for attributes
+    code_good: <UFormField label="Email"><UInput/></UFormField>
+    code_bad: <label for="email">Email</label><UInput id="email"/>
+    severity: High
+    docs_url: https://ui.nuxt.com/docs/components/form-field
+  - id: "42"
+    category: Content
+    guideline: Use UContentToc for table of contents
+    description: Automatic TOC with active heading highlight
+    do: UContentToc with :links
+    don_t: Manual TOC implementation
+    code_good: <UContentToc :links="toc"/>
+    code_bad: <nav><a v-for="heading in headings">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/content-toc
+  - id: "43"
+    category: Content
+    guideline: Use UContentSearch for docs search
+    description: Command palette for documentation search
+    do: UContentSearch with Nuxt Content
+    don_t: Custom search implementation
+    code_good: <UContentSearch/>
+    code_bad: <UCommandPalette :groups="searchResults"/>
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/content-search
+  - id: "44"
+    category: AI/Chat
+    guideline: Use UChatMessages for chat UI
+    description: Designed for Vercel AI SDK integration
+    do: UChatMessages with messages array
+    don_t: Custom chat message list
+    code_good: <UChatMessages :messages="messages"/>
+    code_bad: <div v-for="msg in messages">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/chat-messages
+  - id: "45"
+    category: AI/Chat
+    guideline: Use UChatPrompt for input
+    description: Enhanced textarea for AI prompts
+    do: UChatPrompt with v-model
+    don_t: Basic textarea
+    code_good: <UChatPrompt v-model="prompt"/>
+    code_bad: <UTextarea v-model="prompt"/>
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/chat-prompt
+  - id: "46"
+    category: Editor
+    guideline: Use UEditor for rich text
+    description: TipTap-based editor with toolbar support
+    do: UEditor with v-model:content
+    don_t: Custom TipTap setup
+    code_good: <UEditor v-model:content="content"/>
+    code_bad: Manual TipTap initialization
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/editor
+  - id: "47"
+    category: Links
+    guideline: Use to prop for navigation
+    description: UButton and ULink support NuxtLink to prop
+    do: to="/dashboard" for internal links
+    don_t: href for internal navigation
+    code_good: <UButton to="/dashboard">
+    code_bad: <UButton href="/dashboard">
+    severity: Medium
+    docs_url: https://ui.nuxt.com/docs/components/button
+  - id: "48"
+    category: Links
+    guideline: Use external prop for outside links
+    description: Explicitly mark external links
+    do: target="_blank" with external URLs
+    don_t: Forget rel="noopener"
+    code_good: <UButton to="https://example.com" target="_blank">
+    code_bad: <UButton href="https://...">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/link
+  - id: "49"
+    category: Loading
+    guideline: Use loadingAuto on buttons
+    description: Automatic loading state from @click promise
+    do: loadingAuto prop on UButton
+    don_t: Manual loading state
+    code_good: <UButton loadingAuto @click="async () => await save()">
+    code_bad: <UButton :loading="isLoading" @click="save">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/button
+  - id: "50"
+    category: Loading
+    guideline: Use UForm loadingAuto
+    description: Auto-disable form during submit
+    do: loadingAuto on UForm (default true)
+    don_t: Manual form disabled state
+    code_good: <UForm @submit="handleSubmit">
+    code_bad: <UForm :disabled="isSubmitting">
+    severity: Low
+    docs_url: https://ui.nuxt.com/docs/components/form

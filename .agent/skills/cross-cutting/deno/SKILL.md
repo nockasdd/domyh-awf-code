@@ -1,14 +1,14 @@
 ---
 name: deno
 detect: ["deno.json", "deno.jsonc", "deno.lock", "mod.ts", "deps.ts"]
-version: "6.1.2"
+version: "6.2.1"
 category: runtime
 tier: 2
 ---
 
-# Deno Patterns — DOMYH Awesome Code v6.1.2
+# Deno Patterns — DOMYH Awesome Code
 
-> **Version**: Deno 2.0+ (2025-2026)
+> **Version**: Deno 2.6.8 (2025-2026)
 > **Framework**: Fresh, Hono
 > **Philosophy**: Secure by default, TypeScript-first
 
@@ -17,19 +17,18 @@ tier: 2
 ## 🎯 When to Use This Skill
 
 Use for: APIs, CLI tools, edge functions, TypeScript projects.
-**NOT for**: Heavy npm ecosystem dependency (→ nodejs), speed-critical (→ bun).
+**NOT for**: Heavy npm ecosystem (→ nodejs), speed-critical (→ bun).
 
 ---
 
-## 📦 Why Deno 2?
+## 📦 What's New in Deno 2.x (2025-2026)
 
-| Feature     | Deno 2         | Node.js | Bun      |
-| ----------- | -------------- | ------- | -------- |
-| TS support  | Native 🏆      | Via tsc | Native   |
-| Permissions | Built-in 🏆    | None    | None     |
-| npm compat  | Full           | N/A     | Full     |
-| Deploy      | Deno Deploy 🏆 | Vercel  | None     |
-| Testing     | Built-in 🏆    | Jest    | Built-in |
+| Version | Key Features                                        |
+| ------- | --------------------------------------------------- |
+| **2.2** | node:sqlite, TypeScript 5.7, lint plugins           |
+| **2.4** | deno bundle return, bytes/text imports              |
+| **2.5** | WebSocket headers, setTimeout unstable              |
+| **2.6** | **dx** command, **deno audit**, tsgo fast typecheck |
 
 ---
 
@@ -45,7 +44,8 @@ Use for: APIs, CLI tools, edge functions, TypeScript projects.
     "test": "deno test --allow-all",
     "check": "deno check *.ts",
     "fmt": "deno fmt",
-    "lint": "deno lint"
+    "lint": "deno lint",
+    "audit": "deno audit"
   },
   "imports": {
     "@std/": "jsr:@std/",
@@ -82,48 +82,35 @@ project/
 ### HTTP Server with Hono
 
 ```typescript
-// main.ts
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 
 const app = new Hono();
 
-// Middleware
 app.use("*", logger());
 app.use("/api/*", cors());
 
-// Routes
-app.get("/", (c) => c.text("Hello Deno!"));
+app.get("/", (c) => c.text("Hello Deno 2.6!"));
 
 app.get("/api/users", async (c) => {
-  const users = await getUsers();
+  const users = await listUsers();
   return c.json(users);
 });
 
 app.get("/api/users/:id", async (c) => {
   const id = c.req.param("id");
   const user = await getUser(id);
-  if (!user) {
-    return c.json({ error: "Not found" }, 404);
-  }
+  if (!user) return c.json({ error: "Not found" }, 404);
   return c.json(user);
 });
 
-app.post("/api/users", async (c) => {
-  const body = await c.req.json();
-  const user = await createUser(body);
-  return c.json(user, 201);
-});
-
-// Start server
 Deno.serve({ port: 8000 }, app.fetch);
 ```
 
 ### Database with Deno KV
 
 ```typescript
-// lib/db.ts
 const kv = await Deno.openKv();
 
 interface User {
@@ -137,11 +124,7 @@ export async function createUser(
   data: Omit<User, "id" | "createdAt">,
 ): Promise<User> {
   const id = crypto.randomUUID();
-  const user: User = {
-    id,
-    ...data,
-    createdAt: new Date(),
-  };
+  const user: User = { id, ...data, createdAt: new Date() };
 
   await kv.set(["users", id], user);
   await kv.set(["users_by_email", data.email], id);
@@ -159,34 +142,78 @@ export async function listUsers(): Promise<User[]> {
   const iter = kv.list<User>({ prefix: ["users"] });
 
   for await (const entry of iter) {
-    if (entry.key.length === 2) {
-      users.push(entry.value);
-    }
+    if (entry.key.length === 2) users.push(entry.value);
   }
-
   return users;
-}
-
-export async function deleteUser(id: string): Promise<boolean> {
-  const user = await getUser(id);
-  if (!user) return false;
-
-  await kv
-    .atomic()
-    .delete(["users", id])
-    .delete(["users_by_email", user.email])
-    .commit();
-
-  return true;
 }
 ```
 
-### Permissions Best Practices
+### 🆕 node:sqlite (Deno 2.2+)
 
 ```typescript
-// ✅ Request only needed permissions
-// deno run --allow-net=api.example.com --allow-read=./config main.ts
+import { DatabaseSync } from "node:sqlite";
 
+const db = new DatabaseSync("app.db");
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE
+  )
+`);
+
+const stmt = db.prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+stmt.run("Alice", "alice@example.com");
+
+const users = db.prepare("SELECT * FROM users").all();
+```
+
+---
+
+## 🆕 CLI Commands (2.6+)
+
+### dx — Package Binary Runner
+
+```bash
+# Run npm package binaries directly
+dx prettier --write .
+dx eslint src/
+dx tsx script.ts
+
+# Same as npx but for Deno
+```
+
+### deno audit — Security Scan
+
+```bash
+# Scan dependencies for vulnerabilities
+deno audit
+
+# Output:
+# ✓ No vulnerabilities found
+# - or -
+# ⚠ Found 2 vulnerabilities in dependencies
+```
+
+### Granular Permissions
+
+```bash
+# Specific host only
+deno run --allow-net=api.example.com main.ts
+
+# Specific path only
+deno run --allow-read=./config,./data main.ts
+
+# Fine-grained env access
+deno run --allow-env=DATABASE_URL,API_KEY main.ts
+```
+
+---
+
+## 🔒 Permissions Best Practices
+
+```typescript
 // ✅ Check permissions at runtime
 const netPermission = await Deno.permissions.query({ name: "net" });
 if (netPermission.state !== "granted") {
@@ -199,6 +226,7 @@ const status = await Deno.permissions.request({
   name: "read",
   path: "./config",
 });
+
 if (status.state === "granted") {
   const config = await Deno.readTextFile("./config/app.json");
 }
@@ -233,35 +261,13 @@ export default function Home({ data }: PageProps<Data>) {
 }
 ```
 
-```typescript
-// islands/Counter.tsx
-import { useSignal } from "@preact/signals";
-
-interface Props {
-  start: number;
-}
-
-export default function Counter({ start }: Props) {
-  const count = useSignal(start);
-
-  return (
-    <div class="flex gap-4 items-center">
-      <button onClick={() => count.value--}>-</button>
-      <span>{count}</span>
-      <button onClick={() => count.value++}>+</button>
-    </div>
-  );
-}
-```
-
 ---
 
 ## 🧪 Testing
 
 ```typescript
-// tests/api_test.ts
 import { assertEquals, assertExists } from "@std/assert";
-import { createUser, getUser, deleteUser } from "../lib/db.ts";
+import { createUser, getUser } from "../lib/db.ts";
 
 Deno.test("User CRUD operations", async (t) => {
   let userId: string;
@@ -271,7 +277,6 @@ Deno.test("User CRUD operations", async (t) => {
       name: "Test User",
       email: "test@example.com",
     });
-
     assertExists(user.id);
     assertEquals(user.name, "Test User");
     userId = user.id;
@@ -282,33 +287,13 @@ Deno.test("User CRUD operations", async (t) => {
     assertExists(user);
     assertEquals(user.email, "test@example.com");
   });
-
-  await t.step("delete user", async () => {
-    const deleted = await deleteUser(userId);
-    assertEquals(deleted, true);
-
-    const user = await getUser(userId);
-    assertEquals(user, null);
-  });
-});
-
-// HTTP tests
-Deno.test("API endpoints", async () => {
-  const res = await fetch("http://localhost:8000/api/users");
-  assertEquals(res.status, 200);
-
-  const users = await res.json();
-  assertEquals(Array.isArray(users), true);
 });
 ```
 
 ```bash
-# Run tests
-deno test --allow-all
-
-# With coverage
-deno test --allow-all --coverage=coverage
-deno coverage coverage
+deno test --allow-all           # Run tests
+deno test --allow-all --coverage=coverage  # With coverage
+deno coverage coverage          # View coverage
 ```
 
 ---
@@ -321,6 +306,7 @@ deno coverage coverage
 - [ ] No --allow-all in production
 - [ ] Environment variables for secrets
 - [ ] CORS configured properly
+- [ ] `deno audit` passing
 
 ### Quality
 
@@ -334,8 +320,20 @@ deno coverage coverage
 - [ ] deno.lock committed
 - [ ] Deno Deploy or Docker
 - [ ] Health check endpoint
-- [ ] Structured logging
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Deno 2.0+_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine:
+
+| Domain      | Query Examples                |
+| ----------- | ----------------------------- |
+| Runtime     | "Deno KV database operations" |
+| Permissions | "allow-net granular security" |
+| Framework   | "Fresh island component SSR"  |
+| CLI         | "dx deno audit security scan" |
+
+---
+
+_DOMYH Awesome Code • Deno 2.6.8 • 2026_

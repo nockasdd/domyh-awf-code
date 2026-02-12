@@ -1,0 +1,279 @@
+# =============================================================================
+# Crystal Core Patterns (Feb 2026)
+# Version: Crystal 1.14+
+# =============================================================================
+
+metadata:
+  skill: crystal
+  domain: core
+  version: "1.14"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: crystal001
+    name: Type System
+    category: types
+    version: "Crystal"
+    description: |
+      Crystal's static type system.
+      Union types, nil safety, generics.
+    text: types union nil generic class struct
+    example: |
+      # ✅ Union types
+      alias StringOrInt = String | Int32
+
+      def process(value : StringOrInt)
+        case value
+        when String
+          puts "String: #{value.upcase}"
+        when Int32
+          puts "Int: #{value * 2}"
+        end
+      end
+
+      # ✅ Nil safety
+      def find_user(id : Int32) : User?
+        # Returns User or Nil
+        users.find { |u| u.id == id }
+      end
+
+      user = find_user(1)
+      if user
+        puts user.name  # Safe: user is User here
+      end
+
+      # ✅ Generics
+      class Box(T)
+        getter value : T
+        
+        def initialize(@value : T)
+        end
+        
+        def map(&block : T -> U) forall U
+          Box(U).new(yield @value)
+        end
+      end
+
+      box = Box.new(42)
+      doubled = box.map { |x| x * 2 }
+
+      # ✅ Struct vs Class
+      struct Point  # Value type, stack allocated
+        property x : Int32
+        property y : Int32
+      end
+
+      class Entity  # Reference type, heap allocated
+        property id : Int32
+      end
+
+      # ✅ Type restrictions
+      def add(a : Number, b : Number) : Number
+        a + b
+      end
+    severity: HIGH
+    docs_url: https://crystal-lang.org/reference/syntax_and_semantics/types.html
+
+  - id: crystal002
+    name: Macros
+    category: metaprogramming
+    version: "Crystal"
+    description: |
+      Compile-time metaprogramming.
+      AST manipulation, dynamic code generation.
+    text: macro metaprogramming ast compile-time codegen
+    example: |
+      # ✅ Basic macro
+      macro define_method(name, value)
+        def {{name}}
+          {{value}}
+        end
+      end
+
+      define_method hello, "Hello, World!"
+      puts hello  # "Hello, World!"
+
+      # ✅ Macro with type introspection
+      macro generate_getters(*names)
+        {% for name in names %}
+          def {{name.id}}
+            @{{name.id}}
+          end
+        {% end %}
+      end
+
+      class Person
+        generate_getters name, age, email
+        
+        def initialize(@name : String, @age : Int32, @email : String)
+        end
+      end
+
+      # ✅ Compile-time iteration
+      macro define_validators(*fields)
+        {% for field, type in fields %}
+          def validate_{{field.id}}(value : {{type}}) : Bool
+            !value.nil?
+          end
+        {% end %}
+      end
+
+      # ✅ Access type information
+      macro debug_type(type)
+        {% puts "Type: #{type}" %}
+        {% puts "Methods: #{type.methods.map(&.name).join(", ")}" %}
+      end
+
+      # ✅ JSON mapping macro
+      require "json"
+
+      class User
+        include JSON::Serializable
+        
+        property id : Int32
+        property name : String
+        property email : String?
+      end
+
+      user = User.from_json(%({"id": 1, "name": "Alice"}))
+    severity: MEDIUM
+    docs_url: https://crystal-lang.org/reference/syntax_and_semantics/macros.html
+
+  - id: crystal003
+    name: Error Handling
+    category: errors
+    version: "Crystal"
+    description: |
+      Exception handling and Result pattern.
+      nil vs exceptions, ensure.
+    text: exception error raise rescue ensure result
+    example: |
+      # ✅ Raising exceptions
+      class ValidationError < Exception
+      end
+
+      def validate(email : String)
+        unless email.includes?("@")
+          raise ValidationError.new("Invalid email")
+        end
+      end
+
+      # ✅ Rescue handling
+      def process_email(email : String) : String
+        validate(email)
+        "Valid: #{email}"
+      rescue e : ValidationError
+        "Error: #{e.message}"
+      rescue e
+        "Unknown error: #{e.message}"
+      ensure
+        puts "Cleanup complete"
+      end
+
+      # ✅ Nil for optional absence (not errors)
+      def find_by_id(id : Int32) : User?
+        users.find { |u| u.id == id }
+      end
+
+      # ✅ Result pattern (custom)
+      struct Result(T, E)
+        def self.ok(value : T)
+          Result(T, E).new(value, nil)
+        end
+        
+        def self.error(error : E)
+          Result(T, E).new(nil, error)
+        end
+        
+        getter value : T?
+        getter error : E?
+        
+        def ok? : Bool
+          @error.nil?
+        end
+        
+        def initialize(@value, @error)
+        end
+      end
+
+      def divide(a : Int32, b : Int32) : Result(Int32, String)
+        if b == 0
+          Result(Int32, String).error("Division by zero")
+        else
+          Result(Int32, String).ok(a // b)
+        end
+      end
+
+      result = divide(10, 2)
+      if result.ok?
+        puts result.value
+      end
+    severity: MEDIUM
+    docs_url: https://crystal-lang.org/reference/syntax_and_semantics/exception_handling.html
+
+  - id: crystal004
+    name: Blocks and Procs
+    category: functional
+    version: "Crystal"
+    description: |
+      Closures and block-based programming.
+      Yield, procs, block forwarding.
+    text: block proc yield closure lambda captured
+    example: |
+      # ✅ Blocks with yield
+      def twice
+        yield
+        yield
+      end
+
+      twice { puts "Hello" }  # Prints "Hello" twice
+
+      # ✅ Block with parameters
+      def transform(value : Int32)
+        yield value
+      end
+
+      result = transform(5) { |x| x * 2 }  # 10
+
+      # ✅ Explicit block parameter
+      def apply(value : Int32, &block : Int32 -> Int32) : Int32
+        block.call(value)
+      end
+
+      apply(10) { |x| x + 5 }  # 15
+
+      # ✅ Proc (standalone closure)
+      doubler = ->(x : Int32) { x * 2 }
+      puts doubler.call(21)  # 42
+
+      # ✅ Capturing variables
+      def make_counter : -> Int32
+        count = 0
+        -> { count += 1 }
+      end
+
+      counter = make_counter
+      puts counter.call  # 1
+      puts counter.call  # 2
+
+      # ✅ Block forwarding
+      def wrapper(&block : Int32 -> Int32)
+        puts "Before"
+        result = apply(10, &block)
+        puts "After"
+        result
+      end
+
+      wrapper { |x| x * 3 }
+
+      # ✅ Optional block
+      def optional_block
+        if block_given?
+          yield
+        else
+          "No block"
+        end
+      end
+    severity: MEDIUM
+    docs_url: https://crystal-lang.org/reference/syntax_and_semantics/blocks_and_procs.html

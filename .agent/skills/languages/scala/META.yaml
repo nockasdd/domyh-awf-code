@@ -1,32 +1,12 @@
 name: scala
-version: "6.1.2"
+version: "6.2.1"
 category: functional
-tier: 2
+tier: 3
 
-description: |
-  Scala 3 development patterns.
-  Covers functional programming, Akka, ZIO, Cats Effect.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.scala"
-    - "*.sc"
-    - "build.sbt"
-    - "project/*.scala"
-  keywords:
-    - scala
-    - scala 3
-    - sbt
-    - akka
-    - zio
-    - cats effect
-    - play framework
-    - spark scala
-  intents:
-    - create scala project
-    - scala api
-    - akka actors
-    - zio application
+desc: "Scala 3 development patterns. Covers functional programming, Akka, ZIO, Cats Effect."
 
 related_skills:
   - java

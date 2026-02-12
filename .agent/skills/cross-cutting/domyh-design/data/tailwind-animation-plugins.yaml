@@ -1,0 +1,462 @@
+metadata:
+  skill: domyh-design
+  domain: tailwind_animation_plugins
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "Tailwind CSS animation plugins, utilities, and custom @keyframes patterns"
+  patterns_count: 48
+  columns:
+    - name
+    - type
+    - npm_package
+    - classes
+    - keyframes_code
+
+plugins:
+  # ── Tailwind Animation Plugins ───────────────────────────────
+
+  - id: tw_001
+    name: tailwindcss-animated
+    type: plugin
+    npm_package: tailwindcss-animated
+    description: Predefined animation utilities (wiggle, shake, spin, bounce)
+    install: npm install tailwindcss-animated
+    config: |
+      /* tailwind.config.js */
+      plugins: [require('tailwindcss-animated')]
+    classes:
+      - animate-fade-in
+      - animate-fade-out
+      - animate-slide-in-top
+      - animate-slide-in-bottom
+      - animate-slide-in-left
+      - animate-slide-in-right
+      - animate-spin
+      - animate-bounce
+      - animate-wiggle
+      - animate-shake
+      - animate-flip
+      - animate-rotate-y
+      - animate-zoom-in
+      - animate-zoom-out
+    modifiers:
+      - animate-delay-100 to animate-delay-1000
+      - animate-duration-100 to animate-duration-1000
+      - animate-ease-in / animate-ease-out / animate-ease-in-out
+      - animate-once / animate-twice / animate-infinite
+
+  - id: tw_002
+    name: tailwindcss-motion (Rombo)
+    type: plugin
+    npm_package: tailwindcss-motion
+    description: Motion utilities with prefers-reduced-motion support
+    install: npm install tailwindcss-motion
+    config: |
+      /* tailwind.config.js */
+      plugins: [require('tailwindcss-motion')]
+    classes:
+      - motion-preset-fade
+      - motion-preset-slide-up
+      - motion-preset-slide-down
+      - motion-preset-slide-left
+      - motion-preset-slide-right
+      - motion-preset-blur-up
+      - motion-preset-blur-down
+      - motion-preset-bounce
+      - motion-preset-expand
+      - motion-preset-shrink
+      - motion-preset-spin
+      - motion-preset-confetti
+    modifiers:
+      - motion-duration-75 to motion-duration-1000
+      - motion-delay-75 to motion-delay-1000
+
+  - id: tw_003
+    name: tailwindcss-neumorphism
+    type: plugin
+    npm_package: tailwindcss-neumorphism
+    description: Soft UI / neumorphic shadow utilities
+    install: npm install tailwindcss-neumorphism
+    classes:
+      - nm-flat
+      - nm-concave
+      - nm-convex
+      - nm-inset
+
+  - id: tw_004
+    name: tailwindcss-intersect
+    type: plugin
+    npm_package: tailwindcss-intersect
+    description: Intersection Observer animation trigger
+    install: npm install tailwindcss-intersect
+    classes:
+      - intersect:opacity-100
+      - intersect:translate-y-0
+      - intersect:scale-100
+
+# ── Custom @keyframes for Tailwind ───────────────────────────
+
+custom_keyframes:
+  # Entrance animations
+  - id: kf_001
+    name: fade-in
+    category: entrance
+    keyframes: |
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    tailwind_config: |
+      animation: { 'fade-in': 'fade-in 400ms ease forwards' }
+      keyframes: { 'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } } }
+
+  - id: kf_002
+    name: fade-up
+    category: entrance
+    keyframes: |
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    tailwind_config: |
+      animation: { 'fade-up': 'fade-up 500ms ease forwards' }
+
+  - id: kf_003
+    name: fade-down
+    category: entrance
+    keyframes: |
+      @keyframes fade-down {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    tailwind_config: |
+      animation: { 'fade-down': 'fade-down 500ms ease forwards' }
+
+  - id: kf_004
+    name: slide-in-left
+    category: entrance
+    keyframes: |
+      @keyframes slide-in-left {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+    tailwind_config: |
+      animation: { 'slide-in-left': 'slide-in-left 400ms ease forwards' }
+
+  - id: kf_005
+    name: slide-in-right
+    category: entrance
+    keyframes: |
+      @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+    tailwind_config: |
+      animation: { 'slide-in-right': 'slide-in-right 400ms ease forwards' }
+
+  - id: kf_006
+    name: scale-in
+    category: entrance
+    keyframes: |
+      @keyframes scale-in {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+    tailwind_config: |
+      animation: { 'scale-in': 'scale-in 300ms ease forwards' }
+
+  - id: kf_007
+    name: blur-in
+    category: entrance
+    keyframes: |
+      @keyframes blur-in {
+        from { opacity: 0; filter: blur(8px); }
+        to { opacity: 1; filter: blur(0); }
+      }
+    tailwind_config: |
+      animation: { 'blur-in': 'blur-in 400ms ease forwards' }
+
+  # Exit animations
+  - id: kf_008
+    name: fade-out
+    category: exit
+    keyframes: |
+      @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+    tailwind_config: |
+      animation: { 'fade-out': 'fade-out 300ms ease forwards' }
+
+  - id: kf_009
+    name: slide-out-right
+    category: exit
+    keyframes: |
+      @keyframes slide-out-right {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(30px); }
+      }
+    tailwind_config: |
+      animation: { 'slide-out-right': 'slide-out-right 300ms ease forwards' }
+
+  - id: kf_010
+    name: scale-out
+    category: exit
+    keyframes: |
+      @keyframes scale-out {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0; transform: scale(0.95); }
+      }
+    tailwind_config: |
+      animation: { 'scale-out': 'scale-out 200ms ease forwards' }
+
+  # Attention / Emphasis animations
+  - id: kf_011
+    name: wiggle
+    category: attention
+    keyframes: |
+      @keyframes wiggle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-3deg); }
+        75% { transform: rotate(3deg); }
+      }
+    tailwind_config: |
+      animation: { wiggle: 'wiggle 300ms ease-in-out' }
+
+  - id: kf_012
+    name: shake
+    category: attention
+    keyframes: |
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+      }
+    tailwind_config: |
+      animation: { shake: 'shake 300ms ease' }
+
+  - id: kf_013
+    name: jello
+    category: attention
+    keyframes: |
+      @keyframes jello {
+        0%, 100% { transform: scale3d(1,1,1); }
+        30% { transform: scale3d(1.25,0.75,1); }
+        40% { transform: scale3d(0.75,1.25,1); }
+        50% { transform: scale3d(1.15,0.85,1); }
+        65% { transform: scale3d(0.95,1.05,1); }
+        75% { transform: scale3d(1.05,0.95,1); }
+      }
+    tailwind_config: |
+      animation: { jello: 'jello 800ms ease' }
+
+  - id: kf_014
+    name: rubber-band
+    category: attention
+    keyframes: |
+      @keyframes rubber-band {
+        0% { transform: scale3d(1,1,1); }
+        30% { transform: scale3d(1.25,0.75,1); }
+        40% { transform: scale3d(0.75,1.25,1); }
+        50% { transform: scale3d(1.15,0.85,1); }
+        65% { transform: scale3d(0.95,1.05,1); }
+        75% { transform: scale3d(1.05,0.95,1); }
+        100% { transform: scale3d(1,1,1); }
+      }
+    tailwind_config: |
+      animation: { 'rubber-band': 'rubber-band 500ms ease' }
+
+  - id: kf_015
+    name: heartbeat
+    category: attention
+    keyframes: |
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        15% { transform: scale(1.15); }
+        30% { transform: scale(1); }
+        45% { transform: scale(1.1); }
+      }
+    tailwind_config: |
+      animation: { heartbeat: 'heartbeat 1.5s ease-in-out infinite' }
+
+  # Continuous / Loop animations
+  - id: kf_016
+    name: float
+    category: loop
+    keyframes: |
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+    tailwind_config: |
+      animation: { float: 'float 3s ease-in-out infinite' }
+
+  - id: kf_017
+    name: shimmer
+    category: loop
+    keyframes: |
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+    tailwind_config: |
+      animation: { shimmer: 'shimmer 2s linear infinite' }
+
+  - id: kf_018
+    name: glow-pulse
+    category: loop
+    keyframes: |
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 4px var(--glow-color); }
+        50% { box-shadow: 0 0 16px var(--glow-color); }
+      }
+    tailwind_config: |
+      animation: { 'glow-pulse': 'glow-pulse 2s ease-in-out infinite' }
+
+  - id: kf_019
+    name: gradient-shift
+    category: loop
+    keyframes: |
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    tailwind_config: |
+      animation: { 'gradient-shift': 'gradient-shift 3s ease infinite' }
+
+  - id: kf_020
+    name: rotate-slow
+    category: loop
+    keyframes: |
+      @keyframes rotate-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    tailwind_config: |
+      animation: { 'rotate-slow': 'rotate-slow 8s linear infinite' }
+
+  # Loading animations
+  - id: kf_021
+    name: skeleton-pulse
+    category: loading
+    keyframes: |
+      @keyframes skeleton-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+    tailwind_config: |
+      animation: { 'skeleton-pulse': 'skeleton-pulse 1.5s ease-in-out infinite' }
+
+  - id: kf_022
+    name: dot-loading
+    category: loading
+    keyframes: |
+      @keyframes dot-loading {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+      }
+    tailwind_config: |
+      animation: { 'dot-loading': 'dot-loading 1.4s infinite both' }
+
+  - id: kf_023
+    name: progress-indeterminate
+    category: loading
+    keyframes: |
+      @keyframes progress-indeterminate {
+        0% { left: -50%; width: 30%; }
+        50% { left: 30%; width: 50%; }
+        100% { left: 100%; width: 30%; }
+      }
+    tailwind_config: |
+      animation: { 'progress-indeterminate': 'progress-indeterminate 2s ease-in-out infinite' }
+
+  # Micro-interaction animations
+  - id: kf_024
+    name: pop
+    category: micro
+    keyframes: |
+      @keyframes pop {
+        0% { transform: scale(0.5); opacity: 0; }
+        70% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+    tailwind_config: |
+      animation: { pop: 'pop 300ms cubic-bezier(0.68, -0.55, 0.27, 1.55)' }
+
+  - id: kf_025
+    name: bounce-in
+    category: micro
+    keyframes: |
+      @keyframes bounce-in {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.15); }
+        70% { transform: scale(0.95); }
+        100% { transform: scale(1); }
+      }
+    tailwind_config: |
+      animation: { 'bounce-in': 'bounce-in 500ms ease' }
+
+  - id: kf_026
+    name: flip-in-x
+    category: micro
+    keyframes: |
+      @keyframes flip-in-x {
+        from { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+        to { transform: perspective(400px) rotateX(0); opacity: 1; }
+      }
+    tailwind_config: |
+      animation: { 'flip-in-x': 'flip-in-x 600ms ease forwards' }
+
+  - id: kf_027
+    name: shrink
+    category: micro
+    keyframes: |
+      @keyframes shrink {
+        from { width: 100%; }
+        to { width: 0%; }
+      }
+    tailwind_config: |
+      animation: { shrink: 'shrink linear forwards' }
+
+  - id: kf_028
+    name: draw-check
+    category: micro
+    keyframes: |
+      @keyframes draw-check {
+        from { stroke-dashoffset: 20; }
+        to { stroke-dashoffset: 0; }
+      }
+    tailwind_config: |
+      animation: { 'draw-check': 'draw-check 400ms ease forwards' }
+
+# Tailwind Extend Template
+tailwind_extend_template: |
+  /* tailwind.config.js */
+  module.exports = {
+    theme: {
+      extend: {
+        animation: {
+          'fade-in': 'fade-in 400ms ease forwards',
+          'fade-up': 'fade-up 500ms ease forwards',
+          'fade-down': 'fade-down 500ms ease forwards',
+          'slide-in-left': 'slide-in-left 400ms ease forwards',
+          'slide-in-right': 'slide-in-right 400ms ease forwards',
+          'scale-in': 'scale-in 300ms ease forwards',
+          'blur-in': 'blur-in 400ms ease forwards',
+          'fade-out': 'fade-out 300ms ease forwards',
+          'scale-out': 'scale-out 200ms ease forwards',
+          'wiggle': 'wiggle 300ms ease-in-out',
+          'shake': 'shake 300ms ease',
+          'float': 'float 3s ease-in-out infinite',
+          'shimmer': 'shimmer 2s linear infinite',
+          'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+          'pop': 'pop 300ms cubic-bezier(0.68,-0.55,0.27,1.55)',
+          'bounce-in': 'bounce-in 500ms ease',
+        },
+        keyframes: {
+          /* ... defined above ... */
+        },
+      },
+    },
+  }

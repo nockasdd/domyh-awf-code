@@ -1,48 +1,54 @@
 name: coding-rules
-version: "6.1.2"
+version: "6.2.1"
 display: Awesome Coding Rules
-category: support
+category: cross-cutting
 tier: 1
 priority: 2
+
 desc: "Multi-language naming conventions, architecture patterns, design patterns, coding standards"
-keywords:
-  [
-    naming,
-    convention,
-    style guide,
-    architecture,
-    pattern,
-    clean code,
-    solid,
-    dry,
-    memory,
-    concurrency,
-    performance,
-  ]
-detect: []
+
+triggers:
+  file_patterns: []
+  keywords:
+    - naming
+    - convention
+    - style guide
+    - architecture
+    - pattern
+    - clean code
+    - solid
+    - dry
+    - memory
+    - concurrency
+    - performance
+  intents:
+    - naming convention
+    - code standards
+    - architecture pattern
+    - design pattern
+
 caps:
-  [
-    23-language naming conventions,
-    10 architecture patterns,
-    70 coding rules,
-    20 design patterns,
-    38 build system configs,
-    5 SOLID principles,
-    9 memory management patterns,
-    12 performance benchmarks,
-    9 concurrency patterns,
-  ]
+  - 23-language naming conventions
+  - 10 architecture patterns
+  - 70 coding rules
+  - 20 design patterns
+  - 38 build system configs
+  - 5 SOLID principles
+  - 9 memory management patterns
+  - 12 performance benchmarks
+  - 9 concurrency patterns
+  - 15 framework directory structures
+
 data_files:
-  [
-    naming-conventions.csv,
-    architecture-patterns.csv,
-    coding-rules.csv,
-    design-patterns.csv,
-    build-systems.csv,
-    framework-signatures.csv,
-    test-frameworks.csv,
-    solid-principles.csv,
-    memory-management.csv,
-    performance-benchmarks.csv,
-    concurrency-patterns.csv,
-  ]
+  - data/naming-conventions.yaml
+  - data/architecture-patterns.yaml
+  - data/coding-rules.yaml
+  - data/design-patterns.yaml
+  - data/build-systems.yaml
+  - data/framework-signatures.yaml
+  - data/test-frameworks.yaml
+  - data/solid-principles.yaml
+  - data/memory-management.yaml
+  - data/performance-benchmarks.yaml
+  - data/concurrency-patterns.yaml
+  - data/framework-directories.yaml

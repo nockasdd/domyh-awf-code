@@ -1,0 +1,489 @@
+# =============================================================================
+# Swift Core Patterns (Feb 2026)
+# Version: Swift 6
+# =============================================================================
+
+metadata:
+  skill: swift
+  domain: core
+  version: "6"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: sw001
+    name: Async/Await
+    category: concurrency
+    version: "Swift6"
+    description: |
+      Structured concurrency with async/await.
+      Tasks, task groups, actors.
+    text: async await task actor mainactor sendable concurrency
+    example: |
+      // ✅ Basic async function
+      func fetchUser(id: Int) async throws -> User {
+          let url = URL(string: "https://api.example.com/users/\(id)")!
+          let (data, _) = try await URLSession.shared.data(from: url)
+          return try JSONDecoder().decode(User.self, from: data)
+      }
+
+      // ✅ Parallel async
+      func loadDashboard() async throws -> Dashboard {
+          async let user = fetchUser()
+          async let orders = fetchOrders()
+          async let settings = fetchSettings()
+          
+          return try await Dashboard(
+              user: user,
+              orders: orders,
+              settings: settings
+          )
+      }
+
+      // ✅ Task groups
+      func fetchAllUsers(ids: [Int]) async throws -> [User] {
+          try await withThrowingTaskGroup(of: User.self) { group in
+              for id in ids {
+                  group.addTask {
+                      try await fetchUser(id: id)
+                  }
+              }
+              
+              var users: [User] = []
+              for try await user in group {
+                  users.append(user)
+              }
+              return users
+          }
+      }
+
+      // ✅ Actor for thread-safe state
+      actor Counter {
+          private var value = 0
+          
+          func increment() -> Int {
+              value += 1
+              return value
+          }
+          
+          var current: Int { value }
+      }
+
+      let counter = Counter()
+      await counter.increment()
+
+      // ✅ MainActor for UI updates
+      @MainActor
+      class ViewModel: ObservableObject {
+          @Published var users: [User] = []
+          
+          func loadUsers() async {
+              do {
+                  users = try await api.fetchUsers()
+              } catch {
+                  print("Error: \(error)")
+              }
+          }
+      }
+
+      // ✅ Task cancellation
+      func loadWithTimeout() async throws -> Data {
+          try await withThrowingTaskGroup(of: Data.self) { group in
+              group.addTask {
+                  try await fetchData()
+              }
+              group.addTask {
+                  try await Task.sleep(for: .seconds(5))
+                  throw TimeoutError()
+              }
+              
+              let result = try await group.next()!
+              group.cancelAll()
+              return result
+          }
+      }
+    severity: HIGH
+    docs_url: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/
+
+  - id: sw002
+    name: SwiftUI Views
+    category: ui
+    version: "Swift6"
+    description: |
+      Declarative UI with SwiftUI.
+      Views, modifiers, state.
+    text: swiftui view state binding observable environment
+    example: |
+      import SwiftUI
+
+      // ✅ Basic View
+      struct ContentView: View {
+          var body: some View {
+              VStack(spacing: 16) {
+                  Text("Hello, SwiftUI!")
+                      .font(.largeTitle)
+                      .foregroundStyle(.primary)
+                  
+                  Image(systemName: "star.fill")
+                      .imageScale(.large)
+                      .foregroundStyle(.yellow)
+              }
+              .padding()
+          }
+      }
+
+      // ✅ State management
+      struct CounterView: View {
+          @State private var count = 0
+          
+          var body: some View {
+              VStack {
+                  Text("Count: \(count)")
+                      .font(.title)
+                  
+                  Button("Increment") {
+                      count += 1
+                  }
+                  .buttonStyle(.borderedProminent)
+              }
+          }
+      }
+
+      // ✅ Binding for child views
+      struct ToggleRow: View {
+          let title: String
+          @Binding var isOn: Bool
+          
+          var body: some View {
+              Toggle(title, isOn: $isOn)
+          }
+      }
+
+      // ✅ Observable (Swift 6 / iOS 17+)
+      @Observable
+      class UserSettings {
+          var username = ""
+          var notifications = true
+          var darkMode = false
+      }
+
+      struct SettingsView: View {
+          @State private var settings = UserSettings()
+          
+          var body: some View {
+              Form {
+                  TextField("Username", text: $settings.username)
+                  Toggle("Notifications", isOn: $settings.notifications)
+                  Toggle("Dark Mode", isOn: $settings.darkMode)
+              }
+          }
+      }
+
+      // ✅ Environment
+      struct AppView: View {
+          var body: some View {
+              ContentView()
+                  .environment(\.colorScheme, .dark)
+          }
+      }
+
+      // ✅ List with ForEach
+      struct UserListView: View {
+          let users: [User]
+          
+          var body: some View {
+              List {
+                  ForEach(users) { user in
+                      NavigationLink(value: user) {
+                          UserRow(user: user)
+                      }
+                  }
+                  .onDelete(perform: deleteUsers)
+              }
+          }
+          
+          private func deleteUsers(at offsets: IndexSet) {
+              // Handle deletion
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.apple.com/documentation/swiftui/
+
+  - id: sw003
+    name: Swift Data
+    category: data
+    version: "iOS17"
+    description: |
+      Declarative data persistence.
+      Models, queries, relationships.
+    text: swiftdata model query modelcontainer predicate
+    example: |
+      import SwiftData
+
+      // ✅ Model definition
+      @Model
+      final class User {
+          var name: String
+          var email: String
+          var createdAt: Date
+          
+          @Relationship(deleteRule: .cascade)
+          var orders: [Order] = []
+          
+          init(name: String, email: String) {
+              self.name = name
+              self.email = email
+              self.createdAt = Date()
+          }
+      }
+
+      @Model
+      final class Order {
+          var total: Decimal
+          var status: OrderStatus
+          var user: User?
+          
+          init(total: Decimal, status: OrderStatus = .pending) {
+              self.total = total
+              self.status = status
+          }
+      }
+
+      enum OrderStatus: String, Codable {
+          case pending, processing, completed, cancelled
+      }
+
+      // ✅ App setup
+      @main
+      struct MyApp: App {
+          var body: some Scene {
+              WindowGroup {
+                  ContentView()
+              }
+              .modelContainer(for: [User.self, Order.self])
+          }
+      }
+
+      // ✅ Query in View
+      struct UsersView: View {
+          @Query(sort: \User.name) var users: [User]
+          @Environment(\.modelContext) private var context
+          
+          var body: some View {
+              List(users) { user in
+                  Text(user.name)
+              }
+          }
+          
+          func addUser() {
+              let user = User(name: "John", email: "john@email.com")
+              context.insert(user)
+          }
+      }
+
+      // ✅ Filtered query
+      struct ActiveUsersView: View {
+          @Query(
+              filter: #Predicate<User> { $0.isActive },
+              sort: [SortDescriptor(\User.name)]
+          ) var activeUsers: [User]
+          
+          var body: some View {
+              List(activeUsers) { user in
+                  Text(user.name)
+              }
+          }
+      }
+
+      // ✅ Dynamic query with @Query
+      struct SearchView: View {
+          @State private var searchText = ""
+          
+          var body: some View {
+              UsersList(searchText: searchText)
+                  .searchable(text: $searchText)
+          }
+      }
+
+      struct UsersList: View {
+          @Query private var users: [User]
+          
+          init(searchText: String) {
+              _users = Query(
+                  filter: #Predicate { user in
+                      searchText.isEmpty || user.name.contains(searchText)
+                  }
+              )
+          }
+          
+          var body: some View {
+              List(users) { user in
+                  Text(user.name)
+              }
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.apple.com/documentation/swiftdata
+
+  - id: sw004
+    name: Error Handling
+    category: safety
+    version: "Swift"
+    description: |
+      Comprehensive error handling.
+      throw, try, Result type.
+    text: error throw try catch result optional
+    example: |
+      // ✅ Define errors
+      enum NetworkError: Error {
+          case invalidURL
+          case noData
+          case decodingFailed(Error)
+          case serverError(statusCode: Int)
+      }
+
+      // ✅ Throwing function
+      func fetchUser(id: Int) throws -> User {
+          guard let url = URL(string: "https://api.com/users/\(id)") else {
+              throw NetworkError.invalidURL
+          }
+          
+          let (data, response) = try await URLSession.shared.data(from: url)
+          
+          guard let httpResponse = response as? HTTPURLResponse else {
+              throw NetworkError.noData
+          }
+          
+          guard httpResponse.statusCode == 200 else {
+              throw NetworkError.serverError(statusCode: httpResponse.statusCode)
+          }
+          
+          do {
+              return try JSONDecoder().decode(User.self, from: data)
+          } catch {
+              throw NetworkError.decodingFailed(error)
+          }
+      }
+
+      // ✅ Error handling
+      do {
+          let user = try await fetchUser(id: 1)
+          print("User: \(user.name)")
+      } catch NetworkError.invalidURL {
+          print("Invalid URL")
+      } catch NetworkError.serverError(let code) {
+          print("Server error: \(code)")
+      } catch {
+          print("Unknown error: \(error)")
+      }
+
+      // ✅ try? for optional result
+      let user = try? await fetchUser(id: 1)  // Returns nil on error
+
+      // ✅ Result type
+      func fetchUserResult(id: Int) async -> Result<User, NetworkError> {
+          do {
+              let user = try await fetchUser(id: id)
+              return .success(user)
+          } catch let error as NetworkError {
+              return .failure(error)
+          } catch {
+              return .failure(.decodingFailed(error))
+          }
+      }
+
+      // Handle Result
+      let result = await fetchUserResult(id: 1)
+      switch result {
+      case .success(let user):
+          print("Got user: \(user.name)")
+      case .failure(let error):
+          print("Error: \(error)")
+      }
+
+      // ✅ Result with map/flatMap
+      let userName = result.map { $0.name }
+    severity: MEDIUM
+    docs_url: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/errorhandling/
+
+  - id: sw005
+    name: Protocols and Extensions
+    category: language
+    version: "Swift"
+    description: |
+      Protocol-oriented programming.
+      Extensions, default implementations.
+    text: protocol extension default implementation generic
+    example: |
+      // ✅ Protocol definition
+      protocol Identifiable {
+          var id: String { get }
+      }
+
+      protocol Nameable {
+          var name: String { get }
+      }
+
+      // ✅ Protocol with associated type
+      protocol Repository {
+          associatedtype Entity: Identifiable
+          
+          func findById(_ id: String) async throws -> Entity?
+          func save(_ entity: Entity) async throws
+          func delete(_ entity: Entity) async throws
+      }
+
+      // ✅ Protocol extension with default implementation
+      extension Repository {
+          func saveAll(_ entities: [Entity]) async throws {
+              for entity in entities {
+                  try await save(entity)
+              }
+          }
+      }
+
+      // ✅ Extension on existing types
+      extension String {
+          var isValidEmail: Bool {
+              let regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/
+              return self.wholeMatch(of: regex) != nil
+          }
+          
+          func truncated(to length: Int) -> String {
+              if count <= length { return self }
+              return String(prefix(length)) + "..."
+          }
+      }
+
+      // ✅ Conditional conformance
+      extension Array: Identifiable where Element: Identifiable {
+          var id: String {
+              map(\.id).joined(separator: "-")
+          }
+      }
+
+      // ✅ Protocol composition
+      typealias NamedEntity = Identifiable & Nameable
+
+      func display(_ entity: some NamedEntity) {
+          print("\(entity.name) (\(entity.id))")
+      }
+
+      // ✅ Opaque return types
+      func makeShape() -> some Shape {
+          Circle()
+      }
+
+      // ✅ Primary associated types (Swift 5.7+)
+      protocol Container<Element> {
+          associatedtype Element
+          var items: [Element] { get }
+      }
+
+      func process(_ container: some Container<String>) {
+          for item in container.items {
+              print(item)
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/

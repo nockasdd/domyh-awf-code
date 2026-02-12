@@ -1,0 +1,260 @@
+metadata:
+  skill: coding-rules
+  domain: design_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: design-patterns.yaml
+  patterns_count: 20
+  columns:
+    - pattern
+    - category
+    - cpp
+    - csharp
+    - java
+    - python
+    - go
+    - rust
+    - typescript
+    - best_implementation
+    - token_cost
+patterns:
+  - id: item_001
+    pattern: Singleton
+    category: Creational
+    cpp: ⚠️ Complex (thread-safe)
+    csharp: ✅ Simple (static)
+    java: ✅ Simple (enum)
+    python: ✅ Excellent (module)
+    go: ✅ Simple (sync.Once)
+    rust: ✅ Simple (lazy_static)
+    typescript: ✅ Simple (module)
+    best_implementation: Python/JS (modules are singletons)
+    token_cost: 1k-2k
+  - id: item_002
+    pattern: Factory Method
+    category: Creational
+    cpp: ✅ Excellent (virtual)
+    csharp: ✅ Excellent (interface)
+    java: ✅ Excellent (interface)
+    python: ✅ Good (duck typing)
+    go: ✅ Good (interface)
+    rust: ✅ Good (trait)
+    typescript: ✅ Good (function)
+    best_implementation: C++/C#/Java (strong typing)
+    token_cost: 2k-4k
+  - id: item_003
+    pattern: Abstract Factory
+    category: Creational
+    cpp: ✅ Excellent
+    csharp: ✅ Excellent
+    java: ✅ Excellent
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: C++/C#/Java
+    token_cost: 3k-5k
+  - id: item_004
+    pattern: Builder
+    category: Creational
+    cpp: ✅ Excellent (fluent)
+    csharp: ✅ Excellent (fluent)
+    java: ✅ Excellent (fluent)
+    python: ⚠️ Verbose (dataclasses)
+    go: ⚠️ Verbose
+    rust: ✅ Good (chaining)
+    typescript: ✅ Good (chaining)
+    best_implementation: C++/C# (complex init)
+    token_cost: 2k-4k
+  - id: item_005
+    pattern: Prototype
+    category: Creational
+    cpp: ✅ Good (copy ctor)
+    csharp: ✅ Good (ICloneable)
+    java: ✅ Good (Cloneable)
+    python: ✅ Excellent (copy)
+    go: ⚠️ Manual
+    rust: ✅ Good (Clone trait)
+    typescript: ✅ Good (spread)
+    best_implementation: Python (dynamic clone)
+    token_cost: 1k-2k
+  - id: item_006
+    pattern: Adapter
+    category: Structural
+    cpp: ✅ Excellent (multiple inheritance)
+    csharp: ✅ Good (interface)
+    java: ✅ Good (interface)
+    python: ✅ Excellent (duck typing)
+    go: ✅ Good (interface)
+    rust: ✅ Good (trait)
+    typescript: ✅ Good (class)
+    best_implementation: Python (no boilerplate)
+    token_cost: 2k-3k
+  - id: item_007
+    pattern: Bridge
+    category: Structural
+    cpp: ✅ Excellent
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: C++/C#
+    token_cost: 3k-5k
+  - id: item_008
+    pattern: Composite
+    category: Structural
+    cpp: ✅ Excellent
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: All OOP languages
+    token_cost: 2k-4k
+  - id: item_009
+    pattern: Decorator
+    category: Structural
+    cpp: ⚠️ Complex (pointer)
+    csharp: ✅ Good (interface)
+    java: ✅ Good (interface)
+    python: ✅ Excellent (@decorator)
+    go: ⚠️ Manual
+    rust: ⚠️ Manual
+    typescript: ✅ Good (@decorator)
+    best_implementation: Python (native syntax)
+    token_cost: 2k-3k
+  - id: item_010
+    pattern: Facade
+    category: Structural
+    cpp: ✅ Good
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: All languages
+    token_cost: 1k-2k
+  - id: item_011
+    pattern: Proxy
+    category: Structural
+    cpp: ✅ Excellent
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good (Proxy object)
+    best_implementation: JavaScript (ES6 Proxy)
+    token_cost: 2k-3k
+  - id: item_012
+    pattern: Observer
+    category: Behavioral
+    cpp: ⚠️ Manual (Qt signals)
+    csharp: ✅ Excellent (event)
+    java: ✅ Good (listener)
+    python: ✅ Good (callback)
+    go: ✅ Good (channel)
+    rust: ✅ Good (channel)
+    typescript: ✅ Excellent (events)
+    best_implementation: C# (event keyword)
+    token_cost: 2k-4k
+  - id: item_013
+    pattern: Strategy
+    category: Behavioral
+    cpp: ✅ Excellent (templates)
+    csharp: ✅ Good (interface)
+    java: ✅ Good (interface)
+    python: ✅ Excellent (first-class fn)
+    go: ✅ Good (interface)
+    rust: ✅ Good (trait)
+    typescript: ✅ Excellent (first-class fn)
+    best_implementation: C++ (compile-time)
+    token_cost: 2k-3k
+  - id: item_014
+    pattern: Command
+    category: Behavioral
+    cpp: ✅ Good (functor)
+    csharp: ✅ Good (delegate)
+    java: ✅ Good (interface)
+    python: ✅ Excellent (callable)
+    go: ✅ Good (function)
+    rust: ✅ Good (closure)
+    typescript: ✅ Excellent (closure)
+    best_implementation: Python/JS (closures)
+    token_cost: 1k-2k
+  - id: item_015
+    pattern: State
+    category: Behavioral
+    cpp: ✅ Good
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good (enum)
+    typescript: ✅ Good
+    best_implementation: Rust (algebraic types)
+    token_cost: 2k-4k
+  - id: item_016
+    pattern: Template Method
+    category: Behavioral
+    cpp: ✅ Excellent (virtual)
+    csharp: ✅ Excellent (virtual)
+    java: ✅ Excellent (abstract)
+    python: ✅ Good (inheritance)
+    go: ⚠️ Prefer composition
+    rust: ⚠️ Prefer composition
+    typescript: ✅ Good (prototype)
+    best_implementation: C++/C#/Java (OOP)
+    token_cost: 2k-3k
+  - id: item_017
+    pattern: Chain of Responsibility
+    category: Behavioral
+    cpp: ✅ Good
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: All languages
+    token_cost: 2k-3k
+  - id: item_018
+    pattern: Iterator
+    category: Behavioral
+    cpp: ✅ Excellent (STL)
+    csharp: ✅ Excellent (IEnumerable)
+    java: ✅ Excellent (Iterator)
+    python: ✅ Excellent (generator)
+    go: ✅ Good (for range)
+    rust: ✅ Excellent (IntoIterator)
+    typescript: ✅ Good (Symbol.iterator)
+    best_implementation: Python (generators)
+    token_cost: 1k-2k
+  - id: item_019
+    pattern: Mediator
+    category: Behavioral
+    cpp: ✅ Good
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ✅ Good
+    go: ✅ Good
+    rust: ✅ Good
+    typescript: ✅ Good
+    best_implementation: All languages
+    token_cost: 2k-4k
+  - id: item_020
+    pattern: Visitor
+    category: Behavioral
+    cpp: ✅ Excellent (double dispatch)
+    csharp: ✅ Good
+    java: ✅ Good
+    python: ⚠️ Verbose
+    go: ⚠️ Manual
+    rust: ✅ Excellent (match)
+    typescript: ⚠️ Manual
+    best_implementation: Rust (pattern matching)
+    token_cost: 3k-5k

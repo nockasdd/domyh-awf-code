@@ -1,0 +1,673 @@
+metadata:
+  skill: domyh-design
+  domain: component_effects
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "Per-component animation effect patterns — CSS, Tailwind, and JS approaches"
+  patterns_count: 52
+  columns:
+    - component
+    - effect_name
+    - technique
+    - css_code
+    - tailwind_classes
+    - performance
+    - accessibility
+
+effects:
+  # ── Button Effects ────────────────────────────────────────────
+
+  - id: comp_001
+    component: button
+    effect_name: Scale on hover
+    technique: css-transition
+    css_code: |
+      .btn { transition: transform 200ms ease; }
+      .btn:hover { transform: scale(1.05); }
+    tailwind_classes: transition-transform duration-200 hover:scale-105
+    performance: gpu-only
+    accessibility: preserve-focus-visible
+
+  - id: comp_002
+    component: button
+    effect_name: Ripple effect
+    technique: css-pseudo + js
+    css_code: |
+      .btn { position: relative; overflow: hidden; }
+      .btn::after {
+        content: ''; position: absolute; border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+        transform: scale(0); animation: ripple 600ms linear;
+      }
+      @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+    tailwind_classes: relative overflow-hidden
+    performance: gpu-composited
+    accessibility: aria-busy-during-animation
+
+  - id: comp_003
+    component: button
+    effect_name: Gradient shift
+    technique: css-transition
+    css_code: |
+      .btn { background-size: 200% auto; transition: background-position 500ms ease; }
+      .btn:hover { background-position: right center; }
+    tailwind_classes: bg-gradient-to-r bg-[length:200%_auto] hover:bg-right transition-all duration-500
+    performance: gpu-paint
+    accessibility: safe
+
+  - id: comp_004
+    component: button
+    effect_name: Press down
+    technique: css-transition
+    css_code: |
+      .btn { transition: transform 100ms ease; }
+      .btn:active { transform: scale(0.95) translateY(1px); }
+    tailwind_classes: transition-transform active:scale-95 active:translate-y-px
+    performance: gpu-only
+    accessibility: tactile-feedback
+
+  - id: comp_005
+    component: button
+    effect_name: Magnetic hover
+    technique: js-mousemove
+    css_code: |
+      /* JS: track mouse position, apply transform offset */
+      .btn { transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+    tailwind_classes: transition-transform duration-300
+    performance: requires-raf
+    accessibility: respect-prefers-reduced-motion
+
+  # ── Card Effects ──────────────────────────────────────────────
+
+  - id: comp_006
+    component: card
+    effect_name: Lift on hover
+    technique: css-transition
+    css_code: |
+      .card { transition: transform 300ms ease, box-shadow 300ms ease; }
+      .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+    tailwind_classes: transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
+    performance: gpu-only
+    accessibility: safe-no-content-shift
+
+  - id: comp_007
+    component: card
+    effect_name: Tilt 3D (perspective)
+    technique: js-mousemove
+    css_code: |
+      .card { transition: transform 300ms ease; perspective: 1000px; }
+      /* JS: rotateX/Y based on mouse position */
+    tailwind_classes: transition-transform duration-300
+    performance: gpu-3d-transform
+    accessibility: respect-prefers-reduced-motion
+
+  - id: comp_008
+    component: card
+    effect_name: Border glow
+    technique: css-transition
+    css_code: |
+      .card { border: 1px solid transparent; transition: border-color 300ms ease, box-shadow 300ms ease; }
+      .card:hover { border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+    tailwind_classes: border border-transparent transition-all duration-300 hover:border-accent hover:shadow-glow
+    performance: gpu-paint
+    accessibility: safe
+
+  - id: comp_009
+    component: card
+    effect_name: Reveal on scroll
+    technique: intersection-observer
+    css_code: |
+      .card { opacity: 0; transform: translateY(20px); transition: all 600ms ease; }
+      .card.visible { opacity: 1; transform: translateY(0); }
+    tailwind_classes: opacity-0 translate-y-5 transition-all duration-600
+    performance: gpu-only
+    accessibility: prefers-reduced-motion-no-transform
+
+  - id: comp_010
+    component: card
+    effect_name: Glassmorphism hover
+    technique: css-transition
+    css_code: |
+      .card {
+        background: rgba(255,255,255,0.05); backdrop-filter: blur(8px);
+        transition: backdrop-filter 300ms ease, background 300ms ease;
+      }
+      .card:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(16px); }
+    tailwind_classes: bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-md
+    performance: gpu-composited
+    accessibility: ensure-text-contrast
+
+  # ── Modal / Dialog Effects ────────────────────────────────────
+
+  - id: comp_011
+    component: modal
+    effect_name: Backdrop fade + scale in
+    technique: css-transition
+    css_code: |
+      .overlay { opacity: 0; transition: opacity 200ms ease; }
+      .overlay.open { opacity: 1; }
+      .modal { transform: scale(0.95); opacity: 0; transition: all 200ms ease; }
+      .modal.open { transform: scale(1); opacity: 1; }
+    tailwind_classes: ""
+    performance: gpu-only
+    accessibility: trap-focus-on-open
+
+  - id: comp_012
+    component: modal
+    effect_name: Slide up from bottom
+    technique: css-transition
+    css_code: |
+      .modal { transform: translateY(100%); transition: transform 300ms ease; }
+      .modal.open { transform: translateY(0); }
+    tailwind_classes: translate-y-full transition-transform duration-300
+    performance: gpu-only
+    accessibility: aria-modal-true
+
+  - id: comp_013
+    component: modal
+    effect_name: Blur backdrop
+    technique: css-native
+    css_code: |
+      dialog::backdrop { backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); }
+    tailwind_classes: backdrop:backdrop-blur-sm backdrop:bg-black/40
+    performance: gpu-composited
+    accessibility: ensure-dismiss-escape
+
+  # ── Navbar / Header Effects ───────────────────────────────────
+
+  - id: comp_014
+    component: navbar
+    effect_name: Shrink on scroll
+    technique: js-scroll + css-transition
+    css_code: |
+      .nav { height: 80px; transition: height 300ms ease, box-shadow 300ms ease; }
+      .nav.scrolled { height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    tailwind_classes: h-20 transition-all duration-300
+    performance: avoid-layout-thrash
+    accessibility: safe
+
+  - id: comp_015
+    component: navbar
+    effect_name: Blur background on scroll
+    technique: js-scroll + css-transition
+    css_code: |
+      .nav { background: transparent; transition: all 300ms ease; }
+      .nav.scrolled { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); }
+    tailwind_classes: bg-transparent transition-all duration-300
+    performance: gpu-composited
+    accessibility: safe
+
+  - id: comp_016
+    component: navbar
+    effect_name: Hide on scroll down, show on scroll up
+    technique: js-scroll-direction
+    css_code: |
+      .nav { transition: transform 300ms ease; }
+      .nav.hidden { transform: translateY(-100%); }
+    tailwind_classes: transition-transform duration-300
+    performance: gpu-only
+    accessibility: ensure-keyboard-accessible
+
+  # ── Sidebar Effects ───────────────────────────────────────────
+
+  - id: comp_017
+    component: sidebar
+    effect_name: Slide in from left
+    technique: css-transition
+    css_code: |
+      .sidebar { transform: translateX(-100%); transition: transform 300ms ease; }
+      .sidebar.open { transform: translateX(0); }
+    tailwind_classes: -translate-x-full transition-transform duration-300
+    performance: gpu-only
+    accessibility: trap-focus-when-open
+
+  - id: comp_018
+    component: sidebar
+    effect_name: Overlay with backdrop
+    technique: css-transition
+    css_code: |
+      .backdrop { opacity: 0; transition: opacity 200ms ease; pointer-events: none; }
+      .backdrop.open { opacity: 1; pointer-events: auto; }
+    tailwind_classes: opacity-0 pointer-events-none transition-opacity duration-200
+    performance: gpu-only
+    accessibility: click-backdrop-to-close
+
+  # ── Input / Form Effects ─────────────────────────────────────
+
+  - id: comp_019
+    component: input
+    effect_name: Floating label
+    technique: css-transition
+    css_code: |
+      .label { transform: translateY(0); font-size: 16px; transition: all 200ms ease; }
+      .input:focus ~ .label, .input:not(:placeholder-shown) ~ .label {
+        transform: translateY(-24px); font-size: 12px; color: var(--primary);
+      }
+    tailwind_classes: transition-all duration-200
+    performance: gpu-only
+    accessibility: label-always-visible
+
+  - id: comp_020
+    component: input
+    effect_name: Border focus glow
+    technique: css-transition
+    css_code: |
+      .input { border: 1px solid var(--border); transition: border-color 200ms, box-shadow 200ms; }
+      .input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+    tailwind_classes: border transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/30
+    performance: gpu-paint
+    accessibility: visible-focus-ring
+
+  - id: comp_021
+    component: input
+    effect_name: Shake on error
+    technique: css-keyframe
+    css_code: |
+      @keyframes shake { 0%,100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+      .input.error { animation: shake 300ms ease; border-color: var(--error); }
+    tailwind_classes: animate-shake border-error
+    performance: gpu-only
+    accessibility: aria-invalid-true
+
+  - id: comp_022
+    component: input
+    effect_name: Success checkmark
+    technique: svg-animation
+    css_code: |
+      .check path { stroke-dasharray: 20; stroke-dashoffset: 20;
+        animation: draw-check 400ms ease forwards; }
+      @keyframes draw-check { to { stroke-dashoffset: 0; } }
+    tailwind_classes: ""
+    performance: gpu-only
+    accessibility: aria-live-polite
+
+  # ── Toggle / Switch Effects ───────────────────────────────────
+
+  - id: comp_023
+    component: toggle
+    effect_name: Slide with bounce
+    technique: css-transition
+    css_code: |
+      .thumb { transition: transform 300ms cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+      .toggle.on .thumb { transform: translateX(20px); }
+    tailwind_classes: transition-transform duration-300
+    performance: gpu-only
+    accessibility: role-switch-aria-checked
+
+  - id: comp_024
+    component: toggle
+    effect_name: Color morph
+    technique: css-transition
+    css_code: |
+      .track { background: var(--off); transition: background 200ms ease; }
+      .toggle.on .track { background: var(--on); }
+    tailwind_classes: transition-colors duration-200
+    performance: gpu-paint
+    accessibility: visible-state-change
+
+  # ── Tooltip / Popover Effects ─────────────────────────────────
+
+  - id: comp_025
+    component: tooltip
+    effect_name: Fade up
+    technique: css-transition
+    css_code: |
+      .tooltip { opacity: 0; transform: translateY(4px); transition: all 150ms ease;
+        pointer-events: none; }
+      .trigger:hover .tooltip { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    tailwind_classes: opacity-0 translate-y-1 transition-all duration-150
+    performance: gpu-only
+    accessibility: role-tooltip-delay-300ms
+
+  - id: comp_026
+    component: tooltip
+    effect_name: Scale from origin
+    technique: css-transition
+    css_code: |
+      .tooltip { transform: scale(0.8); opacity: 0; transform-origin: bottom center;
+        transition: all 150ms ease; }
+      .trigger:hover .tooltip { transform: scale(1); opacity: 1; }
+    tailwind_classes: scale-75 opacity-0 transition-all duration-150
+    performance: gpu-only
+    accessibility: timeout-auto-dismiss
+
+  # ── Tab / Accordion Effects ───────────────────────────────────
+
+  - id: comp_027
+    component: tabs
+    effect_name: Sliding indicator
+    technique: css-transition + js
+    css_code: |
+      .indicator { position: absolute; bottom: 0; height: 2px; background: var(--primary);
+        transition: left 300ms ease, width 300ms ease; }
+    tailwind_classes: absolute bottom-0 h-0.5 bg-primary transition-all duration-300
+    performance: gpu-only
+    accessibility: aria-selected-true
+
+  - id: comp_028
+    component: accordion
+    effect_name: Smooth expand/collapse
+    technique: css-transition + grid
+    css_code: |
+      .content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease; }
+      .content.open { grid-template-rows: 1fr; }
+      .inner { overflow: hidden; }
+    tailwind_classes: grid transition-[grid-template-rows] duration-300
+    performance: layout-animation
+    accessibility: aria-expanded
+
+  # ── Avatar / Badge Effects ────────────────────────────────────
+
+  - id: comp_029
+    component: avatar
+    effect_name: Online pulse
+    technique: css-keyframe
+    css_code: |
+      .status { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; }
+      .status.online::after {
+        content: ''; position: absolute; inset: -2px; border-radius: 50%;
+        background: #22c55e; animation: pulse 2s infinite;
+      }
+      @keyframes pulse { 0% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(2); } }
+    tailwind_classes: animate-ping
+    performance: gpu-only
+    accessibility: aria-label-online-status
+
+  - id: comp_030
+    component: badge
+    effect_name: Count bounce
+    technique: css-keyframe
+    css_code: |
+      @keyframes badge-bounce { 0% { transform: scale(0.5); } 50% { transform: scale(1.2); }
+        100% { transform: scale(1); } }
+      .badge.updated { animation: badge-bounce 300ms ease; }
+    tailwind_classes: animate-bounce-once
+    performance: gpu-only
+    accessibility: aria-live-polite
+
+  # ── Skeleton / Loading Effects ────────────────────────────────
+
+  - id: comp_031
+    component: skeleton
+    effect_name: Shimmer loading
+    technique: css-keyframe
+    css_code: |
+      .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    tailwind_classes: animate-pulse bg-muted
+    performance: gpu-composited
+    accessibility: aria-busy-true
+
+  - id: comp_032
+    component: skeleton
+    effect_name: Content fade in
+    technique: css-transition
+    css_code: |
+      .content { opacity: 0; animation: fade-in 400ms ease forwards; }
+      @keyframes fade-in { to { opacity: 1; } }
+    tailwind_classes: animate-fade-in
+    performance: gpu-only
+    accessibility: announce-loaded
+
+  # ── Toast / Notification Effects ──────────────────────────────
+
+  - id: comp_033
+    component: toast
+    effect_name: Slide in from right + auto-dismiss
+    technique: css-keyframe
+    css_code: |
+      @keyframes slide-in-right { from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; } }
+      @keyframes slide-out-right { to { transform: translateX(100%); opacity: 0; } }
+      .toast { animation: slide-in-right 300ms ease; }
+      .toast.dismiss { animation: slide-out-right 200ms ease forwards; }
+    tailwind_classes: animate-slide-in-right
+    performance: gpu-only
+    accessibility: role-alert-aria-live-assertive
+
+  - id: comp_034
+    component: toast
+    effect_name: Progress bar auto-dismiss
+    technique: css-keyframe
+    css_code: |
+      .progress { width: 100%; height: 3px; animation: shrink linear forwards;
+        animation-duration: var(--toast-duration, 5s); }
+      @keyframes shrink { to { width: 0; } }
+    tailwind_classes: h-0.5 animate-shrink
+    performance: gpu-only
+    accessibility: aria-live-polite
+
+  # ── Dropdown / Menu Effects ───────────────────────────────────
+
+  - id: comp_035
+    component: dropdown
+    effect_name: Scale from top
+    technique: css-transition
+    css_code: |
+      .menu { transform: scaleY(0); transform-origin: top; opacity: 0;
+        transition: transform 200ms ease, opacity 200ms ease; }
+      .menu.open { transform: scaleY(1); opacity: 1; }
+    tailwind_classes: scale-y-0 origin-top opacity-0 transition-all duration-200
+    performance: gpu-only
+    accessibility: aria-expanded-keyboard-nav
+
+  - id: comp_036
+    component: dropdown
+    effect_name: Items stagger in
+    technique: css-transition + delay
+    css_code: |
+      .item { opacity: 0; transform: translateY(-8px); transition: all 200ms ease; }
+      .menu.open .item { opacity: 1; transform: translateY(0); }
+      .item:nth-child(1) { transition-delay: 0ms; }
+      .item:nth-child(2) { transition-delay: 50ms; }
+      .item:nth-child(3) { transition-delay: 100ms; }
+    tailwind_classes: opacity-0 -translate-y-2 transition-all duration-200
+    performance: gpu-only
+    accessibility: keyboard-arrow-nav
+
+  # ── Table Effects ─────────────────────────────────────────────
+
+  - id: comp_037
+    component: table
+    effect_name: Row hover highlight
+    technique: css-transition
+    css_code: |
+      tr { transition: background-color 150ms ease; }
+      tr:hover { background-color: var(--hover-bg); }
+    tailwind_classes: transition-colors duration-150 hover:bg-muted/50
+    performance: gpu-paint
+    accessibility: safe
+
+  - id: comp_038
+    component: table
+    effect_name: Sort indicator rotate
+    technique: css-transition
+    css_code: |
+      .sort-icon { transition: transform 200ms ease; }
+      .sort-icon.desc { transform: rotate(180deg); }
+    tailwind_classes: transition-transform duration-200
+    performance: gpu-only
+    accessibility: aria-sort
+
+  # ── Image / Gallery Effects ───────────────────────────────────
+
+  - id: comp_039
+    component: image
+    effect_name: Blur up loading
+    technique: css-transition
+    css_code: |
+      .img { filter: blur(20px); transition: filter 600ms ease; }
+      .img.loaded { filter: blur(0); }
+    tailwind_classes: blur-xl transition-[filter] duration-600
+    performance: gpu-composited
+    accessibility: alt-text-required
+
+  - id: comp_040
+    component: image
+    effect_name: Zoom on hover
+    technique: css-transition
+    css_code: |
+      .img-container { overflow: hidden; }
+      .img { transition: transform 400ms ease; }
+      .img-container:hover .img { transform: scale(1.1); }
+    tailwind_classes: overflow-hidden group
+    performance: gpu-only
+    accessibility: safe
+
+  # ── Pagination / Stepper Effects ──────────────────────────────
+
+  - id: comp_041
+    component: pagination
+    effect_name: Active dot scale
+    technique: css-transition
+    css_code: |
+      .dot { width: 8px; height: 8px; border-radius: 50%; transition: all 200ms ease; }
+      .dot.active { width: 24px; border-radius: 4px; background: var(--primary); }
+    tailwind_classes: w-2 h-2 rounded-full transition-all duration-200
+    performance: gpu-only
+    accessibility: aria-current-page
+
+  - id: comp_042
+    component: stepper
+    effect_name: Progress line fill
+    technique: css-transition
+    css_code: |
+      .line { background: var(--muted); height: 2px; position: relative; }
+      .line::after { content: ''; position: absolute; inset: 0; right: auto;
+        background: var(--primary); transition: width 500ms ease;
+        width: var(--progress); }
+    tailwind_classes: relative h-0.5 bg-muted transition-all duration-500
+    performance: gpu-paint
+    accessibility: aria-valuenow
+
+  # ── Chip / Tag Effects ────────────────────────────────────────
+
+  - id: comp_043
+    component: chip
+    effect_name: Remove shrink
+    technique: css-transition
+    css_code: |
+      .chip { transition: all 200ms ease; max-width: 200px; }
+      .chip.removing { max-width: 0; opacity: 0; padding: 0; margin: 0; }
+    tailwind_classes: transition-all duration-200
+    performance: triggers-layout
+    accessibility: aria-live-polite
+
+  # ── Progress / Meter Effects ─────────────────────────────────
+
+  - id: comp_044
+    component: progress
+    effect_name: Bar fill animation
+    technique: css-transition
+    css_code: |
+      .bar { width: 0%; transition: width 600ms ease; }
+    tailwind_classes: w-0 transition-[width] duration-600
+    performance: triggers-layout
+    accessibility: role-progressbar-aria-valuenow
+
+  - id: comp_045
+    component: progress
+    effect_name: Circular ring
+    technique: svg-stroke
+    css_code: |
+      circle { stroke-dasharray: 283; stroke-dashoffset: 283;
+        transition: stroke-dashoffset 800ms ease; }
+    tailwind_classes: ""
+    performance: gpu-only
+    accessibility: role-progressbar
+
+  # ── List / Grid Item Effects ─────────────────────────────────
+
+  - id: comp_046
+    component: list
+    effect_name: Stagger fade in
+    technique: css-delay
+    css_code: |
+      .item { opacity: 0; transform: translateY(10px); animation: fade-up 400ms ease forwards; }
+      .item:nth-child(n) { animation-delay: calc(var(--i, 0) * 80ms); }
+      @keyframes fade-up { to { opacity: 1; transform: translateY(0); } }
+    tailwind_classes: opacity-0 translate-y-2.5 animate-fade-up
+    performance: gpu-only
+    accessibility: prefers-reduced-motion
+
+  - id: comp_047
+    component: list
+    effect_name: Reorder layout animation
+    technique: flip-technique
+    css_code: |
+      /* FLIP: First, Last, Invert, Play */
+      .item { transition: transform 300ms ease; }
+    tailwind_classes: transition-transform duration-300
+    performance: gpu-only
+    accessibility: announce-reorder
+
+  # ── Search / Command Palette Effects ──────────────────────────
+
+  - id: comp_048
+    component: command-palette
+    effect_name: Fade + scale center
+    technique: css-transition
+    css_code: |
+      .palette { opacity: 0; transform: scale(0.96); transition: all 200ms ease; }
+      .palette.open { opacity: 1; transform: scale(1); }
+    tailwind_classes: opacity-0 scale-[0.96] transition-all duration-200
+    performance: gpu-only
+    accessibility: trap-focus-cmd-k
+
+  # ── Breadcrumb / Link Effects ─────────────────────────────────
+
+  - id: comp_049
+    component: link
+    effect_name: Underline slide
+    technique: css-pseudo
+    css_code: |
+      .link { position: relative; }
+      .link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0;
+        height: 2px; background: currentColor; transition: width 300ms ease; }
+      .link:hover::after { width: 100%; }
+    tailwind_classes: relative
+    performance: gpu-paint
+    accessibility: safe
+
+  - id: comp_050
+    component: link
+    effect_name: Color transition
+    technique: css-transition
+    css_code: |
+      .link { color: var(--text); transition: color 200ms ease; }
+      .link:hover { color: var(--primary); }
+    tailwind_classes: text-foreground transition-colors duration-200 hover:text-primary
+    performance: gpu-paint
+    accessibility: sufficient-contrast
+
+  # ── FAB / Speed Dial Effects ──────────────────────────────────
+
+  - id: comp_051
+    component: fab
+    effect_name: Rotate + expand
+    technique: css-transition
+    css_code: |
+      .fab-icon { transition: transform 300ms ease; }
+      .fab.open .fab-icon { transform: rotate(45deg); }
+      .action { opacity: 0; transform: scale(0); transition: all 200ms ease; }
+      .fab.open .action { opacity: 1; transform: scale(1); }
+    tailwind_classes: transition-transform duration-300
+    performance: gpu-only
+    accessibility: aria-expanded-menu
+
+  # ── Empty State Effects ───────────────────────────────────────
+
+  - id: comp_052
+    component: empty-state
+    effect_name: Illustration float
+    technique: css-keyframe
+    css_code: |
+      @keyframes float { 0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); } }
+      .illustration { animation: float 3s ease-in-out infinite; }
+    tailwind_classes: animate-float
+    performance: gpu-only
+    accessibility: decorative-aria-hidden

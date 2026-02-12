@@ -1,0 +1,515 @@
+metadata:
+  skill: domyh-design
+  domain: nextjs
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: nextjs.yaml
+  patterns_count: 52
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Routing
+    guideline: Use App Router for new projects
+    description: App Router is the recommended approach in Next.js 14+
+    do: app/ directory with page.tsx
+    don_t: pages/ for new projects
+    code_good: app/dashboard/page.tsx
+    code_bad: pages/dashboard.tsx
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app
+  - id: "2"
+    category: Routing
+    guideline: Use file-based routing
+    description: Create routes by adding files in app directory
+    do: page.tsx for routes layout.tsx for layouts
+    don_t: Manual route configuration
+    code_good: app/blog/[slug]/page.tsx
+    code_bad: Custom router setup
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing
+  - id: "3"
+    category: Routing
+    guideline: Colocate related files
+    description: Keep components styles tests with their routes
+    do: Component files alongside page.tsx
+    don_t: Separate components folder
+    code_good: app/dashboard/_components/
+    code_bad: components/dashboard/
+    severity: Low
+  - id: "4"
+    category: Routing
+    guideline: Use route groups for organization
+    description: Group routes without affecting URL
+    do: Parentheses for route groups
+    don_t: Nested folders affecting URL
+    code_good: (marketing)/about/page.tsx
+    code_bad: marketing/about/page.tsx
+    severity: Low
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/route-groups
+  - id: "5"
+    category: Routing
+    guideline: Handle loading states
+    description: Use loading.tsx for route loading UI
+    do: loading.tsx alongside page.tsx
+    don_t: Manual loading state management
+    code_good: app/dashboard/loading.tsx
+    code_bad: useState for loading in page
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming
+  - id: "6"
+    category: Routing
+    guideline: Handle errors with error.tsx
+    description: Catch errors at route level
+    do: error.tsx with reset function
+    don_t: try/catch in every component
+    code_good: app/dashboard/error.tsx
+    code_bad: try/catch in page component
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/error-handling
+  - id: "7"
+    category: Rendering
+    guideline: Use Server Components by default
+    description: Server Components reduce client JS bundle
+    do: Keep components server by default
+    don_t: Add 'use client' unnecessarily
+    code_good: export default function Page()
+    code_bad: ('use client') for static content
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  - id: "8"
+    category: Rendering
+    guideline: Mark Client Components explicitly
+    description: "'use client' for interactive components"
+    do: Add 'use client' only when needed
+    don_t: Server Component with hooks/events
+    code_good: ('use client') for onClick useState
+    code_bad: No directive with useState
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/rendering/client-components
+  - id: "9"
+    category: Rendering
+    guideline: Push Client Components down
+    description: Keep Client Components as leaf nodes
+    do: Client wrapper for interactive parts only
+    don_t: Mark page as Client Component
+    code_good: <InteractiveButton/> in Server Page
+    code_bad: ('use client') on page.tsx
+    severity: High
+  - id: "10"
+    category: Rendering
+    guideline: Use streaming for better UX
+    description: Stream content with Suspense boundaries
+    do: Suspense for slow data fetches
+    don_t: Wait for all data before render
+    code_good: <Suspense><SlowComponent/></Suspense>
+    code_bad: await allData then render
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming
+  - id: "11"
+    category: Rendering
+    guideline: Choose correct rendering strategy
+    description: SSG for static SSR for dynamic ISR for semi-static
+    do: generateStaticParams for known paths
+    don_t: SSR for static content
+    code_good: export const revalidate = 3600
+    code_bad: fetch without cache config
+    severity: Medium
+  - id: "12"
+    category: DataFetching
+    guideline: Fetch data in Server Components
+    description: Fetch directly in async Server Components
+    do: async function Page() { const data = await fetch() }
+    don_t: useEffect for initial data
+    code_good: const data = await fetch(url)
+    code_bad: useEffect(() => fetch(url))
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/data-fetching
+  - id: "13"
+    category: DataFetching
+    guideline: Configure caching explicitly (Next.js 15+)
+    description: Next.js 15 changed defaults to uncached for fetch
+    do: "Explicitly set cache: 'force-cache' for static data"
+    don_t: Assume default is cached (it's not in Next.js 15)
+    code_good: "fetch(url { cache: 'force-cache' })"
+    code_bad: fetch(url) // Uncached in v15
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/upgrading/version-15
+  - id: "14"
+    category: DataFetching
+    guideline: Deduplicate fetch requests
+    description: React and Next.js dedupe same requests
+    do: Same fetch call in multiple components
+    don_t: Manual request deduplication
+    code_good: Multiple components fetch same URL
+    code_bad: Custom cache layer
+    severity: Low
+  - id: "15"
+    category: DataFetching
+    guideline: Use Server Actions for mutations
+    description: Server Actions for form submissions
+    do: action={serverAction} in forms
+    don_t: API route for every mutation
+    code_good: <form action={createPost}>
+    code_bad: <form onSubmit={callApiRoute}>
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
+  - id: "16"
+    category: DataFetching
+    guideline: Revalidate data appropriately
+    description: Use revalidatePath/revalidateTag after mutations
+    do: Revalidate after Server Action
+    don_t: "'use client' with manual refetch"
+    code_good: revalidatePath('/posts')
+    code_bad: router.refresh() everywhere
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/caching#revalidating
+  - id: "17"
+    category: Images
+    guideline: Use next/image for optimization
+    description: Automatic image optimization and lazy loading
+    do: <Image> component for all images
+    don_t: <img> tags directly
+    code_good: <Image src={} alt={} width={} height={}>
+    code_bad: <img src={}/>
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/optimizing/images
+  - id: "18"
+    category: Images
+    guideline: Provide width and height
+    description: Prevent layout shift with dimensions
+    do: width and height props or fill
+    don_t: Missing dimensions
+    code_good: <Image width={400} height={300}/>
+    code_bad: <Image src={url}/>
+    severity: High
+  - id: "19"
+    category: Images
+    guideline: Use fill for responsive images
+    description: Fill container with object-fit
+    do: fill prop with relative parent
+    don_t: Fixed dimensions for responsive
+    code_good: <Image fill className="object-cover"/>
+    code_bad: <Image width={window.width}/>
+    severity: Medium
+  - id: "20"
+    category: Images
+    guideline: Configure remote image domains
+    description: Whitelist external image sources
+    do: remotePatterns in next.config.js
+    don_t: Allow all domains
+    code_good: "remotePatterns: [{ hostname: 'cdn.example.com' }]"
+    code_bad: "domains: ['*']"
+    severity: High
+    docs_url: https://nextjs.org/docs/app/api-reference/components/image#remotepatterns
+  - id: "21"
+    category: Images
+    guideline: Use priority for LCP images
+    description: Mark above-fold images as priority
+    do: priority prop on hero images
+    don_t: All images with priority
+    code_good: <Image priority src={hero}/>
+    code_bad: <Image priority/> on every image
+    severity: Medium
+  - id: "22"
+    category: Fonts
+    guideline: Use next/font for fonts
+    description: Self-hosted fonts with zero layout shift
+    do: next/font/google or next/font/local
+    don_t: External font links
+    code_good: import { Inter } from 'next/font/google'
+    code_bad: <link href="fonts.googleapis.com"/>
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
+  - id: "23"
+    category: Fonts
+    guideline: Apply font to layout
+    description: Set font in root layout for consistency
+    do: className on body in layout.tsx
+    don_t: Font in individual pages
+    code_good: <body className={inter.className}>
+    code_bad: Each page imports font
+    severity: Low
+  - id: "24"
+    category: Fonts
+    guideline: Use variable fonts
+    description: Variable fonts reduce bundle size
+    do: Single variable font file
+    don_t: Multiple font weights as files
+    code_good: "Inter({ subsets: ['latin'] })"
+    code_bad: Inter_400 Inter_500 Inter_700
+    severity: Low
+  - id: "25"
+    category: Metadata
+    guideline: Use generateMetadata for dynamic
+    description: Generate metadata based on params
+    do: export async function generateMetadata()
+    don_t: Hardcoded metadata everywhere
+    code_good: generateMetadata({ params })
+    code_bad: export const metadata = {}
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/optimizing/metadata
+  - id: "26"
+    category: Metadata
+    guideline: Include OpenGraph images
+    description: Add OG images for social sharing
+    do: opengraph-image.tsx or og property
+    don_t: Missing social preview images
+    code_good: "opengraph: { images: ['/og.png'] }"
+    code_bad: No OG configuration
+    severity: Medium
+  - id: "27"
+    category: Metadata
+    guideline: Use metadata API
+    description: Export metadata object for static metadata
+    do: export const metadata = {}
+    don_t: Manual head tags
+    code_good: "export const metadata = { title: 'Page' }"
+    code_bad: <head><title>Page</title></head>
+    severity: Medium
+  - id: "28"
+    category: API
+    guideline: Use Route Handlers for APIs
+    description: app/api routes for API endpoints
+    do: app/api/users/route.ts
+    don_t: pages/api for new projects
+    code_good: export async function GET(request)
+    code_bad: export default function handler
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/route-handlers
+  - id: "29"
+    category: API
+    guideline: Return proper Response objects
+    description: Use NextResponse for API responses
+    do: NextResponse.json() for JSON
+    don_t: Plain objects or res.json()
+    code_good: return NextResponse.json({ data })
+    code_bad: return { data }
+    severity: Medium
+  - id: "30"
+    category: API
+    guideline: Handle HTTP methods explicitly
+    description: Export named functions for methods
+    do: Export GET POST PUT DELETE
+    don_t: Single handler for all methods
+    code_good: export async function POST()
+    code_bad: switch(req.method)
+    severity: Low
+  - id: "31"
+    category: API
+    guideline: Validate request body
+    description: Validate input before processing
+    do: Zod or similar for validation
+    don_t: Trust client input
+    code_good: const body = schema.parse(await req.json())
+    code_bad: const body = await req.json()
+    severity: High
+  - id: "32"
+    category: Middleware
+    guideline: Use middleware for auth
+    description: Protect routes with middleware.ts
+    do: middleware.ts at root
+    don_t: Auth check in every page
+    code_good: export function middleware(request)
+    code_bad: if (!session) redirect in page
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/middleware
+  - id: "33"
+    category: Middleware
+    guideline: Match specific paths
+    description: Configure middleware matcher
+    do: config.matcher for specific routes
+    don_t: Run middleware on all routes
+    code_good: "matcher: ['/dashboard/:path*']"
+    code_bad: No matcher config
+    severity: Medium
+  - id: "34"
+    category: Middleware
+    guideline: Keep middleware edge-compatible
+    description: Middleware runs on Edge runtime
+    do: Edge-compatible code only
+    don_t: Node.js APIs in middleware
+    code_good: Edge-compatible auth check
+    code_bad: fs.readFile in middleware
+    severity: High
+  - id: "35"
+    category: Environment
+    guideline: Use NEXT_PUBLIC prefix
+    description: Client-accessible env vars need prefix
+    do: NEXT_PUBLIC_ for client vars
+    don_t: Server vars exposed to client
+    code_good: NEXT_PUBLIC_API_URL
+    code_bad: API_SECRET in client code
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
+  - id: "36"
+    category: Environment
+    guideline: Validate env vars
+    description: Check required env vars exist
+    do: Validate on startup
+    don_t: Undefined env at runtime
+    code_good: if (!process.env.DATABASE_URL) throw
+    code_bad: process.env.DATABASE_URL (might be undefined)
+    severity: High
+  - id: "37"
+    category: Environment
+    guideline: Use .env.local for secrets
+    description: Local env file for development secrets
+    do: .env.local gitignored
+    don_t: Secrets in .env committed
+    code_good: .env.local with secrets
+    code_bad: .env with DATABASE_PASSWORD
+    severity: High
+  - id: "38"
+    category: Performance
+    guideline: Analyze bundle size
+    description: Use @next/bundle-analyzer
+    do: Bundle analyzer in dev
+    don_t: Ship large bundles blindly
+    code_good: ANALYZE=true npm run build
+    code_bad: No bundle analysis
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/optimizing/bundle-analyzer
+  - id: "39"
+    category: Performance
+    guideline: Use dynamic imports
+    description: Code split with next/dynamic
+    do: dynamic() for heavy components
+    don_t: Import everything statically
+    code_good: const Chart = dynamic(() => import('./Chart'))
+    code_bad: import Chart from './Chart'
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading
+  - id: "40"
+    category: Performance
+    guideline: Avoid layout shifts
+    description: Reserve space for dynamic content
+    do: Skeleton loaders aspect ratios
+    don_t: Content popping in
+    code_good: <Skeleton className="h-48"/>
+    code_bad: No placeholder for async content
+    severity: High
+  - id: "41"
+    category: Performance
+    guideline: Use Partial Prerendering
+    description: Combine static and dynamic in one route
+    do: Static shell with Suspense holes
+    don_t: Full dynamic or static pages
+    code_good: Static header + dynamic content
+    code_bad: Entire page SSR
+    severity: Low
+    docs_url: https://nextjs.org/docs/app/building-your-application/rendering/partial-prerendering
+  - id: "42"
+    category: Link
+    guideline: Use next/link for navigation
+    description: Client-side navigation with prefetching
+    do: <Link href=""> for internal links
+    don_t: <a> for internal navigation
+    code_good: <Link href="/about">About</Link>
+    code_bad: <a href="/about">About</a>
+    severity: High
+    docs_url: https://nextjs.org/docs/app/api-reference/components/link
+  - id: "43"
+    category: Link
+    guideline: Prefetch strategically
+    description: Control prefetching behavior
+    do: prefetch={false} for low-priority
+    don_t: Prefetch all links
+    code_good: <Link prefetch={false}>
+    code_bad: Default prefetch on every link
+    severity: Low
+  - id: "44"
+    category: Link
+    guideline: Use scroll option appropriately
+    description: Control scroll behavior on navigation
+    do: scroll={false} for tabs pagination
+    don_t: Always scroll to top
+    code_good: <Link scroll={false}>
+    code_bad: Manual scroll management
+    severity: Low
+  - id: "45"
+    category: Config
+    guideline: Use next.config.js correctly
+    description: Configure Next.js behavior
+    do: Proper config options
+    don_t: Deprecated or wrong options
+    code_good: "images: { remotePatterns: [] }"
+    code_bad: "images: { domains: [] }"
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/api-reference/next-config-js
+  - id: "46"
+    category: Config
+    guideline: Enable strict mode
+    description: Catch potential issues early
+    do: "reactStrictMode: true"
+    don_t: Strict mode disabled
+    code_good: "reactStrictMode: true"
+    code_bad: "reactStrictMode: false"
+    severity: Medium
+  - id: "47"
+    category: Config
+    guideline: Configure redirects and rewrites
+    description: Use config for URL management
+    do: redirects() rewrites() in config
+    don_t: Manual redirect handling
+    code_good: "redirects: async () => [...]"
+    code_bad: res.redirect in pages
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/api-reference/next-config-js/redirects
+  - id: "48"
+    category: Deployment
+    guideline: Use Vercel for easiest deploy
+    description: Vercel optimized for Next.js
+    do: Deploy to Vercel
+    don_t: Self-host without knowledge
+    code_good: vercel deploy
+    code_bad: Complex Docker setup for simple app
+    severity: Low
+    docs_url: https://nextjs.org/docs/app/building-your-application/deploying
+  - id: "49"
+    category: Deployment
+    guideline: Configure output for self-hosting
+    description: Set output option for deployment target
+    do: "output: 'standalone' for Docker"
+    don_t: Default output for containers
+    code_good: "output: 'standalone'"
+    code_bad: No output config for Docker
+    severity: Medium
+    docs_url: https://nextjs.org/docs/app/building-your-application/deploying#self-hosting
+  - id: "50"
+    category: Security
+    guideline: Sanitize user input
+    description: Never trust user input
+    do: Escape sanitize validate all input
+    don_t: Direct interpolation of user data
+    code_good: DOMPurify.sanitize(userInput)
+    code_bad: "dangerouslySetInnerHTML={{ __html: userInput }}"
+    severity: High
+  - id: "51"
+    category: Security
+    guideline: Use CSP headers
+    description: Content Security Policy for XSS protection
+    do: Configure CSP in next.config.js
+    don_t: No security headers
+    code_good: headers() with CSP
+    code_bad: No CSP configuration
+    severity: High
+    docs_url: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
+  - id: "52"
+    category: Security
+    guideline: Validate Server Action input
+    description: Server Actions are public endpoints
+    do: Validate and authorize in Server Action
+    don_t: Trust Server Action input
+    code_good: Auth check + validation in action
+    code_bad: Direct database call without check
+    severity: High

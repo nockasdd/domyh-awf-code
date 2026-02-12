@@ -1,6 +1,6 @@
 # PHP — Advanced Patterns
 
-# DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -196,4 +196,4 @@ class OrderServiceTest extends TestCase {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Tier 3 Reference_
+_DOMYH Awesome Code — Tier 3 Reference_

@@ -1,0 +1,172 @@
+# VS Code Extension Patterns — HSA Tier 3 Data
+# IDE Extension Development Skill
+version: "1.0.0"
+
+patterns:
+  # ==========================================================================
+  # Extension Host Architecture
+  # ==========================================================================
+  - id: VSCODE-001
+    name: Extension Activation
+    category: lifecycle
+    description: |
+      Extensions run in isolated Extension Host process.
+      Use activation events to lazy-load.
+    text: |
+      Activation Events (package.json):
+      - onLanguage:typescript — When TS file opened
+      - onCommand:ext.cmd — When command invoked
+      - workspaceContains:**/*.rs — When workspace has Rust files  
+      - onStartupFinished — After VS Code fully loaded (use sparingly)
+      - * — Always active (avoid: blocks startup)
+    example: |
+      // package.json
+      "activationEvents": ["onLanguage:python", "onCommand:ext.analyze"]
+
+      // extension.ts
+      export function activate(context: ExtensionContext) {
+        const cmd = commands.registerCommand("ext.analyze", async () => {
+          const editor = window.activeTextEditor;
+          if (!editor) return;
+          // ... analyze document
+        });
+        context.subscriptions.push(cmd);
+      }
+
+  - id: VSCODE-002
+    name: Contribution Points
+    category: api
+    description: |
+      Declarative UI contributions in package.json.
+    text: |
+      Key contribution points:
+      - commands: Register command palette entries
+      - menus: Context menus, editor title, explorer context
+      - views: Custom tree views in sidebar
+      - viewsContainers: Custom activity bar icons
+      - configuration: Settings page entries
+      - keybindings: Keyboard shortcuts
+      - languages: Language declarations
+      - grammars: TextMate grammar for syntax highlighting
+      - themes: Color themes
+      - snippets: Code snippets
+
+  - id: VSCODE-003
+    name: Webview Panel
+    category: ui
+    description: |
+      Custom HTML/CSS/JS UI in editor panels.
+    text: |
+      Best practices:
+      - Use message passing (postMessage/onDidReceiveMessage)
+      - Persist state with getState/setState
+      - Use webviewOptions.retainContextWhenHidden sparingly
+      - Apply CSP: default-src 'none'
+      - Use webview.asWebviewUri for local resources
+    example: |
+      const panel = window.createWebviewPanel(
+        "myView", "My Panel", ViewColumn.One,
+        { enableScripts: true, retainContextWhenHidden: false }
+      );
+      panel.webview.html = getHtml(panel.webview);
+      panel.webview.onDidReceiveMessage((msg) => {
+        if (msg.command === "getData") {
+          panel.webview.postMessage({ data: result });
+        }
+      });
+
+  - id: VSCODE-004
+    name: TreeView Provider
+    category: ui
+    description: |
+      Custom tree views in sidebar/explorer.
+    text: |
+      Implement TreeDataProvider<T> interface:
+      - getChildren(element?): Return child nodes
+      - getTreeItem(element): Return TreeItem with label, icon, command
+      - onDidChangeTreeData: Event to refresh tree
+    example: |
+      class MyTreeProvider implements TreeDataProvider<MyItem> {
+        private _onDidChange = new EventEmitter<MyItem | undefined>();
+        readonly onDidChangeTreeData = this._onDidChange.event;
+        
+        getChildren(el?: MyItem): MyItem[] {
+          return el ? el.children : this.rootItems;
+        }
+        getTreeItem(el: MyItem): TreeItem {
+          return { label: el.name, collapsibleState: el.children.length ? 1 : 0 };
+        }
+        refresh() { this._onDidChange.fire(undefined); }
+      }
+
+  - id: VSCODE-005
+    name: Extension Testing
+    category: testing
+    description: |
+      Test extensions in Extension Development Host.
+    text: |
+      Setup:
+      1. Use @vscode/test-electron for integration tests
+      2. Run tests in isolated VS Code instance
+      3. Use mocha as test runner
+      4. Mock vscode API for unit tests
+    example: |
+      // src/test/suite/extension.test.ts
+      suite("Extension Test Suite", () => {
+        test("Command should activate", async () => {
+          await vscode.commands.executeCommand("ext.doSomething");
+          assert.ok(true);
+        });
+      });
+
+  - id: VSCODE-006
+    name: Diagnostic Provider
+    category: api
+    description: |
+      Report errors/warnings in Problems panel.
+    text: |
+      Use DiagnosticCollection to manage diagnostics.
+      Update on document change events.
+    example: |
+      const diagnostics = languages.createDiagnosticCollection("myLinter");
+      workspace.onDidChangeTextDocument((e) => {
+        const diags: Diagnostic[] = [];
+        // analyze document, push Diagnostic objects
+        diagnostics.set(e.document.uri, diags);
+      });
+
+  - id: VSCODE-007
+    name: CompletionItem Provider
+    category: api
+    description: |
+      Provide autocomplete suggestions.
+    text: |
+      Register CompletionItemProvider with trigger characters.
+      Return CompletionItem[] with label, kind, detail, insertText.
+    example: |
+      languages.registerCompletionItemProvider("typescript", {
+        provideCompletionItems(doc, pos) {
+          const items: CompletionItem[] = [
+            { label: "myFunction", kind: CompletionItemKind.Function,
+              insertText: new SnippetString("myFunction(${1:arg})"),
+              detail: "Custom function" }
+          ];
+          return items;
+        }
+      }, ".");
+
+  - id: VSCODE-008
+    name: Publishing Extension
+    category: distribution
+    description: |
+      Package and publish to VS Code Marketplace.
+    text: |
+      Steps:
+      1. npm install -g @vscode/vsce
+      2. vsce package → creates .vsix
+      3. vsce publish → publishes to marketplace
+      Requirements:
+      - publisher in package.json
+      - Azure DevOps PAT token
+      - README.md with screenshots
+      - CHANGELOG.md

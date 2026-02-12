@@ -1,12 +1,12 @@
 ---
 name: kotlin
 detect: ["build.gradle.kts", "settings.gradle.kts", "*.kt", "*.kts"]
-version: "6.1.2"
+version: "6.2.1"
 category: mobile
 tier: 1
 ---
 
-# Kotlin Patterns — DOMYH Awesome Code v6.1.2
+# Kotlin Patterns — DOMYH Awesome Code
 
 > Kotlin 2.0/2.1 • KMP • Compose — 2025-2026
 
@@ -522,4 +522,4 @@ app/
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Kotlin Development • 2025-2026_
+_DOMYH Awesome Code • Kotlin Development • 2025-2026_

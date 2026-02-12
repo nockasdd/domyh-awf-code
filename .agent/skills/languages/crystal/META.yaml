@@ -1,14 +1,10 @@
 name: crystal
-version: "6.1.2"
-category: language
+version: "6.2.1"
+category: systems
 tier: 3
 
-description: |
-  Crystal development patterns for Crystal 1.10+.
-  Ruby-like syntax with static typing, compiled to native.
+desc: "Crystal development patterns for Crystal 1.14+. Types, macros, fibers, channels, Kemal web framework."
 
-triggers:
-  file_patterns:
     - "*.cr"
     - "shard.yml"
     - "shard.lock"

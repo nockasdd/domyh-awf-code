@@ -1,0 +1,76 @@
+{
+  "commands": {
+    "audit": {
+      "key": "ap",
+      "description": "🔬 Full project audit (5-expert panel)",
+      "prompt": "Analyze this project with the DOMYH 5-expert audit panel (Security, Architecture, Performance, Quality, DevOps). Provide findings with file:line references and severity ratings.",
+      "context": {
+        "currentDir": true,
+        "selection": true
+      }
+    },
+    "code": {
+      "key": "code",
+      "description": "💻 Write quality code",
+      "prompt": "Write production-ready code following DOMYH standards: explicit types, proper error handling, Clean Architecture, and tests. Follow language-specific best practices.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "debug": {
+      "key": "debug",
+      "description": "🐛 Systematic debugging",
+      "prompt": "Debug this issue using root cause analysis: reproduce → isolate → analyze → fix → verify. Provide evidence with file:line references.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "test": {
+      "key": "test",
+      "description": "✅ Run and write tests",
+      "prompt": "Write comprehensive tests following TDD principles. Cover edge cases, error paths, and integration scenarios.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "review": {
+      "key": "review",
+      "description": "👀 Code review",
+      "prompt": "Review this code for logic errors, security issues, performance problems, and adherence to DOMYH quality standards.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "refactor": {
+      "key": "refactor",
+      "description": "🔧 Code refactoring",
+      "prompt": "Refactor this code: identify code smells, apply appropriate design patterns, improve readability while preserving behavior.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "doc": {
+      "key": "doc",
+      "description": "📝 Generate documentation",
+      "prompt": "Generate comprehensive documentation for this code: JSDoc/GoDoc comments, README sections, API docs as appropriate.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    },
+    "security": {
+      "key": "security",
+      "description": "🔒 Security scanning",
+      "prompt": "Scan this code for security vulnerabilities: OWASP Top 10, CWE Top 25, injection risks, auth issues, data exposure.",
+      "context": {
+        "selection": true,
+        "currentFile": true
+      }
+    }
+  }
+}

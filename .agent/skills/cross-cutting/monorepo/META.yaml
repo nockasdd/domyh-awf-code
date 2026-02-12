@@ -1,0 +1,54 @@
+# =============================================================================
+# META.yaml — Monorepo Management
+# =============================================================================
+
+name: monorepo
+version: "1.0.0"
+category: cross-cutting
+priority: 3
+
+description: |
+  Monorepo management patterns: Nx, Turborepo, pnpm workspaces,
+  affected CI, versioning strategies, and dependency management.
+
+triggers:
+  keywords:
+    - monorepo
+    - workspace
+    - nx
+    - turborepo
+    - lerna
+    - pnpm workspace
+    - yarn workspace
+    - npm workspace
+    - changesets
+    - affected
+    - task graph
+
+  intents:
+    - "setup monorepo"
+    - "configure nx workspace"
+    - "setup turborepo"
+    - "manage workspace packages"
+    - "affected-only CI"
+
+  detect_patterns:
+    files: ["nx.json", "turbo.json", "lerna.json", "pnpm-workspace.yaml"]
+    content: ["workspaces", '"nx":', '"turbo":']
+
+caps:
+  - nx_workspace_setup
+  - turborepo_config
+  - workspace_management
+  - affected_ci
+  - versioning_strategy
+  - dependency_graph
+
+data_files:
+  - nx-patterns.yaml
+  - turborepo-patterns.yaml
+  - workspace-patterns.yaml
+  - ci-cd-strategies.yaml
+  - versioning.yaml
+
+# _DOMYH Awesome Code • Monorepo Skill_

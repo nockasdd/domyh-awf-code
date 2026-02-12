@@ -15,11 +15,28 @@
       "description": "Codex configuration settings"
     }
   ],
+  "activation": {
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/fix"],
+    "auto_context": true
+  },
   "features": {
     "customInstructions": true,
     "contextFiles": true,
     "skillLoading": true,
     "workflowSupport": true
+  },
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v1.0.0 Context Management",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
   },
   "documentation": "https://platform.openai.com/docs/codex"
 }

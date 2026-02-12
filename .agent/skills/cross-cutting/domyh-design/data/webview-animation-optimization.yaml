@@ -1,0 +1,685 @@
+metadata:
+  skill: domyh-design
+  domain: webview_animation_optimization
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "C++ WebView2, QtWebEngine, Tauri — single-EXE, embedded resources, GPU-only CSS/JS animation rules"
+  patterns_count: 32
+  columns:
+    - platform
+    - technique
+    - description
+    - code_example
+    - performance_rating
+    - avoid
+
+patterns:
+  # ── WebView2 Single-EXE Deployment ────────────────────────────
+
+  - id: wv_001
+    platform: webview2
+    technique: Static link WebView2Loader
+    category: deployment
+    description: >
+      Loại bỏ WebView2Loader.dll riêng bằng cách static link vào executable.
+      Exe sẽ tự link mà không cần DLL bên ngoài.
+    code_example: |
+      <!-- .vcxproj / PropertyGroup -->
+      <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+
+      <!-- OR NuGet: Microsoft.Web.WebView2 tự hỗ trợ static linking -->
+    performance_rating: "5"
+    avoid: Không static link khi cần update WebView2Loader riêng biệt
+
+  - id: wv_002
+    platform: webview2
+    technique: WebResourceRequested event
+    category: resource-embedding
+    description: >
+      Serve HTML/CSS/JS từ memory thay vì file system.
+      Embed web content vào .rc resource file, load tại runtime qua virtual URL scheme.
+    code_example: |
+      // C++ — Register filter cho custom scheme
+      webviewWindow->AddWebResourceRequestedFilter(
+        L"https://app.local/*",
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+
+      webviewWindow->add_WebResourceRequested(
+        Callback<ICoreWebView2WebResourceRequestedEventHandler>(
+          [](ICoreWebView2* sender, ICoreWebView2WebResourceRequestedEventArgs* args) -> HRESULT {
+            // Load from embedded resource
+            wil::com_ptr<ICoreWebView2WebResourceResponse> response;
+            HRSRC hRes = FindResource(hInstance, MAKEINTRESOURCE(IDR_INDEX_HTML), RT_RCDATA);
+            HGLOBAL hData = LoadResource(hInstance, hRes);
+            DWORD size = SizeofResource(hInstance, hRes);
+
+            auto stream = SHCreateMemStream((BYTE*)LockResource(hData), size);
+            environment->CreateWebResourceResponse(stream, 200, L"OK",
+              L"Content-Type: text/html", &response);
+            args->put_Response(response.get());
+            return S_OK;
+          }).Get(), nullptr);
+    performance_rating: "5"
+    avoid: Không dùng cho web content phức tạp cần hot-reload trong dev
+
+  - id: wv_003
+    platform: webview2
+    technique: NavigateToString
+    category: resource-embedding
+    description: >
+      Cho inline HTML đơn giản — load trực tiếp HTML string vào WebView2.
+      Không hỗ trợ external resource (CSS/JS link phải inline).
+    code_example: |
+      // C++ — Inline HTML
+      webviewWindow->NavigateToString(
+        L"<html><head><style>body{margin:0;font-family:system-ui}</style></head>"
+        L"<body><h1>Hello WebView2</h1></body></html>");
+    performance_rating: "4"
+    avoid: Không dùng khi cần load external CSS/JS files
+
+  - id: wv_004
+    platform: webview2
+    technique: SetVirtualHostNameToFolderMapping
+    category: resource-embedding
+    description: >
+      Map thư mục local thành virtual hostname.
+      Web content access qua URL thay vì file:// protocol.
+    code_example: |
+      // C++ — Map local folder
+      webviewWindow3->SetVirtualHostNameToFolderMapping(
+        L"app.local",
+        L"C:\\path\\to\\web\\assets",
+        COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_ALLOW);
+
+      // Navigate
+      webviewWindow->Navigate(L"https://app.local/index.html");
+    performance_rating: "4"
+    avoid: Không dùng cho production single-exe (file cần tồn tại trên disk)
+
+  - id: wv_005
+    platform: webview2
+    technique: Evergreen WebView2 Runtime
+    category: deployment
+    description: >
+      Dùng Microsoft Edge WebView2 Runtime đã cài sẵn trên Windows 10/11.
+      Không cần bundle browser engine — giảm exe size đáng kể.
+    code_example: |
+      // Check runtime availability
+      LPWSTR versionInfo;
+      HRESULT hr = GetAvailableCoreWebView2BrowserVersionString(nullptr, &versionInfo);
+      if (FAILED(hr)) {
+        // Prompt user to install WebView2 Runtime
+        ShellExecute(nullptr, L"open",
+          L"https://go.microsoft.com/fwlink/p/?LinkId=2124703", nullptr, nullptr, SW_SHOW);
+      }
+    performance_rating: "5"
+    avoid: Nếu target Windows 7/8 (không có Evergreen)
+
+  - id: wv_006
+    platform: webview2
+    technique: webview/webview header-only library
+    category: lightweight-alternative
+    description: >
+      Header-only C/C++ library cho WebView — binary output từ 48KB.
+      Cross-platform: WebView2 trên Windows, WebKit trên macOS/Linux.
+    code_example: |
+      // C++ — Minimal webview app
+      #include "webview/webview.h"
+      int main() {
+        webview::webview w(true, nullptr);
+        w.set_title("My App");
+        w.set_size(800, 600, WEBVIEW_HINT_NONE);
+        w.set_html("<html><body><h1>Hello!</h1></body></html>");
+        w.run();
+        return 0;
+      }
+      // Compile: cl /EHsc /std:c++17 main.cpp /link WebView2Loader.lib
+      // Binary: ~48KB (without debug symbols)
+    performance_rating: "5"
+    avoid: Cần advanced WebView2 API features (WebResourceRequested, DevTools, etc.)
+
+  # ── CSS Animation cho Embedded WebView ────────────────────────
+
+  - id: wv_007
+    platform: webview-css
+    technique: GPU-only properties
+    category: css-performance
+    description: >
+      CHỈ animate transform và opacity — 2 property duy nhất GPU-accelerated.
+      Không trigger layout hoặc paint.
+    code_example: |
+      /* ✅ GPU-only — 60fps */
+      .animated { transition: transform 200ms ease, opacity 200ms ease; }
+      .animated:hover { transform: scale(1.05); opacity: 0.9; }
+
+      /* ❌ AVOID — triggers layout */
+      .bad { transition: width 200ms, height 200ms, top 200ms, left 200ms; }
+    performance_rating: "5"
+    avoid: width, height, top, left, margin, padding, border-width
+
+  - id: wv_008
+    platform: webview-css
+    technique: will-change thận trọng
+    category: css-performance
+    description: >
+      Dùng will-change để hint GPU compositing layer.
+      Chỉ apply khi element SẮP animate. Remove sau khi xong.
+    code_example: |
+      /* ✅ Correct: chỉ khi cần */
+      .will-animate:hover { will-change: transform; }
+      .will-animate.animating { will-change: transform, opacity; }
+
+      /* ❌ AVOID: global will-change */
+      * { will-change: transform; } /* GPU memory explosion */
+    performance_rating: conditional
+    avoid: Overuse trên nhiều elements — consume GPU memory
+
+  - id: wv_009
+    platform: webview-css
+    technique: CSS transitions over JS animation
+    category: css-performance
+    description: >
+      CSS transitions chạy trên browser compositor thread — không block main thread.
+      Prefer CSS cho simple state changes.
+    code_example: |
+      /* ✅ CSS — compositor thread */
+      .btn { transition: transform 200ms ease; }
+      .btn:hover { transform: translateY(-2px); }
+
+      /* ❌ Nặng hơn — JS main thread */
+      // element.animate([{transform:'translateY(0)'},{transform:'translateY(-2px)'}], 200)
+    performance_rating: "5"
+    avoid: Dùng JS animation cho simple hover effects
+
+  - id: wv_010
+    platform: webview-css
+    technique: Inline CSS cho single-page embed
+    category: css-performance
+    description: >
+      Khi embed trong WebView, inline CSS giảm HTTP request.
+      Tối ưu cho single-page apps.
+    code_example: |
+      <style>
+        /* All CSS inline — no external request */
+        :root { --primary: #3b82f6; --bg: #0f172a; }
+        body { margin: 0; font-family: system-ui; background: var(--bg); }
+        .animated { transition: transform 200ms ease; }
+      </style>
+    performance_rating: "5"
+    avoid: Khi CSS > 50KB (tách file và cache)
+
+  - id: wv_011
+    platform: webview-css
+    technique: Avoid layout animations
+    category: css-avoid
+    description: >
+      Layout properties trigger expensive reflow.
+      Dùng transform thay thế.
+    code_example: |
+      /* ❌ Layout animation — triggers reflow */
+      .sidebar { width: 0; transition: width 300ms; }
+      .sidebar.open { width: 280px; }
+
+      /* ✅ Transform — GPU only */
+      .sidebar { transform: translateX(-100%); transition: transform 300ms; }
+      .sidebar.open { transform: translateX(0); }
+    performance_rating: "5"
+    avoid: ALWAYS avoid animating width/height/top/left/margin
+
+  - id: wv_012
+    platform: webview-css
+    technique: Avoid box-shadow animation
+    category: css-avoid
+    description: >
+      box-shadow animation triggers paint on every frame.
+      Dùng pseudo-element với opacity thay thế.
+    code_example: |
+      /* ❌ Paint every frame */
+      .card { transition: box-shadow 300ms; }
+      .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+      /* ✅ Opacity only — GPU */
+      .card::after {
+        content: ''; position: absolute; inset: 0;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        opacity: 0; transition: opacity 300ms;
+      }
+      .card:hover::after { opacity: 1; }
+    performance_rating: "5"
+    avoid: Direct box-shadow transition
+
+  # ── JavaScript cho Embedded WebView ───────────────────────────
+
+  - id: wv_013
+    platform: webview-js
+    technique: requestAnimationFrame
+    category: js-performance
+    description: >
+      Dùng rAF cho mọi JS animation — sync với display refresh rate.
+      Tự pause khi tab inactive — tiết kiệm battery.
+    code_example: |
+      function animate(timestamp) {
+        // Update animation state
+        element.style.transform = `translateX(${progress}px)`;
+        if (!done) requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    performance_rating: "5"
+    avoid: setInterval/setTimeout cho animation
+
+  - id: wv_014
+    platform: webview-js
+    technique: Avoid heavy DOM operations during animation
+    category: js-avoid
+    description: >
+      Không đọc layout properties (offsetWidth, getBoundingClientRect) trong animation frame.
+      Layout thrashing kills performance.
+    code_example: |
+      /* ❌ Layout thrashing */
+      function animate() {
+        const width = element.offsetWidth; // Force layout!
+        element.style.transform = `translateX(${width}px)`;
+        requestAnimationFrame(animate);
+      }
+
+      /* ✅ Cache layout reads */
+      const width = element.offsetWidth; // Read once before loop
+      function animate() {
+        element.style.transform = `translateX(${width}px)`;
+        requestAnimationFrame(animate);
+      }
+    performance_rating: "5"
+    avoid: Reading layout properties inside rAF loop
+
+  - id: wv_015
+    platform: webview-js
+    technique: Web Animation API (WAAPI)
+    category: js-performance
+    description: >
+      Native browser API — no library needed.
+      Runs on compositor thread like CSS animations.
+    code_example: |
+      element.animate([
+        { transform: 'translateY(0)', opacity: 1 },
+        { transform: 'translateY(-20px)', opacity: 0 }
+      ], {
+        duration: 300,
+        easing: 'ease-out',
+        fill: 'forwards'
+      });
+    performance_rating: "5"
+    avoid: Nếu cần timeline orchestration (dùng GSAP)
+
+  # ── Tailwind CSS Purge cho WebView ────────────────────────────
+
+  - id: wv_016
+    platform: tailwind-webview
+    technique: Tailwind JIT + content purge
+    category: css-optimization
+    description: >
+      Tailwind CSS JIT mode + content config → output CSS ~10KB cho production.
+      Critical cho embedded WebView — giảm memory usage.
+    code_example: |
+      /* tailwind.config.js */
+      module.exports = {
+        content: ['./src/**/*.{html,js}'],  /* Chỉ scan files thực tế */
+        theme: {
+          extend: {
+            /* Chỉ extend cần thiết */
+          },
+        },
+      }
+      /* Build: npx tailwindcss -o styles.css --minify */
+      /* Output: ~8-12KB cho typical single-page app */
+    performance_rating: "5"
+    avoid: Không include toàn bộ Tailwind (3MB+) trong embedded app
+
+  - id: wv_017
+    platform: tailwind-webview
+    technique: Critical CSS extraction
+    category: css-optimization
+    description: >
+      Extract chỉ CSS cần cho above-the-fold content.
+      Inline vào HTML, defer phần còn lại.
+    code_example: |
+      /* Use critters or critical to extract */
+      /* npm install critters */
+      /* Vite plugin: vite-plugin-critical */
+      /* Result: ~2-5KB inline CSS for first paint */
+    performance_rating: "5"
+    avoid: Khi toàn bộ CSS đã nhỏ (< 15KB)
+
+  # ── Tauri Integration ─────────────────────────────────────────
+
+  - id: wv_018
+    platform: tauri
+    technique: Tauri v2 embedded webview
+    category: deployment
+    description: >
+      Tauri dùng WebView2 trên Windows (same engine as native WebView2 apps).
+      CSS animation performance identical. Binary size ~3-5MB (vs Electron ~150MB).
+    code_example: |
+      /* Tauri uses system WebView2 — same CSS/JS performance */
+      /* Key advantage: smaller binary, Rust security */
+
+      // tauri.conf.json
+      {
+        "build": {
+          "distDir": "../dist",        // Web assets
+          "devPath": "http://localhost:3000"
+        },
+        "bundle": {
+          "active": true,
+          "targets": ["nsis", "msi"]   // Windows installer
+        }
+      }
+    performance_rating: "5"
+    avoid: Khi cần WebView2-specific APIs (dùng native C++ trực tiếp)
+
+  - id: wv_019
+    platform: tauri
+    technique: Tauri IPC cho native features
+    category: integration
+    description: >
+      Gọi Rust backend từ frontend JS cho heavy computation.
+      Giữ animation logic hoàn toàn trong web layer.
+    code_example: |
+      // Frontend (JS)
+      import { invoke } from '@tauri-apps/api/core';
+      const result = await invoke('process_data', { input: data });
+
+      // Backend (Rust)
+      #[tauri::command]
+      fn process_data(input: String) -> String {
+        // Heavy computation here — not in JS
+        format!("Processed: {}", input)
+      }
+    performance_rating: "5"
+    avoid: Không dùng IPC cho simple UI state
+
+  # ── QtWebEngine Integration ──────────────────────────────────
+
+  - id: wv_020
+    platform: qtwebengine
+    technique: QtWebEngine CSS animation
+    category: css-performance
+    description: >
+      QtWebEngine dùng Chromium — cùng CSS animation engine với Chrome.
+      Tuy nhiên JS animation có thể chậm hơn native browser do overhead.
+    code_example: |
+      // QML — Load web content
+      WebEngineView {
+        url: "qrc:///web/index.html"  // Embedded in Qt resources
+        settings.javascriptEnabled: true
+      }
+    performance_rating: "4"
+    avoid: Complex JS animation logic — prefer CSS transitions
+
+  - id: wv_021
+    platform: qtwebengine
+    technique: Qt Resource System (qrc)
+    category: resource-embedding
+    description: >
+      Embed HTML/CSS/JS trong Qt resource file (.qrc).
+      Access qua qrc:// protocol — compiled vào binary.
+    code_example: |
+      // resources.qrc
+      <RCC>
+        <qresource prefix="/web">
+          <file>index.html</file>
+          <file>styles.css</file>
+          <file>app.js</file>
+        </qresource>
+      </RCC>
+
+      // QML
+      WebEngineView {
+        url: "qrc:///web/index.html"
+      }
+    performance_rating: "5"
+    avoid: Khi web content cần hot-reload trong development
+
+  # ── Performance Measurement ───────────────────────────────────
+
+  - id: wv_022
+    platform: all-webview
+    technique: Performance API measurement
+    category: monitoring
+    description: >
+      Dùng Performance API để measure animation frame timing trong WebView.
+    code_example: |
+      // Measure animation frame timing
+      let lastTime = 0;
+      let frameCount = 0;
+      function measureFPS(timestamp) {
+        frameCount++;
+        if (timestamp - lastTime >= 1000) {
+          console.log(`FPS: ${frameCount}`);
+          frameCount = 0;
+          lastTime = timestamp;
+        }
+        requestAnimationFrame(measureFPS);
+      }
+      requestAnimationFrame(measureFPS);
+
+      // Measure specific animation
+      performance.mark('animation-start');
+      // ... animation ...
+      performance.mark('animation-end');
+      performance.measure('animation', 'animation-start', 'animation-end');
+    performance_rating: diagnostic
+    avoid: Để trong production code
+
+  # ── prefers-reduced-motion ────────────────────────────────────
+
+  - id: wv_023
+    platform: all-webview
+    technique: Respect prefers-reduced-motion
+    category: accessibility
+    description: >
+      Bắt buộc cho mọi embedded WebView app. Disable animations cho users.
+    code_example: |
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* JS check */
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    performance_rating: "5"
+    avoid: NEVER skip — accessibility requirement
+
+  # ── WebView Memory Optimization ───────────────────────────────
+
+  - id: wv_024
+    platform: all-webview
+    technique: Dispose off-screen WebView
+    category: memory
+    description: >
+      Khi WebView không visible — pause hoặc dispose.
+      WebView2 memory footprint ~80-150MB.
+    code_example: |
+      // C++ WebView2 — Visibility change
+      webviewController->put_IsVisible(FALSE);  // Reduce memory when hidden
+
+      // Tauri — WebView visibility
+      // Handled automatically by window minimize
+
+      // Qt — Visibility
+      webEngineView->setVisible(false);
+    performance_rating: "4"
+    avoid: Dispose khi user có thể quay lại nhanh
+
+  # ── Resource Loading Strategy ─────────────────────────────────
+
+  - id: wv_025
+    platform: all-webview
+    technique: Preload critical resources
+    category: loading
+    description: >
+      Preload fonts, critical CSS inline, defer non-critical JS.
+    code_example: |
+      <head>
+        <!-- Critical CSS inline -->
+        <style>/* critical styles */</style>
+
+        <!-- Preload fonts -->
+        <link rel="preload" href="font.woff2" as="font" type="font/woff2" crossorigin>
+
+        <!-- Defer non-critical JS -->
+        <script src="app.js" defer></script>
+      </head>
+    performance_rating: "5"
+    avoid: Preload quá nhiều resource cùng lúc
+
+  # ── Single Page Embedded App Template ─────────────────────────
+
+  - id: wv_026
+    platform: webview2
+    technique: Complete single-page embed template
+    category: template
+    description: >
+      Template đầy đủ cho single-page C++ WebView2 app
+      với inline CSS, GPU-only animation, dark mode.
+    code_example: |
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          :root {
+            --bg: #0f172a; --surface: #1e293b; --text: #e2e8f0;
+            --primary: #3b82f6; --primary-glow: rgba(59,130,246,0.3);
+          }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { background: var(--bg); color: var(--text); font-family: system-ui; }
+
+          /* GPU-only transitions */
+          .card {
+            background: var(--surface); border-radius: 12px; padding: 24px;
+            transition: transform 200ms ease, opacity 200ms ease;
+          }
+          .card:hover { transform: translateY(-2px); }
+
+          .btn {
+            background: var(--primary); color: white; border: none;
+            padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            transition: transform 150ms ease;
+          }
+          .btn:hover { transform: scale(1.02); }
+          .btn:active { transform: scale(0.98); }
+
+          @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+              animation-duration: 0.01ms !important;
+              transition-duration: 0.01ms !important;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h1>WebView2 App</h1>
+          <button class="btn">Action</button>
+        </div>
+      </body>
+      </html>
+    performance_rating: "5"
+    avoid: Dùng như reference, customize theo nhu cầu
+
+  # ── Font Loading cho Embedded ─────────────────────────────────
+
+  - id: wv_027
+    platform: all-webview
+    technique: System font stack
+    category: fonts
+    description: >
+      Dùng system fonts — không cần load font files.
+      Fastest font rendering, zero network/resource overhead.
+    code_example: |
+      body {
+        font-family:
+          system-ui, -apple-system, BlinkMacSystemFont,
+          'Segoe UI', Roboto, 'Helvetica Neue',
+          Arial, sans-serif;
+      }
+      code, pre {
+        font-family:
+          'Cascadia Code', 'Fira Code', 'JetBrains Mono',
+          Consolas, monospace;
+      }
+    performance_rating: "5"
+    avoid: Khi brand font là yêu cầu bắt buộc
+
+  # ── WebView2 Security for Embedded Content ────────────────────
+
+  - id: wv_028
+    platform: webview2
+    technique: Disable unnecessary features
+    category: security
+    description: >
+      Disable features không cần trong embedded app để giảm attack surface.
+    code_example: |
+      // C++ — Disable dev tools, context menu, etc.
+      ICoreWebView2Settings* settings;
+      webviewWindow->get_Settings(&settings);
+      settings->put_IsScriptEnabled(TRUE);           // Keep for app logic
+      settings->put_AreDefaultScriptDialogsEnabled(FALSE);
+      settings->put_AreDevToolsEnabled(FALSE);       // Disable in production
+      settings->put_IsStatusBarEnabled(FALSE);
+      settings->put_AreDefaultContextMenusEnabled(FALSE);
+      settings->put_AreHostObjectsAllowed(FALSE);    // Unless needed
+    performance_rating: security
+    avoid: Disable IsScriptEnabled nếu app cần JS
+
+# ── Comparison Matrix ─────────────────────────────────────────
+
+comparison:
+  title: WebView Embedded App — Framework Comparison
+  columns: [aspect, webview2_native, tauri, qtwebengine, electron]
+  rows:
+    - aspect: Binary size (min)
+      webview2_native: ~2MB
+      tauri: ~3-5MB
+      qtwebengine: ~50MB+
+      electron: ~150MB+
+
+    - aspect: CSS animation perf
+      webview2_native: Chromium native
+      tauri: Same (WebView2 on Windows)
+      qtwebengine: Chromium (slight overhead)
+      electron: Chromium native
+
+    - aspect: Single EXE possible
+      webview2_native: "Yes (static link)"
+      tauri: "Yes (NSIS/MSI)"
+      qtwebengine: "Yes (windeployqt)"
+      electron: "Yes (electron-builder)"
+
+    - aspect: Memory usage
+      webview2_native: ~80-100MB
+      tauri: ~80-100MB
+      qtwebengine: ~120-200MB
+      electron: ~200-400MB
+
+    - aspect: Embed resources
+      webview2_native: WebResourceRequested / .rc
+      tauri: Built-in (distDir)
+      qtwebengine: Qt Resources (.qrc)
+      electron: "asar archive"
+
+    - aspect: Runtime dependency
+      webview2_native: Evergreen WebView2
+      tauri: Evergreen WebView2
+      qtwebengine: Bundled Chromium
+      electron: Bundled Chromium
+
+    - aspect: Cross-platform
+      webview2_native: Windows only
+      tauri: Windows/macOS/Linux
+      qtwebengine: Windows/macOS/Linux
+      electron: Windows/macOS/Linux

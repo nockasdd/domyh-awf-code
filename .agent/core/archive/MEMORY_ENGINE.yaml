@@ -1,0 +1,353 @@
+# DOMYH Awesome Code — Memory Engine Configuration v6.0
+# Implements 5-Tier Memory Architecture with Active Management
+# Based on 2025-2026 Best Practices: Anthropic, MemGPT/Letta, LangGraph
+
+version: "6.2.1"
+engine: hierarchical_memory_v6_with_graph
+
+# =============================================================================
+# SUB-ENGINES (Progressive Loading)
+# =============================================================================
+
+sub_engines:
+  # Phase 2: Core Memory Management
+  summarization: core/SUMMARIZATION_ENGINE.yaml
+  cleanup: core/CLEANUP_ENGINE.yaml
+  utilities: core/MEMORY_UTILS.yaml
+
+  # Phase 3: Semantic Memory
+  semantic: core/SEMANTIC_ENGINE.yaml # Optional vector DB
+
+  # Phase 4: Intelligent Memory (2025+ Best Practices)
+  context_loader: core/CONTEXT_LOADER.yaml # Just-in-Time loading
+  context_injector: core/CONTEXT_INJECTOR.yaml # Smart injection
+  context_priority: core/CONTEXT_PRIORITY.yaml # Priority scoring
+  active_memory: core/ACTIVE_MEMORY.yaml # Self-directing memory
+  consolidation: core/MEMORY_CONSOLIDATION.yaml # Auto-consolidation
+
+  # Phase 5: Centralized Configs (v6.2.1 Cleanup)
+  scoring_formula: core/SCORING_FORMULA.yaml # SSoT for scoring
+  memory_paths: core/MEMORY_PATHS.yaml # SSoT for paths
+  token_budgets: core/TOKEN_BUDGETS.yaml # SSoT for token limits
+
+  # Phase 6: v6.0 Upgrades (2025-2026 Best Practices)
+  state_machine: core/STATE_MACHINE.yaml # LangGraph-inspired flow
+  reflection: core/REFLECTION_ENGINE.yaml # Critic + Reflexion
+  graph_memory: core/GRAPH_MEMORY.yaml # 5th tier: Knowledge Graph
+  mcp_tools: core/MCP_TOOLS.yaml # Model Context Protocol
+  hybrid_router: core/HYBRID_ROUTER.yaml # Multi-strategy routing
+  context_optimization: core/CONTEXT_OPTIMIZATION.yaml # Caching + compaction
+
+# Archive structure (paths defined in MEMORY_PATHS.yaml)
+archive:
+  reference: core/MEMORY_PATHS.yaml # Single Source of Truth
+  base_path: memory/archive/
+  subdirs:
+    - sessions
+    - errors
+    - decisions
+    - audits
+    - phases
+    - consolidation # Phase 4: Consolidation backups
+    - forgotten # Phase 4: Soft-deleted memories
+
+# =============================================================================
+# LAYER CONFIGURATION
+# =============================================================================
+
+layers:
+  # Layer 1: Working Memory (in-context, always active)
+  working:
+    max_tokens: 500
+    persistence: none
+    content:
+      - current_task
+      - last_3_interactions
+      - active_errors
+    auto_manage: true
+    priority: critical
+
+  # Layer 2: Session Notes (file-based, human-readable)
+  session:
+    max_tokens: 2000
+    persistence: file
+    file: memory/session.md
+    format: markdown
+    content:
+      - session_history
+      - workflow_log
+      - agent_notes
+    load_on: session_start
+    save_on:
+      - workflow_complete
+      - every_10_interactions
+      - session_end
+    priority: high
+
+  # Layer 3: Project State (JSON, structured)
+  state:
+    max_tokens: 500
+    persistence: json
+    files:
+      main: memory/state.json
+      audit: memory/audit_summary.json
+      decisions: memory/decisions.md
+    content:
+      - project_info
+      - skill_preferences
+      - audit_scores
+      - pending_tasks
+    load_on: project_open
+    save_on:
+      - state_change
+      - workflow_complete
+      - decision_made
+    priority: high
+
+  # Layer 4: Semantic Memory (optional, vector DB)
+  semantic:
+    enabled: false # Opt-in feature
+    max_tokens: 2500
+    persistence: lancedb
+    database: memory/vectors/
+    content:
+      - full_audit_history
+      - code_reviews
+      - detailed_decisions
+    load_on: semantic_query
+    index_on:
+      - audit_complete
+      - review_complete
+    priority: low
+
+# =============================================================================
+# MEMORY OPERATIONS
+# =============================================================================
+
+operations:
+  # Save operations
+  save:
+    on_decision:
+      target: [state, session]
+      format:
+        date: ISO8601
+        content: structured
+      append_to: decisions.md
+
+    on_audit_complete:
+      target: [state, session]
+      compress: true
+      keep_fields:
+        - score
+        - critical_count
+        - high_count
+        - fixed_count
+        - top_issues
+
+    on_workflow_complete:
+      target: [session, state]
+      summarize: true
+      max_summary_tokens: 200
+
+    on_error_resolved:
+      target: [session]
+      log_solution: true
+
+  # Load operations
+  load:
+    on_session_start:
+      layers: [state, session]
+      max_tokens: 3000
+      prioritize: recent
+
+    on_context_request:
+      layers: [state]
+      specific_keys: true
+
+    on_semantic_search:
+      layers: [semantic]
+      top_k: 5
+      min_score: 0.85 # Research-backed: Microsoft Azure AI optimal threshold
+
+# =============================================================================
+# SUMMARIZATION STRATEGY
+# =============================================================================
+
+summarization:
+  strategy: hierarchical
+
+  triggers:
+    - token_threshold: 8000
+    - session_age_hours: 2
+    - workflow_count: 5
+
+  levels:
+    # Level 1: Light summarization
+    light:
+      trigger_tokens: 5000
+      actions:
+        - compress_old_interactions
+        - keep_last_5_exchanges
+
+    # Level 2: Medium summarization
+    medium:
+      trigger_tokens: 8000
+      actions:
+        - summarize_session_notes
+        - archive_resolved_errors
+        - keep_decisions_only
+
+    # Level 3: Aggressive summarization
+    aggressive:
+      trigger_tokens: 10000
+      actions:
+        - compress_all_to_summary
+        - keep_critical_only
+        - unload_all_optional
+
+# =============================================================================
+# CLEANUP RULES
+# =============================================================================
+
+cleanup:
+  triggers:
+    - on_workflow_switch
+    - on_phase_complete
+    - at_token_threshold
+    - on_session_end
+
+  rules:
+    on_workflow_switch:
+      - unload_previous_workflow_context
+      - keep_decisions
+      - keep_errors
+      - summarize_completed_work
+
+    on_phase_complete:
+      - archive_phase_artifacts
+      - update_state_json
+      - compress_phase_notes
+
+    at_token_threshold:
+      threshold: 10000
+      actions:
+        - trigger_medium_summarization
+        - unload_layer_semantic
+        - alert_user_if_critical
+
+    on_session_end:
+      - save_all_layers
+      - update_timestamps
+      - log_session_metrics
+
+# =============================================================================
+# CROSS-SESSION PERSISTENCE
+# =============================================================================
+
+cross_session:
+  enabled: true
+
+  persist:
+    - project_state
+    - decisions_log
+    - audit_history
+    - skill_preferences
+    - pending_tasks
+
+  restore_on_resume:
+    - last_workflow
+    - pending_tasks
+    - unresolved_errors
+    - active_branch
+
+  resume_command: "/recap"
+
+  handoff:
+    enabled: true
+    format: markdown
+    include:
+      - current_task
+      - context_summary
+      - pending_actions
+      - key_decisions
+
+# =============================================================================
+# MEMORY HOOKS
+# =============================================================================
+
+hooks:
+  pre_save:
+    - validate_json_schema
+    - check_token_budget
+    - sanitize_sensitive_data
+
+  post_save:
+    - update_timestamps
+    - log_metrics
+    - trigger_backup_if_needed
+
+  pre_load:
+    - check_file_exists
+    - validate_version
+    - migrate_if_needed
+
+  post_load:
+    - update_session_cache
+    - log_load_metrics
+    - check_staleness
+
+# =============================================================================
+# METRICS & MONITORING
+# =============================================================================
+
+metrics:
+  track:
+    - tokens_by_layer
+    - save_frequency
+    - load_latency
+    - compression_ratio
+    - decision_count
+    - audit_count
+
+  alerts:
+    high_token_usage:
+      threshold: 10000
+      action: warn_user
+
+    stale_state:
+      threshold_hours: 24
+      action: suggest_recap
+
+    frequent_errors:
+      threshold_count: 5
+      action: log_pattern
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  token_loading:
+    sync: true
+    respect_budgets: true
+
+  flow_engine:
+    trigger_saves: true
+    trigger_loads: true
+
+  router:
+    provide_context: true
+    use_state_for_routing: true
+
+  workflows:
+    /recap:
+      load: [state, session, decisions]
+      display: summary
+
+    /audit:
+      save: [audit_summary, decisions]
+      update: state
+
+    /init:
+      create: [state, session]
+      reset: all

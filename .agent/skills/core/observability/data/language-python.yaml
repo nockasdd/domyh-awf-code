@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_python
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-python.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: PY-001
+    name: OpenTelemetry SDK
+    category: Python
+    description: Initialize OTel in Python
+    example: trace.set_tracer_provider(TracerProvider())
+    library: opentelemetry-python
+  - id: PY-002
+    name: TracerProvider Setup
+    category: Python
+    description: Configure tracer
+    example: TracerProvider(resource=Resource(...))
+    library: opentelemetry-python
+  - id: PY-003
+    name: MeterProvider Setup
+    category: Python
+    description: Configure metrics
+    example: set_meter_provider(MeterProvider())
+    library: opentelemetry-python
+  - id: PY-004
+    name: OTLP Exporter
+    category: Python
+    description: Export via OTLP
+    example: OTLPSpanExporter(endpoint='...')
+    library: opentelemetry-python
+  - id: PY-005
+    name: Auto-Instrumentation
+    category: Python
+    description: Zero-code instrumentation
+    example: opentelemetry-instrument python app.py
+    library: opentelemetry-python
+  - id: PY-006
+    name: Manual Spans
+    category: Python
+    description: Create custom spans
+    example: "with tracer.start_as_current_span('op'): ..."
+    library: opentelemetry-python
+  - id: PY-007
+    name: Span Attributes
+    category: Python
+    description: Add metadata
+    example: span.set_attribute('user.id', user_id)
+    library: opentelemetry-python
+  - id: PY-008
+    name: Context Propagation
+    category: Python
+    description: Pass context
+    example: inject(carrier); extract(carrier)
+    library: opentelemetry-python
+  - id: PY-009
+    name: prometheus_client
+    category: Python
+    description: Create metrics
+    example: Counter('requests_total', 'Total requests')
+    library: prometheus_client
+  - id: PY-010
+    name: Prometheus HTTP
+    category: Python
+    description: Expose /metrics
+    example: start_http_server(8000)
+    library: prometheus_client
+  - id: PY-011
+    name: Prometheus Labels
+    category: Python
+    description: Add dimensions
+    example: counter.labels(method='GET').inc()
+    library: prometheus_client
+  - id: PY-012
+    name: Histogram Observe
+    category: Python
+    description: Record latency
+    example: histogram.observe(duration)
+    library: prometheus_client
+  - id: PY-013
+    name: Multiprocess Mode
+    category: Python
+    description: Gunicorn/uWSGI support
+    example: PROMETHEUS_MULTIPROC_DIR env var
+    library: prometheus_client
+  - id: PY-014
+    name: StatsD Client
+    category: Python
+    description: Send metrics to StatsD
+    example: statsd.increment('requests.total')
+    library: statsd
+  - id: PY-015
+    name: cProfile
+    category: Python
+    description: CPU profiling
+    example: cProfile.run('main()')
+    library: stdlib
+  - id: PY-016
+    name: memory_profiler
+    category: Python
+    description: Memory profiling
+    example: "@profile decorator"
+    library: memory_profiler
+  - id: PY-017
+    name: line_profiler
+    category: Python
+    description: Line-by-line timing
+    example: "@profile decorator"
+    library: line_profiler
+  - id: PY-018
+    name: py-spy
+    category: Python
+    description: Sampling profiler
+    example: py-spy record -o profile.svg -- python app.py
+    library: py-spy
+  - id: PY-019
+    name: Pyroscope Agent
+    category: Python
+    description: Continuous profiling
+    example: pyroscope.configure(application_name='app')
+    library: pyroscope
+  - id: PY-020
+    name: structlog + OTel
+    category: Python
+    description: Structured logs with trace ID
+    example: structlog.configure(processors=[...])
+    library: structlog
+  - id: PY-021
+    name: FastAPI Instrumentation
+    category: Python
+    description: Auto-instrument FastAPI
+    example: FastAPIInstrumentor.instrument()
+    library: otel-fastapi
+  - id: PY-022
+    name: Flask Instrumentation
+    category: Python
+    description: Auto-instrument Flask
+    example: FlaskInstrumentor().instrument_app(app)
+    library: otel-flask
+  - id: PY-023
+    name: Django Instrumentation
+    category: Python
+    description: Auto-instrument Django
+    example: DjangoInstrumentor().instrument()
+    library: otel-django
+  - id: PY-024
+    name: SQLAlchemy Tracing
+    category: Python
+    description: Trace database queries
+    example: SQLAlchemyInstrumentor().instrument()
+    library: otel-sqlalchemy
+  - id: PY-025
+    name: Redis Tracing
+    category: Python
+    description: Trace Redis operations
+    example: RedisInstrumentor().instrument()
+    library: otel-redis

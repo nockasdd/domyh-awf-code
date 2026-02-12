@@ -1,30 +1,12 @@
 name: julia
-version: "6.1.2"
+version: "6.2.1"
 category: scientific
-tier: 2
+tier: 3
 
-description: |
-  Julia development patterns for Julia 1.10+.
-  Covers scientific computing, ML, data analysis, high performance.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.jl"
-    - "Project.toml"
-    - "Manifest.toml"
-  keywords:
-    - julia
-    - julia lang
-    - scientific computing
-    - numerical julia
-    - flux julia
-    - dataframes julia
-    - pluto notebook
-  intents:
-    - julia project
-    - scientific computing
-    - julia ml
-    - numerical analysis
+desc: "Julia development patterns for Julia 1.10+. Covers scientific computing, ML, data analysis, high performance."
 
 related_skills:
   - python

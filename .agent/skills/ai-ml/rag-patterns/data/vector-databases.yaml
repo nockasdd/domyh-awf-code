@@ -1,0 +1,103 @@
+# =============================================================================
+# vector-databases.yaml — Vector Database Comparison
+# =============================================================================
+
+version: "1.0.0"
+
+databases:
+  pgvector:
+    type: "PostgreSQL extension"
+    hosting: "Self-hosted or managed (Supabase, Neon)"
+    best_for: "Already using PostgreSQL, small-medium scale"
+    setup: |
+      CREATE EXTENSION vector;
+      CREATE TABLE documents (
+          id SERIAL PRIMARY KEY,
+          content TEXT,
+          metadata JSONB,
+          embedding vector(1536)
+      );
+      CREATE INDEX ON documents USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+    query: |
+      SELECT content, 1 - (embedding <=> $1) AS similarity
+      FROM documents
+      ORDER BY embedding <=> $1
+      LIMIT 5;
+
+  pinecone:
+    type: "Managed SaaS"
+    hosting: "Cloud (AWS, GCP, Azure)"
+    best_for: "Production, serverless, managed"
+    example_python: |
+      from pinecone import Pinecone
+      pc = Pinecone(api_key="YOUR_KEY")
+      index = pc.Index("my-index")
+
+      # Upsert
+      index.upsert(vectors=[
+          {"id": "doc1", "values": embedding, "metadata": {"source": "doc.pdf"}}
+      ])
+
+      # Query
+      results = index.query(vector=query_embedding, top_k=5, include_metadata=True)
+
+  qdrant:
+    type: "Self-hosted / Cloud"
+    hosting: "Docker, Kubernetes, Qdrant Cloud"
+    best_for: "Full control, advanced filtering"
+    features: ["Payload filtering", "Sparse vectors", "Hybrid search"]
+    example_python: |
+      from qdrant_client import QdrantClient
+      client = QdrantClient("localhost", port=6333)
+
+      client.upsert(collection_name="docs", points=[
+          {"id": 1, "vector": embedding, "payload": {"source": "doc.pdf"}}
+      ])
+
+      results = client.search(
+          collection_name="docs",
+          query_vector=query_embedding,
+          query_filter={"must": [{"key": "source", "match": {"value": "doc.pdf"}}]},
+          limit=5
+      )
+
+  chroma:
+    type: "Embedded / Server"
+    hosting: "In-process or Docker"
+    best_for: "Prototyping, development, small datasets"
+    example_python: |
+      import chromadb
+      client = chromadb.Client()
+      collection = client.create_collection("docs")
+
+      collection.add(
+          documents=["text1", "text2"],
+          metadatas=[{"source": "a"}, {"source": "b"}],
+          ids=["1", "2"]
+      )
+
+      results = collection.query(query_texts=["search query"], n_results=5)
+
+  weaviate:
+    type: "Self-hosted / Cloud"
+    best_for: "Multi-modal (text + images), hybrid search built-in"
+
+  milvus:
+    type: "Self-hosted"
+    best_for: "Large scale (billion vectors), GPU acceleration"
+
+selection_guide:
+  - scenario: "Already using PostgreSQL"
+    choice: "pgvector"
+  - scenario: "Need managed, production-ready"
+    choice: "Pinecone"
+  - scenario: "Need advanced filtering, self-hosted"
+    choice: "Qdrant"
+  - scenario: "Quick prototype, local dev"
+    choice: "Chroma"
+  - scenario: "Multi-modal (text + images)"
+    choice: "Weaviate"
+  - scenario: "Billion+ vectors, GPU"
+    choice: "Milvus"
+
+# _DOMYH Awesome Code • Vector Databases_

@@ -1,0 +1,131 @@
+# Terraform HCL Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TF-HCL-001
+    name: Module Structure
+    category: architecture
+    description: |
+      Standard module structure.
+    text: |
+      module/
+      ├── main.tf       — Primary resources
+      ├── variables.tf  — Input variables
+      ├── outputs.tf    — Output values
+      ├── versions.tf   — Provider + Terraform version constraints
+      ├── locals.tf     — Local values
+      ├── data.tf       — Data sources
+      └── README.md     — Module documentation
+
+  - id: TF-HCL-002
+    name: Variable Patterns
+    category: config
+    description: |
+      Input variables with validation.
+    example: |
+      variable "environment" {
+        description = "Deployment environment"
+        type        = string
+        validation {
+          condition     = contains(["dev", "staging", "prod"], var.environment)
+          error_message = "Environment must be dev, staging, or prod."
+        }
+      }
+
+      variable "instance_config" {
+        description = "EC2 instance configuration"
+        type = object({
+          instance_type = string
+          ami_id        = string
+          disk_size_gb  = optional(number, 20)
+        })
+      }
+
+  - id: TF-HCL-003
+    name: Remote State
+    category: state
+    description: |
+      Store state remotely for team collaboration.
+    example: |
+      terraform {
+        backend "s3" {
+          bucket         = "my-terraform-state"
+          key            = "prod/terraform.tfstate"
+          region         = "us-east-1"
+          dynamodb_table = "terraform-locks"
+          encrypt        = true
+        }
+      }
+
+      # Reference remote state from another project
+      data "terraform_remote_state" "network" {
+        backend = "s3"
+        config = {
+          bucket = "my-terraform-state"
+          key    = "network/terraform.tfstate"
+          region = "us-east-1"
+        }
+      }
+
+  - id: TF-HCL-004
+    name: for_each and count
+    category: config
+    description: |
+      Create multiple resources dynamically.
+    example: |
+      # for_each with map (preferred)
+      variable "subnets" {
+        type = map(object({ cidr = string, az = string }))
+      }
+
+      resource "aws_subnet" "this" {
+        for_each          = var.subnets
+        vpc_id            = aws_vpc.main.id
+        cidr_block        = each.value.cidr
+        availability_zone = each.value.az
+        tags = { Name = "subnet-${each.key}" }
+      }
+
+  - id: TF-HCL-005
+    name: Dynamic Blocks
+    category: config
+    description: |
+      Generate nested blocks dynamically.
+    example: |
+      resource "aws_security_group" "this" {
+        name = "web-sg"
+        
+        dynamic "ingress" {
+          for_each = var.ingress_rules
+          content {
+            from_port   = ingress.value.port
+            to_port     = ingress.value.port
+            protocol    = "tcp"
+            cidr_blocks = ingress.value.cidrs
+          }
+        }
+      }
+
+  - id: TF-HCL-006
+    name: Moved Block (Refactoring)
+    category: refactoring
+    description: |
+      Rename resources without recreating them.
+    example: |
+      moved {
+        from = aws_instance.web
+        to   = aws_instance.app_server
+      }
+
+  - id: TF-HCL-007
+    name: Import Block
+    category: migration
+    description: |
+      Import existing infrastructure into Terraform.
+    example: |
+      import {
+        to = aws_instance.web
+        id = "i-1234567890abcdef0"
+      }
+
+      # Generate config: terraform plan -generate-config-out=generated.tf

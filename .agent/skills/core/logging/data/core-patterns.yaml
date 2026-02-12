@@ -1,0 +1,226 @@
+metadata:
+  skill: logging
+  domain: core_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: core-patterns.yaml
+  patterns_count: 30
+  columns:
+    - pattern_id
+    - category
+    - name
+    - description
+    - example
+    - severity
+    - when_to_use
+patterns:
+  - id: CORE-001
+    category: log-levels
+    name: TRACE Level
+    description: Most detailed logging for loop iterations and fine-grained debugging
+    example: logger.trace("Processing item {} of {}", i, total)
+    severity: low
+    when_to_use: Debugging tight loops or complex algorithms
+  - id: CORE-002
+    category: log-levels
+    name: DEBUG Level
+    description: Detailed information for debugging variable values and flow
+    example: logger.debug("User {} authenticated successfully", userId)
+    severity: low
+    when_to_use: Development and troubleshooting
+  - id: CORE-003
+    category: log-levels
+    name: INFO Level
+    description: General system events like startup and configuration changes
+    example: logger.info("Server started on port {}", port)
+    severity: medium
+    when_to_use: Normal operations and milestones
+  - id: CORE-004
+    category: log-levels
+    name: WARN Level
+    description: Potential issues that don't immediately cause errors
+    example: logger.warn("Retry attempt {} for service {}", attempt, service)
+    severity: medium
+    when_to_use: Deprecated APIs or recoverable issues
+  - id: CORE-005
+    category: log-levels
+    name: ERROR Level
+    description: Errors that require attention but don't stop the system
+    example: logger.error("Failed to process payment", err)
+    severity: high
+    when_to_use: Failures requiring investigation
+  - id: CORE-006
+    category: log-levels
+    name: FATAL/CRITICAL Level
+    description: Severe errors that cause system shutdown
+    example: logger.fatal("Database connection failed permanently")
+    severity: critical
+    when_to_use: Unrecoverable failures
+  - id: CORE-007
+    category: structured
+    name: JSON Format
+    description: Machine-readable structured log output
+    example: '{"timestamp":"2024-01-15T10:30:00Z","level":"INFO","msg":"request"}'
+    severity: high
+    when_to_use: Production environments
+  - id: CORE-008
+    category: structured
+    name: Key-Value Pairs
+    description: Structured data as named parameters
+    example: logger.info("user_login", user_id=123, ip="192.168.1.1")
+    severity: high
+    when_to_use: Searchable and filterable logs
+  - id: CORE-009
+    category: structured
+    name: Consistent Schema
+    description: Uniform field names across all services
+    example: Always use user_id not userId or userID
+    severity: high
+    when_to_use: Multi-service environments
+  - id: CORE-010
+    category: structured
+    name: Timestamp Format
+    description: ISO 8601 UTC timestamps
+    example: "2024-01-15T10:30:00.123Z"
+    severity: high
+    when_to_use: Log aggregation and querying
+  - id: CORE-011
+    category: correlation
+    name: Trace ID
+    description: Unique identifier linking all logs for a request
+    example: "trace_id: abc123-def456-ghi789"
+    severity: critical
+    when_to_use: Distributed tracing
+  - id: CORE-012
+    category: correlation
+    name: Span ID
+    description: Identifier for a specific operation within a trace
+    example: "span_id: span-001"
+    severity: high
+    when_to_use: Microservices debugging
+  - id: CORE-013
+    category: correlation
+    name: Request ID
+    description: HTTP request identifier for correlation
+    example: "X-Request-ID: req-12345"
+    severity: high
+    when_to_use: API request tracking
+  - id: CORE-014
+    category: correlation
+    name: Correlation ID Propagation
+    description: Pass IDs through service calls
+    example: ctx = context.WithValue(ctx, "trace_id", traceID)
+    severity: critical
+    when_to_use: Distributed systems
+  - id: CORE-015
+    category: context
+    name: Include Service Name
+    description: Identify log source in multi-service setup
+    example: "service: user-service"
+    severity: high
+    when_to_use: Microservices
+  - id: CORE-016
+    category: context
+    name: Include Version
+    description: Log application version for debugging
+    example: "version: 1.2.3"
+    severity: medium
+    when_to_use: Version-specific issues
+  - id: CORE-017
+    category: context
+    name: Include Environment
+    description: Distinguish logs by environment
+    example: "env: production"
+    severity: high
+    when_to_use: Multi-environment setups
+  - id: CORE-018
+    category: context
+    name: Include Host/Pod
+    description: Identify the source machine or container
+    example: "host: pod-abc-123"
+    severity: high
+    when_to_use: Kubernetes deployments
+  - id: CORE-019
+    category: formatting
+    name: Human-Readable Dev Logs
+    description: Pretty-printed logs for development
+    example: Use colorized console output in development
+    severity: low
+    when_to_use: Local development
+  - id: CORE-020
+    category: formatting
+    name: Machine-Readable Prod Logs
+    description: JSON structured logs for production
+    example: Use JSON handler in production
+    severity: high
+    when_to_use: Production deployment
+  - id: CORE-021
+    category: formatting
+    name: Units in Field Names
+    description: Include units to prevent ambiguity
+    example: "duration_ms: 45 instead of duration: 45"
+    severity: medium
+    when_to_use: Numeric values
+  - id: CORE-022
+    category: formatting
+    name: Shallow Nesting
+    description: Keep JSON depth to 2-3 levels max
+    example: Avoid deeply nested objects in logs
+    severity: medium
+    when_to_use: Query performance
+  - id: CORE-023
+    category: performance
+    name: Lazy Evaluation
+    description: Defer expensive string formatting
+    example: 'logger.debug { "Computed: ${expensiveCall()}" }'
+    severity: high
+    when_to_use: Performance-critical paths
+  - id: CORE-024
+    category: performance
+    name: Async Logging
+    description: Non-blocking log writes
+    example: Use async appenders or buffers
+    severity: high
+    when_to_use: High-throughput applications
+  - id: CORE-025
+    category: performance
+    name: Log Sampling
+    description: Sample high-volume logs
+    example: Log 1% of requests at debug level
+    severity: medium
+    when_to_use: Reducing log volume
+  - id: CORE-026
+    category: security
+    name: No Sensitive Data
+    description: Never log passwords or PII
+    example: "Mask: user@***.com, card: ****1234"
+    severity: critical
+    when_to_use: All applications
+  - id: CORE-027
+    category: security
+    name: Redaction Patterns
+    description: Automatically mask sensitive fields
+    example: Apply regex patterns to redact
+    severity: critical
+    when_to_use: Compliance requirements
+  - id: CORE-028
+    category: security
+    name: Log Access Control
+    description: Restrict who can view logs
+    example: Role-based access to log systems
+    severity: high
+    when_to_use: Enterprise environments
+  - id: CORE-029
+    category: operations
+    name: Log Rotation
+    description: Rotate logs by size or time
+    example: Rotate daily, keep 30 days
+    severity: high
+    when_to_use: Disk management
+  - id: CORE-030
+    category: operations
+    name: Retention Policies
+    description: Define how long to keep logs
+    example: "Hot: 7 days, Warm: 30 days, Cold: 1 year"
+    severity: high
+    when_to_use: Cost and compliance

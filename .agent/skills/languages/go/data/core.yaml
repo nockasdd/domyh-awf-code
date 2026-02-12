@@ -1,0 +1,399 @@
+# =============================================================================
+# Go Core Patterns (Feb 2026)
+# Version: Go 1.24/1.25
+# =============================================================================
+
+metadata:
+  skill: go
+  domain: core
+  version: "1.25"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: go001
+    name: Generic Type Aliases
+    category: generics
+    version: "1.24+"
+    description: |
+      Type aliases can now use type parameters.
+      Enables cleaner generic type definitions.
+    text: generic type alias generics type parameter
+    example: |
+      // ✅ Generic type alias (Go 1.24+)
+      type Pair[T any] = [2]T
+      type Map[K comparable, V any] = map[K]V
+      type Result[T any] = struct {
+          Value T
+          Error error
+      }
+
+      // Usage
+      func main() {
+          coords := Pair[float64]{1.0, 2.0}
+          users := Map[string, User]{"alice": {Name: "Alice"}}
+          
+          result := Result[int]{Value: 42}
+          fmt.Println(result.Value)
+      }
+
+      // ✅ Generic constraint aliases
+      type Numeric interface {
+          ~int | ~int64 | ~float64
+      }
+
+      type NumberSlice[T Numeric] = []T
+
+      func Sum[T Numeric](nums NumberSlice[T]) T {
+          var sum T
+          for _, n := range nums {
+              sum += n
+          }
+          return sum
+      }
+    severity: MEDIUM
+    docs_url: https://go.dev/doc/go1.24#language
+
+  - id: go002
+    name: Range Over Functions (Iterators)
+    category: iteration
+    version: "1.23+"
+    description: |
+      Range over functions for custom iteration.
+      iter.Seq and iter.Seq2 in standard library.
+    text: range over func iterator iter seq yield
+    example: |
+      import "iter"
+
+      // ✅ Single value iterator (iter.Seq)
+      func Evens(max int) iter.Seq[int] {
+          return func(yield func(int) bool) {
+              for i := 0; i <= max; i += 2 {
+                  if !yield(i) {
+                      return
+                  }
+              }
+          }
+      }
+
+      // ✅ Key-value iterator (iter.Seq2)
+      func Enumerate[T any](s []T) iter.Seq2[int, T] {
+          return func(yield func(int, T) bool) {
+              for i, v := range s {
+                  if !yield(i, v) {
+                      return
+                  }
+              }
+          }
+      }
+
+      // ✅ Usage with range
+      func main() {
+          for n := range Evens(10) {
+              fmt.Println(n) // 0, 2, 4, 6, 8, 10
+          }
+          
+          names := []string{"Alice", "Bob", "Charlie"}
+          for i, name := range Enumerate(names) {
+              fmt.Printf("%d: %s\n", i, name)
+          }
+      }
+
+      // ✅ Combining iterators
+      func Filter[T any](seq iter.Seq[T], pred func(T) bool) iter.Seq[T] {
+          return func(yield func(T) bool) {
+              for v := range seq {
+                  if pred(v) && !yield(v) {
+                      return
+                  }
+              }
+          }
+      }
+    severity: HIGH
+    docs_url: https://go.dev/wiki/RangefuncExperiment
+
+  - id: go003
+    name: Error Handling with errors.Is/As
+    category: errors
+    version: "1.13+"
+    description: |
+      Modern error handling with wrapped errors.
+      Use errors.Is for comparison, errors.As for type assertion.
+    text: error handling errors.Is errors.As wrap unwrap sentinel
+    example: |
+      import (
+          "errors"
+          "fmt"
+      )
+
+      // ✅ Sentinel errors
+      var (
+          ErrNotFound = errors.New("not found")
+          ErrForbidden = errors.New("forbidden")
+      )
+
+      // ✅ Custom error type
+      type ValidationError struct {
+          Field   string
+          Message string
+      }
+
+      func (e *ValidationError) Error() string {
+          return fmt.Sprintf("%s: %s", e.Field, e.Message)
+      }
+
+      // ✅ Wrap errors with context
+      func GetUser(id int) (*User, error) {
+          user, err := db.FindUser(id)
+          if err != nil {
+              // Wrap with fmt.Errorf %w
+              return nil, fmt.Errorf("get user %d: %w", id, err)
+          }
+          return user, nil
+      }
+
+      // ✅ Check with errors.Is
+      func handler(id int) {
+          user, err := GetUser(id)
+          if errors.Is(err, ErrNotFound) {
+              // Handle not found
+              return
+          }
+          if err != nil {
+              log.Error("unexpected error", "err", err)
+              return
+          }
+      }
+
+      // ✅ Extract with errors.As
+      func handleError(err error) {
+          var validErr *ValidationError
+          if errors.As(err, &validErr) {
+              fmt.Printf("Validation failed on %s\n", validErr.Field)
+              return
+          }
+      }
+
+      // ✅ Join multiple errors (1.20+)
+      func validateAll(data Data) error {
+          var errs []error
+          if data.Name == "" {
+              errs = append(errs, &ValidationError{"name", "required"})
+          }
+          if data.Age < 0 {
+              errs = append(errs, &ValidationError{"age", "must be positive"})
+          }
+          return errors.Join(errs...)
+      }
+    severity: HIGH
+    docs_url: https://go.dev/blog/go1.13-errors
+
+  - id: go004
+    name: Structured Logging (slog)
+    category: logging
+    version: "1.21+"
+    description: |
+      Structured logging with slog package.
+      JSON output, log levels, contextual attributes.
+    text: slog structured logging json log levels context
+    example: |
+      import (
+          "context"
+          "log/slog"
+          "os"
+      )
+
+      // ✅ Setup JSON logger
+      func setupLogger() *slog.Logger {
+          return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+              Level: slog.LevelInfo,
+              AddSource: true,
+          }))
+      }
+
+      // ✅ Basic usage
+      func main() {
+          logger := setupLogger()
+          slog.SetDefault(logger)
+          
+          slog.Info("server starting",
+              "port", 8080,
+              "env", "production",
+          )
+          
+          // With groups
+          slog.Info("request",
+              slog.Group("request",
+                  slog.String("method", "GET"),
+                  slog.String("path", "/api/users"),
+                  slog.Int("status", 200),
+              ),
+          )
+      }
+
+      // ✅ Context-aware logging
+      type ctxKey string
+      const requestIDKey ctxKey = "request_id"
+
+      func WithRequestID(ctx context.Context, id string) context.Context {
+          return context.WithValue(ctx, requestIDKey, id)
+      }
+
+      func LoggerFromContext(ctx context.Context) *slog.Logger {
+          logger := slog.Default()
+          if id, ok := ctx.Value(requestIDKey).(string); ok {
+              logger = logger.With("request_id", id)
+          }
+          return logger
+      }
+
+      // ✅ Logger as dependency
+      type Service struct {
+          logger *slog.Logger
+      }
+
+      func NewService(logger *slog.Logger) *Service {
+          return &Service{logger: logger.With("service", "user")}
+      }
+
+      func (s *Service) GetUser(ctx context.Context, id int) (*User, error) {
+          s.logger.InfoContext(ctx, "getting user", "user_id", id)
+          // ...
+      }
+    severity: HIGH
+    docs_url: https://go.dev/blog/slog
+
+  - id: go005
+    name: Context Propagation
+    category: concurrency
+    version: "1.7+"
+    description: |
+      Context for cancellation, timeouts, and request-scoped values.
+      Always pass context as first parameter.
+    text: context cancellation timeout deadline value propagation
+    example: |
+      import (
+          "context"
+          "time"
+      )
+
+      // ✅ Always accept context as first param
+      func GetUser(ctx context.Context, id int) (*User, error) {
+          // Check if already cancelled
+          if err := ctx.Err(); err != nil {
+              return nil, err
+          }
+          
+          // Pass to downstream calls
+          return db.FindUser(ctx, id)
+      }
+
+      // ✅ Timeout context
+      func FetchWithTimeout(url string) ([]byte, error) {
+          ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+          defer cancel() // Always call cancel
+          
+          req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+          resp, err := http.DefaultClient.Do(req)
+          if err != nil {
+              return nil, err
+          }
+          defer resp.Body.Close()
+          
+          return io.ReadAll(resp.Body)
+      }
+
+      // ✅ Cancellation propagation
+      func ProcessItems(ctx context.Context, items []Item) error {
+          for _, item := range items {
+              select {
+              case <-ctx.Done():
+                  return ctx.Err()
+              default:
+                  if err := process(ctx, item); err != nil {
+                      return err
+                  }
+              }
+          }
+          return nil
+      }
+
+      // ✅ Request-scoped values (use sparingly)
+      type userKey struct{}
+
+      func WithUser(ctx context.Context, user *User) context.Context {
+          return context.WithValue(ctx, userKey{}, user)
+      }
+
+      func UserFromContext(ctx context.Context) (*User, bool) {
+          user, ok := ctx.Value(userKey{}).(*User)
+          return user, ok
+      }
+    severity: HIGH
+    docs_url: https://go.dev/blog/context
+
+  - id: go006
+    name: Swiss Table Maps
+    category: performance
+    version: "1.24+"
+    description: |
+      Go 1.24 uses Swiss tables for map implementation.
+      2-3% faster iteration, better memory locality.
+    text: swiss table map performance hash optimization
+    example: |
+      // ✅ Swiss tables are automatic in Go 1.24+
+      // No code changes needed - just faster maps!
+
+      // Previous implementation: Separate chaining
+      // New implementation: Swiss tables (open addressing)
+
+      // Benefits:
+      // - 2-3% faster iteration (range over map)
+      // - Better cache locality
+      // - Faster lookups for small maps
+
+      // ✅ Best practices for maps (still apply)
+      func main() {
+          // Pre-allocate with make for known size
+          users := make(map[string]User, 1000)
+          
+          // Range is faster in 1.24
+          for id, user := range users {
+              process(id, user)
+          }
+      }
+
+      // ✅ maps package utilities (1.21+)
+      import "maps"
+
+      func copyAndFilter() {
+          src := map[string]int{"a": 1, "b": 2, "c": 3}
+          
+          // Clone a map
+          dst := maps.Clone(src)
+          
+          // Delete matching entries
+          maps.DeleteFunc(dst, func(k string, v int) bool {
+              return v < 2
+          })
+          
+          // Check equality
+          if maps.Equal(src, dst) {
+              fmt.Println("Maps are equal")
+          }
+      }
+
+      // ✅ Concurrent map access
+      import "sync"
+
+      var cache sync.Map
+
+      func Get(key string) (User, bool) {
+          val, ok := cache.Load(key)
+          if !ok {
+              return User{}, false
+          }
+          return val.(User), true
+      }
+    severity: MEDIUM
+    docs_url: https://go.dev/doc/go1.24#runtime

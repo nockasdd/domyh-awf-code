@@ -1,0 +1,72 @@
+name: observability
+version: "6.2.1"
+display: Observability Patterns
+category: core
+tier: 1
+priority: 0
+
+desc: "Comprehensive observability patterns for metrics, tracing, and profiling. Covers OpenTelemetry, Prometheus, Jaeger, and 12 programming languages."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - observability
+    - metrics
+    - tracing
+    - monitoring
+    - prometheus
+    - opentelemetry
+    - otel
+    - grafana
+    - jaeger
+    - profiling
+    - spans
+    - SLO
+    - SLI
+    - alerting
+    - RED method
+    - USE method
+    - pprof
+  intents:
+    - setup monitoring
+    - add metrics
+    - distributed tracing
+    - observability stack
+
+caps:
+  - Metrics collection patterns (Prometheus, StatsD)
+  - Distributed tracing (OpenTelemetry, Jaeger, Zipkin)
+  - Profiling (CPU, memory, continuous)
+  - Alerting and SLO-based monitoring
+  - Dashboard design patterns
+  - Anti-patterns detection
+
+    - search_observability_patterns
+    - get_metrics_patterns
+    - get_tracing_patterns
+    - get_otel_patterns
+    - get_language_patterns
+    - get_alerting_patterns
+    - get_profiling_patterns
+
+data_files:
+  - data/core-patterns.yaml
+  - data/otel-core.yaml
+  - data/metrics-prometheus.yaml
+  - data/metrics-patterns.yaml
+  - data/tracing-patterns.yaml
+  - data/tracing-tools.yaml
+  - data/profiling-patterns.yaml
+  - data/alerting-patterns.yaml
+  - data/language-go.yaml
+  - data/language-python.yaml
+  - data/language-typescript.yaml
+  - data/language-rust.yaml
+  - data/language-java.yaml
+  - data/language-csharp.yaml
+  - data/language-cpp.yaml
+  - data/language-others.yaml
+  - data/anti-patterns.yaml
+
+related_skills:
+  - logging

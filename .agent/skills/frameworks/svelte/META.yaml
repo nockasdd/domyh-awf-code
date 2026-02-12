@@ -1,11 +1,32 @@
 name: svelte
-version: "6.1.2"
+version: "6.2.1"
+display: "Svelte & SvelteKit Patterns"
 category: frontend
 tier: 1
+priority: 3
 
-description: |
-  Compiled UI framework for Svelte 5 and SvelteKit 2.
-  Covers runes ($state, $derived, $effect), snippets, form actions.
+desc: "Svelte 5.x / SvelteKit 2.x development patterns (Feb 2026). Runes stable, async SSR, CSP hydration, deep reactivity."
+
+caps:
+  - runes-reactivity
+  - sveltekit-routing
+  - form-actions
+  - ssr-csp
+  - snippets
+  - deep-reactivity
+
+data_files:
+  - data/runes.yaml
+  - data/sveltekit.yaml
+
+patterns:
+  total: 12
+  domains:
+    runes: 6
+    sveltekit: 6
+
+    - search_svelte_patterns
+    - get_svelte_component
 
 triggers:
   file_patterns:
@@ -13,77 +34,42 @@ triggers:
     - "*.svelte"
     - "+page.svelte"
     - "+layout.svelte"
+    - "+page.ts"
     - "+page.server.ts"
   keywords:
-    # Core
-    - svelte
-    - svelte 5
-    - sveltekit
-    - sveltekit 2
-    - svelte component
     # Runes
+    - svelte
     - "$state"
     - "$derived"
     - "$effect"
     - "$props"
     - "$bindable"
     - "$inspect"
-    - runes svelte
-    # Snippets
-    - "{#snippet}"
-    - "{@render}"
-    - svelte snippets
-    # Reactivity
-    - svelte store
-    - writable
-    - readable
-    - derived store
+    - runes
     # SvelteKit
-    - +page.svelte
-    - +layout.svelte
-    - +page.ts
-    - +page.server.ts
-    - +server.ts
+    - sveltekit
     - load function
-    # Routing
-    - sveltekit routing
-    - file based routing
-    - +error.svelte
-    # Forms
-    - form actions
-    - use:enhance
-    - fail svelte
-    # Directives
-    - bind:
-    - on:
-    - use:
-    - class:
-    - style:
-    # Control Flow
-    - "{#if}"
-    - "{#each}"
-    - "{#await}"
-    - "{:else}"
-    # Lifecycle
-    - onMount
-    - onDestroy
-    - beforeUpdate
-    - afterUpdate
-    # Tools
-    - svelte extension
-    - svelte devtools
-    - vitest svelte
+    - form action
+    - enhance
+    - "+page"
+    - "+layout"
+    # Features
+    - snippet
+    - "@render"
+    - async ssr
+    - csp
   intents:
     - svelte component
-    - sveltekit project
-    - svelte state
+    - svelte runes
+    - sveltekit page
     - svelte form
-    - svelte routing
+    - svelte state
 
 related_skills:
   - typescript
   - tailwind
+  - vite
 
 prevent_confusion_with:
-  - vue: "Svelte compiles away, Vue has virtual DOM"
-  - react: "Svelte uses $state runes, React uses useState"
+  - vue: "Svelte uses compilation, Vue uses virtual DOM"
+  - react: "Svelte uses runes, React uses hooks"

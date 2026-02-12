@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_java
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-java.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: JV-001
+    pattern_name: Spring Security Core
+    description: Central Spring authentication framework
+    library: spring-security-core
+    security_level: high
+    keywords:
+      - spring
+      - security
+  - id: JV-002
+    pattern_name: SecurityFilterChain
+    description: Component-based security configuration
+    library: spring-security-web
+    security_level: high
+    keywords:
+      - filter
+      - chain
+  - id: JV-003
+    pattern_name: AuthenticationManager
+    description: Core authentication handling
+    library: spring-security-core
+    security_level: high
+    keywords:
+      - manager
+      - auth
+  - id: JV-004
+    pattern_name: UserDetailsService
+    description: Load user data for authentication
+    library: spring-security-core
+    security_level: high
+    keywords:
+      - user
+      - details
+  - id: JV-005
+    pattern_name: PasswordEncoder
+    description: BCrypt password encoding
+    library: spring-security-crypto
+    security_level: critical
+    keywords:
+      - bcrypt
+      - encoder
+  - id: JV-006
+    pattern_name: Argon2PasswordEncoder
+    description: Argon2 for Spring Security
+    library: spring-security-crypto
+    security_level: critical
+    keywords:
+      - argon2
+      - encoder
+  - id: JV-007
+    pattern_name: JWT Filter
+    description: OncePerRequestFilter for JWT validation
+    library: custom
+    security_level: high
+    keywords:
+      - jwt
+      - filter
+  - id: JV-008
+    pattern_name: jjwt Library
+    description: Java JWT creation and parsing
+    library: io.jsonwebtoken
+    security_level: high
+    keywords:
+      - jjwt
+      - jwt
+  - id: JV-009
+    pattern_name: Spring OAuth2 Client
+    description: OAuth2 client support
+    library: spring-security-oauth2-client
+    security_level: high
+    keywords:
+      - oauth2
+      - client
+  - id: JV-010
+    pattern_name: Spring OAuth2 Resource Server
+    description: JWT resource server
+    library: spring-security-oauth2-resource-server
+    security_level: high
+    keywords:
+      - resource
+      - jwt
+  - id: JV-011
+    pattern_name: Spring Authorization Server
+    description: Full OAuth2 server
+    library: spring-authorization-server
+    security_level: high
+    keywords:
+      - authz
+      - server
+  - id: JV-012
+    pattern_name: OIDC Support
+    description: OpenID Connect integration
+    library: spring-security-oauth2-client
+    security_level: high
+    keywords:
+      - oidc
+      - openid
+  - id: JV-013
+    pattern_name: Method Security
+    description: PreAuthorize PostAuthorize
+    library: spring-security-core
+    security_level: high
+    keywords:
+      - method
+      - annotations
+  - id: JV-014
+    pattern_name: CSRF Protection
+    description: CsrfTokenRepository
+    library: spring-security-web
+    security_level: critical
+    keywords:
+      - csrf
+      - token
+  - id: JV-015
+    pattern_name: Session Management
+    description: SessionRegistry configuration
+    library: spring-security-core
+    security_level: high
+    keywords:
+      - session
+      - registry
+  - id: JV-016
+    pattern_name: Remember Me
+    description: PersistentTokenBasedRememberMeServices
+    library: spring-security-web
+    security_level: medium
+    keywords:
+      - remember
+      - persistent
+  - id: JV-017
+    pattern_name: WebAuthn Support
+    description: Spring Security 6.4 passkeys
+    library: spring-security-webauthn
+    security_level: critical
+    keywords:
+      - webauthn
+      - passkey
+  - id: JV-018
+    pattern_name: Keycloak Integration
+    description: SSO with Keycloak
+    library: keycloak-spring-boot-starter
+    security_level: high
+    keywords:
+      - keycloak
+      - sso
+  - id: JV-019
+    pattern_name: JWT Nimbus
+    description: JOSE JWT implementation
+    library: nimbus-jose-jwt
+    security_level: high
+    keywords:
+      - nimbus
+      - jose
+  - id: JV-020
+    pattern_name: Auth0 Spring SDK
+    description: Auth0 integration
+    library: auth0-spring-security-api
+    security_level: high
+    keywords:
+      - auth0
+      - sdk
+  - id: JV-021
+    pattern_name: SAML Support
+    description: SAML2 authentication
+    library: spring-security-saml2-service-provider
+    security_level: high
+    keywords:
+      - saml
+      - enterprise
+  - id: JV-022
+    pattern_name: LDAP Authentication
+    description: Active Directory integration
+    library: spring-security-ldap
+    security_level: high
+    keywords:
+      - ldap
+      - ad
+  - id: JV-023
+    pattern_name: OTP Aerogear
+    description: TOTP implementation
+    library: aerogear-otp-java
+    security_level: high
+    keywords:
+      - totp
+      - otp
+  - id: JV-024
+    pattern_name: Java JWT
+    description: Lightweight JWT library
+    library: com.auth0.java-jwt
+    security_level: high
+    keywords:
+      - auth0
+      - jwt
+  - id: JV-025
+    pattern_name: Rate Limiter Bucket4j
+    description: Rate limiting for logins
+    library: bucket4j
+    security_level: high
+    keywords:
+      - ratelimit
+      - bucket4j

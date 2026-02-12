@@ -1,0 +1,304 @@
+# =============================================================================
+# C++ Core Patterns (Feb 2026)
+# Version: C++23/26
+# =============================================================================
+
+metadata:
+  skill: cpp
+  domain: core
+  version: "C++26"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: cpp001
+    name: Modules (C++20)
+    category: organization
+    version: "C++20"
+    description: |
+      Replace headers with modules for faster builds.
+      Better encapsulation, no include guards.
+    text: modules import export module interface unit
+    example: |
+      // ✅ Module interface unit (math.ixx or math.cppm)
+      export module math;
+
+      export namespace math {
+          int add(int a, int b) { return a + b; }
+          int subtract(int a, int b) { return a - b; }
+          
+          class Calculator {
+          public:
+              int multiply(int a, int b) { return a * b; }
+          };
+      }
+
+      // Internal (not exported)
+      namespace math::detail {
+          void internal_helper() {}
+      }
+
+      // ✅ Module implementation unit
+      module math;
+
+      // Implementation of unexported functions
+      void math::detail::internal_helper() {
+          // Implementation
+      }
+
+      // ✅ Import and use
+      import math;
+      import std;  // Standard library module (C++23)
+
+      int main() {
+          std::println("{}", math::add(2, 3));
+          math::Calculator calc;
+          std::println("{}", calc.multiply(4, 5));
+      }
+
+      // ✅ CMake support
+      // CMakeLists.txt:
+      // add_library(math)
+      // target_sources(math PUBLIC FILE_SET CXX_MODULES FILES math.cppm)
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/language/modules
+
+  - id: cpp002
+    name: Concepts (C++20)
+    category: templates
+    version: "C++20"
+    description: |
+      Constrain templates with readable requirements.
+      Better error messages, clearer intent.
+    text: concepts requires template constraint auto
+    example: |
+      #include <concepts>
+      #include <ranges>
+
+      // ✅ Define a concept
+      template<typename T>
+      concept Numeric = std::integral<T> || std::floating_point<T>;
+
+      template<typename T>
+      concept Hashable = requires(T t) {
+          { std::hash<T>{}(t) } -> std::convertible_to<std::size_t>;
+      };
+
+      // ✅ Use concept as constraint
+      template<Numeric T>
+      T add(T a, T b) { return a + b; }
+
+      // ✅ Use with requires clause
+      template<typename T>
+      requires Numeric<T>
+      T multiply(T a, T b) { return a * b; }
+
+      // ✅ Inline requires
+      template<typename T>
+      requires std::integral<T> && (sizeof(T) >= 4)
+      void process_large_int(T value) {}
+
+      // ✅ Abbreviated function template
+      void print(const std::ranges::range auto& r) {
+          for (const auto& item : r) {
+              std::println("{}", item);
+          }
+      }
+
+      // ✅ Constrained auto
+      Numeric auto calculate(Numeric auto x, Numeric auto y) {
+          return x * y + x;
+      }
+
+      // ✅ Standard library concepts
+      // std::same_as, std::derived_from, std::convertible_to
+      // std::integral, std::floating_point
+      // std::copyable, std::movable, std::regular
+      // std::invocable, std::predicate
+      // std::ranges::range, std::ranges::input_range
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/concepts
+
+  - id: cpp003
+    name: std::expected (C++23)
+    category: error-handling
+    version: "C++23"
+    description: |
+      Type-safe error handling without exceptions.
+      Similar to Rust Result type.
+    text: expected error handling result optional monadic
+    example: |
+      #include <expected>
+      #include <string>
+      #include <fstream>
+
+      // ✅ Define error type
+      enum class FileError {
+          NotFound,
+          PermissionDenied,
+          InvalidFormat
+      };
+
+      // ✅ Return expected instead of throw
+      std::expected<std::string, FileError> read_file(const std::string& path) {
+          std::ifstream file(path);
+          if (!file) {
+              return std::unexpected(FileError::NotFound);
+          }
+          
+          std::string content((std::istreambuf_iterator<char>(file)),
+                               std::istreambuf_iterator<char>());
+          return content;
+      }
+
+      // ✅ Check and use
+      void process() {
+          auto result = read_file("config.json");
+          
+          if (result) {
+              std::println("Content: {}", *result);
+          } else {
+              switch (result.error()) {
+                  case FileError::NotFound:
+                      std::println("File not found");
+                      break;
+                  case FileError::PermissionDenied:
+                      std::println("Permission denied");
+                      break;
+              }
+          }
+      }
+
+      // ✅ Monadic operations (C++23)
+      auto process_file(const std::string& path) {
+          return read_file(path)
+              .transform([](const std::string& s) {
+                  return parse_json(s);
+              })
+              .transform_error([](FileError e) {
+                  return map_to_app_error(e);
+              });
+      }
+
+      // ✅ value_or for defaults
+      std::string content = read_file("config.json").value_or("{}");
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/utility/expected
+
+  - id: cpp004
+    name: Deducing this (C++23)
+    category: language
+    version: "C++23"
+    description: |
+      Explicit object parameter for member functions.
+      CRTP without templates, perfect forwarding this.
+    text: deducing this explicit object parameter self
+    example: |
+      #include <type_traits>
+
+      // ✅ Basic syntax - explicit object parameter
+      struct Container {
+          std::vector<int> data;
+          
+          // Single implementation for const and non-const
+          template<typename Self>
+          auto&& get(this Self&& self, size_t index) {
+              return std::forward<Self>(self).data[index];
+          }
+          
+          // Works for const and non-const access
+      };
+
+      Container c{{1, 2, 3}};
+      c.get(0) = 10;  // Non-const, modifiable
+
+      const Container& cc = c;
+      auto val = cc.get(0);  // Const access
+
+      // ✅ Replace CRTP with deducing this
+      struct Comparisons {
+          template<typename Self>
+          bool operator!=(this const Self& self, const Self& other) {
+              return !(self == other);
+          }
+          
+          template<typename Self>
+          bool operator<=(this const Self& self, const Self& other) {
+              return !(other < self);
+          }
+      };
+
+      struct Point : Comparisons {
+          int x, y;
+          bool operator==(const Point&) const = default;
+          bool operator<(const Point& other) const {
+              return std::tie(x, y) < std::tie(other.x, other.y);
+          }
+      };
+
+      // ✅ Recursive lambdas
+      auto factorial = [](this auto self, int n) -> int {
+          return n <= 1 ? 1 : n * self(n - 1);
+      };
+
+      int result = factorial(5);  // 120
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/cpp/language/member_functions#Explicit_object_parameter
+
+  - id: cpp005
+    name: if consteval (C++23)
+    category: metaprogramming
+    version: "C++23"
+    description: |
+      Compile-time vs runtime code selection.
+      Supersedes is_constant_evaluated.
+    text: consteval constexpr if compile-time constant
+    example: |
+      #include <cmath>
+
+      // ✅ if consteval - compile-time branch selection
+      constexpr double power(double base, int exp) {
+          if consteval {
+              // Compile-time: use simple loop
+              double result = 1.0;
+              for (int i = 0; i < exp; ++i) {
+                  result *= base;
+              }
+              return result;
+          } else {
+              // Runtime: use optimized std::pow
+              return std::pow(base, exp);
+          }
+      }
+
+      // Compile-time usage
+      constexpr double compile_result = power(2.0, 10);  // Uses loop
+
+      // Runtime usage
+      double runtime_result = power(2.0, 10);  // Uses std::pow
+
+      // ✅ Difference from if constexpr
+      // if constexpr: branch on compile-time boolean
+      // if consteval: branch on whether in constant evaluation
+
+      // ✅ Use with constexpr functions that have runtime fallback
+      constexpr int compute(int x) {
+          if consteval {
+              // No UB checks in constexpr context
+              return x * 2;
+          } else {
+              // Can use runtime-only features
+              [[assume(x > 0)]];  // Runtime hint
+              return x * 2;
+          }
+      }
+
+      // ✅ Negated form
+      constexpr void debug_only(const char* msg) {
+          if !consteval {
+              // Only runs at runtime
+              std::println("Debug: {}", msg);
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/cpp/language/if#Consteval_if

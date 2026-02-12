@@ -1,0 +1,118 @@
+# Search Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: SRCH-001
+    name: Hybrid Search
+    category: retrieval
+    description: |
+      Combine vector similarity with keyword BM25 for better recall.
+    text: |
+      Alpha parameter: 0.0 = pure BM25, 1.0 = pure vector
+      Best: alpha 0.4-0.7 (balanced)
+      Benefit: Catches exact matches that vectors miss
+    example: |
+      // Weaviate hybrid search
+      const results = await collection.query.hybrid("machine learning", {
+        alpha: 0.5,
+        limit: 10,
+        returnMetadata: ["score"]
+      });
+
+      // pgvector + ts_rank hybrid
+      SELECT content,
+        (0.5 * ts_rank(to_tsvector(content), query) + 
+         0.5 * (1 - (embedding <=> query_embedding))) AS score
+      FROM documents, plainto_tsquery('machine learning') query
+      ORDER BY score DESC LIMIT 10;
+
+  - id: SRCH-002
+    name: Metadata Filtering
+    category: retrieval
+    description: |
+      Pre-filter vectors by metadata before similarity search.
+    text: |
+      Strategies:
+      - Pre-filter: Filter first, then vector search (faster)
+      - Post-filter: Vector search first, then filter (better recall)
+      Common filters: date range, category, language, access level
+    example: |
+      // Pinecone with filter
+      await index.query({
+        vector: queryEmbedding,
+        topK: 10,
+        filter: {
+          category: { $eq: "documentation" },
+          date: { $gte: "2025-01-01" }
+        }
+      });
+
+  - id: SRCH-003
+    name: Reranking
+    category: retrieval
+    description: |
+      Rerank initial results for higher precision.
+    text: |
+      Pipeline: Query → Retrieve top-100 → Rerank → Return top-10
+      Models: Cohere Rerank, cross-encoder/ms-marco
+      Benefit: 10-30% precision improvement
+    example: |
+      // Cohere Rerank
+      const reranked = await cohere.rerank({
+        model: "rerank-multilingual-v3.0",
+        query: "What is machine learning?",
+        documents: initialResults.map(r => r.text),
+        topN: 10
+      });
+
+  - id: SRCH-004
+    name: Multi-vector Search
+    category: retrieval
+    description: |
+      Use multiple vectors per document for richer representation.
+    text: |
+      Approaches:
+      - ColBERT: Token-level vectors (late interaction)
+      - Multi-chunk: One vector per chunk, link to parent doc
+      - Multi-modal: Text vector + image vector per document
+
+  - id: SRCH-005
+    name: Namespace Isolation
+    category: architecture
+    description: |
+      Separate vectors by tenant/project for multi-tenancy.
+    text: |
+      Strategies:
+      - Pinecone: Use namespaces
+      - Weaviate: Use multi-tenancy
+      - Qdrant: Use collection aliases or payload filtering
+      - pgvector: Use separate schemas or tenant_id column
+
+  - id: SRCH-006
+    name: Incremental Indexing
+    category: pipeline
+    description: |
+      Keep vector index in sync with source data.
+    text: |
+      Pipeline:
+      1. Detect new/modified/deleted documents
+      2. Chunk modified documents
+      3. Generate embeddings (batch)
+      4. Upsert vectors with document IDs
+      5. Delete vectors for removed documents
+
+      Tools: LlamaIndex IngestionPipeline, custom CDC pipeline
+
+  - id: SRCH-007
+    name: Evaluation Metrics
+    category: quality
+    description: |
+      Measure search quality.
+    text: |
+      Metrics:
+      - Recall@K: % of relevant docs in top-K results
+      - MRR: Mean Reciprocal Rank
+      - NDCG: Normalized Discounted Cumulative Gain
+      - Latency: p50/p95/p99 query time
+
+      Tools: RAGAS, BEIR benchmark, custom eval sets

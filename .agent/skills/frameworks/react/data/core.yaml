@@ -1,0 +1,290 @@
+# =============================================================================
+# React Core Patterns (Feb 2026)
+# =============================================================================
+# React 19.2, Server Components, Hooks
+
+metadata:
+  skill: react
+  domain: core
+  version: "19.2"
+  updated: "2026-02-11"
+  patterns_count: 6
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: react001
+    name: Functional Components
+    category: architecture
+    version: "16.8+"
+    description: Modern React component pattern with hooks
+    text: function component hook useState useEffect props
+    example: |
+      import { useState, useEffect } from 'react';
+
+      interface UserCardProps {
+        userId: string;
+        onSelect?: (user: User) => void;
+      }
+
+      export function UserCard({ userId, onSelect }: UserCardProps) {
+        const [user, setUser] = useState<User | null>(null);
+        const [loading, setLoading] = useState(true);
+
+        useEffect(() => {
+          async function fetchUser() {
+            setLoading(true);
+            const response = await fetch(`/api/users/${userId}`);
+            const data = await response.json();
+            setUser(data);
+            setLoading(false);
+          }
+          fetchUser();
+        }, [userId]);
+
+        if (loading) return <Skeleton />;
+        if (!user) return <p>User not found</p>;
+
+        return (
+          <div onClick={() => onSelect?.(user)}>
+            <img src={user.avatar} alt={user.name} />
+            <h3>{user.name}</h3>
+            <p>{user.email}</p>
+          </div>
+        );
+      }
+    severity: CRITICAL
+    docs_url: https://react.dev/learn/your-first-component
+
+  - id: react002
+    name: useOptimistic (React 19)
+    category: hooks
+    version: "19+"
+    description: Optimistic UI updates for instant feedback
+    text: useOptimistic optimistic ui pending instant update
+    example: |
+      'use client';
+      import { useOptimistic } from 'react';
+
+      interface Message {
+        id: string;
+        text: string;
+        sending?: boolean;
+      }
+
+      export function MessageList({ messages, sendMessage }) {
+        // ✅ useOptimistic for instant UI feedback
+        const [optimisticMessages, addOptimisticMessage] = useOptimistic<
+          Message[],
+          string
+        >(messages, (state, newMessage) => [
+          ...state,
+          { id: crypto.randomUUID(), text: newMessage, sending: true },
+        ]);
+
+        async function handleSubmit(formData: FormData) {
+          const text = formData.get('message') as string;
+          addOptimisticMessage(text);  // Instant UI update
+          await sendMessage(text);      // Server function
+        }
+
+        return (
+          <>
+            <ul>
+              {optimisticMessages.map((msg) => (
+                <li key={msg.id} style={{ opacity: msg.sending ? 0.5 : 1 }}>
+                  {msg.text}
+                </li>
+              ))}
+            </ul>
+            <form action={handleSubmit}>
+              <input name="message" />
+              <button>Send</button>
+            </form>
+          </>
+        );
+      }
+    severity: HIGH
+    docs_url: https://react.dev/reference/react/useOptimistic
+
+  - id: react003
+    name: useEffectEvent (React 19.2)
+    category: hooks
+    version: "19.2+"
+    description: |
+      Stable event handlers without stale closures.
+      Access latest props/state without re-running effects.
+    text: useEffectEvent effect event stable closure dependencies
+    example: |
+      import { useEffect, useEffectEvent } from 'react';
+
+      function ChatRoom({ roomId, theme }) {
+        // ✅ useEffectEvent: Stable callback that always sees latest values
+        const onMessage = useEffectEvent((message: Message) => {
+          // Always has access to current theme, without triggering effect rerun
+          showNotification(message, theme);
+        });
+
+        useEffect(() => {
+          const connection = createConnection(roomId);
+          connection.on('message', onMessage);
+          return () => connection.disconnect();
+        }, [roomId]);  // ✅ onMessage NOT in deps array!
+
+        // ✅ Benefits:
+        // - No stale closure bugs
+        // - Effect doesn't rerun when theme changes
+        // - Always accesses current props/state
+
+        // ⚠️ Rules:
+        // - Only call from useEffect or other useEffectEvent
+        // - Cannot be called during rendering
+      }
+    severity: HIGH
+    docs_url: https://react.dev/reference/react/useEffectEvent
+
+  - id: react004
+    name: Activity Component (React 19.2)
+    category: rendering
+    version: "19.2+"
+    description: |
+      Preserve component state when hidden.
+      Pre-render offscreen components efficiently.
+    text: activity hidden visible offscreen preserve state
+    example: |
+      import { Activity } from 'react';
+
+      function TabContainer({ activeTab }) {
+        return (
+          <div>
+            {/* ✅ Activity preserves state when hidden */}
+            <Activity mode={activeTab === 'home' ? 'visible' : 'hidden'}>
+              <HomeTab />
+            </Activity>
+
+            <Activity mode={activeTab === 'profile' ? 'visible' : 'hidden'}>
+              <ProfileTab />
+            </Activity>
+
+            <Activity mode={activeTab === 'settings' ? 'visible' : 'hidden'}>
+              <SettingsTab />
+            </Activity>
+          </div>
+        );
+      }
+
+      // ✅ Benefits:
+      // - State preserved across visibility changes
+      // - Effects cleaned up when hidden, restored when visible
+      // - No remounting = faster tab switches
+      // - Pre-render content before showing
+
+      // Use cases:
+      // - Tab interfaces
+      // - Modals
+      // - Multi-step forms
+      // - Drawer navigation
+    severity: MEDIUM
+    docs_url: https://react.dev/reference/react/Activity
+
+  - id: react005
+    name: use() Hook (React 19)
+    category: hooks
+    version: "19+"
+    description: Read resources (Promises, Context) in render
+    text: use promise context suspend async await render
+    example: |
+      import { use } from 'react';
+
+      // ✅ use() with Promises
+      function UserProfile({ userPromise }) {
+        // Suspends until promise resolves
+        const user = use(userPromise);
+        return <h1>{user.name}</h1>;
+      }
+
+      // ✅ use() with Context (conditional access!)
+      function ThemedButton({ showTheme }) {
+        if (showTheme) {
+          const theme = use(ThemeContext);  // ✅ OK in conditionals!
+          return <button style={{ background: theme.primary }}>Click</button>;
+        }
+        return <button>Click</button>;
+      }
+
+      // Usage with Suspense
+      <Suspense fallback={<Loading />}>
+        <UserProfile userPromise={fetchUser(id)} />
+      </Suspense>
+
+      // ✅ Benefits over useContext:
+      // - Can be called conditionally
+      // - Works with Promises
+      // - Better integration with Suspense
+    severity: HIGH
+    docs_url: https://react.dev/reference/react/use
+
+  - id: react006
+    name: Custom Hooks
+    category: patterns
+    version: "16.8+"
+    description: Extract and reuse stateful logic
+    text: custom hook reusable logic extract composition
+    example: |
+      import { useState, useEffect, useCallback } from 'react';
+
+      // ✅ Custom hook for data fetching
+      function useFetch<T>(url: string) {
+        const [data, setData] = useState<T | null>(null);
+        const [error, setError] = useState<Error | null>(null);
+        const [loading, setLoading] = useState(true);
+
+        const refetch = useCallback(async () => {
+          setLoading(true);
+          try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch');
+            setData(await response.json());
+          } catch (e) {
+            setError(e as Error);
+          } finally {
+            setLoading(false);
+          }
+        }, [url]);
+
+        useEffect(() => {
+          refetch();
+        }, [refetch]);
+
+        return { data, error, loading, refetch };
+      }
+
+      // ✅ Custom hook for form state
+      function useForm<T>(initialValues: T) {
+        const [values, setValues] = useState(initialValues);
+
+        const handleChange = (name: keyof T) => (
+          e: React.ChangeEvent<HTMLInputElement>
+        ) => {
+          setValues((prev) => ({ ...prev, [name]: e.target.value }));
+        };
+
+        const reset = () => setValues(initialValues);
+
+        return { values, handleChange, reset };
+      }
+
+      // Usage
+      const { values, handleChange } = useForm({ email: '', password: '' });
+    severity: HIGH
+    docs_url: https://react.dev/learn/reusing-logic-with-custom-hooks

@@ -113,4 +113,4 @@ guardrails:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Guardrails Block Template_
+_DOMYH Awesome Code • Guardrails Block Template_

@@ -1,87 +1,73 @@
 name: react
-version: "6.1.2"
+version: "6.2.1"
+display: "React Patterns"
 category: frontend
 tier: 1
+priority: 2
 
-description: |
-  React UI library patterns for React 19.
-  Covers React Compiler, hooks, Zustand, TanStack Query.
+desc: "React 19.2+ development patterns (2025-2026). useEffectEvent, Activity, React Compiler, Server Components."
+
+caps:
+  - hooks-patterns
+  - server-components
+  - server-functions
+  - react-compiler
+  - concurrent-rendering
+  - suspense-streaming
+
+data_files:
+  - data/core.yaml
+  - data/server.yaml
+
+patterns:
+  total: 11
+  domains:
+    core: 6
+    server: 5
+
+    - search_react_patterns
+    - get_react_hook
 
 triggers:
   file_patterns:
-    - "package.json"
     - "*.jsx"
     - "*.tsx"
-    - "vite.config.ts"
+    - "package.json"
   keywords:
     # Core
     - react
-    - react 19
-    - jsx
-    - tsx
-    - react dom
+    - useState
+    - useEffect
+    - useCallback
+    - useMemo
+    # React 19
+    - useOptimistic
+    - useEffectEvent
+    - activity
+    - use hook
+    # Server
+    - use server
+    - server component
+    - server function
     # Compiler
     - react compiler
-    - auto memoization
-    # Hooks
-    - usestate
-    - useeffect
-    - usecontext
-    - usereducer
-    - usememo
-    - usecallback
-    - useref
-    - use hook
-    - useoptimistic
-    - useactionstate
-    - useformstatus
-    # Components
-    - functional component
-    - client component
+    # Patterns
+    - custom hook
     - suspense
     - error boundary
-    - react.lazy
-    # State
-    - zustand
-    - jotai
-    - recoil
-    - redux
-    - context api
-    # Server State
-    - react query
-    - tanstack query
-    - swr
-    # Forms
-    - react hook form
-    - formik
-    - zod validation
-    # UI
-    - shadcn
-    - radix ui
-    - chakra
-    - mantine
-    - material ui
-    - mui
-    # Testing
-    - react testing library
-    - vitest
-    - jest react
-    # Build
-    - vite
-    - webpack
-    - create react app
   intents:
-    - create react app
     - react component
-    - react state management
-    - react form
-    - react testing
+    - react hook
+    - react state
+    - react server
+    - react performance
 
 related_skills:
-  - typescript
-  - tailwind-patterns
   - nextjs
+  - typescript
+  - tailwind
+  - tanstack-query
 
 prevent_confusion_with:
-  - nextjs: "React is library, Next.js adds SSR/routing"
   - vue: "React uses JSX, Vue uses templates"
+  - angular: "React is a library, Angular is a framework"

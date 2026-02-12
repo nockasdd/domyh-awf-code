@@ -1,0 +1,121 @@
+metadata:
+  skill: api-design
+  domain: pagination
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: pagination.yaml
+  patterns_count: 15
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - pros
+    - cons
+    - use_case
+patterns:
+  - id: PAG-01
+    pattern: Offset Pagination
+    description: Skip N records take M
+    example: ?offset=20&limit=10
+    pros: Simple random access
+    cons: Slow at large offsets
+    use_case: Small static data
+  - id: PAG-02
+    pattern: Page Number
+    description: Page and size params
+    example: ?page=3&pageSize=10
+    pros: Intuitive for users
+    cons: Same issues as offset
+    use_case: Admin interfaces
+  - id: PAG-03
+    pattern: Cursor Pagination
+    description: Opaque cursor for position
+    example: ?cursor=eyJpZCI6MTIz
+    pros: Efficient consistent
+    cons: No random access
+    use_case: Large dynamic data
+  - id: PAG-04
+    pattern: Keyset Pagination
+    description: Last seen key values
+    example: ?after_id=123&limit=10
+    pros: Very efficient stable
+    cons: Sequential only
+    use_case: Ordered lists logs
+  - id: PAG-05
+    pattern: Relay Connection
+    description: GraphQL connection spec
+    example: first after edges pageInfo
+    pros: Standard spec
+    cons: Complex implementation
+    use_case: GraphQL APIs
+  - id: PAG-06
+    pattern: Total Count
+    description: Include total in response
+    example: "{total: 100 page: 1}"
+    pros: User knows position
+    cons: Expensive query
+    use_case: Small datasets
+  - id: PAG-07
+    pattern: Has Next Page
+    description: Boolean for more data
+    example: "{hasNext: true data: []}"
+    pros: Avoids count query
+    cons: No total info
+    use_case: Large datasets
+  - id: PAG-08
+    pattern: Link Headers
+    description: RFC 5988 pagination links
+    example: 'Link: <url>; rel="next"'
+    pros: Standard HTTP
+    cons: Header parsing
+    use_case: REST APIs
+  - id: PAG-09
+    pattern: Envelope Links
+    description: Links in response body
+    example: "{_links: {next prev}}"
+    pros: Self-documenting
+    cons: Larger response
+    use_case: HATEOAS APIs
+  - id: PAG-10
+    pattern: Default Page Size
+    description: Sensible default limit
+    example: "Default: 20 Max: 100"
+    pros: Predictable behavior
+    cons: May not fit all
+    use_case: All APIs
+  - id: PAG-11
+    pattern: Max Page Size
+    description: Cap maximum page size
+    example: Max 100 even if 1000 requested
+    pros: Prevents abuse
+    cons: Client limits
+    use_case: Public APIs
+  - id: PAG-12
+    pattern: Consistent Ordering
+    description: Stable sort for pagination
+    example: ORDER BY created_at id
+    pros: Prevents duplicates
+    cons: Requires unique key
+    use_case: All pagination
+  - id: PAG-13
+    pattern: Cursor Encoding
+    description: Encode cursor as base64
+    example: base64(JSON.stringify(pos))
+    pros: Opaque to client
+    cons: Decode overhead
+    use_case: Cursor pagination
+  - id: PAG-14
+    pattern: Time-Based Cursor
+    description: Timestamp in cursor
+    example: ?since=2024-01-01T00:00:00Z
+    pros: Good for feeds
+    cons: Clock sync issues
+    use_case: Activity feeds
+  - id: PAG-15
+    pattern: Seek Method
+    description: SQL SEEK instead of OFFSET
+    example: WHERE id > last_id
+    pros: Database efficient
+    cons: Requires indexed key
+    use_case: Large tables

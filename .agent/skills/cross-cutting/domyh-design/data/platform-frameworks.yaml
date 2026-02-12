@@ -1,0 +1,195 @@
+metadata:
+  skill: domyh-design
+  domain: platform_frameworks
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: platform-frameworks.yaml
+  patterns_count: 16
+  columns:
+    - platform
+    - framework
+    - language
+    - ui_approach
+    - rendering
+    - performance
+    - touch_target
+    - code_output
+    - detection_file
+    - use_case
+patterns:
+  - id: item_001
+    platform: Web
+    framework: React
+    language: TypeScript
+    ui_approach: Component-based
+    rendering: Virtual DOM
+    performance: High
+    touch_target: 44x44px
+    code_output: JSX + Tailwind
+    detection_file: package.json (react)
+    use_case: SPA/Dynamic apps
+  - id: item_002
+    platform: Web
+    framework: Vue
+    language: TypeScript
+    ui_approach: Composition API
+    rendering: Virtual DOM
+    performance: High
+    touch_target: 44x44px
+    code_output: Vue SFC + Tailwind
+    detection_file: package.json (vue)
+    use_case: Progressive apps
+  - id: item_003
+    platform: Web
+    framework: Svelte
+    language: TypeScript
+    ui_approach: Reactive
+    rendering: Compile-time
+    performance: Very High
+    touch_target: 44x44px
+    code_output: Svelte + CSS
+    detection_file: package.json (svelte)
+    use_case: Performance-critical
+  - id: item_004
+    platform: Web
+    framework: Angular
+    language: TypeScript
+    ui_approach: DI + Modules
+    rendering: Zone.js
+    performance: High
+    touch_target: 44x44px
+    code_output: HTML + TypeScript
+    detection_file: angular.json
+    use_case: Enterprise apps
+  - id: item_005
+    platform: Desktop
+    framework: WPF
+    language: C#/XAML
+    ui_approach: MVVM
+    rendering: DirectX
+    performance: Native
+    touch_target: 32x32px
+    code_output: XAML
+    detection_file: "*.csproj (WPF)"
+    use_case: Windows enterprise
+  - id: item_006
+    platform: Desktop
+    framework: WinUI3
+    language: C#/XAML
+    ui_approach: MVVM
+    rendering: DirectX 12
+    performance: Native
+    touch_target: 32x32px
+    code_output: XAML
+    detection_file: "*.csproj (WinUI)"
+    use_case: Windows 11 apps
+  - id: item_007
+    platform: Desktop
+    framework: Qt/QML
+    language: C++/QML
+    ui_approach: Signals/Slots
+    rendering: OpenGL/Native
+    performance: Native
+    touch_target: 32x32px
+    code_output: QML
+    detection_file: CMakeLists.txt (Qt)
+    use_case: Cross-platform desktop
+  - id: item_008
+    platform: Desktop
+    framework: Electron
+    language: TypeScript
+    ui_approach: Web-based
+    rendering: Chromium
+    performance: Medium
+    touch_target: 44x44px
+    code_output: React/Vue + CSS
+    detection_file: package.json (electron)
+    use_case: Web devs → desktop
+  - id: item_009
+    platform: Desktop
+    framework: Tauri
+    language: Rust/TypeScript
+    ui_approach: Web-based
+    rendering: Native WebView
+    performance: Very High
+    touch_target: 44x44px
+    code_output: React/Vue + CSS
+    detection_file: Cargo.toml (tauri)
+    use_case: Lightweight desktop
+  - id: item_010
+    platform: Desktop
+    framework: Avalonia
+    language: C#/XAML
+    ui_approach: MVVM
+    rendering: Skia
+    performance: Native
+    touch_target: 32x32px
+    code_output: XAML
+    detection_file: "*.csproj (Avalonia)"
+    use_case: Cross-platform .NET
+  - id: item_011
+    platform: Mobile
+    framework: Flutter
+    language: Dart
+    ui_approach: Widget tree
+    rendering: Impeller/Skia
+    performance: 60fps
+    touch_target: 44x44pt
+    code_output: Dart
+    detection_file: pubspec.yaml
+    use_case: Pixel-perfect cross-platform
+  - id: item_012
+    platform: Mobile
+    framework: ReactNative
+    language: TypeScript
+    ui_approach: Native bridge
+    rendering: Native components
+    performance: Near-native
+    touch_target: 44x44pt
+    code_output: JSX
+    detection_file: package.json (react-native)
+    use_case: JS devs → mobile
+  - id: item_013
+    platform: Mobile
+    framework: SwiftUI
+    language: Swift
+    ui_approach: Declarative
+    rendering: Native
+    performance: Native
+    touch_target: 44x44pt
+    code_output: Swift
+    detection_file: .xcodeproj
+    use_case: iOS/macOS native
+  - id: item_014
+    platform: Mobile
+    framework: Compose
+    language: Kotlin
+    ui_approach: Composable
+    rendering: Native
+    performance: Native
+    touch_target: 48x48dp
+    code_output: Kotlin
+    detection_file: build.gradle.kts (compose)
+    use_case: Android native
+  - id: item_015
+    platform: Mobile
+    framework: MAUI
+    language: .NET/XAML
+    ui_approach: MVVM
+    rendering: Native per platform
+    performance: Native
+    touch_target: 44x44pt
+    code_output: XAML
+    detection_file: "*.csproj (MAUI)"
+    use_case: C# cross-platform
+  - id: item_016
+    platform: Mobile
+    framework: KMP
+    language: Kotlin
+    ui_approach: Shared logic
+    rendering: Native UI
+    performance: Maximum
+    touch_target: 48x48dp
+    code_output: Kotlin
+    detection_file: build.gradle.kts (multiplatform)
+    use_case: Shared business logic

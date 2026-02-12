@@ -1,0 +1,178 @@
+# =============================================================================
+# BUILD.yaml — Content Distribution Build Configuration
+# =============================================================================
+# Purpose: Define build profiles for dev/production separation
+# Usage: nock awf build --profile production
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# BUILD PROFILES
+# =============================================================================
+
+profiles:
+  # ---------------------------------------------------------------------------
+  # PRODUCTION: Clean distribution for npm/release
+  # ---------------------------------------------------------------------------
+  production:
+    description: "Production build - public content only"
+
+    # Base directory to build from
+    base: "."
+
+    # Visibility filter (only include these)
+    visibility:
+      include: ["public"]
+      exclude: ["private", "internal"]
+
+    # Exclude patterns (glob)
+    exclude:
+      # Development directories
+      - "test-*/"
+      - ".hsa_cache/"
+      - "**/__pycache__/"
+      - "**/.pytest_cache/"
+
+      # Source code (keep only dist)
+      - "domyh-awf-cli/src/"
+      - ".agent/mcp/*/src/"
+      - ".agent/mcp/*/tests/"
+      - ".agent/scripts/*/tests/"
+
+      # Runtime state (user-specific)
+      - ".agent/memory/*.json"
+      - ".agent/memory/squad_*/"
+      - ".agent/memory/session_*"
+
+      # IDE configs (users generate via nock awf init)
+      - ".cursor/"
+      - ".claude/"
+      - ".cline*/"
+      - ".continue/"
+      - ".windsurf*/"
+      - ".roo/"
+      - ".vscode/"
+      - ".aiassistant/"
+      - ".amazonq/"
+      - ".codex/"
+      - ".opencode/"
+      - ".gemini/"
+
+      # Build artifacts & deps
+      - "**/node_modules/"
+      - "**/dist/*.map"
+      - "**/*.d.ts"
+      - "**/*.tsbuildinfo"
+
+      # Git & dev files
+      - ".git/"
+      - ".github/"
+      - "*.log"
+      - ".env*"
+
+    # Output settings
+    output:
+      directory: "./dist/production"
+      clean_before: true
+
+    # Post-build actions
+    post_build:
+      - "echo '✅ Production build complete'"
+
+  # ---------------------------------------------------------------------------
+  # MINIMAL: Core skills only (smallest footprint)
+  # ---------------------------------------------------------------------------
+  minimal:
+    description: "Minimal build - core skills only"
+
+    base: "."
+
+    # Only include essential directories
+    include_only:
+      - ".agent/core/"
+      - ".agent/skills/"
+      - ".agent/rules/"
+      - ".agent/workflows/"
+      - ".agent/config.yaml"
+      - ".agent/manifest.yaml"
+
+    exclude:
+      - ".agent/skills/*/tests/"
+      - ".agent/skills/*/examples/"
+      - "**/__pycache__/"
+
+    output:
+      directory: "./dist/minimal"
+      clean_before: true
+
+  # ---------------------------------------------------------------------------
+  # NPM-PACKAGE: For npm publish
+  # ---------------------------------------------------------------------------
+  npm-package:
+    description: "NPM package build"
+    extends: "production"
+
+    # Additional files for npm
+    include_extra:
+      - "package.json"
+      - "README.md"
+      - "LICENSE"
+      - "CHANGELOG.md"
+
+    output:
+      directory: "./dist/npm"
+      clean_before: true
+
+    post_build:
+      - "cp package.json dist/npm/"
+      - "cp README.md dist/npm/"
+
+# =============================================================================
+# VISIBILITY DETECTION
+# =============================================================================
+
+visibility:
+  # Default visibility if not specified in manifest
+  default: "public"
+
+  # How to detect visibility
+  detection:
+    # Check manifest.yaml in skill/rule directory
+    manifest_field: "visibility"
+
+    # Path-based rules (fallback)
+    path_rules:
+      - pattern: "**/private/**"
+        visibility: "private"
+      - pattern: "~/.domyh/private/**"
+        visibility: "private"
+      - pattern: "**/internal/**"
+        visibility: "internal"
+
+# =============================================================================
+# CLI OPTIONS
+# =============================================================================
+
+cli:
+  command: "nock awf build"
+  options:
+    profile: "--profile <name>"
+    output: "--output <path>"
+    dry_run: "--dry-run"
+    verbose: "--verbose"
+    clean: "--clean"
+
+# =============================================================================
+# VALIDATION
+# =============================================================================
+
+validation:
+  pre_build:
+    - "Check profile exists"
+    - "Validate output directory writable"
+
+  post_build:
+    - "Verify no private content in output"
+    - "Check manifest.yaml present"
+    - "Validate file count > 0"

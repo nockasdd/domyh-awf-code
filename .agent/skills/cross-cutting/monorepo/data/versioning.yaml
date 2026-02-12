@@ -1,0 +1,83 @@
+# =============================================================================
+# versioning.yaml — Monorepo Versioning Strategies
+# =============================================================================
+
+version: "1.0.0"
+
+changesets:
+  description: "Intent-based versioning for monorepos"
+  setup: |
+    npm install @changesets/cli --save-dev
+    npx changeset init
+
+  workflow: |
+    1. Developer runs: npx changeset
+    2. Select packages affected
+    3. Choose bump type (patch/minor/major)
+    4. Write change description
+    5. Commit .changeset/ file with PR
+    6. CI: npx changeset version → updates package.json + CHANGELOG
+    7. CI: npx changeset publish → publishes to npm
+
+  config: |
+    // .changeset/config.json
+    {
+      "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+      "changelog": "@changesets/cli/changelog",
+      "commit": false,
+      "fixed": [],
+      "linked": [["@org/ui", "@org/utils"]],
+      "access": "restricted",
+      "baseBranch": "main",
+      "updateInternalDependencies": "patch"
+    }
+
+conventional_commits:
+  description: "Commit-based versioning"
+  format: |
+    <type>[scope]: <description>
+
+    feat(ui): add Button component      → minor bump
+    fix(api): resolve auth error         → patch bump
+    feat(web)!: redesign checkout        → major bump (breaking)
+
+  types:
+    - feat: "New feature → minor"
+    - fix: "Bug fix → patch"
+    - docs: "Documentation only"
+    - style: "Formatting, no code change"
+    - refactor: "Code change, no feature/fix"
+    - perf: "Performance improvement"
+    - test: "Adding tests"
+    - chore: "Build/tooling changes"
+
+  tools:
+    - name: "commitlint"
+      config: "@commitlint/config-conventional"
+    - name: "semantic-release"
+      description: "Auto-version from commits"
+    - name: "standard-version"
+      description: "Generate changelogs"
+
+versioning_strategies:
+  fixed:
+    description: "All packages share same version"
+    example: "Angular, Babel"
+    pros: "Simple, consistent"
+    cons: "Bumps all packages even for single change"
+
+  independent:
+    description: "Each package has own version"
+    example: "Most open-source monorepos"
+    pros: "Accurate, minimal bumps"
+    cons: "Complex dependency tracking"
+
+  locked:
+    description: "Linked groups share version"
+    example: "@org/core and @org/cli always same version"
+    changesets_config: |
+      {
+        "linked": [["@org/core", "@org/cli"]]
+      }
+
+# _DOMYH Awesome Code • Versioning Patterns_

@@ -1,0 +1,115 @@
+# GraphQL Patterns - HSA API Protocols Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: api-protocols
+  domain: graphql
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 10
+
+patterns:
+  - id: gql001
+    name: schema_design
+    category: design
+    description: Client-centric schema design with meaningful types
+    text: schema design client centric demand driven type naming
+    example: |
+      type Query {
+        user(id: ID!): User
+        users(filter: UserFilter, pagination: PaginationInput): UserConnection!
+      }
+
+  - id: gql002
+    name: relay_pagination
+    category: design
+    description: Cursor-based pagination following Relay specification
+    text: relay pagination cursor connection edge pageInfo
+    example: |
+      type UserConnection {
+        edges: [UserEdge!]!
+        pageInfo: PageInfo!
+        totalCount: Int!
+      }
+      type UserEdge { cursor: String!; node: User! }
+      type PageInfo { hasNextPage: Boolean!; endCursor: String }
+
+  - id: gql003
+    name: federation_subgraph
+    category: architecture
+    description: Apollo Federation subgraph with @key directive
+    text: federation subgraph key directive entity reference
+    example: |
+      # Users subgraph
+      type User @key(fields: "id") { id: ID!; name: String! }
+      # Orders subgraph  
+      extend type User @key(fields: "id") {
+        id: ID! @external
+        orders: [Order!]!
+      }
+
+  - id: gql004
+    name: dataloader
+    category: performance
+    description: DataLoader for N+1 query prevention
+    text: dataloader batch n+1 prevention batch loading
+    example: |
+      const userLoader = new DataLoader(ids =>
+        db.users.findMany({ where: { id: { in: ids } } })
+          .then(users => ids.map(id => users.find(u => u.id === id)))
+      );
+
+  - id: gql005
+    name: depth_limiting
+    category: security
+    description: Query depth limiting to prevent abuse
+    text: depth limiting query complexity max depth protection
+    example: "depthLimit(10) // Max 10 levels of nesting"
+    severity: HIGH
+
+  - id: gql006
+    name: persisted_queries
+    category: security
+    description: Persisted queries whitelist for production
+    text: persisted queries whitelist automatic APQ hash
+    example: |
+      // Client sends hash instead of full query
+      { "extensions": { "persistedQuery": { "sha256Hash": "abc123" } } }
+
+  - id: gql007
+    name: codegen
+    category: tooling
+    description: Type-safe code generation with GraphQL Codegen
+    text: codegen code generation typed resolvers operations
+    example: "npx graphql-codegen --config codegen.ts"
+
+  - id: gql008
+    name: subscriptions
+    category: realtime
+    description: GraphQL subscriptions for real-time data
+    text: subscription websocket real-time pub/sub push
+    example: |
+      type Subscription {
+        messageAdded(channelId: ID!): Message!
+      }
+
+  - id: gql009
+    name: error_handling
+    category: design
+    description: Structured error handling with extensions
+    text: error handling extensions error code user facing
+    example: |
+      throw new GraphQLError("Not authorized", {
+        extensions: { code: "FORBIDDEN", http: { status: 403 } }
+      });
+
+  - id: gql010
+    name: cost_analysis
+    category: security
+    description: Query cost analysis to prevent expensive queries
+    text: cost analysis complexity scoring resource protection
+    example: |
+      // Assign cost per field
+      type Query {
+        users(first: Int!): [User!]! @cost(weight: 10, multiplier: "first")
+      }

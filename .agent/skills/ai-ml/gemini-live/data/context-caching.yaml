@@ -1,0 +1,96 @@
+# =============================================================================
+# context-caching.yaml — Gemini Context Caching Patterns
+# =============================================================================
+# 6 patterns for implicit and explicit caching strategies
+# Source: https://ai.google.dev/gemini-api/docs/caching
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 6
+
+implicit_caching:
+  description: "Automatic cost savings — no code changes needed"
+  enabled: "Default (all Gemini models)"
+  effective_since: "May 8, 2025"
+  how_it_works:
+    - "Gemini auto-caches repeated input prefixes"
+    - "Cost savings passed on automatically"
+    - "No configuration needed"
+  optimization_tips:
+    - "Put large, common content at BEGINNING of prompt"
+    - "Send similar-prefix requests close together in time"
+    - "Check usage_metadata.cached_content_token_count for hits"
+  minimum_token_count:
+    gemini_2_5_flash: 1024
+    gemini_2_5_pro: 2048
+    gemini_3_flash: 1024
+
+explicit_caching:
+  description: "Manual cache creation with TTL control"
+  how_it_works:
+    - "Upload content to cache once"
+    - "Reference cached content in subsequent requests"
+    - "Set TTL (default: 1 hour)"
+    - "Pay reduced rate for cached tokens"
+
+  operations:
+    create:
+      python: |
+        from google import genai
+        client = genai.Client(api_key="API_KEY")
+        cache = client.caches.create(
+            model="gemini-2.5-flash",
+            config=genai.types.CreateCachedContentConfig(
+                display_name="my-cache",
+                contents=[large_document],
+                ttl="3600s"  # 1 hour
+            )
+        )
+
+    use:
+      python: |
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents="Summarize the key findings",
+            config=genai.types.GenerateContentConfig(
+                cached_content=cache.name
+            )
+        )
+
+    list:
+      python: |
+        for cache in client.caches.list():
+            print(f"{cache.display_name}: {cache.expire_time}")
+
+    update_ttl:
+      python: |
+        client.caches.update(
+            name=cache.name,
+            config=genai.types.UpdateCachedContentConfig(ttl="7200s")
+        )
+
+    delete:
+      python: |
+        client.caches.delete(name=cache.name)
+
+use_cases:
+  - scenario: "Chatbot with large system instructions"
+    benefit: "Cache system prompt, pay once"
+  - scenario: "Repetitive video analysis"
+    benefit: "Cache video, query multiple times"
+  - scenario: "Document Q&A"
+    benefit: "Cache document set, ask many questions"
+  - scenario: "Code repository analysis"
+    benefit: "Cache codebase, run multiple audits"
+
+cost_analysis:
+  description: "Cost savings from explicit caching"
+  factors:
+    - "Cached token rate < regular input rate"
+    - "Savings increase with more requests to same cache"
+    - "TTL cost: longer cache = higher storage cost"
+    - "Break-even: typically 3-5 requests to same content"
+
+# =============================================================================
+# _DOMYH Awesome Code • Context Caching v1.0_
+# =============================================================================

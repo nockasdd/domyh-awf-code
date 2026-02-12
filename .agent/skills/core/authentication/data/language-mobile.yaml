@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_mobile
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-mobile.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - platform
+    - security_level
+    - keywords
+patterns:
+  - id: MOB-001
+    pattern_name: Swift AuthenticationServices
+    description: Apple passkeys and Sign in with Apple
+    platform: iOS
+    security_level: critical
+    keywords:
+      - authservices
+      - passkey
+  - id: MOB-002
+    pattern_name: Swift Keychain
+    description: Secure credential storage
+    platform: iOS
+    security_level: critical
+    keywords:
+      - keychain
+      - storage
+  - id: MOB-003
+    pattern_name: KeychainAccess Library
+    description: Keychain wrapper for Swift
+    platform: iOS
+    security_level: high
+    keywords:
+      - wrapper
+      - keychain
+  - id: MOB-004
+    pattern_name: LAContext Biometrics
+    description: Face ID Touch ID authentication
+    platform: iOS
+    security_level: high
+    keywords:
+      - biometric
+      - faceid
+  - id: MOB-005
+    pattern_name: ASAuthorizationController
+    description: Passkey creation and authentication
+    platform: iOS
+    security_level: critical
+    keywords:
+      - passkey
+      - controller
+  - id: MOB-006
+    pattern_name: Sign in with Apple
+    description: Apple identity provider
+    platform: iOS
+    security_level: high
+    keywords:
+      - siwa
+      - apple
+  - id: MOB-007
+    pattern_name: iOS Credential Manager
+    description: Modern credential API iOS 18+
+    platform: iOS
+    security_level: high
+    keywords:
+      - credential
+      - manager
+  - id: MOB-008
+    pattern_name: Swift Crypto
+    description: Apple cryptography library
+    platform: iOS
+    security_level: high
+    keywords:
+      - crypto
+      - swift
+  - id: MOB-009
+    pattern_name: AppAuth iOS
+    description: OAuth for iOS apps
+    platform: iOS
+    security_level: high
+    keywords:
+      - oauth
+      - appauth
+  - id: MOB-010
+    pattern_name: JWT.io Decode Swift
+    description: SwiftJWT library
+    platform: iOS
+    security_level: high
+    keywords:
+      - jwt
+      - swift
+  - id: MOB-011
+    pattern_name: Kotlin Firebase Auth
+    description: Google authentication SDK
+    platform: Android
+    security_level: high
+    keywords:
+      - firebase
+      - google
+  - id: MOB-012
+    pattern_name: Firebase Email Password
+    description: Traditional email login
+    platform: Android
+    security_level: medium
+    keywords:
+      - email
+      - password
+  - id: MOB-013
+    pattern_name: Firebase Google Sign-In
+    description: Google account SSO
+    platform: Android
+    security_level: high
+    keywords:
+      - google
+      - sso
+  - id: MOB-014
+    pattern_name: BiometricPrompt API
+    description: Fingerprint face authentication
+    platform: Android
+    security_level: high
+    keywords:
+      - biometric
+      - fingerprint
+  - id: MOB-015
+    pattern_name: BiometricManager
+    description: Check device capabilities
+    platform: Android
+    security_level: medium
+    keywords:
+      - manager
+      - capability
+  - id: MOB-016
+    pattern_name: Credential Manager API
+    description: Modern Android passkeys
+    platform: Android
+    security_level: critical
+    keywords:
+      - credential
+      - passkey
+  - id: MOB-017
+    pattern_name: EncryptedSharedPreferences
+    description: Secure preference storage
+    platform: Android
+    security_level: high
+    keywords:
+      - encrypted
+      - prefs
+  - id: MOB-018
+    pattern_name: Android Keystore
+    description: Hardware-backed key storage
+    platform: Android
+    security_level: critical
+    keywords:
+      - keystore
+      - hardware
+  - id: MOB-019
+    pattern_name: Play Integrity API
+    description: App attestation (replaces SafetyNet)
+    platform: Android
+    security_level: high
+    keywords:
+      - integrity
+      - attestation
+  - id: MOB-020
+    pattern_name: AppAuth Android
+    description: OAuth for Android apps
+    platform: Android
+    security_level: high
+    keywords:
+      - oauth
+      - appauth
+  - id: MOB-021
+    pattern_name: JWT Kotlin
+    description: jsonwebtoken-kt library
+    platform: Android
+    security_level: high
+    keywords:
+      - jwt
+      - kotlin
+  - id: MOB-022
+    pattern_name: OkHttp Authenticator
+    description: Token refresh interceptor
+    platform: Android
+    security_level: high
+    keywords:
+      - okhttp
+      - refresh
+  - id: MOB-023
+    pattern_name: Retrofit Auth Header
+    description: Authorization header injection
+    platform: Android
+    security_level: medium
+    keywords:
+      - retrofit
+      - bearer
+  - id: MOB-024
+    pattern_name: Android FIDO2
+    description: Google FIDO2 API
+    platform: Android
+    security_level: critical
+    keywords:
+      - fido2
+      - passkey
+  - id: MOB-025
+    pattern_name: Flutter Local Auth
+    description: Biometric plugin
+    platform: Flutter
+    security_level: high
+    keywords:
+      - flutter
+      - biometric

@@ -1,0 +1,173 @@
+# =============================================================================
+# tool-patterns.yaml — Function Calling & Tool Use Patterns
+# =============================================================================
+# 15 patterns for function calling, MCP, multi-tool combinations
+# Source: https://ai.google.dev/gemini-api/docs/function-calling
+# =============================================================================
+
+version: "2.0.0"
+total_patterns: 15
+
+# =============================================================================
+# FUNCTION CALLING FUNDAMENTALS
+# =============================================================================
+
+function_declaration:
+  description: "Define functions the model can call"
+  schema:
+    name: "function_name"
+    description: "What this function does (critical for model understanding)"
+    parameters:
+      type: "OBJECT"
+      properties:
+        param1:
+          type: "STRING"
+          description: "What this parameter represents"
+  tips:
+    - "Description is the MOST important field — be very specific"
+    - "Use enum for constrained parameters"
+    - "Keep parameter names descriptive"
+    - "Include default values where applicable"
+
+function_calling_modes:
+  description: "Control when model calls functions"
+  modes:
+    - name: "AUTO"
+      desc: "Model decides whether to call (default)"
+      use_case: "General purpose, let model choose"
+    - name: "ANY"
+      desc: "Model must call at least one function"
+      use_case: "Force tool use, guaranteed actions"
+    - name: "NONE"
+      desc: "Model cannot call functions"
+      use_case: "Generate text only, testing"
+
+# =============================================================================
+# ADVANCED PATTERNS
+# =============================================================================
+
+parallel_function_calling:
+  description: "Multiple independent function calls in one request"
+  example: "Ask weather + stock price → model calls both simultaneously"
+  use_case: "Independent data fetching, batch operations"
+  tips:
+    - "Functions must be independent (no dependencies)"
+    - "Model decides to parallelize automatically"
+    - "Reduces latency for multi-data requests"
+
+compositional_function_calling:
+  description: "Chained function calls where output feeds next input"
+  example: "get_location() → get_weather(location) → format_response(weather)"
+  use_case: "Multi-step workflows, data pipelines"
+  tips:
+    - "Model handles the chaining automatically"
+    - "Each step's output becomes next step's input"
+    - "Works with automatic function calling (Python)"
+
+automatic_function_calling:
+  description: "SDK handles full request-response loop (Python only)"
+  how_it_works:
+    - "Define Python function with type hints"
+    - "SDK auto-generates function declaration from signature"
+    - "SDK executes function and sends result back to model"
+    - "Loop continues until no more tool calls"
+  config:
+    python: |
+      # Automatic declaration from function signature
+      def get_weather(city: str) -> dict:
+          """Get weather for a city."""
+          return {"temp": 72, "condition": "sunny"}
+
+# =============================================================================
+# MCP INTEGRATION
+# =============================================================================
+
+mcp_built_in_support:
+  description: "Gemini SDK native MCP (Model Context Protocol) integration"
+  how_it_works:
+    - "Connect MCP server to Gemini SDK"
+    - "SDK discovers MCP tools automatically"
+    - "Model can call MCP tools like native functions"
+    - "SDK handles tool execution loop"
+  languages:
+    - "Python: Full automatic tool calling"
+    - "JavaScript: Full automatic tool calling"
+  example:
+    python: |
+      from google.genai import Client
+      # MCP tools are auto-discovered and callable
+      client = Client()
+      # SDK handles MCP tool calls transparently
+  limitations:
+    - "Only local MCP servers (no remote SSE)"
+    - "Tool names must be unique across servers"
+
+# =============================================================================
+# MULTI-TOOL COMBINATIONS
+# =============================================================================
+
+multi_tool_combinations:
+  description: "Combine native Gemini tools with function calling"
+  supported_combinations:
+    - combo: "Google Search + Function Calling"
+      use_case: "Real-time data + custom actions"
+    - combo: "Code Execution + Function Calling"
+      use_case: "Compute + external data"
+    - combo: "Google Search + Code Execution"
+      use_case: "Research + data analysis"
+    - combo: "All three + MCP"
+      use_case: "Complex agentic workflows"
+  api: "Live API supports all tool combinations"
+
+function_calling_with_thinking:
+  description: "Function calling with thinking models (Gemini 3)"
+  key_points:
+    - "Thinking models include thought signatures in response"
+    - "Must preserve thought signatures in conversation history"
+    - "Thought signatures are opaque — don't parse or modify"
+    - "Enables deeper reasoning about when and how to call functions"
+
+function_calling_with_structured_output:
+  description: "Combine function calling with JSON schema output (Gemini 3)"
+  benefit: "Consistently formatted responses when model doesn't generate function calls"
+  use_case: "Agentic workflows with fallback to structured text"
+
+multimodal_function_responses:
+  description: "Function responses can include images and other media"
+  how_it_works:
+    - "Return inline_data with mime_type in function response"
+    - "Model processes the media and generates text response"
+  supported_types:
+    - "image/jpeg, image/png"
+    - "audio/mp3, audio/wav"
+    - "video/mp4"
+  use_case: "Image analysis tools, screenshot processors"
+
+# =============================================================================
+# BEST PRACTICES
+# =============================================================================
+
+best_practices:
+  function_descriptions:
+    - "Be extremely detailed in function descriptions"
+    - "Include what the function does, when to use it, and what it returns"
+    - "Add constraints: units, ranges, valid values"
+
+  parameter_descriptions:
+    - "Document each parameter clearly"
+    - "Use enum for known value sets"
+    - "Specify optional vs required"
+
+  error_handling:
+    - "Always return error messages in function response"
+    - "Model can self-correct based on error feedback"
+    - "Include error details for debugging"
+
+  performance:
+    - "Limit function declarations to <20 per request"
+    - "Use ANY mode when function call is required"
+    - "Cache function results when appropriate"
+
+# =============================================================================
+# _DOMYH Awesome Code • Tool Patterns v2.0_
+# =============================================================================

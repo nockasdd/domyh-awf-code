@@ -1,0 +1,295 @@
+metadata:
+  skill: security
+  domain: python_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: python-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: PY-01
+    name: Pickle Deserialization RCE
+    severity: CRITICAL
+    category: Deserialization
+    description: pickle.load on untrusted data leads to arbitrary code execution
+    detection_pattern: (pickle\\.load|pickle\\.loads|cPickle\\.load)(?!.*trusted)
+    fix_pattern: Use JSON safetensors or restrict classes with pickle.Unpickler
+    cwe: CWE-502
+    cve_reference: CVE-2024-50050,CVE-2025-3108
+    example_vuln: data = pickle.loads(request.data)
+    example_fix: "data = json.loads(request.data) # or safetensors"
+  - id: PY-02
+    name: SSTI Jinja2 RCE
+    severity: CRITICAL
+    category: Injection
+    description: render_template_string with user input leads to RCE
+    detection_pattern: render_template_string.*request|Template\\(.*input
+    fix_pattern: Use render_template with static templates never string input
+    cwe: CWE-94
+    cve_reference: CVE-2024-56085
+    example_vuln: render_template_string(user_input)
+    example_fix: render_template('safe.html', data=user_input)
+  - id: PY-03
+    name: subprocess Shell Injection
+    severity: CRITICAL
+    category: Injection
+    description: shell=True with user input allows command injection
+    detection_pattern: subprocess\\.(run|call|Popen).*shell\\s*=\\s*True.*input
+    fix_pattern: Use list arguments never shell=True with user input
+    cwe: CWE-78
+    cve_reference: CVE-2024-3126
+    example_vuln: subprocess.run(f'echo {user}', shell=True)
+    example_fix: subprocess.run(['echo', user], shell=False)
+  - id: PY-04
+    name: eval/exec RCE
+    severity: CRITICAL
+    category: Injection
+    description: eval or exec with user input leads to arbitrary code execution
+    detection_pattern: (eval|exec)\\s*\\(.*request|input|user
+    fix_pattern: Never use eval/exec with user input use ast.literal_eval
+    cwe: CWE-94
+    cve_reference: n/a
+    example_vuln: result = eval(request.form['expr'])
+    example_fix: import ast; result = ast.literal_eval(safe_expr)
+  - id: PY-05
+    name: tarfile Path Traversal
+    severity: HIGH
+    category: File
+    description: tarfile extractall without filter allows path traversal
+    detection_pattern: tarfile\\.(open|extractall)(?!.*filter)
+    fix_pattern: Use extractall with filter parameter (Python 3.12+)
+    cwe: CWE-22
+    cve_reference: CVE-2024-12718,CVE-2025-4138
+    example_vuln: tar.extractall(path)
+    example_fix: "tar.extractall(path, filter='data') # Python 3.12+"
+  - id: PY-06
+    name: yaml.unsafe_load RCE
+    severity: CRITICAL
+    category: Deserialization
+    description: yaml.load without SafeLoader allows code execution
+    detection_pattern: yaml\\.load\\s*\\([^)]*(?!Loader=yaml\\.SafeLoader)
+    fix_pattern: Always use yaml.safe_load or specify SafeLoader
+    cwe: CWE-502
+    cve_reference: n/a
+    example_vuln: data = yaml.load(file)
+    example_fix: data = yaml.safe_load(file)
+  - id: PY-07
+    name: os.system Injection
+    severity: CRITICAL
+    category: Injection
+    description: os.system with user input allows command injection
+    detection_pattern: os\\.system\\s*\\(.*input|request|user
+    fix_pattern: Use subprocess.run with list arguments
+    cwe: CWE-78
+    cve_reference: n/a
+    example_vuln: os.system('grep ' + user_input)
+    example_fix: subprocess.run(['grep', user_input])
+  - id: PY-08
+    name: SQLAlchemy Raw Query
+    severity: HIGH
+    category: Injection
+    description: text() with string concatenation allows SQL injection
+    detection_pattern: (text|execute)\\s*\\(.*\\+.*input|f['\].*select"
+    fix_pattern: Use bound parameters with text() or ORM methods
+    cwe: CWE-89
+    cve_reference: n/a
+    example_vuln: db.execute(text(f'SELECT * WHERE id={id}'))
+    example_fix: "db.execute(text('SELECT * WHERE id=:id'), {'id': id})"
+  - id: PY-09
+    name: Flask Debug Mode Production
+    severity: HIGH
+    category: Configuration
+    description: Debug mode enabled in production exposes Werkzeug console
+    detection_pattern: app\\.run\\(.*debug\\s*=\\s*True(?!.*if.*__name__)
+    fix_pattern: Disable debug mode in production use environment config
+    cwe: CWE-200
+    cve_reference: n/a
+    example_vuln: app.run(debug=True)
+    example_fix: app.run(debug=os.getenv('FLASK_DEBUG', False))
+  - id: PY-10
+    name: format String Injection
+    severity: MEDIUM
+    category: Injection
+    description: format() or f-strings with user input can leak data
+    detection_pattern: (format|f['\]).*\\{.*input|\\.format\\(.*request"
+    fix_pattern: Validate input or use safe template engines
+    cwe: CWE-134
+    cve_reference: n/a
+    example_vuln: "msg = f'{user_input}' # May contain {__class__}"
+    example_fix: "msg = safe_format(user_input) # Validate first"
+  - id: PY-11
+    name: Insecure Random
+    severity: HIGH
+    category: Cryptography
+    description: random module used for security-sensitive values
+    detection_pattern: import\\s+random(?!.*secrets)|random\\.(randint|choice).*token
+    fix_pattern: Use secrets module for cryptographic randomness
+    cwe: CWE-330
+    cve_reference: n/a
+    example_vuln: token = random.randint(0, 999999)
+    example_fix: token = secrets.token_urlsafe(32)
+  - id: PY-12
+    name: Hardcoded Credentials
+    severity: HIGH
+    category: Secrets
+    description: Password or API key hardcoded in source
+    detection_pattern: (password|api_key|secret)\\s*=\\s*['\][^'\"]+['\"]"
+    fix_pattern: Use environment variables or secrets manager
+    cwe: CWE-798
+    cve_reference: n/a
+    example_vuln: API_KEY = 'sk-1234567890'
+    example_fix: API_KEY = os.getenv('API_KEY')
+  - id: PY-13
+    name: Path Traversal os.path
+    severity: HIGH
+    category: File
+    description: User input in file path without validation
+    detection_pattern: os\\.path\\.join.*request|open\\(.*input(?!.*safe)
+    fix_pattern: Use os.path.realpath and validate against base directory
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: open(os.path.join(base, user_file))
+    example_fix: 'safe_path = os.path.realpath(os.path.join(base, user_file))\nif not safe_path.startswith(base): raise'
+  - id: PY-14
+    name: SSRF requests
+    severity: HIGH
+    category: Network
+    description: User URL fetched without validation
+    detection_pattern: requests\\.(get|post)\\(.*input(?!.*allowlist)
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    cwe: CWE-918
+    cve_reference: n/a
+    example_vuln: requests.get(user_url)
+    example_fix: "if is_allowed_url(user_url): requests.get(user_url)"
+  - id: PY-15
+    name: XML External Entity
+    severity: CRITICAL
+    category: Injection
+    description: XML parsing with external entities enabled
+    detection_pattern: etree\\.(parse|fromstring)(?!.*resolve_entities.*False)
+    fix_pattern: Disable external entity resolution in lxml defusedxml
+    cwe: CWE-611
+    cve_reference: n/a
+    example_vuln: tree = etree.parse(xml_file)
+    example_fix: from defusedxml import ElementTree as ET\ntree = ET.parse(xml_file)
+  - id: PY-16
+    name: JWT Algorithm None
+    severity: CRITICAL
+    category: Authentication
+    description: JWT verification allows algorithm none
+    detection_pattern: jwt\\.decode\\(.*algorithms\\s*=\\s*None
+    fix_pattern: Explicitly specify allowed algorithms
+    cwe: CWE-347
+    cve_reference: n/a
+    example_vuln: jwt.decode(token, key, algorithms=None)
+    example_fix: jwt.decode(token, key, algorithms=['HS256'])
+  - id: PY-17
+    name: Regex DoS ReDoS
+    severity: HIGH
+    category: DoS
+    description: Vulnerable regex pattern with user input
+    detection_pattern: re\\.compile\\(.*input|re\\.(match|search).*user
+    fix_pattern: Use re2 or timeout limit input length
+    cwe: CWE-400
+    cve_reference: n/a
+    example_vuln: re.match(user_regex, data)
+    example_fix: import google_re2 as re2\nre2.match(pattern, data)
+  - id: PY-18
+    name: Race Condition File
+    severity: HIGH
+    category: Concurrency
+    description: TOCTOU race condition in file operations
+    detection_pattern: os\\.path\\.exists.*open|if.*isfile.*then.*open
+    fix_pattern: Use atomic operations or file locking
+    cwe: CWE-367
+    cve_reference: n/a
+    example_vuln: "if os.path.exists(f): open(f) # TOCTOU"
+    example_fix: "with open(f, 'x') as file: # Atomic create"
+  - id: PY-19
+    name: Insecure Temp File
+    severity: MEDIUM
+    category: File
+    description: tempfile created with predictable name or permissions
+    detection_pattern: tempfile\\.mk(s)?temp(?!.*dir=)
+    fix_pattern: Use tempfile.NamedTemporaryFile or mkstemp with secure dir
+    cwe: CWE-377
+    cve_reference: n/a
+    example_vuln: f = tempfile.mktemp()
+    example_fix: "with tempfile.NamedTemporaryFile(delete=False) as f:"
+  - id: PY-20
+    name: Assert Security Check
+    severity: MEDIUM
+    category: Logic
+    description: Assert used for security checks bypassed with -O flag
+    detection_pattern: assert\\s+.*authenticated|assert.*authorized
+    fix_pattern: Use if-raise pattern for security checks
+    cwe: CWE-617
+    cve_reference: n/a
+    example_vuln: "assert user.is_admin # Bypassed with python -O"
+    example_fix: "if not user.is_admin: raise PermissionError()"
+  - id: PY-21
+    name: Dynamic Import Injection
+    severity: HIGH
+    category: Injection
+    description: importlib with user input allows code execution
+    detection_pattern: importlib\\.import_module\\(.*input
+    fix_pattern: Validate module against allowlist
+    cwe: CWE-94
+    cve_reference: n/a
+    example_vuln: mod = importlib.import_module(user_module)
+    example_fix: "if user_module in ALLOWED: mod = importlib.import_module(user_module)"
+  - id: PY-22
+    name: Django ORM extra() Injection
+    severity: HIGH
+    category: Injection
+    description: extra() with raw SQL allows injection
+    detection_pattern: extra\\(.*where.*=.*\\+|extra\\(select=\\{.*\\+
+    fix_pattern: Use ORM methods or parameterized raw queries
+    cwe: CWE-89
+    cve_reference: n/a
+    example_vuln: Model.objects.extra(where=['id=' + id])
+    example_fix: Model.objects.filter(id=id)
+  - id: PY-23
+    name: Weak Password Hash
+    severity: HIGH
+    category: Cryptography
+    description: MD5 SHA1 or unsalted hash for passwords
+    detection_pattern: (md5|sha1)\\(.*password|hashlib\\.(md5|sha1)
+    fix_pattern: Use bcrypt argon2 or PBKDF2 with sufficient rounds
+    cwe: CWE-327
+    cve_reference: n/a
+    example_vuln: hashlib.md5(password.encode()).hexdigest()
+    example_fix: from argon2 import PasswordHasher; ph.hash(password)
+  - id: PY-24
+    name: Socket Race Condition
+    severity: HIGH
+    category: Network
+    description: socket.socketpair fallback race on Windows
+    detection_pattern: socket\\.socketpair(?!.*verify)
+    fix_pattern: Upgrade Python 3.12+ or verify connection manually
+    cwe: CWE-362
+    cve_reference: CVE-2024-3219
+    example_vuln: s1, s2 = socket.socketpair()
+    example_fix: "# Python 3.12 fixes this - upgrade"
+  - id: PY-25
+    name: Sandbox Escape exec
+    severity: CRITICAL
+    category: Sandbox
+    description: Restricted exec can be bypassed with builtins
+    detection_pattern: exec\\(.*\\{['\]__builtins__"
+    fix_pattern: Never use exec for sandboxing use proper isolation
+    cwe: CWE-94
+    cve_reference: n/a
+    example_vuln: "exec(code, {'__builtins__': {}})"
+    example_fix: "# Use subprocess with restricted user or container"

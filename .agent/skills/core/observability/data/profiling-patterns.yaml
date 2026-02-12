@@ -1,0 +1,135 @@
+metadata:
+  skill: observability
+  domain: profiling_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: profiling-patterns.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: PROF-001
+    name: CPU Profiling
+    category: Profiling
+    description: Measure CPU time per function
+    example: pprof cpu profile Go
+    level: beginner
+  - id: PROF-002
+    name: Memory Profiling
+    category: Profiling
+    description: Track heap allocations
+    example: Heap profile, allocation sites
+    level: beginner
+  - id: PROF-003
+    name: Flame Graphs
+    category: Profiling
+    description: Visualize call stack hotspots
+    example: Wide = more time spent
+    level: beginner
+  - id: PROF-004
+    name: Continuous Profiling
+    category: Profiling
+    description: Always-on production profiling
+    example: Low overhead, historical data
+    level: intermediate
+  - id: PROF-005
+    name: pprof
+    category: Profiling
+    description: Go's built-in profiler
+    example: net/http/pprof, go tool pprof
+    level: beginner
+  - id: PROF-006
+    name: Valgrind
+    category: Profiling
+    description: Memory debugging for C/C++
+    example: Memcheck, Callgrind
+    level: intermediate
+  - id: PROF-007
+    name: Tracy
+    category: Profiling
+    description: Real-time C++ profiler
+    example: Nanosecond resolution
+    level: advanced
+  - id: PROF-008
+    name: perf
+    category: Profiling
+    description: Linux kernel profiler
+    example: perf record, perf report
+    level: intermediate
+  - id: PROF-009
+    name: async-profiler
+    category: Profiling
+    description: JVM sampling profiler
+    example: CPU and allocation profiling
+    level: intermediate
+  - id: PROF-010
+    name: py-spy
+    category: Profiling
+    description: Python sampling profiler
+    example: No code changes needed
+    level: beginner
+  - id: PROF-011
+    name: Pyroscope
+    category: Profiling
+    description: Continuous profiling platform
+    example: Open source, multi-language
+    level: intermediate
+  - id: PROF-012
+    name: Parca
+    category: Profiling
+    description: Continuous profiling CNCF
+    example: eBPF-based collection
+    level: advanced
+  - id: PROF-013
+    name: Allocation Profiling
+    category: Profiling
+    description: Track memory allocation rate
+    example: Find allocation hotspots
+    level: intermediate
+  - id: PROF-014
+    name: Block Profiling
+    category: Profiling
+    description: Find goroutine blocking
+    example: Mutex contention in Go
+    level: advanced
+  - id: PROF-015
+    name: Goroutine Profiling
+    category: Profiling
+    description: Track active goroutines
+    example: Detect goroutine leaks
+    level: intermediate
+  - id: PROF-016
+    name: Wall Clock Profiling
+    category: Profiling
+    description: Include waiting time
+    example: Not just CPU time
+    level: intermediate
+  - id: PROF-017
+    name: Off-CPU Analysis
+    category: Profiling
+    description: Time waiting on I/O/locks
+    example: Complement to CPU profiling
+    level: advanced
+  - id: PROF-018
+    name: eBPF Profiling
+    category: Profiling
+    description: Kernel-level profiling
+    example: Low overhead, production safe
+    level: advanced
+  - id: PROF-019
+    name: Profile Diffing
+    category: Profiling
+    description: Compare profiles over time
+    example: Before/after optimization
+    level: intermediate
+  - id: PROF-020
+    name: Profile-to-Trace
+    category: Profiling
+    description: Link profiles to traces
+    example: OTel profiling signal
+    level: advanced

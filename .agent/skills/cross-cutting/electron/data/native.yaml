@@ -1,0 +1,157 @@
+# Electron Native Integration Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: native
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 7
+
+patterns:
+  - id: nat001
+    name: Tray
+    category: native
+    version: all
+    description: System tray icon with context menu
+    text: system tray notification area icon menu context minimize background
+    example: |
+      import { Tray, Menu, nativeImage } from 'electron';
+
+      const icon = nativeImage.createFromPath('icon.png');
+      const tray = new Tray(icon);
+      tray.setToolTip('MyApp');
+
+      const menu = Menu.buildFromTemplate([
+        { label: 'Show', click: () => mainWindow.show() },
+        { type: 'separator' },
+        { label: 'Quit', click: () => app.quit() }
+      ]);
+      tray.setContextMenu(menu);
+    severity: MEDIUM
+    docs_url: https://www.electronjs.org/docs/latest/api/tray
+
+  - id: nat002
+    name: globalShortcut
+    category: native
+    version: all
+    description: Register global keyboard shortcuts
+    text: global shortcut keyboard hotkey system wide register accelerator
+    example: |
+      import { globalShortcut, app } from 'electron';
+
+      app.whenReady().then(() => {
+        globalShortcut.register('CommandOrControl+Shift+X', () => {
+          mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+        });
+      });
+
+      app.on('will-quit', () => globalShortcut.unregisterAll());
+    severity: MEDIUM
+    docs_url: https://www.electronjs.org/docs/latest/api/global-shortcut
+
+  - id: nat003
+    name: powerMonitor
+    category: native
+    version: all
+    description: Monitor system power state changes
+    text: power monitor suspend resume battery ac idle sleep wake
+    example: |
+      import { powerMonitor } from 'electron';
+
+      powerMonitor.on('suspend', () => {
+        console.log('System suspended - saving state');
+      });
+
+      powerMonitor.on('resume', () => {
+        console.log('System resumed - syncing data');
+      });
+
+      powerMonitor.on('on-battery', () => {
+        // Reduce background tasks
+      });
+    severity: MEDIUM
+    docs_url: https://www.electronjs.org/docs/latest/api/power-monitor
+
+  - id: nat004
+    name: Notification
+    category: native
+    version: all
+    description: Native desktop notifications
+    text: native notification desktop alert toast action button click
+    example: |
+      import { Notification } from 'electron';
+
+      if (Notification.isSupported()) {
+        new Notification({
+          title: 'Update Available',
+          body: 'A new version is ready to install',
+          icon: path.join(__dirname, 'icon.png')
+        }).show();
+      }
+    severity: LOW
+    docs_url: https://www.electronjs.org/docs/latest/api/notification
+
+  - id: nat005
+    name: desktopCapturer
+    category: native
+    version: all
+    description: Capture audio/video from desktop sources
+    text: desktop capturer screen capture video audio source share recording
+    example: |
+      import { desktopCapturer } from 'electron';
+
+      const sources = await desktopCapturer.getSources({
+        types: ['window', 'screen'],
+        thumbnailSize: { width: 320, height: 180 }
+      });
+
+      for (const source of sources) {
+        if (source.name === 'Electron') {
+          // Use source.id with getUserMedia
+        }
+      }
+    severity: MEDIUM
+    docs_url: https://www.electronjs.org/docs/latest/api/desktop-capturer
+
+  - id: nat006
+    name: protocol handler
+    category: native
+    version: all
+    description: Register custom URL protocol for deep linking
+    text: protocol handler custom url scheme deep link open with
+    example: |
+      import { app } from 'electron';
+
+      // Register protocol
+      app.setAsDefaultProtocolClient('myapp');
+
+      // Handle URL on macOS
+      app.on('open-url', (event, url) => {
+        event.preventDefault();
+        handleDeepLink(url); // myapp://action?param=value
+      });
+    severity: MEDIUM
+
+  - id: nat007
+    name: single instance
+    category: native
+    version: all
+    description: Ensure only one instance of app runs
+    text: single instance lock second instance focus prevent duplicate
+    example: |
+      const gotTheLock = app.requestSingleInstanceLock();
+
+      if (!gotTheLock) {
+        app.quit();
+      } else {
+        app.on('second-instance', (event, argv) => {
+          // Focus existing window
+          if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+          }
+        });
+      }
+    severity: HIGH

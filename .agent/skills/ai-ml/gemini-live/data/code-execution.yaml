@@ -1,0 +1,131 @@
+# =============================================================================
+# code-execution.yaml — Gemini Code Execution Patterns
+# =============================================================================
+# 8 patterns for Python sandbox execution
+# Source: https://ai.google.dev/gemini-api/docs/code-execution
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 8
+
+overview:
+  description: "Model generates and runs Python code, iterates on results"
+  language: "Python only (can generate other languages, but only runs Python)"
+  cost: "No additional charge (standard token billing)"
+  sandbox: true
+  custom_libraries: false
+
+supported_libraries:
+  data_science:
+    - numpy
+    - pandas
+    - scipy
+    - scikit-learn
+  visualization:
+    - matplotlib
+    - seaborn
+  image:
+    - pillow
+    - opencv-python
+    - imageio
+  documents:
+    - PyPDF2
+    - python-docx
+    - python-pptx
+    - reportlab
+    - fpdf
+    - openpyxl
+    - xlrd
+  math:
+    - sympy
+    - mpmath
+  ml:
+    - tensorflow
+  parsing:
+    - lxml
+    - jsonschema
+    - pyparsing
+    - striprtf
+  other:
+    - chess
+    - geopandas
+    - jinja2
+    - joblib
+    - tabulate
+    - contourpy
+    - protobuf
+    - packaging
+
+api_usage:
+  enable:
+    python: |
+      from google import genai
+      from google.genai import types
+
+      client = genai.Client(api_key="API_KEY")
+      response = client.models.generate_content(
+          model="gemini-2.5-flash",
+          contents="Calculate the first 15 Fibonacci numbers and plot them",
+          config=types.GenerateContentConfig(
+              tools=[types.Tool(code_execution=types.ToolCodeExecution())]
+          )
+      )
+    javascript: |
+      const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: "Calculate Fibonacci and plot",
+          config: { tools: [{ codeExecution: {} }] }
+      });
+
+gemini3_image_execution:
+  description: "Gemini 3 Flash: write code to manipulate and inspect images"
+  use_cases:
+    zoom_and_inspect:
+      desc: "Model detects small details, crops and re-examines at higher resolution"
+      example: "Reading a distant gauge in a photo"
+    visual_math:
+      desc: "Multi-step calculations using code on image data"
+      example: "Summing line items on a receipt"
+    image_annotation:
+      desc: "Draw arrows, labels, highlights on images"
+      example: "Annotating a diagram to show relationships"
+  enable:
+    python: |
+      response = client.models.generate_content(
+          model="gemini-3-flash",
+          contents=[image, "What is the reading on the gauge?"],
+          config=types.GenerateContentConfig(
+              tools=[types.Tool(code_execution=types.ToolCodeExecution())]
+          )
+      )
+
+chat_mode:
+  description: "Use code execution in multi-turn chat"
+  benefit: "Model can build on previous code results"
+  pattern:
+    - "Turn 1: 'Load and analyze this data'"
+    - "Turn 2: 'Now visualize the top 10 results'"
+    - "Turn 3: 'Apply a trend line and predict next quarter'"
+
+billing:
+  description: "Code execution billing model"
+  rules:
+    - "Input tokens: billed once (your prompt)"
+    - "Intermediate tokens: generated code + execution results (billed as input)"
+    - "Output tokens: final summary + code + results"
+    - "Check usage_metadata for intermediate_token_count"
+
+limitations:
+  - "Can only generate and execute code (no media artifacts)"
+  - "Enabling may cause regressions in creative tasks"
+  - "Cannot install custom libraries"
+  - "Model variation in code execution quality"
+
+tool_combinations:
+  - "Code Execution + Google Search = Research + Analysis"
+  - "Code Execution + Function Calling = Compute + External Data"
+  - "All three combined via Live API"
+
+# =============================================================================
+# _DOMYH Awesome Code • Code Execution v1.0_
+# =============================================================================

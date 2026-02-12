@@ -1,30 +1,12 @@
 name: clojure
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 
-description: |
-  Clojure development patterns for Clojure 1.11+.
-  Lisp on JVM, functional, immutable data, REPL-driven.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.clj"
-    - "*.cljs"
-    - "*.cljc"
-    - "deps.edn"
-    - "project.clj"
-  keywords:
-    - clojure
-    - clojurescript
-    - leiningen
-    - deps.edn
-    - ring
-    - reagent
-  intents:
-    - clojure project
-    - lisp jvm
-    - clojurescript
+desc: "Clojure development patterns for Clojure 1.11+. Lisp on JVM, functional, immutable data, REPL-driven."
 
 related_skills:
   - java

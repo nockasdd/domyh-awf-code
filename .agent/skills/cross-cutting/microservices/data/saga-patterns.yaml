@@ -1,0 +1,161 @@
+# =============================================================================
+# saga-patterns.yaml — Saga Pattern Implementation
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# ORCHESTRATION SAGA
+# =============================================================================
+
+orchestration:
+  description: "Central orchestrator coordinates saga steps"
+
+  pattern:
+    name: "Order Saga Orchestrator"
+    steps:
+      - id: create_order
+        service: order-service
+        action: createOrder
+        compensation: cancelOrder
+
+      - id: reserve_inventory
+        service: inventory-service
+        action: reserveStock
+        compensation: releaseStock
+
+      - id: process_payment
+        service: payment-service
+        action: chargePayment
+        compensation: refundPayment
+
+      - id: arrange_shipping
+        service: shipping-service
+        action: createShipment
+        compensation: cancelShipment
+
+  example_go: |
+    type OrderSaga struct {
+        steps []SagaStep
+        compensations []CompensationFn
+    }
+
+    type SagaStep struct {
+        Name         string
+        Execute      func(ctx context.Context, state *SagaState) error
+        Compensate   func(ctx context.Context, state *SagaState) error
+    }
+
+    func (s *OrderSaga) Run(ctx context.Context, state *SagaState) error {
+        for i, step := range s.steps {
+            if err := step.Execute(ctx, state); err != nil {
+                // Compensate in reverse order
+                for j := i - 1; j >= 0; j-- {
+                    if compErr := s.steps[j].Compensate(ctx, state); compErr != nil {
+                        log.Error("compensation failed", "step", s.steps[j].Name, "err", compErr)
+                    }
+                }
+                return fmt.Errorf("saga failed at step %s: %w", step.Name, err)
+            }
+        }
+        return nil
+    }
+
+  example_typescript: |
+    interface SagaStep<T> {
+      name: string;
+      execute: (state: T) => Promise<T>;
+      compensate: (state: T) => Promise<T>;
+    }
+
+    class SagaOrchestrator<T> {
+      constructor(private steps: SagaStep<T>[]) {}
+
+      async run(initialState: T): Promise<T> {
+        let state = initialState;
+        const completed: SagaStep<T>[] = [];
+
+        for (const step of this.steps) {
+          try {
+            state = await step.execute(state);
+            completed.push(step);
+          } catch (error) {
+            // Compensate in reverse
+            for (const done of completed.reverse()) {
+              await done.compensate(state);
+            }
+            throw new SagaFailedError(step.name, error);
+          }
+        }
+        return state;
+      }
+    }
+
+# =============================================================================
+# CHOREOGRAPHY SAGA
+# =============================================================================
+
+choreography:
+  description: "Services communicate via events, no central coordinator"
+
+  pattern:
+    flow: |
+      OrderService → OrderCreated
+        → InventoryService listens → StockReserved
+          → PaymentService listens → PaymentProcessed
+            → ShippingService listens → ShipmentCreated
+              → OrderService listens → OrderCompleted
+
+    failure_flow: |
+      ShippingService → ShipmentFailed
+        → PaymentService listens → PaymentRefunded
+          → InventoryService listens → StockReleased
+            → OrderService listens → OrderCancelled
+
+  example_event: |
+    // Domain Events
+    type OrderCreated struct {
+        OrderID   string    `json:"order_id"`
+        UserID    string    `json:"user_id"`
+        Items     []Item    `json:"items"`
+        Total     float64   `json:"total"`
+        Timestamp time.Time `json:"timestamp"`
+    }
+
+    type StockReserved struct {
+        OrderID   string    `json:"order_id"`
+        Items     []Item    `json:"items"`
+        Timestamp time.Time `json:"timestamp"`
+    }
+
+# =============================================================================
+# DECISION GUIDE
+# =============================================================================
+
+decision_guide:
+  use_orchestration:
+    - "Complex workflows with 4+ services"
+    - "Need centralized monitoring and debugging"
+    - "Strict ordering requirements"
+    - "Business process changes frequently"
+
+  use_choreography:
+    - "Simple 2-3 service flows"
+    - "Loose coupling is critical"
+    - "Services are independently deployable"
+    - "Event-driven architecture already in place"
+
+  anti_patterns:
+    - name: "Saga without idempotency"
+      problem: "Retry causes duplicate actions"
+      fix: "Use idempotency keys for all operations"
+
+    - name: "Missing compensation"
+      problem: "Partial failure leaves inconsistent state"
+      fix: "Every action MUST have a compensating action"
+
+    - name: "Synchronous saga"
+      problem: "Blocking calls defeat the purpose"
+      fix: "Use async message passing between steps"
+
+# _DOMYH Awesome Code • Saga Patterns_

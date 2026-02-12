@@ -1,14 +1,14 @@
 ---
 name: vue
-detect: ["*.vue", "package.json:vue", "nuxt.config.ts", "vite.config.ts"]
-version: "6.1.2"
+detect: ["*.vue", "package.json:vue", "vite.config.ts"]
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# Vue Patterns — DOMYH Awesome Code v6.1.2
+# Vue Patterns — DOMYH Awesome Code
 
-> **Version**: Vue 3.5/Nuxt 4 (2025-2026)
+> **Version**: Vue 3.5+/3.6 (2025-2026)
 > **Philosophy**: Progressive, Composition API, reactive
 
 ---
@@ -47,10 +47,10 @@ Use for: Web apps, SSR with Nuxt, progressive enhancement.
 
 ### IDE Support
 
-| IDE          | Features             |
-| ------------ | -------------------- |
-| **VS Code**  | Volar extension 🏆   |
-| **WebStorm** | Built-in Vue support |
+| IDE          | Features                    |
+| ------------ | --------------------------- |
+| **VS Code**  | Vue - Official extension 🏆 |
+| **WebStorm** | Built-in Vue support        |
 
 ---
 
@@ -353,4 +353,4 @@ definePageMeta({
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Vue 3.5/Nuxt 4_
+_DOMYH Awesome Code • Vue 3.5/Nuxt 4_

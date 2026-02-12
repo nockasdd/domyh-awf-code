@@ -1,14 +1,18 @@
 name: sql
-version: "6.1.2"
+version: "6.2.1"
 category: database
-tier: 1
+tier: 3
 
-description: |
-  SQL development patterns for PostgreSQL 16+, MySQL 8+.
-  Covers query optimization, migrations, indexes, stored procedures.
+desc: "SQL development patterns for PostgreSQL 17/18, MySQL 8+. Covers query optimization, migrations, indexes, JSON, performance."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 28
+  domains:
+    indexing: 7
+    performance: 9
+    json: 6
+    queries: 6
+
     - "*.sql"
     - "migrations/*.sql"
     - "*.pgsql"
@@ -27,26 +31,36 @@ triggers:
     - psql
     - pg_dump
     - pgadmin
+    - pg18
+    - pg17
+    # Features - Indexing
+    - index
+    - gin index
+    - b-tree
+    - covering index
+    - partial index
+    - skip scan
+    # Features - Performance
+    - explain analyze
+    - async io
+    - pg_stat
+    - connection pooling
+    - vacuum
+    # Features - JSON
+    - jsonb
+    - json_table
+    - uuidv7
+    # Features - Queries
+    - cte
+    - window function
+    - upsert
+    - lateral join
+    - recursive
     # MySQL
     - mysql
     - mariadb
     # SQLite
     - sqlite
-    # Features
-    - join
-    - left join
-    - inner join
-    - group by
-    - order by
-    - having
-    - cte
-    - window function
-    - subquery
-    - index
-    - migration
-    - stored procedure
-    - trigger
-    - view
     # ORM
     - raw sql
     - query builder
@@ -55,11 +69,14 @@ triggers:
     - optimize query
     - create migration
     - database schema
+    - postgresql performance
+    - indexing strategy
 
 related_skills:
   - database
   - python
   - go
+  - nodejs
 
 prevent_confusion_with:
   - database: "SQL is query language, database skill covers ORMs"

@@ -152,4 +152,4 @@ This template is composed with:
 
 ---
 
-# DOMYH Awesome Code v6.1.2 • Persona Base Template
+# DOMYH Awesome Code • Persona Base Template

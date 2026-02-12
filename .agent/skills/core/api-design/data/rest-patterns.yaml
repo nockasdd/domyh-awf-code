@@ -1,0 +1,195 @@
+metadata:
+  skill: api-design
+  domain: rest_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: rest-patterns.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - level
+    - category
+patterns:
+  - id: REST-01
+    pattern: Resource Naming
+    description: Use plural nouns for resource collections
+    example: /users /products /orders
+    level: BASIC
+    category: uri
+  - id: REST-02
+    pattern: Hierarchical URIs
+    description: Nest related resources max 2-3 levels
+    example: /users/{id}/orders/{orderId}
+    level: BASIC
+    category: uri
+  - id: REST-03
+    pattern: Hyphen Separation
+    description: Use hyphens for multi-word resources
+    example: /order-items /user-profiles
+    level: BASIC
+    category: uri
+  - id: REST-04
+    pattern: Lowercase URIs
+    description: Keep URIs lowercase for consistency
+    example: /users not /Users
+    level: BASIC
+    category: uri
+  - id: REST-05
+    pattern: No Verbs in URI
+    description: HTTP methods imply action
+    example: GET /users not /getUsers
+    level: BASIC
+    category: uri
+  - id: REST-06
+    pattern: Query Parameters Filter
+    description: Use query params for filtering
+    example: /users?status=active&role=admin
+    level: BASIC
+    category: query
+  - id: REST-07
+    pattern: Query Parameters Sort
+    description: Use sort param with field:direction
+    example: /products?sort=price:desc
+    level: BASIC
+    category: query
+  - id: REST-08
+    pattern: GET Idempotent
+    description: GET should not modify state
+    example: GET /users returns same result
+    level: BASIC
+    category: methods
+  - id: REST-09
+    pattern: POST Create
+    description: POST creates new resources
+    example: POST /users creates user
+    level: BASIC
+    category: methods
+  - id: REST-10
+    pattern: PUT Replace
+    description: PUT replaces entire resource
+    example: PUT /users/1 replaces user 1
+    level: BASIC
+    category: methods
+  - id: REST-11
+    pattern: PATCH Partial
+    description: PATCH updates specific fields
+    example: "PATCH /users/1 {name: 'new'}"
+    level: BASIC
+    category: methods
+  - id: REST-12
+    pattern: DELETE Remove
+    description: DELETE removes resource
+    example: DELETE /users/1 removes user 1
+    level: BASIC
+    category: methods
+  - id: REST-13
+    pattern: RMM Level 0
+    description: Single URI single HTTP method (RPC style)
+    example: POST /api with action in body
+    level: MATURITY
+    category: richardson
+  - id: REST-14
+    pattern: RMM Level 1
+    description: Individual resources with unique URIs
+    example: /doctors/1 /appointments/2
+    level: MATURITY
+    category: richardson
+  - id: REST-15
+    pattern: RMM Level 2
+    description: Proper HTTP verbs for operations
+    example: GET/POST/PUT/DELETE per resource
+    level: MATURITY
+    category: richardson
+  - id: REST-16
+    pattern: RMM Level 3
+    description: HATEOAS hypermedia controls
+    example: Links in response for navigation
+    level: MATURITY
+    category: richardson
+  - id: REST-17
+    pattern: HATEOAS Links
+    description: Include navigation links in response
+    example: "{data: {} _links: {self next}}"
+    level: ADVANCED
+    category: hateoas
+  - id: REST-18
+    pattern: HATEOAS Actions
+    description: Include available actions in response
+    example: "{_actions: [{rel: 'cancel' method: 'POST'}]}"
+    level: ADVANCED
+    category: hateoas
+  - id: REST-19
+    pattern: Self-Discovery
+    description: Single entry point discovers API
+    example: GET / returns all resource links
+    level: ADVANCED
+    category: hateoas
+  - id: REST-20
+    pattern: Content Negotiation
+    description: Use Accept header for format
+    example: "Accept: application/json"
+    level: INTERMEDIATE
+    category: headers
+  - id: REST-21
+    pattern: ETag Caching
+    description: Use ETag for cache validation
+    example: 'ETag: "abc123" If-None-Match'
+    level: INTERMEDIATE
+    category: caching
+  - id: REST-22
+    pattern: Cache-Control
+    description: Set caching directives
+    example: "Cache-Control: max-age=3600"
+    level: INTERMEDIATE
+    category: caching
+  - id: REST-23
+    pattern: Conditional GET
+    description: Support If-Modified-Since
+    example: "If-Modified-Since: date 304 response"
+    level: INTERMEDIATE
+    category: caching
+  - id: REST-24
+    pattern: Stateless Requests
+    description: Each request contains all info
+    example: No server-side session state
+    level: BASIC
+    category: principles
+  - id: REST-25
+    pattern: JSON Preferred
+    description: Use JSON over XML for data
+    example: "Content-Type: application/json"
+    level: BASIC
+    category: format
+  - id: REST-26
+    pattern: Consistent Naming
+    description: Use camelCase or snake_case consistently
+    example: userName or user_name not mixed
+    level: BASIC
+    category: format
+  - id: REST-27
+    pattern: Collection Envelope
+    description: Wrap collections with metadata
+    example: "{data: [] meta: {total page}}"
+    level: INTERMEDIATE
+    category: format
+  - id: REST-28
+    pattern: Sparse Fieldsets
+    description: Allow clients to select fields
+    example: /users?fields=id
+    level: name
+    category: email
+  - id: REST-29
+    pattern: Field Expansion
+    description: Allow nested resource expansion
+    example: /users?expand=orders
+    level: profile
+    category: INTERMEDIATE
+  - id: REST-30
+    pattern: Bulk Operations
+    description: Support batch create/update/delete
+    example: POST /users/bulk [{} {} {}]
+    level: ADVANCED
+    category: operations

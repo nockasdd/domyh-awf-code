@@ -1,83 +1,12 @@
 name: swift
-version: "6.1.2"
-category: mobile
-tier: 1
+version: "6.2.1"
+category: languages
+tier: 3
 
-description: |
-  Apple platform development patterns for Swift 6/6.1.
-  Covers SwiftUI, async/await, actors, SwiftData.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "Package.swift"
-    - "*.swift"
-    - "*.xcodeproj"
-    - "*.xcworkspace"
-  keywords:
-    # Core
-    - swift
-    - swift 6
-    - swiftlang
-    - package.swift
-    - swift package manager
-    - spm
-    # SwiftUI
-    - swiftui
-    - swiftui view
-    - @State
-    - @Binding
-    - @Observable
-    - @ObservedObject
-    - @Environment
-    - @Query
-    - NavigationStack
-    - NavigationPath
-    # Concurrency
-    - async await swift
-    - actor swift
-    - @MainActor
-    - Task swift
-    - TaskGroup
-    - Sendable
-    - structured concurrency
-    # Data
-    - SwiftData
-    - @Model
-    - Core Data
-    - Codable
-    - JSONDecoder
-    # Combine
-    - Combine
-    - Publisher
-    - Subscriber
-    - @Published
-    # UIKit
-    - UIKit
-    - UIViewController
-    - UIView
-    # Architecture
-    - TCA
-    - composable architecture
-    - MVVM swift
-    - coordinator pattern
-    # Tools
-    - Xcode
-    - SwiftLint
-    - Vapor
-    - Kingfisher
-    - Alamofire
-    # Platforms
-    - iOS
-    - macOS
-    - watchOS
-    - tvOS
-    - visionOS
-  intents:
-    - build ios app
-    - swiftui component
-    - swift async
-    - swift actor
-    - ios development
+desc: "Apple platform development patterns for Swift 6/6.1. Covers SwiftUI, async/await, actors, SwiftData."
 
 related_skills:
   - flutter

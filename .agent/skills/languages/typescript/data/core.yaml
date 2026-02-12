@@ -1,0 +1,283 @@
+# =============================================================================
+# TypeScript Core Patterns (Feb 2026)
+# Version: TypeScript 5.8/6.0
+# =============================================================================
+
+metadata:
+  skill: typescript
+  domain: core
+  version: "6.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: ts001
+    name: Utility Types
+    category: types
+    version: "4.0+"
+    description: |
+      Built-in utility types for type transformations.
+      Omit, Pick, Partial, Required, Record, etc.
+    text: utility types omit pick partial required record
+    example: |
+      // ✅ Pick/Omit - Select or exclude properties
+      interface User {
+        id: number;
+        name: string;
+        email: string;
+        password: string;
+      }
+
+      type UserPublic = Omit<User, 'password'>;
+      type UserCredentials = Pick<User, 'email' | 'password'>;
+
+      // ✅ Partial/Required - Make all props optional/required
+      type UserUpdate = Partial<User>; // All optional
+      type StrictUser = Required<User>; // All required
+
+      // ✅ Record - Object type with specified keys
+      type UserRole = 'admin' | 'user' | 'guest';
+      type RolePermissions = Record<UserRole, string[]>;
+
+      const permissions: RolePermissions = {
+        admin: ['read', 'write', 'delete'],
+        user: ['read', 'write'],
+        guest: ['read'],
+      };
+
+      // ✅ Readonly - Immutable types
+      type ImmutableUser = Readonly<User>;
+
+      // ✅ Extract/Exclude - Union type manipulation
+      type NumericKeys = Extract<keyof User, 'id'>; // 'id'
+      type StringKeys = Exclude<keyof User, 'id'>; // 'name' | 'email' | 'password'
+
+      // ✅ ReturnType/Parameters - Function type extraction
+      function createUser(name: string, age: number): User {
+        return { id: 1, name, email: '', password: '' };
+      }
+
+      type CreateUserReturn = ReturnType<typeof createUser>; // User
+      type CreateUserParams = Parameters<typeof createUser>; // [string, number]
+    severity: HIGH
+    docs_url: https://www.typescriptlang.org/docs/handbook/utility-types.html
+
+  - id: ts002
+    name: Discriminated Unions
+    category: types
+    version: "2.0+"
+    description: |
+      Type-safe unions with discriminant property.
+      Exhaustive pattern matching with never.
+    text: discriminated union tagged union pattern matching exhaustive
+    example: |
+      // ✅ Discriminated union with 'type' discriminant
+      type Result<T> =
+        | { type: 'success'; data: T }
+        | { type: 'error'; error: Error }
+        | { type: 'loading' };
+
+      function handleResult<T>(result: Result<T>): T | null {
+        switch (result.type) {
+          case 'success':
+            return result.data; // TypeScript knows data exists
+          case 'error':
+            console.error(result.error);
+            return null;
+          case 'loading':
+            return null;
+          default:
+            // Exhaustiveness check
+            const _exhaustive: never = result;
+            return _exhaustive;
+        }
+      }
+
+      // ✅ API response pattern
+      type ApiResponse<T> =
+        | { status: 'ok'; data: T; timestamp: Date }
+        | { status: 'error'; message: string; code: number }
+        | { status: 'pending' };
+
+      // ✅ State machine pattern
+      type ConnectionState =
+        | { state: 'disconnected' }
+        | { state: 'connecting'; attempt: number }
+        | { state: 'connected'; socket: WebSocket }
+        | { state: 'error'; error: Error; retryAt: Date };
+
+      function getConnectionInfo(conn: ConnectionState): string {
+        switch (conn.state) {
+          case 'disconnected':
+            return 'Not connected';
+          case 'connecting':
+            return `Connecting (attempt ${conn.attempt})`;
+          case 'connected':
+            return `Connected to ${conn.socket.url}`;
+          case 'error':
+            return `Error: ${conn.error.message}`;
+        }
+      }
+    severity: HIGH
+    docs_url: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions
+
+  - id: ts003
+    name: Branded Types
+    category: types
+    version: "2.0+"
+    description: |
+      Nominal typing via branded types.
+      Prevent mixing similar primitive types.
+    text: branded types nominal typing type safety
+    example: |
+      // ✅ Branded type pattern
+      declare const __brand: unique symbol;
+      type Brand<T, B> = T & { [__brand]: B };
+
+      // Define branded types
+      type UserId = Brand<number, 'UserId'>;
+      type OrderId = Brand<number, 'OrderId'>;
+      type Email = Brand<string, 'Email'>;
+
+      // ✅ Type guards for creating branded types
+      function isValidEmail(email: string): email is Email {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function createEmail(value: string): Email {
+        if (!isValidEmail(value)) {
+          throw new Error('Invalid email');
+        }
+        return value;
+      }
+
+      function createUserId(id: number): UserId {
+        if (id <= 0) throw new Error('Invalid user ID');
+        return id as UserId;
+      }
+
+      // ✅ Usage - compiler prevents mixing IDs
+      function getUser(id: UserId): Promise<User> {
+        return fetch(`/users/${id}`).then(r => r.json());
+      }
+
+      function getOrder(id: OrderId): Promise<Order> {
+        return fetch(`/orders/${id}`).then(r => r.json());
+      }
+
+      const userId = createUserId(123);
+      const orderId = createUserId(456) as unknown as OrderId;
+
+      getUser(userId);   // ✅ OK
+      // getUser(orderId); // ❌ Type error: OrderId not assignable to UserId
+      // getUser(123);     // ❌ Type error: number not assignable to UserId
+    severity: MEDIUM
+    docs_url: https://www.typescriptlang.org/play#example/nominal-typing
+
+  - id: ts004
+    name: Template Literal Types
+    category: types
+    version: "4.1+"
+    description: |
+      String manipulation at type level.
+      Build complex string patterns from types.
+    text: template literal types string manipulation type level
+    example: |
+      // ✅ Basic template literal type
+      type EventName = 'click' | 'focus' | 'blur';
+      type EventHandler = `on${Capitalize<EventName>}`; // 'onClick' | 'onFocus' | 'onBlur'
+
+      // ✅ Route patterns
+      type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+      type Resource = 'users' | 'posts' | 'comments';
+      type Route = `${Lowercase<Method>} /api/${Resource}`;
+      // 'get /api/users' | 'get /api/posts' | 'post /api/users' | ...
+
+      // ✅ CSS property types
+      type CSSUnit = 'px' | 'rem' | 'em' | '%';
+      type CSSValue = `${number}${CSSUnit}`;
+
+      function setWidth(width: CSSValue): void {
+        // ...
+      }
+
+      setWidth('100px');  // ✅
+      setWidth('2rem');   // ✅
+      // setWidth('100');  // ❌ Type error
+
+      // ✅ Object key transformation
+      type Getters<T> = {
+        [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+      };
+
+      interface Person {
+        name: string;
+        age: number;
+      }
+
+      type PersonGetters = Getters<Person>;
+      // { getName: () => string; getAge: () => number }
+
+      // ✅ Parse string patterns
+      type ParseRoute<T extends string> =
+        T extends `${infer Method} ${infer Path}`
+          ? { method: Method; path: Path }
+          : never;
+
+      type Parsed = ParseRoute<'GET /users'>; // { method: 'GET'; path: '/users' }
+    severity: MEDIUM
+    docs_url: https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
+
+  - id: ts005
+    name: const Assertions
+    category: types
+    version: "3.4+"
+    description: |
+      Narrow literal types with 'as const'.
+      Readonly inference for objects and arrays.
+    text: const assertion literal type readonly inference
+    example: |
+      // ✅ Array as tuple
+      const colors = ['red', 'green', 'blue'] as const;
+      // type: readonly ['red', 'green', 'blue']
+
+      type Color = (typeof colors)[number]; // 'red' | 'green' | 'blue'
+
+      // ✅ Object literal types
+      const config = {
+        apiUrl: 'https://api.example.com',
+        timeout: 5000,
+        retries: 3,
+      } as const;
+
+      type Config = typeof config;
+      // { readonly apiUrl: 'https://api.example.com'; readonly timeout: 5000; readonly retries: 3 }
+
+      // ✅ Enum-like pattern
+      const HttpStatus = {
+        OK: 200,
+        NotFound: 404,
+        ServerError: 500,
+      } as const;
+
+      type HttpStatusCode = (typeof HttpStatus)[keyof typeof HttpStatus];
+      // 200 | 404 | 500
+
+      // ✅ Function with const type parameter (5.0+)
+      function createRoute<const T extends string>(path: T): { path: T } {
+        return { path };
+      }
+
+      const route = createRoute('/users/:id');
+      // type: { path: '/users/:id' } (not { path: string })
+
+      // ✅ satisfies with as const
+      const routes = {
+        home: '/',
+        users: '/users',
+        posts: '/posts',
+      } as const satisfies Record<string, string>;
+
+      type RouteName = keyof typeof routes; // 'home' | 'users' | 'posts'
+    severity: MEDIUM
+    docs_url: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions

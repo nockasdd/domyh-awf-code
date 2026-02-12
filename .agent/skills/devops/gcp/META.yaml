@@ -1,0 +1,43 @@
+name: gcp
+version: "1.0.0"
+display: Google Cloud Platform
+category: devops
+tier: 1
+priority: 6
+
+desc: "Google Cloud Platform services: Cloud Run, Cloud Functions, BigQuery, Firestore, Pub/Sub, IAM, and gcloud CLI patterns."
+
+triggers:
+  file_patterns:
+    - "app.yaml"
+    - "cloudbuild.yaml"
+    - ".gcloudignore"
+  keywords:
+    - GCP
+    - Google Cloud
+    - Cloud Run
+    - Cloud Functions
+    - BigQuery
+    - Firestore
+    - Cloud SQL
+    - Pub/Sub
+    - gcloud
+    - Google Cloud Storage
+
+caps:
+  - Cloud Run (serverless containers)
+  - Cloud Functions (event-driven)
+  - BigQuery, Firestore, Cloud SQL
+  - Pub/Sub messaging
+  - IAM & security
+  - gcloud CLI patterns
+
+related_skills:
+  - docker
+  - kubernetes
+  - terraform
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/devops/gcp/data"
+  preload_data: false

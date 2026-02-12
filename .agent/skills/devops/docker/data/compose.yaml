@@ -1,0 +1,229 @@
+# =============================================================================
+# Docker Compose v5 Patterns (Feb 2026)
+# =============================================================================
+# Go SDK, GPU support, watch mode, profiles
+
+metadata:
+  skill: docker
+  domain: compose
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: docker010
+    name: Compose v5 Go SDK
+    category: compose
+    version: "2024+"
+    description: New Go-based Compose with improved performance and features
+    text: compose v5 go sdk docker compose up services
+    example: |
+      # compose.yaml (Compose v5 format)
+      name: my-app
+
+      services:
+        api:
+          build:
+            context: ./api
+            dockerfile: Dockerfile
+          ports:
+            - "3000:3000"
+          environment:
+            DATABASE_URL: postgres://db:5432/app
+          depends_on:
+            db:
+              condition: service_healthy
+          develop:
+            watch:
+              - action: sync
+                path: ./api/src
+                target: /app/src
+
+        db:
+          image: postgres:16
+          environment:
+            POSTGRES_PASSWORD: secret
+          healthcheck:
+            test: ["CMD", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+      # Run with watch mode
+      docker compose up --watch
+
+      # Compose v5 vs v2:
+      # - 40% faster startup
+      # - Native GPU support
+      # - Better BuildKit integration
+    severity: HIGH
+    docs_url: https://docs.docker.com/compose/
+
+  - id: docker011
+    name: Compose Watch Mode
+    category: compose
+    version: "2023+"
+    description: Automatic sync and rebuild on file changes
+    text: compose watch hot reload development live sync
+    example: |
+      services:
+        frontend:
+          build: ./frontend
+          develop:
+            watch:
+              # Sync files without rebuild
+              - action: sync
+                path: ./frontend/src
+                target: /app/src
+                ignore:
+                  - node_modules/
+
+              # Rebuild on package changes
+              - action: rebuild
+                path: ./frontend/package.json
+
+              # Sync and restart
+              - action: sync+restart
+                path: ./frontend/config.json
+                target: /app/config.json
+
+        api:
+          build: ./api
+          develop:
+            watch:
+              - action: rebuild
+                path: ./api
+                ignore:
+                  - "*.test.go"
+
+      # Start with watch mode
+      docker compose watch
+      # Or: docker compose up --watch
+    severity: HIGH
+    docs_url: https://docs.docker.com/compose/file-watch/
+
+  - id: docker012
+    name: Compose GPU Support
+    category: compose
+    version: "2024+"
+    description: Native GPU access for ML workloads in Compose
+    text: compose gpu nvidia ml machine learning cuda
+    example: |
+      services:
+        ml-training:
+          image: pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+          deploy:
+            resources:
+              reservations:
+                devices:
+                  - driver: nvidia
+                    count: 1  # Or "all" for all GPUs
+                    capabilities: [gpu]
+          environment:
+            CUDA_VISIBLE_DEVICES: 0
+
+        inference:
+          image: myregistry/inference-server
+          deploy:
+            resources:
+              reservations:
+                devices:
+                  - driver: nvidia
+                    device_ids: ['0', '1']  # Specific GPUs
+                    capabilities: [gpu, utility]
+
+      # Check GPU availability
+      docker info | grep -i nvidia
+    severity: HIGH
+    docs_url: https://docs.docker.com/compose/gpu-support/
+
+  - id: docker013
+    name: Compose Profiles
+    category: compose
+    version: "2021+"
+    description: Selective service startup with profiles
+    text: compose profiles conditional services development testing
+    example: |
+      services:
+        app:
+          image: myapp
+
+        db:
+          image: postgres:16
+
+        # Only start with --profile debug
+        debug-tools:
+          image: nicolaka/netshoot
+          profiles: [debug]
+          stdin_open: true
+          tty: true
+
+        # Development tools
+        adminer:
+          image: adminer
+          profiles: [dev]
+          ports:
+            - "8080:8080"
+
+        # Testing database
+        test-db:
+          image: postgres:16
+          profiles: [test]
+          environment:
+            POSTGRES_DB: test_db
+
+      # Usage:
+      docker compose up                    # Only app and db
+      docker compose --profile dev up      # + adminer
+      docker compose --profile debug up    # + debug-tools
+      docker compose --profile test up     # + test-db
+    severity: MEDIUM
+    docs_url: https://docs.docker.com/compose/profiles/
+
+  - id: docker014
+    name: Compose Networking
+    category: compose
+    version: "2021+"
+    description: Custom networks and service discovery
+    text: compose networks internal external service discovery dns
+    example: |
+      services:
+        api:
+          networks:
+            - frontend
+            - backend
+
+        db:
+          networks:
+            - backend
+
+        nginx:
+          networks:
+            - frontend
+            - external
+
+      networks:
+        frontend:
+          # Internal network (no external access)
+        backend:
+          internal: true  # No outbound internet
+        external:
+          # Connect to existing network
+          external: true
+          name: prod-network
+
+      # Service discovery:
+      # - Services can reach each other by name
+      # - api can reach db at "db:5432"
+      # - nginx can reach api at "api:3000"
+
+      # DNS aliases:
+      services:
+        db:
+          networks:
+            backend:
+              aliases:
+                - database
+                - postgres
+    severity: MEDIUM
+    docs_url: https://docs.docker.com/compose/networking/

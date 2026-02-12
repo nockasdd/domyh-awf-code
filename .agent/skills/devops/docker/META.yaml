@@ -1,44 +1,59 @@
 name: docker
-version: "6.1.2"
-display: Docker
-category: devops
-tier: 1
-priority: 1
+version: "6.2.1"
+category: infrastructure
+tier: 3
 
-description: |
-  Container orchestration with Docker 28+ and Compose V3.
-  Covers multi-stage builds, security, networking, volumes.
+desc: "Docker containerization patterns for builds, security, and deployment. Covers Compose v5, Hardened Images, Build Cloud, Bake."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 18
+  domains:
+    build: 5
+    compose: 5
+    security: 4
+    runtime: 4
+
     - "Dockerfile"
+    - "Dockerfile.*"
     - "docker-compose.yml"
-    - ".dockerignore"
+    - "compose.yml"
+    - "docker-bake.hcl"
   keywords:
-    # Core
+    # Docker
     - docker
     - dockerfile
     - container
-    # Compose
-    - docker-compose
-    - compose
-    # Features
-    - multi-stage
-    - buildx
-    - buildkit
-  intents:
+    - image
     - docker build
-    - container setup
-    - dockerfile
+    - docker run
+    # Compose
+    - docker compose
+    - compose
+    - multicontainer
+    - services
+    - compose v5
+    # Build
+    - buildx
+    - multi-stage
+    - buildkit
+    - docker bake
+    - build cloud
+    # Security
+    - hardened image
+    - rootless
+    - distroless
+    - container security
+  intents:
+    - create dockerfile
+    - optimize docker
+    - secure container
+    - docker compose
 
 related_skills:
   - kubernetes
   - ci-cd
-  - go
+  - aws
+  - security
 
-caps:
-  - Docker 28+
-  - Multi-stage builds
-  - BuildKit
-  - Docker Compose V3
-  - Security best practices
+prevent_confusion_with:
+  - kubernetes: "docker is for container building, kubernetes is orchestration"

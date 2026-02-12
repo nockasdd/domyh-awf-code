@@ -1,11 +1,34 @@
 name: angular
-version: "6.1.2"
+version: "6.2.1"
+display: "Angular Patterns"
 category: frontend
 tier: 1
+priority: 3
 
-description: |
-  Enterprise web framework for Angular 19/20.
-  Covers signals, standalone components, zoneless change detection.
+desc: "Angular 20.2/21/22 development patterns (2025-2026). Signals-first, standalone, zoneless-stable."
+
+caps:
+  - signals-system
+  - standalone-components
+  - zoneless-change-detection
+  - incremental-hydration
+  - ssr-hydration
+  - dependency-injection
+
+data_files:
+  - data/core.yaml
+  - data/server.yaml
+  - data/performance.yaml
+
+patterns:
+  total: 15
+  domains:
+    core: 6
+    server: 4
+    performance: 5
+
+    - search_angular_patterns
+    - get_angular_component
 
 triggers:
   file_patterns:
@@ -13,77 +36,49 @@ triggers:
     - "*.component.ts"
     - "*.module.ts"
     - "*.service.ts"
-    - "*.directive.ts"
   keywords:
     # Core
     - angular
-    - angular 19
-    - angular 20
     - "@angular/core"
-    - "@angular/common"
-    # Signals
-    - signal()
-    - computed()
-    - effect()
-    - input()
-    - output()
-    - model()
-    - angular signals
-    # Components
-    - "@Component"
+    - component
     - standalone component
-    - angular component
+    # Signals
+    - signal
+    - computed
+    - effect
+    - input signal
+    - model signal
     # Control Flow
     - "@if"
     - "@for"
-    - "@switch"
     - "@defer"
-    # Zoneless
+    - "@switch"
+    # SSR
+    - hydration
     - zoneless
-    - provideExperimentalZonelessChangeDetection
-    - ChangeDetectionStrategy
-    - OnPush
-    # RxJS
-    - RxJS
-    - Observable
-    - BehaviorSubject
-    - AsyncPipe
-    # Services
-    - "@Injectable"
+    - provideZonelessChangeDetection
+    - incremental hydration
+    - route rendering
+    # DI
+    - inject
     - providedIn
     - dependency injection
-    # Forms
-    - ReactiveFormsModule
-    - FormControl
-    - FormGroup
-    - Validators
-    # HTTP
-    - HttpClient
-    - HttpInterceptor
-    # Router
-    - RouterModule
-    - RouterLink
-    - ActivatedRoute
-    # CLI
-    - angular cli
-    - ng serve
-    - ng build
-    - ng generate
-    # Testing
-    - TestBed
-    - ComponentFixture
-    - jasmine angular
+    # Routing
+    - router
+    - routes
+    - lazy loading
   intents:
-    - angular project
     - angular component
-    - angular signals
-    - angular form
-    - angular service
+    - angular signal
+    - angular ssr
+    - angular zoneless
+    - angular performance
 
 related_skills:
   - typescript
+  - tailwind
   - rxjs
 
 prevent_confusion_with:
-  - react: "Angular uses signals, React uses useState"
-  - vue: "Angular is class-based with decorators"
+  - react: "Angular uses signals + DI, React uses hooks"
+  - vue: "Angular is enterprise-focused with full framework"

@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_typescript
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-typescript.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: TS-001
+    pattern_name: Auth.js (NextAuth)
+    description: Full-stack auth for Next.js
+    library: next-auth
+    security_level: high
+    keywords:
+      - nextauth
+      - authjs
+  - id: TS-002
+    pattern_name: Auth.js Providers
+    description: OAuth provider configuration
+    library: next-auth/providers
+    security_level: high
+    keywords:
+      - providers
+      - oauth
+  - id: TS-003
+    pattern_name: Auth.js Session
+    description: Session handling and callbacks
+    library: next-auth/jwt
+    security_level: high
+    keywords:
+      - session
+      - jwt
+  - id: TS-004
+    pattern_name: Auth.js Middleware
+    description: Route protection in Next.js
+    library: next-auth/middleware
+    security_level: high
+    keywords:
+      - middleware
+      - protect
+  - id: TS-005
+    pattern_name: Passport.js
+    description: Express authentication middleware
+    library: passport
+    security_level: high
+    keywords:
+      - passport
+      - express
+  - id: TS-006
+    pattern_name: Passport Local
+    description: Username password strategy
+    library: passport-local
+    security_level: high
+    keywords:
+      - local
+      - password
+  - id: TS-007
+    pattern_name: Passport JWT
+    description: JWT authentication strategy
+    library: passport-jwt
+    security_level: high
+    keywords:
+      - jwt
+      - strategy
+  - id: TS-008
+    pattern_name: Passport OAuth2
+    description: Generic OAuth2 strategy
+    library: passport-oauth2
+    security_level: high
+    keywords:
+      - oauth2
+      - strategy
+  - id: TS-009
+    pattern_name: jose Library
+    description: JOSE JWT JWE JWK implementation
+    library: jose
+    security_level: high
+    keywords:
+      - jose
+      - jwt
+  - id: TS-010
+    pattern_name: jsonwebtoken
+    description: Simple JWT signing verification
+    library: jsonwebtoken
+    security_level: high
+    keywords:
+      - jwt
+      - simple
+  - id: TS-011
+    pattern_name: Better Auth
+    description: Type-safe auth framework
+    library: better-auth
+    security_level: high
+    keywords:
+      - typesafe
+      - auth
+  - id: TS-012
+    pattern_name: Lucia Auth
+    description: Session-based auth library
+    library: lucia
+    security_level: high
+    keywords:
+      - lucia
+      - session
+  - id: TS-013
+    pattern_name: Oslo Crypto
+    description: Utilities for auth implementations
+    library: oslo
+    security_level: medium
+    keywords:
+      - crypto
+      - utils
+  - id: TS-014
+    pattern_name: express-session
+    description: Session middleware for Express
+    library: express-session
+    security_level: high
+    keywords:
+      - session
+      - express
+  - id: TS-015
+    pattern_name: cookie-session
+    description: Signed cookie sessions
+    library: cookie-session
+    security_level: medium
+    keywords:
+      - cookie
+      - signed
+  - id: TS-016
+    pattern_name: bcryptjs
+    description: Pure JS bcrypt implementation
+    library: bcryptjs
+    security_level: critical
+    keywords:
+      - bcrypt
+      - hash
+  - id: TS-017
+    pattern_name: argon2
+    description: Node argon2 bindings
+    library: argon2
+    security_level: critical
+    keywords:
+      - argon2
+      - hash
+  - id: TS-018
+    pattern_name: CSRF Protection
+    description: csurf or lusca middleware
+    library: csurf
+    security_level: critical
+    keywords:
+      - csrf
+      - token
+  - id: TS-019
+    pattern_name: Helmet Security
+    description: Security headers middleware
+    library: helmet
+    security_level: high
+    keywords:
+      - headers
+      - helmet
+  - id: TS-020
+    pattern_name: Rate Limiter
+    description: express-rate-limit for logins
+    library: express-rate-limit
+    security_level: high
+    keywords:
+      - ratelimit
+      - login
+  - id: TS-021
+    pattern_name: Zod Validation
+    description: Schema validation for auth
+    library: zod
+    security_level: medium
+    keywords:
+      - zod
+      - validation
+  - id: TS-022
+    pattern_name: SimpleWebAuthn Server
+    description: WebAuthn for Node.js
+    library: "@simplewebauthn/server"
+    security_level: critical
+    keywords:
+      - webauthn
+      - passkey
+  - id: TS-023
+    pattern_name: SimpleWebAuthn Browser
+    description: WebAuthn client library
+    library: "@simplewebauthn/browser"
+    security_level: critical
+    keywords:
+      - webauthn
+      - client
+  - id: TS-024
+    pattern_name: OTPAuth
+    description: TOTP HOTP generation
+    library: otpauth
+    security_level: high
+    keywords:
+      - totp
+      - otp
+  - id: TS-025
+    pattern_name: Speakeasy
+    description: Two-factor authentication
+    library: speakeasy
+    security_level: high
+    keywords:
+      - 2fa
+      - totp

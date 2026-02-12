@@ -1,12 +1,12 @@
 ---
 name: asm
 detect: ["*.asm", "*.s", "*.S", "__asm", "asm volatile"]
-version: "6.1.2"
+version: "6.2.1"
 category: language
 tier: 2
 ---
 
-# Assembly Language Patterns — DOMYH Awesome Code v6.1.2
+# Assembly Language Patterns — DOMYH Awesome Code
 
 > Comprehensive guide for x86/x64, ARM64 assembly with C++ integration
 
@@ -750,4 +750,4 @@ void amx_matmul_bf16(void* c, void* a, void* b) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Assembly Language Skill • Comprehensive Guide_
+_DOMYH Awesome Code • Assembly Language Skill • Comprehensive Guide_

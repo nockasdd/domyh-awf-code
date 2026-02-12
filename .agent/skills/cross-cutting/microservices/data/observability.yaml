@@ -1,0 +1,152 @@
+# =============================================================================
+# observability.yaml — Distributed Observability Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# THREE PILLARS
+# =============================================================================
+
+pillars:
+  logs:
+    description: "Structured, correlated log entries"
+    standards: ["JSON format", "correlation IDs", "log levels"]
+    tools: ["ELK Stack", "Grafana Loki", "Datadog Logs"]
+
+  metrics:
+    description: "Numerical measurements over time"
+    types:
+      - counter: "Only increases (requests_total)"
+      - gauge: "Goes up and down (active_connections)"
+      - histogram: "Distribution of values (request_duration)"
+      - summary: "Quantiles (p50, p95, p99)"
+    tools: ["Prometheus", "Grafana", "Datadog"]
+
+  traces:
+    description: "End-to-end request path across services"
+    concepts:
+      - trace: "Complete request journey"
+      - span: "Single operation within a trace"
+      - context: "Propagated metadata (trace_id, span_id)"
+    tools: ["Jaeger", "Zipkin", "Tempo", "Datadog APM"]
+
+# =============================================================================
+# OPENTELEMETRY
+# =============================================================================
+
+opentelemetry:
+  description: "Vendor-neutral observability framework"
+
+  components:
+    - SDK: "Instrumentation libraries per language"
+    - Collector: "Receives, processes, exports telemetry"
+    - Exporters: "Send to Jaeger, Prometheus, Datadog, etc."
+
+  go_setup: |
+    import (
+        "go.opentelemetry.io/otel"
+        "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+        "go.opentelemetry.io/otel/sdk/trace"
+    )
+
+    func initTracer() (*trace.TracerProvider, error) {
+        exporter, err := otlptracehttp.New(context.Background(),
+            otlptracehttp.WithEndpoint("localhost:4318"),
+            otlptracehttp.WithInsecure(),
+        )
+        if err != nil {
+            return nil, err
+        }
+        tp := trace.NewTracerProvider(
+            trace.WithBatcher(exporter),
+            trace.WithResource(resource.NewWithAttributes(
+                semconv.SchemaURL,
+                semconv.ServiceNameKey.String("order-service"),
+            )),
+        )
+        otel.SetTracerProvider(tp)
+        return tp, nil
+    }
+
+  span_example: |
+    func (s *OrderService) Create(ctx context.Context, req CreateOrderReq) (*Order, error) {
+        ctx, span := otel.Tracer("order-service").Start(ctx, "OrderService.Create")
+        defer span.End()
+
+        span.SetAttributes(
+            attribute.String("customer_id", req.CustomerID),
+            attribute.Int("item_count", len(req.Items)),
+        )
+
+        order, err := s.repo.Save(ctx, req)
+        if err != nil {
+            span.RecordError(err)
+            span.SetStatus(codes.Error, err.Error())
+            return nil, err
+        }
+
+        span.SetAttributes(attribute.String("order_id", order.ID))
+        return order, nil
+    }
+
+# =============================================================================
+# CORRELATION IDS
+# =============================================================================
+
+correlation_ids:
+  description: "Track requests across service boundaries"
+
+  headers:
+    - "X-Request-ID"
+    - "X-Correlation-ID"
+    - "traceparent (W3C standard)"
+
+  middleware_go: |
+    func CorrelationMiddleware(next http.Handler) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            correlationID := r.Header.Get("X-Correlation-ID")
+            if correlationID == "" {
+                correlationID = uuid.NewString()
+            }
+            ctx := context.WithValue(r.Context(), CorrelationKey, correlationID)
+            w.Header().Set("X-Correlation-ID", correlationID)
+            next.ServeHTTP(w, r.WithContext(ctx))
+        })
+    }
+
+# =============================================================================
+# HEALTH CHECKS
+# =============================================================================
+
+health_checks:
+  types:
+    - name: "Liveness"
+      path: "/healthz"
+      purpose: "Is the process alive?"
+      checks: ["Process running"]
+
+    - name: "Readiness"
+      path: "/readyz"
+      purpose: "Can the service handle traffic?"
+      checks: ["DB connected", "Cache connected", "Dependencies up"]
+
+    - name: "Startup"
+      path: "/startupz"
+      purpose: "Has the service finished initializing?"
+      checks: ["Migrations done", "Cache warmed"]
+
+  kubernetes: |
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 15
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8080
+      periodSeconds: 5
+
+# _DOMYH Awesome Code • Observability Patterns_

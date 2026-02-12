@@ -1,0 +1,219 @@
+metadata:
+  skill: security
+  domain: csharp_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: csharp-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_vuln
+    - example_fix
+patterns:
+  - id: CS-01
+    name: SQL Injection
+    severity: CRITICAL
+    category: Injection
+    description: String concatenation in SQL queries
+    detection_pattern: (SqlCommand|ExecuteReader|ExecuteNonQuery).*\\+.*Request
+    fix_pattern: Use parameterized queries with SqlParameter
+    cwe: CWE-89
+    example_vuln: cmd.CommandText = 'SELECT * FROM Users WHERE id = ' + userId;
+    example_fix: cmd.CommandText = 'SELECT * FROM Users WHERE id = @id';\ncmd.Parameters.AddWithValue('@id', userId);
+  - id: CS-02
+    name: XSS Via Response Write
+    severity: HIGH
+    category: XSS
+    description: User input written to response without encoding
+    detection_pattern: Response\\.Write.*Request(?!.*Encode|HtmlEncode)
+    fix_pattern: Use HttpUtility.HtmlEncode for all user output
+    cwe: CWE-79
+    example_vuln: Response.Write(Request['name']);
+    example_fix: Response.Write(HttpUtility.HtmlEncode(Request['name']));
+  - id: CS-03
+    name: Insecure Deserialization
+    severity: CRITICAL
+    category: Deserialization
+    description: BinaryFormatter used for untrusted data
+    detection_pattern: BinaryFormatter|SoapFormatter|ObjectStateFormatter
+    fix_pattern: Use JSON or XML with type constraints avoid TypeNameHandling
+    cwe: CWE-502
+    example_vuln: var bf = new BinaryFormatter();\nbf.Deserialize(stream);
+    example_fix: var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None };
+  - id: CS-04
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User input in file path without validation
+    detection_pattern: (File\\.Open|ReadAllText|WriteAllText).*Request
+    fix_pattern: Use Path.GetFullPath and validate against base directory
+    cwe: CWE-22
+    example_vuln: File.ReadAllText(basePath + Request['file']);
+    example_fix: var full = Path.GetFullPath(Path.Combine(basePath, file));\nif (!full.StartsWith(basePath)) throw new SecurityException();
+  - id: CS-05
+    name: Command Injection
+    severity: CRITICAL
+    category: Injection
+    description: User input in Process.Start without sanitization
+    detection_pattern: Process\\.Start.*Request.*(?!.*AllowedCommands)
+    fix_pattern: Use argument arrays validate against allowlist
+    cwe: CWE-78
+    example_vuln: Process.Start('cmd', '/c ' + userCommand);
+    example_fix: // Only allow specific commands\nif (!AllowedCommands.Contains(cmd)) throw new SecurityException();
+  - id: CS-06
+    name: Missing CSRF Token
+    severity: HIGH
+    category: CSRF
+    description: Form without AntiForgeryToken validation
+    detection_pattern: \\[HttpPost\\](?!.*ValidateAntiForgeryToken)
+    fix_pattern: Add [ValidateAntiForgeryToken] to all POST actions
+    cwe: CWE-352
+    example_vuln: '[HttpPost]\npublic IActionResult Transfer()'
+    example_fix: '[HttpPost]\n[ValidateAntiForgeryToken]\npublic IActionResult Transfer()'
+  - id: CS-07
+    name: Weak Password Hashing
+    severity: HIGH
+    category: Crypto
+    description: Using MD5 SHA1 or custom hashing for passwords
+    detection_pattern: (MD5|SHA1)\\.Create|GetHashCode.*password
+    fix_pattern: Use Argon2 or PBKDF2 with sufficient iterations
+    cwe: CWE-327
+    example_vuln: var hash = MD5.Create().ComputeHash(password);
+    example_fix: var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
+  - id: CS-08
+    name: Hardcoded Connection String
+    severity: HIGH
+    category: Secrets
+    description: Database connection string in source code
+    detection_pattern: (Server=|Data Source=|Password=).*['\]"
+    fix_pattern: Use IConfiguration and secrets management
+    cwe: CWE-798
+    example_vuln: var conn = 'Server=db;Password=secret123';
+    example_fix: var conn = _configuration.GetConnectionString('Default');
+  - id: CS-09
+    name: Missing Authorization
+    severity: HIGH
+    category: AuthZ
+    description: Controller action without authorization check
+    detection_pattern: \\[HttpGet\\](?!.*\\[Authorize\\]).*public.*IActionResult
+    fix_pattern: Add [Authorize] or policy-based authorization
+    cwe: CWE-284
+    example_vuln: '[HttpGet]\npublic IActionResult AdminPanel()'
+    example_fix: '[Authorize(Roles = ''Admin'')]\n[HttpGet]\npublic IActionResult AdminPanel()'
+  - id: CS-10
+    name: Insecure Cookie
+    severity: HIGH
+    category: Session
+    description: Cookie without Secure HttpOnly SameSite flags
+    detection_pattern: new Cookie|Response\\.Cookies(?!.*Secure|HttpOnly)
+    fix_pattern: Set Secure HttpOnly SameSite=Strict on cookies
+    cwe: CWE-614
+    example_vuln: Response.Cookies.Append('session', token);
+    example_fix: Response.Cookies.Append('session', token, new CookieOptions { Secure = true, HttpOnly = true, SameSite = SameSiteMode.Strict });
+  - id: CS-11
+    name: Regex DoS
+    severity: HIGH
+    category: DoS
+    description: Vulnerable regex pattern causing catastrophic backtracking
+    detection_pattern: new Regex\\(.*\\*\\+|\\+\\+|\\*\\?
+    fix_pattern: Use timeout on regex or simplify patterns
+    cwe: CWE-400
+    example_vuln: var regex = new Regex('(a+)+$');
+    example_fix: var regex = new Regex('a+$', RegexOptions.None, TimeSpan.FromSeconds(1));
+  - id: CS-12
+    name: XML External Entity
+    severity: CRITICAL
+    category: Injection
+    description: XXE processing enabled in XML parser
+    detection_pattern: XmlReader\\.Create(?!.*DtdProcessing.*Prohibit)
+    fix_pattern: Disable DTD processing and external entities
+    cwe: CWE-611
+    example_vuln: var reader = XmlReader.Create(stream);
+    example_fix: var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null };
+  - id: CS-13
+    name: LDAP Injection
+    severity: HIGH
+    category: Injection
+    description: User input in LDAP query without escaping
+    detection_pattern: DirectorySearcher.*Filter.*\\+.*Request
+    fix_pattern: Escape special LDAP characters in user input
+    cwe: CWE-90
+    example_vuln: searcher.Filter = '(uid=' + username + ')';
+    example_fix: searcher.Filter = '(uid=' + EscapeLdap(username) + ')';
+  - id: CS-14
+    name: Open Redirect
+    severity: MEDIUM
+    category: Redirect
+    description: User input in redirect without validation
+    detection_pattern: Redirect(Request\\[|RedirectToAction.*Request
+    fix_pattern: Validate URLs against allowlist use LocalRedirect
+    cwe: CWE-601
+    example_vuln: return Redirect(Request['returnUrl']);
+    example_fix: if (!Url.IsLocalUrl(returnUrl)) returnUrl = '/';\nreturn LocalRedirect(returnUrl);
+  - id: CS-15
+    name: Mass Assignment
+    severity: HIGH
+    category: Binding
+    description: Model binding without property whitelist
+    detection_pattern: \\[Bind\\](?!.*Include).*public.*IActionResult
+    fix_pattern: Use [Bind(Include = 'prop1,prop2')] or DTOs
+    cwe: CWE-915
+    example_vuln: public IActionResult Update(User user)
+    example_fix: public IActionResult Update([Bind(Include = 'Name,Email')] UserDto dto)
+  - id: CS-16
+    name: Nullable Deref
+    severity: MEDIUM
+    category: NullRef
+    description: Nullable reference used without null check
+    detection_pattern: (\\?|null).*\\.(?!\\?)
+    fix_pattern: Use null-conditional operator or explicit checks
+    cwe: CWE-476
+    example_vuln: string name = user.Profile.Name;
+    example_fix: string? name = user?.Profile?.Name;
+  - id: CS-17
+    name: Weak Random
+    severity: HIGH
+    category: Crypto
+    description: Using System.Random for security tokens
+    detection_pattern: new\\s+Random\\(\\)(?!.*crypto)
+    fix_pattern: Use RandomNumberGenerator for security values
+    cwe: CWE-338
+    example_vuln: var token = new Random().Next().ToString();
+    example_fix: var token = RandomNumberGenerator.GetBytes(32);
+  - id: CS-18
+    name: Exposed Error Details
+    severity: MEDIUM
+    category: Info
+    description: Detailed errors exposed in production
+    detection_pattern: UseDeveloperExceptionPage(?!.*IsDevelopment)
+    fix_pattern: Only show detailed errors in development
+    cwe: CWE-209
+    example_vuln: app.UseDeveloperExceptionPage();
+    example_fix: if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+  - id: CS-19
+    name: Unvalidated File Upload
+    severity: HIGH
+    category: Upload
+    description: File upload without type and size validation
+    detection_pattern: IFormFile(?!.*ContentType|Length.*check)
+    fix_pattern: Validate file type size and scan for malware
+    cwe: CWE-434
+    example_vuln: await file.CopyToAsync(stream);
+    example_fix: if (file.Length > 10_000_000 || !AllowedTypes.Contains(file.ContentType)) throw new ValidationException();
+  - id: CS-20
+    name: Logging Sensitive Data
+    severity: MEDIUM
+    category: Privacy
+    description: Passwords or tokens in log output
+    detection_pattern: _logger\\.(Log|Information|Debug).*password|token|secret
+    fix_pattern: Never log sensitive data use structured logging
+    cwe: CWE-532
+    example_vuln: "_logger.LogInformation($'User {email} token: {token}');"
+    example_fix: _logger.LogInformation('User {Email} logged in', email); // No token

@@ -1,0 +1,197 @@
+# =============================================================================
+# Docker Build Patterns (Feb 2026)
+# =============================================================================
+# Multi-stage, BuildKit, Bake, Build Cloud
+
+metadata:
+  skill: docker
+  domain: build
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: docker001
+    name: Multi-Stage Build
+    category: build
+    version: "17.05+"
+    description: Minimize image size with multi-stage builds
+    text: multi-stage build slim minimize image size layers
+    example: |
+      # Multi-stage Dockerfile for Go
+      FROM golang:1.22 AS builder
+      WORKDIR /app
+      COPY go.* ./
+      RUN go mod download
+      COPY . .
+      RUN CGO_ENABLED=0 go build -o /app/server
+
+      # Final stage - minimal image
+      FROM gcr.io/distroless/static-debian12:nonroot
+      COPY --from=builder /app/server /server
+      USER nonroot
+      ENTRYPOINT ["/server"]
+
+      # Node.js example
+      FROM node:22 AS builder
+      WORKDIR /app
+      COPY package*.json ./
+      RUN npm ci
+      COPY . .
+      RUN npm run build
+
+      FROM node:22-slim
+      WORKDIR /app
+      COPY --from=builder /app/dist ./dist
+      COPY --from=builder /app/node_modules ./node_modules
+      CMD ["node", "dist/index.js"]
+
+      # Result: ~50-100MB images instead of ~1GB
+    severity: CRITICAL
+    docs_url: https://docs.docker.com/build/building/multi-stage/
+
+  - id: docker002
+    name: Docker Build Cloud
+    category: build
+    version: "2024+"
+    description: Cloud-based builders for faster CI/CD builds
+    text: docker build cloud ci cd fast remote builder
+    example: |
+      # Enable Build Cloud in Docker Desktop or CI
+      docker buildx create --use --driver cloud myorg/mybuilder
+
+      # Build with cloud builders
+      docker buildx build \
+        --builder cloud-myorg-mybuilder \
+        --platform linux/amd64,linux/arm64 \
+        --push \
+        -t myregistry/myapp:latest .
+
+      # GitHub Actions
+      - uses: docker/setup-buildx-action@v3
+        with:
+          driver: cloud
+          endpoint: myorg/mybuilder
+
+      # Benefits:
+      # - 10-40x faster builds (shared cache)
+      # - Multi-arch builds without QEMU
+      # - 400+ GB persistent cache per builder
+    severity: HIGH
+    docs_url: https://docs.docker.com/build/cloud/
+
+  - id: docker003
+    name: Docker Bake
+    category: build
+    version: "2022+"
+    description: Build multiple images with single command using HCL
+    text: docker bake buildx hcl targets multi-image build
+    example: |
+      # docker-bake.hcl
+      group "default" {
+        targets = ["api", "frontend", "worker"]
+      }
+
+      target "base" {
+        dockerfile = "Dockerfile.base"
+        context = "."
+        tags = ["myregistry/base:latest"]
+      }
+
+      target "api" {
+        inherits = ["base"]
+        dockerfile = "apps/api/Dockerfile"
+        tags = ["myregistry/api:latest"]
+        platforms = ["linux/amd64", "linux/arm64"]
+      }
+
+      target "frontend" {
+        inherits = ["base"]
+        dockerfile = "apps/frontend/Dockerfile"
+        tags = ["myregistry/frontend:latest"]
+        args = {
+          NODE_ENV = "production"
+        }
+      }
+
+      target "worker" {
+        dockerfile = "apps/worker/Dockerfile"
+        tags = ["myregistry/worker:latest"]
+        cache-from = ["type=registry,ref=myregistry/worker:cache"]
+        cache-to = ["type=registry,ref=myregistry/worker:cache,mode=max"]
+      }
+
+      # Build all: docker buildx bake
+      # Build one: docker buildx bake api
+    severity: HIGH
+    docs_url: https://docs.docker.com/build/bake/
+
+  - id: docker004
+    name: BuildKit Cache Mounts
+    category: build
+    version: "18.09+"
+    description: Persistent caches for package managers (npm, pip, go)
+    text: buildkit cache mount persistent npm pip go mod cache
+    example: |
+      # syntax=docker/dockerfile:1
+
+      FROM node:22
+      WORKDIR /app
+      COPY package*.json ./
+
+      # Cache npm packages across builds
+      RUN --mount=type=cache,target=/root/.npm \
+          npm ci
+
+      # Go modules cache
+      FROM golang:1.22
+      WORKDIR /app
+      COPY go.* ./
+      RUN --mount=type=cache,target=/go/pkg/mod \
+          --mount=type=cache,target=/root/.cache/go-build \
+          go mod download
+
+      # Python pip cache
+      FROM python:3.12
+      WORKDIR /app
+      COPY requirements.txt .
+      RUN --mount=type=cache,target=/root/.cache/pip \
+          pip install -r requirements.txt
+
+      # Enable BuildKit:
+      # export DOCKER_BUILDKIT=1
+    severity: HIGH
+    docs_url: https://docs.docker.com/build/cache/
+
+  - id: docker005
+    name: BuildKit Secrets
+    category: build
+    version: "18.09+"
+    description: Securely pass secrets during build (not in image layers)
+    text: buildkit secrets build time credentials ssh private key
+    example: |
+      # syntax=docker/dockerfile:1
+
+      FROM node:22
+      WORKDIR /app
+
+      # Use SSH for private repos
+      RUN --mount=type=ssh \
+          git clone git@github.com:myorg/private-repo.git
+
+      # Use secret file (not stored in layer)
+      RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
+          npm ci
+
+      # Build commands:
+      docker buildx build \
+        --ssh default \
+        --secret id=npmrc,src=.npmrc \
+        -t myapp .
+
+      # Important:
+      # - Secrets NOT stored in image layers
+      # - Cannot be extracted from final image
+      # - Must be provided at build time
+    severity: CRITICAL
+    docs_url: https://docs.docker.com/build/building/secrets/

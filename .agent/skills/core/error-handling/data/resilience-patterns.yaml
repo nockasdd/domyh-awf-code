@@ -1,0 +1,191 @@
+metadata:
+  skill: error-handling
+  domain: resilience_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: resilience-patterns.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - use_case
+    - level
+    - implementation
+patterns:
+  - id: RES-001
+    pattern: Circuit Breaker
+    description: Prevent cascading failures by stopping requests to failing service
+    example: "CB states: CLOSED -> OPEN -> HALF_OPEN"
+    use_case: External service calls
+    level: INTERMEDIATE
+    implementation: Track failures; open after threshold; timeout to half-open; test requests
+  - id: RES-002
+    pattern: Circuit Breaker - Closed
+    description: Normal operation passing all requests
+    example: All requests pass through
+    use_case: Default state
+    level: BASIC
+    implementation: Track success/failure ratio
+  - id: RES-003
+    pattern: Circuit Breaker - Open
+    description: Fail fast without calling service
+    example: Immediately return error or fallback
+    use_case: Service unavailable
+    level: BASIC
+    implementation: Skip actual calls; return cached/default
+  - id: RES-004
+    pattern: Circuit Breaker - Half-Open
+    description: Test if service recovered
+    example: Allow limited test requests
+    use_case: Recovery detection
+    level: INTERMEDIATE
+    implementation: Send probe requests; close on success
+  - id: RES-005
+    pattern: Retry Pattern
+    description: Retry failed operation
+    example: Retry up to N times with delay
+    use_case: Transient failures
+    level: BASIC
+    implementation: Loop with attempt counter
+  - id: RES-006
+    pattern: Fixed Backoff
+    description: Constant delay between retries
+    example: Wait 1s, 1s, 1s...
+    use_case: Simple retry scenarios
+    level: BASIC
+    implementation: sleep(1000) between attempts
+  - id: RES-007
+    pattern: Linear Backoff
+    description: Linearly increasing delay
+    example: Wait 1s, 2s, 3s...
+    use_case: Moderate retry scenarios
+    level: BASIC
+    implementation: sleep(attempt * delay)
+  - id: RES-008
+    pattern: Exponential Backoff
+    description: Exponentially increasing delay
+    example: Wait 1s, 2s, 4s, 8s...
+    use_case: Distributed systems
+    level: INTERMEDIATE
+    implementation: sleep(2^attempt * base_delay)
+  - id: RES-009
+    pattern: Jitter
+    description: Add randomness to backoff
+    example: "delay = base_delay + random(0, jitter_max)"
+    use_case: Prevent thundering herd
+    level: INTERMEDIATE
+    implementation: "random.uniform(0, max_jitter)"
+  - id: RES-010
+    pattern: Full Jitter
+    description: Random delay up to exponential
+    example: delay = random(0, 2^attempt * base)
+    use_case: Best distributed performance
+    level: ADVANCED
+    implementation: random(0, calculated_delay)
+  - id: RES-011
+    pattern: Decorrelated Jitter
+    description: Delay based on previous delay
+    example: "delay = random(base, prev_delay * 3)"
+    use_case: Optimal distribution
+    level: ADVANCED
+    implementation: AWS recommended algorithm
+  - id: RES-012
+    pattern: Timeout
+    description: Limit operation duration
+    example: Cancel if exceeds 30s
+    use_case: All external calls
+    level: BASIC
+    implementation: context.WithTimeout() or setTimeout
+  - id: RES-013
+    pattern: Fallback
+    description: Provide alternative on failure
+    example: Return cached data if service unavailable
+    use_case: Non-critical features
+    level: INTERMEDIATE
+    implementation: try primary else return fallback
+  - id: RES-014
+    pattern: Fallback Chain
+    description: Multiple fallback levels
+    example: Primary -> Cache -> Default -> Error
+    use_case: Complex systems
+    level: ADVANCED
+    implementation: Chain of fallbacks
+  - id: RES-015
+    pattern: Bulkhead
+    description: Isolate resources
+    example: Separate thread pools per dependency
+    use_case: Multi-tenant systems
+    level: ADVANCED
+    implementation: Semaphore or thread pool isolation
+  - id: RES-016
+    pattern: Rate Limiting
+    description: Control request rate
+    example: Max 100 requests per minute
+    use_case: API protection
+    level: INTERMEDIATE
+    implementation: Token bucket or sliding window
+  - id: RES-017
+    pattern: Retry Budget
+    description: Limit total retries
+    example: Only retry 10% of requests
+    use_case: Prevent amplification
+    level: ADVANCED
+    implementation: Global retry counter
+  - id: RES-018
+    pattern: Deadline Propagation
+    description: Pass deadline through call chain
+    example: Include deadline in context
+    use_case: Microservices
+    level: INTERMEDIATE
+    implementation: context.deadline or X-Deadline header
+  - id: RES-019
+    pattern: Graceful Degradation
+    description: Reduce functionality under load
+    example: Disable non-critical features when overloaded
+    use_case: High traffic
+    level: INTERMEDIATE
+    implementation: Feature flags per load level
+  - id: RES-020
+    pattern: Load Shedding
+    description: Reject excess load
+    example: Return 503 when at capacity
+    use_case: Overload protection
+    level: ADVANCED
+    implementation: Queue size limits or admission control
+  - id: RES-021
+    pattern: Retry with Idempotency
+    description: Safe to retry same operation
+    example: Include idempotency key in request
+    use_case: Payment and mutations
+    level: INTERMEDIATE
+    implementation: Idempotency-Key header
+  - id: RES-022
+    pattern: Health Check
+    description: Verify service readiness
+    example: GET /health returns status
+    use_case: All services
+    level: BASIC
+    implementation: Endpoint returning 200 or 503
+  - id: RES-023
+    pattern: Watchdog Timer
+    description: Detect hangs
+    example: Reset operation if stuck
+    use_case: Long-running tasks
+    level: ADVANCED
+    implementation: Background timer that aborts
+  - id: RES-024
+    pattern: Fail Fast
+    description: Detect failure immediately
+    example: Return error without waiting
+    use_case: Known bad state
+    level: BASIC
+    implementation: Check preconditions first
+  - id: RES-025
+    pattern: Fail Safe
+    description: Continue despite errors
+    example: Log error and continue with default
+    use_case: Background jobs
+    level: INTERMEDIATE
+    implementation: Wrap in try-catch with logging

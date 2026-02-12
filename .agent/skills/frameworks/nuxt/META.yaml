@@ -1,100 +1,71 @@
 name: nuxt
-version: "6.1.2"
+version: "6.2.1"
+display: "Nuxt Framework Patterns"
 category: frontend
 tier: 1
+priority: 2
 
-description: |
-  Full-stack Vue framework for Nuxt 4.
-  Covers app/ directory, data fetching, server routes, hybrid rendering.
+desc: "Nuxt 4 development patterns (4.0 Jul 2025, latest 4.3.1). App directory, smart data fetching, Nitro server."
+
+caps:
+  - ssr-ssg-hybrid
+  - file-based-routing
+  - auto-imports
+  - server-api
+  - nitro-engine
+  - data-fetching
+
+data_files:
+  - data/core.yaml
+  - data/server.yaml
+
+patterns:
+  total: 11
+  domains:
+    core: 6
+    server: 5
+
+    - search_nuxt_patterns
+    - get_nuxt_composable
 
 triggers:
   file_patterns:
     - "nuxt.config.ts"
     - "nuxt.config.js"
-    - ".nuxtrc"
     - "app.vue"
-    - "pages/**/*.vue"
-    - "server/api/**/*.ts"
+    - "pages/*.vue"
+    - "server/api/*.ts"
   keywords:
     # Core
     - nuxt
-    - nuxt 4
     - nuxt.js
-    - nuxtjs
-    - nuxt config
-    # Data Fetching
-    - useFetch
     - useAsyncData
-    - useLazyFetch
-    - useLazyAsyncData
-    - $fetch
-    # Routing
+    - useFetch
     - definePageMeta
-    - navigateTo
-    - useRoute nuxt
-    - useRouter nuxt
-    # Server
-    - defineEventHandler
-    - createError
-    - getRouterParam
-    - cachedEventHandler
-    - nitro
-    - h3
-    # Middleware
-    - defineNuxtRouteMiddleware
-    - nuxt middleware
-    # Composables
-    - useState
-    - useRuntimeConfig
-    - useSeoMeta
-    - useHead
-    # Config
-    - defineNuxtConfig
-    - routeRules
-    - hybrid rendering
-    - ssr nuxt
-    - ssg nuxt
-    # Components
     - NuxtLink
-    - NuxtPage
-    - NuxtLayout
-    - ClientOnly
-    # Server Components
-    - .server.vue
-    - component islands
-    # Tools
-    - volar nuxt
-    - nuxtr
-    - nuxt devtools
+    # Server
+    - nitro
+    - defineEventHandler
+    - useRuntimeConfig
+    - server/api
+    # Features
+    - auto-import
+    - file-based routing
+    - layouts
+    - middleware
   intents:
-    - nuxt project
-    - nuxt api route
-    - nuxt middleware
-    - nuxt data fetching
-    - full stack vue
+    - nuxt app
+    - nuxt page
+    - nuxt api
+    - nuxt server
+    - vue fullstack
 
 related_skills:
   - vue
   - typescript
+  - nitro
+  - tailwind
 
 prevent_confusion_with:
-  - nextjs: "Nuxt is for Vue, Next.js for React"
-  - vue: "Nuxt adds SSR/routing to Vue"
-
-# Nuxt-specific APIs NOT in other frameworks
-unique_apis:
-  - "useFetch(), useAsyncData(), useLazyFetch()"
-  - "defineEventHandler(), createError()"
-  - "definePageMeta(), defineNuxtConfig"
-  - "defineNuxtRouteMiddleware()"
-  - "navigateTo(), abortNavigation()"
-  - "useState(), useRuntimeConfig()"
-  - "useSeoMeta(), useHead()"
-  - "getRouterParam(), getQuery()"
-  - "cachedEventHandler(), routeRules"
-  - "NuxtLink, NuxtPage, NuxtLayout, ClientOnly"
-  - ".server.vue (component islands)"
-
-version_features:
-  nuxt3: ["Nitro server", "Hybrid rendering", "Component islands"]
-  nuxt4: ["app/ directory", "Enhanced useFetch", "New shared/ directory"]
+  - nextjs: "Nuxt uses Vue, Next.js uses React"
+  - vue: "Nuxt is a Vue meta-framework with SSR/SSG"

@@ -1,0 +1,109 @@
+# Tailwind CSS 4.0 - Configuration Patterns
+# @theme, @utility, @source directives for CSS-first config
+# Source: tailwindcss.com/docs/v4 (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: config
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: cfg001
+    name: "@theme"
+    category: config
+    version: "4.0+"
+    description: |
+      CSS-first theme configuration. Define design tokens as CSS variables
+      that Tailwind uses to generate utilities. Replaces tailwind.config.js.
+    text: "@theme css variable design token color spacing font custom property"
+    example: |
+      @theme {
+        --color-primary: #3b82f6;
+        --font-sans: "Inter", sans-serif;
+        --spacing-18: 4.5rem;
+        --animate-slide-in: slide-in 0.3s ease-out;
+      }
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/theme"
+
+  - id: cfg002
+    name: "@utility"
+    category: config
+    version: "4.0+"
+    description: |
+      Define custom utility classes in CSS. Replaces @layer utilities.
+      Utilities support variants like hover:, dark:, etc.
+    text: "@utility custom class define extend plugin"
+    example: |
+      @utility no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
+      }
+      /* Usage: <div class="no-scrollbar hover:no-scrollbar" /> */
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/adding-custom-styles"
+
+  - id: cfg003
+    name: "@source"
+    category: config
+    version: "4.0+"
+    description: |
+      Configure content paths for utility generation. Auto-detects most files.
+      Use 'not' to exclude directories.
+    text: "@source content path glob tree shaking purge exclude"
+    example: |
+      @source "./src/**/*.{html,js,ts,jsx,tsx,vue,svelte}";
+      @source not "./src/legacy/*";
+      @source not "./node_modules";
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/detecting-classes-in-source-files"
+
+  - id: cfg004
+    name: "@import"
+    category: config
+    version: "4.0+"
+    description: |
+      Import Tailwind CSS. Replaces @tailwind base/components/utilities.
+      Lightning CSS handles import processing.
+    text: "@import tailwindcss import css entry"
+    example: |
+      /* app.css - v4 style */
+      @import "tailwindcss";
+
+      /* Legacy v3 style (deprecated) */
+      /* @tailwind base; @tailwind components; @tailwind utilities; */
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/installation"
+
+  - id: cfg005
+    name: "@variant"
+    category: config
+    version: "4.0+"
+    description: |
+      Define custom variants for conditional styling.
+      Works with @utility and native utilities.
+    text: "@variant custom selector pseudo class media query"
+    example: |
+      @variant hocus (&:hover, &:focus);
+      @variant touch (@media (pointer: coarse));
+      /* Usage: hocus:bg-blue-500 touch:p-4 */
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states"
+
+  - id: cfg006
+    name: "@plugin"
+    category: config
+    version: "4.0+"
+    description: |
+      Load Tailwind plugins in CSS-first configuration.
+      Replaces plugins array in tailwind.config.js.
+    text: "@plugin import load typography forms container-queries"
+    example: |
+      @plugin "@tailwindcss/typography";
+      @plugin "@tailwindcss/forms";
+      @plugin "@tailwindcss/container-queries";
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/plugins"

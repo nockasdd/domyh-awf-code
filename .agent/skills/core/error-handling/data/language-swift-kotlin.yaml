@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: language_swift_kotlin
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-swift-kotlin.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - language
+    - category
+    - level
+patterns:
+  - id: EH-SWIFT-001
+    pattern: throws
+    description: Mark function can throw
+    example: func f() throws -> Int {}
+    language: Swift
+    category: Declaration
+    level: BASIC
+  - id: EH-SWIFT-002
+    pattern: try
+    description: Call throwing function
+    example: let x = try riskyFunc()
+    language: Swift
+    category: Call
+    level: BASIC
+  - id: EH-SWIFT-003
+    pattern: do-catch
+    description: Handle thrown errors
+    example: do { try f() } catch { handle(error) }
+    language: Swift
+    category: Exception
+    level: BASIC
+  - id: EH-SWIFT-004
+    pattern: try?
+    description: Convert to optional
+    example: let x = try? riskyFunc() // nil on error
+    language: Swift
+    category: Optional
+    level: BASIC
+  - id: EH-SWIFT-005
+    pattern: try!
+    description: Force unwrap throws
+    example: let x = try! safeFunc() // crash if error
+    language: Swift
+    category: Danger
+    level: BASIC
+  - id: EH-SWIFT-006
+    pattern: Error Protocol
+    description: Define custom errors
+    example: "enum MyError: Error { case notFound }"
+    language: Swift
+    category: Definition
+    level: BASIC
+  - id: EH-SWIFT-007
+    pattern: Result Type
+    description: Encapsulate success/failure
+    example: Result<Value, Error> { .success(v) }
+    language: Swift
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-SWIFT-008
+    pattern: Result get()
+    description: Extract value or throw
+    example: let v = try result.get()
+    language: Swift
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-SWIFT-009
+    pattern: Result map
+    description: Transform success value
+    example: result.map { $0 * 2 }
+    language: Swift
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-SWIFT-010
+    pattern: Result mapError
+    description: Transform error type
+    example: result.mapError { MyError.from($0) }
+    language: Swift
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-SWIFT-011
+    pattern: async throws
+    description: Async function can throw
+    example: func f() async throws -> Data {}
+    language: Swift
+    category: Async
+    level: INTERMEDIATE
+  - id: EH-SWIFT-012
+    pattern: try await
+    description: Call async throwing function
+    example: let data = try await fetch()
+    language: Swift
+    category: Async
+    level: INTERMEDIATE
+  - id: EH-SWIFT-013
+    pattern: Task error handling
+    description: Handle async task errors
+    example: Task { do { try await f() } catch {} }
+    language: Swift
+    category: Async
+    level: INTERMEDIATE
+  - id: EH-SWIFT-014
+    pattern: defer
+    description: Cleanup on scope exit
+    example: defer { file.close() }
+    language: Swift
+    category: Cleanup
+    level: BASIC
+  - id: EH-SWIFT-015
+    pattern: LocalizedError
+    description: Provide localized message
+    example: "var errorDescription: String? { localMsg }"
+    language: Swift
+    category: Message
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-001
+    pattern: try-catch
+    description: Catch exceptions
+    example: "try { risky() } catch (e: Exception) { handle(e) }"
+    language: Kotlin
+    category: Exception
+    level: BASIC
+  - id: EH-KOTLIN-002
+    pattern: throw
+    description: Throw exception
+    example: throw IllegalStateException("msg")
+    language: Kotlin
+    category: Exception
+    level: BASIC
+  - id: EH-KOTLIN-003
+    pattern: Nothing type
+    description: Never returns normally
+    example: "fun fail(): Nothing = throw Error()"
+    language: Kotlin
+    category: Type
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-004
+    pattern: Result class
+    description: Encapsulate success/failure
+    example: Result.success(value) or Result.failure(e)
+    language: Kotlin
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-005
+    pattern: runCatching
+    description: Wrap in Result
+    example: val result = runCatching { risky() }
+    language: Kotlin
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-006
+    pattern: getOrNull
+    description: Get value or null
+    example: result.getOrNull()
+    language: Kotlin
+    category: Functional
+    level: BASIC
+  - id: EH-KOTLIN-007
+    pattern: getOrElse
+    description: Get value or default
+    example: result.getOrElse { default }
+    language: Kotlin
+    category: Functional
+    level: BASIC
+  - id: EH-KOTLIN-008
+    pattern: getOrThrow
+    description: Get value or throw
+    example: result.getOrThrow()
+    language: Kotlin
+    category: Functional
+    level: BASIC
+  - id: EH-KOTLIN-009
+    pattern: onSuccess/onFailure
+    description: Handle Result cases
+    example: result.onSuccess { }.onFailure { }
+    language: Kotlin
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-010
+    pattern: fold
+    description: Transform both cases
+    example: result.fold(onSuccess = {}, onFailure = {})
+    language: Kotlin
+    category: Functional
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-011
+    pattern: CancellationException
+    description: Coroutine cancellation
+    example: "catch (e: CancellationException) { throw e }"
+    language: Kotlin
+    category: Coroutine
+    level: ADVANCED
+  - id: EH-KOTLIN-012
+    pattern: supervisorScope
+    description: Independent child failures
+    example: supervisorScope { launch { } launch { } }
+    language: Kotlin
+    category: Coroutine
+    level: ADVANCED
+  - id: EH-KOTLIN-013
+    pattern: CoroutineExceptionHandler
+    description: Handle uncaught in coroutine
+    example: CoroutineExceptionHandler { _, e -> log(e) }
+    language: Kotlin
+    category: Coroutine
+    level: ADVANCED
+  - id: EH-KOTLIN-014
+    pattern: Sealed class Result
+    description: Custom result type
+    example: sealed class Result<out T> { Success, Failure }
+    language: Kotlin
+    category: Custom
+    level: INTERMEDIATE
+  - id: EH-KOTLIN-015
+    pattern: use
+    description: Auto-close resources
+    example: file.use { it.readText() }
+    language: Kotlin
+    category: Resource
+    level: BASIC

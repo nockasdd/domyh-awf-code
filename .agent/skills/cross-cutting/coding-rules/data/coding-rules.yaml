@@ -1,0 +1,647 @@
+metadata:
+  skill: coding-rules
+  domain: coding_rules
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: coding-rules.yaml
+  patterns_count: 70
+  columns:
+    - category
+    - rule_id
+    - rule_name
+    - description
+    - applies_to
+    - severity
+    - example_good
+    - example_bad
+patterns:
+  - id: item_001
+    category: Naming
+    rule_id: N001
+    rule_name: Descriptive Names
+    description: Names should reveal intent without comments
+    applies_to: all
+    severity: CRITICAL
+    example_good: userAccountBalance
+    example_bad: uab
+  - id: item_002
+    category: Naming
+    rule_id: N002
+    rule_name: Avoid Abbreviations
+    description: Use full words except well-known acronyms
+    applies_to: all
+    severity: HIGH
+    example_good: numberOfItems
+    example_bad: numItms
+  - id: item_003
+    category: Naming
+    rule_id: N003
+    rule_name: Consistent Casing
+    description: Follow language-specific casing conventions
+    applies_to: all
+    severity: CRITICAL
+    example_good: getUserName (Java) get_user_name (Python)
+    example_bad: GetUserName (Python)
+  - id: item_004
+    category: Naming
+    rule_id: N004
+    rule_name: Boolean Prefixes
+    description: Prefix booleans with is/has/can/should
+    applies_to: all
+    severity: MEDIUM
+    example_good: isValid hasAccess canEdit
+    example_bad: valid access edit
+  - id: item_005
+    category: Naming
+    rule_id: N005
+    rule_name: Verb Methods
+    description: Methods should start with verbs
+    applies_to: all
+    severity: HIGH
+    example_good: calculateTotal fetchUser
+    example_bad: total user
+  - id: item_006
+    category: Naming
+    rule_id: N006
+    rule_name: Noun Classes
+    description: Classes should be nouns or noun phrases
+    applies_to: all
+    severity: HIGH
+    example_good: UserRepository OrderProcessor
+    example_bad: ProcessOrder DoCalculation
+  - id: item_007
+    category: Naming
+    rule_id: N007
+    rule_name: Interface Naming
+    description: Follow language convention for interfaces
+    applies_to: varies
+    severity: MEDIUM
+    example_good: "C#: IUserRepository TS: UserRepository"
+    example_bad: "TS: IUserRepository (deprecated pattern)"
+  - id: item_008
+    category: Functions
+    rule_id: F001
+    rule_name: Single Responsibility
+    description: Each function does one thing well
+    applies_to: all
+    severity: CRITICAL
+    example_good: validateEmail() sendEmail()
+    example_bad: validateAndSendEmail()
+  - id: item_009
+    category: Functions
+    rule_id: F002
+    rule_name: Max Parameters
+    description: Limit parameters to 3-4 max
+    applies_to: all
+    severity: HIGH
+    example_good: createUser(config)
+    example_bad: createUser(name email age phone address)
+  - id: item_010
+    category: Functions
+    rule_id: F003
+    rule_name: Max Length
+    description: Functions under 50 lines
+    applies_to: all
+    severity: MEDIUM
+    example_good: Short focused functions
+    example_bad: 300+ line functions
+  - id: item_011
+    category: Functions
+    rule_id: F004
+    rule_name: Pure Functions
+    description: Prefer pure functions without side effects
+    applies_to: all
+    severity: MEDIUM
+    example_good: calculateSum(a b) => a+b
+    example_bad: calculateSum modifies global state
+  - id: item_012
+    category: Functions
+    rule_id: F005
+    rule_name: Early Return
+    description: Return early to reduce nesting
+    applies_to: all
+    severity: MEDIUM
+    example_good: if (!valid) return; process();
+    example_bad: if (valid) { process(); }
+  - id: item_013
+    category: Classes
+    rule_id: C001
+    rule_name: Single Purpose
+    description: Each class has one reason to change
+    applies_to: all
+    severity: CRITICAL
+    example_good: UserValidator (only validates)
+    example_bad: UserManagerValidatorLogger
+  - id: item_014
+    category: Classes
+    rule_id: C002
+    rule_name: Max Length
+    description: Classes under 300 lines
+    applies_to: all
+    severity: MEDIUM
+    example_good: Focused domain class
+    example_bad: God class with 1000+ lines
+  - id: item_015
+    category: Classes
+    rule_id: C003
+    rule_name: Composition Over Inheritance
+    description: Prefer composition to inheritance
+    applies_to: all
+    severity: HIGH
+    example_good: "class Car { engine: Engine }"
+    example_bad: class Car extends Engine
+  - id: item_016
+    category: Classes
+    rule_id: C004
+    rule_name: Open-Closed
+    description: Open for extension closed for modification
+    applies_to: all
+    severity: HIGH
+    example_good: Use interfaces and polymorphism
+    example_bad: Switch statements on types
+  - id: item_017
+    category: Classes
+    rule_id: C005
+    rule_name: Dependency Injection
+    description: Inject dependencies don't create them
+    applies_to: all
+    severity: HIGH
+    example_good: "constructor(repo: IRepo)"
+    example_bad: constructor() { this.repo = new Repo() }
+  - id: item_018
+    category: Error Handling
+    rule_id: E001
+    rule_name: Specific Exceptions
+    description: Use specific not generic exceptions
+    applies_to: all
+    severity: HIGH
+    example_good: throw new InvalidEmailException
+    example_bad: throw new Error('something wrong')
+  - id: item_019
+    category: Error Handling
+    rule_id: E002
+    rule_name: No Silent Catch
+    description: Never swallow exceptions silently
+    applies_to: all
+    severity: CRITICAL
+    example_good: catch (e) { log(e); handle(); }
+    example_bad: catch (e) { }
+  - id: item_020
+    category: Error Handling
+    rule_id: E003
+    rule_name: Error Messages
+    description: Include context in error messages
+    applies_to: all
+    severity: HIGH
+    example_good: Email 'x@y' format invalid
+    example_bad: Invalid input
+  - id: item_021
+    category: Error Handling
+    rule_id: E004
+    rule_name: Result Types
+    description: Consider Result<T E> over exceptions
+    applies_to: Rust/TS/Go
+    severity: MEDIUM
+    example_good: Result<User Error>
+    example_bad: throws everywhere
+  - id: item_022
+    category: Documentation
+    rule_id: D001
+    rule_name: Why Not What
+    description: Comments explain why not what
+    applies_to: all
+    severity: HIGH
+    example_good: // Timeout needed for legacy API
+    example_bad: // Add 1 to counter
+  - id: item_023
+    category: Documentation
+    rule_id: D002
+    rule_name: Self-Documenting
+    description: Code should be self-explanatory
+    applies_to: all
+    severity: MEDIUM
+    example_good: customerAge = birthDate.yearsUntilNow()
+    example_bad: a = b.calc()
+  - id: item_024
+    category: Documentation
+    rule_id: D003
+    rule_name: API Documentation
+    description: Public APIs must be documented
+    applies_to: all
+    severity: HIGH
+    example_good: "@param @returns documentation"
+    example_bad: No docs on public methods
+  - id: item_025
+    category: Documentation
+    rule_id: D004
+    rule_name: Outdated Comments
+    description: Remove outdated comments
+    applies_to: all
+    severity: HIGH
+    example_good: Keep comments in sync
+    example_bad: Comment says X code does Y
+  - id: item_026
+    category: Testing
+    rule_id: T001
+    rule_name: Test Naming
+    description: Tests describe expected behavior
+    applies_to: all
+    severity: HIGH
+    example_good: should_return_error_when_email_invalid
+    example_bad: test1 testA
+  - id: item_027
+    category: Testing
+    rule_id: T002
+    rule_name: AAA Pattern
+    description: Arrange-Act-Assert structure
+    applies_to: all
+    severity: MEDIUM
+    example_good: Clear sections in test
+    example_bad: Mixed arrange act assert
+  - id: item_028
+    category: Testing
+    rule_id: T003
+    rule_name: One Assert
+    description: One logical assertion per test
+    applies_to: all
+    severity: MEDIUM
+    example_good: Single focused assertion
+    example_bad: Ten assertions in one test
+  - id: item_029
+    category: Testing
+    rule_id: T004
+    rule_name: No Logic
+    description: No conditionals or loops in tests
+    applies_to: all
+    severity: HIGH
+    example_good: Straightforward assertions
+    example_bad: if/for in test code
+  - id: item_030
+    category: Performance
+    rule_id: P001
+    rule_name: Avoid Premature Optimization
+    description: Optimize after profiling
+    applies_to: all
+    severity: MEDIUM
+    example_good: Profile then optimize
+    example_bad: Optimize without measurement
+  - id: item_031
+    category: Performance
+    rule_id: P002
+    rule_name: N+1 Queries
+    description: Batch database queries
+    applies_to: backend
+    severity: HIGH
+    example_good: SELECT with JOIN or batch
+    example_bad: Query per item in loop
+  - id: item_032
+    category: Security
+    rule_id: S001
+    rule_name: Input Validation
+    description: Validate all user input
+    applies_to: all
+    severity: CRITICAL
+    example_good: Sanitize before use
+    example_bad: Trust user input
+  - id: item_033
+    category: Security
+    rule_id: S002
+    rule_name: No Hardcoded Secrets
+    description: Use environment variables
+    applies_to: all
+    severity: CRITICAL
+    example_good: process.env.API_KEY
+    example_bad: apiKey = 'abc123'
+  - id: item_034
+    category: Security
+    rule_id: S003
+    rule_name: Parameterized Queries
+    description: Prevent SQL injection
+    applies_to: backend
+    severity: CRITICAL
+    example_good: db.query('SELECT ? WHERE id = ?' [col id])
+    example_bad: db.query('SELECT * WHERE id = ' + id)
+  - id: item_035
+    category: Memory
+    rule_id: M001
+    rule_name: Prefer Stack Allocation
+    description: Use stack for small fixed-size data
+    applies_to: C++/Rust/C/Go
+    severity: HIGH
+    example_good: int arr[100]; Point p;
+    example_bad: new int[100] for small arrays
+  - id: item_036
+    category: Memory
+    rule_id: M002
+    rule_name: Smart Pointers Over Raw
+    description: Use RAII smart pointers
+    applies_to: C++
+    severity: CRITICAL
+    example_good: auto ptr = make_unique<Data>();
+    example_bad: Data* p = new Data();
+  - id: item_037
+    category: Memory
+    rule_id: M003
+    rule_name: Reserve Collection Capacity
+    description: Pre-allocate when size known
+    applies_to: all
+    severity: MEDIUM
+    example_good: vec.reserve(1000);
+    example_bad: Loop push_back without reserve
+  - id: item_038
+    category: Memory
+    rule_id: M004
+    rule_name: Avoid Memory Leaks
+    description: Free allocated memory properly
+    applies_to: C++/C
+    severity: CRITICAL
+    example_good: RAII/unique_ptr auto-deletes
+    example_bad: malloc without free
+  - id: item_039
+    category: Memory
+    rule_id: M005
+    rule_name: RAII Pattern
+    description: Acquire in constructor release in destructor
+    applies_to: C++/Rust
+    severity: HIGH
+    example_good: ~File() { close(); }
+    example_bad: Manual cleanup calls
+  - id: item_040
+    category: Memory
+    rule_id: M006
+    rule_name: Pool Allocations
+    description: Reuse objects in hot paths
+    applies_to: all
+    severity: MEDIUM
+    example_good: Object pool pattern
+    example_bad: New allocation per request
+  - id: item_041
+    category: Memory
+    rule_id: M007
+    rule_name: Avoid Large Stack Objects
+    description: Keep stack usage reasonable
+    applies_to: C++/C/Rust
+    severity: HIGH
+    example_good: Heap for >1KB objects
+    example_bad: char buffer[1000000];
+  - id: item_042
+    category: Memory
+    rule_id: M008
+    rule_name: Zero-Copy When Possible
+    description: Avoid unnecessary copies
+    applies_to: all
+    severity: MEDIUM
+    example_good: string_view/span
+    example_bad: String copy for read-only
+  - id: item_043
+    category: Concurrency
+    rule_id: CC001
+    rule_name: Thread-Safe by Design
+    description: Prefer immutability or message passing
+    applies_to: all
+    severity: CRITICAL
+    example_good: Immutable objects + channels
+    example_bad: Shared mutable global
+  - id: item_044
+    category: Concurrency
+    rule_id: CC002
+    rule_name: Avoid Shared Mutable State
+    description: Minimize shared state
+    applies_to: all
+    severity: CRITICAL
+    example_good: thread_local or const refs
+    example_bad: static mut counter
+  - id: item_045
+    category: Concurrency
+    rule_id: CC003
+    rule_name: Lock Ordering
+    description: Consistent lock acquisition order
+    applies_to: all
+    severity: CRITICAL
+    example_good: Always lock A then B
+    example_bad: "Thread1: B A; Thread2: A B"
+  - id: item_046
+    category: Concurrency
+    rule_id: CC004
+    rule_name: Prefer Channels Over Locks
+    description: Message passing over mutexes
+    applies_to: Go/Rust
+    severity: HIGH
+    example_good: ch <- data
+    example_bad: mutex.Lock(); data
+  - id: item_047
+    category: Concurrency
+    rule_id: CC005
+    rule_name: Async for I/O Sync for CPU
+    description: Match pattern to workload
+    applies_to: all
+    severity: HIGH
+    example_good: await fetch(); pool.compute();
+    example_bad: await heavyComputation()
+  - id: item_048
+    category: Concurrency
+    rule_id: CC006
+    rule_name: Use Context for Cancellation
+    description: Propagate cancellation signals
+    applies_to: Go
+    severity: HIGH
+    example_good: ctx.Done() select
+    example_bad: No timeout or cancel
+  - id: item_049
+    category: Concurrency
+    rule_id: CC007
+    rule_name: Limit Concurrency
+    description: Bound worker pools
+    applies_to: all
+    severity: HIGH
+    example_good: Semaphore or worker pool
+    example_bad: Unbounded goroutine spawn
+  - id: item_050
+    category: Concurrency
+    rule_id: CC008
+    rule_name: Avoid Deadlocks
+    description: Design for deadlock prevention
+    applies_to: all
+    severity: CRITICAL
+    example_good: Timeout + lock hierarchy
+    example_bad: Circular wait conditions
+  - id: item_051
+    category: API
+    rule_id: API001
+    rule_name: RESTful Resource Naming
+    description: Use nouns not verbs for resources
+    applies_to: backend
+    severity: HIGH
+    example_good: GET /api/users
+    example_bad: GET /api/getUsers
+  - id: item_052
+    category: API
+    rule_id: API002
+    rule_name: API Versioning
+    description: Version your APIs
+    applies_to: backend
+    severity: HIGH
+    example_good: /api/v1/users
+    example_bad: /api/users (breaking changes)
+  - id: item_053
+    category: API
+    rule_id: API003
+    rule_name: Consistent Error Format
+    description: Structured error responses
+    applies_to: backend
+    severity: HIGH
+    example_good: "{error: {code: 'INVALID_EMAIL'}}"
+    example_bad: throw 'Invalid'
+  - id: item_054
+    category: API
+    rule_id: API004
+    rule_name: Pagination for Lists
+    description: Don't return unbounded collections
+    applies_to: backend
+    severity: HIGH
+    example_good: ?page=2&limit=20
+    example_bad: Return 10000 items
+  - id: item_055
+    category: API
+    rule_id: API005
+    rule_name: Idempotent Operations
+    description: PUT/DELETE should be idempotent
+    applies_to: backend
+    severity: HIGH
+    example_good: Same result on retry
+    example_bad: Side effects on retry
+  - id: item_056
+    category: API
+    rule_id: API006
+    rule_name: Rate Limiting
+    description: Protect against abuse
+    applies_to: backend
+    severity: HIGH
+    example_good: 429 Too Many Requests
+    example_bad: No rate limits
+  - id: item_057
+    category: Database
+    rule_id: DB001
+    rule_name: Parameterized Queries
+    description: Prevent SQL injection
+    applies_to: backend
+    severity: CRITICAL
+    example_good: WHERE id = $1
+    example_bad: WHERE id = ' + id
+  - id: item_058
+    category: Database
+    rule_id: DB002
+    rule_name: Avoid N+1 Queries
+    description: Batch or join related data
+    applies_to: backend
+    severity: HIGH
+    example_good: SELECT with JOIN
+    example_bad: Query per item in loop
+  - id: item_059
+    category: Database
+    rule_id: DB003
+    rule_name: Use Indexes
+    description: Index frequently queried columns
+    applies_to: backend
+    severity: HIGH
+    example_good: CREATE INDEX on search cols
+    example_bad: Full table scan
+  - id: item_060
+    category: Database
+    rule_id: DB004
+    rule_name: Connection Pooling
+    description: Reuse database connections
+    applies_to: backend
+    severity: HIGH
+    example_good: Pool with max connections
+    example_bad: New connection per query
+  - id: item_061
+    category: Database
+    rule_id: DB005
+    rule_name: Transaction Boundaries
+    description: Group related operations
+    applies_to: backend
+    severity: HIGH
+    example_good: BEGIN COMMIT for atomicity
+    example_bad: No transaction for multi-op
+  - id: item_062
+    category: Database
+    rule_id: DB006
+    rule_name: Soft Delete Consider
+    description: Prefer soft delete for audit
+    applies_to: backend
+    severity: MEDIUM
+    example_good: deleted_at timestamp
+    example_bad: Hard delete important data
+  - id: item_063
+    category: Anti-Pattern
+    rule_id: AP001
+    rule_name: God Object
+    description: Avoid classes that do everything
+    applies_to: all
+    severity: HIGH
+    example_good: Split into focused classes
+    example_bad: UserManagerValidatorLogger
+  - id: item_064
+    category: Anti-Pattern
+    rule_id: AP002
+    rule_name: Magic Numbers
+    description: Use named constants
+    applies_to: all
+    severity: HIGH
+    example_good: MAX_RETRY_COUNT = 3
+    example_bad: if (count > 3)
+  - id: item_065
+    category: Anti-Pattern
+    rule_id: AP003
+    rule_name: Deep Nesting
+    description: Max 3 levels of nesting
+    applies_to: all
+    severity: MEDIUM
+    example_good: Early returns/guard clauses
+    example_bad: if { if { if { if
+  - id: item_066
+    category: Anti-Pattern
+    rule_id: AP004
+    rule_name: Premature Abstraction
+    description: Don't abstract too early
+    applies_to: all
+    severity: MEDIUM
+    example_good: Rule of 3 before DRY
+    example_bad: Interface for 1 implementation
+  - id: item_067
+    category: Anti-Pattern
+    rule_id: AP005
+    rule_name: Stringly Typed
+    description: Use types over strings
+    applies_to: all
+    severity: HIGH
+    example_good: enum Status { Active }
+    example_bad: status = 'active'
+  - id: item_068
+    category: Anti-Pattern
+    rule_id: AP006
+    rule_name: Copy Paste Programming
+    description: Extract common code
+    applies_to: all
+    severity: HIGH
+    example_good: Shared utility function
+    example_bad: Same code in 5 places
+  - id: item_069
+    category: Anti-Pattern
+    rule_id: AP007
+    rule_name: Callback Hell
+    description: Use async/await or promises
+    applies_to: JS/TS
+    severity: HIGH
+    example_good: await sequential();
+    example_bad: callback(callback(callback))
+  - id: item_070
+    category: Anti-Pattern
+    rule_id: AP008
+    rule_name: Feature Envy
+    description: Keep data and behavior together
+    applies_to: all
+    severity: MEDIUM
+    example_good: Method on owning class
+    example_bad: Accessing other object's fields

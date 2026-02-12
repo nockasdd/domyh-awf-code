@@ -1,12 +1,12 @@
 ---
 name: julia
 detect: ["*.jl", "Project.toml", "Manifest.toml"]
-version: "6.1.2"
+version: "6.2.1"
 category: scientific
 tier: 2
 ---
 
-# Julia Patterns — DOMYH Awesome Code v6.1.2
+# Julia Patterns — DOMYH Awesome Code
 
 > **Version**: Julia 1.10+ (2025-2026)
 > **Focus**: Scientific computing, ML, high performance
@@ -171,4 +171,4 @@ end
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Julia 1.10+_
+_DOMYH Awesome Code • Julia 1.10+_

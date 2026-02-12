@@ -1,0 +1,644 @@
+# Audit Pro — 12-Expert Panel Checklists (Bilingual EN/VN)
+# Format: id | check | severity | tools (optional)
+# Standards: ISO 25010, CWE Top 25, OWASP Top 10, WCAG 2.2, GDPR, SOC2
+# Activation: always (core 5) | conditional (7 experts, auto-detect)
+
+experts:
+  # ════════════════════════════════════════════════════════════════
+  # CORE EXPERTS — Always Active (5)
+  # ════════════════════════════════════════════════════════════════
+
+  security:
+    name_en: "Principal Security Architect"
+    name_vi: "Kiến trúc sư An ninh Chính"
+    persona_en: "David Chen"
+    persona_vi: "Minh"
+    experience: "15 years"
+    seniority: "Principal"
+    activation:
+      mode: always
+    focus: Vulnerabilities, Authentication, Data Protection, Supply Chain
+    standards: [OWASP Top 10, CWE Top 25, NIST, ISO 27001]
+    checklists:
+      authentication:
+        label: "🔐 Authentication & Authorization"
+        items:
+          - SEC-001 | JWT token validation & expiration | P0 | grep_search: jwt,token,verify
+          - SEC-002 | Session management security | P1 | grep_search: session,cookie
+          - SEC-003 | Password hashing (bcrypt/argon2) | P0 | grep_search: password,hash,bcrypt
+          - SEC-004 | OAuth/SSO implementation | P1
+          - SEC-005 | Role-based access control (RBAC) | P1
+          - SEC-006 | API key management | P1 | grep_search: api_key,apiKey
+      cwe_top_25:
+        label: "🛡️ CWE Top 25 (2024)"
+        items:
+          - SEC-007 | CWE-79: XSS vulnerabilities | P0 | grep_search: innerHTML,dangerouslySetInnerHTML
+          - SEC-008 | CWE-89: SQL Injection | P0 | grep_search: db.Query,db.Exec,raw SQL
+          - SEC-009 | CWE-78: OS Command Injection | P0 | grep_search: exec,system,popen
+          - SEC-010 | CWE-22: Path Traversal | P0 | grep_search: filepath,path.Join
+          - SEC-011 | CWE-352: CSRF protection | P1
+          - SEC-012 | CWE-287: Authentication bypass | P0
+          - SEC-013 | CWE-862: Missing authorization | P0
+      owasp_top_10:
+        label: "🌐 OWASP Top 10 (2021)"
+        items:
+          - SEC-014 | A01: Broken Access Control | P0
+          - SEC-015 | A02: Cryptographic Failures | P0
+          - SEC-016 | A03: Injection | P0
+          - SEC-017 | A05: Security Misconfiguration | P1
+          - SEC-018 | A07: Auth Failures | P0
+          - SEC-019 | A09: Logging Failures | P1
+      secrets:
+        label: "🔒 Secrets & Data"
+        items:
+          - SEC-020 | No hardcoded secrets | P0 | grep_search: password,secret,api_key,token
+          - SEC-021 | .env files not in git | P0 | find_by_name: .env*,credentials.*,*.key
+          - SEC-022 | Sensitive data encryption | P1
+          - SEC-023 | Audit logging for sensitive ops | P2
+      supply_chain:
+        label: "📦 Supply Chain Security"
+        items:
+          - SEC-024 | SBOM (Software Bill of Materials) generated | P2
+          - SEC-025 | Dependency vulnerability scanning | P1 | grep_search: dependabot,renovate,snyk
+          - SEC-026 | Lock file integrity (package-lock, go.sum) | P1
+          - SEC-027 | No typosquatting risk in deps | P2
+          - SEC-028 | AI input/output guardrails (if applicable) | P1
+
+  architecture:
+    name_en: "Staff Software Architect"
+    name_vi: "Kiến trúc sư Phần mềm Cao cấp"
+    persona_en: "Sarah Kim"
+    persona_vi: "Linh"
+    experience: "12 years"
+    seniority: "Staff"
+    activation:
+      mode: always
+    focus: Design Patterns, Structure, Maintainability, API Design
+    standards: [Clean Architecture, SOLID, DDD, Hexagonal]
+    checklists:
+      solid:
+        label: "🏗️ SOLID Principles"
+        context: { min_project_size: "medium" }
+        items:
+          - ARCH-001 | Single Responsibility (1 class = 1 job) | P2
+          - ARCH-002 | Open/Closed (extensible, not modifiable) | P2
+          - ARCH-003 | Liskov Substitution (subtypes replaceable) | P3
+          - ARCH-004 | Interface Segregation (small interfaces) | P2
+          - ARCH-005 | Dependency Inversion (abstractions) | P2
+      patterns:
+        label: "📐 Design Patterns"
+        items:
+          - ARCH-006 | Repository pattern for data access | P1
+          - ARCH-007 | Factory pattern usage | P3
+          - ARCH-008 | Strategy pattern for algorithms | P3
+          - ARCH-009 | Observer for events | P3
+          - ARCH-010 | Dependency Injection setup | P1
+      coupling:
+        label: "🔗 Coupling & Cohesion"
+        items:
+          - ARCH-011 | Low coupling between modules | P1 | grep_search: import patterns
+          - ARCH-012 | High cohesion within modules | P2
+          - ARCH-013 | Clear module boundaries | P1
+          - ARCH-014 | Circular dependency detection | P1
+      structure:
+        label: "📁 Project Structure"
+        items:
+          - ARCH-015 | Follows domain-driven design | P2 | list_dir: project structure
+          - ARCH-016 | Clear separation of concerns | P1
+          - ARCH-017 | Consistent file/folder naming | P3
+          - ARCH-018 | Proper layering (handlers→services→repos) | P1
+      api:
+        label: "📋 API Design"
+        items:
+          - ARCH-019 | RESTful conventions | P2
+          - ARCH-020 | Consistent error responses | P1
+          - ARCH-021 | Proper HTTP status codes | P2
+          - ARCH-022 | API versioning strategy | P2
+      advanced:
+        label: "🔬 Advanced Architecture"
+        items:
+          - ARCH-023 | Event-driven patterns (if applicable) | P2
+          - ARCH-024 | CQRS separation (if applicable) | P3
+          - ARCH-025 | Saga/compensation patterns (if distributed) | P3
+          - ARCH-026 | Hexagonal/ports-adapters boundaries | P2
+
+  performance:
+    name_en: "Senior Performance Engineer"
+    name_vi: "Kỹ sư Hiệu năng Cao cấp"
+    persona_en: "James Park"
+    persona_vi: "Khoa"
+    experience: "10 years"
+    seniority: "Senior"
+    activation:
+      mode: always
+    focus: Speed, Resources, Scalability, Reliability
+    standards: [Core Web Vitals, N+1 detection, SLO/SLI]
+    checklists:
+      database:
+        label: "🗃️ Database Performance"
+        items:
+          - PERF-001 | N+1 query detection | P0 | grep_search: SELECT,db.Query,gorm
+          - PERF-002 | Index usage verification | P1
+          - PERF-003 | Connection pooling | P1
+          - PERF-004 | Query optimization | P1
+          - PERF-005 | Proper pagination | P2
+      memory:
+        label: "💾 Memory Management"
+        items:
+          - PERF-006 | Memory leak patterns | P1
+          - PERF-007 | Large object handling | P2
+          - PERF-008 | Buffer management | P2
+          - PERF-009 | Garbage collection friendly | P3
+      caching:
+        label: "⚡ Caching Strategy"
+        items:
+          - PERF-010 | Cache layer exists | P1
+          - PERF-011 | Cache invalidation logic | P1
+          - PERF-012 | Redis/Memcached usage | P2
+          - PERF-013 | HTTP caching headers | P2
+      async:
+        label: "🔄 Async Patterns"
+        items:
+          - PERF-014 | Proper goroutine/worker usage | P1
+          - PERF-015 | Context cancellation | P1
+          - PERF-016 | Rate limiting | P1
+          - PERF-017 | Queue implementation | P2
+      monitoring:
+        label: "📊 Monitoring Ready"
+        items:
+          - PERF-018 | Response time tracking | P2
+          - PERF-019 | Resource usage metrics | P2
+          - PERF-020 | Error rate monitoring | P1
+      load:
+        label: "🏋️ Load & Stress"
+        items:
+          - PERF-021 | Load test scenarios documented | P2
+          - PERF-022 | Baseline performance benchmarks | P2
+          - PERF-023 | SLO targets defined (latency, throughput) | P2
+          - PERF-024 | Graceful degradation under load | P1
+
+  quality:
+    name_en: "Staff QA Engineer"
+    name_vi: "Kỹ sư Chất lượng Cao cấp"
+    persona_en: "Emma Wilson"
+    persona_vi: "Hương"
+    experience: "12 years"
+    seniority: "Staff"
+    activation:
+      mode: always
+    focus: Testing, Documentation, Standards, Code Quality
+    standards: [ISO 25010, Cognitive complexity]
+    checklists:
+      testing:
+        label: "🧪 Test Coverage"
+        items:
+          - QUAL-001 | Unit test existence (>70%) | P1 | find_by_name: *_test.go,*.test.ts
+          - QUAL-002 | Integration tests (critical paths) | P1
+          - QUAL-003 | E2E tests (core flows) | P2
+          - QUAL-004 | Test naming conventions | P3
+          - QUAL-005 | Mock/stub usage | P3
+      errors:
+        label: "❌ Error Handling"
+        items:
+          - QUAL-006 | Consistent error types | P1
+          - QUAL-007 | Error wrapping with context | P1
+          - QUAL-008 | No silent failures | P0
+          - QUAL-009 | User-friendly messages | P2
+          - QUAL-010 | Error recovery patterns | P2
+      docs:
+        label: "📝 Documentation"
+        items:
+          - QUAL-011 | README completeness | P2 | view_file: README.md
+          - QUAL-012 | API documentation | P1
+          - QUAL-013 | Code comments (why, not what) | P3
+          - QUAL-014 | Architecture decision records | P3
+          - QUAL-015 | Setup/deployment guides | P2
+      code_quality:
+        label: "🔧 Code Quality"
+        items:
+          - QUAL-016 | No code duplication (DRY) | P2
+          - QUAL-017 | Consistent formatting | P3
+          - QUAL-018 | Linter compliance | P2
+          - QUAL-019 | Type safety | P1
+          - QUAL-020 | Naming conventions | P3
+      advanced_testing:
+        label: "🔬 Advanced Testing"
+        items:
+          - QUAL-021 | Mutation testing (>60% score) | P3
+          - QUAL-022 | Property-based testing (edge cases) | P3
+          - QUAL-023 | Contract testing (API consumers) | P2
+          - QUAL-024 | Snapshot/visual regression tests | P3
+
+  devops:
+    name_en: "Senior DevOps Engineer"
+    name_vi: "Kỹ sư DevOps Cao cấp"
+    persona_en: "Michael Torres"
+    persona_vi: "Đức"
+    experience: "10 years"
+    seniority: "Senior"
+    activation:
+      mode: always
+    focus: Deployment, Monitoring, Operations, GitOps
+    standards: [SRE principles, 12-factor app, GitOps]
+    checklists:
+      cicd:
+        label: "🚀 CI/CD Pipeline"
+        items:
+          - OPS-001 | Automated testing in CI | P1 | view_file: .github/workflows/*.yml
+          - OPS-002 | Linting/formatting checks | P2
+          - OPS-003 | Build verification | P1
+          - OPS-004 | Deployment automation | P1
+          - OPS-005 | Rollback capability | P1
+      logging:
+        label: "📊 Logging & Monitoring"
+        items:
+          - OPS-006 | Structured logging | P1 | grep_search: log.Info,logger,slog
+          - OPS-007 | Log levels (debug/info/error) | P2
+          - OPS-008 | Centralized log collection | P2
+          - OPS-009 | Alerting configuration | P2
+          - OPS-010 | Dashboard existence | P3
+      containers:
+        label: "🐳 Containerization"
+        items:
+          - OPS-011 | Dockerfile optimization | P2 | view_file: Dockerfile
+          - OPS-012 | Multi-stage builds | P2
+          - OPS-013 | .dockerignore completeness | P3
+          - OPS-014 | Docker Compose for dev | P3
+          - OPS-015 | Security scanning | P1
+      config:
+        label: "⚙️ Configuration"
+        items:
+          - OPS-016 | Environment separation | P1
+          - OPS-017 | Secrets management | P0
+          - OPS-018 | Feature flags | P3
+          - OPS-019 | Health check endpoints | P1
+          - OPS-020 | Graceful shutdown | P1
+      gitops:
+        label: "🔀 GitOps & IaC"
+        items:
+          - OPS-021 | Infrastructure as Code (Terraform/Pulumi) | P2
+          - OPS-022 | GitOps workflow (ArgoCD/Flux) | P3
+          - OPS-023 | Blue-green/canary deployment ready | P2
+          - OPS-024 | Environment parity (dev≈staging≈prod) | P2
+
+  # ════════════════════════════════════════════════════════════════
+  # CONDITIONAL EXPERTS — Auto-detect Activation (7)
+  # ════════════════════════════════════════════════════════════════
+
+  ux:
+    name_en: "Senior UX/Accessibility Engineer"
+    name_vi: "Kỹ sư UX/Trợ năng Cao cấp"
+    persona_en: "Lisa Wang"
+    persona_vi: "Thảo"
+    experience: "8 years"
+    seniority: "Senior"
+    activation:
+      mode: conditional
+      rule: has_ui
+      detect_files: ["*.vue", "*.tsx", "*.jsx", "*.svelte", "*.html", "*.css", "*.swift", "*.dart"]
+      detect_deps: ["react", "vue", "angular", "svelte", "next", "nuxt", "flutter", "tailwindcss"]
+      detect_dirs: ["components/", "pages/", "views/", "layouts/"]
+    focus: Accessibility, Usability, Responsive Design, Design System
+    standards: [WCAG 2.2 AA, WAI-ARIA, Material Design, Apple HIG]
+    checklists:
+      accessibility:
+        label: "♿ Accessibility (WCAG 2.2)"
+        items:
+          - UX-001 | Keyboard navigation works for all interactive elements | P1
+          - UX-002 | Color contrast ratio ≥4.5:1 (text), ≥3:1 (large) | P1
+          - UX-003 | Screen reader compatible (ARIA labels, roles) | P1
+          - UX-004 | Alt text for all meaningful images | P1
+          - UX-005 | Focus indicators visible and clear | P2
+          - UX-006 | No seizure-triggering animations (>3 flashes/sec) | P0
+      usability:
+        label: "👆 Usability"
+        items:
+          - UX-007 | Consistent navigation patterns across pages | P2
+          - UX-008 | Error messages are user-friendly and actionable | P2
+          - UX-009 | Loading states and progress feedback present | P2
+          - UX-010 | Mobile responsive (320px–1920px breakpoints) | P1
+          - UX-011 | Touch targets ≥44x44px on mobile | P2
+      design_system:
+        label: "🎨 Design System"
+        items:
+          - UX-012 | Design tokens documented (colors, spacing, typography) | P2
+          - UX-013 | Component library consistency | P2
+          - UX-014 | Typography scale and hierarchy | P3
+          - UX-015 | Dark/light mode support | P3
+          - UX-016 | Semantic HTML structure (h1-h6, nav, main, aside) | P1
+
+  data:
+    name_en: "Principal Data Architect"
+    name_vi: "Kiến trúc sư Dữ liệu Chính"
+    persona_en: "Robert Martinez"
+    persona_vi: "Tuấn"
+    experience: "15 years"
+    seniority: "Principal"
+    activation:
+      mode: conditional
+      rule: has_database
+      detect_files: ["*.sql", "*.prisma", "schema.prisma", "drizzle.config.*", "knexfile.*"]
+      detect_deps: ["prisma", "drizzle", "typeorm", "sequelize", "mongoose", "gorm", "sqlalchemy"]
+      detect_dirs: ["migrations/", "seeds/", "models/", "entities/"]
+    focus: Database Design, Migrations, Data Quality, Backup
+    standards: [Database normalization, ETL best practices, ACID]
+    checklists:
+      schema:
+        label: "🗄️ Schema Design"
+        items:
+          - DATA-001 | Database normalization (3NF minimum) | P1
+          - DATA-002 | Index strategy documented and optimized | P1
+          - DATA-003 | Foreign key constraints enforced | P1
+          - DATA-004 | Schema versioning via migrations | P1
+          - DATA-005 | Naming conventions consistent (snake_case) | P2
+      data_quality:
+        label: "✅ Data Quality"
+        items:
+          - DATA-006 | Input validation at database level (CHECK, NOT NULL) | P1
+          - DATA-007 | Data type correctness and sizing | P1
+          - DATA-008 | NULL handling strategy documented | P2
+          - DATA-009 | Unique constraints where business rules require | P1
+      operations:
+        label: "⚙️ Data Operations"
+        items:
+          - DATA-010 | Backup strategy documented and tested | P0
+          - DATA-011 | Point-in-time recovery capability | P1
+          - DATA-012 | Zero-downtime migration plan | P1
+          - DATA-013 | Data retention/archival policy | P2
+          - DATA-014 | Seed data for dev/test environments | P3
+          - DATA-015 | Connection pool sizing appropriate | P1
+
+  compliance:
+    name_en: "Distinguished Compliance Engineer"
+    name_vi: "Kỹ sư Tuân thủ Xuất sắc"
+    persona_en: "Jennifer Anderson"
+    persona_vi: "Hà"
+    experience: "18 years"
+    seniority: "Distinguished"
+    activation:
+      mode: conditional
+      rule: is_regulated
+      detect_files: ["HIPAA*", "GDPR*", "privacy-policy*", "compliance*"]
+      detect_code: ["consent", "data_subject", "right_to_delete", "audit_log", "pii"]
+      user_input: true
+    focus: GDPR, SOC2, HIPAA, Privacy, Regulatory Compliance
+    standards: [GDPR, SOC2 TSC, HIPAA, ISO 27001, PCI-DSS]
+    checklists:
+      data_privacy:
+        label: "🔏 Data Privacy & GDPR"
+        items:
+          - COMP-001 | Consent management implemented and auditable | P0
+          - COMP-002 | Data subject rights (access, rectify, delete, port) | P0
+          - COMP-003 | Privacy policy current and accessible | P1
+          - COMP-004 | Data Processing Agreements (DPA) with third parties | P1
+          - COMP-005 | PII data inventory documented | P1
+      audit_trail:
+        label: "📋 Audit Trail"
+        items:
+          - COMP-006 | All sensitive operations logged immutably | P0
+          - COMP-007 | Audit logs tamper-proof and time-stamped | P1
+          - COMP-008 | Log retention period compliant with regulations | P1
+          - COMP-009 | Breach notification process documented (<72hr GDPR) | P0
+      security_compliance:
+        label: "🔐 Security Compliance"
+        items:
+          - COMP-010 | Encryption at rest and in transit (TLS 1.3+) | P0
+          - COMP-011 | MFA enforced for admin/elevated access | P0
+          - COMP-012 | Vulnerability scanning on regular schedule | P1
+          - COMP-013 | Third-party vendor risk assessment done | P1
+          - COMP-014 | Employee/developer security training documented | P2
+          - COMP-015 | Data classification policy (public/internal/confidential/restricted) | P1
+
+  product:
+    name_en: "Tech Lead (Product Engineering)"
+    name_vi: "Trưởng nhóm Kỹ thuật Sản phẩm"
+    persona_en: "Daniel Lee"
+    persona_vi: "Lan"
+    experience: "10 years"
+    seniority: "Tech Lead"
+    activation:
+      mode: conditional
+      rule: scope_full
+      trigger: "scope_option IN [FULL_AUDIT, 1]"
+      user_input: true
+    focus: Acceptance Criteria, Definition of Done/Ready, UAT, Feature Flags
+    standards: [INVEST, Given-When-Then (BDD), Scrum Guide]
+    checklists:
+      acceptance:
+        label: "📋 Acceptance & Readiness"
+        items:
+          - PROD-001 | Acceptance criteria defined (Given-When-Then format) | P1
+          - PROD-002 | Definition of Ready (DoR) checklist met | P1
+          - PROD-003 | Definition of Done (DoD) checklist verified | P1
+          - PROD-004 | User stories follow INVEST criteria | P2
+      uat:
+        label: "🧑‍💼 User Acceptance Testing"
+        items:
+          - PROD-005 | UAT test scenarios documented | P1
+          - PROD-006 | UAT environment mirrors production config | P1
+          - PROD-007 | End-user testers identified and briefed | P2
+          - PROD-008 | UAT sign-off obtained from stakeholders | P0
+      release:
+        label: "🚀 Release Management"
+        items:
+          - PROD-009 | Feature flags for gradual rollout | P2
+          - PROD-010 | Release notes prepared | P2
+          - PROD-011 | Stakeholder communication plan | P2
+          - PROD-012 | Rollback criteria clearly defined | P1
+          - PROD-013 | A/B test metrics defined (if applicable) | P3
+
+  reliability:
+    name_en: "Staff Site Reliability Engineer"
+    name_vi: "Kỹ sư Độ tin cậy Cao cấp"
+    persona_en: "William Brown"
+    persona_vi: "Phong"
+    experience: "12 years"
+    seniority: "Staff"
+    activation:
+      mode: conditional
+      rule: is_production
+      detect_files: ["Dockerfile", "docker-compose.*", "*.tf", "Procfile", "fly.toml", "vercel.json"]
+      detect_dirs: ["deploy/", "infra/", ".github/workflows/"]
+    focus: SLO/SLI, Incident Management, Chaos Engineering, Runbooks
+    standards: [Google SRE Book, Chaos Engineering Principles]
+    checklists:
+      slo:
+        label: "📏 Service Level Objectives"
+        items:
+          - SRE-001 | SLI defined (latency p50/p95/p99, error rate, throughput) | P1
+          - SRE-002 | SLO targets documented (e.g. 99.9% availability) | P1
+          - SRE-003 | Error budget policy exists and tracked | P2
+          - SRE-004 | SLO dashboard accessible to team | P2
+      incident:
+        label: "🚨 Incident Management"
+        items:
+          - SRE-005 | On-call rotation defined and documented | P1
+          - SRE-006 | Escalation paths documented (L1→L2→L3) | P0
+          - SRE-007 | Runbooks for top 5 common failure modes | P1
+          - SRE-008 | Blameless postmortem template and process | P1
+          - SRE-009 | Incident communication channels (Slack, PagerDuty) | P1
+      resilience:
+        label: "🛡️ Resilience & Chaos"
+        items:
+          - SRE-010 | Circuit breakers implemented for external deps | P1
+          - SRE-011 | Graceful degradation tested (partial outage) | P1
+          - SRE-012 | Chaos experiments planned and documented | P2
+          - SRE-013 | Disaster recovery plan tested (RTO/RPO defined) | P1
+          - SRE-014 | Capacity planning documented (growth projections) | P2
+          - SRE-015 | Production readiness checklist passed before launch | P0
+
+  cloud:
+    name_en: "Senior Cloud Infrastructure Architect"
+    name_vi: "Kiến trúc sư Hạ tầng Cloud Cao cấp"
+    persona_en: "Alexander White"
+    persona_vi: "Bảo"
+    experience: "10 years"
+    seniority: "Senior"
+    activation:
+      mode: conditional
+      rule: has_infra
+      detect_files: ["*.tf", "*.tfvars", "pulumi.*", "cloudformation.*", "*.bicep"]
+      detect_deps: ["@aws-sdk/*", "@azure/*", "@google-cloud/*"]
+      detect_dirs: ["terraform/", "infra/", "cdk/", "pulumi/"]
+    focus: Cloud-Native, IaC, Cost Optimization, Multi-Region
+    standards: [12-Factor App, AWS/Azure/GCP Well-Architected Framework]
+    checklists:
+      infrastructure:
+        label: "🏗️ Infrastructure"
+        items:
+          - CLOUD-001 | Infrastructure as Code (Terraform/Pulumi/CDK) | P1
+          - CLOUD-002 | Environment parity (dev ≈ staging ≈ prod) | P1
+          - CLOUD-003 | Auto-scaling configured with proper thresholds | P1
+          - CLOUD-004 | CDN configured for static assets | P2
+      cost:
+        label: "💰 Cost Optimization"
+        items:
+          - CLOUD-005 | Cost alerts and budget thresholds configured | P2
+          - CLOUD-006 | Right-sizing review completed | P2
+          - CLOUD-007 | Reserved/spot instances evaluated | P3
+      network_security:
+        label: "🔒 Network & Security"
+        items:
+          - CLOUD-008 | Network segmentation (VPC/subnets) | P1
+          - CLOUD-009 | WAF/DDoS protection enabled | P1
+          - CLOUD-010 | SSL/TLS certificates managed and auto-renewed | P0
+      operations:
+        label: "⚙️ Cloud Operations"
+        items:
+          - CLOUD-011 | Multi-region DR strategy documented | P2
+          - CLOUD-012 | Managed services preferred over self-hosted | P3
+
+  ai_safety:
+    name_en: "Distinguished AI Safety Researcher"
+    name_vi: "Nhà nghiên cứu An toàn AI Xuất sắc"
+    persona_en: "Dr. Sophia Nguyen"
+    persona_vi: "Vy"
+    experience: "20 years"
+    seniority: "Distinguished"
+    activation:
+      mode: conditional
+      rule: has_ai
+      detect_deps: ["openai", "langchain", "llama-index", "transformers", "torch", "tensorflow", "anthropic"]
+      detect_code: ["system_prompt", "ChatCompletion", "llm.", "model.generate", "embeddings"]
+      detect_files: ["*.prompt", "prompts/", "model_card*"]
+    focus: System Prompts, Guardrails, Hallucination, Bias, Model Cards
+    standards: [OpenAI Model Spec, ISO 42001, EU AI Act]
+    checklists:
+      prompts:
+        label: "💬 System Prompt Engineering"
+        items:
+          - AI-001 | System prompt has clear behavioral guardrails | P0
+          - AI-002 | Input validation and sanitization before LLM | P0
+          - AI-003 | Output format enforcement (structured, schema) | P1
+          - AI-004 | Prompt injection protection tested | P0
+      safety:
+        label: "🛡️ AI Safety"
+        items:
+          - AI-005 | Hallucination detection/mitigation mechanism | P1
+          - AI-006 | Bias audit documented (fairness across demographics) | P1
+          - AI-007 | Human oversight for critical/high-stakes decisions | P0
+          - AI-008 | Model card documented (capabilities, limitations) | P2
+      operations:
+        label: "⚙️ AI Operations"
+        items:
+          - AI-009 | Model drift monitoring in production | P2
+          - AI-010 | Data privacy in training and inference (no PII leak) | P0
+
+# ════════════════════════════════════════════════════════════════
+# ACTIVATION RULES — Auto-detection for conditional experts
+# ════════════════════════════════════════════════════════════════
+
+activation_rules:
+  always_active: [security, architecture, performance, quality, devops]
+  has_ui:
+    detect_files: ["*.vue", "*.tsx", "*.jsx", "*.svelte", "*.html", "*.css", "*.swift", "*.dart"]
+    detect_deps: ["react", "vue", "angular", "svelte", "next", "nuxt", "flutter", "tailwindcss"]
+    experts: [ux]
+  has_database:
+    detect_files: ["*.sql", "*.prisma", "schema.prisma", "drizzle.config.*"]
+    detect_deps: ["prisma", "drizzle", "typeorm", "sequelize", "mongoose", "gorm", "sqlalchemy"]
+    experts: [data]
+  is_regulated:
+    detect_files: ["HIPAA*", "GDPR*", "privacy-policy*", "compliance*"]
+    detect_code: ["consent", "data_subject", "right_to_delete", "pii"]
+    user_input: true
+    experts: [compliance]
+  scope_full:
+    trigger: "scope_option IN [FULL_AUDIT, 1]"
+    user_input: true
+    experts: [product]
+  is_production:
+    detect_files: ["Dockerfile", "docker-compose.*", "*.tf", "Procfile", "fly.toml"]
+    detect_dirs: ["deploy/", "infra/", ".github/workflows/"]
+    experts: [reliability]
+  has_infra:
+    detect_files: ["*.tf", "*.tfvars", "pulumi.*", "cloudformation.*"]
+    detect_dirs: ["terraform/", "infra/", "cdk/"]
+    experts: [cloud]
+  has_ai:
+    detect_deps: ["openai", "langchain", "llama-index", "transformers", "torch", "tensorflow", "anthropic"]
+    detect_code: ["system_prompt", "ChatCompletion", "llm.", "embeddings"]
+    experts: [ai_safety]
+
+# ════════════════════════════════════════════════════════════════
+# SCOPE MAPPING — Expert subsets by audit scope
+# ════════════════════════════════════════════════════════════════
+
+scope_mapping:
+  FULL_AUDIT: all
+  BACKEND: [security, architecture, performance, quality, devops, data, reliability]
+  FRONTEND: [security, quality, ux, performance]
+  SECURITY_ONLY: [security, compliance]
+  CUSTOM: user_selected
+
+# ════════════════════════════════════════════════════════════════
+# OVERRIDE — User can force include/exclude experts
+# ════════════════════════════════════════════════════════════════
+
+override:
+  force_include: "--experts security,ux,compliance"
+  force_exclude: "--skip ux,ai_safety"
+
+# ════════════════════════════════════════════════════════════════
+# STATS
+# ════════════════════════════════════════════════════════════════
+
+stats:
+  total: 222
+  core_experts: 5
+  conditional_experts: 7
+  by_expert:
+    security: 28
+    architecture: 26
+    performance: 24
+    quality: 24
+    devops: 24
+    ux: 16
+    data: 15
+    compliance: 15
+    product: 13
+    reliability: 15
+    cloud: 12
+    ai_safety: 10
+  by_severity: { P0: 26, P1: 80, P2: 72, P3: 30, context_dependent: 14 }
+  by_activation: { always: 126, conditional: 96 }

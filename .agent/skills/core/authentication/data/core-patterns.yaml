@@ -1,0 +1,256 @@
+metadata:
+  skill: authentication
+  domain: core_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: core-patterns.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: CORE-001
+    pattern_name: Three Authentication Factors
+    description: Knowledge (password) + Possession (device) + Inherence (biometric) = MFA
+    category: fundamentals
+    security_level: high
+    keywords:
+      - factors
+      - mfa
+      - biometric
+  - id: CORE-002
+    pattern_name: Zero Trust Model
+    description: Never trust always verify - authenticate every request
+    category: architecture
+    security_level: critical
+    keywords:
+      - zero-trust
+      - verification
+  - id: CORE-003
+    pattern_name: Defense in Depth
+    description: Multiple layers of authentication and authorization
+    category: architecture
+    security_level: high
+    keywords:
+      - layers
+      - defense
+  - id: CORE-004
+    pattern_name: Principle of Least Privilege
+    description: Grant minimum permissions required
+    category: authorization
+    security_level: high
+    keywords:
+      - rbac
+      - permissions
+  - id: CORE-005
+    pattern_name: Separation of Duties
+    description: Different roles for different operations
+    category: authorization
+    security_level: high
+    keywords:
+      - roles
+      - duties
+  - id: CORE-006
+    pattern_name: Authentication vs Authorization
+    description: Authn = who you are; Authz = what you can do
+    category: fundamentals
+    security_level: medium
+    keywords:
+      - authn
+      - authz
+  - id: CORE-007
+    pattern_name: Identity Federation
+    description: Trust relationships between identity providers
+    category: architecture
+    security_level: high
+    keywords:
+      - federation
+      - sso
+  - id: CORE-008
+    pattern_name: Single Sign-On (SSO)
+    description: One login for multiple applications
+    category: user-experience
+    security_level: medium
+    keywords:
+      - sso
+      - convenience
+  - id: CORE-009
+    pattern_name: Session Management
+    description: Track authenticated state across requests
+    category: state
+    security_level: high
+    keywords:
+      - session
+      - cookies
+  - id: CORE-010
+    pattern_name: Token-Based Authentication
+    description: Stateless auth using signed tokens
+    category: architecture
+    security_level: high
+    keywords:
+      - jwt
+      - tokens
+  - id: CORE-011
+    pattern_name: Credential Rotation
+    description: Regularly rotate passwords and secrets
+    category: security
+    security_level: critical
+    keywords:
+      - rotation
+      - secrets
+  - id: CORE-012
+    pattern_name: Secure Credential Storage
+    description: Never store plaintext credentials
+    category: security
+    security_level: critical
+    keywords:
+      - hashing
+      - encryption
+  - id: CORE-013
+    pattern_name: Rate Limiting Login
+    description: Prevent brute force attacks
+    category: security
+    security_level: high
+    keywords:
+      - rate-limit
+      - bruteforce
+  - id: CORE-014
+    pattern_name: Account Lockout Policy
+    description: Lock after failed attempts
+    category: security
+    security_level: high
+    keywords:
+      - lockout
+      - attempts
+  - id: CORE-015
+    pattern_name: Audit Logging
+    description: Log all authentication events
+    category: compliance
+    security_level: high
+    keywords:
+      - audit
+      - logging
+  - id: CORE-016
+    pattern_name: Secure Password Reset
+    description: Token-based time-limited reset
+    category: security
+    security_level: high
+    keywords:
+      - reset
+      - recovery
+  - id: CORE-017
+    pattern_name: Email Verification
+    description: Verify email ownership before activation
+    category: security
+    security_level: medium
+    keywords:
+      - email
+      - verification
+  - id: CORE-018
+    pattern_name: Phone Verification
+    description: SMS or voice code verification
+    category: security
+    security_level: medium
+    keywords:
+      - phone
+      - sms
+  - id: CORE-019
+    pattern_name: CAPTCHA Integration
+    description: Prevent automated attacks
+    category: security
+    security_level: medium
+    keywords:
+      - captcha
+      - bot
+  - id: CORE-020
+    pattern_name: Geolocation Checks
+    description: Verify login location anomalies
+    category: security
+    security_level: medium
+    keywords:
+      - geo
+      - location
+  - id: CORE-021
+    pattern_name: Device Fingerprinting
+    description: Track trusted devices
+    category: security
+    security_level: medium
+    keywords:
+      - device
+      - fingerprint
+  - id: CORE-022
+    pattern_name: Remember Me Feature
+    description: Extended session with secure token
+    category: user-experience
+    security_level: medium
+    keywords:
+      - remember
+      - persistent
+  - id: CORE-023
+    pattern_name: Logout Handling
+    description: Invalidate all tokens and sessions
+    category: security
+    security_level: high
+    keywords:
+      - logout
+      - invalidation
+  - id: CORE-024
+    pattern_name: Cross-Origin Auth
+    description: CORS and SameSite cookie policies
+    category: security
+    security_level: high
+    keywords:
+      - cors
+      - samesite
+  - id: CORE-025
+    pattern_name: Auth State Machine
+    description: Formal state transitions for auth flow
+    category: architecture
+    security_level: medium
+    keywords:
+      - state
+      - machine
+  - id: CORE-026
+    pattern_name: Graceful Degradation
+    description: Fallback when auth service unavailable
+    category: reliability
+    security_level: medium
+    keywords:
+      - fallback
+      - degradation
+  - id: CORE-027
+    pattern_name: Auth Error Messages
+    description: Non-revealing error responses
+    category: security
+    security_level: high
+    keywords:
+      - errors
+      - enumeration
+  - id: CORE-028
+    pattern_name: Consent Management
+    description: Track user consent for data usage
+    category: compliance
+    security_level: medium
+    keywords:
+      - consent
+      - gdpr
+  - id: CORE-029
+    pattern_name: Privacy by Design
+    description: Minimize stored authentication data
+    category: compliance
+    security_level: high
+    keywords:
+      - privacy
+      - minimal
+  - id: CORE-030
+    pattern_name: Threat Modeling
+    description: STRIDE analysis for auth systems
+    category: security
+    security_level: critical
+    keywords:
+      - threats
+      - stride

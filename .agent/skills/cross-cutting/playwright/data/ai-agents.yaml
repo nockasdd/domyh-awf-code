@@ -1,0 +1,137 @@
+# =============================================================================
+# ai-agents.yaml — Playwright AI Test Agent Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+agents:
+  planner:
+    name: "Planner Agent"
+    role: "Explore application and generate structured test plan"
+    input: "Application URL + description"
+    output: "Markdown test plan with scenarios, steps, assertions"
+    workflow:
+      - "Navigate to application root"
+      - "Use browser_snapshot to map all pages and routes"
+      - "Identify interactive elements per page"
+      - "Generate test scenarios with expected behaviors"
+      - "Output: structured Markdown test plan"
+    template: |
+      ## Test Plan: [Application Name]
+
+      ### Page: /login
+      **Interactive Elements**: email input, password input, submit button, forgot password link
+
+      #### Scenario 1: Successful Login
+      1. Navigate to /login
+      2. Fill email: test@example.com
+      3. Fill password: password123
+      4. Click "Sign in" button
+      5. **Assert**: Redirected to /dashboard
+      6. **Assert**: Welcome message visible
+
+      #### Scenario 2: Invalid Credentials
+      1. Navigate to /login
+      2. Fill email: wrong@example.com
+      3. Fill password: wrongpass
+      4. Click "Sign in" button
+      5. **Assert**: Error message "Invalid credentials"
+      6. **Assert**: Still on /login page
+
+      #### Scenario 3: Empty Form Submission
+      1. Navigate to /login
+      2. Click "Sign in" without filling fields
+      3. **Assert**: Validation errors for email and password
+
+  generator:
+    name: "Generator Agent"
+    role: "Convert test plan to executable Playwright tests"
+    input: "Markdown test plan"
+    output: "Playwright test files (.spec.ts)"
+    workflow:
+      - "Parse Markdown test plan"
+      - "Map scenarios to test blocks"
+      - "Use getByRole/getByLabel for locators"
+      - "Add assertions with expect()"
+      - "Validate against live browser"
+    template: |
+      import { test, expect } from '@playwright/test';
+
+      test.describe('Login Page', () => {
+        test.beforeEach(async ({ page }) => {
+          await page.goto('/login');
+        });
+
+        test('successful login', async ({ page }) => {
+          await page.getByLabel('Email').fill('test@example.com');
+          await page.getByLabel('Password').fill('password123');
+          await page.getByRole('button', { name: 'Sign in' }).click();
+
+          await expect(page).toHaveURL('/dashboard');
+          await expect(page.getByText('Welcome')).toBeVisible();
+        });
+
+        test('invalid credentials shows error', async ({ page }) => {
+          await page.getByLabel('Email').fill('wrong@example.com');
+          await page.getByLabel('Password').fill('wrongpass');
+          await page.getByRole('button', { name: 'Sign in' }).click();
+
+          await expect(page.getByRole('alert')).toContainText('Invalid credentials');
+          await expect(page).toHaveURL('/login');
+        });
+
+        test('empty form shows validation errors', async ({ page }) => {
+          await page.getByRole('button', { name: 'Sign in' }).click();
+
+          await expect(page.getByText('Email is required')).toBeVisible();
+          await expect(page.getByText('Password is required')).toBeVisible();
+        });
+      });
+
+  healer:
+    name: "Healer Agent"
+    role: "Detect and repair failing tests due to UI changes"
+    input: "Failed test + error message + current page state"
+    output: "Updated test with fixed locators/assertions"
+    workflow:
+      - "Run failing test, capture error"
+      - "Take browser_snapshot of current page state"
+      - "Compare expected vs actual element references"
+      - "Identify what changed (selector, text, structure)"
+      - "Update locator or assertion to match new UI"
+      - "Re-run test to verify fix"
+    detection_patterns:
+      - pattern: "Element not found"
+        cause: "Selector changed (class, ID, text)"
+        fix: "Use browser_snapshot to find new ref, update locator"
+      - pattern: "Expected text mismatch"
+        cause: "Content text changed"
+        fix: "Update expected text in assertion"
+      - pattern: "Timeout waiting"
+        cause: "Element removed or hidden"
+        fix: "Check if element still exists, update test flow"
+      - pattern: "Navigation mismatch"
+        cause: "URL structure changed"
+        fix: "Update expected URL pattern"
+    template: |
+      // Before (failing):
+      // await page.locator('#submit-btn').click();
+      // Error: Element not found: #submit-btn
+
+      // After browser_snapshot, found new ref:
+      await page.getByRole('button', { name: 'Submit' }).click();
+      // ✅ Healed: switched from ID to semantic role locator
+
+# Integration with AI IDEs
+ide_integration:
+  antigravity:
+    tool: "browser_subagent"
+    usage: "Delegate test plan generation to Planner via browser_subagent task"
+  cursor:
+    tool: "Playwright MCP"
+    usage: "Use MCP tools directly for interaction"
+  vscode:
+    tool: "Playwright Test extension"
+    usage: "Built-in test runner with UI mode"
+
+# _DOMYH Awesome Code • AI Test Agent Patterns v1.0.0_

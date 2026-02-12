@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: passkeys_webauthn
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: passkeys-webauthn.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: PASS-001
+    pattern_name: WebAuthn Standard
+    description: W3C standard for passwordless authentication
+    category: standards
+    security_level: critical
+    keywords:
+      - webauthn
+      - w3c
+  - id: PASS-002
+    pattern_name: FIDO2 Protocol
+    description: FIDO Alliance authentication framework
+    category: standards
+    security_level: critical
+    keywords:
+      - fido2
+      - fido
+  - id: PASS-003
+    pattern_name: Passkey Definition
+    description: Synced discoverable FIDO credentials
+    category: fundamentals
+    security_level: high
+    keywords:
+      - passkey
+      - synced
+  - id: PASS-004
+    pattern_name: Platform Authenticator
+    description: Built-in device authenticator (Touch ID Face ID)
+    category: authenticators
+    security_level: high
+    keywords:
+      - platform
+      - builtin
+  - id: PASS-005
+    pattern_name: Roaming Authenticator
+    description: External hardware security key
+    category: authenticators
+    security_level: high
+    keywords:
+      - roaming
+      - yubikey
+  - id: PASS-006
+    pattern_name: Credential Creation
+    description: navigator.credentials.create() call
+    category: implementation
+    security_level: high
+    keywords:
+      - create
+      - registration
+  - id: PASS-007
+    pattern_name: Credential Get
+    description: navigator.credentials.get() call
+    category: implementation
+    security_level: high
+    keywords:
+      - get
+      - authentication
+  - id: PASS-008
+    pattern_name: Challenge Generation
+    description: Server-side random challenge
+    category: security
+    security_level: critical
+    keywords:
+      - challenge
+      - random
+  - id: PASS-009
+    pattern_name: Public Key Storage
+    description: Store only public key on server
+    category: security
+    security_level: critical
+    keywords:
+      - publickey
+      - storage
+  - id: PASS-010
+    pattern_name: User Verification
+    description: Require biometric or PIN
+    category: security
+    security_level: high
+    keywords:
+      - uv
+      - biometric
+  - id: PASS-011
+    pattern_name: User Presence
+    description: Require physical interaction
+    category: security
+    security_level: medium
+    keywords:
+      - up
+      - presence
+  - id: PASS-012
+    pattern_name: Attestation
+    description: Verify authenticator genuineness
+    category: security
+    security_level: high
+    keywords:
+      - attestation
+      - genuine
+  - id: PASS-013
+    pattern_name: Relying Party ID
+    description: Domain-scoped credential binding
+    category: security
+    security_level: critical
+    keywords:
+      - rpid
+      - domain
+  - id: PASS-014
+    pattern_name: Credential ID
+    description: Unique identifier for credential
+    category: implementation
+    security_level: high
+    keywords:
+      - credid
+      - identifier
+  - id: PASS-015
+    pattern_name: Counter Verification
+    description: Detect cloned authenticators
+    category: security
+    security_level: high
+    keywords:
+      - counter
+      - clone
+  - id: PASS-016
+    pattern_name: Resident Key
+    description: Discoverable credential stored on device
+    category: storage
+    security_level: high
+    keywords:
+      - resident
+      - discoverable
+  - id: PASS-017
+    pattern_name: Cross-Platform Sync
+    description: iCloud Keychain Google Password Manager
+    category: usability
+    security_level: high
+    keywords:
+      - sync
+      - cloud
+  - id: PASS-018
+    pattern_name: Conditional UI
+    description: Autofill integration for passkeys
+    category: usability
+    security_level: medium
+    keywords:
+      - conditional
+      - autofill
+  - id: PASS-019
+    pattern_name: Hybrid Flow
+    description: Phone as authenticator for computer
+    category: usability
+    security_level: medium
+    keywords:
+      - hybrid
+      - crossdevice
+  - id: PASS-020
+    pattern_name: Backup Eligibility
+    description: Credentials that can be synced
+    category: usability
+    security_level: medium
+    keywords:
+      - backup
+      - sync
+  - id: PASS-021
+    pattern_name: Enterprise Attestation
+    description: Enhanced verification for enterprises
+    category: enterprise
+    security_level: high
+    keywords:
+      - enterprise
+      - attestation
+  - id: PASS-022
+    pattern_name: Large Blob Storage
+    description: Store additional data with credential
+    category: features
+    security_level: medium
+    keywords:
+      - blob
+      - storage
+  - id: PASS-023
+    pattern_name: Credential Hints
+    description: Suggest preferred authenticators
+    category: usability
+    security_level: medium
+    keywords:
+      - hints
+      - preference
+  - id: PASS-024
+    pattern_name: Passkey Migration
+    description: Upgrade password accounts to passkeys
+    category: migration
+    security_level: high
+    keywords:
+      - migration
+      - upgrade
+  - id: PASS-025
+    pattern_name: Fallback Strategy
+    description: Password backup when passkey unavailable
+    category: usability
+    security_level: medium
+    keywords:
+      - fallback
+      - password

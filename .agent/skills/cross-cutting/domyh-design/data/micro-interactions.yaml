@@ -1,0 +1,528 @@
+metadata:
+  skill: domyh-design
+  domain: micro_interactions
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "Micro-interaction catalog — feedback, state change, loading, celebration patterns"
+  patterns_count: 36
+  columns:
+    - category
+    - interaction_name
+    - trigger
+    - feedback_type
+    - css_code
+    - duration_ms
+    - performance
+    - accessibility
+
+interactions:
+  # ── Feedback Micro-interactions ───────────────────────────────
+
+  - id: micro_001
+    category: feedback
+    interaction_name: Like heart burst
+    trigger: click
+    feedback_type: visual + scale
+    css_code: |
+      @keyframes heart-burst {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(0.9); color: #ef4444; }
+        100% { transform: scale(1); color: #ef4444; }
+      }
+      .heart.liked { animation: heart-burst 400ms ease; }
+    duration_ms: 400
+    performance: gpu-only
+    accessibility: aria-pressed-toggle
+
+  - id: micro_002
+    category: feedback
+    interaction_name: Bookmark save
+    trigger: click
+    feedback_type: visual + path-morph
+    css_code: |
+      .bookmark { transition: fill 200ms ease, transform 200ms ease; }
+      .bookmark.saved { fill: var(--primary); transform: scale(1.1); }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: aria-pressed
+
+  - id: micro_003
+    category: feedback
+    interaction_name: Copy to clipboard
+    trigger: click
+    feedback_type: icon-swap + tooltip
+    css_code: |
+      .copy-icon { transition: opacity 150ms ease; }
+      .check-icon { opacity: 0; transition: opacity 150ms ease; }
+      .copied .copy-icon { opacity: 0; }
+      .copied .check-icon { opacity: 1; }
+    duration_ms: 1500
+    performance: gpu-only
+    accessibility: aria-live-polite-copied
+
+  - id: micro_004
+    category: feedback
+    interaction_name: Pull to refresh
+    trigger: touch-drag
+    feedback_type: visual + haptic
+    css_code: |
+      .spinner { opacity: 0; transform: rotate(0) scale(0.5);
+        transition: all 300ms ease; }
+      .pulling .spinner { opacity: 1; transform: rotate(180deg) scale(1); }
+    duration_ms: 300
+    performance: gpu-only
+    accessibility: aria-label-refreshing
+
+  - id: micro_005
+    category: feedback
+    interaction_name: Swipe to delete
+    trigger: touch-swipe
+    feedback_type: visual + reveal
+    css_code: |
+      .item { transition: transform 200ms ease; }
+      .item.swiped { transform: translateX(-80px); }
+      .delete-action { opacity: 0; transition: opacity 200ms ease; }
+      .item.swiped ~ .delete-action { opacity: 1; }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: confirm-before-delete
+
+  - id: micro_006
+    category: feedback
+    interaction_name: Double tap zoom
+    trigger: double-tap
+    feedback_type: visual + scale
+    css_code: |
+      .zoomable { transition: transform 300ms ease; }
+      .zoomable.zoomed { transform: scale(2); }
+    duration_ms: 300
+    performance: gpu-3d-transform
+    accessibility: pinch-alternative
+
+  # ── State Change Micro-interactions ───────────────────────────
+
+  - id: micro_007
+    category: state-change
+    interaction_name: Checkbox check draw
+    trigger: click
+    feedback_type: SVG stroke animation
+    css_code: |
+      .checkmark { stroke-dasharray: 16; stroke-dashoffset: 16;
+        transition: stroke-dashoffset 300ms ease; }
+      .checked .checkmark { stroke-dashoffset: 0; }
+    duration_ms: 300
+    performance: gpu-only
+    accessibility: role-checkbox-aria-checked
+
+  - id: micro_008
+    category: state-change
+    interaction_name: Radio select ripple
+    trigger: click
+    feedback_type: ripple + scale
+    css_code: |
+      .radio-dot { transform: scale(0); transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1); }
+      .selected .radio-dot { transform: scale(1); }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: role-radio-aria-checked
+
+  - id: micro_009
+    category: state-change
+    interaction_name: Dark mode toggle
+    trigger: click
+    feedback_type: icon morph + color transition
+    css_code: |
+      .theme-icon { transition: transform 500ms ease, opacity 300ms ease; }
+      .dark .sun { transform: rotate(180deg); opacity: 0; }
+      .dark .moon { transform: rotate(0); opacity: 1; }
+      :root { transition: background-color 300ms ease, color 300ms ease; }
+    duration_ms: 500
+    performance: gpu-only
+    accessibility: aria-label-theme-switch
+
+  - id: micro_010
+    category: state-change
+    interaction_name: Password visibility toggle
+    trigger: click
+    feedback_type: icon swap
+    css_code: |
+      .eye-icon { transition: opacity 150ms ease; }
+    duration_ms: 150
+    performance: gpu-only
+    accessibility: aria-label-show-password
+
+  - id: micro_011
+    category: state-change
+    interaction_name: Add to cart bounce
+    trigger: click
+    feedback_type: icon + counter
+    css_code: |
+      @keyframes add-bounce {
+        0% { transform: scale(1); }
+        30% { transform: scale(1.3); }
+        60% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+      }
+      .cart-icon.adding { animation: add-bounce 500ms ease; }
+      .cart-count { animation: badge-pop 300ms ease; }
+    duration_ms: 500
+    performance: gpu-only
+    accessibility: aria-live-polite-item-added
+
+  - id: micro_012
+    category: state-change
+    interaction_name: Favorite star fill
+    trigger: click
+    feedback_type: fill + particles
+    css_code: |
+      .star { transition: fill 200ms ease, transform 200ms ease; }
+      .star.active { fill: #fbbf24; transform: scale(1.2); }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: aria-pressed
+
+  # ── Loading & Progress Micro-interactions ─────────────────────
+
+  - id: micro_013
+    category: loading
+    interaction_name: Spinner dots
+    trigger: async-start
+    feedback_type: rotation
+    css_code: |
+      @keyframes spin-dots {
+        0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
+      }
+      .dot { animation: spin-dots 1.2s infinite; }
+      .dot:nth-child(2) { animation-delay: 0.2s; }
+      .dot:nth-child(3) { animation-delay: 0.4s; }
+    duration_ms: 1200
+    performance: gpu-only
+    accessibility: role-status-loading
+
+  - id: micro_014
+    category: loading
+    interaction_name: Button loading state
+    trigger: form-submit
+    feedback_type: text swap + spinner
+    css_code: |
+      .btn-text { transition: opacity 150ms ease; }
+      .btn.loading .btn-text { opacity: 0; }
+      .btn.loading .spinner { opacity: 1; }
+      .btn.loading { pointer-events: none; opacity: 0.7; }
+    duration_ms: 150
+    performance: gpu-only
+    accessibility: aria-busy-true-aria-disabled
+
+  - id: micro_015
+    category: loading
+    interaction_name: Skeleton to content
+    trigger: data-loaded
+    feedback_type: crossfade
+    css_code: |
+      .skeleton { animation: pulse 1.5s infinite; }
+      .content { opacity: 0; transition: opacity 400ms ease; }
+      .loaded .skeleton { display: none; }
+      .loaded .content { opacity: 1; }
+    duration_ms: 400
+    performance: gpu-only
+    accessibility: aria-busy-false-when-loaded
+
+  - id: micro_016
+    category: loading
+    interaction_name: Upload progress ring
+    trigger: file-upload
+    feedback_type: SVG ring + percentage
+    css_code: |
+      .ring { stroke-dasharray: 283; stroke-dashoffset: calc(283 - (283 * var(--progress) / 100));
+        transition: stroke-dashoffset 100ms linear; }
+    duration_ms: 100
+    performance: gpu-only
+    accessibility: role-progressbar
+
+  - id: micro_017
+    category: loading
+    interaction_name: Infinite scroll loader
+    trigger: intersection
+    feedback_type: spinner at bottom
+    css_code: |
+      .loader { opacity: 0; transition: opacity 200ms ease; }
+      .loader.visible { opacity: 1; }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: aria-label-loading-more
+
+  # ── Navigation Micro-interactions ─────────────────────────────
+
+  - id: micro_018
+    category: navigation
+    interaction_name: Page transition fade
+    trigger: route-change
+    feedback_type: crossfade
+    css_code: |
+      .page-enter { opacity: 0; }
+      .page-enter-active { opacity: 1; transition: opacity 300ms ease; }
+      .page-exit-active { opacity: 0; transition: opacity 200ms ease; }
+    duration_ms: 300
+    performance: gpu-only
+    accessibility: focus-first-heading
+
+  - id: micro_019
+    category: navigation
+    interaction_name: Scroll to top
+    trigger: click
+    feedback_type: smooth-scroll + icon
+    css_code: |
+      .scroll-top { opacity: 0; transform: translateY(20px);
+        transition: all 300ms ease; pointer-events: none; }
+      .scroll-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    duration_ms: 300
+    performance: gpu-only
+    accessibility: aria-label-back-to-top
+
+  - id: micro_020
+    category: navigation
+    interaction_name: Breadcrumb expand
+    trigger: click
+    feedback_type: text reveal
+    css_code: |
+      .collapsed { max-width: 24px; overflow: hidden; transition: max-width 200ms ease; }
+      .collapsed:hover { max-width: 200px; }
+    duration_ms: 200
+    performance: triggers-layout
+    accessibility: aria-expanded
+
+  # ── Celebration Micro-interactions ────────────────────────────
+
+  - id: micro_021
+    category: celebration
+    interaction_name: Confetti burst
+    trigger: success-action
+    feedback_type: canvas-particles
+    css_code: |
+      /* Use canvas-confetti library (6KB) */
+      /* confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }) */
+    duration_ms: 2000
+    performance: canvas-gpu
+    accessibility: decorative-only
+
+  - id: micro_022
+    category: celebration
+    interaction_name: Achievement unlock
+    trigger: milestone
+    feedback_type: toast + animation
+    css_code: |
+      @keyframes achievement {
+        0% { transform: translateY(-100%) scale(0.5); opacity: 0; }
+        50% { transform: translateY(0) scale(1.1); }
+        70% { transform: scale(0.95); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .achievement { animation: achievement 600ms cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+    duration_ms: 600
+    performance: gpu-only
+    accessibility: role-alert
+
+  - id: micro_023
+    category: celebration
+    interaction_name: Streak counter
+    trigger: consecutive-action
+    feedback_type: number roll + glow
+    css_code: |
+      @keyframes number-roll { from { transform: translateY(100%); } to { transform: translateY(0); } }
+      .counter { animation: number-roll 300ms ease; }
+      .streak-glow { box-shadow: 0 0 16px var(--gold); transition: box-shadow 300ms ease; }
+    duration_ms: 300
+    performance: gpu-only
+    accessibility: aria-live-polite
+
+  # ── Data Micro-interactions ───────────────────────────────────
+
+  - id: micro_024
+    category: data
+    interaction_name: Chart bar grow
+    trigger: data-load
+    feedback_type: height animation
+    css_code: |
+      .bar { height: 0; transition: height 800ms cubic-bezier(0.4, 0, 0.2, 1); }
+      .bar.loaded { height: var(--value); }
+    duration_ms: 800
+    performance: triggers-layout
+    accessibility: aria-label-value
+
+  - id: micro_025
+    category: data
+    interaction_name: Counter count up
+    trigger: visible
+    feedback_type: number increment
+    css_code: |
+      /* JS: requestAnimationFrame + easing to count from 0 to target */
+      .counter { font-variant-numeric: tabular-nums; }
+    duration_ms: 1500
+    performance: cpu-js
+    accessibility: aria-live-polite-final-value
+
+  - id: micro_026
+    category: data
+    interaction_name: Pie chart reveal
+    trigger: data-load
+    feedback_type: stroke-dashoffset
+    css_code: |
+      .segment { stroke-dashoffset: var(--circumference);
+        transition: stroke-dashoffset 1000ms ease; }
+      .segment.loaded { stroke-dashoffset: var(--offset); }
+    duration_ms: 1000
+    performance: gpu-only
+    accessibility: aria-label-percentage
+
+  # ── Validation Micro-interactions ─────────────────────────────
+
+  - id: micro_027
+    category: validation
+    interaction_name: Real-time field validation
+    trigger: input/blur
+    feedback_type: border color + icon
+    css_code: |
+      .field { border-color: var(--border); transition: border-color 200ms ease; }
+      .field.valid { border-color: #22c55e; }
+      .field.invalid { border-color: #ef4444; }
+      .validation-icon { opacity: 0; transition: opacity 200ms ease; }
+      .field.valid ~ .validation-icon,
+      .field.invalid ~ .validation-icon { opacity: 1; }
+    duration_ms: 200
+    performance: gpu-paint
+    accessibility: aria-invalid-describedby
+
+  - id: micro_028
+    category: validation
+    interaction_name: Password strength meter
+    trigger: input
+    feedback_type: bar width + color
+    css_code: |
+      .meter { transition: width 300ms ease, background-color 300ms ease; }
+      .weak { width: 33%; background: #ef4444; }
+      .medium { width: 66%; background: #f59e0b; }
+      .strong { width: 100%; background: #22c55e; }
+    duration_ms: 300
+    performance: triggers-layout
+    accessibility: aria-valuenow-aria-valuetext
+
+  - id: micro_029
+    category: validation
+    interaction_name: Form submit success
+    trigger: form-valid-submit
+    feedback_type: button morph to checkmark
+    css_code: |
+      .btn { transition: all 300ms ease; }
+      .btn.success { width: 48px; border-radius: 50%; background: #22c55e; }
+      .btn.success .text { opacity: 0; }
+      .btn.success .check { opacity: 1; }
+    duration_ms: 300
+    performance: triggers-layout
+    accessibility: aria-live-polite-success
+
+  # ── Cursor / Pointer Micro-interactions ───────────────────────
+
+  - id: micro_030
+    category: cursor
+    interaction_name: Custom cursor follow
+    trigger: mousemove
+    feedback_type: custom cursor element
+    css_code: |
+      .cursor { position: fixed; pointer-events: none; mix-blend-mode: difference;
+        transition: width 200ms ease, height 200ms ease; }
+      .cursor.hovering { width: 48px; height: 48px; }
+    duration_ms: 16
+    performance: raf-required
+    accessibility: respect-prefers-reduced-motion
+
+  - id: micro_031
+    category: cursor
+    interaction_name: Hover reveal content
+    trigger: hover
+    feedback_type: content reveal at cursor
+    css_code: |
+      .reveal { clip-path: circle(0% at var(--x) var(--y));
+        transition: clip-path 400ms ease; }
+      .container:hover .reveal { clip-path: circle(100% at var(--x) var(--y)); }
+    duration_ms: 400
+    performance: gpu-composited
+    accessibility: alternative-tap-on-mobile
+
+  # ── Drag & Drop Micro-interactions ────────────────────────────
+
+  - id: micro_032
+    category: drag-drop
+    interaction_name: Drag ghost
+    trigger: drag-start
+    feedback_type: scale + opacity
+    css_code: |
+      .dragging { opacity: 0.5; transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+      .drop-target { border: 2px dashed var(--primary); transition: all 200ms ease; }
+      .drop-target.over { background: var(--primary-light); border-style: solid; }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: aria-grabbed-dropeffect
+
+  - id: micro_033
+    category: drag-drop
+    interaction_name: Sortable list shift
+    trigger: drag-over
+    feedback_type: position shift animation
+    css_code: |
+      .item { transition: transform 200ms ease; }
+      .item.shift-down { transform: translateY(var(--item-height)); }
+      .item.shift-up { transform: translateY(calc(-1 * var(--item-height))); }
+    duration_ms: 200
+    performance: gpu-only
+    accessibility: keyboard-reorder-alternative
+
+  # ── Audio/Haptic Micro-interactions ───────────────────────────
+
+  - id: micro_034
+    category: haptic
+    interaction_name: Haptic tap feedback
+    trigger: click
+    feedback_type: vibration
+    css_code: |
+      /* JS: navigator.vibrate(10) on click */
+      /* Pair with visual scale feedback */
+    duration_ms: 10
+    performance: native-api
+    accessibility: visual-fallback-required
+
+  # ── Accessibility Motion ──────────────────────────────────────
+
+  - id: micro_035
+    category: a11y
+    interaction_name: Reduced motion global
+    trigger: media-query
+    feedback_type: disable animations
+    css_code: |
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    duration_ms: 0
+    performance: none
+    accessibility: mandatory-for-all-projects
+
+  - id: micro_036
+    category: a11y
+    interaction_name: Focus visible ring
+    trigger: keyboard-tab
+    feedback_type: outline ring
+    css_code: |
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      :focus:not(:focus-visible) { outline: none; }
+    duration_ms: 0
+    performance: none
+    accessibility: wcag-2.4.7

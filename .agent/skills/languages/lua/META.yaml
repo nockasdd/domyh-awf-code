@@ -1,16 +1,12 @@
 name: lua
-version: "6.1.2"
+version: "6.2.1"
 display: Lua
 category: scripting
-tier: 1
-priority: 3
+tier: 3
+priority: 1
 
-description: |
-  Lua scripting for game development, embedded systems, configuration.
-  Covers Lua 5.1-5.5, LuaJIT, FFI, metatables, coroutines.
+desc: "Lua development patterns for Lua 5.4/LuaJIT. Tables, metatables, coroutines, C API, FFI, game scripting."
 
-triggers:
-  file_patterns:
     - "*.lua"
     - ".luarc.json"
     - "*.rockspec"

@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "orch-001"
 
 # =============================================================================
@@ -66,6 +66,9 @@ tools:
     - view_file_outline
     - list_dir
     - grep_search
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - replace_file_content # Orchestrator doesn't code
     - run_command # Delegates to appropriate persona
@@ -234,4 +237,4 @@ output_template: |
   [Combined output from all personas]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Orchestrator Persona
+# DOMYH Awesome Code • Orchestrator Persona

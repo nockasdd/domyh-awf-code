@@ -1,0 +1,132 @@
+# MongoDB Patterns - HSA Database Skill
+# Version: MongoDB 8.2 (2025)
+# Updated: 2026-02-05
+
+patterns:
+  # Optimization
+  - id: mo001
+    pattern: Compound Index
+    category: optimization
+    version: all
+    description: Order indexes by equality, sort, range (ESR rule)
+    example: "db.collection.createIndex({ status: 1, date: -1 })"
+    severity: HIGH
+
+  - id: mo002
+    pattern: Express Path
+    category: performance
+    version: "8"
+    description: MongoDB 8 fast execution for simple index lookups
+    example: "Automatic for _id and simple equality queries"
+    severity: MEDIUM
+
+  - id: mo003
+    pattern: Embed vs Reference
+    category: data
+    version: all
+    description: Embed frequently accessed data, reference large/unbounded
+    example: "Embed: user.address, Reference: user.orders[]"
+    severity: HIGH
+
+  # Query
+  - id: mo004
+    pattern: Aggregation Pipeline
+    category: query
+    version: all
+    description: Use aggregation for complex queries, $match early
+    example: "db.orders.aggregate([{$match: {status: 'active'}}, {$group: ...}])"
+    severity: MEDIUM
+
+  - id: mo005
+    pattern: Text Search
+    category: query
+    version: all
+    description: Full-text search with text indexes
+    example: "db.articles.createIndex({ content: 'text' })"
+    severity: MEDIUM
+
+  # Security - Queryable Encryption
+  - id: mo006
+    pattern: Queryable Encryption
+    category: security
+    version: "7+"
+    description: Client-side encryption with query support
+    example: "encryptedFieldsMap: { 'ssn': { keyId: ..., queries: 'equality' } }"
+    severity: CRITICAL
+
+  - id: mo007
+    pattern: QE Range Queries
+    category: security
+    version: "8"
+    description: Range queries on encrypted fields ($gt, $lt, $gte, $lte)
+    example: "db.patients.find({ age: { $gte: 21 } }) // encrypted"
+    severity: HIGH
+
+  - id: mo008
+    pattern: QE Prefix/Suffix
+    category: security
+    version: "8.2"
+    description: Prefix, suffix, substring on encrypted (preview)
+    example: "queries: ['prefix', 'suffix'] // GA in 2026"
+    severity: LOW
+
+  # Realtime
+  - id: mo009
+    pattern: Change Streams
+    category: realtime
+    version: "3.6+"
+    description: React to data changes in real-time
+    example: "db.collection.watch([{ $match: { operationType: 'insert' } }])"
+    severity: MEDIUM
+
+  # Scaling
+  - id: mo010
+    pattern: Sharding Strategy
+    category: scaling
+    version: all
+    description: Choose shard key - high cardinality, even distribution
+    example: "sh.shardCollection('db.orders', { customerId: 'hashed' })"
+    severity: CRITICAL
+
+  # Debug
+  - id: mo011
+    pattern: Query Profiler
+    category: debug
+    version: all
+    description: Profile slow queries
+    example: "db.setProfilingLevel(1, { slowms: 100 })"
+    severity: HIGH
+
+  # Data Types
+  - id: mo012
+    pattern: Time Series
+    category: data
+    version: "5+"
+    description: Use time series collections for IoT/metrics
+    example: "db.createCollection('metrics', { timeseries: { timeField: 'ts' } })"
+    severity: LOW
+
+  - id: mo013
+    pattern: Vector Search
+    category: data
+    version: "7+"
+    description: Atlas Vector Search for semantic queries
+    example: "{ $vectorSearch: { queryVector: [...], path: 'embedding' } }"
+    severity: MEDIUM
+
+  # Transactions
+  - id: mo014
+    pattern: Multi-Document Transactions
+    category: transaction
+    version: "4.0+"
+    description: ACID transactions across multiple documents
+    example: "session.withTransaction(async () => { ... })"
+    severity: HIGH
+
+  - id: mo015
+    pattern: Read Concern
+    category: transaction
+    version: all
+    description: Control consistency vs availability
+    example: "{ readConcern: { level: 'majority' } }"
+    severity: MEDIUM

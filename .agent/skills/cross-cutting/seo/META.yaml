@@ -1,0 +1,47 @@
+name: seo
+version: "6.2.1"
+display: SEO & Core Web Vitals
+category: cross-cutting
+tier: 1
+priority: 1
+
+desc: "SEO optimization: Core Web Vitals (LCP, FID, CLS, INP), structured data (JSON-LD), meta tags, sitemap, robots.txt, semantic HTML. Technical and on-page SEO. 90+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - seo
+    - search engine
+    - core web vitals
+    - lcp
+    - fid
+    - cls
+    - inp
+    - structured data
+    - json-ld
+    - meta tags
+    - sitemap
+    - robots.txt
+    - schema.org
+    - open graph
+    - canonical
+  intents:
+    - search optimization
+    - improve SEO
+    - core web vitals
+    - structured data
+
+caps:
+  - Core Web Vitals (LCP, INP, CLS)
+  - Technical SEO (sitemap, robots, canonical)
+  - Structured data (JSON-LD, Schema.org)
+  - Meta tags (Open Graph, Twitter Card)
+  - Semantic HTML for SEO
+  - Performance optimization for SEO
+  - Mobile-first indexing
+  - International SEO (hreflang)
+
+data_files:
+  - data/core-web-vitals.yaml
+  - data/structured-data.yaml
+  - data/technical-seo.yaml

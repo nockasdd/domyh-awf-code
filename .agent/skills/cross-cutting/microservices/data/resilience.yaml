@@ -1,0 +1,189 @@
+# =============================================================================
+# resilience.yaml — Resilience Patterns for Microservices
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# CIRCUIT BREAKER
+# =============================================================================
+
+circuit_breaker:
+  description: "Prevent cascade failures by stopping requests to failing services"
+
+  states:
+    closed: "Normal operation — requests pass through"
+    open: "Service failing — requests immediately rejected"
+    half_open: "Testing recovery — limited requests allowed"
+
+  config:
+    failure_threshold: 5
+    success_threshold: 3
+    timeout_seconds: 30
+    half_open_max_calls: 3
+
+  example_go: |
+    type CircuitBreaker struct {
+        mu              sync.Mutex
+        state           State
+        failureCount    int
+        successCount    int
+        failureThreshold int
+        successThreshold int
+        timeout         time.Duration
+        lastFailure     time.Time
+    }
+
+    func (cb *CircuitBreaker) Execute(fn func() error) error {
+        cb.mu.Lock()
+        if cb.state == Open {
+            if time.Since(cb.lastFailure) > cb.timeout {
+                cb.state = HalfOpen
+                cb.mu.Unlock()
+            } else {
+                cb.mu.Unlock()
+                return ErrCircuitOpen
+            }
+        } else {
+            cb.mu.Unlock()
+        }
+
+        err := fn()
+
+        cb.mu.Lock()
+        defer cb.mu.Unlock()
+
+        if err != nil {
+            cb.failureCount++
+            cb.lastFailure = time.Now()
+            if cb.failureCount >= cb.failureThreshold {
+                cb.state = Open
+            }
+            return err
+        }
+
+        if cb.state == HalfOpen {
+            cb.successCount++
+            if cb.successCount >= cb.successThreshold {
+                cb.state = Closed
+                cb.failureCount = 0
+                cb.successCount = 0
+            }
+        }
+        return nil
+    }
+
+  libraries:
+    go: ["sony/gobreaker", "afex/hystrix-go"]
+    java: ["resilience4j", "Netflix Hystrix (deprecated)"]
+    dotnet: ["Polly"]
+    typescript: ["opossum", "cockatiel"]
+
+# =============================================================================
+# BULKHEAD
+# =============================================================================
+
+bulkhead:
+  description: "Isolate failures so one component can't take down the whole system"
+
+  types:
+    - name: "Thread Pool Bulkhead"
+      description: "Dedicated thread pool per downstream service"
+      example: "Service A gets 10 threads, Service B gets 20 threads"
+
+    - name: "Semaphore Bulkhead"
+      description: "Limit concurrent calls with semaphore"
+      example: "max 5 concurrent calls to payment service"
+
+  example_go: |
+    type Bulkhead struct {
+        sem chan struct{}
+    }
+
+    func NewBulkhead(maxConcurrent int) *Bulkhead {
+        return &Bulkhead{sem: make(chan struct{}, maxConcurrent)}
+    }
+
+    func (b *Bulkhead) Execute(fn func() error) error {
+        select {
+        case b.sem <- struct{}{}:
+            defer func() { <-b.sem }()
+            return fn()
+        default:
+            return ErrBulkheadFull
+        }
+    }
+
+# =============================================================================
+# RETRY
+# =============================================================================
+
+retry:
+  description: "Automatically retry failed operations with backoff"
+
+  strategies:
+    - name: "Fixed Delay"
+      wait: "Same delay between retries"
+    - name: "Exponential Backoff"
+      wait: "2^attempt * base (100ms, 200ms, 400ms, 800ms)"
+    - name: "Exponential + Jitter"
+      wait: "Backoff + random jitter to prevent thundering herd"
+
+  config:
+    max_retries: 3
+    initial_delay_ms: 100
+    max_delay_ms: 5000
+    jitter: true
+    retryable_errors: ["timeout", "connection_refused", "503"]
+
+  example_go: |
+    func RetryWithBackoff(ctx context.Context, maxRetries int, fn func() error) error {
+        for i := 0; i <= maxRetries; i++ {
+            err := fn()
+            if err == nil {
+                return nil
+            }
+            if !isRetryable(err) || i == maxRetries {
+                return err
+            }
+            // Exponential backoff with jitter
+            delay := time.Duration(1<<uint(i)) * 100 * time.Millisecond
+            jitter := time.Duration(rand.Int63n(int64(delay / 2)))
+            select {
+            case <-time.After(delay + jitter):
+            case <-ctx.Done():
+                return ctx.Err()
+            }
+        }
+        return nil
+    }
+
+# =============================================================================
+# TIMEOUT
+# =============================================================================
+
+timeout:
+  description: "Prevent hanging by setting time limits"
+  recommended_values:
+    http_client: "3-5 seconds"
+    database_query: "5-10 seconds"
+    grpc_call: "1-3 seconds"
+    message_processing: "30 seconds"
+
+# =============================================================================
+# FALLBACK
+# =============================================================================
+
+fallback:
+  description: "Provide alternative when primary fails"
+  strategies:
+    - name: "Cache Fallback"
+      description: "Return cached data when service unavailable"
+    - name: "Default Value"
+      description: "Return sensible defaults"
+    - name: "Degraded Service"
+      description: "Reduced functionality instead of total failure"
+    - name: "Queue for Later"
+      description: "Accept request, process when service recovers"
+
+# _DOMYH Awesome Code • Resilience Patterns_

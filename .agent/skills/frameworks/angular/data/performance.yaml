@@ -1,0 +1,210 @@
+# =============================================================================
+# Angular Performance Patterns (Feb 2026)
+# =============================================================================
+# Lazy loading, OnPush, Optimization strategies
+
+metadata:
+  skill: angular
+  domain: performance
+  version: "20.2"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: ang011
+    name: Lazy Loading with @defer
+    category: loading
+    version: "17+"
+    description: Built-in deferred loading for components and chunks
+    text: defer lazy loading viewport idle interaction prefetch
+    example: |
+      <!-- ✅ Lazy load on viewport visibility -->
+      @defer (on viewport) {
+        <heavy-chart-component />
+      } @placeholder (minimum 500ms) {
+        <div class="skeleton">Loading chart...</div>
+      } @loading (after 200ms; minimum 300ms) {
+        <spinner />
+      } @error {
+        <p>Failed to load</p>
+      }
+
+      <!-- ✅ Prefetch for faster UX -->
+      @defer (on viewport; prefetch on idle) {
+        <recommendations />
+      }
+
+      <!-- ✅ Multiple triggers -->
+      @defer (on interaction; on timer(5s)) {
+        <comments-section />
+      }
+
+      <!-- ✅ Conditional defer -->
+      @defer (when shouldLoad()) {
+        <premium-content />
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/defer
+
+  - id: ang012
+    name: OnPush Change Detection
+    category: change-detection
+    version: "2+"
+    description: Optimize change detection with OnPush strategy
+    text: onpush change detection strategy immutable performance
+    example: |
+      import { ChangeDetectionStrategy } from "@angular/core";
+
+      @Component({
+        selector: "app-item-list",
+        standalone: true,
+        changeDetection: ChangeDetectionStrategy.OnPush, // ✅
+        template: `
+          @for (item of items(); track item.id) {
+            <app-item [item]="item" />
+          }
+        `,
+      })
+      export class ItemListComponent {
+        items = input.required<Item[]>();
+      }
+
+      // OnPush triggers on:
+      // 1. @Input reference change
+      // 2. Signal updates
+      // 3. Event bindings
+      // 4. Async pipe
+      // 5. Manual markForCheck()
+
+      // ⚠️ Best with:
+      // - Immutable data
+      // - Signals (Angular 16+)
+      // - Pure pipes
+    severity: HIGH
+    docs_url: https://angular.dev/guide/change-detection
+
+  - id: ang013
+    name: Route Preloading
+    category: loading
+    version: "2+"
+    description: Preload routes for faster navigation
+    text: preload preloading strategy route prefetch navigation
+    example: |
+      import { 
+        PreloadAllModules, 
+        NoPreloading,
+        provideRouter,
+        withPreloading 
+      } from "@angular/router";
+
+      // ✅ Preload all routes after initial load
+      provideRouter(routes, withPreloading(PreloadAllModules))
+
+      // ✅ Custom preloading strategy
+      @Injectable({ providedIn: "root" })
+      export class SelectivePreloadingStrategy implements PreloadingStrategy {
+        preload(route: Route, load: () => Observable<any>): Observable<any> {
+          // Only preload routes with data.preload = true
+          if (route.data?.["preload"]) {
+            return load();
+          }
+          return of(null);
+        }
+      }
+
+      // routes.ts
+      export const routes: Routes = [
+        {
+          path: "dashboard",
+          loadComponent: () => import("./dashboard"),
+          data: { preload: true }, // ✅ Will preload
+        },
+        {
+          path: "settings",
+          loadComponent: () => import("./settings"),
+          // No preload - loads on demand
+        },
+      ];
+    severity: MEDIUM
+    docs_url: https://angular.dev/guide/routing/preloading
+
+  - id: ang014
+    name: trackBy in @for
+    category: rendering
+    version: "17+"
+    description: Optimize list rendering with track expression
+    text: track trackby for loop rendering performance list
+    example: |
+      <!-- ✅ Angular 17+: track is REQUIRED in @for -->
+      @for (user of users(); track user.id) {
+        <app-user-card [user]="user" />
+      }
+
+      <!-- ✅ Track by index (use sparingly) -->
+      @for (item of items(); track $index) {
+        <div>{{ item }}</div>
+      }
+
+      <!-- ✅ Complex track expression -->
+      @for (item of searchResults(); track item.id + item.version) {
+        <result-card [result]="item" />
+      }
+
+      <!-- ✅ Available variables in @for -->
+      @for (item of items(); track item.id; let i = $index) {
+        <div>
+          {{ i + 1 }}. {{ item.name }}
+          @if ($first) { (First) }
+          @if ($last) { (Last) }
+          @if ($even) { [Even row] }
+        </div>
+      }
+
+      <!-- Available: $index, $first, $last, $even, $odd, $count -->
+    severity: CRITICAL
+    docs_url: https://angular.dev/guide/templates/control-flow
+
+  - id: ang015
+    name: Bundle Optimization
+    category: build
+    version: "15+"
+    description: Optimize production builds with esbuild
+    text: bundle size tree shaking esbuild production minify
+    example: |
+      // angular.json - Production optimization
+      {
+        "configurations": {
+          "production": {
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "500kb",
+                "maximumError": "1mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "2kb",
+                "maximumError": "4kb"
+              }
+            ],
+            "outputHashing": "all",
+            "optimization": true,
+            "sourceMap": false,
+            "namedChunks": false,
+            "extractLicenses": true
+          }
+        }
+      }
+
+      // ✅ Analyze bundle
+      // ng build --stats-json
+      // npx webpack-bundle-analyzer dist/stats.json
+
+      // ✅ Tips for smaller bundles:
+      // 1. Use standalone components (no NgModule overhead)
+      // 2. Lazy load routes with @defer
+      // 3. Remove unused RxJS operators (pipeable)
+      // 4. Use zoneless mode (-45KB)
+      // 5. Enable tree-shaking
+    severity: HIGH
+    docs_url: https://angular.dev/guide/build

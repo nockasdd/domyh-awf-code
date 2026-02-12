@@ -1,0 +1,101 @@
+# gRPC Patterns - HSA API Protocols Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: api-protocols
+  domain: grpc
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 7
+
+patterns:
+  - id: grpc001
+    name: proto_design
+    category: design
+    description: Protocol Buffer message and service design
+    text: proto design message service rpc protobuf schema
+    example: |
+      syntax = "proto3";
+      package user.v1;
+      service UserService {
+        rpc GetUser(GetUserRequest) returns (User);
+        rpc ListUsers(ListUsersRequest) returns (stream User);
+      }
+      message User {
+        string id = 1;
+        string name = 2;
+        google.protobuf.Timestamp created_at = 3;
+      }
+
+  - id: grpc002
+    name: streaming_patterns
+    category: architecture
+    description: gRPC streaming types (server, client, bidirectional)
+    text: streaming server client bidirectional stream rpc
+    types:
+      unary: "rpc GetUser(Request) returns (Response)"
+      server_stream: "rpc ListUsers(Request) returns (stream Response)"
+      client_stream: "rpc UploadFiles(stream Request) returns (Response)"
+      bidi_stream: "rpc Chat(stream Message) returns (stream Message)"
+
+  - id: grpc003
+    name: channel_reuse
+    category: performance
+    description: Reuse gRPC channels to avoid connection overhead
+    text: channel reuse connection pooling performance optimization
+    example: |
+      // ✅ GOOD: Create channel once, reuse
+      const channel = new grpc.Channel("localhost:50051", grpc.credentials.createInsecure());
+      const client = new UserServiceClient(channel);
+      // ❌ BAD: New channel per request
+    severity: HIGH
+
+  - id: grpc004
+    name: tls_security
+    category: security
+    description: TLS encryption for gRPC connections
+    text: tls ssl security encryption certificate mutual tls mTLS
+    example: |
+      const creds = grpc.credentials.createSsl(
+        fs.readFileSync("ca.pem"),
+        fs.readFileSync("client-key.pem"),
+        fs.readFileSync("client-cert.pem")
+      );
+    severity: CRITICAL
+
+  - id: grpc005
+    name: load_balancing
+    category: architecture
+    description: gRPC load balancing strategies
+    text: load balancing client side proxy envoy round robin
+    strategies:
+      client_side: "Built-in pick_first, round_robin"
+      proxy: "Envoy, NGINX, HAproxy for L7 gRPC"
+      service_mesh: "Istio, Linkerd for automatic load balancing"
+
+  - id: grpc006
+    name: error_handling
+    category: design
+    description: gRPC status codes and error details
+    text: error handling status code details metadata
+    status_codes:
+      OK: 0
+      CANCELLED: 1
+      INVALID_ARGUMENT: 3
+      NOT_FOUND: 5
+      PERMISSION_DENIED: 7
+      INTERNAL: 13
+      UNAVAILABLE: 14
+      UNAUTHENTICATED: 16
+
+  - id: grpc007
+    name: grpc_web
+    category: integration
+    description: gRPC-Web for browser clients via Envoy proxy
+    text: grpc-web browser client envoy proxy frontend
+    example: |
+      // Browser client via grpc-web
+      const client = new UserServiceClient("https://api.example.com", null, null);
+      const request = new GetUserRequest(); request.setId("123");
+      client.getUser(request, {}, (err, response) => { ... });
+    note: "Requires Envoy or similar proxy for protocol translation"

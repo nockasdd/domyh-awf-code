@@ -1,0 +1,149 @@
+# Tailwind CSS 4.0 - Migration Patterns
+# v3 to v4 breaking changes and upgrade guide
+# Source: tailwindcss.com/docs/upgrade-guide (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: migration
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: mig001
+    name: "Upgrade Tool"
+    category: migration
+    version: "4.0"
+    description: |
+      Automated upgrade from v3 to v4.
+      Handles config migration, class renames, and syntax changes.
+    text: "upgrade migrate v3 v4 tool automated npx cli"
+    example: |
+      # Run upgrade tool
+      npx @tailwindcss/upgrade
+
+      # What it does:
+      # ✓ Updates dependencies
+      # ✓ Migrates tailwind.config.js → CSS @theme
+      # ✓ Renames utilities (shadow-sm → shadow-xs)
+      # ✓ Updates @tailwind directives → @import
+      # ✓ Converts @layer utilities → @utility
+
+      # Requires Node.js 20+
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide"
+
+  - id: mig002
+    name: "Renamed Utilities"
+    category: breaking-change
+    version: "4.0"
+    description: |
+      Several utilities renamed for consistency.
+      Run upgrade tool or manually update.
+    text: "renamed utility shadow blur rounded outline breaking change"
+    example: |
+      /* Shadow scale shifted */
+      shadow-sm  →  shadow-xs
+      shadow     →  shadow-sm
+      shadow-md  →  shadow (same)
+      shadow-lg  →  shadow-md
+
+      /* Blur scale shifted */
+      blur-sm   →  blur-xs
+      blur      →  blur-sm
+
+      /* Rounded scale shifted */
+      rounded-sm →  rounded-xs
+      rounded    →  rounded-sm
+
+      /* Outline */
+      outline-none  →  outline-hidden
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide#renamed-utilities"
+
+  - id: mig003
+    name: "Default Values Changed"
+    category: breaking-change
+    version: "4.0"
+    description: |
+      Default colors and widths changed.
+      Border and ring now use currentColor.
+    text: "default value border ring color current breaking change"
+    example: |
+      /* Border default color */
+      v3: border-gray-200 (implicit)
+      v4: currentColor (explicit gray needed)
+
+      /* Ring default */
+      v3: ring-3 ring-blue-500
+      v4: ring-1 currentColor
+
+      /* Fix: Be explicit */
+      <div class="border border-gray-200" />
+      <div class="ring ring-3 ring-blue-500" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide#default-border-color"
+
+  - id: mig004
+    name: "Import Syntax"
+    category: breaking-change
+    version: "4.0"
+    description: |
+      @tailwind directives replaced by @import.
+      Simpler, more standard CSS syntax.
+    text: "@tailwind @import directive entry point breaking change"
+    example: |
+      /* v3 (deprecated) */
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      /* v4 */
+      @import "tailwindcss";
+
+      /* With Vite - even simpler */
+      /* Just configure vite.config.ts */
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide#import-syntax"
+
+  - id: mig005
+    name: "Important Modifier"
+    category: breaking-change
+    version: "4.0"
+    description: |
+      ! modifier moved to end of class.
+      More intuitive and consistent.
+    text: "important ! modifier syntax breaking change override"
+    example: |
+      /* v3 */
+      <div class="!flex !text-red-500" />
+
+      /* v4 */
+      <div class="flex! text-red-500!" />
+
+      /* With variants */
+      /* v3: hover:!flex */
+      /* v4: hover:flex! */
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide#important-modifier"
+
+  - id: mig006
+    name: "Browser Support"
+    category: breaking-change
+    version: "4.0"
+    description: |
+      v4 targets modern browsers only.
+      Safari 16.4+, Chrome 111+, Firefox 128+.
+    text: "browser support compatibility modern safari chrome firefox ie"
+    example: |
+      /* v4 browser requirements */
+      Safari 16.4+   (March 2023)
+      Chrome 111+    (March 2023)
+      Firefox 128+   (July 2024)
+
+      /* For older browsers, stay on v3 */
+      npm install tailwindcss@3.4
+
+      /* Or use transpilation manually */
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/upgrade-guide#browser-support"

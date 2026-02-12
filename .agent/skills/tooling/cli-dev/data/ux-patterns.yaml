@@ -1,0 +1,97 @@
+# CLI UX Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: CLI-UX-001
+    name: Progressive Discovery
+    category: ux
+    description: |
+      Guide users from beginner to expert progressively.
+    text: |
+      Level 1: mycli → Show help + suggest commands
+      Level 2: mycli --help → Detailed help with examples
+      Level 3: mycli <cmd> --help → Command-specific help
+      Level 4: mycli suggest → AI-powered context suggestions
+      Level 5: mycli --verbose → Expert debug output
+
+  - id: CLI-UX-002
+    name: Color and Formatting
+    category: ux
+    description: |
+      Use colors, icons, and formatting for readability.
+    text: |
+      Libraries:
+      - chalk (Node.js): Color output
+      - ora (Node.js): Spinners
+      - cli-table3: Tables
+      - boxen: Boxed messages
+      Rules:
+      - Detect NO_COLOR env and CI environments
+      - Use stderr for progress, stdout for data
+      - Use emoji/icons sparingly (✓ ✗ ⚠ ℹ)
+
+  - id: CLI-UX-003
+    name: Interactive Prompts
+    category: ux
+    description: |
+      Interactive input with validation.
+    text: |
+      Libraries:
+      - @clack/prompts: Beautiful, modern prompts
+      - Inquirer.js: Feature-rich
+      - prompts: Lightweight
+    example: |
+      import { intro, select, text, confirm, outro } from "@clack/prompts";
+
+      intro("Welcome to MyTool");
+      const name = await text({ message: "Project name?", validate: (v) => v.length < 1 ? "Required" : undefined });
+      const framework = await select({ message: "Framework?", options: [
+        { value: "react", label: "React" },
+        { value: "vue", label: "Vue" },
+      ]});
+      const proceed = await confirm({ message: "Create project?" });
+      outro("Done!");
+
+  - id: CLI-UX-004
+    name: Help Formatting
+    category: ux
+    description: |
+      Well-formatted help output.
+    text: |
+      Structure:
+      USAGE: mycli <command> [options]
+
+      COMMANDS:
+        init      Initialize project
+        build     Build project
+        deploy    Deploy to production
+
+      OPTIONS:
+        -v, --verbose    Verbose output
+        -h, --help       Show help
+        --no-color       Disable colors
+
+      EXAMPLES:
+        $ mycli init my-project --template react
+        $ mycli deploy --env production
+
+  - id: CLI-UX-005
+    name: Error Display
+    category: ux
+    description: |
+      User-friendly error messages.
+    example: |
+      import chalk from "chalk";
+
+      function displayError(err: CLIError) {
+        console.error();
+        console.error(chalk.red.bold("Error:"), err.message);
+        if (err.suggestion) {
+          console.error(chalk.dim("Suggestion:"), err.suggestion);
+        }
+        if (err.docs) {
+          console.error(chalk.dim("Docs:"), chalk.underline(err.docs));
+        }
+        console.error();
+        process.exit(err.code || 1);
+      }

@@ -1,0 +1,204 @@
+# =============================================================================
+# PostgreSQL 17/18 Performance Patterns (Feb 2026)
+# =============================================================================
+# Query optimization and performance monitoring
+
+metadata:
+  skill: sql
+  domain: performance
+  version: "18.0.0"
+  updated: "2026-02-05"
+  patterns_count: 9
+
+patterns:
+  - id: sql010
+    name: EXPLAIN ANALYZE
+    category: monitoring
+    version: "8.0+"
+    description: Analyze query execution plan with timing and buffers
+    text: explain analyze buffers query plan execution performance
+    example: |
+      EXPLAIN (ANALYZE, BUFFERS, TIMING, VERBOSE)
+      SELECT * FROM orders 
+        WHERE customer_id = 123 
+        AND created_at > '2026-01-01';
+
+      -- Look for:
+      -- - Sequential scans on large tables (bad)
+      -- - High buffer reads (caching issue)
+      -- - Actual vs Planned rows mismatch (stats outdated)
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/sql-explain.html
+
+  - id: sql011
+    name: Async I/O (PG18)
+    category: performance
+    version: "18+"
+    description: PG18 asynchronous I/O for 3x faster sequential scans
+    text: aio async io performance sequential scan vacuum pg18
+    example: |
+      -- PG18: Async I/O enabled by default for read-heavy workloads
+      -- Up to 3x faster sequential scans
+      -- Up to 3x faster VACUUM operations
+
+      -- Check if AIO is being used:
+      SELECT * FROM pg_stat_io;
+
+      -- Good for: Data warehousing, analytics, bulk operations
+    severity: CRITICAL
+    docs_url: https://www.postgresql.org/docs/18/asynchronous-io.html
+
+  - id: sql012
+    name: pg_stat_statements
+    category: monitoring
+    version: "8.4+"
+    description: Track execution statistics of all SQL statements
+    text: pg_stat_statements monitoring slow query execution stats
+    example: |
+      -- Enable extension
+      CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+      -- Find slowest queries
+      SELECT query, calls, total_exec_time / calls AS avg_time
+        FROM pg_stat_statements
+        ORDER BY total_exec_time DESC
+        LIMIT 10;
+
+      -- Find most frequent queries
+      SELECT query, calls FROM pg_stat_statements
+        ORDER BY calls DESC LIMIT 10;
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/pgstatstatements.html
+
+  - id: sql013
+    name: pg_stat_io (PG16+)
+    category: monitoring
+    version: "16+"
+    description: I/O statistics for understanding disk/buffer activity
+    text: pg_stat_io statistics monitoring reads writes buffer io
+    example: |
+      -- View I/O statistics by backend type
+      SELECT backend_type, reads, writes, hits
+        FROM pg_stat_io
+        WHERE backend_type = 'client backend';
+
+      -- Calculate cache hit ratio
+      SELECT 
+        sum(hits) / nullif(sum(hits) + sum(reads), 0) 
+          AS cache_hit_ratio
+        FROM pg_stat_io;
+    severity: MEDIUM
+    docs_url: https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-IO
+
+  - id: sql014
+    name: Connection Pooling
+    category: performance
+    version: "all"
+    description: Use connection pooler (PgBouncer) for high concurrency
+    text: connection pool pgbouncer connectionlimit performance
+    example: |
+      -- Check current connections
+      SELECT count(*) FROM pg_stat_activity;
+
+      -- PostgreSQL max_connections (default 100)
+      SHOW max_connections;
+
+      -- PgBouncer config (pgbouncer.ini)
+      [databases]
+      mydb = host=localhost dbname=mydb
+
+      [pgbouncer]
+      pool_mode = transaction
+      max_client_conn = 1000
+      default_pool_size = 20
+    severity: HIGH
+    docs_url: https://www.pgbouncer.org/
+
+  - id: sql015
+    name: VACUUM and ANALYZE
+    category: maintenance
+    version: "8.0+"
+    description: Reclaim storage and update query planner statistics
+    text: vacuum analyze maintenance autovacuum statistics bloat
+    example: |
+      -- Manual vacuum
+      VACUUM (VERBOSE) orders;
+
+      -- Update statistics
+      ANALYZE orders;
+
+      -- Check autovacuum status
+      SELECT schemaname, relname, 
+             last_vacuum, last_autovacuum,
+             n_dead_tup
+        FROM pg_stat_user_tables
+        WHERE n_dead_tup > 10000;
+
+      -- PG18: pg_upgrade preserves optimizer stats!
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/routine-vacuuming.html
+
+  - id: sql016
+    name: Parallel Query
+    category: performance
+    version: "9.6+"
+    description: Parallelize sequential scans, aggregates, and joins
+    text: parallel query workers sequential scan aggregate
+    example: |
+      -- Check parallel settings
+      SHOW max_parallel_workers_per_gather;
+
+      -- Enable more parallelism
+      SET max_parallel_workers_per_gather = 4;
+
+      -- Parallel-eligible query
+      EXPLAIN SELECT count(*) FROM large_table 
+        WHERE status = 'active';
+
+      -- Look for "Gather" node in plan
+    severity: MEDIUM
+    docs_url: https://www.postgresql.org/docs/current/parallel-query.html
+
+  - id: sql017
+    name: pg_aios View (PG18)
+    category: monitoring
+    version: "18+"
+    description: Monitor async I/O operations with real-time statistics
+    text: pg_aios async io monitoring statistics view aio operations
+    example: |
+      -- View active async I/O operations
+      SELECT * FROM pg_aios;
+
+      -- Monitor AIO by backend
+      SELECT 
+        pid, 
+        state, 
+        io_type,
+        blocks_requested,
+        blocks_completed
+      FROM pg_aios 
+      WHERE state = 'in_progress';
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/18/asynchronous-io.html
+
+  - id: sql018
+    name: io_uring (PG18 Linux)
+    category: performance
+    version: "18+"
+    description: Linux io_uring backend for maximum async I/O performance
+    text: io_uring linux kernel async io performance ring buffer
+    example: |
+      -- PG18 supports two AIO backends:
+      -- 1. io_uring (Linux 5.1+) - fastest, uses kernel ring buffers
+      -- 2. worker - cross-platform, uses worker processes
+
+      -- Check AIO configuration
+      SHOW io_method;
+      -- Default: io_uring on Linux, worker on other platforms
+
+      -- Benefits:
+      -- - 2-3x faster sequential scans
+      -- - 2-3x faster bitmap heap scans
+      -- - No application code changes needed
+    severity: CRITICAL
+    docs_url: https://www.postgresql.org/docs/18/asynchronous-io.html

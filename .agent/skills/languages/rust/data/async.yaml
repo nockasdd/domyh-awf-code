@@ -1,0 +1,404 @@
+# =============================================================================
+# Rust Async Patterns (Feb 2026)
+# Version: Tokio 1.40+ / Rust 2024
+# =============================================================================
+
+metadata:
+  skill: rust
+  domain: async
+  version: "1.40"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rs101
+    name: spawn_blocking for CPU Work
+    category: concurrency
+    version: "tokio"
+    description: |
+      Offload blocking/CPU-intensive work to thread pool.
+      Prevents blocking the async runtime.
+    text: spawn_blocking blocking cpu thread pool tokio
+    example: |
+      use tokio::task;
+
+      // ✅ Offload blocking I/O
+      async fn read_file(path: &str) -> Result<String, std::io::Error> {
+          let path = path.to_string();
+          task::spawn_blocking(move || {
+              std::fs::read_to_string(path)
+          }).await?
+      }
+
+      // ✅ CPU-intensive computation
+      async fn compute_hash(data: Vec<u8>) -> String {
+          task::spawn_blocking(move || {
+              use sha2::{Sha256, Digest};
+              let mut hasher = Sha256::new();
+              hasher.update(&data);
+              format!("{:x}", hasher.finalize())
+          }).await.unwrap()
+      }
+
+      // ✅ Integration with sync libraries
+      async fn use_sync_library() -> Result<Data, Error> {
+          let data = task::spawn_blocking(|| {
+              // Sync library call
+              sync_library::fetch_data()
+          }).await??;
+          
+          Ok(data)
+      }
+
+      // ✅ With larger thread pool
+      // Configure in Tokio runtime
+      #[tokio::main]
+      async fn main() {
+          let rt = tokio::runtime::Builder::new_multi_thread()
+              .worker_threads(4)
+              .max_blocking_threads(32)  // For spawn_blocking
+              .enable_all()
+              .build()
+              .unwrap();
+          
+          rt.block_on(async {
+              // Your async code
+          });
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html
+
+  - id: rs102
+    name: tokio::sync::RwLock
+    category: synchronization
+    version: "tokio"
+    description: |
+      Async-aware read-write lock.
+      Better than std::sync for async contexts.
+    text: rwlock read write lock async tokio sync
+    example: |
+      use tokio::sync::RwLock;
+      use std::sync::Arc;
+      use std::collections::HashMap;
+
+      // ✅ Shared cache with RwLock
+      #[derive(Clone)]
+      struct Cache {
+          data: Arc<RwLock<HashMap<String, String>>>,
+      }
+
+      impl Cache {
+          fn new() -> Self {
+              Self {
+                  data: Arc::new(RwLock::new(HashMap::new())),
+              }
+          }
+          
+          // Multiple readers allowed
+          async fn get(&self, key: &str) -> Option<String> {
+              let data = self.data.read().await;
+              data.get(key).cloned()
+          }
+          
+          // Exclusive write access
+          async fn set(&self, key: String, value: String) {
+              let mut data = self.data.write().await;
+              data.insert(key, value);
+          }
+          
+          // Get or compute pattern
+          async fn get_or_insert<F, Fut>(&self, key: &str, f: F) -> String
+          where
+              F: FnOnce() -> Fut,
+              Fut: std::future::Future<Output = String>,
+          {
+              // Try read first
+              {
+                  let data = self.data.read().await;
+                  if let Some(value) = data.get(key) {
+                      return value.clone();
+                  }
+              }
+              
+              // Compute and write
+              let value = f().await;
+              let mut data = self.data.write().await;
+              data.entry(key.to_string())
+                  .or_insert(value)
+                  .clone()
+          }
+      }
+
+      // ✅ Usage
+      #[tokio::main]
+      async fn main() {
+          let cache = Cache::new();
+          
+          cache.set("key1".into(), "value1".into()).await;
+          
+          // Concurrent reads
+          let (r1, r2) = tokio::join!(
+              cache.get("key1"),
+              cache.get("key1"),
+          );
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/tokio/latest/tokio/sync/struct.RwLock.html
+
+  - id: rs103
+    name: JoinSet for Task Management
+    category: concurrency
+    version: "tokio 1.32+"
+    description: |
+      Manage groups of spawned tasks.
+      Auto-cancel on drop, collect results.
+    text: joinset task management spawn cancel tokio
+    example: |
+      use tokio::task::JoinSet;
+
+      // ✅ Spawn and collect results
+      async fn fetch_all(urls: Vec<String>) -> Vec<Result<String, Error>> {
+          let mut set = JoinSet::new();
+          
+          for url in urls {
+              set.spawn(async move {
+                  fetch_url(&url).await
+              });
+          }
+          
+          let mut results = Vec::new();
+          while let Some(result) = set.join_next().await {
+              match result {
+                  Ok(data) => results.push(data),
+                  Err(join_err) => {
+                      eprintln!("Task panicked: {:?}", join_err);
+                  }
+              }
+          }
+          results
+      }
+
+      // ✅ With bounded concurrency
+      async fn process_with_limit(items: Vec<Item>, limit: usize) -> Vec<Result<(), Error>> {
+          let mut set = JoinSet::new();
+          let mut results = Vec::new();
+          let mut items_iter = items.into_iter();
+          
+          // Fill initial pool
+          for item in items_iter.by_ref().take(limit) {
+              set.spawn(async move { process(item).await });
+          }
+          
+          // Process as slots free up
+          while let Some(result) = set.join_next().await {
+              results.push(result.unwrap());
+              
+              if let Some(item) = items_iter.next() {
+                  set.spawn(async move { process(item).await });
+              }
+          }
+          
+          results
+      }
+
+      // ✅ Cancel all on first error
+      async fn fetch_or_fail(urls: Vec<String>) -> Result<Vec<String>, Error> {
+          let mut set = JoinSet::new();
+          
+          for url in urls {
+              set.spawn(async move { fetch_url(&url).await });
+          }
+          
+          let mut results = Vec::new();
+          while let Some(result) = set.join_next().await {
+              match result? {
+                  Ok(data) => results.push(data),
+                  Err(e) => {
+                      set.abort_all(); // Cancel remaining
+                      return Err(e);
+                  }
+              }
+          }
+          
+          Ok(results)
+      }
+
+      // ✅ JoinSet drops = auto abort all tasks
+      async fn with_scope() {
+          let mut set = JoinSet::new();
+          set.spawn(long_running_task());
+          // Drop set here cancels the task
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/tokio/latest/tokio/task/struct.JoinSet.html
+
+  - id: rs104
+    name: Tokio Streams
+    category: iteration
+    version: "tokio-stream"
+    description: |
+      Async iteration with streams.
+      Backpressure, buffering, combining.
+    text: stream async iterator tokio-stream buffered
+    example: |
+      use tokio_stream::{StreamExt, wrappers::ReceiverStream};
+      use tokio::sync::mpsc;
+
+      // ✅ Create stream from channel
+      async fn process_messages() {
+          let (tx, rx) = mpsc::channel(32);
+          let stream = ReceiverStream::new(rx);
+          
+          tokio::spawn(async move {
+              for i in 0..10 {
+                  tx.send(i).await.unwrap();
+              }
+          });
+          
+          tokio::pin!(stream);
+          while let Some(msg) = stream.next().await {
+              println!("Received: {}", msg);
+          }
+      }
+
+      // ✅ Stream combinators
+      async fn transform_stream() {
+          let numbers = tokio_stream::iter(1..=10);
+          
+          let processed = numbers
+              .filter(|n| *n % 2 == 0)    // Keep even
+              .map(|n| n * 2)              // Double
+              .take(3);                    // First 3
+          
+          tokio::pin!(processed);
+          while let Some(n) = processed.next().await {
+              println!("{}", n); // 4, 8, 12
+          }
+      }
+
+      // ✅ Buffered async operations
+      async fn fetch_with_buffer(urls: Vec<String>) -> Vec<String> {
+          let stream = tokio_stream::iter(urls);
+          
+          let results: Vec<String> = stream
+              .map(|url| async move { fetch_url(&url).await })
+              .buffered(10)  // Max 10 concurrent
+              .filter_map(|r| async { r.ok() })
+              .collect()
+              .await;
+          
+          results
+      }
+
+      // ✅ Chunks for batch processing
+      async fn batch_process() {
+          let items = tokio_stream::iter(0..100);
+          
+          let chunked = items.chunks_timeout(10, std::time::Duration::from_secs(1));
+          
+          tokio::pin!(chunked);
+          while let Some(batch) = chunked.next().await {
+              process_batch(batch).await;
+          }
+      }
+
+      // ✅ Merge multiple streams
+      async fn merge_streams() {
+          let s1 = tokio_stream::iter(vec![1, 3, 5]);
+          let s2 = tokio_stream::iter(vec![2, 4, 6]);
+          
+          let merged = tokio_stream::StreamExt::merge(s1, s2);
+          
+          tokio::pin!(merged);
+          while let Some(n) = merged.next().await {
+              println!("{}", n); // Interleaved
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.rs/tokio-stream/
+
+  - id: rs105
+    name: Cooperative Cancellation
+    category: cancellation
+    version: "tokio"
+    description: |
+      Graceful task cancellation with cancellation tokens.
+      Clean shutdown patterns.
+    text: cancellation cancel token shutdown graceful tokio
+    example: |
+      use tokio::sync::{broadcast, watch};
+      use tokio_util::sync::CancellationToken;
+
+      // ✅ CancellationToken pattern
+      async fn worker(token: CancellationToken) {
+          loop {
+              tokio::select! {
+                  _ = token.cancelled() => {
+                      println!("Worker cancelled, cleaning up...");
+                      cleanup().await;
+                      break;
+                  }
+                  _ = do_work() => {
+                      // Work completed
+                  }
+              }
+          }
+      }
+
+      async fn main_with_cancellation() {
+          let token = CancellationToken::new();
+          
+          // Spawn workers
+          let t1 = token.clone();
+          let w1 = tokio::spawn(async move { worker(t1).await });
+          
+          let t2 = token.clone();
+          let w2 = tokio::spawn(async move { worker(t2).await });
+          
+          // Cancel after 5 seconds
+          tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+          token.cancel();
+          
+          // Wait for graceful shutdown
+          let _ = tokio::join!(w1, w2);
+      }
+
+      // ✅ Child tokens (hierarchical cancellation)
+      async fn parent_child_cancellation() {
+          let parent = CancellationToken::new();
+          let child = parent.child_token();
+          
+          // Cancelling parent cancels child
+          parent.cancel();
+          assert!(child.is_cancelled());
+          
+          // Cancelling child does NOT cancel parent
+      }
+
+      // ✅ Graceful shutdown with signal
+      async fn graceful_shutdown() {
+          let token = CancellationToken::new();
+          let token_clone = token.clone();
+          
+          // Signal handler
+          tokio::spawn(async move {
+              tokio::signal::ctrl_c().await.unwrap();
+              println!("Received Ctrl+C, initiating shutdown...");
+              token_clone.cancel();
+          });
+          
+          // Main loop
+          loop {
+              tokio::select! {
+                  _ = token.cancelled() => {
+                      println!("Shutdown complete");
+                      break;
+                  }
+                  result = process_next() => {
+                      handle(result);
+                  }
+              }
+          }
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html

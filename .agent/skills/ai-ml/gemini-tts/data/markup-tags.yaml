@@ -1,0 +1,95 @@
+# =============================================================================
+# markup-tags.yaml — TTS Markup Tags Reference
+# =============================================================================
+# 15 patterns for speech control via inline markup tags
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 15
+
+modes:
+  non_speech_sounds:
+    description: "Add natural non-verbal sounds"
+    tags:
+      - tag: "[laughing]"
+        desc: "Laughter"
+        example: "[laughing] That's the funniest thing I've heard all day!"
+      - tag: "[sigh]"
+        desc: "Exasperated or tired sigh"
+        example: "[sigh] I suppose we'll have to start over."
+      - tag: "[gasp]"
+        desc: "Surprise or shock"
+        example: "[gasp] I had no idea!"
+      - tag: "[clears throat]"
+        desc: "Throat clearing"
+        example: "[clears throat] Allow me to begin."
+      - tag: "[sniffles]"
+        desc: "Sniffling"
+        example: "[sniffles] It's just so beautiful."
+
+  speaking_style:
+    description: "Modify vocal delivery style"
+    tags:
+      - tag: "[whispering]"
+        desc: "Quiet, secretive tone"
+        example: "[whispering] I have something important to tell you..."
+      - tag: "[sarcasm]"
+        desc: "Sarcastic delivery"
+        example: "[sarcasm] Oh wow, what a brilliant plan."
+      - tag: "[cheerfully]"
+        desc: "Happy, upbeat tone"
+        example: "[cheerfully] Great news everyone!"
+      - tag: "[sadly]"
+        desc: "Somber, melancholic tone"
+        example: "[sadly] I'm afraid it's too late."
+      - tag: "[excitedly]"
+        desc: "Energetic, enthusiastic"
+        example: "[excitedly] You won't believe what happened!"
+      - tag: "[calmly]"
+        desc: "Peaceful, measured delivery"
+        example: "[calmly] Take a deep breath and relax."
+
+  vocalized_sounds:
+    description: "Musical and vocalized expressions"
+    tags:
+      - tag: "[singing]"
+        desc: "Singing voice"
+        example: "[singing] Happy birthday to you..."
+      - tag: "[humming]"
+        desc: "Humming melody"
+        example: "[humming] Hmm hmm hmm..."
+
+  pacing_pronunciation:
+    description: "Control speech speed and timing"
+    tags:
+      - tag: "[extremely fast]"
+        desc: "Rapid speech delivery"
+        example: "[extremely fast] And the winner of tonight's grand prize is..."
+      - tag: "[slowly]"
+        desc: "Deliberate, slow delivery"
+        example: "[slowly] Let me explain this one more time..."
+      - tag: "[pause: Xs]"
+        desc: "Insert silence (X seconds)"
+        example: "The answer is... [pause: 2s] ...forty-two."
+
+usage_tips:
+  - "Tags go BEFORE the text they modify"
+  - "Tags affect the sentence/phrase immediately following"
+  - "Combine tags: '[whispering][slowly] This is very important...'"
+  - "Tags are case-insensitive: [LAUGHING] = [laughing]"
+  - "Not all tags work equally well — experiment with model"
+  - "Pro model handles markup most naturally"
+
+combinations:
+  example_dialogue: |
+    [cheerfully] Welcome to today's episode!
+    [pause: 1s]
+    [calmly] Today we're going to discuss something fascinating.
+    [excitedly] You won't believe the results we found!
+    [whispering] But first, let me share a little secret...
+    [laughing] Just kidding, it's not that dramatic.
+    [sigh] Anyway, let's get started.
+
+# =============================================================================
+# _DOMYH Awesome Code • Markup Tags v1.0_
+# =============================================================================

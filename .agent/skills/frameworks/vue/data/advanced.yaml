@@ -1,0 +1,265 @@
+# =============================================================================
+# Vue Advanced Patterns (Feb 2026)
+# =============================================================================
+# Vapor Mode, Performance, TypeScript
+
+metadata:
+  skill: vue
+  domain: advanced
+  version: "3.6"
+  updated: "2026-02-11"
+  patterns_count: 5
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: vue007
+    name: Vapor Mode (Vue 3.6)
+    category: performance
+    version: "3.6+"
+    description: |
+      No-VDOM compilation for Solid.js-like performance.
+      88% smaller baseline, direct DOM manipulation.
+    text: vapor mode no vdom virtual dom performance solid
+    example: |
+      <!-- ✅ Vue 3.6 Vapor Mode: Add 'vapor' attribute -->
+      <script setup vapor>
+      import { ref } from 'vue';
+
+      // Same Composition API, but compiled to direct DOM updates
+      const count = ref(0);
+
+      function increment() {
+        count.value++;
+      }
+      </script>
+
+      <template>
+        <button @click="increment">Count: {{ count }}</button>
+      </template>
+
+      <!-- ✅ Benefits:
+      - 88% smaller baseline (50KB → 6KB)
+      - Solid.js-like performance
+      - No Virtual DOM overhead
+      - Direct DOM manipulation
+      - Gradual adoption (mix with VDOM components)
+
+      ⚠️ Current Limitations (beta):
+      - SSR Hydration: experimental
+      - Async Components: limited
+      - Transitions: partial support
+      - keepAlive: not yet
+      - Suspense: not yet -->
+    severity: HIGH
+    docs_url: https://github.com/vuejs/vue-vapor
+
+  - id: vue008
+    name: Provide/Inject TypeScript
+    category: patterns
+    version: "3.0+"
+    description: Type-safe dependency injection
+    text: provide inject dependency injection typescript symbol
+    example: |
+      // ✅ Define injection keys with types
+      // injection-keys.ts
+      import type { InjectionKey, Ref } from 'vue';
+
+      export interface User {
+        id: string;
+        name: string;
+        email: string;
+      }
+
+      export const userKey = Symbol('user') as InjectionKey<Ref<User>>;
+      export const themeKey = Symbol('theme') as InjectionKey<Ref<'light' | 'dark'>>;
+
+      // Provider component
+      <script setup lang="ts">
+      import { provide, ref } from 'vue';
+      import { userKey, themeKey } from './injection-keys';
+
+      const user = ref({ id: '1', name: 'John', email: 'j@e.com' });
+      const theme = ref<'light' | 'dark'>('dark');
+
+      provide(userKey, user);
+      provide(themeKey, theme);
+      </script>
+
+      // Consumer component
+      <script setup lang="ts">
+      import { inject } from 'vue';
+      import { userKey, themeKey } from './injection-keys';
+
+      // ✅ Type-safe injection
+      const user = inject(userKey);  // Ref<User> | undefined
+      const theme = inject(themeKey, ref('light'));  // With default
+      </script>
+    severity: MEDIUM
+    docs_url: https://vuejs.org/guide/components/provide-inject.html
+
+  - id: vue009
+    name: VueUse Utilities
+    category: ecosystem
+    version: "10+"
+    description: Essential composition utilities collection
+    text: vueuse composable utility mouse fetch storage intersection
+    example: |
+      <script setup>
+      import { 
+        useMouse, 
+        useLocalStorage, 
+        useFetch,
+        useIntersectionObserver,
+        useDebounce,
+        useThrottleFn,
+        onClickOutside,
+      } from '@vueuse/core';
+
+      // ✅ Mouse position
+      const { x, y } = useMouse();
+
+      // ✅ Persistent storage
+      const preferences = useLocalStorage('user-prefs', {
+        theme: 'dark',
+        sidebar: 'expanded',
+      });
+
+      // ✅ Fetch with auto-refetch
+      const { data, error, isFetching } = useFetch('/api/users')
+        .get()
+        .json();
+
+      // ✅ Intersection observer
+      const target = ref(null);
+      const { isIntersecting } = useIntersectionObserver(target);
+
+      // ✅ Debounced value
+      const searchQuery = ref('');
+      const debouncedQuery = useDebounce(searchQuery, 300);
+
+      // ✅ Click outside handler
+      const modal = ref(null);
+      onClickOutside(modal, () => closeModal());
+      </script>
+
+      <template>
+        <div ref="modal">Modal content</div>
+        <div ref="target" v-if="isIntersecting">Lazy loaded!</div>
+      </template>
+    severity: MEDIUM
+    docs_url: https://vueuse.org/
+
+  - id: vue010
+    name: TypeScript Best Practices
+    category: typescript
+    version: "3.5+"
+    description: Type-safe Vue component patterns
+    text: typescript props emit generic type infer
+    example: |
+      <script setup lang="ts">
+      // ✅ Typed props
+      interface Props {
+        title: string;
+        count?: number;
+        items: string[];
+      }
+
+      const props = withDefaults(defineProps<Props>(), {
+        count: 0,
+      });
+
+      // ✅ Typed emits
+      interface Emits {
+        (e: 'update', value: string): void;
+        (e: 'delete', id: number): void;
+      }
+
+      const emit = defineEmits<Emits>();
+
+      // ✅ Generic components (Vue 3.5+)
+      // GenericList.vue
+      <script setup lang="ts" generic="T extends { id: string | number }">
+      defineProps<{
+        items: T[];
+        selected?: T;
+      }>();
+
+      defineEmits<{
+        select: [item: T];
+      }>();
+      </script>
+
+      // ✅ Typed slots
+      defineSlots<{
+        default(props: { item: T }): any;
+        empty(): any;
+      }>();
+      </script>
+
+      <!-- Usage with inferred types -->
+      <!-- <GenericList :items="users" @select="handleUser">
+        <template #default="{ item }">
+          {{ item.name }}
+        </template>
+      </GenericList> -->
+    severity: HIGH
+    docs_url: https://vuejs.org/guide/typescript/composition-api.html
+
+  - id: vue011
+    name: Performance Optimization
+    category: performance
+    version: "3.5+"
+    description: Key techniques for fast Vue apps
+    text: performance optimization v-memo shallowRef computed cache
+    example: |
+      <script setup>
+      import { shallowRef, triggerRef, computed } from 'vue';
+
+      // ✅ shallowRef for large lists
+      const largeList = shallowRef([...items]);
+      function updateList(newItems) {
+        largeList.value = newItems;  // Only this triggers reactivity
+      }
+
+      // ✅ Computed with getter only (cached)
+      const expensiveComputed = computed(() => {
+        return items.value.reduce((acc, item) => acc + calculate(item), 0);
+      });
+      </script>
+
+      <template>
+        <!-- ✅ v-memo for skipping updates -->
+        <div v-for="item in items" :key="item.id" v-memo="[item.id, item.selected]">
+          <ExpensiveComponent :item="item" />
+        </div>
+
+        <!-- ✅ v-once for static content -->
+        <div v-once>
+          <h1>{{ staticTitle }}</h1>
+          <p>This never re-renders</p>
+        </div>
+
+        <!-- ✅ Async components for code splitting -->
+        <Suspense>
+          <AsyncHeavyComponent />
+        </Suspense>
+      </template>
+
+      <!-- ✅ Additional tips:
+      - Use shallowRef for large objects/arrays
+      - Avoid inline arrow functions in templates
+      - Use v-show instead of v-if for frequent toggles
+      - Keep component trees shallow -->
+    severity: MEDIUM
+    docs_url: https://vuejs.org/guide/best-practices/performance.html

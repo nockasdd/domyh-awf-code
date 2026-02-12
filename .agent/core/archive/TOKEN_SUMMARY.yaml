@@ -1,0 +1,121 @@
+# DOMYH Awesome Code — Token Optimization Summary v6.2.1
+# This file provides quick reference for token-optimized usage
+
+# =============================================================================
+# QUICK STATS
+# =============================================================================
+
+stats:
+  workflows: 28
+  skills: 22
+  personas: 7
+  languages_supported: 30+
+
+# Token budgets
+tokens:
+  idle: 2500
+  typical: 6000
+  peak: 12000
+  max_allowed: 25000
+
+# =============================================================================
+# WORKFLOW SIZE CLASSIFICATION
+# =============================================================================
+
+# Workflow classifications are defined in TOKEN_LOADING.yaml (Single Source of Truth)
+# See: core/TOKEN_LOADING.yaml → optimized_workflows section
+# Categories: small (<10KB), medium (10-20KB), large (>20KB)
+workflow_reference: core/TOKEN_LOADING.yaml
+
+# =============================================================================
+# OPTIMIZATION FEATURES ENABLED
+# =============================================================================
+
+features:
+  progressive_loading: true
+  section_based_lazy_load: true
+  dynamic_skill_unload: true
+  context_cleanup_on_switch: true
+  automatic_summarization: true
+  template_externalization: true
+  shared_patterns_library: true
+  # New in : Memory Engine
+  hierarchical_memory: true
+  cross_session_persistence: true
+  auto_save_decisions: true
+  compact_audit_storage: true
+
+# =============================================================================
+# FILES ADDED FOR OPTIMIZATION
+# =============================================================================
+
+optimization_files:
+  - core/PATTERNS.yaml # Shared patterns to reduce duplication
+  - core/TEMPLATES.yaml # External templates registry
+  - core/TOKEN_LOADING.yaml # Section-based lazy loading config
+  - core/TOKEN_SUMMARY.yaml # This file
+  # Phase 1: Memory Engine
+  - core/MEMORY_ENGINE.yaml # 4-layer memory architecture
+  - core/session_cache.json # Active session state
+  - memory/session.md # Session notes (Layer 2)
+  - memory/decisions.md # Decisions log (Layer 3)
+  - memory/state.json # Project state (Layer 3)
+  - memory/audit_summary.json # Compact audit data (Layer 3)
+  # Phase 2: Robust Memory
+  - core/SUMMARIZATION_ENGINE.yaml # 3-level hierarchical summarization
+  - core/CLEANUP_ENGINE.yaml # Automated cleanup triggers
+  - core/MEMORY_UTILS.yaml # Memory commands and utilities
+  - memory/cleanup_log.json # Cleanup operation log
+  - memory/metrics.json # Memory system metrics
+  - memory/archive/ # Archive directory structure
+  # Phase 3: Semantic Memory (Optional — NOT YET IMPLEMENTED)
+  - core/SEMANTIC_ENGINE.yaml # LanceDB vector database config
+  - memory/vectors/ # Vector database storage
+  # Phase 4: Intelligent Memory (2025+ Best Practices)
+  - core/CONTEXT_LOADER.yaml # Just-in-Time context loading
+  - core/CONTEXT_INJECTOR.yaml # Smart context injection
+  - core/CONTEXT_PRIORITY.yaml # Multi-factor priority scoring
+  - core/ACTIVE_MEMORY.yaml # Self-directing memory (Letta-style)
+  - core/MEMORY_CONSOLIDATION.yaml # Auto-consolidation engine
+  - memory/active_memories.json # Active memory storage
+  - memory/insights.md # Memory reflection insights
+  - memory/consolidated.md # Consolidated memory view
+  # Phase 5: Cleanup & SSoT (v6.2.1)
+  - core/SCORING_FORMULA.yaml # SSoT for priority scoring
+  - core/MEMORY_PATHS.yaml # SSoT for memory paths
+  - core/TOKEN_BUDGETS.yaml # SSoT for all token limits
+
+# =============================================================================
+# MEMORY LAYER TOKEN BUDGETS (Optimized with JIT)
+# =============================================================================
+
+memory_budgets:
+  # Core layers
+  layer_1_working: 500 # Always in context
+  layer_2_session: 2000 # Loaded on demand
+  layer_3_state: 500 # Structured JSON
+  layer_4_semantic: 2500 # Optional vector DB
+
+  # Phase 4: JIT Optimization
+  jit_savings: 1500 # Saved via just-in-time loading
+  smart_injection_budget: 2000 # Max for injected context
+  active_memory_budget: 500 # For active memory actions
+
+  # Totals
+  total_memory_max: 5500 # Base without JIT
+  total_with_jit: 4000 # ~3.1% of 128K limit (36% improvement)
+
+# =============================================================================
+# USER TIPS FOR MINIMAL TOKEN USAGE
+# =============================================================================
+
+tips:
+  - "Use specific commands (not just the workflow name)"
+  - "Avoid loading multiple large workflows in sequence"
+  - "Use /workflow suggest for quick recommendations"
+  - "Use /recap before switching contexts"
+  - "Skills auto-unload after 5 minutes of inactivity"
+  # New tips for memory system
+  - "Session notes auto-save every 10 interactions"
+  - "Decisions are automatically logged for cross-session reference"
+  - "Use /recap to restore context from previous sessions"

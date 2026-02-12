@@ -1,0 +1,448 @@
+# =============================================================================
+# Ruby Core Patterns (Feb 2026)
+# Version: Ruby 3.3/3.4
+# =============================================================================
+
+metadata:
+  skill: ruby
+  domain: core
+  version: "3.4"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rb001
+    name: Pattern Matching
+    category: language
+    version: "Ruby3"
+    description: |
+      Structural pattern matching.
+      Case/in, array/hash patterns.
+    text: pattern matching case in deconstruct hash
+    example: |
+      # ✅ Basic pattern matching
+      def parse_response(response)
+        case response
+        in { status: 200, body: }
+          puts "Success: #{body}"
+        in { status: 404 }
+          puts "Not found"
+        in { status: 500..599 => code }
+          puts "Server error: #{code}"
+        in { status: }
+          puts "Unknown status: #{status}"
+        end
+      end
+
+      # ✅ Array patterns
+      def process(data)
+        case data
+        in []
+          "Empty"
+        in [single]
+          "Single: #{single}"
+        in [first, second]
+          "Pair: #{first}, #{second}"
+        in [first, *rest]
+          "First: #{first}, Rest: #{rest.size} items"
+        end
+      end
+
+      # ✅ Guard clauses
+      def categorize(user)
+        case user
+        in { age: } if age < 18
+          :minor
+        in { age: } if age >= 65
+          :senior
+        in { verified: true }
+          :verified_adult
+        else
+          :adult
+        end
+      end
+
+      # ✅ Rightward assignment
+      response => { status:, body: }
+      puts status  # Use destructured values
+
+      # ✅ Find pattern (Ruby 3.0+)
+      case [1, 2, 3, 4, 5]
+      in [*, 3, *after]
+        puts "Found 3, followed by: #{after}"
+      end
+
+      # ✅ Custom deconstruct
+      class Point
+        attr_reader :x, :y
+        
+        def initialize(x, y)
+          @x, @y = x, y
+        end
+        
+        def deconstruct
+          [x, y]  # For array pattern
+        end
+        
+        def deconstruct_keys(keys)
+          { x: x, y: y }  # For hash pattern  
+        end
+      end
+
+      point = Point.new(3, 4)
+      point => { x:, y: }
+      puts "x=#{x}, y=#{y}"
+    severity: HIGH
+    docs_url: https://docs.ruby-lang.org/en/master/syntax/pattern_matching_rdoc.html
+
+  - id: rb002
+    name: Blocks and Procs
+    category: language
+    version: "Ruby"
+    description: |
+      Closures and iterators.
+      Blocks, procs, lambdas, method references.
+    text: block proc lambda yield ampersand iterator
+    example: |
+      # ✅ Block basics
+      [1, 2, 3].each { |n| puts n }
+
+      [1, 2, 3].map do |n|
+        n * 2
+      end
+
+      # ✅ yield to block
+      def with_timing
+        start = Time.now
+        result = yield
+        elapsed = Time.now - start
+        puts "Took #{elapsed.round(2)}s"
+        result
+      end
+
+      with_timing { expensive_operation }
+
+      # ✅ Explicit block parameter
+      def repeat(times, &block)
+        times.times { block.call }
+      end
+
+      # ✅ Proc vs Lambda
+      my_proc = Proc.new { |x| x * 2 }
+      my_lambda = ->(x) { x * 2 }  # Lambda literal
+
+      # Lambda checks arity, Proc doesn't
+      my_lambda.call(5)  # => 10
+      my_proc.call(5)    # => 10
+
+      # ✅ Method reference
+      def double(x)
+        x * 2
+      end
+
+      [1, 2, 3].map(&method(:double))  # => [2, 4, 6]
+
+      # ✅ Symbol to proc
+      words = ["hello", "world"]
+      words.map(&:upcase)  # => ["HELLO", "WORLD"]
+      words.map(&:length)  # => [5, 5]
+
+      # ✅ Numbered parameters (Ruby 2.7+)
+      [1, 2, 3].map { _1 * 2 }  # => [2, 4, 6]
+
+      [[1, 2], [3, 4]].map { _1 + _2 }  # => [3, 7]
+
+      # ✅ Chaining enumerators
+      (1..Float::INFINITY)
+        .lazy
+        .select { |n| n.odd? }
+        .map { |n| n * 2 }
+        .take(5)
+        .to_a  # => [2, 6, 10, 14, 18]
+    severity: HIGH
+    docs_url: https://docs.ruby-lang.org/en/master/Proc.html
+
+  - id: rb003
+    name: Modules and Mixins
+    category: oop
+    version: "Ruby"
+    description: |
+      Code organization and mixins.
+      Include, extend, prepend.
+    text: module mixin include extend prepend concern
+    example: |
+      # ✅ Module as namespace
+      module MyApp
+        module Services
+          class UserService
+            def find(id)
+              # ...
+            end
+          end
+        end
+      end
+
+      user_service = MyApp::Services::UserService.new
+
+      # ✅ Module as mixin
+      module Loggable
+        def log(message)
+          puts "[#{self.class}] #{message}"
+        end
+      end
+
+      class User
+        include Loggable  # Instance methods
+        
+        def save
+          log("Saving user...")
+        end
+      end
+
+      # ✅ extend for class methods
+      module ClassMethods
+        def find_all
+          # Class method
+        end
+      end
+
+      class User
+        extend ClassMethods
+      end
+
+      User.find_all
+
+      # ✅ prepend for method wrapping
+      module Timestampable
+        def save
+          @updated_at = Time.now
+          super  # Call original save
+        end
+      end
+
+      class Model
+        prepend Timestampable
+        
+        def save
+          puts "Saving..."
+        end
+      end
+
+      # ✅ Modern pattern with Concern
+      module Trackable
+        extend ActiveSupport::Concern
+        
+        included do
+          before_save :set_timestamps
+        end
+        
+        class_methods do
+          def recent
+            where("created_at > ?", 1.week.ago)
+          end
+        end
+        
+        private
+        
+        def set_timestamps
+          self.updated_at = Time.current
+        end
+      end
+
+      # ✅ Module with configuration
+      module Configurable
+        def self.included(base)
+          base.extend(ClassMethods)
+        end
+        
+        module ClassMethods
+          def config
+            @config ||= {}
+          end
+          
+          def configure(key, value)
+            config[key] = value
+          end
+        end
+      end
+    severity: MEDIUM
+    docs_url: https://docs.ruby-lang.org/en/master/Module.html
+
+  - id: rb004
+    name: Error Handling
+    category: safety
+    version: "Ruby"
+    description: |
+      Exception handling patterns.
+      Rescue, ensure, custom errors.
+    text: exception rescue raise ensure retry error
+    example: |
+      # ✅ Basic rescue
+      begin
+        risky_operation
+      rescue StandardError => e
+        puts "Error: #{e.message}"
+        puts e.backtrace.first(5)
+      ensure
+        cleanup
+      end
+
+      # ✅ Multiple rescue clauses
+      def process_file(path)
+        file = File.open(path)
+        data = JSON.parse(file.read)
+        # ...
+      rescue Errno::ENOENT
+        puts "File not found: #{path}"
+        nil
+      rescue JSON::ParserError => e
+        puts "Invalid JSON: #{e.message}"
+        nil
+      ensure
+        file&.close
+      end
+
+      # ✅ Inline rescue
+      result = risky_operation rescue default_value
+
+      # ✅ Retry pattern
+      def fetch_with_retry(url, max_retries: 3)
+        retries = 0
+        begin
+          HTTP.get(url)
+        rescue HTTP::TimeoutError
+          retries += 1
+          if retries <= max_retries
+            sleep(2 ** retries)  # Exponential backoff
+            retry
+          else
+            raise
+          end
+        end
+      end
+
+      # ✅ Custom error classes
+      module MyApp
+        class Error < StandardError; end
+        
+        class ValidationError < Error
+          attr_reader :field, :message
+          
+          def initialize(field, message)
+            @field = field
+            @message = message
+            super("#{field}: #{message}")
+          end
+        end
+        
+        class NotFoundError < Error
+          attr_reader :resource, :id
+          
+          def initialize(resource, id)
+            @resource = resource
+            @id = id
+            super("#{resource} with id #{id} not found")
+          end
+        end
+      end
+
+      # Raise custom errors
+      raise MyApp::ValidationError.new(:email, "is invalid")
+      raise MyApp::NotFoundError.new("User", 123)
+
+      # ✅ Re-raise with context
+      rescue => e
+        raise MyApp::Error, "Failed to process: #{e.message}", e.backtrace
+      end
+    severity: MEDIUM
+    docs_url: https://docs.ruby-lang.org/en/master/Exception.html
+
+  - id: rb005
+    name: Metaprogramming
+    category: language
+    version: "Ruby"
+    description: |
+      Dynamic code generation.
+      method_missing, define_method, class_eval.
+    text: metaprogramming method_missing define_method eval
+    example: |
+      # ✅ define_method
+      class Model
+        ATTRIBUTES = [:name, :email, :age]
+        
+        ATTRIBUTES.each do |attr|
+          define_method(attr) do
+            @attributes[attr]
+          end
+          
+          define_method("#{attr}=") do |value|
+            @attributes[attr] = value
+          end
+        end
+        
+        def initialize
+          @attributes = {}
+        end
+      end
+
+      # ✅ method_missing for delegation
+      class Wrapper
+        def initialize(target)
+          @target = target
+        end
+        
+        def method_missing(method, *args, &block)
+          if @target.respond_to?(method)
+            @target.send(method, *args, &block)
+          else
+            super
+          end
+        end
+        
+        def respond_to_missing?(method, include_private = false)
+          @target.respond_to?(method) || super
+        end
+      end
+
+      # ✅ class_eval for dynamic class modification
+      def add_timestamp_to(klass)
+        klass.class_eval do
+          attr_accessor :created_at, :updated_at
+          
+          define_method(:touch) do
+            @updated_at = Time.now
+          end
+        end
+      end
+
+      # ✅ Macro-style methods
+      class ActiveRecord::Base
+        def self.belongs_to(name)
+          define_method(name) do
+            # Implementation
+          end
+          
+          define_method("#{name}=") do |value|
+            # Implementation
+          end
+        end
+      end
+
+      class Order < ActiveRecord::Base
+        belongs_to :user  # Creates user and user= methods
+      end
+
+      # ✅ instance_variable_set/get
+      class DynamicModel
+        def initialize(attrs = {})
+          attrs.each do |key, value|
+            instance_variable_set("@#{key}", value)
+            self.class.define_method(key) { instance_variable_get("@#{key}") }
+          end
+        end
+      end
+
+      model = DynamicModel.new(name: "John", age: 30)
+      model.name  # => "John"
+    severity: MEDIUM
+    docs_url: https://docs.ruby-lang.org/en/master/Object.html

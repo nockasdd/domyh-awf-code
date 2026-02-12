@@ -1,14 +1,14 @@
 ---
 name: sql
 detect: ["*.sql", "migrations/*.sql", "*.pgsql"]
-version: "6.1.2"
+version: "6.2.1"
 category: database
 tier: 1
 ---
 
-# SQL Patterns — DOMYH Awesome Code v6.1.2
+# SQL Patterns — DOMYH Awesome Code
 
-> **Version**: PostgreSQL 16+, MySQL 8.4+
+> **Version**: PostgreSQL 18, MySQL 8.4+
 > **Focus**: Query optimization, migrations, performance
 > **Philosophy**: Declarative, set-based thinking
 
@@ -21,25 +21,37 @@ Use for: Database queries, data analysis, migrations, reporting.
 
 ---
 
+## 📦 What's New in PostgreSQL 18 (2025)
+
+| Feature                       | Description                     |
+| ----------------------------- | ------------------------------- |
+| **Async I/O (AIO)**           | Revolutionary performance boost |
+| **uuidv7()**                  | Timestamp-ordered UUIDs         |
+| **Virtual Generated Columns** | Computed on read                |
+| **Skip Scan**                 | B-tree optimization             |
+| **pg_stat_io**                | I/O monitoring                  |
+| **NOT NULL/FK enhancements**  | Data integrity                  |
+
+---
+
 ## 📦 Database Comparison
 
-| Feature      | PostgreSQL   | MySQL        | SQLite      |
-| ------------ | ------------ | ------------ | ----------- |
-| JSON support | JSONB 🏆     | JSON         | JSON1 ext   |
-| Full-text    | Built-in     | Full-text    | FTS5        |
-| CTEs         | Recursive    | Recursive    | Recursive   |
-| Window funcs | Full         | Full         | Basic       |
-| UPSERT       | ON CONFLICT  | ON DUPLICATE | ON CONFLICT |
-| Best for     | Complex apps | Web apps     | Embedded    |
+| Feature   | PostgreSQL 18  | MySQL 8.4+ | SQLite    |
+| --------- | -------------- | ---------- | --------- |
+| Async I/O | ✅ AIO 🏆      | Partial    | ❌        |
+| JSON      | JSONB 🏆       | JSON       | JSON1     |
+| UUIDv7    | ✅ Built-in 🏆 | Plugin     | ❌        |
+| CTEs      | Recursive      | Recursive  | Recursive |
+| Window    | Full           | Full       | Basic     |
+| Best for  | Complex apps   | Web apps   | Embedded  |
 
 ---
 
 ## 🔄 Query Patterns
 
-### Modern SELECT
+### Modern SELECT with CTEs
 
 ```sql
--- ✅ Use CTEs for readability
 WITH active_orders AS (
   SELECT
     user_id,
@@ -58,22 +70,45 @@ user_ranks AS (
   FROM active_orders
 )
 SELECT
-  u.id,
-  u.name,
-  u.email,
-  ur.order_count,
-  ur.total_spent,
-  ur.spending_rank
+  u.id, u.name, u.email,
+  ur.order_count, ur.total_spent, ur.spending_rank
 FROM users u
 JOIN user_ranks ur ON u.id = ur.user_id
-WHERE ur.percentile >= 0.9  -- Top 10%
+WHERE ur.percentile >= 0.9
 ORDER BY ur.spending_rank;
+```
+
+### 🆕 UUIDv7 (PostgreSQL 18)
+
+```sql
+-- Timestamp-ordered UUIDs (better for indexing)
+CREATE TABLE orders (
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
+  user_id UUID NOT NULL,
+  total DECIMAL(10,2),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- UUIDv7 sorts chronologically!
+SELECT * FROM orders ORDER BY id;
+```
+
+### 🆕 Virtual Generated Columns
+
+```sql
+-- Computed on read (no storage)
+ALTER TABLE users
+ADD COLUMN full_name TEXT GENERATED ALWAYS AS (first_name || ' ' || last_name) VIRTUAL;
+
+-- vs STORED (computed on write)
+ALTER TABLE orders
+ADD COLUMN tax DECIMAL GENERATED ALWAYS AS (total * 0.1) STORED;
 ```
 
 ### Window Functions
 
 ```sql
--- Running totals
+-- Running totals with moving average
 SELECT
   date,
   amount,
@@ -84,57 +119,32 @@ SELECT
   ) AS moving_avg_7d
 FROM daily_sales;
 
--- Ranking within groups
+-- Ranking with gap detection
 SELECT
   department,
   employee_name,
   salary,
   ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rank,
-  salary - LAG(salary) OVER (PARTITION BY department ORDER BY salary DESC) AS gap_to_higher
+  salary - LAG(salary) OVER (PARTITION BY department ORDER BY salary DESC) AS gap
 FROM employees;
-
--- Lead/Lag for comparisons
-SELECT
-  month,
-  revenue,
-  LAG(revenue, 1) OVER (ORDER BY month) AS prev_month,
-  revenue - LAG(revenue, 1) OVER (ORDER BY month) AS growth,
-  ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY month)) /
-        LAG(revenue) OVER (ORDER BY month), 2) AS growth_pct
-FROM monthly_revenue;
 ```
 
 ### Recursive CTEs
 
 ```sql
--- Hierarchical data (org chart)
 WITH RECURSIVE org_tree AS (
-  -- Base case: top-level managers
-  SELECT
-    id,
-    name,
-    manager_id,
-    1 AS level,
-    ARRAY[id] AS path
+  SELECT id, name, manager_id, 1 AS level, ARRAY[id] AS path
   FROM employees
   WHERE manager_id IS NULL
 
   UNION ALL
 
-  -- Recursive case: subordinates
-  SELECT
-    e.id,
-    e.name,
-    e.manager_id,
-    ot.level + 1,
-    ot.path || e.id
+  SELECT e.id, e.name, e.manager_id, ot.level + 1, ot.path || e.id
   FROM employees e
   JOIN org_tree ot ON e.manager_id = ot.id
-  WHERE NOT e.id = ANY(ot.path)  -- Prevent cycles
+  WHERE NOT e.id = ANY(ot.path)
 )
-SELECT
-  REPEAT('  ', level - 1) || name AS hierarchy,
-  level
+SELECT REPEAT('  ', level - 1) || name AS hierarchy, level
 FROM org_tree
 ORDER BY path;
 ```
@@ -146,68 +156,56 @@ ORDER BY path;
 ### Index Strategy
 
 ```sql
--- ✅ Create indexes for common queries
-CREATE INDEX CONCURRENTLY idx_orders_user_status
+-- Partial index (filtered)
+CREATE INDEX CONCURRENTLY idx_orders_active
 ON orders (user_id, status)
-WHERE status != 'cancelled';  -- Partial index
+WHERE status != 'cancelled';
 
--- ✅ Covering index (includes all needed columns)
+-- Covering index (includes columns)
 CREATE INDEX idx_orders_covering
 ON orders (user_id, created_at)
 INCLUDE (total, status);
 
--- ✅ GIN index for JSONB
+-- GIN for JSONB
 CREATE INDEX idx_products_attrs
 ON products USING GIN (attributes jsonb_path_ops);
 
--- ✅ Full-text search index
+-- Full-text search
 CREATE INDEX idx_posts_search
 ON posts USING GIN (to_tsvector('english', title || ' ' || body));
+```
+
+### 🆕 pg_stat_io Monitoring (PostgreSQL 18)
+
+```sql
+-- I/O statistics per backend type
+SELECT
+  backend_type,
+  object,
+  context,
+  reads,
+  writes,
+  extends,
+  fsyncs
+FROM pg_stat_io
+WHERE reads > 0 OR writes > 0;
 ```
 
 ### Query Analysis
 
 ```sql
--- Always check query plans
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT * FROM orders WHERE user_id = 123;
 
--- Key metrics to watch:
+-- Watch for:
 -- - Seq Scan on large tables → Need index
--- - Nested Loop with high row count → Consider hash join
+-- - Nested Loop with high rows → Consider hash join
 -- - Buffers: shared hit vs read → Cache efficiency
-```
-
-### Batch Operations
-
-```sql
--- ✅ Batch inserts
-INSERT INTO logs (user_id, action, created_at)
-SELECT
-  user_id,
-  'migration_complete',
-  NOW()
-FROM users
-WHERE migrated = false
-ON CONFLICT (user_id, action) DO NOTHING;
-
--- ✅ Batch updates with LIMIT
-WITH to_update AS (
-  SELECT id
-  FROM orders
-  WHERE status = 'pending'
-    AND created_at < NOW() - INTERVAL '7 days'
-  LIMIT 1000
-  FOR UPDATE SKIP LOCKED
-)
-UPDATE orders
-SET status = 'expired'
-WHERE id IN (SELECT id FROM to_update);
 ```
 
 ---
 
-## 🔒 JSONB Patterns (PostgreSQL)
+## 🔒 JSONB Patterns
 
 ```sql
 -- Query JSONB
@@ -218,28 +216,14 @@ WHERE attributes->>'color' = 'red'
 -- Update JSONB field
 UPDATE products
 SET attributes = jsonb_set(
-  attributes,
-  '{discount}',
-  '"20%"'::jsonb
-)
-WHERE id = 1;
-
--- Append to JSONB array
-UPDATE products
-SET attributes = jsonb_set(
-  attributes,
-  '{tags}',
-  (attributes->'tags') || '["sale"]'::jsonb
+  attributes, '{discount}', '"20%"'::jsonb
 )
 WHERE id = 1;
 
 -- Aggregate to JSONB
 SELECT jsonb_agg(
-  jsonb_build_object(
-    'id', id,
-    'name', name,
-    'total', total
-  ) ORDER BY total DESC
+  jsonb_build_object('id', id, 'name', name, 'total', total)
+  ORDER BY total DESC
 ) AS top_customers
 FROM customers
 LIMIT 10;
@@ -250,41 +234,19 @@ LIMIT 10;
 ## 📦 Migration Patterns
 
 ```sql
--- ✅ Add column with default (non-blocking in PG 11+)
+-- Add column with default (non-blocking in PG 11+)
 ALTER TABLE users
 ADD COLUMN preferences JSONB DEFAULT '{}'::jsonb;
 
--- ✅ Create index concurrently (non-blocking)
+-- Create index concurrently (non-blocking)
 CREATE INDEX CONCURRENTLY idx_users_email
 ON users (email);
 
--- ✅ Rename with backward compatibility
-ALTER TABLE old_orders RENAME TO orders_archive;
-CREATE VIEW old_orders AS SELECT * FROM orders_archive;
-
--- ✅ Safe column removal
+-- Safe column removal (3-step)
 -- Step 1: Stop writing
 -- Step 2: Deploy code that doesn't read
 -- Step 3: Drop column
 ALTER TABLE users DROP COLUMN deprecated_field;
-```
-
----
-
-## 🧪 Testing Queries
-
-```sql
--- Test with transaction rollback
-BEGIN;
-
--- Your test INSERT/UPDATE
-INSERT INTO orders (user_id, total) VALUES (1, 99.99);
-
--- Verify
-SELECT * FROM orders WHERE user_id = 1;
-
--- Always rollback in tests
-ROLLBACK;
 ```
 
 ---
@@ -297,6 +259,7 @@ ROLLBACK;
 - [ ] Proper indexes exist
 - [ ] No SELECT \* in production
 - [ ] Pagination with keyset (not OFFSET)
+- [ ] pg_stat_io monitored
 
 ### Safety
 
@@ -313,4 +276,17 @@ ROLLBACK;
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • SQL PostgreSQL 16+_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine:
+
+| Domain    | Query Examples                      |
+| --------- | ----------------------------------- |
+| Query     | "window function ranking partition" |
+| Index     | "partial covering GIN index"        |
+| PG18      | "uuidv7 virtual generated columns"  |
+| Migration | "safe column removal ALTER TABLE"   |
+
+---
+
+_DOMYH Awesome Code • SQL PostgreSQL 18 • 2026_

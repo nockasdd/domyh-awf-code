@@ -1,0 +1,39 @@
+name: audit-pro
+version: "6.2.1"
+display: Audit Pro System
+category: cross-cutting
+tier: 1
+priority: 1
+
+desc: "12-Expert Panel audit (5 core + 7 conditional) with 222 checkpoints and bilingual EN/VN personas. Conditional activation auto-detects project type (UI, DB, regulated, AI, cloud). ISO 25010, CWE Top 25, OWASP Top 10, WCAG 2.2, GDPR, SRE. HSA-queryable."
+
+triggers:
+  file_patterns: []
+  keywords:
+    [
+      audit,
+      review,
+      assess,
+      compliance,
+      quality gate,
+      production readiness,
+      security audit,
+      uat,
+      slo,
+      accessibility,
+    ]
+  intents:
+    [
+      run audit,
+      check production readiness,
+      security review,
+      quality assessment,
+      full audit,
+      ai safety review,
+    ]
+
+data_files:
+  - data/checklists.yaml
+  - data/scoring.yaml
+
+related_skills: [security, testing]

@@ -1,0 +1,95 @@
+# MCP Transport Patterns - HSA MCP Skill
+# Version: MCP SDK 2025-2026
+# Updated: 2026-02-12
+
+metadata:
+  skill: mcp
+  domain: transport
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: tp001
+    name: stdio_transport
+    category: transport
+    description: Local stdio transport for development and CLI tools
+    text: stdio transport local development cli pipe subprocess
+    example: "new StdioServerTransport(); // stdin/stdout"
+    use_case: Local MCP servers, IDE integrations, same-machine
+    severity: INFO
+
+  - id: tp002
+    name: streamable_http
+    category: transport
+    description: Streamable HTTP transport for production remote servers
+    text: streamable http transport production remote sse server-sent events
+    example: "new StreamableHTTPServerTransport({ sessionId })"
+    use_case: Remote servers, multi-user, cloud deployment
+    severity: INFO
+    requires_auth: true
+
+  - id: tp003
+    name: server_setup_stdio
+    category: transport
+    description: Basic MCP server setup with stdio transport
+    text: server create stdio setup basic initialize
+    example: |
+      const server = new McpServer({ name: "my-server", version: "1.0.0" });
+      const transport = new StdioServerTransport();
+      await server.connect(transport);
+
+  - id: tp004
+    name: server_setup_http
+    category: transport
+    description: MCP server with Streamable HTTP + Express
+    text: server http express setup production oauth
+    example: |
+      app.post("/mcp", async (req, res) => {
+        const transport = new StreamableHTTPServerTransport({ sessionId: req.sessionId });
+        await server.connect(transport);
+        await transport.handleRequest(req, res);
+      });
+
+  - id: tp005
+    name: transport_selection
+    category: transport
+    description: Decision matrix for choosing transport
+    text: transport selection guide choose stdio http decision
+    decision_matrix:
+      stdio:
+        when: "Local dev, CLI, same machine, no auth needed"
+        pros: "Simple, no network, fast"
+        cons: "Local only, single client"
+      streamable_http:
+        when: "Production, remote, multi-user, cloud"
+        pros: "Scalable, auth support, firewall friendly"
+        cons: "Complex setup, requires OAuth 2.1"
+
+  - id: tp006
+    name: connection_lifecycle
+    category: transport
+    description: MCP connection lifecycle management
+    text: connection lifecycle initialize shutdown cleanup graceful
+    example: |
+      server.onclose = async () => { await cleanup(); };
+      process.on("SIGTERM", async () => { await server.close(); });
+
+  - id: tp007
+    name: session_management
+    category: transport
+    description: Session management for HTTP transport
+    text: session management http stateless reconnect resume
+    example: "transport = new StreamableHTTPServerTransport({ sessionId: uuid() });"
+    note: "Sessions are optional; prefer stateless design"
+
+  - id: tp008
+    name: error_transport
+    category: transport
+    description: Transport-level error handling
+    text: transport error handling reconnect retry timeout
+    example: |
+      server.onerror = (error) => {
+        console.error("[MCP Error]", error);
+        // Don't crash - log and continue
+      };

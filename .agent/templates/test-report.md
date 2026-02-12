@@ -1,6 +1,6 @@
 ---
 name: test-report
-version: "6.1.2"
+version: "6.2.1"
 type: report
 triggers: ["/test"]
 ---
@@ -49,4 +49,4 @@ triggers: ["/test"]
 
 ---
 
-_DOMYH Awesome Code v6.1_
+\_DOMYH Awesome Code

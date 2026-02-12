@@ -1,6 +1,6 @@
 ---
 name: researcher
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "res-001"
 
 # =============================================================================
@@ -69,6 +69,9 @@ tools:
     - grep_search # Find in codebase
     - find_by_name
     - list_dir
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - replace_file_content
     - run_command
@@ -188,4 +191,4 @@ output_template: |
   - [Any limitations or uncertainties]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Researcher Persona
+# DOMYH Awesome Code • Researcher Persona

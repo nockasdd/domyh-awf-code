@@ -1,0 +1,85 @@
+# =============================================================================
+# workspace-patterns.yaml — Package Manager Workspace Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+pnpm:
+  config: |
+    # pnpm-workspace.yaml
+    packages:
+      - 'apps/*'
+      - 'packages/*'
+
+  commands:
+    install: "pnpm install"
+    add_dep: "pnpm add lodash --filter @org/web"
+    add_shared: "pnpm add -w typescript"
+    run_script: "pnpm --filter @org/web dev"
+    run_all: "pnpm -r run build"
+
+  advantages:
+    - "Disk-efficient (content-addressable store)"
+    - "Strict dependency isolation"
+    - "Fast installations"
+    - "Built-in workspace protocol"
+
+npm:
+  config: |
+    // package.json
+    {
+      "workspaces": ["apps/*", "packages/*"]
+    }
+
+  commands:
+    install: "npm install"
+    add_dep: "npm install lodash -w @org/web"
+    run_script: "npm run dev -w @org/web"
+    run_all: "npm run build --workspaces"
+
+yarn_berry:
+  config: |
+    // package.json
+    {
+      "workspaces": ["apps/*", "packages/*"]
+    }
+
+  commands:
+    install: "yarn install"
+    add_dep: "yarn workspace @org/web add lodash"
+    run_script: "yarn workspace @org/web dev"
+    run_all: "yarn workspaces foreach -A run build"
+
+  pnp:
+    description: "Plug'n'Play — zero-install, no node_modules"
+    enable: "yarn set version berry"
+
+internal_packages:
+  description: "Share code between workspace packages"
+  setup: |
+    // packages/ui/package.json
+    {
+      "name": "@org/ui",
+      "main": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+
+    // apps/web/package.json
+    {
+      "dependencies": {
+        "@org/ui": "workspace:*"
+      }
+    }
+
+  tsconfig: |
+    // tsconfig.json (root)
+    {
+      "compilerOptions": {
+        "paths": {
+          "@org/ui": ["./packages/ui/src"],
+          "@org/utils": ["./packages/utils/src"]
+        }
+      }
+    }
+
+# _DOMYH Awesome Code • Workspace Patterns_

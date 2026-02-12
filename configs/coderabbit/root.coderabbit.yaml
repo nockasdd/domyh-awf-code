@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: vi-VN # Default; user can change via nock awf init --language en
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+
+  path_instructions:
+    - path: "**/*.ts"
+      instructions: |
+        Follow DOMYH Awesome Code standards:
+        - TypeScript strict mode
+        - Explicit types, no any
+        - Proper error handling
+        - Clean code principles
+
+    - path: "**/*.vue"
+      instructions: |
+        Follow DOMYH Awesome Code standards:
+        - Vue 3 Composition API with <script setup>
+        - Type-safe props and emits
+        - Proper ref/reactive usage
+
+    - path: "**/*.go"
+      instructions: |
+        Follow DOMYH Awesome Code standards:
+        - Effective Go conventions
+        - Proper error wrapping
+        - Context propagation
+
+chat:
+  auto_reply: true
+
+# DOMYH Awesome Code Agent Framework
+# Commands: /ap, /code, /debug, /plan, /test, /deploy, /refactor,
+#   /init, /review, /recap, /save, /status, /help, /fix, /dev,
+#   /doc, /env, /generate, /git, /migrate, /monitor, /perf,
+#   /clean, /upgrade, /scaffold, /security, /suggest, /think
+#
+# Personas: Developer, Architect, Auditor, Debugger, Tester,
+#   DevOps, Documenter, Planner, Researcher, Orchestrator, Security
+#
+# Skills: Progressive Disclosure (META.yaml → SKILL.md → ADVANCED.md)
+# MCP Tools: hsa_get_context, hsa_detect_stack, hsa_check_changes, hsa_prepare_handoff, hsa_filter_tools
+# Constitutional Rules: Tier 0 (Immutable) → Tier 1 (Safety) → Tier 2 (Execution)

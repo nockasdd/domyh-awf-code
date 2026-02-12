@@ -1,0 +1,261 @@
+metadata:
+  skill: security
+  domain: ai_ml_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: ai-ml-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - subcategory
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - example_vuln
+    - example_fix
+patterns:
+  - id: AIML-01
+    name: Prompt Injection
+    severity: CRITICAL
+    category: LLM
+    subcategory: Input
+    description: Malicious prompts manipulate LLM behavior via user input
+    detection_pattern: (prompt.*user|input.*llm|openai.*messages)(?!.*sanitize|filter)
+    fix_pattern: Sanitize user input use system prompts defensively
+    languages:
+      - python
+      - javascript
+      - typescript
+    example_vuln: "messages = [{'role': 'user', 'content': user_input}]"
+    example_fix: 'messages = [{''role'': ''system'', ''content'': STRICT_SYSTEM_PROMPT},\n{''role'': ''user'', ''content'': sanitize(user_input)}]'
+  - id: AIML-02
+    name: Indirect Prompt Injection
+    severity: CRITICAL
+    category: LLM
+    subcategory: Input
+    description: LLM processes external content containing hidden instructions
+    detection_pattern: (fetch.*url|read.*document|web.*search).*llm(?!.*strip|clean)
+    fix_pattern: Scan and sanitize all external content before LLM processing
+    languages:
+      - python
+      - javascript
+    example_vuln: doc = fetch(url)\nresponse = llm.complete(doc)
+    example_fix: doc = fetch(url)\ncleaned = strip_instructions(doc)\nresponse = llm.complete(cleaned)
+  - id: AIML-03
+    name: Jailbreaking Vulnerability
+    severity: HIGH
+    category: LLM
+    subcategory: Safety
+    description: System prompts can be bypassed with crafted inputs
+    detection_pattern: (system.*prompt|instruction)(?!.*guard|check)
+    fix_pattern: Use prompt injection detection and content filtering
+    languages:
+      - python
+      - javascript
+    example_vuln: system = 'Be helpful'\nllm.chat(user_input)
+    example_fix: 'if detect_jailbreak(user_input): reject()\nif not content_policy_check(response): filter()'
+  - id: AIML-04
+    name: Training Data Poisoning
+    severity: CRITICAL
+    category: ML
+    subcategory: Training
+    description: Malicious data injected into training datasets
+    detection_pattern: (train|fit|fine_tune).*data(?!.*validate|verify)
+    fix_pattern: Validate training data verify sources implement data provenance
+    languages: python
+    example_vuln: model.train(user_data)
+    example_fix: validated = validate_samples(user_data)\nmodel.train(validated)
+  - id: AIML-05
+    name: Model Extraction Attack
+    severity: HIGH
+    category: ML
+    subcategory: Model
+    description: API allows extraction of model weights or architecture
+    detection_pattern: (model|weights).*api(?!.*rate.*limit|auth)
+    fix_pattern: Implement rate limiting watermarking query detection
+    languages:
+      - python
+      - javascript
+    example_vuln: '@app.route(''/predict'')\ndef predict(input): return model(input).tolist()'
+    example_fix: '@app.route(''/predict'')\n@rate_limit(100/hour)\n@detect_extraction\ndef predict(input): return {''result'': label} # No raw logits'
+  - id: AIML-06
+    name: Model Inversion Attack
+    severity: HIGH
+    category: ML
+    subcategory: Privacy
+    description: Model predictions leak training data information
+    detection_pattern: (predict|confidence).*return(?!.*quantize|noise)
+    fix_pattern: Return only top-K predictions add noise to outputs
+    languages: python
+    example_vuln: "return {'probs': model(x).numpy()}"
+    example_fix: "return {'label': top_prediction} # No raw probabilities"
+  - id: AIML-07
+    name: Adversarial Input Attack
+    severity: HIGH
+    category: ML
+    subcategory: Robustness
+    description: Model vulnerable to crafted inputs causing misclassification
+    detection_pattern: (model\\.predict|classify)(?!.*adversarial|robust)
+    fix_pattern: Implement adversarial training input preprocessing
+    languages: python
+    example_vuln: prediction = model.predict(image)
+    example_fix: prediction = model.predict(preprocess_defense(image))
+  - id: AIML-08
+    name: Insecure Model Loading
+    severity: CRITICAL
+    category: ML
+    subcategory: Runtime
+    description: Model loaded from untrusted source without verification
+    detection_pattern: (pickle\\.load|torch\\.load|load_model)(?!.*verify|trusted)
+    fix_pattern: Verify model signatures use safetensors format
+    languages: python
+    example_vuln: "model = torch.load('model.pkl') # Arbitrary code exec"
+    example_fix: model = safetensors.torch.load_file('model.safetensors')
+  - id: AIML-09
+    name: LLM Data Leakage
+    severity: CRITICAL
+    category: LLM
+    subcategory: Privacy
+    description: LLM returns sensitive data from training or context
+    detection_pattern: (context|rag).*(?!.*filter|redact).*response
+    fix_pattern: Filter sensitive data from context and responses
+    languages:
+      - python
+      - javascript
+    example_vuln: response = llm.chat(context=all_documents)
+    example_fix: filtered_context = redact_pii(documents)\nresponse = pii_filter(llm.chat(context=filtered_context))
+  - id: AIML-10
+    name: Insecure AI Output Handling
+    severity: HIGH
+    category: LLM
+    subcategory: Integration
+    description: LLM output used without validation in code execution
+    detection_pattern: (llm|gpt|claude).*response.*eval|exec(?!.*sandbox)
+    fix_pattern: Validate and sandbox all AI-generated code
+    languages:
+      - python
+      - javascript
+    example_vuln: code = llm.generate_code()\nexec(code)
+    example_fix: code = llm.generate_code()\nif validate_syntax(code):\n  run_sandboxed(code)
+  - id: AIML-11
+    name: Excessive Agency
+    severity: HIGH
+    category: LLM
+    subcategory: Safety
+    description: LLM has too many capabilities without human oversight
+    detection_pattern: (tools|functions).*(?!.*approval|confirm).*execute
+    fix_pattern: Require human approval for sensitive operations
+    languages:
+      - python
+      - javascript
+    example_vuln: tools = [delete_file, send_email, api_call]\nllm.run(tools)
+    example_fix: tools = [read_only_tools]\nif action.is_sensitive:\n  await require_approval()
+  - id: AIML-12
+    name: RAG Poisoning
+    severity: HIGH
+    category: LLM
+    subcategory: RAG
+    description: Retrieval-Augmented Generation with untrusted sources
+    detection_pattern: (vector\\.search|rag).*external(?!.*trust|verify)
+    fix_pattern: Validate and score RAG sources filter untrusted content
+    languages: python
+    example_vuln: "docs = vectordb.search(query) # Any source"
+    example_fix: docs = vectordb.search(query)\ntrusted = [d for d in docs if d.source in TRUSTED]
+  - id: AIML-13
+    name: Embedding Leakage
+    severity: MEDIUM
+    category: ML
+    subcategory: Privacy
+    description: Embeddings expose sensitive information from inputs
+    detection_pattern: (embed|encode).*return(?!.*noise|truncate)
+    fix_pattern: Add differential privacy noise to embeddings
+    languages: python
+    example_vuln: "return model.encode(text) # Full embedding"
+    example_fix: "return add_noise(model.encode(text)[:128]) # Truncated & noised"
+  - id: AIML-14
+    name: AI Supply Chain Risk
+    severity: HIGH
+    category: ML
+    subcategory: Supply
+    description: Using untrusted models from public hubs without verification
+    detection_pattern: (huggingface|modelzoo|download)(?!.*verify|scan)
+    fix_pattern: Scan models for backdoors verify provenance signatures
+    languages: python
+    example_vuln: model = AutoModel.from_pretrained('random/model')
+    example_fix: model = AutoModel.from_pretrained('verified-org/model')\nverify_signature(model)
+  - id: AIML-15
+    name: Missing AI Guardrails
+    severity: HIGH
+    category: LLM
+    subcategory: Safety
+    description: LLM deployed without content safety guardrails
+    detection_pattern: (llm|chat|complete)(?!.*guard|moderate|filter)
+    fix_pattern: Implement input and output content moderation
+    languages:
+      - python
+      - javascript
+    example_vuln: response = llm.complete(prompt)
+    example_fix: 'if not is_safe(prompt): reject()\nresponse = llm.complete(prompt)\nif not is_safe(response): filter()'
+  - id: AIML-16
+    name: Bias Exploitation
+    severity: MEDIUM
+    category: ML
+    subcategory: Fairness
+    description: Model biases exploited for adversarial purposes
+    detection_pattern: (predict|classify)(?!.*fairness|bias.*check)
+    fix_pattern: Monitor for demographic bias implement fairness checks
+    languages: python
+    example_vuln: result = model.predict(input)
+    example_fix: 'result = model.predict(input)\nif bias_detected(result): flag_for_review()'
+  - id: AIML-17
+    name: Denial of Wallet
+    severity: HIGH
+    category: LLM
+    subcategory: Resource
+    description: Expensive AI operations triggered without limits
+    detection_pattern: (openai|anthropic)\\.(?!.*budget|limit)
+    fix_pattern: Implement token budgets and cost controls
+    languages:
+      - python
+      - javascript
+    example_vuln: "response = openai.chat(messages) # No limits"
+    example_fix: 'if token_count(messages) > MAX_TOKENS: reject()\nwith budget_limit(max_cost=1.0):\n  response = openai.chat(messages)'
+  - id: AIML-18
+    name: Shadow AI Usage
+    severity: MEDIUM
+    category: Compliance
+    subcategory: Governance
+    description: Unauthorized AI tools used in production without approval
+    detection_pattern: (openai|claude|gemini)(?!.*approved|registered)
+    fix_pattern: Register and approve all AI services audit usage
+    languages:
+      - python
+      - javascript
+    example_vuln: "# Using ChatGPT for code review without approval"
+    example_fix: '# Only use company-approved AI services\n# Log all AI usage for audit'
+  - id: AIML-19
+    name: Feature Extraction Leak
+    severity: MEDIUM
+    category: ML
+    subcategory: Privacy
+    description: Model features reveal sensitive attribute information
+    detection_pattern: (features|encode).*user(?!.*anonymize)
+    fix_pattern: Anonymize features remove identifying attributes
+    languages: python
+    example_vuln: features = extract_features(user_data)
+    example_fix: features = anonymize(extract_features(mask_pii(user_data)))
+  - id: AIML-20
+    name: Membership Inference
+    severity: HIGH
+    category: ML
+    subcategory: Privacy
+    description: Model reveals whether data was used in training
+    detection_pattern: (predict|probability).*return(?!.*defend)
+    fix_pattern: Apply differential privacy or output perturbation
+    languages: python
+    example_vuln: return model.predict_proba(x)
+    example_fix: return defend_membership_inference(model.predict(x))

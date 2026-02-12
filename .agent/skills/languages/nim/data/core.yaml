@@ -1,0 +1,241 @@
+# =============================================================================
+# Nim Core Patterns (Feb 2026)
+# Version: Nim 2.2+
+# =============================================================================
+
+metadata:
+  skill: nim
+  domain: core
+  version: "2.2"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: nim001
+    name: Type System
+    category: types
+    version: "Nim"
+    description: |
+      Nim's powerful type system.
+      Objects, variants, distinct types.
+    text: types object variant distinct enum tuple
+    example: |
+      # ✅ Object types
+      type
+        Person = object
+          name: string
+          age: int
+        
+        # Object with inheritance
+        Animal = object of RootObj
+          name: string
+        
+        Dog = object of Animal
+          breed: string
+
+      # ✅ Variant types (tagged unions)
+      type
+        NodeKind = enum
+          nkInt, nkFloat, nkString
+        
+        Node = object
+          case kind: NodeKind
+          of nkInt: intVal: int
+          of nkFloat: floatVal: float
+          of nkString: strVal: string
+
+      let intNode = Node(kind: nkInt, intVal: 42)
+      let strNode = Node(kind: nkString, strVal: "hello")
+
+      # ✅ Distinct types (type-safe aliases)
+      type
+        Dollars = distinct float
+        Euros = distinct float
+
+      proc `+`(a, b: Dollars): Dollars = Dollars(float(a) + float(b))
+
+      let price = Dollars(10.0)
+      # let mixed = price + Euros(5.0)  # Compile error!
+
+      # ✅ Ref vs value types
+      type
+        RefPerson = ref Person  # Heap allocated
+        ValuePerson = Person    # Stack allocated
+
+      var rp = new(Person)  # Creates RefPerson
+      rp.name = "Alice"
+    severity: HIGH
+    docs_url: https://nim-lang.org/docs/manual.html#types
+
+  - id: nim002
+    name: Macros and Templates
+    category: metaprogramming
+    version: "Nim"
+    description: |
+      Compile-time code generation.
+      Templates, macros, AST manipulation.
+    text: macro template metaprogramming ast compile-time
+    example: |
+      import macros
+
+      # ✅ Templates - compile-time substitution
+      template debug(msg: string, data: untyped) =
+        when defined(debug):
+          echo "[DEBUG] ", msg, ": ", data
+
+      debug("value", 42)  # Expands at compile time
+
+      # ✅ Generic templates
+      template withLock(lock: Lock, body: untyped) =
+        acquire(lock)
+        try:
+          body
+        finally:
+          release(lock)
+
+      withLock(myLock):
+        sharedData += 1
+
+      # ✅ Macros - AST manipulation
+      macro dumpTree(body: untyped): untyped =
+        echo treeRepr(body)
+        result = body
+
+      # ✅ Custom DSL with macros
+      macro html(body: untyped): string =
+        result = newLit("")
+        for node in body:
+          # Build HTML string from DSL
+          discard
+
+      # ✅ Loop unrolling
+      macro unrollFor(count: static[int], body: untyped): untyped =
+        result = newStmtList()
+        for i in 0..<count:
+          result.add(body)
+
+      # ✅ Generate repetitive code
+      macro createAccessors(T: typedesc, fields: varargs[untyped]): untyped =
+        result = newStmtList()
+        for field in fields:
+          let getter = ident("get" & $field)
+          result.add quote do:
+            proc `getter`(self: `T`): auto = self.`field`
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/manual.html#macros
+
+  - id: nim003
+    name: Effects System
+    category: safety
+    version: "Nim"
+    description: |
+      Track side effects at compile time.
+      Pure functions, exceptions, GC safety.
+    text: effects pure noSideEffect raises gcsafe
+    example: |
+      # ✅ Pure functions (no side effects)
+      func add(a, b: int): int {.noSideEffect.} =
+        return a + b
+
+      # 'func' is shorthand for 'proc {.noSideEffect.}'
+      func multiply(a, b: int): int =
+        a * b
+
+      # ✅ Exception tracking
+      proc mightFail() {.raises: [IOError, ValueError].} =
+        raise newException(IOError, "oops")
+
+      proc neverFails() {.raises: [].} =
+        # Cannot raise any exceptions
+        discard
+
+      # ✅ GC safety for threads
+      proc threadSafe(data: ptr int) {.gcsafe.} =
+        # Safe to call from threads
+        data[] += 1
+
+      # ✅ Combined effects
+      proc safeCompute(x: int): int {.noSideEffect, raises: [], gcsafe.} =
+        x * 2
+
+      # ✅ Effect inference
+      proc inferred(x: int): int =
+        # Nim infers this is pure
+        x + 1
+
+      # ✅ Tags for custom effects
+      type DbEffect = object of RootEffect
+
+      proc queryDb(): seq[string] {.tags: [DbEffect].} =
+        @["result"]
+
+      proc pureLogic(): int {.tags: [].} =
+        # Cannot call queryDb here
+        42
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/manual.html#effect-system
+
+  - id: nim004
+    name: Iterators
+    category: iterators
+    version: "Nim"
+    description: |
+      Custom iterators with yield.
+      Inline and closure iterators.
+    text: iterator yield inline closure for loop
+    example: |
+      # ✅ Inline iterator (zero overhead)
+      iterator countUp(a, b: int): int =
+        var i = a
+        while i <= b:
+          yield i
+          inc i
+
+      for i in countUp(1, 10):
+        echo i
+
+      # ✅ Closure iterator (stateful)
+      iterator fibonacci(): int {.closure.} =
+        var a = 0
+        var b = 1
+        while true:
+          yield a
+          let next = a + b
+          a = b
+          b = next
+
+      let fib = fibonacci
+      echo fib()  # 0
+      echo fib()  # 1
+      echo fib()  # 1
+
+      # ✅ Two-phase iteration (items + pairs)
+      type MySeq = object
+        data: seq[int]
+
+      iterator items(s: MySeq): int =
+        for item in s.data:
+          yield item
+
+      iterator pairs(s: MySeq): tuple[key: int, val: int] =
+        for i, item in s.data:
+          yield (i, item)
+
+      let mySeq = MySeq(data: @[10, 20, 30])
+
+      for item in mySeq:
+        echo item
+
+      for i, item in mySeq:
+        echo i, ": ", item
+
+      # ✅ Filter iterator
+      iterator filter[T](s: openArray[T], pred: proc(x: T): bool): T =
+        for item in s:
+          if pred(item):
+            yield item
+
+      for x in filter([1, 2, 3, 4, 5], proc(x: int): bool = x mod 2 == 0):
+        echo x  # 2, 4
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/manual.html#iterators

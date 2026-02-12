@@ -1,0 +1,36 @@
+{
+  "name": "DOMYH Awesome Code",
+  "version": "v6.2.1",
+  "ide": "Continue.dev",
+  "value": "continue",
+
+  "activation": {
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/fix"],
+    "auto_context": true
+  },
+
+  "skills": {
+    "loading": "progressive",
+    "max_active": 3
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v1.0.0 Context Management",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
+  },
+
+  "config_files": {
+    "config": "~/.continue/config.yaml",
+    "mcp_format": "yaml",
+    "mcp_note": "Continue uses YAML array format: mcpServers: [{name: 'server-name', ...}]"
+  }
+}

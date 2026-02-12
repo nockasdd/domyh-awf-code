@@ -2,16 +2,16 @@
 name: nextjs
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# Next.js Patterns — DOMYH Awesome Code v6.1.2
+# Next.js Patterns — DOMYH Awesome Code
 
-> **Version**: Next.js 15/16 (2025-2026)
+> **Version**: Next.js 16+ (Oct 2025)
 > **Runtime**: React meta-framework with App Router
-> **Philosophy**: Server-first, zero-config, progressive enhancement
+> **Philosophy**: Server-first, Turbopack default, Cache Components
 
 ---
 
@@ -66,14 +66,15 @@ Use for: React SSR/SSG apps, Server Components, App Router, API routes, Turbopac
 
 ---
 
-## 🏗️ Next.js 15/16 New Features
+## 🏗️ Next.js 16 New Features
 
-### Turbopack (Default in 16)
+### Turbopack (Default Bundler)
 
 ```bash
-# ✅ 2-5x faster production builds
-# ✅ 10x faster Fast Refresh
-# No configuration needed in Next.js 16
+# ✅ Turbopack is now the DEFAULT bundler in Next.js 16
+# 2-5x faster production builds
+# 10x faster Fast Refresh
+# No configuration needed
 
 # Enable FS cache for even faster builds (beta)
 # next.config.ts
@@ -83,6 +84,120 @@ export default {
       fileSystemCache: true,
     }
   }
+}
+```
+
+### Cache Components (Replaces PPR)
+
+```tsx
+// ✅ Next.js 16: Cache Components with 'use cache' directive
+// PPR flag removed - use explicit caching instead
+
+// app/products/page.tsx
+import { unstable_cache } from "next/cache";
+
+// Cache at component level
+export default async function ProductsPage() {
+  "use cache"; // ✅ New directive
+
+  const products = await db.product.findMany();
+  return <ProductList products={products} />;
+}
+
+// Enhanced cache APIs
+import { revalidateTag, updateTag, refresh } from "next/cache";
+
+export async function updateProduct(id: string, data: ProductData) {
+  await db.product.update({ where: { id }, data });
+
+  // ✅ New cache APIs in Next.js 16
+  updateTag("products"); // Partial update
+  refresh(); // Full refresh
+  revalidateTag("products"); // Revalidate
+}
+```
+
+### proxy.ts (Replaces middleware.ts)
+
+```tsx
+// ✅ Next.js 16: proxy.ts for network boundary control
+// Provides clearer separation than middleware.ts
+
+// proxy.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Auth check with clearer network boundary
+  const token = request.cookies.get("token");
+  if (pathname.startsWith("/dashboard") && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+```
+
+### React 19.2 Integration
+
+```tsx
+// ✅ Next.js 16 bundles React 19.2
+import { useOptimistic, useEffectEvent } from "react";
+
+// View Transitions API
+export function NavigationLink({ href, children }) {
+  return (
+    <Link href={href} viewTransition>
+      {children}
+    </Link>
+  );
+}
+
+// useEffectEvent for stable event handlers
+function ChatRoom({ roomId }) {
+  const onMessage = useEffectEvent((msg) => {
+    showNotification(msg);
+  });
+
+  useEffect(() => {
+    const connection = createConnection(roomId);
+    connection.on("message", onMessage);
+    return () => connection.disconnect();
+  }, [roomId]); // onMessage not in deps!
+}
+
+// Activity component for offscreen rendering
+import { Activity } from "react";
+
+<Activity mode="hidden">
+  <HeavyComponent />
+</Activity>;
+```
+
+### React Compiler (Stable)
+
+```tsx
+// ✅ Next.js 16: Built-in React Compiler support
+// Automatic memoization at build time
+
+// next.config.ts
+export default {
+  experimental: {
+    reactCompiler: true, // ✅ Stable in Next.js 16
+  },
+};
+
+// No more manual useMemo/useCallback needed!
+function ExpensiveComponent({ data }) {
+  // Compiler auto-memoizes this
+  const processed = data.map((item) => expensiveOperation(item));
+  return <List items={processed} />;
 }
 ```
 
@@ -273,7 +388,7 @@ export function UserForm({ userId }: { userId: string }) {
 
 ---
 
-## ⚡ Server Actions
+## ⚡ Server Functions
 
 ```tsx
 // app/actions.ts
@@ -319,7 +434,7 @@ export function LikeButton({ likes }: { likes: number }) {
 
   async function handleLike() {
     addOptimisticLike(null); // Instant UI update
-    await likePost(); // Server action
+    await likePost(); // Server function
   }
 
   return <button onClick={handleLike}>❤️ {optimisticLikes}</button>;
@@ -463,7 +578,7 @@ export default function Error({
 
 - [ ] Environment variables for secrets
 - [ ] Input validation with Zod
-- [ ] CSRF protection in Server Actions
+- [ ] CSRF protection in Server Functions
 - [ ] Middleware for auth
 
 ### SEO
@@ -475,4 +590,4 @@ export default function Error({
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Next.js 15/16_
+_DOMYH Awesome Code • Next.js 16+ • Turbopack Default • Cache Components_

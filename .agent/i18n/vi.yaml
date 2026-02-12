@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - Vietnamese Strings
-# i18n/vi.yaml v6.1.2 — Enhanced i18n System
+# i18n/vi.yaml v6.2.1 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version được sync từ core/VERSION.yaml
 # Sử dụng: Agent đọc language từ state.json → load file i18n tương ứng
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.1.2" # Sync từ VERSION.yaml
-  version_short: "v6.1.2"
+  version: "6.2.1" # Sync từ VERSION.yaml
+  version_short: "v6.2.1"
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"
   language_name: "Tiếng Việt"
@@ -49,10 +49,10 @@ commands:
     desc: "Kiểm tra code toàn diện với hội đồng 5 chuyên gia"
     help: "Sử dụng: /ap [scope] — scope: full | quick | security"
   code:
-    name: "Viết Code"
+    name: "Viết & Sửa Code"
     short: "Code"
-    desc: "Viết code production-ready với Auto Test Loop"
-    help: "Sử dụng: /code [mô tả] — Options: --test, --no-test, --plan"
+    desc: "Viết code production-ready, sửa/cải thiện dự án có sẵn"
+    help: "Sử dụng: /code [task] | /code fix [issue] | /code improve [target] | /code analyze [path]"
   debug:
     name: "Sửa Lỗi"
     short: "Debug"
@@ -68,11 +68,6 @@ commands:
     short: "Test"
     desc: "Chạy tests và viết test cases mới"
     help: "Sử dụng: /test [scope] — scope: unit | integration | e2e | all"
-  modify:
-    name: "Sửa Project"
-    short: "Modify"
-    desc: "Sửa và cải thiện project có sẵn"
-    help: "Sử dụng: /modify [mô tả vấn đề cần sửa]"
 
   # Planning (5)
   think:
@@ -140,20 +135,37 @@ commands:
     desc: "Review PRs với security và performance checks"
     help: "Sử dụng: /review [pr_link hoặc file_path]"
   refactor:
-    name: "Tái Cấu Trúc"
+    name: "Tái Cấu Trúc & Dọn Dẹp"
     short: "Refactor"
-    desc: "Cải thiện code structure mà không đổi behavior"
-    help: "Sử dụng: /refactor [scope] — scope: file | module | pattern"
-  clean:
-    name: "Dọn Dẹp"
-    short: "Clean"
-    desc: "Xóa dead code và unused dependencies"
-    help: "Sử dụng: /clean [type] — type: code | deps | all"
+    desc: "Refactor code, dọn dead code, sắp xếp imports"
+    help: "Sử dụng: /refactor [scope] | /refactor clean [type] | /refactor clean dead"
   upgrade:
     name: "Nâng Cấp"
     short: "Upgrade"
     desc: "Update dependencies với compatibility checks"
     help: "Sử dụng: /upgrade [scope] — scope: minor | major | security"
+
+  # Commands mới (v6.3)
+  git:
+    name: "Git"
+    short: "Git"
+    desc: "Trung tâm Git với conventional commits"
+    help: "Sử dụng: /git [command] — commit | branch | stash | log | diff | merge"
+  fix:
+    name: "Sửa Nhanh"
+    short: "Fix"
+    desc: "Pipeline sửa lỗi nhanh (tối đa 60s)"
+    help: "Sử dụng: /fix [error] | /fix last | /fix build | /fix lint | /fix types"
+  scaffold:
+    name: "Khởi Tạo Code"
+    short: "Scaffold"
+    desc: "Tạo components, pages, services từ patterns dự án"
+    help: "Sử dụng: /scaffold [type] [name] — component | page | service | module | api"
+  workflow:
+    name: "Workflow"
+    short: "Workflow"
+    desc: "Khám phá, chain, và quản lý workflows"
+    help: "Sử dụng: /workflow list | /workflow chain [a] [b] | /workflow suggest"
 
   # Utility (6)
   status:
@@ -166,21 +178,6 @@ commands:
     short: "Recap"
     desc: "Tóm tắt phiên làm việc"
     help: "Sử dụng: /recap"
-  suggest:
-    name: "Gợi Ý"
-    short: "Suggest"
-    desc: "Gợi ý bước tiếp theo dựa trên context"
-    help: "Sử dụng: /suggest"
-  save:
-    name: "Lưu"
-    short: "Save"
-    desc: "Lưu session vào memory files"
-    help: "Sử dụng: /save"
-  lang:
-    name: "Ngôn Ngữ"
-    short: "Lang"
-    desc: "Chuyển đổi ngôn ngữ agent"
-    help: "Sử dụng: /lang [code] — code: vi | en"
   help:
     name: "Trợ Giúp"
     short: "Help"
@@ -235,7 +232,7 @@ messages:
   progress_complete: "✅ Hoàn thành!"
   progress_failed: "❌ Thất bại"
 
-  # Deep Interview (v6.1.2)
+  # Deep Interview (v6.2.1)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "Feature này xử lý/quản lý cái gì chính xác?"
   interview_question_who: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
@@ -243,7 +240,7 @@ messages:
   interview_skip: "→ Đủ context, bỏ qua interview"
   interview_complete: "→ Đủ context, tiến hành lên kế hoạch..."
 
-  # Auto Test Loop (v6.1.2)
+  # Auto Test Loop (v6.2.1)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Đang thử cách khác..."
   test_loop_pass: "✅ Tests passed!"
@@ -256,7 +253,7 @@ messages:
     3️⃣ Gọi /debug để phân tích sâu
     4️⃣ Rollback về trước khi sửa
 
-  # Step Confirmation (v6.1.2)
+  # Step Confirmation (v6.2.1)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ ĐÃ XONG: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Tiếp task tiếp? (y/điều chỉnh/dừng)"
 

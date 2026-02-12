@@ -1,0 +1,136 @@
+# =============================================================================
+# e2e-patterns.yaml — End-to-End Testing Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+playwright:
+  config: |
+    // playwright.config.ts
+    import { defineConfig, devices } from '@playwright/test';
+    export default defineConfig({
+      testDir: './tests/e2e',
+      fullyParallel: true,
+      forbidOnly: !!process.env.CI,
+      retries: process.env.CI ? 2 : 0,
+      workers: process.env.CI ? 1 : undefined,
+      reporter: 'html',
+      use: {
+        baseURL: 'http://localhost:3000',
+        trace: 'on-first-retry',
+        screenshot: 'only-on-failure',
+      },
+      projects: [
+        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+        { name: 'mobile', use: { ...devices['iPhone 14'] } },
+      ],
+      webServer: {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: !process.env.CI,
+      },
+    });
+
+  page_objects: |
+    // tests/pages/LoginPage.ts
+    import { Page, Locator, expect } from '@playwright/test';
+
+    export class LoginPage {
+      readonly page: Page;
+      readonly emailInput: Locator;
+      readonly passwordInput: Locator;
+      readonly submitButton: Locator;
+
+      constructor(page: Page) {
+        this.page = page;
+        this.emailInput = page.getByLabel('Email');
+        this.passwordInput = page.getByLabel('Password');
+        this.submitButton = page.getByRole('button', { name: 'Sign in' });
+      }
+
+      async login(email: string, password: string) {
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        await this.submitButton.click();
+      }
+    }
+
+  fixtures: |
+    // tests/fixtures.ts
+    import { test as base } from '@playwright/test';
+    import { LoginPage } from './pages/LoginPage';
+
+    type Fixtures = {
+      loginPage: LoginPage;
+      authenticatedPage: Page;
+    };
+
+    export const test = base.extend<Fixtures>({
+      loginPage: async ({ page }, use) => {
+        const loginPage = new LoginPage(page);
+        await page.goto('/login');
+        await use(loginPage);
+      },
+      authenticatedPage: async ({ page }, use) => {
+        await page.goto('/login');
+        // Login with test credentials
+        await page.getByLabel('Email').fill('test@example.com');
+        await page.getByLabel('Password').fill('password');
+        await page.getByRole('button', { name: 'Sign in' }).click();
+        await page.waitForURL('/dashboard');
+        await use(page);
+      },
+    });
+
+  visual_regression: |
+    test('homepage visual', async ({ page }) => {
+      await page.goto('/');
+      await expect(page).toHaveScreenshot('homepage.png', {
+        maxDiffPixelRatio: 0.01,
+      });
+    });
+
+cypress:
+  custom_commands: |
+    // cypress/support/commands.ts
+    Cypress.Commands.add('login', (email: string, password: string) => {
+      cy.session([email, password], () => {
+        cy.visit('/login');
+        cy.get('[data-testid=email]').type(email);
+        cy.get('[data-testid=password]').type(password);
+        cy.get('[data-testid=submit]').click();
+        cy.url().should('include', '/dashboard');
+      });
+    });
+
+  intercept: |
+    it('loads user data', () => {
+      cy.intercept('GET', '/api/users/*', { fixture: 'user.json' }).as('getUser');
+      cy.visit('/profile');
+      cy.wait('@getUser');
+      cy.get('[data-testid=username]').should('contain', 'John');
+    });
+
+best_practices:
+  selectors:
+    preferred: "data-testid, role, label, text"
+    avoid: "CSS classes, IDs, XPath"
+    example: |
+      ✅ page.getByRole('button', { name: 'Submit' })
+      ✅ page.getByTestId('submit-button')
+      ❌ page.locator('.btn-primary.submit')
+
+  test_isolation:
+    - "Each test should be independent"
+    - "Use database seeds/fixtures for test data"
+    - "Clean up after tests"
+    - "Don't depend on test execution order"
+
+  ci_setup:
+    - "Run in headless mode"
+    - "Use retries for flaky tests (max 2)"
+    - "Upload traces/screenshots on failure"
+    - "Parallelize across workers"
+
+# _DOMYH Awesome Code • E2E Testing Patterns_

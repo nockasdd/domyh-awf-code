@@ -1,0 +1,198 @@
+metadata:
+  skill: security
+  domain: swift_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: swift-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_code
+patterns:
+  - id: SW-01
+    name: Keychain Without ACL
+    severity: HIGH
+    category: iOS
+    description: Keychain item without biometric protection
+    detection_pattern: kSecAttrAccessible(?!.*kSecAccessControl)
+    fix_pattern: Use kSecAccessControlBiometryAny for sensitive data
+    cwe: CWE-522
+    example_code: // Weak\nkSecAttrAccessibleWhenUnlocked\n// SAFE\nSecAccessControlCreateWithFlags(nil, .biometryAny, ...)
+  - id: SW-02
+    name: ATS Bypass Domain
+    severity: HIGH
+    category: iOS
+    description: App Transport Security disabled for domain
+    detection_pattern: NSExceptionDomains|NSAllowsArbitraryLoads
+    fix_pattern: Avoid ATS exceptions or whitelist specific domains only
+    cwe: CWE-319
+    example_code: '// Insecure\n<key>NSAllowsArbitraryLoads</key><true/>\n// SAFE: Use HTTPS only'
+  - id: SW-03
+    name: Hardcoded Credentials
+    severity: CRITICAL
+    category: iOS
+    description: API key or password in source code
+    detection_pattern: (apiKey|password|secret)\\s*=\\s*\[^\"]+\""
+    fix_pattern: Use Keychain or environment variables
+    cwe: CWE-798
+    example_code: '// Exposed\nlet apiKey = \sk-1234567890\"\n// SAFE: Keychain or .xcconfig"'
+  - id: SW-04
+    name: Jailbreak Detection Weak
+    severity: MEDIUM
+    category: iOS
+    description: Simple jailbreak check easily bypassed
+    detection_pattern: fileExists.*cydia|canOpenURL.*cydia
+    fix_pattern: Use multiple detection methods and obfuscate
+    cwe: CWE-693
+    example_code: '// Weak\nFileManager.default.fileExists(atPath: \/Applications/Cydia.app\")\n// SAFE: Multiple checks + native code"'
+  - id: SW-05
+    name: UserDefaults Sensitive
+    severity: HIGH
+    category: iOS
+    description: Sensitive data in unencrypted UserDefaults
+    detection_pattern: UserDefaults.*password|token|secret
+    fix_pattern: Use Keychain for sensitive data
+    cwe: CWE-312
+    example_code: '// Unencrypted\nUserDefaults.standard.set(token, forKey: \token\")\n// SAFE: Keychain"'
+  - id: SW-06
+    name: URLSession No Pin
+    severity: HIGH
+    category: iOS
+    description: URLSession without certificate pinning
+    detection_pattern: URLSession(?!.*urlSession.*didReceive.*challenge)
+    fix_pattern: Implement certificate pinning delegate
+    cwe: CWE-295
+    example_code: '// No pinning\nURLSession.shared.dataTask(...)\n// SAFE: Custom session with pinning'
+  - id: SW-07
+    name: WebView WKWebView JS
+    severity: HIGH
+    category: iOS
+    description: WKWebView with unsafe JavaScript bridge
+    detection_pattern: WKScriptMessageHandler|evaluateJavaScript.*\\+
+    fix_pattern: Validate JavaScript input/output strictly
+    cwe: CWE-79
+    example_code: '// XSS risk\nwebView.evaluateJavaScript(userScript)\n// SAFE: Whitelist commands'
+  - id: SW-08
+    name: Biometric No Domain
+    severity: MEDIUM
+    category: iOS
+    description: LAContext without kSecUseAuthenticationContext
+    detection_pattern: evaluatePolicy(?!.*kSecUseAuthenticationContext)
+    fix_pattern: Use domainState to detect biometric changes
+    cwe: CWE-287
+    example_code: '// Bypassed if fingerprint changed\ncontext.evaluatePolicy(.biometricOnly)\n// SAFE: Check domainState'
+  - id: SW-09
+    name: Pasteboard Leak
+    severity: MEDIUM
+    category: iOS
+    description: Sensitive data copied to pasteboard persists
+    detection_pattern: UIPasteboard.*setString|copiedText.*password
+    fix_pattern: Clear pasteboard after short timeout
+    cwe: CWE-200
+    example_code: '// Persists\nUIPasteboard.general.string = password\n// SAFE: Clear after 30 seconds'
+  - id: SW-10
+    name: URL Scheme Hijack
+    severity: HIGH
+    category: iOS
+    description: Custom URL scheme without source validation
+    detection_pattern: openURL\\(.*\\)|application.*openURL(?!.*sourceApplication)
+    fix_pattern: Validate source application and URL parameters
+    cwe: CWE-601
+    example_code: '// Hijackable\nfunc application(_ app: UIApplication, open url: URL)\n// SAFE: Validate sourceApplication'
+  - id: SW-11
+    name: Screenshot Capture
+    severity: MEDIUM
+    category: iOS
+    description: Sensitive view not hidden on background
+    detection_pattern: applicationWillResignActive(?!.*blur|hide)
+    fix_pattern: Blur or hide sensitive content on backgrounding
+    cwe: CWE-200
+    example_code: '// Visible in task switcher\nfunc applicationWillResignActive(_:) {}\n// SAFE: Add blur overlay'
+  - id: SW-12
+    name: Swift Concurrency Race
+    severity: HIGH
+    category: Concurrency
+    description: Actor state accessed from nonisolated context
+    detection_pattern: nonisolated.*self\\.|Task\\s*\\{.*self\\.(?!await)
+    fix_pattern: Use MainActor or proper isolation
+    cwe: CWE-362
+    example_code: '// Race condition\nnonisolated func update() { self.state = new }\n// SAFE: @MainActor'
+  - id: SW-13
+    name: Unowned Crash
+    severity: HIGH
+    category: Memory
+    description: unowned reference accessed after deallocation
+    detection_pattern: unowned\\s+(var|let)(?!.*\\[weak\\])
+    fix_pattern: Use weak with guard instead of unowned
+    cwe: CWE-416
+    example_code: '// Crash\nunowned let delegate: Delegate\n// SAFE\nweak var delegate: Delegate?'
+  - id: SW-14
+    name: Force Unwrap Optional
+    severity: MEDIUM
+    category: Memory
+    description: Force unwrap ! on optional can crash
+    detection_pattern: \\!(?!.*guard|if\\s+let)
+    fix_pattern: Use guard let or if let with fallback
+    cwe: CWE-476
+    example_code: // Crash\nlet value = optional!\n// SAFE\nguard let value = optional else { return }
+  - id: SW-15
+    name: Crypto Deprecated
+    severity: HIGH
+    category: Crypto
+    description: Using deprecated Security.framework APIs
+    detection_pattern: SecKeyEncrypt|CC_MD5|SecTransform
+    fix_pattern: Use CryptoKit for modern encryption
+    cwe: CWE-327
+    example_code: '// Deprecated\nCC_MD5(data, len, digest)\n// SAFE\nCryptoKit.SHA256.hash(data: data)'
+  - id: SW-16
+    name: CoreData No Encryption
+    severity: HIGH
+    category: iOS
+    description: CoreData store without file protection
+    detection_pattern: NSSQLiteStoreType(?!.*NSFileProtection)
+    fix_pattern: Enable NSFileProtectionComplete
+    cwe: CWE-311
+    example_code: '// Unencrypted\nNSSQLiteStoreType\n// SAFE: Add NSPersistentStoreFileProtectionKey: .complete'
+  - id: SW-17
+    name: Notification Payload
+    severity: MEDIUM
+    category: iOS
+    description: Sensitive data in push notification payload
+    detection_pattern: UNNotificationContent.*body.*secret|password
+    fix_pattern: Avoid sensitive data in notifications
+    cwe: CWE-200
+    example_code: '// Exposed\ncontent.body = \Your OTP is \\(otp)\"\n// SAFE: Use silent push and fetch from server"'
+  - id: SW-18
+    name: Debug Build Leak
+    severity: LOW
+    category: iOS
+    description: Debug assertions compiled in release
+    detection_pattern: '#if DEBUG(?!.*#endif)|assert\\(.*DEBUG)'
+    fix_pattern: Ensure assertions stripped in release
+    cwe: CWE-215
+    example_code: '// Left in release\nassert(isValid())\n// SAFE: Use #if DEBUG properly'
+  - id: SW-19
+    name: Sendable Violation
+    severity: HIGH
+    category: Concurrency
+    description: Non-Sendable type across actor boundary
+    detection_pattern: Task\\s*\\{.*capture.*(?!Sendable)
+    fix_pattern: Mark types as Sendable or use @unchecked carefully
+    cwe: CWE-362
+    example_code: '// Data race\nTask { self.mutableArray.append() }\n// SAFE: Make Sendable or copy'
+  - id: SW-20
+    name: Path Traversal Bundle
+    severity: HIGH
+    category: iOS
+    description: User path accessing outside app bundle
+    detection_pattern: Bundle\\.main\\.path.*\\+.*user|URL.*appendingPathComponent.*params
+    fix_pattern: Validate paths stay within allowed directories
+    cwe: CWE-22
+    example_code: '// Traversal\nBundle.main.path(forResource: userInput, ofType: nil)\n// SAFE: Validate and sanitize'

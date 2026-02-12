@@ -1,0 +1,75 @@
+name: tauri
+version: "1.0.0"
+display: Tauri Desktop & Mobile
+category: cross-cutting
+tier: 1
+priority: 5
+
+desc: "Tauri 2.0 desktop & mobile app development. Rust core, system WebView, capability-based security, IPC bridge, plugin system, and cross-platform bundling."
+
+  ### Data Files (3 domains, ~21 patterns)
+  - security.yaml: capability permissions, IPC safety, CSP (7)
+  - plugins.yaml: official + custom plugin patterns (7)
+  - build.yaml: bundler config, cross-compilation, CI/CD (7)
+
+triggers:
+  file_patterns:
+    - "tauri.conf.json"
+    - "tauri.conf.json5"
+    - "Cargo.toml"
+    - "src-tauri/**"
+    - "src-tauri/src/main.rs"
+    - "src-tauri/src/lib.rs"
+    - "capabilities/*.json"
+    - "src-tauri/capabilities/**"
+  keywords:
+    - tauri
+    - tauri app
+    - tauri 2
+    - tauri 2.0
+    - tauri desktop
+    - tauri mobile
+    - invoke command
+    - IPC bridge
+    - system webview
+    - capability permissions
+    - tauri plugin
+    - tauri-cli
+    - src-tauri
+    - webview window
+    - "@tauri-apps/api"
+    - "@tauri-apps/cli"
+
+caps:
+  # Architecture
+  - Tauri 2.0 architecture (Rust core + system WebView frontend)
+  - IPC bridge (invoke/listen/emit between JS ↔ Rust)
+  - Multi-window management
+  - Tray icons & system integration
+  # Security
+  - Capability-based security model (fine-grained permissions)
+  - Content Security Policy (CSP) for WebView
+  - No direct Node.js access (secure by default)
+  # Plugins
+  - Official plugins (fs, shell, http, dialog, notification, clipboard)
+  - Custom Rust plugin development
+  # Cross-platform
+  - Desktop: Windows (WebView2), macOS (WebKit), Linux (WebKitGTK)
+  - Mobile: iOS + Android (Tauri 2.0)
+  # Build & Distribution
+  - tauri-cli bundler (MSI, DMG, AppImage, DEB, Android APK, iOS IPA)
+  - Auto-updater integration
+  - Code signing (Windows, macOS)
+  - CI/CD build matrix
+
+related_skills:
+  - electron
+  - rust
+  - react
+  - vue
+  - svelte
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/cross-cutting/tauri/data"
+  preload_data: true

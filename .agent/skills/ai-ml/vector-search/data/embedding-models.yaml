@@ -1,0 +1,117 @@
+# Embedding Models Comparison — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: EMB-001
+    name: OpenAI text-embedding-3
+    category: commercial
+    description: |
+      OpenAI embedding models.
+    text: |
+      Models:
+      - text-embedding-3-small: 1536 dims, $0.02/1M tokens, best value
+      - text-embedding-3-large: 3072 dims, $0.13/1M tokens, best quality
+      - text-embedding-ada-002: 1536 dims (legacy, deprecated)
+
+      Features: Dimension reduction via dimensions parameter
+      API: openai.embeddings.create()
+    example: |
+      const response = await openai.embeddings.create({
+        model: "text-embedding-3-small",
+        input: ["search query", "document text"],
+        dimensions: 512  // Optional: reduce for cost savings
+      });
+      const embeddings = response.data.map(d => d.embedding);
+
+  - id: EMB-002
+    name: Cohere Embed v3
+    category: commercial
+    description: |
+      Cohere embedding with separate query/document modes.
+    text: |
+      Model: embed-multilingual-v3.0
+      Dims: 1024
+      Special: input_type parameter (search_query vs search_document)
+      Multilingual: 100+ languages
+    example: |
+      const response = await cohere.embed({
+        texts: ["search query"],
+        model: "embed-multilingual-v3.0",
+        inputType: "search_query",  // or "search_document" for indexing
+        embeddingTypes: ["float"]
+      });
+
+  - id: EMB-003
+    name: Voyage AI
+    category: commercial
+    description: |
+      Specialized embeddings for code and text.
+    text: |
+      Models:
+      - voyage-3: General purpose, 1024 dims
+      - voyage-code-3: Code-optimized, 1024 dims
+      - voyage-3-lite: Lightweight, 512 dims
+
+      Best for: Code search, technical documentation
+
+  - id: EMB-004
+    name: Local Models (Sentence-Transformers)
+    category: open-source
+    description: |
+      Free, self-hosted embedding models.
+    text: |
+      Top models:
+      - all-MiniLM-L6-v2: 384 dims, fastest, good quality
+      - all-mpnet-base-v2: 768 dims, best quality/speed
+      - multilingual-e5-large: 1024 dims, multilingual
+      - nomic-embed-text-v1.5: 768 dims, Matryoshka
+
+      Frameworks: sentence-transformers, ollama, fastembed
+    example: |
+      from sentence_transformers import SentenceTransformer
+      model = SentenceTransformer("all-MiniLM-L6-v2")
+      embeddings = model.encode(["text1", "text2"])
+
+  - id: EMB-005
+    name: Chunking Strategies
+    category: preprocessing
+    description: |
+      How to split documents before embedding.
+    text: |
+      | Strategy | Chunk Size | Overlap | Use Case |
+      |----------|-----------|---------|----------|
+      | Fixed tokens | 500-1000 | 50-100 | General purpose |
+      | Sentences | 3-5 sentences | 1 | Q&A systems |
+      | Paragraphs | Variable | 0 | Articles, blogs |
+      | Semantic | Variable | 0 | Mixed content |
+      | Code | Function/class | 0 | Codebase search |
+      | Markdown | Headers | 0 | Documentation |
+
+      Tools: LangChain TextSplitters, LlamaIndex NodeParsers
+
+  - id: EMB-006
+    name: Embedding Best Practices
+    category: optimization
+    description: |
+      Production embedding optimization.
+    text: |
+      1. Batch embeddings (reduce API calls)
+      2. Cache embeddings (avoid re-computing)
+      3. Use smaller dimensions when possible
+      4. Separate query vs document embeddings if model supports it
+      5. Normalize embeddings for cosine similarity
+      6. Use Matryoshka models for dimension flexibility
+
+  - id: EMB-007
+    name: Model Selection Guide
+    category: comparison
+    description: |
+      How to choose embedding model.
+    text: |
+      Decision flow:
+      Budget zero → Local: all-MiniLM-L6-v2 or nomic-embed
+      Need multilingual → Cohere embed-multilingual-v3
+      Code search → Voyage code-3
+      General best quality → OpenAI text-embedding-3-large
+      Best cost/quality → OpenAI text-embedding-3-small
+      Privacy/latency → Local: all-mpnet-base-v2

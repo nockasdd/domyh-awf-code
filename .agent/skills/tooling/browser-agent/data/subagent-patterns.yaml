@@ -1,0 +1,158 @@
+# =============================================================================
+# subagent-patterns.yaml — browser_subagent Task Description Templates
+# =============================================================================
+
+version: "1.0.0"
+
+# These templates are used with the browser_subagent tool in AI IDEs
+# (e.g., Antigravity). The Task argument should be detailed and explicit.
+
+templates:
+  verify_page_load:
+    name: "Page Load Verification"
+    when: "Quick check that page loads correctly"
+    recording_name: "page_load_check"
+    task_template: |
+      Navigate to {URL}. Wait for page to fully load.
+
+      1. Take a screenshot of the full page
+      2. Take a browser_snapshot to see the accessibility tree
+      3. Check browser_console_messages for any errors (level: error)
+      4. Check browser_network_requests for any failed requests (4xx/5xx)
+
+      Return:
+      - Whether the page loaded successfully (HTTP 200)
+      - Any console errors found
+      - Any failed network requests
+      - A brief description of the page layout
+    return_conditions: "Return after all 4 checks completed"
+
+  test_all_interactions:
+    name: "Comprehensive Interaction Testing"
+    when: "Full verification of all interactive elements"
+    recording_name: "comprehensive_test"
+    task_template: |
+      Navigate to {URL}. Wait for page to fully load.
+
+      PHASE 1: Discover all interactive elements
+      - Take a browser_snapshot
+      - List ALL buttons, links, inputs, dropdowns, and modal triggers
+
+      PHASE 2: Test EACH element systematically
+      For each BUTTON found:
+        - Click it and verify the expected action happens
+        - Take a screenshot after clicking
+        - Note if it's disabled, loading, or changes state
+
+      For each DROPDOWN found:
+        - Click to open it
+        - Verify options are visible
+        - Select an option and verify the value updates
+        - Press Escape to close and verify it closes
+
+      For each INPUT found:
+        - Click to focus
+        - Type test text and verify it appears
+        - If it has validation, try submitting empty
+
+      For each MODAL TRIGGER found:
+        - Click to open the modal
+        - Verify the modal appears with correct content
+        - Press Escape to close
+        - Verify focus returns to the trigger
+
+      PHASE 3: Edge cases
+      - Check browser_console_messages for errors
+      - Check browser_network_requests for failures
+
+      Return: A table with columns [Element, Type, Test, Pass/Fail, Notes]
+      for every element tested.
+    return_conditions: "Return after all elements tested and evidence collected"
+
+  test_specific_component:
+    name: "Specific Component Testing"
+    when: "Test a particular component in depth"
+    recording_name: "component_test"
+    task_template: |
+      Navigate to {URL}. Wait for page to fully load.
+
+      Find the {COMPONENT_NAME} component ({COMPONENT_DESCRIPTION}).
+
+      Test it thoroughly:
+      1. Take a browser_snapshot to find the exact element ref
+      2. Interact with it: {SPECIFIC_INTERACTIONS}
+      3. Verify: {EXPECTED_BEHAVIOR}
+      4. Test keyboard: Tab to it, Enter/Space to activate, Escape to dismiss
+      5. Take screenshots before and after each interaction
+
+      Return:
+      - Whether the component works as expected
+      - Any issues found
+      - Screenshots of each state
+    return_conditions: "Return after all specified interactions tested"
+
+  visual_comparison:
+    name: "Before/After Visual Comparison"
+    when: "Compare UI before and after a code change"
+    recording_name: "visual_comparison"
+    task_template: |
+      Navigate to {URL}. Wait for page to fully load.
+
+      Take a full-page screenshot as the "current state".
+
+      Then perform these actions to test the change:
+      {CHANGE_DESCRIPTION}
+
+      Take another full-page screenshot as the "after state".
+
+      Compare the two states and report:
+      1. What changed visually?
+      2. Is the layout correct?
+      3. Are all elements still accessible?
+      4. Any unexpected visual changes?
+
+      Return: Description of visual changes with screenshots.
+    return_conditions: "Return after both screenshots taken and compared"
+
+  form_flow_test:
+    name: "Complete Form Flow Testing"
+    when: "Test end-to-end form submission"
+    recording_name: "form_flow_test"
+    task_template: |
+      Navigate to {URL}. Wait for page to fully load.
+
+      Find the {FORM_NAME} form.
+
+      Test 1: Happy Path
+      1. Fill all required fields with valid data:
+         {FIELD_VALUES}
+      2. Click the submit button
+      3. Verify success state (message, redirect, etc.)
+      4. Take screenshot of success state
+
+      Test 2: Validation
+      1. Clear all fields (or reload page)
+      2. Click submit without filling anything
+      3. Verify validation error messages appear
+      4. Take screenshot of error state
+
+      Test 3: Individual Field Validation
+      For each required field:
+      1. Fill all fields EXCEPT the current one
+      2. Submit
+      3. Verify specific error for that field
+
+      Return:
+      - Happy path: Pass/Fail with screenshot
+      - Validation: Pass/Fail with error messages
+      - Per-field validation: Pass/Fail for each field
+    return_conditions: "Return after all 3 test types completed"
+
+# Usage Example:
+# browser_subagent(
+#   TaskName: "Comprehensive Verification",
+#   Task: templates.test_all_interactions.task_template.replace("{URL}", "http://localhost:3000"),
+#   RecordingName: "comprehensive_test"
+# )
+
+# _DOMYH Awesome Code • Browser Subagent Task Templates v1.0.0_

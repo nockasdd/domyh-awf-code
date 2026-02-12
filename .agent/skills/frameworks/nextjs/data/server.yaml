@@ -1,0 +1,248 @@
+# =============================================================================
+# Next.js Server Patterns (Feb 2026)
+# =============================================================================
+# Server Functions, proxy.ts, React 19.2 features
+
+metadata:
+  skill: nextjs
+  domain: server
+  version: "16"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: next012
+    name: Server Functions
+    category: data-mutation
+    version: "14+"
+    description: Form submissions and mutations without API routes
+    text: use server function form mutation revalidate redirect
+    example: |
+      // app/actions.ts
+      "use server";
+
+      import { revalidatePath } from "next/cache";
+      import { redirect } from "next/navigation";
+      import { z } from "zod";
+
+      const UserSchema = z.object({
+        name: z.string().min(2),
+        email: z.string().email(),
+      });
+
+      export async function createUser(formData: FormData) {
+        // ✅ Validate input
+        const validated = UserSchema.parse({
+          name: formData.get("name"),
+          email: formData.get("email"),
+        });
+
+        // ✅ Database operation
+        const user = await db.user.create({
+          data: validated,
+        });
+
+        // ✅ Revalidate cache
+        revalidatePath("/users");
+
+        // ✅ Redirect
+        redirect(`/users/${user.id}`);
+      }
+
+      // Usage in form
+      export default function CreateUserForm() {
+        return (
+          <form action={createUser}>
+            <input name="name" placeholder="Name" />
+            <input name="email" type="email" placeholder="Email" />
+            <button type="submit">Create</button>
+          </form>
+        );
+      }
+    severity: CRITICAL
+    docs_url: https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
+
+  - id: next013
+    name: proxy.ts (Next.js 16)
+    category: networking
+    version: "16+"
+    description: |
+      Network boundary control replacing middleware.ts.
+      Clearer separation of concerns.
+    text: proxy middleware network boundary auth redirect
+    example: |
+      // ✅ Next.js 16: proxy.ts for network boundary control
+      // Provides clearer separation than middleware.ts
+
+      // proxy.ts
+      import { NextResponse } from "next/server";
+      import type { NextRequest } from "next/server";
+
+      export function proxy(request: NextRequest) {
+        const { pathname } = request.nextUrl;
+
+        // Auth check with clearer network boundary
+        const token = request.cookies.get("token");
+        if (pathname.startsWith("/dashboard") && !token) {
+          return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        // API rate limiting
+        if (pathname.startsWith("/api")) {
+          // Rate limit logic here
+        }
+
+        return NextResponse.next();
+      }
+
+      export const config = {
+        matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+      };
+
+      // ⚠️ Migration from middleware.ts:
+      // - Rename function from `middleware` to `proxy`
+      // - Update import paths if needed
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/middleware
+
+  - id: next014
+    name: React 19.2 Integration
+    category: react
+    version: "16+"
+    description: |
+      Next.js 16 bundles React 19.2 with new hooks and features.
+      View Transitions, useEffectEvent, Activity component.
+    text: react 19 useOptimistic useEffectEvent view transition activity
+    example: |
+      // ✅ Next.js 16 bundles React 19.2
+      import { useOptimistic, useEffectEvent } from "react";
+
+      // View Transitions API
+      export function NavigationLink({ href, children }) {
+        return (
+          <Link href={href} viewTransition>
+            {children}
+          </Link>
+        );
+      }
+
+      // useEffectEvent for stable event handlers
+      function ChatRoom({ roomId }) {
+        const onMessage = useEffectEvent((msg) => {
+          showNotification(msg);
+        });
+
+        useEffect(() => {
+          const connection = createConnection(roomId);
+          connection.on("message", onMessage);
+          return () => connection.disconnect();
+        }, [roomId]); // onMessage not in deps!
+      }
+
+      // Activity component for offscreen rendering
+      import { Activity } from "react";
+
+      <Activity mode="hidden">
+        <HeavyComponent />
+      </Activity>;
+
+      // useOptimistic for instant UI feedback
+      export function LikeButton({ likes }: { likes: number }) {
+        const [optimisticLikes, addOptimisticLike] = useOptimistic(
+          likes,
+          (state) => state + 1,
+        );
+
+        async function handleLike() {
+          addOptimisticLike(null); // Instant UI update
+          await likePost();        // Server function
+        }
+
+        return <button onClick={handleLike}>❤️ {optimisticLikes}</button>;
+      }
+    severity: HIGH
+    docs_url: https://react.dev/blog/2024/04/25/react-19
+
+  - id: next015
+    name: React Compiler (Stable)
+    category: optimization
+    version: "16+"
+    description: |
+      Automatic memoization at build time.
+      No more manual useMemo/useCallback needed.
+    text: react compiler memoization useMemo useCallback automatic
+    example: |
+      // ✅ Next.js 16: Built-in React Compiler support
+      // Automatic memoization at build time
+
+      // next.config.ts
+      export default {
+        experimental: {
+          reactCompiler: true, // ✅ Stable in Next.js 16
+        },
+      };
+
+      // No more manual useMemo/useCallback needed!
+      function ExpensiveComponent({ data }) {
+        // ✅ Compiler auto-memoizes this computation
+        const processed = data.map((item) => expensiveOperation(item));
+        
+        // ✅ Callbacks also auto-memoized
+        const handleClick = (id) => {
+          doSomething(id);
+        };
+
+        return <List items={processed} onClick={handleClick} />;
+      }
+
+      // Before React Compiler:
+      // const processed = useMemo(() => data.map(...), [data]);
+      // const handleClick = useCallback((id) => ..., []);
+
+      // After: Just write normal code!
+    severity: HIGH
+    docs_url: https://react.dev/learn/react-compiler
+
+  - id: next016
+    name: Middleware (Legacy)
+    category: networking
+    version: "12+"
+    description: Edge runtime middleware for auth, redirects, headers
+    text: middleware edge runtime auth headers cookies
+    example: |
+      // middleware.ts (still supported, proxy.ts preferred in v16)
+      import { NextResponse } from "next/server";
+      import type { NextRequest } from "next/server";
+
+      export function middleware(request: NextRequest) {
+        const { pathname } = request.nextUrl;
+
+        // ✅ Auth check
+        const token = request.cookies.get("token");
+        if (pathname.startsWith("/dashboard") && !token) {
+          return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        // ✅ Add headers
+        const response = NextResponse.next();
+        response.headers.set("x-pathname", pathname);
+
+        // ✅ Geolocation-based routing
+        const country = request.geo?.country;
+        if (country === "CN" && !pathname.startsWith("/cn")) {
+          return NextResponse.redirect(new URL("/cn" + pathname, request.url));
+        }
+
+        return response;
+      }
+
+      export const config = {
+        matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+      };
+
+      // ⚠️ Middleware runs on Edge Runtime
+      // - No Node.js APIs (fs, path, etc.)
+      // - Limited to Web APIs
+      // - Max 1MB code size
+    severity: MEDIUM
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/middleware

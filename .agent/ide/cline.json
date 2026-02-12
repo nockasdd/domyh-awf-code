@@ -1,0 +1,35 @@
+{
+  "name": "DOMYH Awesome Code",
+  "version": "v6.2.1",
+  "ide": "Cline",
+  "value": "cline",
+
+  "activation": {
+    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/init", "/fix", "/refactor", "/review", "/status", "/hsa"],
+    "auto_context": true
+  },
+
+  "skills": {
+    "loading": "progressive",
+    "max_active": 3
+  },
+
+  "mcp_servers": {
+    "domyh-hsa": {
+      "description": "HSA v1.0.0 Context Management",
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest"],
+      "auto_start": true,
+      "env": {
+        
+        "HSA_DASHBOARD": "true",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
+  },
+
+  "config_files": {
+    "rules": ".clinerules",
+    "mcp": "globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json"
+  }
+}

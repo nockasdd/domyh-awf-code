@@ -1,0 +1,355 @@
+# =============================================================================
+# R Core Patterns (Feb 2026)
+# Version: R 4.4
+# =============================================================================
+
+metadata:
+  skill: r
+  domain: core
+  version: "4.4"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: r001
+    name: Tidyverse Data Manipulation
+    category: data
+    version: "dplyr2.1"
+    description: |
+      Data wrangling with dplyr.
+      Pipelines, verbs, transformations.
+    text: dplyr pipe filter select mutate group summarize
+    example: |
+      library(tidyverse)
+
+      # ✅ Load and preview data
+      df <- read_csv("data/sales.csv")
+      glimpse(df)
+
+      # ✅ Basic verbs with pipe |>
+      result <- df |>
+        filter(year >= 2024, !is.na(amount)) |>
+        select(date, customer, product, amount) |>
+        mutate(
+          month = month(date, label = TRUE),
+          amount_usd = amount * exchange_rate
+        ) |>
+        arrange(desc(amount))
+
+      # ✅ Group and summarize
+      summary_stats <- df |>
+        group_by(category, region) |>
+        summarize(
+          total = sum(amount, na.rm = TRUE),
+          avg = mean(amount, na.rm = TRUE),
+          count = n(),
+          .groups = "drop"
+        )
+
+      # ✅ Window functions
+      ranked <- df |>
+        group_by(category) |>
+        mutate(
+          rank = row_number(desc(amount)),
+          pct_of_total = amount / sum(amount) * 100,
+          cumulative = cumsum(amount)
+        ) |>
+        filter(rank <= 10)
+
+      # ✅ Joins
+      customers <- read_csv("customers.csv")
+      orders <- read_csv("orders.csv")
+
+      combined <- orders |>
+        left_join(customers, by = "customer_id") |>
+        inner_join(products, by = "product_id")
+
+      # ✅ Pivot operations
+      wide_data <- df |>
+        pivot_wider(
+          names_from = product,
+          values_from = amount,
+          values_fill = 0
+        )
+
+      long_data <- wide_data |>
+        pivot_longer(
+          cols = -customer,
+          names_to = "product",
+          values_to = "amount"
+        )
+    severity: HIGH
+    docs_url: https://dplyr.tidyverse.org/
+
+  - id: r002
+    name: ggplot2 Visualization
+    category: visualization
+    version: "ggplot2"
+    description: |
+      Grammar of graphics.
+      Layers, aesthetics, themes.
+    text: ggplot geom aes theme facet scale
+    example: |
+      library(ggplot2)
+
+      # ✅ Basic scatter plot
+      ggplot(df, aes(x = income, y = spending, color = segment)) +
+        geom_point(alpha = 0.7, size = 3) +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(
+          title = "Income vs Spending by Segment",
+          x = "Annual Income ($)",
+          y = "Spending Score"
+        ) +
+        theme_minimal()
+
+      # ✅ Bar chart with groups
+      ggplot(summary_df, aes(x = reorder(category, -total), y = total, fill = region)) +
+        geom_col(position = "dodge") +
+        scale_y_continuous(labels = scales::comma) +
+        scale_fill_viridis_d() +
+        coord_flip() +
+        labs(title = "Sales by Category and Region")
+
+      # ✅ Time series
+      ggplot(ts_data, aes(x = date, y = value)) +
+        geom_line(color = "#2E86AB", linewidth = 1) +
+        geom_area(alpha = 0.2, fill = "#2E86AB") +
+        scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+      # ✅ Faceted plots
+      ggplot(df, aes(x = value)) +
+        geom_histogram(bins = 30, fill = "steelblue", alpha = 0.7) +
+        facet_wrap(~ category, scales = "free_y", ncol = 3) +
+        theme_bw()
+
+      # ✅ Combined plot types
+      ggplot(df, aes(x = factor(year), y = amount)) +
+        geom_violin(fill = "lightblue", alpha = 0.5) +
+        geom_boxplot(width = 0.2, outlier.shape = NA) +
+        stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "red")
+
+      # ✅ Custom theme
+      theme_custom <- theme_minimal() +
+        theme(
+          plot.title = element_text(size = 16, face = "bold"),
+          axis.title = element_text(size = 12),
+          legend.position = "bottom",
+          panel.grid.minor = element_blank()
+        )
+
+      # ✅ Save plot
+      ggsave("output/plot.png", width = 10, height = 8, dpi = 300)
+    severity: HIGH
+    docs_url: https://ggplot2.tidyverse.org/
+
+  - id: r003
+    name: Functional Programming
+    category: language
+    version: "purrr"
+    description: |
+      Functional patterns with purrr.
+      Map, reduce, iterate.
+    text: map purrr reduce keep walk lambda
+    example: |
+      library(purrr)
+
+      # ✅ Map functions
+      numbers <- list(1, 2, 3, 4, 5)
+      squared <- map(numbers, ~ .x^2)  # Returns list
+      squared_dbl <- map_dbl(numbers, ~ .x^2)  # Returns vector
+
+      # ✅ Map variants
+      files <- list.files("data", pattern = "\\.csv$", full.names = TRUE)
+      dfs <- map(files, read_csv)  # List of data frames
+
+      # map_dfr - bind rows
+      combined <- map_dfr(files, read_csv, .id = "source")
+
+      # map2 - two inputs
+      result <- map2(names, ages, ~ paste(.x, "is", .y, "years old"))
+
+      # pmap - multiple inputs
+      result <- pmap(list(a = 1:3, b = 4:6, c = 7:9), ~ ..1 + ..2 + ..3)
+
+      # ✅ Reduce and accumulate
+      total <- reduce(numbers, `+`)  # Sum all
+      running <- accumulate(numbers, `+`)  # Running sum
+
+      # Reduce with initial value
+      merged_df <- reduce(list_of_dfs, left_join, .init = base_df)
+
+      # ✅ Filtering
+      keep(numbers, ~ .x > 2)  # Keep elements where predicate is TRUE
+      discard(numbers, ~ .x > 2)  # Discard where TRUE
+      compact(list(1, NULL, 2, NULL, 3))  # Remove NULLs
+
+      # ✅ Possibly - handle errors gracefully
+      safe_log <- possibly(log, otherwise = NA_real_)
+      map_dbl(c(1, -1, 10), safe_log)  # [0, NA, 2.303]
+
+      # ✅ Walk - side effects
+      walk(plots, ~ ggsave(paste0(.x$name, ".png"), .x$plot))
+
+      # ✅ Nested data
+      nested <- df |>
+        group_by(category) |>
+        nest()
+
+      models <- nested |>
+        mutate(model = map(data, ~ lm(y ~ x, data = .x)))
+    severity: MEDIUM
+    docs_url: https://purrr.tidyverse.org/
+
+  - id: r004
+    name: Statistical Modeling
+    category: statistics
+    version: "R4.4"
+    description: |
+      Regression and hypothesis testing.
+      tidymodels for ML.
+    text: lm glm regression anova tidymodels fit
+    example: |
+      # ✅ Linear regression
+      model <- lm(price ~ sqft + bedrooms + bathrooms, data = housing)
+      summary(model)
+
+      # Predictions
+      new_data <- tibble(sqft = 2000, bedrooms = 3, bathrooms = 2)
+      predict(model, newdata = new_data, interval = "confidence")
+
+      # ✅ Model diagnostics
+      par(mfrow = c(2, 2))
+      plot(model)
+
+      # ✅ ANOVA
+      anova_result <- aov(score ~ group, data = experiment)
+      summary(anova_result)
+      TukeyHSD(anova_result)  # Post-hoc test
+
+      # ✅ Logistic regression
+      logit_model <- glm(
+        purchased ~ age + income + visits,
+        data = customers,
+        family = binomial
+      )
+
+      # Odds ratios
+      exp(coef(logit_model))
+
+      # ✅ tidymodels workflow
+      library(tidymodels)
+
+      # Split data
+      set.seed(42)
+      split <- initial_split(df, prop = 0.8)
+      train <- training(split)
+      test <- testing(split)
+
+      # Define recipe
+      recipe <- recipe(target ~ ., data = train) |>
+        step_normalize(all_numeric_predictors()) |>
+        step_dummy(all_nominal_predictors())
+
+      # Define model
+      model_spec <- rand_forest(trees = 500) |>
+        set_engine("ranger") |>
+        set_mode("classification")
+
+      # Create workflow
+      wf <- workflow() |>
+        add_recipe(recipe) |>
+        add_model(model_spec)
+
+      # Fit and evaluate
+      fitted <- fit(wf, train)
+      predictions <- predict(fitted, test)
+
+      metrics <- test |>
+        bind_cols(predictions) |>
+        metrics(truth = target, estimate = .pred_class)
+    severity: HIGH
+    docs_url: https://www.tidymodels.org/
+
+  - id: r005
+    name: Shiny Applications
+    category: web
+    version: "Shiny"
+    description: |
+      Interactive web apps.
+      Reactive programming.
+    text: shiny reactive render input output ui server
+    example: |
+      library(shiny)
+      library(bslib)
+
+      # ✅ UI definition
+      ui <- page_sidebar(
+        title = "Sales Dashboard",
+        sidebar = sidebar(
+          selectInput("category", "Category", 
+                      choices = c("All", "Electronics", "Clothing", "Food")),
+          dateRangeInput("dates", "Date Range",
+                         start = Sys.Date() - 30, end = Sys.Date()),
+          sliderInput("min_amount", "Min Amount", 0, 1000, 100)
+        ),
+        
+        # Main content
+        card(
+          card_header("Sales Overview"),
+          plotOutput("sales_plot")
+        ),
+        card(
+          card_header("Data Table"),
+          DTOutput("data_table")
+        )
+      )
+
+      # ✅ Server logic
+      server <- function(input, output, session) {
+        
+        # Reactive data
+        filtered_data <- reactive({
+          data <- sales_df
+          
+          if (input$category != "All") {
+            data <- filter(data, category == input$category)
+          }
+          
+          data |>
+            filter(
+              date >= input$dates[1],
+              date <= input$dates[2],
+              amount >= input$min_amount
+            )
+        })
+        
+        # Render plot
+        output$sales_plot <- renderPlot({
+          ggplot(filtered_data(), aes(x = date, y = amount, fill = product)) +
+            geom_col() +
+            scale_y_continuous(labels = scales::dollar) +
+            theme_minimal() +
+            labs(title = "Daily Sales")
+        })
+        
+        # Render table
+        output$data_table <- renderDT({
+          datatable(filtered_data(), 
+                    options = list(pageLength = 10),
+                    filter = "top")
+        })
+        
+        # Reactive values for state
+        rv <- reactiveValues(selected_id = NULL)
+        
+        observeEvent(input$data_table_rows_selected, {
+          rv$selected_id <- filtered_data()[input$data_table_rows_selected, ]$id
+        })
+      }
+
+      # ✅ Run app
+      shinyApp(ui, server)
+    severity: MEDIUM
+    docs_url: https://shiny.posit.co/

@@ -1,0 +1,170 @@
+# =============================================================================
+# Bun 1.3+ Runtime Patterns (Feb 2026)
+# =============================================================================
+# Storage and File APIs for Bun runtime
+
+metadata:
+  skill: bun
+  domain: runtime
+  version: "1.3.0"
+  updated: "2026-02-05"
+  patterns_count: 10
+
+patterns:
+  - id: bun001
+    name: Bun.serve
+    category: server
+    version: "1.0+"
+    description: High-performance HTTP server with built-in routing
+    text: http server web request response handler routing
+    example: |
+      Bun.serve({
+        port: 3000,
+        fetch(req) {
+          const url = new URL(req.url);
+          if (url.pathname === "/") return new Response("Home");
+          return new Response("Not Found", { status: 404 });
+        }
+      });
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/http
+
+  - id: bun002
+    name: Bun.file
+    category: io
+    version: "1.0+"
+    description: Efficient file I/O with lazy loading and streaming
+    text: file read write text blob stream async Bunfile
+    example: |
+      const file = Bun.file("data.txt");
+      const text = await file.text();
+      const bytes = await file.arrayBuffer();
+      const exists = await file.exists();
+    severity: MEDIUM
+    docs_url: https://bun.sh/docs/api/file-io
+
+  - id: bun003
+    name: Bun.S3
+    category: storage
+    version: "1.2+"
+    description: Built-in S3-compatible object storage client
+    text: s3 object storage bucket file upload download aws minio
+    example: |
+      const bucket = Bun.s3("bucket-name");
+      await bucket.file("key").write("content");
+      const data = await bucket.file("key").text();
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/s3
+
+  - id: bun004
+    name: Bun.Archive
+    category: utility
+    version: "1.2+"
+    description: Create and extract tar/gzip archives
+    text: archive tarball tar.gz create extract compress decompress
+    example: |
+      // Create archive
+      await Bun.Archive.create("dist.tar.gz", ["src/", "package.json"]);
+      // Extract archive
+      await Bun.Archive.extract("dist.tar.gz", "output/");
+    severity: MEDIUM
+    docs_url: https://bun.sh/docs/api/archive
+
+  - id: bun005
+    name: Bun.password
+    category: security
+    version: "1.0+"
+    description: Secure password hashing with bcrypt/argon2
+    text: password hash bcrypt argon2 verify secure authentication
+    example: |
+      const hash = await Bun.password.hash("password123");
+      const valid = await Bun.password.verify("password123", hash);
+    severity: CRITICAL
+    docs_url: https://bun.sh/docs/api/password
+
+  - id: bun006
+    name: Bun.JSON5
+    category: parsing
+    version: "1.2+"
+    description: Parse JSON5 with comments and trailing commas
+    text: json5 parse comments trailing comma config file
+    example: |
+      const config = Bun.JSON5.parse(`{
+        // Server settings
+        port: 3000,
+        debug: true,
+      }`);
+    severity: LOW
+    docs_url: https://bun.sh/docs/api/json5
+
+  - id: bun007
+    name: Bun.JSONL
+    category: parsing
+    version: "1.2+"
+    description: Parse newline-delimited JSON (JSONL) for logs/streams
+    text: jsonl ndjson line delimited json logs streaming parse
+    example: |
+      const lines = Bun.JSONL.parse(`{"name":"a"}\n{"name":"b"}`);
+      // [{ name: "a" }, { name: "b" }]
+    severity: LOW
+    docs_url: https://bun.sh/docs/api/jsonl
+
+  - id: bun008
+    name: Bun.Cookie
+    category: web
+    version: "1.3+"
+    description: Native cookie handling with secure defaults
+    text: cookie handling secure httponly samesite session authentication
+    example: |
+      // Parse cookies from request
+      const cookies = Bun.Cookie.parse(request.headers.get("cookie"));
+
+      // Create secure cookie
+      const cookie = Bun.Cookie.create("session", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 86400
+      });
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/cookie
+
+  - id: bun009
+    name: Bun.YAML
+    category: parsing
+    version: "1.3+"
+    description: Built-in YAML parsing support without external dependencies
+    text: yaml parse stringify config configuration file
+    example: |
+      // Parse YAML file
+      const config = await Bun.file("config.yaml").yaml();
+
+      // Parse YAML string
+      const data = Bun.YAML.parse(`
+        server:
+          port: 3000
+          host: localhost
+      `);
+
+      // Stringify to YAML
+      const yaml = Bun.YAML.stringify({ key: "value" });
+    severity: MEDIUM
+    docs_url: https://bun.sh/docs/api/yaml
+
+  - id: bun010
+    name: Bun.zstd
+    category: compression
+    version: "1.3+"
+    description: Zstandard compression for high-performance data compression
+    text: zstd zstandard compression decompress performance binary
+    example: |
+      // Compress data
+      const compressed = await Bun.zstd.compress(data);
+
+      // Decompress data
+      const original = await Bun.zstd.decompress(compressed);
+
+      // Compression level (1-22, default 3)
+      const highCompression = await Bun.zstd.compress(data, { level: 19 });
+    severity: MEDIUM
+    docs_url: https://bun.sh/docs/api/compression

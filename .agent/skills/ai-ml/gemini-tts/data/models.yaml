@@ -1,0 +1,124 @@
+# =============================================================================
+# models.yaml — Gemini TTS Model Comparison
+# =============================================================================
+# 6 patterns for model selection, voice options, output configuration
+# Source: https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 6
+
+models:
+  flash:
+    id: "gemini-2.5-flash-preview-tts"
+    display: "Gemini TTS Flash"
+    tier: "speed"
+    latency: "lowest"
+    quality: "good"
+    cost: "low"
+    streaming: true
+    multi_speaker: true
+    best_for:
+      - "Real-time applications"
+      - "Interactive voice agents"
+      - "Live narration"
+
+  lite:
+    id: "gemini-2.5-flash-lite-preview-tts"
+    display: "Gemini TTS Lite"
+    tier: "cost"
+    latency: "low"
+    quality: "good"
+    cost: "lowest"
+    streaming: true
+    multi_speaker: true
+    best_for:
+      - "High-volume batch processing"
+      - "Cost-sensitive applications"
+      - "Notifications and alerts"
+
+  pro:
+    id: "gemini-2.5-pro-preview-tts"
+    display: "Gemini TTS Pro"
+    tier: "quality"
+    latency: "higher"
+    quality: "best"
+    cost: "higher"
+    streaming: true
+    multi_speaker: true
+    best_for:
+      - "Audiobooks"
+      - "Premium voiceovers"
+      - "Marketing content"
+      - "Podcast production"
+
+voices:
+  description: "Prebuilt voice options available across all models"
+  options:
+    - name: "Kore"
+      style: "Clear, professional female"
+    - name: "Puck"
+      style: "Warm, conversational male"
+    - name: "Charon"
+      style: "Deep, authoritative male"
+    - name: "Aoede"
+      style: "Bright, energetic female"
+    - name: "Fenrir"
+      style: "Calm, measured male"
+    - name: "Leda"
+      style: "Friendly, approachable female"
+
+output_formats:
+  - mime: "audio/wav"
+    desc: "WAV (PCM 24kHz)"
+    use_case: "High quality editing"
+  - mime: "audio/ogg;codecs=opus"
+    desc: "OGG Opus"
+    use_case: "Streaming, low bandwidth"
+  - mime: "audio/mp3"
+    desc: "MP3"
+    use_case: "Universal compatibility"
+  - mime: "audio/flac"
+    desc: "FLAC"
+    use_case: "Lossless archival"
+  - mime: "audio/aac"
+    desc: "AAC"
+    use_case: "Mobile playback"
+  - mime: "audio/L16;rate=24000"
+    desc: "Raw PCM 24kHz"
+    use_case: "Real-time processing"
+
+api_usage:
+  basic:
+    python: |
+      from google import genai
+      client = genai.Client(api_key="API_KEY")
+      response = client.models.generate_content(
+          model="gemini-2.5-flash-preview-tts",
+          contents="Hello, welcome to our product demo!",
+          config=genai.types.GenerateContentConfig(
+              response_modalities=["AUDIO"],
+              speech_config=genai.types.SpeechConfig(
+                  voice_config=genai.types.VoiceConfig(
+                      prebuilt_voice_config=genai.types.PrebuiltVoiceConfig(
+                          voice_name="Kore"
+                      )
+                  )
+              )
+          )
+      )
+      # Save: response.candidates[0].content.parts[0].inline_data.data
+
+  streaming:
+    python: |
+      for chunk in client.models.generate_content_stream(
+          model="gemini-2.5-flash-preview-tts",
+          contents="Long text to narrate...",
+          config=config
+      ):
+          # Process each audio chunk in real-time
+          audio_data = chunk.candidates[0].content.parts[0].inline_data.data
+
+# =============================================================================
+# _DOMYH Awesome Code • TTS Models v1.0_
+# =============================================================================

@@ -1,12 +1,12 @@
 ---
 name: perl
 detect: ["*.pl", "*.pm", "Makefile.PL", "cpanfile"]
-version: "6.1.2"
+version: "6.2.1"
 category: scripting
 tier: 3
 ---
 
-# Perl 5 Patterns — DOMYH Awesome Code v6.1.2
+# Perl 5 Patterns — DOMYH Awesome Code
 
 > **Version**: Perl 5.40+ (2025-2026)
 > **Framework**: Mojolicious, Dancer2
@@ -112,4 +112,4 @@ app->start;
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Perl 5.40+_
+_DOMYH Awesome Code • Perl 5.40+_

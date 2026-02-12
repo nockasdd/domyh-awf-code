@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_java
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-java.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: JAVA-001
+    name: OpenTelemetry SDK
+    category: Java
+    description: Initialize OTel in Java
+    example: OpenTelemetrySdk.builder().build()
+    library: opentelemetry-java
+  - id: JAVA-002
+    name: TracerProvider Setup
+    category: Java
+    description: Configure tracer
+    example: SdkTracerProvider.builder().build()
+    library: opentelemetry-java
+  - id: JAVA-003
+    name: MeterProvider Setup
+    category: Java
+    description: Configure metrics
+    example: SdkMeterProvider.builder().build()
+    library: opentelemetry-java
+  - id: JAVA-004
+    name: OTLP Exporter
+    category: Java
+    description: Export via OTLP
+    example: OtlpGrpcSpanExporter.builder().build()
+    library: opentelemetry-java
+  - id: JAVA-005
+    name: Java Agent
+    category: Java
+    description: Auto-instrumentation
+    example: java -javaagent:opentelemetry-javaagent.jar
+    library: otel-javaagent
+  - id: JAVA-006
+    name: Manual Spans
+    category: Java
+    description: Create custom spans
+    example: Span span = tracer.spanBuilder('op').startSpan()
+    library: opentelemetry-java
+  - id: JAVA-007
+    name: Span Attributes
+    category: Java
+    description: Add metadata
+    example: span.setAttribute('key', 'value')
+    library: opentelemetry-java
+  - id: JAVA-008
+    name: Context Propagation
+    category: Java
+    description: Pass context
+    example: Context.current().with(span).makeCurrent()
+    library: opentelemetry-java
+  - id: JAVA-009
+    name: Micrometer
+    category: Java
+    description: Metrics abstraction facade
+    example: Counter.builder('requests').register(registry)
+    library: micrometer
+  - id: JAVA-010
+    name: Micrometer Timer
+    category: Java
+    description: Track latency
+    example: Timer.Sample sample = Timer.start(registry)
+    library: micrometer
+  - id: JAVA-011
+    name: Micrometer Gauge
+    category: Java
+    description: Register gauge value
+    example: Gauge.builder('queue.size', queue::size)
+    library: micrometer
+  - id: JAVA-012
+    name: Micrometer + Prometheus
+    category: Java
+    description: Export to Prometheus
+    example: PrometheusMeterRegistry
+    library: micrometer
+  - id: JAVA-013
+    name: Micrometer + OTel
+    category: Java
+    description: Bridge to OpenTelemetry
+    example: OpenTelemetryMeterRegistry
+    library: micrometer
+  - id: JAVA-014
+    name: Spring Boot Actuator
+    category: Java
+    description: Production endpoints
+    example: /actuator/health, /actuator/metrics
+    library: spring-boot
+  - id: JAVA-015
+    name: Spring Boot Metrics
+    category: Java
+    description: Auto-configure metrics
+    example: management.metrics.export.enabled=true
+    library: spring-boot
+  - id: JAVA-016
+    name: Spring Boot Tracing
+    category: Java
+    description: Auto-configure tracing
+    example: spring-boot-starter-actuator + micrometer-tracing
+    library: spring-boot
+  - id: JAVA-017
+    name: JFR
+    category: Java
+    description: Java Flight Recorder
+    example: jcmd <pid> JFR.start
+    library: jdk
+  - id: JAVA-018
+    name: async-profiler
+    category: Java
+    description: Low-overhead profiler
+    example: ./profiler.sh -d 30 -f profile.html <pid>
+    library: async-profiler
+  - id: JAVA-019
+    name: JMX Metrics
+    category: Java
+    description: Expose JVM metrics
+    example: MBeanServer mbs = ManagementFactory.getPlatformMBeanServer()
+    library: jdk
+  - id: JAVA-020
+    name: Micronaut Tracing
+    category: Java
+    description: Trace Micronaut apps
+    example: "@Traced annotation"
+    library: micronaut
+  - id: JAVA-021
+    name: Quarkus Tracing
+    category: Java
+    description: Trace Quarkus apps
+    example: quarkus-opentelemetry extension
+    library: quarkus
+  - id: JAVA-022
+    name: MDC Trace ID
+    category: Java
+    description: Logs with trace context
+    example: MDC.put('traceId', span.getSpanContext().getTraceId())
+    library: slf4j
+  - id: JAVA-023
+    name: Brave
+    category: Java
+    description: Zipkin tracer
+    example: Tracing.newBuilder().build()
+    library: brave
+  - id: JAVA-024
+    name: Sleuth
+    category: Java
+    description: Spring Cloud tracing (deprecated)
+    example: Use Micrometer Tracing instead
+    library: spring-cloud
+  - id: JAVA-025
+    name: VisualVM
+    category: Java
+    description: JVM monitoring GUI
+    example: Heap dump, thread analysis
+    library: visualvm

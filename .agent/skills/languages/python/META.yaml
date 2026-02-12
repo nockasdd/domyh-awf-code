@@ -1,14 +1,10 @@
 name: python
-version: "6.1.2"
+version: "6.2.1"
 category: backend
-tier: 1
+tier: 3
 
-description: |
-  Python development patterns for Python 3.12/3.13.
-  Covers FastAPI, Django 5, asyncio, type hints, ML patterns.
+desc: "Python development patterns for Python 3.13/3.14. GIL-free mode, JIT compiler, t-strings, FastAPI, asyncio, type hints."
 
-triggers:
-  file_patterns:
     - "pyproject.toml"
     - "requirements.txt"
     - "*.py"

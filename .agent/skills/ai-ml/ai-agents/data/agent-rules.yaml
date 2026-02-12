@@ -1,0 +1,120 @@
+# Agent Rules Systems - HSA AI Agents Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: ai-agents
+  domain: agent-rules
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: rules001
+    name: cursor_rules
+    category: rules
+    description: Cursor IDE rule system (3-level hierarchy)
+    text: cursor rules mdc global project dynamic file scope
+    hierarchy:
+      global: "Cursor Settings → Rules for AI (plain text, all projects)"
+      project: ".cursor/index.mdc (project overview, tech stack)"
+      dynamic: ".cursor/rules/*.mdc (glob-scoped, activate on context)"
+    example: |
+      ---
+      description: React component guidelines
+      globs: ["src/components/**/*.tsx"]
+      ---
+      - Use functional components with TypeScript
+      - Use React.memo for expensive renders
+    best_practices:
+      - "Keep under 500 lines per rule file"
+      - "Use descriptive names for .mdc files"
+      - "Reference files instead of copying content"
+
+  - id: rules002
+    name: cline_rules
+    category: rules
+    description: Cline Rules for persistent coding standards
+    text: cline rules clinerules folder markdown project workspace
+    locations:
+      folder: ".clinerules/*.md (multiple files)"
+      file: ".clinerules (single file)"
+      agents: "AGENTS.md (alternative)"
+    scope: "Workspace rules override global rules"
+    content_types:
+      - "Code standards (formatting, naming)"
+      - "Documentation requirements"
+      - "Architectural decisions"
+      - "Technology constraints (required/banned)"
+
+  - id: rules003
+    name: codex_agents_md
+    category: rules
+    description: OpenAI Codex AGENTS.md configuration
+    text: codex agents md configuration testing commands code style
+    example: |
+      # AGENTS.md
+      ## Testing
+      Run `npm test` to verify changes.
+      ## Code Style
+      - Use TypeScript strict mode
+      - Follow existing patterns
+      ## Structure
+      - Components in src/components/
+      - API routes in src/api/
+
+  - id: rules004
+    name: domyh_skill_system
+    category: rules
+    description: DOMYH hierarchical skill system (META→SKILL→data)
+    text: domyh skill system meta yaml skill md data progressive disclosure
+    hierarchy:
+      T1_META: "~100 tokens — triggers, keywords, caps (always loaded)"
+      T2_SKILL: "~1500 tokens — patterns, examples, traps (on-demand)"
+      T3_DATA: "YAML domain files (HSA adapter, reference only)"
+
+  - id: rules005
+    name: rule_design_principles
+    category: best-practices
+    description: Best practices for designing agent rules
+    text: rule design principles concise specific scoped layered
+    principles:
+      concise: "Under 500 lines per rule file"
+      specific: "Show patterns and examples, not just principles"
+      scoped: "Use glob patterns for context-specific activation"
+      layered: "Global → Project → File-specific (override order)"
+      outcome_focused: "Describe desired outcomes, not just constraints"
+      conditional: "Use if/when conditions for context-dependent rules"
+
+  - id: rules006
+    name: rule_content_types
+    category: best-practices
+    description: Common content types for agent rules
+    text: rule content types standards conventions patterns frameworks
+    types:
+      - "Code standards: formatting, naming, imports"
+      - "Architecture: patterns, module boundaries, dependencies"
+      - "Security: banned APIs, input validation requirements"
+      - "Testing: coverage thresholds, test patterns"
+      - "Documentation: comment style, README template"
+      - "Git: commit message format, branch naming"
+
+  - id: rules007
+    name: vercel_agent_skills
+    category: reference
+    description: Vercel agent-skills open standard (Anthropic 2025)
+    text: vercel agent skills open standard anthropic markdown code
+    note: "Anthropic open-sourced agent skills in late 2025"
+    format: "Markdown + optional code snippets"
+    example: "Skills packaged as npm modules with domain knowledge"
+
+  - id: rules008
+    name: rule_anti_patterns
+    category: best-practices
+    description: Common anti-patterns in agent rules
+    text: anti-patterns rules mistakes avoid
+    anti_patterns:
+      - "Too generic: 'Write good code' → Be specific"
+      - "Too long: 1000+ line rule files → Split into focused files"
+      - "Stale references: Copying file contents → Reference files instead"
+      - "Contradictory: Conflicting rules → Clear priority/override order"
+      - "Missing context: No examples → Always include code examples"

@@ -1,0 +1,165 @@
+metadata:
+  skill: error-handling
+  domain: error_codes
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: error-codes.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - level
+    - category
+patterns:
+  - id: EC-001
+    pattern: Domain Prefix
+    description: Start error code with domain identifier
+    example: AUTH-001 or PAY-ERR-001
+    level: BASIC
+    category: Structure
+  - id: EC-002
+    pattern: Numeric Code
+    description: Use numeric codes for processing
+    example: 1001 for validation error
+    level: BASIC
+    category: Structure
+  - id: EC-003
+    pattern: Alphanumeric Code
+    description: Combine letters and numbers
+    example: E1001 or ERR_INVALID_INPUT
+    level: BASIC
+    category: Structure
+  - id: EC-004
+    pattern: Severity Level
+    description: Include severity in code
+    example: CRIT-001 for critical
+    level: INTERMEDIATE
+    category: Classification
+  - id: EC-005
+    pattern: Category Code
+    description: Group codes by category
+    example: VAL-001 for validation category
+    level: BASIC
+    category: Classification
+  - id: EC-006
+    pattern: HTTP Status Mapping
+    description: Map error codes to HTTP status
+    example: 404-001 maps to 404 Not Found
+    level: INTERMEDIATE
+    category: API
+  - id: EC-007
+    pattern: Sequential Numbering
+    description: Assign codes sequentially
+    example: 001 -> 002 -> 003
+    level: BASIC
+    category: Structure
+  - id: EC-008
+    pattern: Reserved Ranges
+    description: Reserve code ranges
+    example: 1000-1999 for validation
+    level: INTERMEDIATE
+    category: Organization
+  - id: EC-009
+    pattern: Unique Identifier
+    description: Ensure global uniqueness
+    example: UUID-based error identifier
+    level: ADVANCED
+    category: Tracking
+  - id: EC-010
+    pattern: Version Suffix
+    description: Include version in code
+    example: AUTH-001-v2
+    level: ADVANCED
+    category: Versioning
+  - id: EC-011
+    pattern: Error Registry
+    description: Central catalog of codes
+    example: ErrorRegistry.register(AUTH_001)
+    level: INTERMEDIATE
+    category: Organization
+  - id: EC-012
+    pattern: Code Lookup
+    description: Function to get error details
+    example: ErrorCatalog.lookup('AUTH-001')
+    level: INTERMEDIATE
+    category: API
+  - id: EC-013
+    pattern: Deprecation Mark
+    description: Mark deprecated codes
+    example: AUTH-001 [DEPRECATED]
+    level: INTERMEDIATE
+    category: Lifecycle
+  - id: EC-014
+    pattern: Related Codes
+    description: Link related error codes
+    example: AUTH-001 relates to AUTH-002
+    level: ADVANCED
+    category: Organization
+  - id: EC-015
+    pattern: Machine Readable
+    description: Codes parseable by machines
+    example: 'JSON: { "code": "AUTH-001" }'
+    level: BASIC
+    category: Format
+  - id: EC-016
+    pattern: Human Readable
+    description: Codes understandable by humans
+    example: AUTH_INVALID_PASSWORD
+    level: BASIC
+    category: Format
+  - id: EC-017
+    pattern: Localization Key
+    description: Use code as i18n key
+    example: errors.AUTH_001.message
+    level: INTERMEDIATE
+    category: Internationalization
+  - id: EC-018
+    pattern: Error Enum
+    description: Define codes as enum
+    example: enum ErrorCode { AUTH_001 = 'AUTH_001' }
+    level: BASIC
+    category: Definition
+  - id: EC-019
+    pattern: Constant Definition
+    description: Define codes as constants
+    example: const AUTH_001 = 'AUTH-001';
+    level: BASIC
+    category: Definition
+  - id: EC-020
+    pattern: Code Documentation
+    description: Document each error code
+    example: "/** AUTH-001: Invalid password format */"
+    level: INTERMEDIATE
+    category: Documentation
+  - id: EC-021
+    pattern: Error Namespace
+    description: Namespace error codes
+    example: Company.Module.ErrorCode
+    level: INTERMEDIATE
+    category: Structure
+  - id: EC-022
+    pattern: Recovery Action
+    description: Include recovery hint in code
+    example: AUTH-001-RETRY vs AUTH-001-FATAL
+    level: ADVANCED
+    category: Classification
+  - id: EC-023
+    pattern: Transient Marker
+    description: Mark transient errors
+    example: NET-001-T for transient network error
+    level: INTERMEDIATE
+    category: Classification
+  - id: EC-024
+    pattern: Permanent Marker
+    description: Mark permanent errors
+    example: VAL-001-P for permanent validation error
+    level: INTERMEDIATE
+    category: Classification
+  - id: EC-025
+    pattern: Error Code Type
+    description: Type-safe error codes
+    example: type ErrorCode = 'AUTH-001' | 'AUTH-002'
+    level: INTERMEDIATE
+    category: Type Safety

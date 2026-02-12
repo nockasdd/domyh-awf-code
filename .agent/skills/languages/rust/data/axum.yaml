@@ -1,0 +1,450 @@
+# =============================================================================
+# Rust Axum Patterns (Feb 2026)
+# Version: Axum 0.8+ / Tower
+# =============================================================================
+
+metadata:
+  skill: rust
+  domain: axum
+  version: "0.8"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rs201
+    name: Router with State
+    category: http
+    version: "axum 0.7+"
+    description: |
+      Axum router setup with shared application state.
+      Database pools, config, services.
+    text: axum router state arc pool database
+    example: |
+      use axum::{Router, routing::{get, post}, extract::State};
+      use std::sync::Arc;
+      use sqlx::PgPool;
+
+      // ✅ Application state
+      #[derive(Clone)]
+      struct AppState {
+          db: PgPool,
+          redis: redis::Client,
+          config: Arc<Config>,
+      }
+
+      impl AppState {
+          async fn new() -> Result<Self, Error> {
+              let db = PgPool::connect(&env::var("DATABASE_URL")?).await?;
+              let redis = redis::Client::open(env::var("REDIS_URL")?)?;
+              let config = Arc::new(Config::load()?);
+              
+              Ok(Self { db, redis, config })
+          }
+      }
+
+      // ✅ Handler using state
+      async fn list_users(State(state): State<AppState>) -> Result<Json<Vec<User>>, AppError> {
+          let users = sqlx::query_as!(User, "SELECT * FROM users")
+              .fetch_all(&state.db)
+              .await?;
+          Ok(Json(users))
+      }
+
+      async fn get_config(State(state): State<AppState>) -> Json<Config> {
+          Json((*state.config).clone())
+      }
+
+      // ✅ Router setup
+      fn create_router(state: AppState) -> Router {
+          Router::new()
+              .route("/users", get(list_users).post(create_user))
+              .route("/users/:id", get(get_user).put(update_user).delete(delete_user))
+              .route("/health", get(health_check))
+              .with_state(state)
+      }
+
+      #[tokio::main]
+      async fn main() -> Result<(), Error> {
+          let state = AppState::new().await?;
+          let app = create_router(state);
+          
+          let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+          axum::serve(listener, app).await?;
+          Ok(())
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/axum/latest/axum/#using-state
+
+  - id: rs202
+    name: Tower Middleware
+    category: http
+    version: "tower 0.4+"
+    description: |
+      Composable middleware with Tower ecosystem.
+      Logging, tracing, compression, timeout.
+    text: tower middleware layer service builder tracing
+    example: |
+      use axum::{Router, middleware};
+      use tower::ServiceBuilder;
+      use tower_http::{
+          trace::TraceLayer,
+          compression::CompressionLayer,
+          timeout::TimeoutLayer,
+          cors::CorsLayer,
+      };
+      use std::time::Duration;
+
+      // ✅ ServiceBuilder for middleware stack
+      fn create_app(state: AppState) -> Router {
+          Router::new()
+              .route("/api/users", get(list_users))
+              .route("/api/posts", get(list_posts))
+              .layer(
+                  ServiceBuilder::new()
+                      .layer(TraceLayer::new_for_http())
+                      .layer(CompressionLayer::new())
+                      .layer(TimeoutLayer::new(Duration::from_secs(30)))
+                      .layer(CorsLayer::permissive())
+              )
+              .with_state(state)
+      }
+
+      // ✅ Custom middleware with from_fn
+      use axum::{http::Request, middleware::Next, response::Response};
+
+      async fn auth_middleware(
+          State(state): State<AppState>,
+          request: Request<axum::body::Body>,
+          next: Next,
+      ) -> Result<Response, AppError> {
+          let token = request
+              .headers()
+              .get("Authorization")
+              .and_then(|h| h.to_str().ok())
+              .ok_or(AppError::Unauthorized)?;
+          
+          let user = validate_token(&state.db, token).await?;
+          
+          // Add user to request extensions
+          let mut request = request;
+          request.extensions_mut().insert(user);
+          
+          Ok(next.run(request).await)
+      }
+
+      // Apply to specific routes
+      fn protected_routes(state: AppState) -> Router {
+          Router::new()
+              .route("/profile", get(get_profile))
+              .route("/settings", get(get_settings).put(update_settings))
+              .layer(middleware::from_fn_with_state(state.clone(), auth_middleware))
+              .with_state(state)
+      }
+
+      // ✅ Request timing middleware
+      async fn timing_middleware(
+          request: Request<axum::body::Body>,
+          next: Next,
+      ) -> Response {
+          let start = std::time::Instant::now();
+          let path = request.uri().path().to_string();
+          
+          let response = next.run(request).await;
+          
+          let duration = start.elapsed();
+          tracing::info!(
+              path = %path,
+              status = %response.status(),
+              duration_ms = %duration.as_millis(),
+              "request completed"
+          );
+          
+          response
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/tower/latest/tower/
+
+  - id: rs203
+    name: Extractors and Responses
+    category: http
+    version: "axum 0.7+"
+    description: |
+      Type-safe request extraction and response building.
+      Path, Query, Json, Form extractors.
+    text: extractor response json path query form axum
+    example: |
+      use axum::{
+          extract::{Path, Query, Json, State, Form},
+          response::{IntoResponse, Response},
+          http::StatusCode,
+      };
+      use serde::{Deserialize, Serialize};
+
+      // ✅ Path parameters
+      async fn get_user(Path(id): Path<i32>) -> Result<Json<User>, AppError> {
+          // id is parsed from /users/:id
+          todo!()
+      }
+
+      // Multiple path params
+      async fn get_user_post(
+          Path((user_id, post_id)): Path<(i32, i32)>,
+      ) -> Result<Json<Post>, AppError> {
+          todo!()
+      }
+
+      // ✅ Query parameters
+      #[derive(Deserialize)]
+      struct ListParams {
+          page: Option<u32>,
+          limit: Option<u32>,
+          search: Option<String>,
+      }
+
+      async fn list_users(
+          Query(params): Query<ListParams>,
+      ) -> Result<Json<Vec<User>>, AppError> {
+          let page = params.page.unwrap_or(1);
+          let limit = params.limit.unwrap_or(20).min(100);
+          todo!()
+      }
+
+      // ✅ JSON body
+      #[derive(Deserialize)]
+      struct CreateUser {
+          email: String,
+          name: String,
+      }
+
+      async fn create_user(
+          State(state): State<AppState>,
+          Json(payload): Json<CreateUser>,
+      ) -> Result<(StatusCode, Json<User>), AppError> {
+          let user = state.db.create_user(payload).await?;
+          Ok((StatusCode::CREATED, Json(user)))
+      }
+
+      // ✅ Custom response
+      #[derive(Serialize)]
+      struct ApiResponse<T> {
+          success: bool,
+          data: Option<T>,
+          error: Option<String>,
+      }
+
+      impl<T: Serialize> IntoResponse for ApiResponse<T> {
+          fn into_response(self) -> Response {
+              let status = if self.success {
+                  StatusCode::OK
+              } else {
+                  StatusCode::BAD_REQUEST
+              };
+              (status, Json(self)).into_response()
+          }
+      }
+
+      // ✅ Extension extractor (from middleware)
+      use axum::Extension;
+
+      async fn get_profile(
+          Extension(user): Extension<User>,
+      ) -> Json<User> {
+          Json(user)
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/axum/latest/axum/extract/index.html
+
+  - id: rs204
+    name: Error Handling Layer
+    category: errors
+    version: "axum 0.7+"
+    description: |
+      Centralized error handling with custom error types.
+      Convert errors to HTTP responses.
+    text: error handling axum intoresponse appError status
+    example: |
+      use axum::{
+          response::{IntoResponse, Response},
+          http::StatusCode,
+          Json,
+      };
+      use serde_json::json;
+
+      // ✅ Application error type
+      #[derive(Debug)]
+      pub enum AppError {
+          NotFound(String),
+          BadRequest(String),
+          Unauthorized,
+          Forbidden,
+          Internal(anyhow::Error),
+          Database(sqlx::Error),
+          Validation(validator::ValidationErrors),
+      }
+
+      impl IntoResponse for AppError {
+          fn into_response(self) -> Response {
+              let (status, message) = match &self {
+                  AppError::NotFound(msg) => (StatusCode::NOT_FOUND, msg.clone()),
+                  AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, msg.clone()),
+                  AppError::Unauthorized => (StatusCode::UNAUTHORIZED, "Unauthorized".into()),
+                  AppError::Forbidden => (StatusCode::FORBIDDEN, "Forbidden".into()),
+                  AppError::Internal(err) => {
+                      tracing::error!("Internal error: {:?}", err);
+                      (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error".into())
+                  }
+                  AppError::Database(err) => {
+                      tracing::error!("Database error: {:?}", err);
+                      (StatusCode::INTERNAL_SERVER_ERROR, "Database error".into())
+                  }
+                  AppError::Validation(errors) => {
+                      let messages: Vec<String> = errors
+                          .field_errors()
+                          .into_iter()
+                          .flat_map(|(f, e)| e.into_iter().map(move |e| format!("{}: {:?}", f, e.message)))
+                          .collect();
+                      (StatusCode::UNPROCESSABLE_ENTITY, messages.join(", "))
+                  }
+              };
+              
+              let body = Json(json!({ "error": message }));
+              (status, body).into_response()
+          }
+      }
+
+      // ✅ From implementations for ? operator
+      impl From<sqlx::Error> for AppError {
+          fn from(err: sqlx::Error) -> Self {
+              match err {
+                  sqlx::Error::RowNotFound => AppError::NotFound("Resource not found".into()),
+                  _ => AppError::Database(err),
+              }
+          }
+      }
+
+      impl From<anyhow::Error> for AppError {
+          fn from(err: anyhow::Error) -> Self {
+              AppError::Internal(err)
+          }
+      }
+
+      // ✅ Usage in handlers
+      async fn get_user(
+          State(state): State<AppState>,
+          Path(id): Path<i32>,
+      ) -> Result<Json<User>, AppError> {
+          let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = $1", id)
+              .fetch_optional(&state.db)
+              .await?
+              .ok_or_else(|| AppError::NotFound(format!("User {} not found", id)))?;
+          
+          Ok(Json(user))
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/axum/latest/axum/error_handling/index.html
+
+  - id: rs205
+    name: SQLx Integration
+    category: database
+    version: "sqlx 0.8+"
+    description: |
+      Compile-time checked SQL with SQLx.
+      Async database operations with Axum.
+    text: sqlx database postgres mysql query compile-time
+    example: |
+      use sqlx::{PgPool, FromRow, postgres::PgPoolOptions};
+
+      // ✅ Database model
+      #[derive(FromRow, Serialize)]
+      pub struct User {
+          pub id: i32,
+          pub email: String,
+          pub name: String,
+          pub created_at: chrono::DateTime<chrono::Utc>,
+      }
+
+      // ✅ Connection pool setup
+      async fn create_pool() -> Result<PgPool, sqlx::Error> {
+          PgPoolOptions::new()
+              .max_connections(20)
+              .min_connections(5)
+              .acquire_timeout(std::time::Duration::from_secs(3))
+              .connect(&std::env::var("DATABASE_URL")?)
+              .await
+      }
+
+      // ✅ Compile-time checked queries
+      async fn get_user(pool: &PgPool, id: i32) -> Result<Option<User>, sqlx::Error> {
+          sqlx::query_as!(User, "SELECT * FROM users WHERE id = $1", id)
+              .fetch_optional(pool)
+              .await
+      }
+
+      async fn create_user(pool: &PgPool, email: &str, name: &str) -> Result<User, sqlx::Error> {
+          sqlx::query_as!(
+              User,
+              r#"
+              INSERT INTO users (email, name)
+              VALUES ($1, $2)
+              RETURNING *
+              "#,
+              email,
+              name
+          )
+          .fetch_one(pool)
+          .await
+      }
+
+      // ✅ Transaction
+      async fn transfer_funds(
+          pool: &PgPool,
+          from_id: i32,
+          to_id: i32,
+          amount: i64,
+      ) -> Result<(), sqlx::Error> {
+          let mut tx = pool.begin().await?;
+          
+          sqlx::query!(
+              "UPDATE accounts SET balance = balance - $1 WHERE id = $2",
+              amount,
+              from_id
+          )
+          .execute(&mut *tx)
+          .await?;
+          
+          sqlx::query!(
+              "UPDATE accounts SET balance = balance + $1 WHERE id = $2",
+              amount,
+              to_id
+          )
+          .execute(&mut *tx)
+          .await?;
+          
+          tx.commit().await?;
+          Ok(())
+      }
+
+      // ✅ Dynamic queries
+      use sqlx::QueryBuilder;
+
+      async fn search_users(
+          pool: &PgPool,
+          search: Option<&str>,
+          limit: i32,
+      ) -> Result<Vec<User>, sqlx::Error> {
+          let mut builder = QueryBuilder::new("SELECT * FROM users");
+          
+          if let Some(term) = search {
+              builder.push(" WHERE name ILIKE ");
+              builder.push_bind(format!("%{}%", term));
+          }
+          
+          builder.push(" ORDER BY created_at DESC LIMIT ");
+          builder.push_bind(limit);
+          
+          builder.build_query_as::<User>()
+              .fetch_all(pool)
+              .await
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/sqlx/

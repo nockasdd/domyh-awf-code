@@ -1,15 +1,15 @@
 ---
 name: angular
 detect: ["angular.json", "*.component.ts", "@angular/core"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# Angular Patterns — DOMYH Awesome Code v6.1.2
+# Angular Patterns — DOMYH Awesome Code
 
-> **Version**: Angular 19/20 (2025-2026)
-> **Philosophy**: Signals-first, standalone, zoneless-ready
+> **Version**: Angular 20.2/21/22 (2025-2026)
+> **Philosophy**: Signals-first, standalone, zoneless-stable
 
 ---
 
@@ -133,12 +133,14 @@ export class FormFieldComponent {
 ### Zoneless Change Detection
 
 ```typescript
-// ✅ Angular 20: Zoneless stable
+// ✅ Angular 20.2: Zoneless STABLE (not experimental anymore)
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideExperimentalZonelessChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 bootstrapApplication(AppComponent, {
-  providers: [provideExperimentalZonelessChangeDetection()],
+  providers: [
+    provideZonelessChangeDetection(), // ✅ Stable API
+  ],
 });
 
 // ✅ Component with signals works automatically
@@ -153,6 +155,47 @@ export class AppComponent {
   // No Zone.js needed - signals trigger change detection
 }
 ```
+
+### Incremental Hydration (Stable)
+
+```typescript
+// ✅ Angular 20.2+: On-demand hydration for SSR
+import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideClientHydration(
+      withIncrementalHydration(), // ✅ Stable in v20.2
+      withEventReplay(),          // ✅ Default in v19+
+    ),
+  ],
+});
+
+// In templates - hydrate on viewport visibility
+@defer (hydrate on viewport) {
+  <heavy-component />
+}
+```
+
+### Route-level Rendering Modes
+
+```typescript
+// ✅ Angular 20+: Production-ready route rendering configuration
+import { Routes, RenderMode, ServerRoute } from "@angular/router";
+
+const serverRoutes: ServerRoute[] = [
+  { path: "/", renderMode: RenderMode.Prerender }, // Static at build
+  { path: "/dashboard/**", renderMode: RenderMode.Server }, // SSR
+  { path: "/static/**", renderMode: RenderMode.Client }, // SPA
+];
+
+export const routes: Routes = [
+  { path: "", component: HomeComponent },
+  { path: "dashboard", loadComponent: () => import("./dashboard") },
+];
+```
+
+````
 
 ---
 
@@ -180,7 +223,7 @@ export class UserService {
     }
   }
 }
-```
+````
 
 ### HTTP with Signals
 
@@ -259,11 +302,18 @@ export class UsersComponent {
 
 ### Performance
 
-- [ ] Enable zoneless mode
+- [ ] Enable zoneless mode (provideZonelessChangeDetection)
 - [ ] Use `@defer` for lazy loading
 - [ ] `track` in @for loops
 - [ ] OnPush change detection
+- [ ] Incremental hydration for SSR
+
+### TypeScript 5.9
+
+- [ ] Full compatibility ensured
+- [ ] Host bindings with IntelliSense
+- [ ] Enhanced template type checking
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Angular 19/20_
+_DOMYH Awesome Code • Angular 20.2/21/22 • Zoneless Stable_

@@ -1,0 +1,85 @@
+# Electron IPC Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: ipc
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: ipc001
+    name: ipcMain.handle
+    category: ipc
+    version: "7+"
+    description: Async IPC handler pattern (recommended for request-response)
+    text: ipc invoke handle async communication main renderer promise await
+    example: |
+      ipcMain.handle('channel', async (event, data) => {
+        return await processData(data);
+      });
+    severity: HIGH
+    recommended: true
+
+  - id: ipc002
+    name: ipcRenderer.invoke
+    category: ipc
+    version: "7+"
+    description: Invoke main process handler and await response
+    text: ipc invoke renderer call main process promise async
+    example: "const result = await ipcRenderer.invoke('channel', data);"
+    severity: HIGH
+    recommended: true
+
+  - id: ipc003
+    name: ipcMain.on / ipcRenderer.send
+    category: ipc
+    version: all
+    description: One-way IPC from renderer to main (fire-and-forget)
+    text: ipc send on one way communication main renderer fire forget
+    example: |
+      // Renderer
+      ipcRenderer.send('channel', data);
+      // Main
+      ipcMain.on('channel', (event, data) => { ... });
+    severity: MEDIUM
+
+  - id: ipc004
+    name: MessageChannelMain
+    category: ipc
+    version: "14+"
+    description: Direct renderer-to-renderer communication via message ports
+    text: message port channel direct renderer communication port transfer
+    example: |
+      const { port1, port2 } = new MessageChannelMain();
+      window1.webContents.postMessage('port', null, [port1]);
+      window2.webContents.postMessage('port', null, [port2]);
+    severity: MEDIUM
+
+  - id: ipc005
+    name: contextBridge types
+    category: ipc
+    version: all
+    description: TypeScript type declarations for exposed preload API
+    text: typescript types preload api declaration interface window global
+    example: |
+      // preload.d.ts
+      declare global {
+        interface Window {
+          electronAPI: {
+            openFile: () => Promise<string | null>;
+          }
+        }
+      }
+    severity: LOW
+
+  - id: ipc006
+    name: webContents.send
+    category: ipc
+    version: all
+    description: Push events from main process to renderer
+    text: webcontents send main renderer push events notify update
+    example: "mainWindow.webContents.send('update:progress', 50);"
+    severity: MEDIUM

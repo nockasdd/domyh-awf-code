@@ -1,0 +1,401 @@
+# DOMYH Awesome Code — Library Registry v6.2.1
+# Best libraries for each language (2025-2026)
+# Token-optimized: Only load relevant section
+
+# =============================================================================
+# 🔧 GO (Golang)
+# =============================================================================
+
+go:
+  web_frameworks:
+    tier_1: # Most popular
+      - name: gin
+        use: "REST APIs, microservices"
+        install: "go get github.com/gin-gonic/gin"
+      - name: echo
+        use: "High-perf APIs, minimal"
+        install: "go get github.com/labstack/echo/v5"
+      - name: fiber
+        use: "Express.js style, fasthttp"
+        install: "go get github.com/gofiber/fiber/v2"
+    tier_2:
+      - beego # Full-stack
+      - chi # Lightweight router
+      - gorilla # Modular toolkit
+
+  database:
+    orm:
+      - name: gorm
+        use: "Full ORM, associations, migrations"
+        install: "go get gorm.io/gorm"
+      - name: sqlx
+        use: "SQL extensions, lightweight"
+        install: "go get github.com/jmoiron/sqlx"
+      - name: sqlc
+        use: "Type-safe SQL code gen"
+        install: "go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest"
+    drivers:
+      - pgx # PostgreSQL
+      - mysql # MySQL
+      - sqlite # SQLite
+
+  http_client:
+    - name: resty
+      use: "Fluent HTTP client"
+    - name: net/http
+      use: "Standard library (recommended)"
+
+  utilities:
+    - cobra # CLI
+    - viper # Config
+    - zap # Logging
+    - testify # Testing
+
+# =============================================================================
+# 🐍 PYTHON
+# =============================================================================
+
+python:
+  web_frameworks:
+    tier_1:
+      - name: fastapi
+        use: "Async APIs, automatic docs, ML deployment"
+        install: "pip install fastapi uvicorn"
+      - name: django
+        use: "Full-stack, admin, enterprise"
+        install: "pip install django"
+      - name: flask
+        use: "Micro-framework, prototyping"
+        install: "pip install flask"
+    tier_2:
+      - tornado # Async
+      - pyramid # Flexible
+      - dash # Data viz
+
+  data_science:
+    core:
+      - numpy # Numerical computing
+      - pandas # DataFrames
+      - polars # Fast alternative
+    ml:
+      - scikit-learn # Classical ML
+      - tensorflow # Deep learning (Google)
+      - pytorch # Deep learning (Meta)
+      - transformers # NLP (Hugging Face)
+    viz:
+      - matplotlib
+      - seaborn
+      - plotly
+
+  database:
+    orm:
+      - sqlalchemy # Full ORM
+      - peewee # Lightweight
+    async:
+      - asyncpg # PostgreSQL
+      - databases # Async wrapper
+
+  utilities:
+    - pydantic # Validation
+    - httpx # HTTP client
+    - pytest # Testing
+    - black # Formatter
+
+# =============================================================================
+# 📘 TYPESCRIPT / JAVASCRIPT
+# =============================================================================
+
+typescript:
+  frontend:
+    frameworks:
+      - name: react
+        use: "Component-based UI, 82% usage"
+      - name: vue
+        use: "Progressive, easy learning curve"
+      - name: svelte
+        use: "Compile-time, fast"
+      - name: solid
+        use: "Fine-grained reactivity"
+    meta_frameworks:
+      - name: nextjs
+        use: "React SSR/SSG, App Router"
+      - name: nuxt
+        use: "Vue SSR/SSG"
+      - name: remix
+        use: "React, web fundamentals"
+
+  ui_libraries:
+    tier_1:
+      - shadcn/ui # Radix + Tailwind
+      - mui # Material Design
+      - chakra-ui # Accessible
+      - antd # Enterprise
+    tier_2:
+      - mantine
+      - nextui
+      - radix-ui
+
+  state_management:
+    - zustand # Minimal
+    - redux-toolkit # Full (RTK)
+    - tanstack-query # Server state
+
+  backend:
+    frameworks:
+      - name: express
+        use: "Minimal, flexible"
+      - name: nestjs
+        use: "Angular-style, enterprise"
+      - name: fastify
+        use: "Performance-focused"
+    validation:
+      - zod # Schema validation
+      - joi # Object schema
+
+  utilities:
+    - axios # HTTP
+    - lodash # Utils
+    - date-fns # Dates
+    - vitest # Testing
+
+# =============================================================================
+# 🦀 RUST
+# =============================================================================
+
+rust:
+  async_runtime:
+    - name: tokio
+      use: "De-facto async runtime"
+      install: 'tokio = { version = "1", features = ["full"] }'
+
+  web_frameworks:
+    tier_1:
+      - name: actix-web
+        use: "High-perf, actor model"
+      - name: axum
+        use: "Tokio-based, macro-free"
+      - name: rocket
+        use: "Developer-friendly"
+    tier_2:
+      - warp
+      - salvo
+      - poem
+
+  database:
+    - name: sqlx
+      use: "Compile-time SQL validation"
+    - name: diesel
+      use: "Full ORM"
+    - name: sea-orm
+      use: "Async ORM"
+
+  serialization:
+    - serde # Serialize/Deserialize
+    - serde_json # JSON
+
+  utilities:
+    - clap # CLI
+    - tracing # Logging
+    - anyhow # Error handling
+    - thiserror # Custom errors
+    - reqwest # HTTP client
+
+# =============================================================================
+# ☕ JAVA
+# =============================================================================
+
+java:
+  frameworks:
+    tier_1:
+      - name: spring-boot
+        use: "Enterprise, microservices"
+      - name: quarkus
+        use: "Cloud-native, fast startup"
+      - name: micronaut
+        use: "Compile-time DI"
+    tier_2:
+      - jakarta-ee # Enterprise standard
+      - helidon # Oracle microservices
+
+  database:
+    orm:
+      - hibernate # JPA implementation
+      - jooq # Type-safe SQL
+    connection:
+      - hikaricp # Connection pool
+
+  build_tools:
+    - gradle # Fast, flexible
+    - maven # Convention-based
+
+  utilities:
+    - jackson # JSON
+    - lombok # Reduce boilerplate
+    - junit5 # Testing
+    - mockito # Mocking
+    - guava # Google utils
+
+# =============================================================================
+# 🍎 SWIFT (iOS)
+# =============================================================================
+
+swift:
+  ui:
+    - name: swiftui
+      use: "Declarative UI (Apple)"
+    - name: uikit
+      use: "Imperative UI (legacy)"
+
+  networking:
+    - name: alamofire
+      use: "HTTP networking, 70% usage"
+    - name: urlsession
+      use: "Native (recommended with async)"
+
+  image:
+    - name: kingfisher
+      use: "Image loading + caching"
+    - name: asyncimage
+      use: "SwiftUI native"
+
+  state:
+    - name: combine
+      use: "Reactive programming"
+    - name: tca
+      use: "Composable Architecture"
+
+  persistence:
+    - swiftdata # Modern (iOS 17+)
+    - coredata # Legacy
+    - realm # Alternative
+
+  ui_libraries:
+    - lottie # Animations
+    - snapkit # Auto Layout
+    - swiftui-introspect
+
+  utilities:
+    - revenuecat # In-app purchases
+    - firebase # Backend services
+    - swiftlint # Linting
+
+# =============================================================================
+# ➕ C++
+# =============================================================================
+
+cpp:
+  ui:
+    - name: qt
+      use: "Cross-platform GUI"
+    - name: wxwidgets
+      use: "Alternative GUI"
+
+  networking:
+    - boost-asio # Async I/O
+    - boost-beast # HTTP/WebSocket
+    - poco # Network/IoT
+
+  json:
+    - name: nlohmann-json
+      use: "Simple, header-only"
+    - name: glaze
+      use: "High-performance"
+
+  utilities:
+    - boost # General purpose
+    - spdlog # Logging
+    - fmt # Formatting
+    - gtest # Testing
+    - catch2 # Testing alt
+
+# =============================================================================
+# 🎸 OTHER LANGUAGES
+# =============================================================================
+
+kotlin:
+  android:
+    - jetpack-compose # Modern UI
+    - retrofit # HTTP
+    - room # Database
+    - dagger-hilt # DI
+    - coroutines # Async
+
+php:
+  frameworks:
+    - laravel # Full-stack
+    - symfony # Enterprise
+  orm:
+    - eloquent # Laravel ORM
+    - doctrine # Standalone
+  utilities:
+    - composer # Package manager
+
+lua:
+  game:
+    - love2d # 2D game engine
+  embedding:
+    - neovim # Text editor
+    - redis # Scripting
+
+csharp:
+  frameworks:
+    - aspnet-core # Web
+    - blazor # WebAssembly
+  orm:
+    - ef-core # Entity Framework
+  ui:
+    - maui # Cross-platform
+    - wpf # Windows
+
+# =============================================================================
+# 🎯 SELECTION LOGIC
+# =============================================================================
+
+selection_rules:
+  by_use_case:
+    web_api:
+      go: [gin, echo, fiber]
+      python: [fastapi, flask]
+      typescript: [express, fastify, nestjs]
+      rust: [actix-web, axum]
+      java: [spring-boot, quarkus]
+
+    full_stack:
+      python: [django]
+      typescript: [nextjs, nuxt, remix]
+      java: [spring-boot]
+      php: [laravel]
+
+    microservices:
+      go: [gin, go-kit]
+      java: [quarkus, micronaut]
+      rust: [axum]
+      typescript: [nestjs]
+
+    mobile_ios:
+      swift: [swiftui, alamofire, kingfisher]
+
+    mobile_android:
+      kotlin: [jetpack-compose, retrofit, room]
+
+    data_science:
+      python: [pandas, numpy, scikit-learn]
+
+    machine_learning:
+      python: [pytorch, tensorflow, transformers]
+
+    cli_tools:
+      go: [cobra]
+      rust: [clap]
+      python: [click, typer]
+
+    game_dev:
+      cpp: [sdl, sfml]
+      lua: [love2d]
+      csharp: [unity]
+
+  by_priority:
+    performance: [rust, go, cpp]
+    productivity: [python, typescript]
+    enterprise: [java, csharp]
+    mobile: [swift, kotlin]

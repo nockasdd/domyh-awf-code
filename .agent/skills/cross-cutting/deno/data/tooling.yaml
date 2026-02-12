@@ -1,0 +1,133 @@
+# =============================================================================
+# Deno 2.1+ Development Tools Patterns (Feb 2026)
+# =============================================================================
+# CLI tools and development utilities
+
+metadata:
+  skill: deno
+  domain: tooling
+  version: "2.1.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: deno020
+    name: Deno.test
+    category: testing
+    version: "1.0+"
+    description: Built-in test runner with BDD-style syntax
+    text: test runner describe expect assert unit integration
+    example: |
+      import { assertEquals } from "jsr:@std/assert";
+
+      Deno.test("addition works", () => {
+        assertEquals(1 + 2, 3);
+      });
+
+      Deno.test({
+        name: "async test",
+        async fn() {
+          const result = await fetch("http://localhost:3000");
+          assertEquals(result.status, 200);
+        },
+      });
+
+      // Run: deno test --watch --coverage
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/basics/testing
+
+  - id: deno021
+    name: deno compile
+    category: cli
+    version: "1.6+"
+    description: Compile to standalone executable with embedded assets (2.1+)
+    text: compile standalone executable binary deploy embed assets
+    example: |
+      # Basic compile
+      deno compile --output=myapp main.ts
+
+      # With embedded assets (Deno 2.1+)
+      deno compile --include=./assets --output=myapp main.ts
+
+      # Cross-compilation
+      deno compile --target=x86_64-unknown-linux-gnu main.ts
+      deno compile --target=x86_64-pc-windows-msvc main.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/tools/compiler
+
+  - id: deno022
+    name: deno task
+    category: cli
+    version: "1.20+"
+    description: Define project-specific scripts like npm scripts
+    text: task script runner deno.json npm scripts
+    example: |
+      // deno.json
+      {
+        "tasks": {
+          "dev": "deno run --watch --allow-all server.ts",
+          "test": "deno test --coverage",
+          "build": "deno compile --output=dist/app main.ts"
+        }
+      }
+
+      # Run: deno task dev
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/tools/task_runner
+
+  - id: deno023
+    name: deno add/remove
+    category: cli
+    version: "2.0+"
+    description: Simplified dependency management
+    text: add remove install dependency package management
+    example: |
+      # Add JSR packages
+      deno add @std/fs @std/yaml
+
+      # Add npm packages
+      deno add npm:express npm:lodash
+
+      # Remove packages
+      deno remove @std/fs
+
+      # Install all dependencies
+      deno install
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/basics/modules
+
+  - id: deno024
+    name: deno outdated
+    category: cli
+    version: "2.1+"
+    description: Check for outdated dependencies
+    text: outdated dependencies update check version
+    example: |
+      # Check outdated deps
+      deno outdated
+
+      # Update to latest versions
+      deno outdated --update
+
+      # Check specific packages
+      deno outdated @std/fs
+    severity: LOW
+    docs_url: https://docs.deno.com/runtime/manual/basics/modules
+
+  - id: deno025
+    name: dx (package runner)
+    category: cli
+    version: "2.0+"
+    description: Run npm packages without install (like npx)
+    text: dx npx package runner execute binary
+    example: |
+      # Run prettier without installing
+      dx prettier --write .
+
+      # Run eslint
+      dx eslint .
+
+      # Run tsc
+      dx typescript --version
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/tools/dx

@@ -1,0 +1,260 @@
+# =============================================================================
+# React Native Core Patterns (Feb 2026)
+# =============================================================================
+# New Architecture default, Fabric, Turbo Modules
+
+metadata:
+  skill: react-native
+  domain: core
+  version: "0.77"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rn001
+    name: New Architecture (Default)
+    category: architecture
+    version: "0.76+"
+    description: |
+      New Architecture is now default since 0.76.
+      Fabric renderer, Turbo Modules, JSI.
+    text: new architecture fabric turbo module jsi bridge
+    example: |
+      // ✅ React Native 0.76+: New Architecture is DEFAULT
+      // No configuration needed for new projects
+
+      // Key components:
+      // 1. Fabric - New rendering system
+      // 2. Turbo Modules - Lazy native module loading
+      // 3. JSI - Direct JS ↔ C++ communication
+
+      // ✅ Benefits:
+      // - No bridge serialization (faster)
+      // - Synchronous native calls possible
+      // - Concurrent rendering (React 18)
+      // - Smaller memory footprint
+      // - Faster startup time
+
+      // ✅ Check if New Architecture is enabled
+      import { TurboModuleRegistry } from 'react-native';
+      const isNewArchEnabled = TurboModuleRegistry.get !== undefined;
+
+      // ⚠️ Legacy architecture removed in 0.82+
+      // All new React/RN features require New Architecture
+    severity: CRITICAL
+    docs_url: https://reactnative.dev/docs/new-architecture-intro
+
+  - id: rn002
+    name: Functional Components
+    category: components
+    version: "0.60+"
+    description: Modern React Native component patterns
+    text: function component hook useState useEffect style
+    example: |
+      import React, { useState, useEffect } from 'react';
+      import {
+        View,
+        Text,
+        StyleSheet,
+        TouchableOpacity,
+        FlatList,
+      } from 'react-native';
+
+      interface User {
+        id: string;
+        name: string;
+        email: string;
+      }
+
+      export function UserList() {
+        const [users, setUsers] = useState<User[]>([]);
+        const [loading, setLoading] = useState(true);
+
+        useEffect(() => {
+          fetchUsers().then((data) => {
+            setUsers(data);
+            setLoading(false);
+          });
+        }, []);
+
+        const renderItem = ({ item }: { item: User }) => (
+          <TouchableOpacity style={styles.card}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.email}>{item.email}</Text>
+          </TouchableOpacity>
+        );
+
+        if (loading) return <LoadingSpinner />;
+
+        return (
+          <FlatList
+            data={users}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            contentContainerStyle={styles.list}
+          />
+        );
+      }
+
+      const styles = StyleSheet.create({
+        list: {
+          padding: 16,
+        },
+        card: {
+          backgroundColor: '#fff',
+          padding: 16,
+          borderRadius: 8,
+          marginBottom: 12,
+        },
+        name: {
+          fontSize: 18,
+          fontWeight: 'bold',
+        },
+        email: {
+          color: '#666',
+        },
+      });
+    severity: CRITICAL
+    docs_url: https://reactnative.dev/docs/intro-react-native-components
+
+  - id: rn003
+    name: New CSS Features (0.77)
+    category: styling
+    version: "0.77+"
+    description: |
+      New CSS features: display:contents, boxSizing,
+      mixBlendMode, outline properties.
+    text: css styling display contents boxsizing outline blend
+    example: |
+      import { View, Text, StyleSheet } from 'react-native';
+
+      // ✅ React Native 0.77: New CSS features (New Architecture only!)
+
+      const styles = StyleSheet.create({
+        container: {
+          // ✅ boxSizing (new in 0.77)
+          boxSizing: 'border-box',
+
+          // ✅ outline properties (new in 0.77)
+          outlineColor: '#3b82f6',
+          outlineWidth: 2,
+          outlineStyle: 'solid',
+          outlineOffset: 2,
+
+          // Existing styles
+          padding: 16,
+          borderRadius: 8,
+        },
+
+        // ✅ display: 'contents' (new in 0.77)
+        // Removes the element from layout but keeps children
+        wrapper: {
+          display: 'contents',
+        },
+
+        // ✅ mixBlendMode (new in 0.77)
+        overlay: {
+          mixBlendMode: 'multiply',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        },
+      });
+
+      // ⚠️ These features require New Architecture
+      // Legacy architecture does not support these
+    severity: MEDIUM
+    docs_url: https://reactnative.dev/blog/2025/01/21/version-0.77
+
+  - id: rn004
+    name: Expo (Recommended)
+    category: tooling
+    version: "SDK 55+"
+    description: Recommended development framework with Expo Router
+    text: expo router managed workflow eas build sdk
+    example: |
+      // ✅ Expo SDK 55+ with React Native 0.83
+
+      // Create new project
+      // npx create-expo-app@latest my-app
+
+      // ✅ File-based routing with Expo Router
+      // app/_layout.tsx
+      import { Stack } from 'expo-router';
+
+      export default function RootLayout() {
+        return (
+          <Stack>
+            <Stack.Screen name="index" options={{ title: 'Home' }} />
+            <Stack.Screen name="profile" options={{ title: 'Profile' }} />
+          </Stack>
+        );
+      }
+
+      // app/index.tsx
+      import { View, Text } from 'react-native';
+      import { Link } from 'expo-router';
+
+      export default function Home() {
+        return (
+          <View>
+            <Text>Welcome!</Text>
+            <Link href="/profile">Go to Profile</Link>
+            <Link href="/users/123">View User</Link>
+          </View>
+        );
+      }
+
+      // app/users/[id].tsx - Dynamic route
+      import { useLocalSearchParams } from 'expo-router';
+
+      export default function UserScreen() {
+        const { id } = useLocalSearchParams<{ id: string }>();
+        return <UserProfile userId={id} />;
+      }
+
+      // ✅ EAS Build for production
+      // eas build --platform all
+    severity: HIGH
+    docs_url: https://docs.expo.dev/
+
+  - id: rn005
+    name: React 19.2 Features
+    category: react
+    version: "0.83+"
+    description: |
+      Activity and useEffectEvent available in React Native.
+      Same APIs as React web.
+    text: activity useEffectEvent react 19 native mobile
+    example: |
+      // ✅ React Native 0.83+ bundles React 19.2
+      import { Activity, useEffectEvent, useEffect } from 'react';
+      import { View, Text } from 'react-native';
+
+      // ✅ Activity for preserving tab state
+      function TabContainer({ activeTab }) {
+        return (
+          <View>
+            <Activity mode={activeTab === 'home' ? 'visible' : 'hidden'}>
+              <HomeScreen />
+            </Activity>
+            <Activity mode={activeTab === 'profile' ? 'visible' : 'hidden'}>
+              <ProfileScreen />
+            </Activity>
+          </View>
+        );
+      }
+
+      // ✅ useEffectEvent for stable callbacks
+      function ChatScreen({ roomId, theme }) {
+        const onMessage = useEffectEvent((message) => {
+          // Always has access to current theme
+          showNotification(message, theme);
+        });
+
+        useEffect(() => {
+          const socket = connectToRoom(roomId);
+          socket.on('message', onMessage);
+          return () => socket.disconnect();
+        }, [roomId]);  // onMessage NOT in deps!
+      }
+    severity: HIGH
+    docs_url: https://reactnative.dev/blog

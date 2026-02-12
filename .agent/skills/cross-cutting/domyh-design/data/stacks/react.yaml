@@ -1,0 +1,526 @@
+metadata:
+  skill: domyh-design
+  domain: react
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: react.yaml
+  patterns_count: 53
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: State
+    guideline: Use useState for local state
+    description: Simple component state should use useState hook
+    do: useState for form inputs toggles counters
+    don_t: Class components this.state
+    code_good: const [count, setCount] = useState(0)
+    code_bad: "this.state = { count: 0 }"
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useState
+  - id: "2"
+    category: State
+    guideline: Lift state up when needed
+    description: Share state between siblings by lifting to parent
+    do: Lift shared state to common ancestor
+    don_t: Prop drilling through many levels
+    code_good: Parent holds state passes down
+    code_bad: Deep prop chains
+    severity: Medium
+    docs_url: https://react.dev/learn/sharing-state-between-components
+  - id: "3"
+    category: State
+    guideline: Use useReducer for complex state
+    description: Complex state logic benefits from reducer pattern
+    do: useReducer for state with multiple sub-values
+    don_t: Multiple useState for related values
+    code_good: useReducer with action types
+    code_bad: 5+ useState calls that update together
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useReducer
+  - id: "4"
+    category: State
+    guideline: Avoid unnecessary state
+    description: Derive values from existing state when possible
+    do: Compute derived values in render
+    don_t: Store derivable values in state
+    code_good: const total = items.reduce(...)
+    code_bad: const [total, setTotal] = useState(0)
+    severity: High
+    docs_url: https://react.dev/learn/choosing-the-state-structure
+  - id: "5"
+    category: State
+    guideline: Initialize state lazily
+    description: Use function form for expensive initial state
+    do: useState(() => computeExpensive())
+    don_t: useState(computeExpensive())
+    code_good: useState(() => JSON.parse(data))
+    code_bad: useState(JSON.parse(data))
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useState#avoiding-recreating-the-initial-state
+  - id: "6"
+    category: Effects
+    guideline: Clean up effects
+    description: Return cleanup function for subscriptions timers
+    do: Return cleanup function in useEffect
+    don_t: No cleanup for subscriptions
+    code_good: useEffect(() => { sub(); return unsub; })
+    code_bad: useEffect(() => { subscribe(); })
+    severity: High
+    docs_url: https://react.dev/reference/react/useEffect#connecting-to-an-external-system
+  - id: "7"
+    category: Effects
+    guideline: Specify dependencies correctly
+    description: Include all values used inside effect in deps array
+    do: All referenced values in dependency array
+    don_t: Empty deps with external references
+    code_good: "[value] when using value in effect"
+    code_bad: "[] when using props/state in effect"
+    severity: High
+    docs_url: https://react.dev/reference/react/useEffect#specifying-reactive-dependencies
+  - id: "8"
+    category: Effects
+    guideline: Avoid unnecessary effects
+    description: Don't use effects for transforming data or events
+    do: Transform data during render handle events directly
+    don_t: useEffect for derived state or event handling
+    code_good: const filtered = items.filter(...)
+    code_bad: useEffect(() => setFiltered(items.filter(...)))
+    severity: High
+    docs_url: https://react.dev/learn/you-might-not-need-an-effect
+  - id: "9"
+    category: Effects
+    guideline: Use refs for non-reactive values
+    description: Store values that don't trigger re-renders in refs
+    do: useRef for interval IDs DOM elements
+    don_t: useState for values that don't need render
+    code_good: const intervalRef = useRef(null)
+    code_bad: const [intervalId, setIntervalId] = useState()
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useRef
+  - id: "10"
+    category: Rendering
+    guideline: Use keys properly
+    description: Stable unique keys for list items
+    do: Use stable IDs as keys
+    don_t: Array index as key for dynamic lists
+    code_good: key={item.id}
+    code_bad: key={index}
+    severity: High
+    docs_url: https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key
+  - id: "11"
+    category: Rendering
+    guideline: Memoize expensive calculations
+    description: Use useMemo for costly computations
+    do: useMemo for expensive filtering/sorting
+    don_t: Recalculate every render
+    code_good: useMemo(() => expensive(), [deps])
+    code_bad: const result = expensiveCalc()
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useMemo
+  - id: "12"
+    category: Rendering
+    guideline: Memoize callbacks passed to children
+    description: Use useCallback for functions passed as props
+    do: useCallback for handlers passed to memoized children
+    don_t: New function reference every render
+    code_good: useCallback(() => {}, [deps])
+    code_bad: const handler = () => {}
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useCallback
+  - id: "13"
+    category: Rendering
+    guideline: Use React.memo wisely
+    description: Wrap components that render often with same props
+    do: memo for pure components with stable props
+    don_t: memo everything or nothing
+    code_good: memo(ExpensiveList)
+    code_bad: memo(SimpleButton)
+    severity: Low
+    docs_url: https://react.dev/reference/react/memo
+  - id: "14"
+    category: Rendering
+    guideline: Avoid inline object/array creation in JSX
+    description: Create objects outside render or memoize
+    do: Define style objects outside component
+    don_t: Inline objects in props
+    code_good: <div style={styles.container}>
+    code_bad: "<div style={{ margin: 10 }}>"
+    severity: Medium
+  - id: "15"
+    category: Components
+    guideline: Keep components small and focused
+    description: Single responsibility for each component
+    do: One concern per component
+    don_t: Large multi-purpose components
+    code_good: <UserAvatar /><UserName />
+    code_bad: <UserCard /> with 500 lines
+    severity: Medium
+  - id: "16"
+    category: Components
+    guideline: Use composition over inheritance
+    description: Compose components using children and props
+    do: Use children prop for flexibility
+    don_t: Inheritance hierarchies
+    code_good: <Card>{content}</Card>
+    code_bad: class SpecialCard extends Card
+    severity: Medium
+    docs_url: https://react.dev/learn/thinking-in-react
+  - id: "17"
+    category: Components
+    guideline: Colocate related code
+    description: Keep related components and hooks together
+    do: Related files in same directory
+    don_t: Flat structure with many files
+    code_good: components/User/UserCard.tsx
+    code_bad: components/UserCard.tsx + hooks/useUser.ts
+    severity: Low
+  - id: "18"
+    category: Components
+    guideline: Use fragments to avoid extra DOM
+    description: Fragment or <> for multiple elements without wrapper
+    do: <> for grouping without DOM node
+    don_t: Extra div wrappers
+    code_good: <>{items.map(...)}</>
+    code_bad: <div>{items.map(...)}</div>
+    severity: Low
+    docs_url: https://react.dev/reference/react/Fragment
+  - id: "19"
+    category: Props
+    guideline: Destructure props
+    description: Destructure props for cleaner component code
+    do: Destructure in function signature
+    don_t: props.name props.value throughout
+    code_good: function User({ name, age })
+    code_bad: function User(props)
+    severity: Low
+  - id: "20"
+    category: Props
+    guideline: Provide default props values
+    description: Use default parameters or defaultProps
+    do: Default values in destructuring
+    don_t: Undefined checks throughout
+    code_good: function Button({ size = 'md' })
+    code_bad: if (size === undefined) size = 'md'
+    severity: Low
+  - id: "21"
+    category: Props
+    guideline: Avoid prop drilling
+    description: Use context or composition for deeply nested data
+    do: Context for global data composition for UI
+    don_t: Passing props through 5+ levels
+    code_good: <UserContext.Provider>
+    code_bad: <A user={u}><B user={u}><C user={u}>
+    severity: Medium
+    docs_url: https://react.dev/learn/passing-data-deeply-with-context
+  - id: "22"
+    category: Props
+    guideline: Validate props with TypeScript
+    description: Use TypeScript interfaces for prop types
+    do: "interface Props { name: string }"
+    don_t: PropTypes or no validation
+    code_good: "interface ButtonProps { onClick: () => void }"
+    code_bad: Button.propTypes = {}
+    severity: Medium
+  - id: "23"
+    category: Events
+    guideline: Use synthetic events correctly
+    description: React normalizes events across browsers
+    do: e.preventDefault() e.stopPropagation()
+    don_t: Access native event unnecessarily
+    code_good: onClick={(e) => e.preventDefault()}
+    code_bad: onClick={(e) => e.nativeEvent.preventDefault()}
+    severity: Low
+    docs_url: https://react.dev/reference/react-dom/components/common#react-event-object
+  - id: "24"
+    category: Events
+    guideline: Avoid binding in render
+    description: Use arrow functions in class or hooks
+    do: Arrow functions in functional components
+    don_t: bind in render or constructor
+    code_good: const handleClick = () => {}
+    code_bad: this.handleClick.bind(this)
+    severity: Medium
+  - id: "25"
+    category: Events
+    guideline: Pass event handlers not call results
+    description: Pass function reference not invocation
+    do: onClick={handleClick}
+    don_t: onClick={handleClick()} causing immediate call
+    code_good: onClick={handleClick}
+    code_bad: onClick={handleClick()}
+    severity: High
+  - id: "26"
+    category: Forms
+    guideline: Controlled components for forms
+    description: Use state to control form inputs
+    do: value + onChange for inputs
+    don_t: Uncontrolled inputs with refs
+    code_good: <input value={val} onChange={setVal}>
+    code_bad: <input ref={inputRef}>
+    severity: Medium
+    docs_url: https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable
+  - id: "27"
+    category: Forms
+    guideline: Handle form submission properly
+    description: Prevent default and handle in submit handler
+    do: onSubmit with preventDefault
+    don_t: onClick on submit button only
+    code_good: <form onSubmit={handleSubmit}>
+    code_bad: <button onClick={handleSubmit}>
+    severity: Medium
+  - id: "28"
+    category: Forms
+    guideline: Debounce rapid input changes
+    description: Debounce search/filter inputs
+    do: useDeferredValue or debounce for search
+    don_t: Filter on every keystroke
+    code_good: useDeferredValue(searchTerm)
+    code_bad: useEffect filtering on every change
+    severity: Medium
+    docs_url: https://react.dev/reference/react/useDeferredValue
+  - id: "29"
+    category: Hooks
+    guideline: Follow rules of hooks
+    description: Only call hooks at top level and in React functions
+    do: Hooks at component top level
+    don_t: Hooks in conditions loops or callbacks
+    code_good: const [x, setX] = useState()
+    code_bad: if (cond) { const [x, setX] = useState() }
+    severity: High
+    docs_url: https://react.dev/reference/rules/rules-of-hooks
+  - id: "30"
+    category: Hooks
+    guideline: Custom hooks for reusable logic
+    description: Extract shared stateful logic to custom hooks
+    do: useCustomHook for reusable patterns
+    don_t: Duplicate hook logic across components
+    code_good: const { data } = useFetch(url)
+    code_bad: Duplicate useEffect/useState in components
+    severity: Medium
+    docs_url: https://react.dev/learn/reusing-logic-with-custom-hooks
+  - id: "31"
+    category: Hooks
+    guideline: Name custom hooks with use prefix
+    description: Custom hooks must start with use
+    do: useFetch useForm useAuth
+    don_t: fetchData or getData for hook
+    code_good: function useFetch(url)
+    code_bad: function fetchData(url)
+    severity: High
+  - id: "32"
+    category: Context
+    guideline: Use context for global data
+    description: Context for theme auth locale
+    do: Context for app-wide state
+    don_t: Context for frequently changing data
+    code_good: <ThemeContext.Provider>
+    code_bad: Context for form field values
+    severity: Medium
+    docs_url: https://react.dev/learn/passing-data-deeply-with-context
+  - id: "33"
+    category: Context
+    guideline: Split contexts by concern
+    description: Separate contexts for different domains
+    do: ThemeContext + AuthContext
+    don_t: One giant AppContext
+    code_good: <ThemeProvider><AuthProvider>
+    code_bad: <AppProvider value={{theme user...}}>
+    severity: Medium
+  - id: "34"
+    category: Context
+    guideline: Memoize context values
+    description: Prevent unnecessary re-renders with useMemo
+    do: useMemo for context value object
+    don_t: New object reference every render
+    code_good: value={useMemo(() => ({...}), [])}
+    code_bad: value={{ user, theme }}
+    severity: High
+  - id: "35"
+    category: Performance
+    guideline: Use React DevTools Profiler
+    description: Profile to identify performance bottlenecks
+    do: Profile before optimizing
+    don_t: Optimize without measuring
+    code_good: React DevTools Profiler
+    code_bad: Guessing at bottlenecks
+    severity: Medium
+    docs_url: https://react.dev/learn/react-developer-tools
+  - id: "36"
+    category: Performance
+    guideline: Lazy load components
+    description: Use React.lazy for code splitting
+    do: lazy() for routes and heavy components
+    don_t: Import everything upfront
+    code_good: const Page = lazy(() => import('./Page'))
+    code_bad: import Page from './Page'
+    severity: Medium
+    docs_url: https://react.dev/reference/react/lazy
+  - id: "37"
+    category: Performance
+    guideline: Virtualize long lists
+    description: Use windowing for lists over 100 items
+    do: react-window or react-virtual
+    don_t: Render thousands of DOM nodes
+    code_good: <VirtualizedList items={items}/>
+    code_bad: "{items.map(i => <Item />)}"
+    severity: High
+  - id: "38"
+    category: Performance
+    guideline: Batch state updates
+    description: React 18 auto-batches but be aware
+    do: Let React batch related updates
+    don_t: Manual batching with flushSync
+    code_good: setA(1); setB(2); // batched
+    code_bad: flushSync(() => setA(1))
+    severity: Low
+    docs_url: https://react.dev/learn/queueing-a-series-of-state-updates
+  - id: "39"
+    category: ErrorHandling
+    guideline: Use error boundaries
+    description: Catch JavaScript errors in component tree
+    do: ErrorBoundary wrapping sections
+    don_t: Let errors crash entire app
+    code_good: <ErrorBoundary><App/></ErrorBoundary>
+    code_bad: No error handling
+    severity: High
+    docs_url: https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary
+  - id: "40"
+    category: ErrorHandling
+    guideline: Handle async errors
+    description: Catch errors in async operations
+    do: try/catch in async handlers
+    don_t: Unhandled promise rejections
+    code_good: try { await fetch() } catch(e) {}
+    code_bad: await fetch() // no catch
+    severity: High
+  - id: "41"
+    category: Testing
+    guideline: Test behavior not implementation
+    description: Test what user sees and does
+    do: Test renders and interactions
+    don_t: Test internal state or methods
+    code_good: expect(screen.getByText('Hello'))
+    code_bad: expect(component.state.name)
+    severity: Medium
+    docs_url: https://testing-library.com/docs/react-testing-library/intro/
+  - id: "42"
+    category: Testing
+    guideline: Use testing-library queries
+    description: Use accessible queries
+    do: getByRole getByLabelText
+    don_t: getByTestId for everything
+    code_good: getByRole('button')
+    code_bad: getByTestId('submit-btn')
+    severity: Medium
+    docs_url: https://testing-library.com/docs/queries/about#priority
+  - id: "43"
+    category: Accessibility
+    guideline: Use semantic HTML
+    description: Proper HTML elements for their purpose
+    do: button for clicks nav for navigation
+    don_t: div with onClick for buttons
+    code_good: <button onClick={...}>
+    code_bad: <div onClick={...}>
+    severity: High
+    docs_url: https://react.dev/reference/react-dom/components#all-html-components
+  - id: "44"
+    category: Accessibility
+    guideline: Manage focus properly
+    description: Handle focus for modals dialogs
+    do: Focus trap in modals return focus on close
+    don_t: No focus management
+    code_good: useEffect to focus input
+    code_bad: Modal without focus trap
+    severity: High
+  - id: "45"
+    category: Accessibility
+    guideline: Announce dynamic content
+    description: Use ARIA live regions for updates
+    do: aria-live for dynamic updates
+    don_t: Silent updates to screen readers
+    code_good: <div aria-live="polite">{msg}</div>
+    code_bad: <div>{msg}</div>
+    severity: Medium
+  - id: "46"
+    category: Accessibility
+    guideline: Label form controls
+    description: Associate labels with inputs
+    do: htmlFor matching input id
+    don_t: Placeholder as only label
+    code_good: <label htmlFor="email">Email</label>
+    code_bad: <input placeholder="Email"/>
+    severity: High
+  - id: "47"
+    category: TypeScript
+    guideline: Type component props
+    description: Define interfaces for all props
+    do: interface Props with all prop types
+    don_t: any or missing types
+    code_good: "interface Props { name: string }"
+    code_bad: "function Component(props: any)"
+    severity: High
+  - id: "48"
+    category: TypeScript
+    guideline: Type state properly
+    description: Provide types for useState
+    do: useState<Type>() for complex state
+    don_t: Inferred any types
+    code_good: useState<User | null>(null)
+    code_bad: useState(null)
+    severity: Medium
+  - id: "49"
+    category: TypeScript
+    guideline: Type event handlers
+    description: Use React event types
+    do: React.ChangeEvent<HTMLInputElement>
+    don_t: Generic Event type
+    code_good: "onChange: React.ChangeEvent<HTMLInputElement>"
+    code_bad: "onChange: Event"
+    severity: Medium
+  - id: "50"
+    category: TypeScript
+    guideline: Use generics for reusable components
+    description: Generic components for flexible typing
+    do: Generic props for list components
+    don_t: Union types for flexibility
+    code_good: <List<T> items={T[]}>
+    code_bad: <List items={any[]}>
+    severity: Medium
+  - id: "51"
+    category: Patterns
+    guideline: Container/Presentational split
+    description: Separate data logic from UI
+    do: Container fetches presentational renders
+    don_t: Mixed data and UI in one
+    code_good: <UserContainer><UserView/></UserContainer>
+    code_bad: <User /> with fetch and render
+    severity: Low
+  - id: "52"
+    category: Patterns
+    guideline: Render props for flexibility
+    description: Share code via render prop pattern
+    do: Render prop for customizable rendering
+    don_t: Duplicate logic across components
+    code_good: <DataFetcher render={data => ...}/>
+    code_bad: Copy paste fetch logic
+    severity: Low
+    docs_url: https://react.dev/reference/react/cloneElement#passing-data-with-a-render-prop
+  - id: "53"
+    category: Patterns
+    guideline: Compound components
+    description: Related components sharing state
+    do: Tab + TabPanel sharing context
+    don_t: Prop drilling between related
+    code_good: <Tabs><Tab/><TabPanel/></Tabs>
+    code_bad: <Tabs tabs={[]} panels={[...]}/>
+    severity: Low

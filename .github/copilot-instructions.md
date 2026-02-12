@@ -1,4 +1,4 @@
-# DOMYH Awesome Code v6.1.2 — GitHub Copilot Instructions
+# DOMYH Awesome Code — GitHub Copilot Instructions
 
 <!-- === 🔴 SACRED RULES (Parse First) === -->
 <!-- Priority: HEAD ZONE (HIGH ATTENTION) - Research: Found in the Middle 2024 -->
@@ -91,4 +91,4 @@ Before responding, verify:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Universal Rule Loading Framework • NockDev_
+_DOMYH Awesome Code • Universal Rule Loading Framework • NockDev_

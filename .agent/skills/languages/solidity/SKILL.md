@@ -1,12 +1,12 @@
 ---
 name: solidity
 detect: ["*.sol", "hardhat.config.js", "hardhat.config.ts", "foundry.toml"]
-version: "6.1.2"
+version: "6.2.1"
 category: blockchain
 tier: 2
 ---
 
-# Solidity Patterns — DOMYH Awesome Code v6.1.2
+# Solidity Patterns — DOMYH Awesome Code
 
 > **Version**: Solidity 0.8.24+ (2025-2026)
 > **Frameworks**: Hardhat, Foundry
@@ -185,4 +185,4 @@ contract MyTokenTest is Test {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Solidity 0.8.24+_
+_DOMYH Awesome Code • Solidity 0.8.24+_

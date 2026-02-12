@@ -1,0 +1,420 @@
+# =============================================================================
+# DOMYH Awesome Code
+# Graph Memory - Knowledge Graph for Complex Reasoning
+# =============================================================================
+
+version: "6.2.1"
+
+# =============================================================================
+# OVERVIEW
+# 5th layer of memory: Knowledge Graph for relationship-based reasoning
+# =============================================================================
+
+description: |
+  Graph Memory enables:
+  1. Entity extraction from conversations
+  2. Relationship mapping between concepts
+  3. Multi-hop reasoning queries
+  4. Temporal knowledge tracking
+
+  Integration with existing 4-layer memory:
+  - Working Memory (immediate context)
+  - Session Memory (conversation history)
+  - State Memory (persistent state)
+  - Semantic Memory (vector store)
+  - Graph Memory (knowledge graph) ← NEW
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+config:
+  enabled: true
+
+  storage:
+    backend: "in-memory" # Options: in-memory, neo4j, networkx-file
+    file_path: ".agent/memory/graph/knowledge_graph.json"
+
+  limits:
+    max_entities: 1000
+    max_relationships: 5000
+    max_hops: 4
+
+  sync:
+    auto_save: true
+    save_interval: "5 minutes"
+
+# =============================================================================
+# ENTITY TYPES
+# What kinds of things we track
+# =============================================================================
+
+entity_types:
+  # Code entities
+  code:
+    file:
+      properties: ["path", "language", "size", "last_modified"]
+
+    function:
+      properties: ["name", "file", "signature", "docstring"]
+
+    class:
+      properties: ["name", "file", "methods", "attributes"]
+
+    module:
+      properties: ["name", "path", "exports"]
+
+    variable:
+      properties: ["name", "type", "scope"]
+
+  # Project entities
+  project:
+    component:
+      properties: ["name", "type", "description"]
+
+    dependency:
+      properties: ["name", "version", "type"]
+
+    configuration:
+      properties: ["key", "value", "source"]
+
+  # Interaction entities
+  interaction:
+    decision:
+      properties: ["description", "rationale", "timestamp"]
+
+    task:
+      properties: ["description", "status", "priority"]
+
+    error:
+      properties: ["type", "message", "solution"]
+
+    learning:
+      properties: ["insight", "context", "confidence"]
+
+  # User entities
+  user:
+    preference:
+      properties: ["category", "value", "confidence"]
+
+    skill_usage:
+      properties: ["skill_name", "frequency", "last_used"]
+
+# =============================================================================
+# RELATIONSHIP TYPES
+# How entities connect
+# =============================================================================
+
+relationship_types:
+  # Code relationships
+  code:
+    IMPORTS:
+      from: "file"
+      to: "module"
+      properties: ["import_type"]
+
+    CALLS:
+      from: "function"
+      to: "function"
+      properties: ["call_count"]
+
+    DEFINES:
+      from: "file"
+      to: ["function", "class"]
+      properties: []
+
+    EXTENDS:
+      from: "class"
+      to: "class"
+      properties: []
+
+    USES:
+      from: ["function", "class"]
+      to: "variable"
+      properties: ["usage_type"]
+
+  # Project relationships
+  project:
+    CONTAINS:
+      from: "component"
+      to: ["file", "component"]
+      properties: []
+
+    DEPENDS_ON:
+      from: "component"
+      to: "dependency"
+      properties: ["version_constraint"]
+
+    CONFIGURED_BY:
+      from: "component"
+      to: "configuration"
+      properties: []
+
+  # Knowledge relationships
+  knowledge:
+    CAUSED_BY:
+      from: "error"
+      to: ["decision", "code"]
+      properties: ["confidence"]
+
+    SOLVED_BY:
+      from: "error"
+      to: "solution"
+      properties: ["success_rate"]
+
+    LEARNED_FROM:
+      from: "learning"
+      to: ["task", "error"]
+      properties: []
+
+    RELATED_TO:
+      from: "*"
+      to: "*"
+      properties: ["similarity", "relationship_type"]
+
+  # Temporal relationships
+  temporal:
+    PRECEDED_BY:
+      from: "*"
+      to: "*"
+      properties: ["time_gap"]
+
+    FOLLOWED_BY:
+      from: "*"
+      to: "*"
+      properties: ["time_gap"]
+
+    MODIFIED_AT:
+      from: "*"
+      to: "timestamp"
+      properties: []
+
+# =============================================================================
+# EXTRACTION RULES
+# How to extract entities and relationships from context
+# =============================================================================
+
+extraction:
+  # Extract from code
+  from_code:
+    triggers:
+      - "file_view"
+      - "code_generation"
+      - "code_modification"
+
+    extractors:
+      imports:
+        patterns:
+          python: "^import (.+)|^from (.+) import"
+          javascript: "^import .+ from ['\"](.+)['\"]|require\\(['\"](.+)['\"]\\)"
+          go: "^import \"(.+)\"|^import \\(([^)]+)\\)"
+
+      functions:
+        method: "ast_parse"
+        extract: ["name", "signature", "docstring"]
+
+      classes:
+        method: "ast_parse"
+        extract: ["name", "bases", "methods"]
+
+  # Extract from conversation
+  from_conversation:
+    triggers:
+      - "user_message"
+      - "agent_response"
+
+    extractors:
+      decisions:
+        patterns:
+          - "decided to"
+          - "chose"
+          - "will use"
+          - "going with"
+        extract: ["what", "why"]
+
+      preferences:
+        patterns:
+          - "I prefer"
+          - "I like"
+          - "always use"
+          - "never use"
+        extract: ["category", "preference"]
+
+      errors:
+        patterns:
+          - "error:"
+          - "failed"
+          - "exception"
+        extract: ["type", "message", "context"]
+
+  # Extract from reflections
+  from_reflections:
+    triggers:
+      - "reflection_generated"
+
+    extractors:
+      learnings:
+        source: "reflection.insight"
+        extract: ["what_learned", "context", "prevention"]
+        create_relationships:
+          - ["learning", "LEARNED_FROM", "source_context"]
+
+# =============================================================================
+# QUERY PATTERNS
+# How to query the knowledge graph
+# =============================================================================
+
+queries:
+  # Find related code
+  related_code:
+    description: "Find code related to a given file/function"
+    pattern: |
+      MATCH (source {name: $name})-[r*1..3]-(related)
+      WHERE type(related) IN ['file', 'function', 'class']
+      RETURN related, r
+      ORDER BY length(r)
+      LIMIT 10
+
+  # Find error solutions
+  error_solutions:
+    description: "Find solutions for similar errors"
+    pattern: |
+      MATCH (error:error)-[:SOLVED_BY]->(solution)
+      WHERE error.type = $error_type
+      RETURN solution
+      ORDER BY solution.success_rate DESC
+      LIMIT 5
+
+  # Find decision context
+  decision_context:
+    description: "Find why a decision was made"
+    pattern: |
+      MATCH (d:decision {description: $description})-[r]-(context)
+      RETURN d, r, context
+
+  # Find user preferences
+  user_preferences:
+    description: "Get user preferences for a category"
+    pattern: |
+      MATCH (p:preference {category: $category})
+      RETURN p
+      ORDER BY p.confidence DESC
+
+  # Multi-hop reasoning
+  impact_analysis:
+    description: "Find what might be affected by a change"
+    pattern: |
+      MATCH (source {path: $file_path})<-[:IMPORTS|CALLS|USES*1..4]-(affected)
+      RETURN DISTINCT affected
+      ORDER BY length(path)
+
+# =============================================================================
+# MEMORY OPERATIONS
+# How to interact with the graph
+# =============================================================================
+
+operations:
+  # Add entity
+  add_entity:
+    description: "Add a new entity to the graph"
+    parameters:
+      entity_type: "required"
+      properties: "required"
+      source: "optional - where this info came from"
+    returns: "entity_id"
+
+  # Add relationship
+  add_relationship:
+    description: "Create a relationship between entities"
+    parameters:
+      from_entity: "entity_id"
+      to_entity: "entity_id"
+      relationship_type: "string"
+      properties: "optional"
+    returns: "relationship_id"
+
+  # Query graph
+  query:
+    description: "Query the knowledge graph"
+    parameters:
+      query_type: "predefined query name"
+      parameters: "query parameters"
+    returns: "list of results"
+
+  # Update entity
+  update_entity:
+    description: "Update entity properties"
+    parameters:
+      entity_id: "string"
+      properties: "dict of updates"
+    returns: "updated_entity"
+
+  # Delete entity
+  delete_entity:
+    description: "Remove entity and its relationships"
+    parameters:
+      entity_id: "string"
+      cascade: "boolean - delete orphaned connected entities"
+    returns: "deleted_count"
+
+  # Merge entities
+  merge_entities:
+    description: "Combine duplicate entities"
+    parameters:
+      entity_ids: "list of ids to merge"
+      primary_id: "which one to keep"
+    returns: "merged_entity"
+
+# =============================================================================
+# MAINTENANCE
+# Keep the graph healthy and useful
+# =============================================================================
+
+maintenance:
+  # Cleanup old/unused nodes
+  cleanup:
+    schedule: "weekly"
+    actions:
+      - "Remove entities not accessed in 30 days"
+      - "Remove orphaned relationships"
+      - "Merge duplicate entities"
+
+  # Validation
+  validation:
+    on: "before_save"
+    checks:
+      - "No dangling relationships"
+      - "Entity types are valid"
+      - "Required properties present"
+
+  # Statistics
+  stats:
+    track:
+      - "entity_count_by_type"
+      - "relationship_count_by_type"
+      - "query_frequency"
+      - "graph_density"
+
+# =============================================================================
+# INTEGRATION
+# How graph memory works with other systems
+# =============================================================================
+
+integration:
+  # With semantic memory
+  semantic_memory:
+    on_entity_add: "Also index in vector store for semantic search"
+    on_query: "Combine graph paths with semantic similarity"
+
+  # With context loader
+  context_loader:
+    provide:
+      - "Related entities"
+      - "Recent decisions"
+      - "Error solutions"
+    limit_tokens: 500
+
+  # With reflection engine
+  reflection_engine:
+    on_reflection: "Add learning entities and relationships"
+    on_error: "Link error to potential causes"

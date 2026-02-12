@@ -1,12 +1,12 @@
 ---
 name: php
 detect: ["composer.json", "*.php", "artisan", "symfony.lock"]
-version: "6.1.2"
+version: "6.2.1"
 category: backend
 tier: 1
 ---
 
-# PHP Patterns — DOMYH Awesome Code v6.1.2
+# PHP Patterns — DOMYH Awesome Code
 
 > **Version**: PHP 8.3/8.4 (2025-2026)
 > **Frameworks**: Laravel 12, Symfony 8
@@ -485,4 +485,4 @@ vendor/bin/phpstan analyse --memory-limit=2G
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • PHP 8.3/8.4_
+_DOMYH Awesome Code • PHP 8.3/8.4_

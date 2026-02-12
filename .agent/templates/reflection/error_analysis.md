@@ -146,4 +146,4 @@ When starting a new task:
 
 ---
 
-# DOMYH Awesome Code v6.1.2 • Error Analysis Template
+# DOMYH Awesome Code • Error Analysis Template

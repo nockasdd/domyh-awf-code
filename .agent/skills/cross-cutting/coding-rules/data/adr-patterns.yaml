@@ -1,0 +1,102 @@
+# =============================================================================
+# adr-patterns.yaml — Architecture Decision Records
+# =============================================================================
+
+version: "1.0.0"
+
+overview:
+  description: |
+    Architecture Decision Records capture context, options, and rationale
+    for significant architectural decisions. They serve as documentation
+    for future team members and prevent re-debating settled decisions.
+
+templates:
+  madr:
+    name: "Markdown ADR (MADR)"
+    structure: |
+      # ADR-NNNN: [Decision Title]
+
+      ## Status
+      [Proposed | Accepted | Deprecated | Superseded by ADR-XXXX]
+
+      ## Context
+      What is the issue that we're seeing that is motivating this decision?
+
+      ## Decision
+      What is the change that we're proposing and/or doing?
+
+      ## Consequences
+      What becomes easier or more difficult to do because of this change?
+
+      ### Positive
+      - [Benefit 1]
+
+      ### Negative
+      - [Trade-off 1]
+
+      ## Alternatives Considered
+      ### Option A: [Name]
+      - Pros: ...
+      - Cons: ...
+
+  nygard:
+    name: "Michael Nygard (original)"
+    structure: |
+      # [Number]. [Title]
+      Date: [YYYY-MM-DD]
+      ## Status
+      ## Context
+      ## Decision
+      ## Consequences
+
+lifecycle:
+  statuses:
+    - proposed: "Under discussion, not yet decided"
+    - accepted: "Decision made, being implemented"
+    - deprecated: "No longer applies, but kept for history"
+    - superseded: "Replaced by a newer ADR"
+
+  transitions: |
+    proposed → accepted → deprecated
+                        → superseded (by ADR-XXXX)
+
+conventions:
+  naming: "docs/adr/NNNN-kebab-case-title.md"
+  numbering: "Sequential (0001, 0002, ...)"
+  directory: "docs/adr/ or docs/architecture/decisions/"
+  index: "README.md or index.md listing all ADRs"
+
+  example_index: |
+    # Architecture Decision Records
+
+    | # | Title | Status | Date |
+    |---|-------|--------|------|
+    | 0001 | Use PostgreSQL as primary DB | Accepted | 2025-01-15 |
+    | 0002 | Adopt microservices architecture | Accepted | 2025-02-01 |
+    | 0003 | Switch from REST to gRPC | Proposed | 2025-03-10 |
+
+tooling:
+  - name: "adr-tools"
+    install: "brew install adr-tools"
+    commands:
+      create: "adr new Use PostgreSQL"
+      list: "adr list"
+      link: "adr link 3 Supersedes 2"
+
+  - name: "log4brains"
+    install: "npm install -g log4brains"
+    features: ["Web UI", "Search", "Timeline view"]
+    commands:
+      init: "log4brains init"
+      new: "log4brains adr new"
+      preview: "log4brains preview"
+
+when_to_create:
+  - "Choosing a database or infrastructure"
+  - "Selecting a framework or library"
+  - "Defining API contracts or protocols"
+  - "Architecture pattern decisions (monolith vs microservices)"
+  - "Security-impacting decisions"
+  - "Performance trade-offs"
+
+# _DOMYH Awesome Code • ADR Patterns_

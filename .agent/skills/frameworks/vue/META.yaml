@@ -1,43 +1,70 @@
 name: vue
-version: "6.1.2"
-display: Vue.js
+version: "6.2.1"
+display: "Vue.js Patterns"
 category: frontend
 tier: 1
-priority: 1
+priority: 2
 
-description: |
-  Vue.js 3 with Composition API and Vapor Mode preview.
-  Covers Pinia, VueUse, Vue Router, Nuxt.
+desc: "Vue 3.5/3.6 development patterns (2025-2026). defineModel, Vapor Mode beta, deep reactivity."
+
+caps:
+  - composition-api
+  - reactive-state
+  - component-patterns
+  - vapor-mode
+  - typescript-integration
+  - performance-optimization
+
+data_files:
+  - data/core.yaml
+  - data/advanced.yaml
+
+patterns:
+  total: 11
+  domains:
+    core: 6
+    advanced: 5
+
+    - search_vue_patterns
+    - get_vue_composable
 
 triggers:
   file_patterns:
     - "*.vue"
-    - "nuxt.config.ts"
+    - "vue.config.js"
     - "vite.config.ts"
   keywords:
     # Core
     - vue
-    - vue 3
+    - vue.js
     - composition api
-    # State
-    - pinia
+    - script setup
     - ref
     - reactive
-    # Router
-    - vue router
+    # 3.5+ Features
+    - defineModel
+    - suspense
+    - composable
+    # 3.6 Vapor
+    - vapor mode
+    - vapor
+    # Patterns
+    - provide inject
+    - vueuse
+    - pinia
   intents:
     - vue component
-    - vue app
-    - pinia store
+    - vue composable
+    - vue state
+    - vue performance
+    - vue typescript
 
 related_skills:
   - nuxt
   - typescript
   - tailwind
+  - pinia
 
-caps:
-  - Vue 3 Composition API
-  - Pinia state management
-  - VueUse composables
-  - Vue Router 4
-  - Vapor Mode
+prevent_confusion_with:
+  - react: "Vue uses templates, React uses JSX"
+  - svelte: "Vue uses VDOM (except Vapor), Svelte compiles away"

@@ -1,0 +1,116 @@
+# Anti-Patterns - HSA Database Skill
+# Common database mistakes and how to fix them
+# Updated: 2026-02-05
+
+patterns:
+  - id: ap001
+    pattern: N+1 Query
+    category: query
+    description: Loop with individual queries instead of batch/join
+    fix: Use JOINs, batch loading, or ORM eager loading
+    example_bad: |
+      for user in users:
+        posts = db.query(Post).filter(Post.user_id == user.id)
+    example_good: |
+      users = db.query(User).options(joinedload(User.posts)).all()
+    severity: CRITICAL
+
+  - id: ap002
+    pattern: SELECT *
+    category: query
+    description: Fetching all columns when only few needed
+    fix: Select only required columns
+    example_bad: "SELECT * FROM users"
+    example_good: "SELECT id, name, email FROM users"
+    severity: HIGH
+
+  - id: ap003
+    pattern: Missing Index
+    category: optimization
+    description: Full table scan on frequently queried columns
+    fix: Add appropriate indexes, analyze with EXPLAIN
+    example_bad: "No index on WHERE clause columns"
+    example_good: "CREATE INDEX idx_users_email ON users(email)"
+    severity: CRITICAL
+
+  - id: ap004
+    pattern: Unbounded Query
+    category: query
+    description: SELECT without LIMIT returning millions of rows
+    fix: Always paginate with LIMIT/OFFSET or cursor
+    example_bad: "SELECT * FROM orders"
+    example_good: "SELECT * FROM orders LIMIT 100 OFFSET 0"
+    severity: HIGH
+
+  - id: ap005
+    pattern: String Concatenation SQL
+    category: security
+    description: Building SQL with string concatenation
+    fix: Use parameterized queries/prepared statements
+    example_bad: "SELECT * FROM users WHERE id = ' + id + '"
+    example_good: "SELECT * FROM users WHERE id = $1"
+    severity: CRITICAL
+
+  - id: ap006
+    pattern: No Connection Pooling
+    category: performance
+    description: New connection per query
+    fix: Use connection pool (PgBouncer, HikariCP)
+    example_bad: "Connect/disconnect for each request"
+    example_good: "max_pool_size=20, min_pool_size=5"
+    severity: HIGH
+
+  - id: ap007
+    pattern: Transaction Too Long
+    category: transaction
+    description: Holding locks for extended periods
+    fix: Keep transactions short, do I/O outside
+    example_bad: "BEGIN; long_operation(); external_api(); COMMIT;"
+    example_good: "fetch_data(); BEGIN; quick_update(); COMMIT;"
+    severity: HIGH
+
+  - id: ap008
+    pattern: No Retry Logic
+    category: resilience
+    description: Failing on transient errors
+    fix: Implement retry with exponential backoff
+    example_bad: "Single attempt, fail on error"
+    example_good: |
+      retry(max_attempts=3, backoff_factor=2)
+    severity: MEDIUM
+
+  - id: ap009
+    pattern: Storing Files in Database
+    category: data
+    description: Large binary data in DB columns
+    fix: Use object storage (S3, GCS), store URL in DB
+    example_bad: "BYTEA/BLOB for images"
+    example_good: "VARCHAR for S3 URL, files in object storage"
+    severity: MEDIUM
+
+  - id: ap010
+    pattern: Missing Soft Delete
+    category: data
+    description: Hard deleting records, losing audit trail
+    fix: Use deleted_at timestamp for soft deletes
+    example_bad: "DELETE FROM users WHERE id = 1"
+    example_good: "UPDATE users SET deleted_at = NOW() WHERE id = 1"
+    severity: MEDIUM
+
+  - id: ap011
+    pattern: No Read Replicas
+    category: scaling
+    description: Single DB for read-heavy workloads
+    fix: Use read replicas for read scaling
+    example_bad: "All queries to primary"
+    example_good: "Writes to primary, reads to replicas"
+    severity: MEDIUM
+
+  - id: ap012
+    pattern: Storing Secrets in DB
+    category: security
+    description: Plain text passwords or API keys
+    fix: Hash passwords (bcrypt/argon2), use secrets manager
+    example_bad: "password VARCHAR NOT NULL"
+    example_good: "password_hash VARCHAR NOT NULL (bcrypt)"
+    severity: CRITICAL

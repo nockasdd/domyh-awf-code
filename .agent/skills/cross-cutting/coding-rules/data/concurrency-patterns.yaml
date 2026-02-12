@@ -1,0 +1,108 @@
+metadata:
+  skill: coding-rules
+  domain: concurrency_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: concurrency-patterns.yaml
+  patterns_count: 9
+  columns:
+    - language
+    - model
+    - primitive
+    - runtime
+    - scheduling
+    - memory
+    - channel_type
+    - best_for
+    - learning_curve
+patterns:
+  - id: item_001
+    language: Go
+    model: CSP (goroutines)
+    primitive: goroutine + channel
+    runtime: Built-in
+    scheduling: Pre-emptive
+    memory: GC + stackful
+    channel_type: mpsc (first-class)
+    best_for: I/O-bound + network services
+    learning_curve: Low
+  - id: item_002
+    language: Rust
+    model: Async/Await
+    primitive: Future + task
+    runtime: External (Tokio/async-std)
+    scheduling: Cooperative
+    memory: Ownership + stackless
+    channel_type: tokio::sync::mpsc
+    best_for: CPU-bound + high-perf
+    learning_curve: High
+  - id: item_003
+    language: C++
+    model: Threads + C++20 coroutines
+    primitive: std::thread + co_await
+    runtime: Manual
+    scheduling: Pre-emptive (threads) / Coop (coro)
+    memory: Manual + RAII
+    channel_type: std::mutex/condition_var
+    best_for: Low-latency + game engines
+    learning_curve: High
+  - id: item_004
+    language: Java
+    model: Threads + Virtual Threads (21+)
+    primitive: Thread + VirtualThread
+    runtime: JVM managed
+    scheduling: Pre-emptive
+    memory: GC
+    channel_type: BlockingQueue/CompletableFuture
+    best_for: Enterprise + microservices
+    learning_curve: Medium
+  - id: item_005
+    language: C#
+    model: Async/Await + TPL
+    primitive: Task + async
+    runtime: CLR managed
+    scheduling: Pre-emptive
+    memory: GC
+    channel_type: Channel<T> (System.Threading.Channels)
+    best_for: Enterprise + web services
+    learning_curve: Medium
+  - id: item_006
+    language: Python
+    model: asyncio + threading
+    primitive: coroutine + Thread
+    runtime: Event loop
+    scheduling: Cooperative (async) + GIL (threads)
+    memory: GC + refcount
+    channel_type: asyncio.Queue
+    best_for: I/O-bound + scripting
+    learning_curve: Low
+  - id: item_007
+    language: Node.js
+    model: Event loop
+    primitive: Promise + async/await
+    runtime: libuv
+    scheduling: Cooperative
+    memory: V8 GC
+    channel_type: N/A (callbacks/promises)
+    best_for: Real-time + streaming
+    learning_curve: Low
+  - id: item_008
+    language: Kotlin
+    model: Coroutines
+    primitive: suspend fun + Channel
+    runtime: Dispatchers
+    scheduling: Cooperative
+    memory: JVM GC
+    channel_type: Channel<T>
+    best_for: Android + server
+    learning_curve: Medium
+  - id: item_009
+    language: Swift
+    model: Structured concurrency
+    primitive: Task + actor
+    runtime: Runtime
+    scheduling: Cooperative
+    memory: ARC
+    channel_type: AsyncStream
+    best_for: iOS/macOS + server
+    learning_curve: Medium

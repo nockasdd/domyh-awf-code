@@ -1,0 +1,129 @@
+# LLM Integration Patterns - HSA AI Agents Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: ai-agents
+  domain: llm-integration
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: llm001
+    name: multi_provider
+    category: integration
+    description: Provider-agnostic LLM interface
+    text: multi provider openai anthropic gemini abstraction unified
+    example: |
+      // Unified interface
+      const llm = createLLM({ provider: "openai", model: "gpt-4o" });
+      const result = await llm.chat([{ role: "user", content: "Hello" }]);
+
+  - id: llm002
+    name: function_calling
+    category: integration
+    description: Tool/function calling across LLM providers
+    text: function calling tool use openai anthropic gemini tools
+    example: |
+      // OpenAI format (widely adopted)
+      const tools = [{ type: "function", function: {
+        name: "search", description: "Search the web",
+        parameters: { type: "object", properties: { query: { type: "string" } } }
+      }}];
+      const response = await openai.chat.completions.create({ model, messages, tools });
+
+  - id: llm003
+    name: structured_output
+    category: integration
+    description: Force LLM to output structured JSON
+    text: structured output json schema pydantic response format
+    example: |
+      // OpenAI JSON mode
+      { response_format: { type: "json_schema", json_schema: { schema: userSchema } } }
+      // Anthropic tool-based extraction
+      { tools: [{ name: "extract", input_schema: userSchema }], tool_choice: { type: "tool", name: "extract" } }
+
+  - id: llm004
+    name: streaming
+    category: integration
+    description: Streaming LLM responses (SSE pattern)
+    text: streaming sse server-sent events real-time incremental
+    example: |
+      const stream = await openai.chat.completions.create({ model, messages, stream: true });
+      for await (const chunk of stream) {
+        process.stdout.write(chunk.choices[0]?.delta?.content || "");
+      }
+
+  - id: llm005
+    name: retry_fallback
+    category: production
+    description: Retry with fallback to alternate provider/model
+    text: retry fallback exponential backoff rate limit alternate model
+    example: |
+      async function llmCall(messages, options) {
+        try { return await primaryModel.chat(messages, options); }
+        catch (e) {
+          if (e.status === 429) { // Rate limited
+            await sleep(exponentialBackoff(retryCount));
+            return await fallbackModel.chat(messages, options);
+          }
+          throw e;
+        }
+      }
+
+  - id: llm006
+    name: token_optimization
+    category: production
+    description: Token usage optimization and cost management
+    text: token optimization context window cost management trim
+    strategies:
+      - "Summarize old messages to reduce context"
+      - "Use smaller models for triage/routing"
+      - "Cache identical prompts"
+      - "Trim system prompts to essentials"
+      - "Track token usage per request"
+
+  - id: llm007
+    name: prompt_caching
+    category: production
+    description: Anthropic/OpenAI prompt caching for cost reduction
+    text: prompt caching cache_control ephemeral cost reduction
+    example: |
+      // Anthropic prompt caching
+      { role: "user", content: [
+        { type: "text", text: longDocument, cache_control: { type: "ephemeral" } }
+      ]}
+
+  - id: llm008
+    name: provider_comparison
+    category: reference
+    description: LLM provider feature comparison matrix
+    text: provider comparison openai anthropic gemini features
+    comparison:
+      openai:
+        {
+          streaming: true,
+          function_calling: true,
+          json_mode: true,
+          vision: true,
+        }
+      anthropic:
+        {
+          streaming: true,
+          function_calling: true,
+          json_mode: "via tools",
+          vision: true,
+        }
+      gemini:
+        {
+          streaming: true,
+          function_calling: true,
+          json_mode: true,
+          vision: true,
+        }
+      local_ollama:
+        {
+          streaming: true,
+          function_calling: "model dependent",
+          json_mode: "model dependent",
+        }

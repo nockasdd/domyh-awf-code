@@ -1,0 +1,105 @@
+metadata:
+  skill: observability
+  domain: anti_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: anti-patterns.yaml
+  patterns_count: 15
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - impact
+    - fix
+patterns:
+  - id: ANTI-001
+    name: High Cardinality Labels
+    category: Anti-Pattern
+    description: Using unbounded values as labels
+    impact: Memory explosion/query slowness
+    fix: Use bounded enum values or drop high-cardinality labels
+  - id: ANTI-002
+    name: Metrics Without Alerts
+    category: Anti-Pattern
+    description: Collecting metrics without alerting
+    impact: Issues go unnoticed
+    fix: Define thresholds and alert rules for critical metrics
+  - id: ANTI-003
+    name: Alert Fatigue
+    category: Anti-Pattern
+    description: Too many noisy alerts
+    impact: Team ignores real issues
+    fix: Tune thresholds and reduce false positives
+  - id: ANTI-004
+    name: Trace Without Context
+    category: Anti-Pattern
+    description: Spans missing correlation IDs
+    impact: Hard to debug across services
+    fix: Add trace_id/span_id to logs
+  - id: ANTI-005
+    name: Log Without Structure
+    category: Anti-Pattern
+    description: Unstructured plain text logs
+    impact: Hard to query and analyze
+    fix: Use JSON structured logging
+  - id: ANTI-006
+    name: Sampling Too Aggressively
+    category: Anti-Pattern
+    description: Missing rare errors/events
+    impact: Cannot debug edge cases
+    fix: Use tail-based sampling for errors
+  - id: ANTI-007
+    name: Dashboard Overload
+    category: Anti-Pattern
+    description: Too many dashboards/panels
+    impact: Information overload
+    fix: Focus on SLO-based dashboards
+  - id: ANTI-008
+    name: Metric Name Inconsistency
+    category: Anti-Pattern
+    description: Inconsistent naming conventions
+    impact: Hard to find and correlate
+    fix: Follow naming conventions (snake_case/units)
+  - id: ANTI-009
+    name: Ignoring Profiling
+    category: Anti-Pattern
+    description: Never profiling in production
+    impact: Miss performance issues
+    fix: Enable continuous profiling
+  - id: ANTI-010
+    name: No Baseline
+    category: Anti-Pattern
+    description: No historical comparison
+    impact: Cannot detect anomalies
+    fix: Establish baseline metrics
+  - id: ANTI-011
+    name: Over-Instrumentation
+    category: Anti-Pattern
+    description: Too many spans/metrics
+    impact: Performance overhead/cost
+    fix: Focus on critical paths
+  - id: ANTI-012
+    name: Missing Service Maps
+    category: Anti-Pattern
+    description: No dependency visualization
+    impact: Hard to understand system
+    fix: Generate service maps from traces
+  - id: ANTI-013
+    name: Single Point of Failure
+    category: Anti-Pattern
+    description: One observability backend
+    impact: Data loss if backend fails
+    fix: Multi-region/HA setup
+  - id: ANTI-014
+    name: No Retention Policy
+    category: Anti-Pattern
+    description: Keeping data forever
+    impact: Storage costs explode
+    fix: Define retention by signal type
+  - id: ANTI-015
+    name: Ignoring Cost
+    category: Anti-Pattern
+    description: Not monitoring observability cost
+    impact: Budget overrun
+    fix: Track ingestion volume and optimize

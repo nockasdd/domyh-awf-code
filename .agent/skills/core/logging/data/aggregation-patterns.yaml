@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: aggregation_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: aggregation-patterns.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - platform
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: AGG-001
+    category: elk
+    platform: Elasticsearch
+    name: Index Template
+    description: Define index structure
+    example: 'PUT _index_template/logs { "index_patterns": ["logs-*"] }'
+    when_to_use: ELK setup
+  - id: AGG-002
+    category: elk
+    platform: Elasticsearch
+    name: ILM Policy
+    description: Index lifecycle management
+    example: 'PUT _ilm/policy/logs-policy { "phases": { "hot": {}, "warm": {} } }'
+    when_to_use: Log retention
+  - id: AGG-003
+    category: elk
+    platform: Logstash
+    name: Input Plugin
+    description: Log ingestion
+    example: input { beats { port => 5044 } }
+    when_to_use: Receiving logs
+  - id: AGG-004
+    category: elk
+    platform: Logstash
+    name: Filter Pipeline
+    description: Transform logs
+    example: filter { json { source => "message" } }
+    when_to_use: Log parsing
+  - id: AGG-005
+    category: elk
+    platform: Logstash
+    name: Output Plugin
+    description: Send to Elasticsearch
+    example: output { elasticsearch { hosts => ["localhost:9200"] } }
+    when_to_use: Indexing logs
+  - id: AGG-006
+    category: elk
+    platform: Kibana
+    name: Discover
+    description: Search logs
+    example: "Use KQL: level:ERROR AND service:api"
+    when_to_use: Log exploration
+  - id: AGG-007
+    category: elk
+    platform: Kibana
+    name: Dashboard
+    description: Visualize logs
+    example: Create panels for error rates, response times
+    when_to_use: Monitoring
+  - id: AGG-008
+    category: filebeat
+    platform: Filebeat
+    name: filebeat.inputs
+    description: Collect log files
+    example: "filebeat.inputs: [{type: log, paths: ['/var/log/*.log']}]"
+    when_to_use: Log shipping
+  - id: AGG-009
+    category: loki
+    platform: Loki
+    name: Labels
+    description: Index by labels
+    example: '{app="myapp", env="prod"}'
+    when_to_use: Cost-effective logging
+  - id: AGG-010
+    category: loki
+    platform: Loki
+    name: LogQL
+    description: Query language
+    example: '''{app="myapp"} |= "error" | json | line_format "{{.message}}"'''
+    when_to_use: Log querying
+  - id: AGG-011
+    category: loki
+    platform: Promtail
+    name: scrape_configs
+    description: Log collection
+    example: "scrape_configs: [{job_name: system, static_configs: [...]}]"
+    when_to_use: Loki ingestion
+  - id: AGG-012
+    category: loki
+    platform: Grafana
+    name: Explore
+    description: Loki in Grafana
+    example: Use Explore panel with Loki datasource
+    when_to_use: Log exploration
+  - id: AGG-013
+    category: splunk
+    platform: Splunk
+    name: HEC
+    description: HTTP Event Collector
+    example: POST /services/collector/event with token auth
+    when_to_use: Splunk ingestion
+  - id: AGG-014
+    category: splunk
+    platform: Splunk
+    name: SPL
+    description: Search Processing Language
+    example: index=main sourcetype=json | stats count by level
+    when_to_use: Log analysis
+  - id: AGG-015
+    category: splunk
+    platform: Splunk
+    name: Saved Search
+    description: Scheduled search
+    example: Create alerts for error patterns
+    when_to_use: Alerting
+  - id: AGG-016
+    category: cloud
+    platform: CloudWatch
+    name: Log Groups
+    description: AWS log organization
+    example: aws logs create-log-group --log-group-name /app/myservice
+    when_to_use: AWS logging
+  - id: AGG-017
+    category: cloud
+    platform: CloudWatch
+    name: Insights
+    description: CloudWatch query
+    example: fields @timestamp, @message | filter level = 'ERROR'
+    when_to_use: AWS log analysis
+  - id: AGG-018
+    category: cloud
+    platform: Cloud Logging
+    name: Structured Logs
+    description: GCP structured
+    example: jsonPayload.level = "ERROR"
+    when_to_use: GCP logging
+  - id: AGG-019
+    category: cloud
+    platform: Cloud Logging
+    name: Log Router
+    description: Route to BigQuery
+    example: Create sink to BigQuery for analytics
+    when_to_use: GCP log routing
+  - id: AGG-020
+    category: cloud
+    platform: Azure Monitor
+    name: Diagnostic Settings
+    description: Azure log config
+    example: Create diagnostic setting to Log Analytics
+    when_to_use: Azure logging
+  - id: AGG-021
+    category: fluentd
+    platform: Fluentd
+    name: source
+    description: Log input
+    example: <source> @type tail path /var/log/*.log </source>
+    when_to_use: Multi-source collection
+  - id: AGG-022
+    category: fluentd
+    platform: Fluentd
+    name: match
+    description: Log routing
+    example: <match app.**> @type elasticsearch </match>
+    when_to_use: Log forwarding
+  - id: AGG-023
+    category: fluentbit
+    platform: Fluent Bit
+    name: Lightweight Agent
+    description: Resource-efficient
+    example: "[INPUT] Name tail Path /var/log/*.log"
+    when_to_use: Edge/container logging
+  - id: AGG-024
+    category: vector
+    platform: Vector
+    name: Pipeline
+    description: High-performance agent
+    example: "sources: { logs: { type: file } }"
+    when_to_use: Modern log shipping
+  - id: AGG-025
+    category: general
+    platform: any
+    name: Centralization Pattern
+    description: Unified log platform
+    example: All services → Aggregator → Storage → Visualization
+    when_to_use: Architecture

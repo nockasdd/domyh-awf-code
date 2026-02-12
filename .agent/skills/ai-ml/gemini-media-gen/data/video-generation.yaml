@@ -1,0 +1,131 @@
+# =============================================================================
+# video-generation.yaml — Veo 3.1 Video Generation Patterns
+# =============================================================================
+# 10 patterns for text/image-to-video, prompting, extension, frame control
+# Source: https://ai.google.dev/gemini-api/docs/video
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 10
+
+model:
+  id: "veo-3.1"
+  capabilities:
+    - "Text-to-video"
+    - "Image-to-video"
+    - "Video extension"
+    - "Frame control (first/last)"
+    - "Native audio generation"
+    - "Negative prompts"
+  specs:
+    duration: "5-8 seconds"
+    resolutions: ["720p", "1080p", "4K"]
+    audio: "Native AI-generated (sound effects, dialogue, ambient)"
+    aspect_ratios: ["16:9", "9:16"]
+
+prompt_elements:
+  - name: "Subject"
+    desc: "Who/what is in the scene"
+    example: "A chef in a modern kitchen"
+  - name: "Action"
+    desc: "What is happening (be specific about motion)"
+    example: "flipping a pancake high into the air"
+  - name: "Style"
+    desc: "Visual aesthetic"
+    examples:
+      - "cinematic, 35mm film"
+      - "documentary style"
+      - "anime"
+      - "slow motion"
+      - "time-lapse"
+      - "noir black and white"
+  - name: "Camera"
+    desc: "Camera movement and angle"
+    examples:
+      - "pan left slowly"
+      - "zoom in on the subject"
+      - "tracking shot following the character"
+      - "overhead drone shot"
+      - "handheld shaky cam"
+      - "dolly zoom (Vertigo effect)"
+  - name: "Audio"
+    desc: "Sound elements (Veo 3.1 generates native audio)"
+    examples:
+      - "birds chirping in the background"
+      - "dramatic orchestral music"
+      - "the character says 'Welcome home'"
+      - "rain on a tin roof"
+      - "busy city traffic sounds"
+  - name: "Lighting"
+    desc: "Light quality and mood"
+    examples:
+      - "golden hour warm light"
+      - "harsh noon shadows"
+      - "soft studio lighting"
+      - "neon-lit urban night"
+
+generation_modes:
+  text_to_video:
+    desc: "Generate video from text description"
+    api: |
+      response = client.models.generate_videos(
+          model="veo-3.1",
+          prompt="A cat walking through a garden at sunset",
+          config={"generate_audio": True, "aspect_ratio": "16:9"}
+      )
+    tips:
+      - "Be specific about motion and timing"
+      - "Include audio cues for better results"
+      - "Describe camera movement explicitly"
+
+  image_to_video:
+    desc: "Animate a static image"
+    api: |
+      response = client.models.generate_videos(
+          model="veo-3.1",
+          prompt="The flowers sway gently in the breeze",
+          image=reference_image,
+          config={"generate_audio": True}
+      )
+    tips:
+      - "Image becomes the first frame"
+      - "Describe the motion that should happen"
+      - "Works great for product animations"
+
+video_extension:
+  desc: "Extend existing video by generating continuation"
+  how: "Feed last frame of video as reference, prompt describes continuation"
+  max_consecutive: "Multiple extensions possible (each 5-8s)"
+  tip: "Maintain style consistency in extension prompt"
+
+frame_control:
+  first_frame:
+    desc: "Control opening frame with reference image"
+    use_case: "Start from specific composition"
+  last_frame:
+    desc: "Control ending frame with reference image"
+    use_case: "Create transitions between videos"
+
+negative_prompts:
+  desc: "Specify what should NOT appear in video"
+  config_key: "negative_prompt"
+  examples:
+    - "blurry, shaky footage"
+    - "text overlays, watermarks"
+    - "low quality, pixelated"
+
+async_generation:
+  desc: "Video generation is asynchronous (check status)"
+  workflow:
+    - "Submit generation request"
+    - "Receive operation name"
+    - "Poll for completion"
+    - "Download generated video"
+  polling: |
+    while not operation.done:
+        operation = client.operations.get(name=operation.name)
+        time.sleep(5)
+
+# =============================================================================
+# _DOMYH Awesome Code • Video Generation v1.0_
+# =============================================================================

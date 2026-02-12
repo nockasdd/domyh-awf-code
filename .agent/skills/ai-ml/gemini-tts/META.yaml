@@ -1,0 +1,49 @@
+name: gemini-tts
+version: "1.0.0"
+display: Gemini Text-to-Speech
+category: ai-ml
+tier: 1
+priority: 3
+
+desc: "Gemini TTS: 3 models (Flash/Lite/Pro), markup tags ([sigh], [whispering], [extremely fast]), multi-speaker, 6 output formats, streaming. Style control via prompts. 29+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - text to speech
+    - tts
+    - gemini tts
+    - speech synthesis
+    - voice generation
+    - audio generation
+    - read aloud
+    - narration
+    - multi speaker
+    - voice style
+    - speech markup
+    - prosody
+  intents:
+    - generate speech
+    - convert text to audio
+    - narrate content
+    - create voiceover
+
+caps:
+  - Flash TTS (low-latency streaming)
+  - Lite TTS (cost-effective)
+  - Pro TTS (highest quality)
+  - Markup tags (sigh, laughing, whispering, sarcasm, pauses)
+  - Multi-speaker synthesis
+  - Streaming audio (PCM, OGG_OPUS)
+  - Style control via natural language prompts
+  - Pace & pronunciation control
+  - 6 output audio formats
+
+related_skills:
+  - prompt-engineering
+  - gemini-media-gen
+
+data_files:
+  - data/models.yaml
+  - data/markup-tags.yaml
+  - data/prompting-patterns.yaml

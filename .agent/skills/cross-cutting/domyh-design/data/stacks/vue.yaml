@@ -1,0 +1,485 @@
+metadata:
+  skill: domyh-design
+  domain: vue
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: vue.yaml
+  patterns_count: 49
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Composition
+    guideline: Use Composition API for new projects
+    description: Composition API offers better TypeScript support and logic reuse
+    do: <script setup> for components
+    don_t: Options API for new projects
+    code_good: <script setup>
+    code_bad: export default { data() }
+    severity: Medium
+    docs_url: https://vuejs.org/guide/extras/composition-api-faq.html
+  - id: "2"
+    category: Composition
+    guideline: Use script setup syntax
+    description: Cleaner syntax with automatic exports
+    do: <script setup> with defineProps
+    don_t: setup() function manually
+    code_good: <script setup>
+    code_bad: <script> setup() { return {} }
+    severity: Low
+    docs_url: https://vuejs.org/api/sfc-script-setup.html
+  - id: "3"
+    category: Reactivity
+    guideline: Use ref for primitives
+    description: ref() for primitive values that need reactivity
+    do: ref() for strings numbers booleans
+    don_t: reactive() for primitives
+    code_good: const count = ref(0)
+    code_bad: const count = reactive(0)
+    severity: Medium
+    docs_url: https://vuejs.org/guide/essentials/reactivity-fundamentals.html
+  - id: "4"
+    category: Reactivity
+    guideline: Use reactive for objects
+    description: reactive() for complex objects and arrays
+    do: reactive() for objects with multiple properties
+    don_t: ref() for complex objects
+    code_good: "const state = reactive({ user: null })"
+    code_bad: "const state = ref({ user: null })"
+    severity: Medium
+  - id: "5"
+    category: Reactivity
+    guideline: Access ref values with .value
+    description: Remember .value in script unwrap in template
+    do: Use .value in script
+    don_t: Forget .value in script
+    code_good: count.value++
+    code_bad: count++ (in script)
+    severity: High
+  - id: "6"
+    category: Reactivity
+    guideline: Use computed for derived state
+    description: Computed properties cache and update automatically
+    do: computed() for derived values
+    don_t: Methods for derived values
+    code_good: const doubled = computed(() => count.value * 2)
+    code_bad: const doubled = () => count.value * 2
+    severity: Medium
+    docs_url: https://vuejs.org/guide/essentials/computed.html
+  - id: "7"
+    category: Reactivity
+    guideline: Use shallowRef for large objects
+    description: Avoid deep reactivity for performance
+    do: shallowRef for large data structures
+    don_t: ref for large nested objects
+    code_good: const bigData = shallowRef(largeObject)
+    code_bad: const bigData = ref(largeObject)
+    severity: Medium
+    docs_url: https://vuejs.org/api/reactivity-advanced.html#shallowref
+  - id: "8"
+    category: Watchers
+    guideline: Use watchEffect for simple cases
+    description: Auto-tracks dependencies
+    do: watchEffect for simple reactive effects
+    don_t: watch with explicit deps when not needed
+    code_good: watchEffect(() => console.log(count.value))
+    code_bad: watch(count, (val) => console.log(val))
+    severity: Low
+    docs_url: https://vuejs.org/guide/essentials/watchers.html
+  - id: "9"
+    category: Watchers
+    guideline: Use watch for specific sources
+    description: Explicit control over what to watch
+    do: watch with specific refs
+    don_t: watchEffect for complex conditional logic
+    code_good: watch(userId, fetchUser)
+    code_bad: watchEffect with conditionals
+    severity: Medium
+  - id: "10"
+    category: Watchers
+    guideline: Clean up side effects
+    description: Return cleanup function in watchers
+    do: Return cleanup in watchEffect
+    don_t: Leave subscriptions open
+    code_good: watchEffect((onCleanup) => { onCleanup(unsub) })
+    code_bad: watchEffect without cleanup
+    severity: High
+  - id: "11"
+    category: Props
+    guideline: Define props with defineProps
+    description: Type-safe prop definitions
+    do: defineProps with TypeScript
+    don_t: Props without types
+    code_good: "defineProps<{ msg: string }>()"
+    code_bad: defineProps(['msg'])
+    severity: Medium
+    docs_url: https://vuejs.org/guide/typescript/composition-api.html#typing-component-props
+  - id: "12"
+    category: Props
+    guideline: Use withDefaults for default values
+    description: Provide defaults for optional props
+    do: withDefaults with defineProps
+    don_t: Defaults in destructuring
+    code_good: "withDefaults(defineProps<Props>(), { count: 0 })"
+    code_bad: const { count = 0 } = defineProps()
+    severity: Medium
+  - id: "13"
+    category: Props
+    guideline: Avoid mutating props
+    description: Props should be read-only
+    do: Emit events to parent for changes
+    don_t: Direct prop mutation
+    code_good: emit('update:modelValue', newVal)
+    code_bad: props.modelValue = newVal
+    severity: High
+  - id: "14"
+    category: Emits
+    guideline: Define emits with defineEmits
+    description: Type-safe event emissions
+    do: defineEmits with types
+    don_t: Emit without definition
+    code_good: "defineEmits<{ change: [id: number] }>()"
+    code_bad: emit('change', id) without define
+    severity: Medium
+    docs_url: https://vuejs.org/guide/typescript/composition-api.html#typing-component-emits
+  - id: "15"
+    category: Emits
+    guideline: Use v-model for two-way binding
+    description: Simplified parent-child data flow
+    do: v-model with modelValue prop
+    don_t: :value + @input manually
+    code_good: <Child v-model="value"/>
+    code_bad: <Child :value="value" @input="value = $event"/>
+    severity: Low
+    docs_url: https://vuejs.org/guide/components/v-model.html
+  - id: "16"
+    category: Lifecycle
+    guideline: Use onMounted for DOM access
+    description: DOM is ready in onMounted
+    do: onMounted for DOM operations
+    don_t: Access DOM in setup directly
+    code_good: onMounted(() => el.value.focus())
+    code_bad: el.value.focus() in setup
+    severity: High
+    docs_url: https://vuejs.org/api/composition-api-lifecycle.html
+  - id: "17"
+    category: Lifecycle
+    guideline: Clean up in onUnmounted
+    description: Remove listeners and subscriptions
+    do: onUnmounted for cleanup
+    don_t: Leave listeners attached
+    code_good: onUnmounted(() => window.removeEventListener())
+    code_bad: No cleanup on unmount
+    severity: High
+  - id: "18"
+    category: Lifecycle
+    guideline: Avoid onBeforeMount for data
+    description: Use onMounted or setup for data fetching
+    do: Fetch in onMounted or setup
+    don_t: Fetch in onBeforeMount
+    code_good: onMounted(async () => await fetchData())
+    code_bad: onBeforeMount(async () => await fetchData())
+    severity: Low
+  - id: "19"
+    category: Components
+    guideline: Use single-file components
+    description: Keep template script style together
+    do: .vue files for components
+    don_t: Separate template/script files
+    code_good: Component.vue with all parts
+    code_bad: Component.js + Component.html
+    severity: Low
+  - id: "20"
+    category: Components
+    guideline: Use PascalCase for components
+    description: Consistent component naming
+    do: PascalCase in imports and templates
+    don_t: kebab-case in script
+    code_good: <MyComponent/>
+    code_bad: <my-component/>
+    severity: Low
+    docs_url: https://vuejs.org/style-guide/rules-strongly-recommended.html
+  - id: "21"
+    category: Components
+    guideline: Prefer composition over mixins
+    description: Composables replace mixins
+    do: Composables for shared logic
+    don_t: Mixins for code reuse
+    code_good: const { data } = useApi()
+    code_bad: "mixins: [apiMixin]"
+    severity: Medium
+  - id: "22"
+    category: Composables
+    guideline: Name composables with use prefix
+    description: Convention for composable functions
+    do: useFetch useAuth useForm
+    don_t: getData or fetchApi
+    code_good: export function useFetch()
+    code_bad: export function fetchData()
+    severity: Medium
+    docs_url: https://vuejs.org/guide/reusability/composables.html
+  - id: "23"
+    category: Composables
+    guideline: Return refs from composables
+    description: Maintain reactivity when destructuring
+    do: Return ref values
+    don_t: Return reactive objects that lose reactivity
+    code_good: "return { data: ref(null) }"
+    code_bad: "return reactive({ data: null })"
+    severity: Medium
+  - id: "24"
+    category: Composables
+    guideline: Accept ref or value params
+    description: Use toValue for flexible inputs
+    do: toValue() or unref() for params
+    don_t: Only accept ref or only value
+    code_good: const val = toValue(maybeRef)
+    code_bad: const val = maybeRef.value
+    severity: Low
+    docs_url: https://vuejs.org/api/reactivity-utilities.html#tovalue
+  - id: "25"
+    category: Templates
+    guideline: Use v-bind shorthand
+    description: Cleaner template syntax
+    do: :prop instead of v-bind:prop
+    don_t: Full v-bind syntax
+    code_good: <div :class="cls">
+    code_bad: <div v-bind:class="cls">
+    severity: Low
+  - id: "26"
+    category: Templates
+    guideline: Use v-on shorthand
+    description: Cleaner event binding
+    do: "@event instead of v-on:event"
+    don_t: Full v-on syntax
+    code_good: <button @click="handler">
+    code_bad: <button v-on:click="handler">
+    severity: Low
+  - id: "27"
+    category: Templates
+    guideline: Avoid v-if with v-for
+    description: v-if has higher priority causes issues
+    do: Wrap in template or computed filter
+    don_t: v-if on same element as v-for
+    code_good: <template v-for><div v-if>
+    code_bad: <div v-for v-if>
+    severity: High
+    docs_url: https://vuejs.org/style-guide/rules-essential.html#avoid-v-if-with-v-for
+  - id: "28"
+    category: Templates
+    guideline: Use key with v-for
+    description: Proper list rendering and updates
+    do: Unique key for each item
+    don_t: Index as key for dynamic lists
+    code_good: v-for="item in items" :key="item.id"
+    code_bad: v-for="(item, i) in items" :key="i"
+    severity: High
+  - id: "29"
+    category: State
+    guideline: Use Pinia for global state
+    description: Official state management for Vue 3
+    do: Pinia stores for shared state
+    don_t: Vuex for new projects
+    code_good: const store = useCounterStore()
+    code_bad: Vuex with mutations
+    severity: Medium
+    docs_url: https://pinia.vuejs.org/
+  - id: "30"
+    category: State
+    guideline: Define stores with defineStore
+    description: Composition API style stores
+    do: Setup stores with defineStore
+    don_t: Options stores for complex state
+    code_good: defineStore('counter', () => {})
+    code_bad: defineStore('counter', { state })
+    severity: Low
+  - id: "31"
+    category: State
+    guideline: Use storeToRefs for destructuring
+    description: Maintain reactivity when destructuring
+    do: storeToRefs(store)
+    don_t: Direct destructuring
+    code_good: const { count } = storeToRefs(store)
+    code_bad: const { count } = store
+    severity: High
+    docs_url: https://pinia.vuejs.org/core-concepts/#destructuring-from-a-store
+  - id: "32"
+    category: Routing
+    guideline: Use useRouter and useRoute
+    description: Composition API router access
+    do: useRouter() useRoute() in setup
+    don_t: this.$router this.$route
+    code_good: const router = useRouter()
+    code_bad: this.$router.push()
+    severity: Medium
+    docs_url: https://router.vuejs.org/guide/advanced/composition-api.html
+  - id: "33"
+    category: Routing
+    guideline: Lazy load route components
+    description: Code splitting for routes
+    do: () => import() for components
+    don_t: Static imports for all routes
+    code_good: "component: () => import('./Page.vue')"
+    code_bad: "component: Page"
+    severity: Medium
+    docs_url: https://router.vuejs.org/guide/advanced/lazy-loading.html
+  - id: "34"
+    category: Routing
+    guideline: Use navigation guards
+    description: Protect routes and handle redirects
+    do: beforeEach for auth checks
+    don_t: Check auth in each component
+    code_good: router.beforeEach((to) => {})
+    code_bad: Check auth in onMounted
+    severity: Medium
+  - id: "35"
+    category: Performance
+    guideline: Use v-once for static content
+    description: Skip re-renders for static elements
+    do: v-once on never-changing content
+    don_t: v-once on dynamic content
+    code_good: <div v-once>{{ staticText }}</div>
+    code_bad: <div v-once>{{ dynamicText }}</div>
+    severity: Low
+    docs_url: https://vuejs.org/api/built-in-directives.html#v-once
+  - id: "36"
+    category: Performance
+    guideline: Use v-memo for expensive lists
+    description: Memoize list items
+    do: v-memo with dependency array
+    don_t: Re-render entire list always
+    code_good: <div v-for v-memo="[item.id]">
+    code_bad: <div v-for> without memo
+    severity: Medium
+    docs_url: https://vuejs.org/api/built-in-directives.html#v-memo
+  - id: "37"
+    category: Performance
+    guideline: Use shallowReactive for flat objects
+    description: Avoid deep reactivity overhead
+    do: shallowReactive for flat state
+    don_t: reactive for simple objects
+    code_good: "shallowReactive({ count: 0 })"
+    code_bad: "reactive({ count: 0 })"
+    severity: Low
+  - id: "38"
+    category: Performance
+    guideline: Use defineAsyncComponent
+    description: Lazy load heavy components
+    do: defineAsyncComponent for modals dialogs
+    don_t: Import all components eagerly
+    code_good: defineAsyncComponent(() => import())
+    code_bad: import HeavyComponent from
+    severity: Medium
+    docs_url: https://vuejs.org/guide/components/async.html
+  - id: "39"
+    category: TypeScript
+    guideline: Use generic components
+    description: Type-safe reusable components
+    do: Generic with defineComponent
+    don_t: Any types in components
+    code_good: <script setup lang="ts" generic="T">
+    code_bad: <script setup> without types
+    severity: Medium
+    docs_url: https://vuejs.org/guide/typescript/composition-api.html
+  - id: "40"
+    category: TypeScript
+    guideline: Type template refs
+    description: Proper typing for DOM refs
+    do: ref<HTMLInputElement>(null)
+    don_t: ref(null) without type
+    code_good: const input = ref<HTMLInputElement>(null)
+    code_bad: const input = ref(null)
+    severity: Medium
+  - id: "41"
+    category: TypeScript
+    guideline: Use PropType for complex props
+    description: Type complex prop types
+    do: PropType<User> for object props
+    don_t: Object without type
+    code_good: "type: Object as PropType<User>"
+    code_bad: "type: Object"
+    severity: Medium
+  - id: "42"
+    category: Testing
+    guideline: Use Vue Test Utils
+    description: Official testing library
+    do: mount shallowMount for components
+    don_t: Manual DOM testing
+    code_good: import { mount } from '@vue/test-utils'
+    code_bad: document.createElement
+    severity: Medium
+    docs_url: https://test-utils.vuejs.org/
+  - id: "43"
+    category: Testing
+    guideline: Test component behavior
+    description: Focus on inputs and outputs
+    do: Test props emit and rendered output
+    don_t: Test internal implementation
+    code_good: expect(wrapper.text()).toContain()
+    code_bad: expect(wrapper.vm.internalState)
+    severity: Medium
+  - id: "44"
+    category: Forms
+    guideline: Use v-model modifiers
+    description: Built-in input handling
+    do: .lazy .number .trim modifiers
+    don_t: Manual input parsing
+    code_good: <input v-model.number="age">
+    code_bad: <input v-model="age"> then parse
+    severity: Low
+    docs_url: https://vuejs.org/guide/essentials/forms.html#modifiers
+  - id: "45"
+    category: Forms
+    guideline: Use VeeValidate or FormKit
+    description: Form validation libraries
+    do: VeeValidate for complex forms
+    don_t: Manual validation logic
+    code_good: useField useForm from vee-validate
+    code_bad: Custom validation in each input
+    severity: Medium
+  - id: "46"
+    category: Accessibility
+    guideline: Use semantic elements
+    description: Proper HTML elements in templates
+    do: button nav main for purpose
+    don_t: div for everything
+    code_good: <button @click>
+    code_bad: <div @click>
+    severity: High
+  - id: "47"
+    category: Accessibility
+    guideline: Bind aria attributes dynamically
+    description: Keep ARIA in sync with state
+    do: :aria-expanded="isOpen"
+    don_t: Static ARIA values
+    code_good: :aria-expanded="menuOpen"
+    code_bad: aria-expanded="true"
+    severity: Medium
+  - id: "48"
+    category: SSR
+    guideline: Use Nuxt for SSR
+    description: Full-featured SSR framework
+    do: Nuxt 3 for SSR apps
+    don_t: Manual SSR setup
+    code_good: npx nuxi init my-app
+    code_bad: Custom SSR configuration
+    severity: Medium
+    docs_url: https://nuxt.com/
+  - id: "49"
+    category: SSR
+    guideline: Handle hydration mismatches
+    description: Client/server content must match
+    do: ClientOnly for browser-only content
+    don_t: Different content server/client
+    code_good: <ClientOnly><BrowserWidget/></ClientOnly>
+    code_bad: <div>{{ Date.now() }}</div>
+    severity: High

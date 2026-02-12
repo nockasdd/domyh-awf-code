@@ -1,0 +1,175 @@
+metadata:
+  skill: authentication
+  domain: mfa_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: mfa-patterns.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: MFA-001
+    pattern_name: TOTP Algorithm
+    description: Time-based one-time password RFC 6238
+    category: algorithms
+    security_level: high
+    keywords:
+      - totp
+      - rfc6238
+  - id: MFA-002
+    pattern_name: HOTP Algorithm
+    description: HMAC-based one-time password RFC 4226
+    category: algorithms
+    security_level: medium
+    keywords:
+      - hotp
+      - counter
+  - id: MFA-003
+    pattern_name: Authenticator Apps
+    description: Google Authenticator Authy Microsoft Auth
+    category: implementation
+    security_level: high
+    keywords:
+      - authenticator
+      - app
+  - id: MFA-004
+    pattern_name: QR Code Setup
+    description: Register TOTP via QR code scanning
+    category: usability
+    security_level: medium
+    keywords:
+      - qr
+      - setup
+  - id: MFA-005
+    pattern_name: Backup Codes
+    description: One-time recovery codes if device lost
+    category: recovery
+    security_level: critical
+    keywords:
+      - backup
+      - recovery
+  - id: MFA-006
+    pattern_name: SMS OTP
+    description: One-time password via text message
+    category: channels
+    security_level: medium
+    keywords:
+      - sms
+      - text
+  - id: MFA-007
+    pattern_name: Email OTP
+    description: One-time password via email
+    category: channels
+    security_level: medium
+    keywords:
+      - email
+      - code
+  - id: MFA-008
+    pattern_name: Push Notifications
+    description: Approve login via mobile push
+    category: usability
+    security_level: high
+    keywords:
+      - push
+      - approve
+  - id: MFA-009
+    pattern_name: Hardware Security Keys
+    description: YubiKey SoloKey physical devices
+    category: hardware
+    security_level: critical
+    keywords:
+      - yubikey
+      - hardware
+  - id: MFA-010
+    pattern_name: Biometric Factor
+    description: Fingerprint face recognition
+    category: biometrics
+    security_level: high
+    keywords:
+      - fingerprint
+      - face
+  - id: MFA-011
+    pattern_name: MFA Enrollment Flow
+    description: User-friendly setup wizard
+    category: usability
+    security_level: medium
+    keywords:
+      - enrollment
+      - setup
+  - id: MFA-012
+    pattern_name: MFA Challenge Flow
+    description: Prompt and verify second factor
+    category: implementation
+    security_level: high
+    keywords:
+      - challenge
+      - verify
+  - id: MFA-013
+    pattern_name: Step-Up Authentication
+    description: Require MFA for sensitive operations
+    category: security
+    security_level: high
+    keywords:
+      - stepup
+      - sensitive
+  - id: MFA-014
+    pattern_name: Adaptive MFA
+    description: Risk-based MFA triggering
+    category: intelligence
+    security_level: high
+    keywords:
+      - adaptive
+      - risk
+  - id: MFA-015
+    pattern_name: MFA Bypass Tokens
+    description: Temporary skip for trusted devices
+    category: usability
+    security_level: medium
+    keywords:
+      - bypass
+      - trusted
+  - id: MFA-016
+    pattern_name: Recovery Phone
+    description: Backup phone number for account recovery
+    category: recovery
+    security_level: high
+    keywords:
+      - recovery
+      - phone
+  - id: MFA-017
+    pattern_name: Admin MFA Override
+    description: Emergency admin access without MFA
+    category: administration
+    security_level: critical
+    keywords:
+      - admin
+      - override
+  - id: MFA-018
+    pattern_name: MFA Rate Limiting
+    description: Prevent OTP brute force
+    category: security
+    security_level: high
+    keywords:
+      - ratelimit
+      - brute
+  - id: MFA-019
+    pattern_name: MFA Code Window
+    description: Time tolerance for TOTP codes
+    category: implementation
+    security_level: medium
+    keywords:
+      - window
+      - tolerance
+  - id: MFA-020
+    pattern_name: MFA Audit Logging
+    description: Log all MFA events
+    category: audit
+    security_level: high
+    keywords:
+      - audit
+      - logging

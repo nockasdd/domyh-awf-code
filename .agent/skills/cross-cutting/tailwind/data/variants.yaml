@@ -1,0 +1,154 @@
+# Tailwind CSS 4.0 - New Variants
+# not-*, starting, inert, nth-*, descendant, and more
+# Source: tailwindcss.com/blog/tailwindcss-v4 (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: variants
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 8
+
+patterns:
+  - id: var001
+    name: "not-*"
+    category: variant
+    version: "4.0+"
+    description: |
+      CSS :not() pseudo-class variant. Style elements when they
+      don't match a selector or variant.
+    text: "not variant :not() pseudo class negation exclude"
+    example: |
+      <!-- Not disabled -->
+      <button class="not-disabled:hover:bg-blue-500" />
+
+      <!-- Not last child -->
+      <li class="not-last:border-b" />
+
+      <!-- Not in dark mode -->
+      <div class="not-dark:bg-white" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#not"
+
+  - id: var002
+    name: "starting"
+    category: variant
+    version: "4.0+"
+    description: |
+      @starting-style for enter animations. Define initial state
+      when element appears. Works without JavaScript.
+    text: "starting @starting-style enter animation appear fade in"
+    example: |
+      <dialog class="
+        opacity-100 scale-100 transition-all
+        starting:opacity-0 starting:scale-95
+      " open>
+        Modal animates on open
+      </dialog>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#starting"
+
+  - id: var003
+    name: "inert"
+    category: variant
+    version: "4.0+"
+    description: |
+      Style non-interactive inert elements. The inert attribute
+      disables all interactions and removes from accessibility tree.
+    text: "inert variant non-interactive disabled accessibility aria"
+    example: |
+      <div inert class="inert:opacity-50 inert:pointer-events-none">
+        Non-interactive content
+      </div>
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#inert"
+
+  - id: var004
+    name: "nth-*"
+    category: variant
+    version: "4.0+"
+    description: |
+      Advanced :nth-child() selectors. Target specific children
+      by position or formula.
+    text: "nth-child odd even first last selector index"
+    example: |
+      <!-- Every 3rd item -->
+      <div class="nth-3:bg-blue-100" />
+
+      <!-- Odd items -->
+      <li class="nth-odd:bg-gray-50" />
+
+      <!-- Last 3 items -->
+      <li class="nth-last-[-n+3]:font-bold" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#nth-child"
+
+  - id: var005
+    name: "descendant"
+    category: variant
+    version: "4.0+"
+    description: |
+      Style all descendant elements with ** variant.
+      Useful for styling dynamic content.
+    text: "descendant ** children nested prose content"
+    example: |
+      <article class="**:text-gray-700 **:leading-relaxed">
+        <p>All descendants styled</p>
+        <div><span>Nested too</span></div>
+      </article>
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#descendant"
+
+  - id: var006
+    name: "noscript"
+    category: variant
+    version: "4.0+"
+    description: |
+      Style elements when JavaScript is disabled.
+      Show fallback content for no-JS users.
+    text: "noscript no-js fallback javascript disabled"
+    example: |
+      <div class="hidden noscript:block">
+        JavaScript is required for this feature
+      </div>
+      <button class="noscript:hidden" onclick="...">
+        Interactive button
+      </button>
+    severity: LOW
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#noscript"
+
+  - id: var007
+    name: "user-valid/user-invalid"
+    category: variant
+    version: "4.0+"
+    description: |
+      Style form inputs after user interaction.
+      Unlike valid:/invalid:, only shows after user has edited.
+    text: "user-valid user-invalid form validation after interaction"
+    example: |
+      <input
+        type="email"
+        required
+        class="
+          border-gray-300
+          user-valid:border-green-500
+          user-invalid:border-red-500
+        "
+      />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#user-valid"
+
+  - id: var008
+    name: "inverted-colors"
+    category: variant
+    version: "4.0+"
+    description: |
+      Detect OS accessibility setting for inverted colors.
+      Adjust design for inverted color mode users.
+    text: "inverted-colors accessibility a11y os preference invert"
+    example: |
+      <div class="inverted-colors:invert inverted-colors:hue-rotate-180">
+        Respects OS accessibility setting
+      </div>
+    severity: LOW
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#inverted-colors"

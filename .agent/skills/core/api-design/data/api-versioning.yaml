@@ -1,0 +1,217 @@
+metadata:
+  skill: api-design
+  domain: api_versioning
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: api-versioning.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - pros
+    - cons
+    - level
+    - real_world
+patterns:
+  - id: VER-01
+    pattern: URI Versioning
+    description: Version in URL path
+    example: /v1/users /v2/users
+    pros: Visible easy to implement cache-friendly
+    cons: Long URLs violates REST principle
+    level: BASIC
+    real_world: Facebook Twitter PayPal
+  - id: VER-02
+    pattern: Header Versioning
+    description: Version in custom header
+    example: "X-API-Version: 1"
+    pros: Clean URLs hide version
+    cons: Less discoverable browser testing hard
+    level: INTERMEDIATE
+    real_world: Microsoft Azure
+  - id: VER-03
+    pattern: Query Param Version
+    description: Version as query parameter
+    example: /users?version=1
+    pros: Easy to add flexible
+    cons: Can be forgotten routing difficult
+    level: BASIC
+    real_world: Google Maps
+  - id: VER-04
+    pattern: Media Type Version
+    description: Version in Accept header
+    example: "Accept: application/vnd.api.v1+json"
+    pros: Fine-grained per-resource versioning
+    cons: Complex implementation client support
+    level: ADVANCED
+    real_world: GitHub Enterprise
+  - id: VER-05
+    pattern: Semantic Versioning
+    description: MAJOR.MINOR.PATCH format
+    example: 2.1.0
+    pros: Clear change communication industry standard
+    cons: Maintenance overhead version explosion
+    level: BASIC
+    real_world: Twilio SDKs npm packages
+  - id: VER-06
+    pattern: Date-Based Version
+    description: Version by release date
+    example: 2024-06-20 2026-01-28.acacia
+    pros: Clear timeline immutable snapshots
+    cons: Many versions accumulate naming long
+    level: INTERMEDIATE
+    real_world: Stripe GitHub REST API
+  - id: VER-07
+    pattern: Calendar Versioning
+    description: YYYY-MM-DD in header
+    example: "X-GitHub-Api-Version: 2022-11-28"
+    pros: Standard format long support window
+    cons: Requires header handling
+    level: INTERMEDIATE
+    real_world: GitHub REST API
+  - id: VER-08
+    pattern: Major Breaking
+    description: Increment MAJOR for breaking
+    example: v1 → v2 when breaking change
+    pros: Clients know to update signals impact
+    cons: Requires migration guide
+    level: BASIC
+    real_world: All mature APIs
+  - id: VER-09
+    pattern: Minor Features
+    description: Increment MINOR for features
+    example: v1.0 → v1.1 new endpoint
+    pros: Backward compatible safe to adopt
+    cons: Minor updates accumulate
+    level: BASIC
+    real_world: Twilio REST API
+  - id: VER-10
+    pattern: Patch Fixes
+    description: Increment PATCH for fixes
+    example: v1.0.0 → v1.0.1 bug fix
+    pros: Safe to update minimal risk
+    cons: Frequent releases
+    level: BASIC
+    real_world: All SDKs
+  - id: VER-11
+    pattern: Deprecation Notice
+    description: Warn before removing version
+    example: "Deprecation: true header response field"
+    pros: Gives clients time to migrate
+    cons: Requires tracking enforcement
+    level: BASIC
+    real_world: Stripe Twilio
+  - id: VER-12
+    pattern: Sunset Header
+    description: RFC 8594 removal date
+    example: "Sunset: Sat 01 Jan 2027 00:00:00 GMT"
+    pros: Standard HTTP header machine-readable
+    cons: Client needs to check implement
+    level: INTERMEDIATE
+    real_world: Akamai Stripe
+  - id: VER-13
+    pattern: Migration Guide
+    description: Document upgrade path
+    example: MIGRATION.md breaking-changes.md
+    pros: Helps clients upgrade reduces support
+    cons: Maintenance burden keep updated
+    level: BASIC
+    real_world: Stripe GitHub
+  - id: VER-14
+    pattern: Parallel Versions
+    description: Run multiple versions simultaneously
+    example: Both /v1 and /v2 active for 24 months
+    pros: Smooth transition client flexibility
+    cons: Infrastructure cost maintenance burden
+    level: INTERMEDIATE
+    real_world: GitHub Stripe Twilio
+  - id: VER-15
+    pattern: Feature Flags
+    description: Toggle features per client
+    example: "X-Features: beta-search"
+    pros: Gradual rollout A/B testing
+    cons: Complex logic feature explosion
+    level: ADVANCED
+    real_world: LaunchDarkly pattern
+  - id: VER-16
+    pattern: API Gateway Routing
+    description: Gateway routes to version backend
+    example: Kong/AWS API Gateway → v1 or v2
+    pros: Centralized routing version isolation
+    cons: Single point failure complexity
+    level: ADVANCED
+    real_world: Enterprise APIs
+  - id: VER-17
+    pattern: SDK Version Pinning
+    description: Pin SDK to API version
+    example: stripe-python==5.0.0 pins 2024-06-20
+    pros: Stable integration predictable
+    cons: Must update SDK for new features
+    level: INTERMEDIATE
+    real_world: Stripe Twilio
+  - id: VER-18
+    pattern: Account Version Pinning
+    description: Account pinned to first-use version
+    example: Account uses API version from first request
+    pros: Protected from breaking changes
+    cons: Must explicitly upgrade
+    level: ADVANCED
+    real_world: Stripe
+  - id: VER-19
+    pattern: Version Override Header
+    description: Override default per-request
+    example: "Stripe-Version: 2026-01-28"
+    pros: Test new version before upgrade
+    cons: Must remember to send header
+    level: INTERMEDIATE
+    real_world: Stripe
+  - id: VER-20
+    pattern: Named Releases
+    description: Codename with date
+    example: 2024-09-30.acacia 2024-06-20.basil
+    pros: Human-friendly memorable
+    cons: Additional naming overhead
+    level: INTERMEDIATE
+    real_world: Stripe 2024+
+  - id: VER-21
+    pattern: Changelog Automation
+    description: Auto-generate changelog
+    example: OpenAPI diff → CHANGELOG.md
+    pros: Accurate documentation less effort
+    cons: Requires tooling setup
+    level: INTERMEDIATE
+    real_world: Bump.sh Optic
+  - id: VER-22
+    pattern: Breaking Change Detection
+    description: Automated compatibility check
+    example: buf breaking proto.lock
+    pros: Catch breaks before release
+    cons: False positives possible
+    level: ADVANCED
+    real_world: buf protolint
+  - id: VER-23
+    pattern: Version Lifecycle
+    description: Defined support stages
+    example: Latest → Support → Deprecated → EOL
+    pros: Clear expectations planning
+    cons: Enforcement communication
+    level: INTERMEDIATE
+    real_world: Twilio
+  - id: VER-24
+    pattern: Gradual Rollout
+    description: Progressive version adoption
+    example: 1% → 10% → 50% → 100% traffic
+    pros: Safe rollout quick rollback
+    cons: Complex infrastructure
+    level: ADVANCED
+    real_world: Google internal
+  - id: VER-25
+    pattern: Version Negotiation
+    description: Client requests server negotiates
+    example: "Accept: application/vnd.api.v2+json"
+    pros: Server backward compatible
+    cons: Complex server logic
+    level: ADVANCED
+    real_world: REST best practice

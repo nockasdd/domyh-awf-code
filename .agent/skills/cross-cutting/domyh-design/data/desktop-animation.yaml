@@ -1,0 +1,680 @@
+metadata:
+  skill: domyh-design
+  domain: desktop_animation
+  version: 6.2.1
+  updated: "2026-02-12"
+  migrated_from: desktop-animation.yaml
+  patterns_count: 58
+  columns:
+    - platform
+    - technology
+    - technique
+    - description
+    - performance_rating
+    - example_code
+    - avoid
+patterns:
+  - id: item_001
+    platform: cpp
+    technology: DirectX 12
+    technique: Batch Rendering
+    description: Combine multiple draw calls into single batch
+    performance_rating: "5"
+    example_code: commandList->DrawIndexedInstanced(count, instances, 0, 0, 0);
+    avoid: Individual draw calls per object
+  - id: item_002
+    platform: cpp
+    technology: DirectX 12
+    technique: Instancing
+    description: GPU draws same geometry with different transforms
+    performance_rating: "5"
+    example_code: D3D12_INPUT_ELEMENT_DESC with D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA
+    avoid: Unique buffers for identical meshes
+  - id: item_003
+    platform: cpp
+    technology: DirectX 12
+    technique: Swap Chain
+    description: Double/triple buffering for smooth frame display
+    performance_rating: "5"
+    example_code: IDXGISwapChain4, Present1() with DXGI_SWAP_EFFECT_FLIP_DISCARD
+    avoid: Single buffer rendering
+  - id: item_004
+    platform: cpp
+    technology: DirectX 12
+    technique: Frustum Culling
+    description: Skip rendering objects outside camera view
+    performance_rating: "4"
+    example_code: BoundingFrustum::Contains(boundingBox) != ContainmentType::Disjoint
+    avoid: Render all objects unconditionally
+  - id: item_005
+    platform: cpp
+    technology: DirectX 12
+    technique: Occlusion Culling
+    description: Skip hidden objects using GPU queries
+    performance_rating: "4"
+    example_code: ID3D12QueryHeap TYPE_OCCLUSION, BeginQuery/EndQuery
+    avoid: Render occluded geometry
+  - id: item_006
+    platform: cpp
+    technology: Direct2D
+    technique: Hardware Accelerated 2D
+    description: GPU-accelerated 2D graphics for UI
+    performance_rating: "5"
+    example_code: ID2D1RenderTarget, D2D1CreateFactory with D2D1_FACTORY_TYPE_MULTI_THREADED
+    avoid: GDI+ for performance-critical paths
+  - id: item_007
+    platform: cpp
+    technology: Direct2D
+    technique: Geometry Batching
+    description: Combine paths into single geometry
+    performance_rating: "4"
+    example_code: ID2D1GeometryGroup, CreateGeometryGroup()
+    avoid: Individual DrawGeometry calls
+  - id: item_008
+    platform: csharp
+    technology: WPF
+    technique: RenderTransform Animation
+    description: Animate GPU-friendly transform properties
+    performance_rating: "5"
+    example_code: <DoubleAnimation Storyboard.TargetProperty='(UIElement.RenderTransform).(ScaleTransform.ScaleX)' To='1.2'/>
+    avoid: Animate Width/Height properties
+  - id: item_009
+    platform: csharp
+    technology: WPF
+    technique: Opacity Animation
+    description: Fade using GPU compositing
+    performance_rating: "5"
+    example_code: <DoubleAnimation Storyboard.TargetProperty='Opacity' From='0' To='1' Duration='0:0:0.3'/>
+    avoid: Visibility toggle without fade
+  - id: item_010
+    platform: csharp
+    technology: WPF
+    technique: EasingFunction
+    description: Natural motion curves for animations
+    performance_rating: "4"
+    example_code: <DoubleAnimation.EasingFunction><CubicEase EasingMode='EaseOut'/></DoubleAnimation.EasingFunction>
+    avoid: Linear animations only
+  - id: item_011
+    platform: csharp
+    technology: WPF
+    technique: BitmapCache
+    description: Cache static content as bitmap
+    performance_rating: "4"
+    example_code: <Canvas CacheMode='BitmapCache'/>
+    avoid: Re-render static content each frame
+  - id: item_012
+    platform: csharp
+    technology: WPF
+    technique: VirtualizingPanel
+    description: Virtualize long lists only render visible
+    performance_rating: "5"
+    example_code: <ListBox VirtualizingStackPanel.VirtualizationMode='Recycling'/>
+    avoid: ItemsControl without virtualization
+  - id: item_013
+    platform: csharp
+    technology: WinUI 3
+    technique: Composition API
+    description: Low-level animation with compositor
+    performance_rating: "5"
+    example_code: ElementCompositionPreview.GetElementVisual(element).StartAnimation('Opacity', animation);
+    avoid: WPF-style Storyboard animations
+  - id: item_014
+    platform: csharp
+    technology: WinUI 3
+    technique: Implicit Animations
+    description: Auto-animate property changes
+    performance_rating: "4"
+    example_code: Visual.ImplicitAnimations = CreateImplicitAnimations();
+    avoid: Manual animation triggering
+  - id: item_015
+    platform: csharp
+    technology: WinUI 3
+    technique: Expression Animations
+    description: Data-driven animations
+    performance_rating: "4"
+    example_code: "ExpressionAnimation: 'this.Target.Offset.X + tracker.Position.X'"
+    avoid: Hardcoded animation values
+  - id: item_016
+    platform: qt
+    technology: Qt Animation
+    technique: QPropertyAnimation
+    description: Animate any Q_PROPERTY
+    performance_rating: "4"
+    example_code: QPropertyAnimation* anim = new QPropertyAnimation(btn, 'geometry'); anim->setDuration(300);
+    avoid: Timer-based manual interpolation
+  - id: item_017
+    platform: qt
+    technology: Qt Animation
+    technique: QEasingCurve
+    description: Built-in easing functions
+    performance_rating: "4"
+    example_code: anim->setEasingCurve(QEasingCurve::InOutQuad);
+    avoid: Linear interpolation only
+  - id: item_018
+    platform: qt
+    technology: Qt Animation
+    technique: QParallelAnimationGroup
+    description: Run animations simultaneously
+    performance_rating: "4"
+    example_code: QParallelAnimationGroup* group = new QParallelAnimationGroup; group->addAnimation(anim1);
+    avoid: Sequential animations for parallel motion
+  - id: item_019
+    platform: qt
+    technology: QML Animation
+    technique: Behavior on
+    description: Auto-animate property changes in QML
+    performance_rating: "5"
+    example_code: "Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }"
+    avoid: Manual State transitions
+  - id: item_020
+    platform: qt
+    technology: QML Animation
+    technique: States and Transitions
+    description: Declarative state machine
+    performance_rating: "4"
+    example_code: "states: [State { name: 'pressed' ... }] transitions: [Transition { ... }]"
+    avoid: Imperative show/hide logic
+  - id: item_021
+    platform: avalonia
+    technology: Avalonia
+    technique: Transitions
+    description: XAML-defined transitions
+    performance_rating: "4"
+    example_code: <Style.Animations><Animation Duration='0:0:0.3'><DoubleAnimationUsingKeyFrames .../></Animation></Style.Animations>
+    avoid: Direct property changes
+  - id: item_022
+    platform: python
+    technology: PyQt
+    technique: QPropertyAnimation
+    description: Same as Qt C++ animation
+    performance_rating: "4"
+    example_code: anim = QPropertyAnimation(widget, b'geometry'); anim.setDuration(300)
+    avoid: Thread-based animation
+  - id: item_023
+    platform: python
+    technology: Flet
+    technique: animate_ properties
+    description: Built-in implicit animations
+    performance_rating: "4"
+    example_code: container.animate_opacity = 300; container.opacity = 1
+    avoid: Manual Timer updates
+  - id: item_024
+    platform: electron
+    technology: CSS
+    technique: requestAnimationFrame
+    description: 60fps browser animation loop
+    performance_rating: "4"
+    example_code: requestAnimationFrame(timestamp => { element.style.transform = `translateX(${x}px)`; });
+    avoid: setInterval for animations
+  - id: item_025
+    platform: electron
+    technology: CSS
+    technique: CSS Transitions
+    description: Declarative CSS animations
+    performance_rating: "5"
+    example_code: "transition: transform 0.3s ease-out;"
+    avoid: JavaScript style manipulation
+  - id: item_026
+    platform: electron
+    technology: Framer Motion
+    technique: Motion components
+    description: React animation library in Electron
+    performance_rating: "5"
+    example_code: "<motion.div animate={{ x: 100, opacity: 1 }} transition={{ duration: 0.3 }}/>"
+    avoid: CSS animations in React
+  - id: item_027
+    platform: tauri
+    technology: CSS
+    technique: Native + CSS hybrid
+    description: Use native window effects + CSS animations
+    performance_rating: "5"
+    example_code: tauri-plugin-vibrancy for Mica; CSS for UI animations
+    avoid: Heavy CSS-only approaches
+
+  # ── NEW: Windows Animation Manager (WAM) ─────────────────────
+
+  - id: item_028
+    platform: cpp
+    technology: Windows Animation Manager
+    technique: IUIAnimationManager2
+    description: System-level animation orchestration cho Win32 apps — automatic pacing, priority queueing
+    performance_rating: "5"
+    example_code: |
+      IUIAnimationManager2* mgr; CoCreateInstance(CLSID_UIAnimationManager2, ...);
+      IUIAnimationTimer* timer; CoCreateInstance(CLSID_UIAnimationTimer, ...);
+      mgr->SetManagerEventHandler(handler);
+      IUIAnimationTransition2* trans;
+      transLib->CreateAccelerateDecelerateTransition(0.3, 1.0, 0.4, 0.6, &trans);
+      mgr->ScheduleTransition(var, trans, currentTime);
+    avoid: Custom timer loops khi sử dụng WAM
+
+  - id: item_029
+    platform: cpp
+    technology: Windows Animation Manager
+    technique: Storyboard orchestration
+    description: Coordinate multiple animation variables trên cùng timeline
+    performance_rating: "5"
+    example_code: |
+      IUIAnimationStoryboard2* sb;
+      mgr->CreateStoryboard(&sb);
+      sb->AddTransition(xVar, transX);
+      sb->AddTransition(yVar, transY);
+      sb->Schedule(currentTime);
+    avoid: Independent timers per animation variable
+
+  # ── NEW: DirectComposition ───────────────────────────────────
+
+  - id: item_030
+    platform: cpp
+    technology: DirectComposition
+    technique: Independent compositor thread
+    description: Animations chạy trên compositor thread riêng — không block UI thread
+    performance_rating: "5"
+    example_code: |
+      IDCompositionDevice* device;
+      DCompositionCreateDevice(dxgiDevice, IID_PPV_ARGS(&device));
+      IDCompositionTarget* target;
+      device->CreateTargetForHwnd(hwnd, TRUE, &target);
+      IDCompositionVisual* visual;
+      device->CreateVisual(&visual);
+      // Animation runs independently of UI thread
+    avoid: Main thread animation qua WM_PAINT
+
+  - id: item_031
+    platform: cpp
+    technology: DirectComposition
+    technique: Transform animations
+    description: GPU-accelerated transform trên visual tree
+    performance_rating: "5"
+    example_code: |
+      IDCompositionScaleTransform* scale;
+      device->CreateScaleTransform(&scale);
+      IDCompositionAnimation* anim;
+      device->CreateAnimation(&anim);
+      anim->AddCubic(0.0, 1.0, 0.5, 0.0, 0.0); // cubic bezier
+      scale->SetScaleX(anim);
+      visual->SetTransform(scale);
+    avoid: Software-rendered transform
+
+  # ── NEW: WinUI 3 Advanced ───────────────────────────────────
+
+  - id: item_032
+    platform: csharp
+    technology: WinUI 3
+    technique: Spring Animation
+    description: Physics-based spring motion — natural feel
+    performance_rating: "5"
+    example_code: |
+      var spring = compositor.CreateSpringScalarAnimation();
+      spring.DampingRatio = 0.6f;
+      spring.Period = TimeSpan.FromMilliseconds(150);
+      spring.FinalValue = 1.0f;
+      visual.StartAnimation("Scale.X", spring);
+    avoid: Linear keyframe cho interactive responses
+
+  - id: item_033
+    platform: csharp
+    technology: WinUI 3
+    technique: Connected Animation
+    description: Shared element transition giữa pages
+    performance_rating: "5"
+    example_code: |
+      // Source page
+      ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("img", sourceImage);
+      // Target page
+      var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("img");
+      anim?.TryStart(targetImage);
+    avoid: Manual crossfade giữa pages
+
+  - id: item_034
+    platform: csharp
+    technology: WinUI 3
+    technique: Theme Transition
+    description: Built-in page/content transitions
+    performance_rating: "4"
+    example_code: |
+      <Page.Transitions>
+        <TransitionCollection>
+          <NavigationThemeTransition/>
+        </TransitionCollection>
+      </Page.Transitions>
+    avoid: Custom page transition code khi built-in đủ dùng
+
+  - id: item_035
+    platform: csharp
+    technology: WinUI 3
+    technique: Lottie via CommunityToolkit
+    description: Play Lottie animations trong WinUI 3
+    performance_rating: "4"
+    example_code: |
+      <!-- NuGet: CommunityToolkit.WinUI.Lottie -->
+      <AnimatedVisualPlayer Source="ms-appx:///Assets/animation.json" AutoPlay="True"/>
+    avoid: Custom frame-by-frame rendering cho simple animations
+
+  # ── NEW: WPF Advanced ───────────────────────────────────────
+
+  - id: item_036
+    platform: csharp
+    technology: WPF
+    technique: Freeze Freezable
+    description: Freeze tất cả Brush, Geometry không thay đổi — giảm overhead tracking
+    performance_rating: "4"
+    example_code: |
+      var brush = new SolidColorBrush(Colors.Blue);
+      brush.Freeze(); // Thread-safe, no change tracking overhead
+    avoid: Mutable brushes cho static UI elements
+
+  - id: item_037
+    platform: csharp
+    technology: WPF
+    technique: Timeline.DesiredFrameRate
+    description: Giảm frame rate cho non-critical animations
+    performance_rating: "4"
+    example_code: |
+      Timeline.SetDesiredFrameRate(storyboard, 30); // 30fps thay vì 60fps
+    avoid: 60fps cho background/subtle animations
+
+  - id: item_038
+    platform: csharp
+    technology: WPF
+    technique: HandoffBehavior.Compose
+    description: Compose multiple animations thay vì replace
+    performance_rating: "4"
+    example_code: |
+      element.BeginAnimation(OpacityProperty, newAnim, HandoffBehavior.Compose);
+    avoid: SnapshotAndReplace khi cần layer animations
+
+  # ── NEW: Dear ImGui ──────────────────────────────────────────
+
+  - id: item_039
+    platform: cpp
+    technology: Dear ImGui
+    technique: Lerp-based animation
+    description: Per-frame interpolation trong immediate mode GUI
+    performance_rating: "4"
+    example_code: |
+      static float progress = 0.0f;
+      float target = is_open ? 1.0f : 0.0f;
+      progress += (target - progress) * ImGui::GetIO().DeltaTime * 8.0f;
+      // Use progress for alpha, position, size
+      ImGui::SetNextWindowBgAlpha(progress);
+    avoid: Abrupt state changes without lerp
+
+  - id: item_040
+    platform: cpp
+    technology: Dear ImGui
+    technique: Custom drawing with AnimateValue
+    description: Smooth numeric transitions cho UI values
+    performance_rating: "4"
+    example_code: |
+      static float displayed_value = 0;
+      displayed_value = displayed_value + (actual_value - displayed_value) * 0.1f;
+      ImGui::ProgressBar(displayed_value / max_value);
+    avoid: Instant value jumps in UI
+
+  # ── NEW: Qt Advanced ────────────────────────────────────────
+
+  - id: item_041
+    platform: qt
+    technology: QML Animation
+    technique: Canvas/ShaderEffect
+    description: Custom GPU shader effects trong QML
+    performance_rating: "5"
+    example_code: |
+      ShaderEffect {
+        property real time: 0
+        NumberAnimation on time { from: 0; to: 1; duration: 1000; loops: Animation.Infinite }
+        fragmentShader: "shaders/ripple.frag.qsb"
+      }
+    avoid: CPU-based pixel manipulation
+
+  - id: item_042
+    platform: qt
+    technology: Qt Quick
+    technique: Particles system
+    description: GPU-accelerated particle effects
+    performance_rating: "4"
+    example_code: |
+      ParticleSystem { id: sys }
+      Emitter { system: sys; emitRate: 100; lifeSpan: 1000; velocity: AngleDirection { magnitude: 100 } }
+      ImageParticle { system: sys; source: "particle.png" }
+    avoid: Manual sprite animation cho particle effects
+
+  - id: item_043
+    platform: qt
+    technology: Qt Quick
+    technique: PathAnimation
+    description: Animate along arbitrary path
+    performance_rating: "4"
+    example_code: |
+      PathAnimation {
+        target: rect; duration: 2000; orientation: PathAnimation.Fixed
+        path: Path { startX: 0; startY: 0; PathCurve { x: 200; y: 100 } PathCurve { x: 400; y: 0 } }
+      }
+    avoid: Separate X/Y NumberAnimations
+
+  # ── NEW: .NET MAUI ───────────────────────────────────────────
+
+  - id: item_044
+    platform: csharp
+    technology: .NET MAUI
+    technique: ViewExtensions animations
+    description: Fluent animation API cho cross-platform
+    performance_rating: "4"
+    example_code: |
+      await element.FadeTo(1, 300, Easing.CubicOut);
+      await element.TranslateTo(0, -20, 200);
+      await element.ScaleTo(1.1, 150).ContinueWith(_ => element.ScaleTo(1, 150));
+    avoid: Custom timer-based animation
+
+  - id: item_045
+    platform: csharp
+    technology: .NET MAUI
+    technique: Animation class
+    description: Complex composite animations
+    performance_rating: "4"
+    example_code: |
+      var anim = new Animation(v => element.Opacity = v, 0, 1, Easing.CubicIn);
+      anim.Add(0, 0.5, new Animation(v => element.TranslationY = v, 30, 0));
+      anim.Commit(element, "FadeSlideIn", length: 400);
+    avoid: Sequential await chains cho parallel animations
+
+  # ── NEW: Avalonia Advanced ───────────────────────────────────
+
+  - id: item_046
+    platform: avalonia
+    technology: Avalonia
+    technique: PageSlide transition
+    description: Built-in page transition effects
+    performance_rating: "4"
+    example_code: |
+      <TransitioningContentControl Content="{Binding CurrentPage}">
+        <TransitioningContentControl.PageTransition>
+          <PageSlide Duration="0:0:0.3" Orientation="Horizontal"/>
+        </TransitioningContentControl.PageTransition>
+      </TransitioningContentControl>
+    avoid: Manual content swap without transition
+
+  - id: item_047
+    platform: avalonia
+    technology: Avalonia
+    technique: Custom IPageTransition
+    description: Implement custom transition effects
+    performance_rating: "4"
+    example_code: |
+      public class FadeSlideTransition : IPageTransition {
+        public async Task Start(Visual from, Visual to, bool forward, CancellationToken ct) {
+          if (to != null) { to.Opacity = 0; await to.Animate().Opacity(1, TimeSpan.FromMilliseconds(300)); }
+          if (from != null) { await from.Animate().Opacity(0, TimeSpan.FromMilliseconds(200)); }
+        }
+      }
+    avoid: Abrupt page switches
+
+  # ── NEW: SwiftUI (macOS) ─────────────────────────────────────
+
+  - id: item_048
+    platform: swift
+    technology: SwiftUI
+    technique: withAnimation
+    description: Declarative animation wrapper
+    performance_rating: "5"
+    example_code: |
+      withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+        isExpanded.toggle()
+      }
+    avoid: Imperative UIView.animate in SwiftUI context
+
+  - id: item_049
+    platform: swift
+    technology: SwiftUI
+    technique: matchedGeometryEffect
+    description: Shared element transitions giữa views
+    performance_rating: "5"
+    example_code: |
+      @Namespace var namespace
+      // Source
+      Image("photo").matchedGeometryEffect(id: "hero", in: namespace)
+      // Target
+      Image("photo").matchedGeometryEffect(id: "hero", in: namespace)
+    avoid: Manual frame animation
+
+  - id: item_050
+    platform: swift
+    technology: SwiftUI
+    technique: PhaseAnimator
+    description: Multi-step sequential animations (iOS 17+)
+    performance_rating: "5"
+    example_code: |
+      PhaseAnimator([false, true]) { phase in
+        Image("star")
+          .scaleEffect(phase ? 1.2 : 1.0)
+          .rotationEffect(.degrees(phase ? 360 : 0))
+      } animation: { _ in .spring(duration: 0.5) }
+    avoid: Complex timeline management
+
+  # ── NEW: AppKit (macOS native) ────────────────────────────────
+
+  - id: item_051
+    platform: swift
+    technology: AppKit
+    technique: NSAnimationContext
+    description: macOS native animation grouping
+    performance_rating: "4"
+    example_code: |
+      NSAnimationContext.runAnimationGroup { context in
+        context.duration = 0.3
+        context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.animator().alphaValue = 1.0
+        view.animator().frame = targetFrame
+      }
+    avoid: Direct frame setting without animation
+
+  # ── NEW: Flutter Desktop ─────────────────────────────────────
+
+  - id: item_052
+    platform: flutter
+    technology: Flutter
+    technique: AnimatedContainer
+    description: Implicit animations for all container properties
+    performance_rating: "5"
+    example_code: |
+      AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+        width: isExpanded ? 300 : 100,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(isExpanded ? 16 : 8)),
+      )
+    avoid: Manual AnimationController cho simple property changes
+
+  - id: item_053
+    platform: flutter
+    technology: Flutter
+    technique: Hero widget
+    description: Shared element transition giữa routes
+    performance_rating: "5"
+    example_code: |
+      // Source page
+      Hero(tag: 'product-${item.id}', child: Image.network(item.image))
+      // Target page
+      Hero(tag: 'product-${item.id}', child: Image.network(item.image))
+    avoid: Manual crossfade giữa pages
+
+  - id: item_054
+    platform: flutter
+    technology: Flutter
+    technique: Staggered animation with Interval
+    description: Cascading multi-step animations
+    performance_rating: "5"
+    example_code: |
+      final controller = AnimationController(vsync: this, duration: Duration(milliseconds: 800));
+      final fadeAnim = Tween(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: controller, curve: Interval(0.0, 0.5, curve: Curves.easeOut)));
+      final slideAnim = Tween(begin: Offset(0, 0.3), end: Offset.zero).animate(
+        CurvedAnimation(parent: controller, curve: Interval(0.2, 0.7, curve: Curves.easeOut)));
+    avoid: Sequential await chains
+
+  # ── NEW: Lottie Integration (Cross-platform) ─────────────────
+
+  - id: item_055
+    platform: cross-platform
+    technology: Lottie
+    technique: Lottie in Qt (rlottie)
+    description: Render Lottie animations trong Qt apps via rlottie
+    performance_rating: "4"
+    example_code: |
+      // C++ Qt — rlottie library
+      auto animation = rlottie::Animation::loadFromFile("anim.json");
+      auto surface = rlottie::Surface(buffer, width, height, width * 4);
+      animation->renderSync(frameNo, surface);
+      // Paint to QWidget
+    avoid: Full-size Lottie files > 500KB
+
+  - id: item_056
+    platform: cross-platform
+    technology: Lottie
+    technique: Lottie in Electron
+    description: lottie-web trong Electron renderer
+    performance_rating: "4"
+    example_code: |
+      import lottie from 'lottie-web';
+      lottie.loadAnimation({
+        container: document.getElementById('anim'),
+        renderer: 'svg', // or 'canvas' for better performance
+        loop: true, autoplay: true,
+        path: 'animations/loading.json'
+      });
+    avoid: renderer 'html' (worst performance)
+
+  - id: item_057
+    platform: cross-platform
+    technology: Lottie
+    technique: dotLottie format
+    description: Compressed .lottie format (60-70% smaller than JSON)
+    performance_rating: "5"
+    example_code: |
+      // npm install @lottiefiles/dotlottie-web
+      import { DotLottie } from '@lottiefiles/dotlottie-web';
+      const player = new DotLottie({
+        canvas: document.getElementById('canvas'),
+        src: 'animation.lottie', // compressed format
+        loop: true, autoplay: true
+      });
+    avoid: Uncompressed .json khi .lottie available
+
+  # ── NEW: General Desktop Best Practice ───────────────────────
+
+  - id: item_058
+    platform: all-desktop
+    technology: General
+    technique: 60fps animation budget
+    description: Target 16.67ms per frame — allocate wisely
+    performance_rating: reference
+    example_code: |
+      Frame Budget (60fps = 16.67ms):
+      ├── Input handling: ~2ms
+      ├── Animation tick: ~2ms
+      ├── Layout/measure: ~4ms
+      ├── Render/paint: ~6ms
+      └── Buffer: ~2.67ms
+      Total: 16.67ms
+    avoid: Block main thread > 8ms during animation

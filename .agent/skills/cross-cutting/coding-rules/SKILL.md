@@ -95,32 +95,31 @@ src/
 
 ## Data Files
 
-| File                         | Content                      | Entries       |
-| ---------------------------- | ---------------------------- | ------------- |
-| `naming-conventions.csv`     | Multi-language naming rules  | 22 languages  |
-| `architecture-patterns.csv`  | Project structure patterns   | 10 patterns   |
-| `coding-rules.csv`           | Universal coding rules       | 32+ rules     |
-| `design-patterns.csv`        | GoF patterns by language     | 20 patterns   |
-| `build-systems.csv`          | Build system commands        | 38 configs    |
-| `framework-signatures.csv`   | Framework detection rules    | 47 frameworks |
-| `test-frameworks.csv`        | Test framework detection     | 24 frameworks |
-| `solid-principles.csv`       | SOLID implementation         | 5 principles  |
-| `memory-management.csv`      | Memory allocation benchmarks | 9 languages   |
-| `performance-benchmarks.csv` | Cross-language performance   | 12 categories |
-| `concurrency-patterns.csv`   | Async/threading comparison   | 9 languages   |
+| File                          | Content                      | Entries       |
+| ----------------------------- | ---------------------------- | ------------- |
+| `naming-conventions.yaml`     | Multi-language naming rules  | 23 languages  |
+| `architecture-patterns.yaml`  | Project structure patterns   | 10 patterns   |
+| `coding-rules.yaml`           | Universal coding rules       | 32+ rules     |
+| `design-patterns.yaml`        | GoF patterns by language     | 20 patterns   |
+| `build-systems.yaml`          | Build system commands        | 38 configs    |
+| `framework-signatures.yaml`   | Framework detection rules    | 47 frameworks |
+| `test-frameworks.yaml`        | Test framework detection     | 24 frameworks |
+| `solid-principles.yaml`       | SOLID implementation         | 5 principles  |
+| `memory-management.yaml`      | Memory allocation benchmarks | 9 languages   |
+| `performance-benchmarks.yaml` | Cross-language performance   | 12 categories |
+| `concurrency-patterns.yaml`   | Async/threading comparison   | 9 languages   |
+| `framework-directories.yaml`  | Framework directory trees    | 15 frameworks |
 
 ## Usage
 
-```bash
-# Search naming conventions
-python .agent/skills/coding-rules/scripts/search.py "python function naming"
+All data files are YAML format in `data/` directory, indexed by HSA BM25 engine:
 
-# Get architecture for project type
-python .agent/skills/coding-rules/scripts/search.py "enterprise backend" --domain architecture
-
-# Find design pattern implementation
-python .agent/skills/coding-rules/scripts/search.py "observer csharp" --domain patterns
-```
+- **Naming**: `data/naming-conventions.yaml` — lookup by `language` field
+- **Architecture**: `data/architecture-patterns.yaml` — lookup by `architecture` field
+- **Design Patterns**: `data/design-patterns.yaml` — lookup by `pattern` field
+- **Directory Trees**: `data/framework-directories.yaml` — lookup by `framework` field
+- **Build Commands**: `data/build-systems.yaml` — lookup by `build_system` field
+- **Detection**: `data/framework-signatures.yaml` — match `detection_file` + `detection_pattern`
 
 ## Sources
 
@@ -140,4 +139,25 @@ python .agent/skills/coding-rules/scripts/search.py "observer csharp" --domain p
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Awesome Coding Rules • 23 Languages • 10 Architectures • 70+ Rules_
+## 🔌 HSA Integration
+
+All 12 data domains are indexed by HSA BM25 engine for semantic search:
+
+| Domain              | Data File                     | Query Examples              |
+| ------------------- | ----------------------------- | --------------------------- |
+| Naming              | `naming-conventions.yaml`     | "python function naming"    |
+| Architecture        | `architecture-patterns.yaml`  | "clean architecture folder" |
+| Coding Rules        | `coding-rules.yaml`           | "single responsibility"     |
+| Design Patterns     | `design-patterns.yaml`        | "observer csharp"           |
+| Build Systems       | `build-systems.yaml`          | "cmake build command"       |
+| Framework Detection | `framework-signatures.yaml`   | "react detection"           |
+| Test Frameworks     | `test-frameworks.yaml`        | "jest testing"              |
+| SOLID               | `solid-principles.yaml`       | "dependency inversion"      |
+| Memory              | `memory-management.yaml`      | "rust memory safety"        |
+| Performance         | `performance-benchmarks.yaml` | "go vs rust benchmark"      |
+| Concurrency         | `concurrency-patterns.yaml`   | "async await pattern"       |
+| Directory Trees     | `framework-directories.yaml`  | "nuxt directory structure"  |
+
+---
+
+_DOMYH Awesome Code • Awesome Coding Rules • 23 Languages • 12 Data Domains_

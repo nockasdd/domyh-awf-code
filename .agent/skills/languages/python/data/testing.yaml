@@ -1,0 +1,226 @@
+# =============================================================================
+# Python Testing Patterns (Feb 2026)
+# Version: pytest 8.x / pytest-asyncio
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: testing
+  version: "8.0"
+  updated: "2026-02-05"
+  patterns_count: 3
+
+patterns:
+  - id: py301
+    name: pytest-asyncio
+    category: testing
+    version: "pytest-asyncio"
+    description: |
+      Async test patterns with pytest-asyncio.
+      Fixtures, markers, and async test functions.
+    text: pytest asyncio async test fixture marker
+    example: |
+      import pytest
+      from httpx import AsyncClient, ASGITransport
+      from sqlalchemy.ext.asyncio import AsyncSession
+
+      # ✅ Configure pytest-asyncio mode
+      # pyproject.toml:
+      # [tool.pytest.ini_options]
+      # asyncio_mode = "auto"
+
+      # ✅ Async fixture
+      @pytest.fixture
+      async def db_session() -> AsyncGenerator[AsyncSession, None]:
+          async with async_session_maker() as session:
+              yield session
+              await session.rollback()
+
+      # ✅ FastAPI test client fixture
+      @pytest.fixture
+      async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
+          app.dependency_overrides[get_db] = lambda: db_session
+          
+          async with AsyncClient(
+              transport=ASGITransport(app=app),
+              base_url="http://test",
+          ) as client:
+              yield client
+          
+          app.dependency_overrides.clear()
+
+      # ✅ Async test function
+      async def test_create_user(client: AsyncClient):
+          response = await client.post("/users", json={
+              "email": "test@example.com",
+              "password": "SecurePass123",
+              "name": "Test User",
+          })
+          
+          assert response.status_code == 201
+          data = response.json()
+          assert data["email"] == "test@example.com"
+
+      # ✅ Parametrized async test
+      @pytest.mark.parametrize("email,expected", [
+          ("valid@example.com", 201),
+          ("invalid-email", 422),
+          ("", 422),
+      ])
+      async def test_user_email_validation(
+          client: AsyncClient,
+          email: str,
+          expected: int,
+      ):
+          response = await client.post("/users", json={
+              "email": email,
+              "password": "SecurePass123",
+              "name": "Test",
+          })
+          assert response.status_code == expected
+    severity: HIGH
+    docs_url: https://pytest-asyncio.readthedocs.io/
+
+  - id: py302
+    name: Fixtures and Factories
+    category: testing
+    version: "pytest"
+    description: |
+      Test data factories with factory_boy or manual factories.
+      Reusable, composable test data.
+    text: fixture factory test data factory_boy builder
+    example: |
+      import pytest
+      from datetime import datetime, timezone
+      from typing import Any
+      from dataclasses import dataclass, field
+
+      # ✅ Manual factory pattern
+      @dataclass
+      class UserFactory:
+          email: str = "test@example.com"
+          name: str = "Test User"
+          is_active: bool = True
+          
+          def build(self, **overrides: Any) -> dict:
+              data = {
+                  "email": self.email,
+                  "name": self.name,
+                  "is_active": self.is_active,
+              }
+              data.update(overrides)
+              return data
+          
+          async def create(self, db: AsyncSession, **overrides: Any) -> User:
+              data = self.build(**overrides)
+              user = User(**data)
+              db.add(user)
+              await db.flush()
+              return user
+
+      # ✅ Factory fixture
+      @pytest.fixture
+      def user_factory():
+          return UserFactory()
+
+      # ✅ Using factory_boy
+      import factory
+      from factory.alchemy import SQLAlchemyModelFactory
+
+      class UserFactory(SQLAlchemyModelFactory):
+          class Meta:
+              model = User
+              sqlalchemy_session_persistence = "commit"
+          
+          email = factory.Sequence(lambda n: f"user{n}@example.com")
+          name = factory.Faker("name")
+          created_at = factory.LazyFunction(
+              lambda: datetime.now(timezone.utc)
+          )
+
+      # ✅ Fixture with factory
+      @pytest.fixture
+      async def user(db_session: AsyncSession) -> User:
+          UserFactory._meta.sqlalchemy_session = db_session
+          return UserFactory.create()
+
+      # ✅ Test using factory
+      async def test_user_service(
+          db_session: AsyncSession,
+          user_factory: UserFactory,
+      ):
+          user = await user_factory.create(db_session, is_active=False)
+          
+          service = UserService(db_session)
+          result = await service.get_active_users()
+          
+          assert user not in result
+    severity: MEDIUM
+    docs_url: https://factoryboy.readthedocs.io/
+
+  - id: py303
+    name: Mocking and Patching
+    category: testing
+    version: "pytest"
+    description: |
+      unittest.mock and pytest-mock for test doubles.
+      Mock external services, time, I/O.
+    text: mock patch unittest pytest-mock spy stub
+    example: |
+      from unittest.mock import AsyncMock, MagicMock, patch
+      import pytest
+      from pytest_mock import MockerFixture
+
+      # ✅ Mocking async functions
+      async def test_external_api_call(mocker: MockerFixture):
+          mock_response = {"id": 1, "name": "Test"}
+          
+          mocker.patch(
+              "app.services.external.fetch_user",
+              new=AsyncMock(return_value=mock_response),
+          )
+          
+          result = await my_service.get_user(1)
+          assert result == mock_response
+
+      # ✅ Patch decorator
+      @patch("app.services.email.send_email", new=AsyncMock())
+      async def test_user_creation_sends_email():
+          from app.services.email import send_email
+          
+          await create_user({"email": "test@example.com"})
+          
+          send_email.assert_called_once()
+          call_args = send_email.call_args
+          assert call_args.kwargs["to"] == "test@example.com"
+
+      # ✅ Mock context manager
+      async def test_with_mock_context():
+          with patch("app.external.client.get") as mock_get:
+              mock_get.return_value = AsyncMock(
+                  json=AsyncMock(return_value={"data": "test"})
+              )
+              
+              result = await fetch_data()
+              assert result["data"] == "test"
+
+      # ✅ Spy (track calls without replacing)
+      async def test_spy_on_method(mocker: MockerFixture):
+          spy = mocker.spy(UserService, "get_user")
+          
+          service = UserService(db)
+          await service.get_user(1)
+          await service.get_user(2)
+          
+          assert spy.call_count == 2
+          spy.assert_any_call(service, 1)
+
+      # ✅ Time mocking with freezegun
+      from freezegun import freeze_time
+
+      @freeze_time("2026-01-15 12:00:00")
+      async def test_time_dependent_logic():
+          result = await get_greeting()
+          assert result == "Good afternoon"
+    severity: MEDIUM
+    docs_url: https://docs.python.org/3/library/unittest.mock.html

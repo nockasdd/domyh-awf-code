@@ -1,4 +1,4 @@
-# 🌍 i18n — DOMYH Awesome Code v6.1.2
+# 🌍 i18n — DOMYH Awesome Code
 
 Language files for internationalization.
 
@@ -27,4 +27,4 @@ Or switch at runtime: `/lang vi`
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • NockDev_
+_DOMYH Awesome Code • NockDev_

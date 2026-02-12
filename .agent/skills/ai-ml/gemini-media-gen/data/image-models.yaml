@@ -1,0 +1,112 @@
+# =============================================================================
+# image-models.yaml — Nano Banana Image Generation Models
+# =============================================================================
+# 8 patterns for model selection, configuration, and API usage
+# Source: https://ai.google.dev/gemini-api/docs/image-generation
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 8
+
+models:
+  flash:
+    id: "gemini-2.0-flash-preview-image-generation"
+    display: "Nano Banana Flash"
+    tier: "speed"
+    max_resolution: "1024x1024"
+    max_reference_images: 5
+    thinking: false
+    search_grounding: false
+    text_rendering: "basic"
+    synthid: true
+    best_for:
+      - "Rapid prototyping"
+      - "Batch generation"
+      - "Low-latency applications"
+      - "Standard quality images"
+    config:
+      response_modalities: ["TEXT", "IMAGE"]
+      temperature: 1.0 # Recommended for image gen
+      top_p: null # Not supported for image gen
+      top_k: null # Not supported for image gen
+
+  pro:
+    id: "gemini-2.5-pro-preview-image-generation"
+    display: "Nano Banana Pro"
+    tier: "quality"
+    max_resolution: "4096x4096"
+    max_reference_images: 14
+    thinking: true
+    search_grounding: true
+    text_rendering: "enhanced"
+    synthid: true
+    best_for:
+      - "Production-quality images"
+      - "4K resolution output"
+      - "Complex multi-reference compositing"
+      - "Accurate text rendering"
+      - "Search-grounded image generation"
+    config:
+      response_modalities: ["TEXT", "IMAGE"]
+      temperature: 1.0
+      thinking_config:
+        thinking_budget: 4096 # Optional, for complex prompts
+
+aspect_ratios:
+  - ratio: "1:1"
+    desc: "Square (default)"
+    use_case: "Social media, profile pictures, icons"
+  - ratio: "16:9"
+    desc: "Wide landscape"
+    use_case: "Desktop wallpapers, YouTube thumbnails, presentations"
+  - ratio: "9:16"
+    desc: "Tall portrait"
+    use_case: "Mobile wallpapers, Instagram stories, TikTok covers"
+  - ratio: "4:3"
+    desc: "Standard landscape"
+    use_case: "Photo prints, blog images"
+  - ratio: "3:4"
+    desc: "Standard portrait"
+    use_case: "Product photos, book covers"
+
+safety_settings:
+  description: "All generated images include invisible SynthID watermark"
+  blocked_content:
+    - "CSAM (Child Sexual Abuse Material)"
+    - "Violent or graphic content"
+    - "Hate speech imagery"
+  person_generation:
+    default: "ALLOW_ADULT"
+    options:
+      - "DONT_ALLOW"
+      - "ALLOW_ADULT"
+
+api_usage:
+  python: |
+    from google import genai
+    client = genai.Client(api_key="YOUR_API_KEY")
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-preview-image-generation",
+        contents="A serene Japanese garden with cherry blossoms",
+        config=genai.types.GenerateContentConfig(
+            response_modalities=["TEXT", "IMAGE"]
+        )
+    )
+    # Access image: response.candidates[0].content.parts[0].inline_data
+  javascript: |
+    const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash-preview-image-generation",
+        contents: "A serene Japanese garden with cherry blossoms",
+        config: { responseModalities: ["TEXT", "IMAGE"] }
+    });
+
+batch_generation:
+  description: "Generate multiple images in sequence"
+  tips:
+    - "Use chat mode to maintain style consistency"
+    - "Reference previous images: 'Generate another image like the previous one but...'"
+    - "Flash model for batch, Pro for final selection"
+
+# =============================================================================
+# _DOMYH Awesome Code • Image Models v1.0_
+# =============================================================================

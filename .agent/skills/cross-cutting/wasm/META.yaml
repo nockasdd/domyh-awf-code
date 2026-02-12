@@ -1,0 +1,47 @@
+name: wasm
+version: "1.0.0"
+display: WebAssembly
+category: cross-cutting
+tier: 1
+priority: 8
+
+desc: "WebAssembly: Component Model, WASI 0.2+, WIT interfaces, browser WASM (wasm-bindgen), and server-side WASM (Spin, wasmCloud)."
+
+triggers:
+  file_patterns:
+    - "*.wasm"
+    - "*.wat"
+    - "*.wit"
+    - "Cargo.toml"
+  keywords:
+    - wasm
+    - webassembly
+    - WASI
+    - component model
+    - WIT interface
+    - wasm-bindgen
+    - wasm-pack
+    - wasmtime
+    - wasmer
+    - wasm-tools
+    - spin framework
+    - wasmcloud
+
+caps:
+  - Component Model architecture
+  - WIT interface definitions
+  - WASI 0.2+ (I/O, networking, filesystem)
+  - Browser WASM (wasm-bindgen, wasm-pack)
+  - Server-side WASM (Spin, wasmCloud, Fermyon)
+  - Language toolchains (Rust/Go/Python → WASM)
+  - Performance optimization (SIMD, memory)
+
+related_skills:
+  - rust
+  - javascript
+  - go
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/cross-cutting/wasm/data"
+  preload_data: false

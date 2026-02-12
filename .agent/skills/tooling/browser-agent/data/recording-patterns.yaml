@@ -1,0 +1,74 @@
+# =============================================================================
+# recording-patterns.yaml — WebP Video Recording Best Practices
+# =============================================================================
+
+version: "1.0.0"
+
+# browser_subagent automatically records sessions as WebP videos
+
+naming:
+  format: "lowercase_with_underscores"
+  max_words: 3
+  examples:
+    - name: "page_load_check"
+      when: "Basic page load verification"
+    - name: "comprehensive_test"
+      when: "Full interaction testing"
+    - name: "dropdown_test"
+      when: "Testing specific dropdown component"
+    - name: "modal_focus_trap"
+      when: "Testing modal focus trap behavior"
+    - name: "form_submission"
+      when: "Testing form fill and submit flow"
+    - name: "visual_comparison"
+      when: "Before/after visual comparison"
+
+  anti_patterns:
+    - bad: "test_1"
+      reason: "Not descriptive"
+      fix: "login_form_test"
+    - bad: "MyComponentTest"
+      reason: "Not lowercase"
+      fix: "component_test"
+    - bad: "testing-the-dropdown-menu-v2"
+      reason: "Too long, has hyphens"
+      fix: "dropdown_menu_test"
+
+when_to_record:
+  always:
+    - "Comprehensive verification (proof of work)"
+    - "Bug reproduction (evidence)"
+    - "Visual comparison (before/after)"
+  optional:
+    - "Quick page load check"
+    - "Single component test"
+  never:
+    - "Sensitive data on screen (credentials, PII)"
+    - "Long-running background processes"
+
+best_practices:
+  - practice: "Keep recordings focused"
+    details: "One recording per logical test flow, not one giant recording"
+    max_duration: "60 seconds per recording"
+
+  - practice: "Include meaningful interactions"
+    details: "Ensure clicks, type actions, and results are visible"
+
+  - practice: "Capture error states"
+    details: "If something fails, the recording provides evidence"
+
+  - practice: "Name describes content"
+    details: "RecordingName should tell what was tested"
+
+  - practice: "Use screenshots for static evidence"
+    details: "For pass/fail evidence, screenshots are lighter than videos"
+
+  - practice: "Always include return info in task"
+    details: "Tell browser_subagent what to return — the recording alone is not enough"
+
+storage:
+  location: "Artifacts directory (auto-managed by browser_subagent)"
+  format: "WebP"
+  retention: "Per conversation session"
+
+# _DOMYH Awesome Code • Recording Patterns v1.0.0_

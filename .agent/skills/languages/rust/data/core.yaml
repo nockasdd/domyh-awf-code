@@ -1,0 +1,356 @@
+# =============================================================================
+# Rust Core Patterns (Feb 2026)
+# Version: Rust 2024 Edition (1.85)
+# =============================================================================
+
+metadata:
+  skill: rust
+  domain: core
+  version: "1.85"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rs001
+    name: Async Closures
+    category: async
+    version: "1.85+"
+    description: |
+      Native async closures with `async ||` syntax.
+      Part of Rust 2024 Edition.
+    text: async closure async block move await
+    example: |
+      // ✅ Async closure (Rust 2024 Edition)
+      // Before: had to use async blocks
+      // let f = || async { fetch().await };
+
+      // Now: direct async closures
+      let fetch_data = async || {
+          let response = reqwest::get("https://api.example.com").await?;
+          response.json::<Data>().await
+      };
+
+      // ✅ With move semantics
+      let url = String::from("https://api.example.com");
+      let fetch_with_url = async move || {
+          reqwest::get(&url).await?.json::<Data>().await
+      };
+
+      // ✅ As function parameter
+      async fn process<F, Fut>(f: F) -> Result<(), Error>
+      where
+          F: FnOnce() -> Fut,
+          Fut: Future<Output = Result<(), Error>>,
+      {
+          f().await
+      }
+
+      // ✅ With AsyncFn trait (in prelude)
+      async fn with_async_fn<F>(f: F) -> Result<String, Error>
+      where
+          F: AsyncFn() -> Result<String, Error>,
+      {
+          f().await
+      }
+
+      // Usage
+      let result = with_async_fn(async || {
+          Ok(String::from("Hello from async closure"))
+      }).await;
+    severity: HIGH
+    docs_url: https://doc.rust-lang.org/edition-guide/rust-2024/
+
+  - id: rs002
+    name: Error Handling (thiserror/anyhow)
+    category: errors
+    version: "stable"
+    description: |
+      Idiomatic error handling with thiserror and anyhow.
+      thiserror for libraries, anyhow for applications.
+    text: error handling thiserror anyhow result context
+    example: |
+      // ✅ thiserror for library errors (public API)
+      use thiserror::Error;
+
+      #[derive(Error, Debug)]
+      pub enum DataError {
+          #[error("failed to fetch data: {0}")]
+          Fetch(#[from] reqwest::Error),
+          
+          #[error("failed to parse JSON: {0}")]
+          Parse(#[from] serde_json::Error),
+          
+          #[error("resource not found: {resource}")]
+          NotFound { resource: String },
+          
+          #[error("validation failed: {0}")]
+          Validation(String),
+      }
+
+      pub fn fetch_data(url: &str) -> Result<Data, DataError> {
+          let response = reqwest::blocking::get(url)?;
+          let data: Data = response.json()?;
+          
+          if !data.is_valid() {
+              return Err(DataError::Validation("invalid data".into()));
+          }
+          Ok(data)
+      }
+
+      // ✅ anyhow for application code (internal)
+      use anyhow::{Context, Result, bail};
+
+      fn main() -> Result<()> {
+          let config = load_config()
+              .context("failed to load configuration")?;
+          
+          let data = fetch_data(&config.api_url)
+              .context("failed to fetch initial data")?;
+          
+          if data.items.is_empty() {
+              bail!("no items found in response");
+          }
+          
+          process_data(data)?;
+          Ok(())
+      }
+
+      // ✅ Combining both
+      fn process_file(path: &Path) -> Result<()> {
+          let content = std::fs::read_to_string(path)
+              .with_context(|| format!("failed to read file: {}", path.display()))?;
+          
+          let data: Config = serde_json::from_str(&content)
+              .context("failed to parse config JSON")?;
+          
+          Ok(())
+      }
+    severity: HIGH
+    docs_url: https://docs.rs/thiserror/
+
+  - id: rs003
+    name: Builder Pattern
+    category: design-patterns
+    version: "stable"
+    description: |
+      Type-safe builder pattern with compile-time validation.
+      Typestate pattern for required fields.
+    text: builder pattern typestate derive compile-time
+    example: |
+      // ✅ Simple builder with derive_builder
+      use derive_builder::Builder;
+
+      #[derive(Builder, Debug)]
+      #[builder(setter(into))]
+      pub struct Config {
+          host: String,
+          port: u16,
+          #[builder(default = "30")]
+          timeout: u64,
+          #[builder(default)]
+          debug: bool,
+      }
+
+      let config = ConfigBuilder::default()
+          .host("localhost")
+          .port(8080)
+          .timeout(60)
+          .build()?;
+
+      // ✅ Manual builder with typestate
+      pub struct RequestBuilder<State> {
+          url: String,
+          method: String,
+          headers: Vec<(String, String)>,
+          body: Option<Vec<u8>>,
+          _state: std::marker::PhantomData<State>,
+      }
+
+      pub struct NeedsUrl;
+      pub struct NeedsMethod;
+      pub struct Ready;
+
+      impl RequestBuilder<NeedsUrl> {
+          pub fn new() -> Self {
+              Self {
+                  url: String::new(),
+                  method: String::new(),
+                  headers: Vec::new(),
+                  body: None,
+                  _state: std::marker::PhantomData,
+              }
+          }
+          
+          pub fn url(self, url: impl Into<String>) -> RequestBuilder<NeedsMethod> {
+              RequestBuilder {
+                  url: url.into(),
+                  method: self.method,
+                  headers: self.headers,
+                  body: self.body,
+                  _state: std::marker::PhantomData,
+              }
+          }
+      }
+
+      impl RequestBuilder<NeedsMethod> {
+          pub fn method(self, method: impl Into<String>) -> RequestBuilder<Ready> {
+              RequestBuilder {
+                  url: self.url,
+                  method: method.into(),
+                  headers: self.headers,
+                  body: self.body,
+                  _state: std::marker::PhantomData,
+              }
+          }
+      }
+
+      impl RequestBuilder<Ready> {
+          pub fn header(mut self, key: &str, value: &str) -> Self {
+              self.headers.push((key.to_string(), value.to_string()));
+              self
+          }
+          
+          pub fn build(self) -> Request {
+              Request { url: self.url, method: self.method, headers: self.headers, body: self.body }
+          }
+      }
+
+      // Compile-time enforcement
+      let req = RequestBuilder::new()
+          .url("https://api.example.com")
+          .method("GET")
+          .header("Authorization", "Bearer token")
+          .build();
+    severity: MEDIUM
+    docs_url: https://rust-unofficial.github.io/patterns/patterns/creational/builder.html
+
+  - id: rs004
+    name: Smart Pointers
+    category: memory
+    version: "stable"
+    description: |
+      Box, Rc, Arc, RefCell, Mutex for memory management.
+      Choose based on ownership and mutability needs.
+    text: box rc arc refcell mutex smart pointer ownership
+    example: |
+      use std::sync::{Arc, Mutex, RwLock};
+      use std::rc::Rc;
+      use std::cell::RefCell;
+
+      // ✅ Box - heap allocation, single owner
+      let boxed: Box<[u8; 1_000_000]> = Box::new([0u8; 1_000_000]);
+
+      // Recursive types
+      enum List<T> {
+          Cons(T, Box<List<T>>),
+          Nil,
+      }
+
+      // ✅ Rc - single-threaded shared ownership
+      let shared = Rc::new(vec![1, 2, 3]);
+      let clone1 = Rc::clone(&shared);
+      let clone2 = Rc::clone(&shared);
+      println!("References: {}", Rc::strong_count(&shared)); // 3
+
+      // ✅ RefCell - interior mutability (single-threaded)
+      let cell = RefCell::new(vec![1, 2, 3]);
+      cell.borrow_mut().push(4);
+      println!("{:?}", cell.borrow()); // [1, 2, 3, 4]
+
+      // ✅ Rc<RefCell<T>> - shared mutable (single-threaded)
+      let shared_mut = Rc::new(RefCell::new(HashMap::new()));
+      shared_mut.borrow_mut().insert("key", "value");
+
+      // ✅ Arc - thread-safe shared ownership
+      let arc_data = Arc::new(vec![1, 2, 3]);
+      let arc_clone = Arc::clone(&arc_data);
+      std::thread::spawn(move || {
+          println!("{:?}", arc_clone);
+      });
+
+      // ✅ Arc<Mutex<T>> - thread-safe shared mutable
+      let shared_state = Arc::new(Mutex::new(0));
+      let state_clone = Arc::clone(&shared_state);
+
+      std::thread::spawn(move || {
+          let mut data = state_clone.lock().unwrap();
+          *data += 1;
+      });
+
+      // ✅ Arc<RwLock<T>> - read-heavy shared mutable
+      let cache = Arc::new(RwLock::new(HashMap::new()));
+
+      // Multiple readers
+      let read = cache.read().unwrap();
+
+      // Exclusive writer
+      let mut write = cache.write().unwrap();
+      write.insert("key", "value");
+    severity: HIGH
+    docs_url: https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
+
+  - id: rs005
+    name: Trait Objects vs Generics
+    category: types
+    version: "stable"
+    description: |
+      Choose between static dispatch (generics) and dynamic dispatch (dyn Trait).
+      Performance vs flexibility tradeoff.
+    text: trait object dyn generic static dispatch dynamic dispatch
+    example: |
+      trait Draw {
+          fn draw(&self);
+      }
+
+      struct Circle { radius: f64 }
+      struct Rectangle { width: f64, height: f64 }
+
+      impl Draw for Circle {
+          fn draw(&self) { println!("Drawing circle r={}", self.radius); }
+      }
+
+      impl Draw for Rectangle {
+          fn draw(&self) { println!("Drawing rect {}x{}", self.width, self.height); }
+      }
+
+      // ✅ Generics - static dispatch, monomorphization
+      // + Zero-cost abstraction, inlining possible
+      // + Better performance (no vtable lookup)
+      // - Larger binary (code duplicated per type)
+      // - Can't store mixed types in collection
+      fn draw_generic<T: Draw>(item: &T) {
+          item.draw();
+      }
+
+      // ✅ Trait objects - dynamic dispatch
+      // + Smaller binary (single implementation)
+      // + Can store mixed types in collection
+      // - Runtime overhead (vtable lookup)
+      // - No inlining across dyn boundary
+      fn draw_dynamic(item: &dyn Draw) {
+          item.draw();
+      }
+
+      // ✅ Mixed collection with trait objects
+      let shapes: Vec<Box<dyn Draw>> = vec![
+          Box::new(Circle { radius: 5.0 }),
+          Box::new(Rectangle { width: 10.0, height: 20.0 }),
+      ];
+
+      for shape in &shapes {
+          shape.draw();
+      }
+
+      // ✅ Generic with multiple bounds
+      fn process<T>(item: &T)
+      where
+          T: Draw + Clone + Send + 'static,
+      {
+          item.draw();
+      }
+
+      // ✅ When to use which:
+      // Generics: known types, performance-critical, complex trait bounds
+      // Trait objects: heterogeneous collections, plugins, runtime polymorphism
+    severity: MEDIUM
+    docs_url: https://doc.rust-lang.org/book/ch17-02-trait-objects.html

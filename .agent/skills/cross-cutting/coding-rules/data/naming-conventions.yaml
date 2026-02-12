@@ -1,0 +1,320 @@
+metadata:
+  skill: coding-rules
+  domain: naming_conventions
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: naming-conventions.yaml
+  patterns_count: 23
+  columns:
+    - language
+    - style_guide
+    - classes
+    - interfaces
+    - functions_methods
+    - variables_local
+    - constants
+    - private_members
+    - enums_values
+    - namespaces_packages
+    - files
+    - source
+patterns:
+  - id: item_001
+    language: C++
+    style_guide: Google Style Guide
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: PascalCase
+    variables_local: snake_case
+    constants: kPascalCase
+    private_members: snake_case_
+    enums_values: kPascalCase
+    namespaces_packages: snake_case
+    files: snake_case.cpp
+    source: google.github.io/styleguide
+  - id: item_002
+    language: C#
+    style_guide: Microsoft Conventions
+    classes: PascalCase
+    interfaces: IPascalCase
+    functions_methods: PascalCase
+    variables_local: camelCase
+    constants: PascalCase
+    private_members: _camelCase
+    enums_values: PascalCase
+    namespaces_packages: PascalCase
+    files: PascalCase.cs
+    source: learn.microsoft.com
+  - id: item_003
+    language: Java
+    style_guide: Google Java Style
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: camelCase
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: lowercase.dot
+    files: PascalCase.java
+    source: google.github.io/styleguide
+  - id: item_004
+    language: Python
+    style_guide: PEP 8
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: UPPER_SNAKE_CASE
+    private_members: _snake_case
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: lowercase
+    files: snake_case.py
+    source: peps.python.org/pep-0008
+  - id: item_005
+    language: Go
+    style_guide: Effective Go
+    classes: PascalCase (exported)
+    interfaces: PascalCase
+    functions_methods: PascalCase/camelCase (export)
+    variables_local: camelCase
+    constants: PascalCase/camelCase (export)
+    private_members: camelCase
+    enums_values: PascalCase
+    namespaces_packages: lowercase
+    files: snake_case.go
+    source: go.dev/doc/effective_go
+  - id: item_006
+    language: Rust
+    style_guide: Rust API Guidelines
+    classes: PascalCase
+    interfaces: PascalCase (trait)
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: SCREAMING_SNAKE_CASE
+    private_members: snake_case
+    enums_values: PascalCase
+    namespaces_packages: snake_case
+    files: snake_case.rs
+    source: rust-lang.github.io/api-guidelines
+  - id: item_007
+    language: TypeScript
+    style_guide: TS Best Practices
+    classes: PascalCase
+    interfaces: PascalCase (no I prefix)
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: "_camelCase or #private"
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: camelCase
+    files: kebab-case.ts
+    source: ts.dev
+  - id: item_008
+    language: JavaScript
+    style_guide: Airbnb/Google
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: _camelCase
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: camelCase
+    files: kebab-case.js
+    source: airbnb.io/javascript
+  - id: item_009
+    language: Swift
+    style_guide: Swift API Guidelines
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: camelCase
+    private_members: camelCase
+    enums_values: camelCase
+    namespaces_packages: PascalCase
+    files: PascalCase.swift
+    source: swift.org/documentation/api-design
+  - id: item_010
+    language: Kotlin
+    style_guide: Kotlin Conventions
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: _camelCase
+    enums_values: PascalCase
+    namespaces_packages: lowercase
+    files: PascalCase.kt
+    source: kotlinlang.org/docs/coding-conventions
+  - id: item_011
+    language: PHP
+    style_guide: PSR-12
+    classes: PascalCase
+    interfaces: PascalCase + Interface suffix
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: $UPPER_SNAKE_CASE
+    private_members: camelCase (no underscore)
+    enums_values: PascalCase
+    namespaces_packages: PascalCase
+    files: PascalCase.php
+    source: php-fig.org/psr/psr-12
+  - id: item_012
+    language: Ruby
+    style_guide: Ruby Style Guide
+    classes: PascalCase
+    interfaces: N/A (duck typing)
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: SCREAMING_SNAKE_CASE
+    private_members: "@snake_case"
+    enums_values: SCREAMING_SNAKE_CASE
+    namespaces_packages: PascalCase
+    files: snake_case.rb
+    source: rubystyle.guide
+  - id: item_013
+    language: Dart
+    style_guide: Dart Effective
+    classes: PascalCase
+    interfaces: N/A (no keyword)
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: camelCase
+    private_members: _camelCase
+    enums_values: camelCase
+    namespaces_packages: lowercase
+    files: snake_case.dart
+    source: dart.dev/effective-dart
+  - id: item_014
+    language: Elixir
+    style_guide: Elixir Style Guide
+    classes: PascalCase
+    interfaces: N/A (no interfaces)
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: UPPER_SNAKE_CASE
+    private_members: _snake_case
+    enums_values: snake_case
+    namespaces_packages: snake_case
+    files: snake_case.ex
+    source: hexdocs.pm
+  - id: item_015
+    language: Scala
+    style_guide: Scala Style Guide
+    classes: PascalCase
+    interfaces: PascalCase
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: PascalCase or UPPER
+    private_members: camelCase
+    enums_values: PascalCase
+    namespaces_packages: lowercase
+    files: PascalCase.scala
+    source: scala-lang.org/style
+  - id: item_016
+    language: C
+    style_guide: Linux Kernel Style
+    classes: N/A (structs only)
+    interfaces: N/A
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: UPPER_SNAKE_CASE
+    private_members: static + snake_case
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: N/A
+    files: snake_case.c
+    source: kernel.org/doc/html/latest
+  - id: item_017
+    language: Lua
+    style_guide: Lua Style Guide
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: snake_case or camelCase
+    variables_local: snake_case
+    constants: UPPER_SNAKE_CASE
+    private_members: _snake_case
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: lowercase
+    files: snake_case.lua
+    source: lua-users.org/wiki/LuaStyleGuide
+  - id: item_018
+    language: Assembly
+    style_guide: x86 NASM/MASM
+    classes: N/A
+    interfaces: N/A
+    functions_methods: snake_case
+    variables_local: snake_case
+    constants: UPPER_SNAKE_CASE
+    private_members: N/A
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: N/A
+    files: snake_case.asm
+    source: nasm.us
+  - id: item_019
+    language: Vue
+    style_guide: Vue Style Guide
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: _camelCase
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: kebab-case
+    files: PascalCase.vue
+    source: vuejs.org/style-guide
+  - id: item_020
+    language: React
+    style_guide: React/Airbnb
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: _camelCase
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: kebab-case
+    files: PascalCase.jsx
+    source: airbnb.io/javascript/react
+  - id: item_021
+    language: Next.js
+    style_guide: Next.js Conventions
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: UPPER_SNAKE_CASE
+    private_members: _camelCase
+    enums_values: UPPER_SNAKE_CASE
+    namespaces_packages: kebab-case
+    files: page.tsx or kebab-case
+    source: nextjs.org/docs
+  - id: item_022
+    language: Zig
+    style_guide: Zig Style Guide
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase (TitleCase if returns type)
+    variables_local: snake_case
+    constants: snake_case
+    private_members: snake_case
+    enums_values: PascalCase
+    namespaces_packages: snake_case
+    files: snake_case.zig
+    source: ziglang.org/documentation
+  - id: item_023
+    language: Nim
+    style_guide: Nim Style Guide
+    classes: PascalCase
+    interfaces: N/A
+    functions_methods: camelCase
+    variables_local: camelCase
+    constants: PascalCase
+    private_members: camelCase
+    enums_values: PascalCase
+    namespaces_packages: camelCase
+    files: snake_case.nim
+    source: nim-lang.org/docs/nep1

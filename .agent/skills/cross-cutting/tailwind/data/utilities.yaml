@@ -1,0 +1,182 @@
+# Tailwind CSS 4.0 - New Utilities
+# 3D transforms, gradients, field-sizing, color-scheme, and more
+# Source: tailwindcss.com/blog/tailwindcss-v4 (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: utilities
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 8
+
+patterns:
+  - id: util001
+    name: "3D Transforms"
+    category: transform
+    version: "4.0+"
+    description: |
+      Transform elements in 3D space. Includes perspective,
+      rotate-x/y/z, scale-z, translate-z utilities.
+    text: "3d transform rotate-x rotate-y rotate-z perspective scale translate z-axis"
+    example: |
+      <div class="perspective-1000">
+        <div class="rotate-x-45 rotate-y-12 translate-z-10">
+          3D transformed element
+        </div>
+      </div>
+
+      <!-- Card flip effect -->
+      <div class="group perspective-1000">
+        <div class="transition-transform duration-500 transform-style-preserve-3d group-hover:rotate-y-180">
+          <div class="backface-hidden">Front</div>
+          <div class="backface-hidden rotate-y-180 absolute">Back</div>
+        </div>
+      </div>
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/rotate"
+
+  - id: util002
+    name: "Radial Gradient"
+    category: gradient
+    version: "4.0+"
+    description: |
+      Radial gradient backgrounds with color stops.
+      Control shape and position.
+    text: "bg-radial radial gradient circle ellipse center color stop"
+    example: |
+      <!-- Basic radial -->
+      <div class="bg-radial from-blue-500 to-purple-500" />
+
+      <!-- Positioned -->
+      <div class="bg-radial-[at_top_left] from-pink-500 to-transparent" />
+
+      <!-- With stops -->
+      <div class="bg-radial from-blue-500 via-purple-500 to-pink-500" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/background-image#radial-gradients"
+
+  - id: util003
+    name: "Conic Gradient"
+    category: gradient
+    version: "4.0+"
+    description: |
+      Conic gradient for pie charts, color wheels, and
+      angular color transitions.
+    text: "bg-conic conic gradient angle color wheel pie chart circular"
+    example: |
+      <!-- Basic conic -->
+      <div class="bg-conic from-red-500 via-yellow-500 to-blue-500" />
+
+      <!-- Pie chart segment -->
+      <div class="bg-conic-[from_45deg] from-blue-500 to-transparent" />
+
+      <!-- Color wheel -->
+      <div class="bg-conic from-red-500 via-yellow-500 via-green-500 via-blue-500 to-red-500 rounded-full" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/background-image#conic-gradients"
+
+  - id: util004
+    name: "field-sizing"
+    category: form
+    version: "4.0+"
+    description: |
+      Auto-resize form fields based on content.
+      No JavaScript needed for auto-growing textareas.
+    text: "field-sizing content fixed auto-grow textarea resize"
+    example: |
+      <!-- Auto-growing textarea -->
+      <textarea class="field-sizing-content min-h-20 max-h-64">
+        Grows with content automatically
+      </textarea>
+
+      <!-- Fixed size (default) -->
+      <textarea class="field-sizing-fixed h-32" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/field-sizing"
+
+  - id: util005
+    name: "color-scheme"
+    category: theme
+    version: "4.0+"
+    description: |
+      Control browser color scheme. Affects scrollbars,
+      form controls, and system UI in dark mode.
+    text: "color-scheme dark light system scrollbar form browser native"
+    example: |
+      <!-- Scrollbar matches theme -->
+      <html class="dark color-scheme-dark">
+        <body class="bg-gray-900">
+          Scrollbars now dark
+        </body>
+      </html>
+
+      <!-- Light inputs in dark mode -->
+      <input class="color-scheme-light" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/color-scheme"
+
+  - id: util006
+    name: "Text Shadow"
+    category: effect
+    version: "4.1+"
+    description: |
+      Text shadow utilities with size variants and colors.
+      Create glow effects on text.
+    text: "text-shadow glow effect blur color sm md lg"
+    example: |
+      <!-- Size variants -->
+      <h1 class="text-shadow-sm">Subtle</h1>
+      <h1 class="text-shadow-md">Medium</h1>
+      <h1 class="text-shadow-lg">Large</h1>
+
+      <!-- Colored glow -->
+      <h1 class="text-shadow-lg text-shadow-blue-500/50">Blue glow</h1>
+
+      <!-- Dark mode adaptive -->
+      <h1 class="text-shadow-lg dark:text-shadow-white/20">Adaptive</h1>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/text-shadow"
+
+  - id: util007
+    name: "Mask"
+    category: effect
+    version: "4.1+"
+    description: |
+      Mask images and elements with gradients or images.
+      Create fade effects and custom shapes.
+    text: "mask linear radial gradient image fade shape clip"
+    example: |
+      <!-- Gradient mask -->
+      <div class="mask-linear-to-b">Fades to bottom</div>
+      <div class="mask-radial">Circular fade</div>
+
+      <!-- Custom mask image -->
+      <img src="/photo.jpg" class="mask-[url('/shape.svg')]" />
+
+      <!-- Horizontal fade -->
+      <img class="mask-linear-to-r from-black to-transparent" />
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/mask-image"
+
+  - id: util008
+    name: "font-stretch"
+    category: typography
+    version: "4.0+"
+    description: |
+      Control width of variable fonts. Use condensed or
+      expanded font variants without loading separate files.
+    text: "font-stretch condensed expanded variable font width"
+    example: |
+      <!-- Condensed text -->
+      <p class="font-stretch-75">Condensed text</p>
+
+      <!-- Normal (100%) -->
+      <p class="font-stretch-100">Normal text</p>
+
+      <!-- Expanded text -->
+      <p class="font-stretch-125">Expanded text</p>
+
+      <!-- Arbitrary value -->
+      <p class="font-stretch-[87%]">Custom width</p>
+    severity: LOW
+    docs_url: "https://tailwindcss.com/docs/font-stretch"

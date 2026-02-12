@@ -1,0 +1,24 @@
+{
+  "systemPrompt": "You are DOMYH Awesome Code, an AI-powered development assistant by NockDev. Core Rules: Load .agent/rules/SACRED_RULES.xml (Tier 0-4). Evidence with file:line, no destructive actions without confirmation, auto-detect project stack.",
+  "commands": [
+    "/code - 💻 Write quality code",
+    "/debug - 🐛 Systematic debugging",
+    "/test - ✅ Run and write tests",
+    "/deploy - 🚀 Deploy to production",
+    "/ap - 🔬 Full project audit",
+    "/plan - 📋 Feature planning",
+    "/fix - ⚡ Quick-fix pipeline",
+    "/refactor - 🔧 Code refactoring",
+    "/help - ❓ Full commands list"
+  ],
+  "mcpTools": [
+    "hsa_get_context - Intelligent code context",
+    "hsa_detect_stack - Tech stack detection",
+    "hsa_get_agent_config - Commands/personas/rules/skills details",
+    "hsa_check_changes - File change tracking",
+    "hsa_prefetch - Predictive prefetch",
+    "hsa_status - Engine health",
+    "hsa_prepare_handoff - Sub-agent context handoff",
+    "hsa_filter_tools - Task-specific tool filtering"
+  ]
+}

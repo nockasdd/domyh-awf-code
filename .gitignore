@@ -1,28 +1,62 @@
-# OS generated files
+# ── OS generated files ────────────────────────────────────────
 .DS_Store
 Thumbs.db
+Desktop.ini
+ehthumbs.db
 
-# IDE
+# ── IDE / Editor ──────────────────────────────────────────────
 .idea/
+.vscode/
 *.swp
 *.swo
+*~
 
-# Logs
+# ── Logs ──────────────────────────────────────────────────────
 *.log
 npm-debug.log*
+pnpm-debug.log*
 
-# Dependencies (không có trong content repo)
+# ── Dependencies ──────────────────────────────────────────────
 node_modules/
 
-# Build (không có trong content repo)
+# ── Build artifacts ───────────────────────────────────────────
 dist/
 
-# CLI build artifacts (source is tracked)
-domyh-awf-cli/
-domyh-awf-cli/dist/
-domyh-awf-cli/node_modules/
+# ── Python bytecode ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
 
-# === DOMYH Agent Security ===
+# ── HSA MCP Server ────────────────────────────────────────────
+.agent/mcp/hsa-server/node_modules/
+.agent/mcp/hsa-server/dist/
+
+# ── Legacy CLI (migrated to nock-cli/packages/plugin-awf) ────
+domyh-awf-cli/
+
+# ── DOMYH Agent Security ─────────────────────────────────────
 # Session rules may contain sensitive preferences
 .agent/memory/session_rules.json
 .agent/memory/session_rules.*.json
+
+# ── HSA runtime cache ────────────────────────────────────────
+.hsa_cache/
+
+# ── Environment ──────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Misc ─────────────────────────────────────────────────────
+*.tgz
+*.tsbuildinfo
+coverage/
+tmp/
+temp/
+
+# ── Private Skills (not shared publicly) ─────────────────────
+.agent/private/
+# ── FLOW.md ──────────────────────────────────────────────
+FLOW.md

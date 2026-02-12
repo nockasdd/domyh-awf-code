@@ -26,11 +26,11 @@ Personas define specialized agent roles with distinct:
 | **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.1.2   |
 | **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.1.2   |
 | **security**     | Security Specialist              | `/security`, `/scan` | 6.1.2   |
-| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 4.5.0   |
-| **debugger**     | Bug Hunter                       | `/debug`             | 4.5.0   |
-| **tester**       | Quality Assurance                | `/test`              | 4.5.0   |
-| **devops**       | Infrastructure Engineer          | `/deploy`            | 4.5.0   |
-| **documenter**   | Technical Writer                 | `/doc`               | 4.5.0   |
+| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 6.1.2   |
+| **debugger**     | Bug Hunter                       | `/debug`             | 6.1.2   |
+| **tester**       | Quality Assurance                | `/test`              | 6.1.2   |
+| **devops**       | Infrastructure Engineer          | `/deploy`            | 6.1.2   |
+| **documenter**   | Technical Writer                 | `/doc`               | 6.1.2   |
 
 ---
 
@@ -41,7 +41,7 @@ All personas follow the enhanced schema:
 ```yaml
 ---
 name: [persona_name]
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "[prefix]-001"
 
 # Core Identity (CrewAI Pattern)
@@ -177,4 +177,4 @@ User Request → Orchestrator → [Planner → Developer → Tester] → Result
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Personas System_
+_DOMYH Awesome Code • Personas System_

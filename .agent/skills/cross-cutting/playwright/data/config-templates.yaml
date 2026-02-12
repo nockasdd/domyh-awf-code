@@ -1,0 +1,141 @@
+# =============================================================================
+# config-templates.yaml — Playwright Configuration Templates
+# =============================================================================
+
+version: "1.0.0"
+
+templates:
+  local_development:
+    name: "Local Development"
+    when: "Day-to-day development testing"
+    config: |
+      import { defineConfig, devices } from '@playwright/test';
+      export default defineConfig({
+        testDir: './tests/e2e',
+        fullyParallel: true,
+        retries: 0,
+        workers: undefined, // Use all CPU cores
+        reporter: [['html', { open: 'never' }]],
+        use: {
+          baseURL: 'http://localhost:3000',
+          trace: 'on', // Always trace for debugging
+          screenshot: 'on', // Always capture
+          video: 'on', // Record all tests
+          headless: false, // See browser
+        },
+        projects: [
+          { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        ],
+        webServer: {
+          command: 'npm run dev',
+          url: 'http://localhost:3000',
+          reuseExistingServer: true,
+        },
+      });
+
+  ci_pipeline:
+    name: "CI Pipeline"
+    when: "GitHub Actions, GitLab CI, Jenkins"
+    config: |
+      import { defineConfig, devices } from '@playwright/test';
+      export default defineConfig({
+        testDir: './tests/e2e',
+        fullyParallel: true,
+        forbidOnly: true, // Fail on test.only
+        retries: 2, // Retry flaky tests
+        workers: 1, // Sequential for stability
+        reporter: [
+          ['html', { outputFolder: 'test-results/html' }],
+          ['json', { outputFile: 'test-results/results.json' }],
+          ['github'], // GitHub Actions annotations
+        ],
+        use: {
+          baseURL: 'http://localhost:3000',
+          trace: 'on-first-retry', // Trace only on failure
+          screenshot: 'only-on-failure',
+          video: 'retain-on-failure',
+          headless: true,
+        },
+        projects: [
+          { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+          { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+          { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+        ],
+        webServer: {
+          command: 'npm run start',
+          url: 'http://localhost:3000',
+          reuseExistingServer: false,
+          timeout: 120_000,
+        },
+      });
+
+  mobile_testing:
+    name: "Mobile Device Testing"
+    when: "Responsive design, touch interactions"
+    config: |
+      import { defineConfig, devices } from '@playwright/test';
+      export default defineConfig({
+        testDir: './tests/e2e/mobile',
+        use: {
+          baseURL: 'http://localhost:3000',
+          trace: 'on-first-retry',
+        },
+        projects: [
+          // iPhone
+          { name: 'iphone-14', use: { ...devices['iPhone 14'] } },
+          { name: 'iphone-14-landscape', use: { ...devices['iPhone 14 landscape'] } },
+          // Android
+          { name: 'pixel-7', use: { ...devices['Pixel 7'] } },
+          // iPad
+          { name: 'ipad', use: { ...devices['iPad (gen 7)'] } },
+          { name: 'ipad-landscape', use: { ...devices['iPad (gen 7) landscape'] } },
+        ],
+      });
+
+  visual_regression:
+    name: "Visual Regression"
+    when: "Screenshot comparison testing"
+    config: |
+      import { defineConfig, devices } from '@playwright/test';
+      export default defineConfig({
+        testDir: './tests/visual',
+        snapshotDir: './tests/visual/__snapshots__',
+        updateSnapshots: process.env.UPDATE_SNAPSHOTS ? 'all' : 'missing',
+        expect: {
+          toHaveScreenshot: {
+            maxDiffPixelRatio: 0.01, // 1% tolerance
+            threshold: 0.2, // Color threshold
+            animations: 'disabled', // Freeze animations
+          },
+          toMatchSnapshot: {
+            maxDiffPixelRatio: 0.01,
+          },
+        },
+        use: {
+          baseURL: 'http://localhost:3000',
+          screenshot: 'on',
+          // Consistent rendering
+          colorScheme: 'dark',
+          locale: 'en-US',
+          timezoneId: 'America/New_York',
+        },
+        projects: [
+          { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        ],
+      });
+    test_example: |
+      import { test, expect } from '@playwright/test';
+
+      test('homepage visual', async ({ page }) => {
+        await page.goto('/');
+        await page.waitForLoadState('networkidle');
+        await expect(page).toHaveScreenshot('homepage.png');
+      });
+
+      test('dark mode toggle', async ({ page }) => {
+        await page.goto('/');
+        await page.getByRole('button', { name: 'Toggle theme' }).click();
+        await expect(page).toHaveScreenshot('homepage-dark.png');
+      });
+
+# _DOMYH Awesome Code • Playwright Config Templates v1.0.0_

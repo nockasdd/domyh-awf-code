@@ -1,6 +1,6 @@
 ---
 name: auditor
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "aud-001"
 
 # =============================================================================
@@ -110,6 +110,9 @@ tools:
     - list_dir
     - search_web
     - run_command # For test/lint commands
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - replace_file_content # Auditors don't fix
     - delete_file
@@ -216,4 +219,4 @@ output_template: |
   **Reference:** [OWASP/CWE if applicable]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Auditor Persona
+# DOMYH Awesome Code • Auditor Persona

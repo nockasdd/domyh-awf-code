@@ -1,0 +1,116 @@
+# MCP Security Patterns - HSA MCP Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: mcp
+  domain: security
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: sec001
+    name: oauth21
+    category: security
+    description: OAuth 2.1 authentication for HTTP transport
+    text: oauth 2.1 authentication http transport authorization bearer token
+    example: |
+      // Server: validate OAuth token
+      app.use("/mcp", async (req, res, next) => {
+        const token = req.headers.authorization?.split("Bearer ")[1];
+        if (!token || !await validateToken(token)) {
+          return res.status(401).json({ error: "Unauthorized" });
+        }
+        next();
+      });
+    severity: CRITICAL
+    rule: "OAuth 2.1 is MANDATORY for HTTP transport"
+
+  - id: sec002
+    name: input_sanitization
+    category: security
+    description: Sanitize all user inputs to prevent injection
+    text: input sanitization injection prevention path traversal command injection
+    example: |
+      // Prevent path traversal
+      const safePath = path.resolve(baseDir, userPath);
+      if (!safePath.startsWith(baseDir)) throw new Error("Path traversal!");
+      // Prevent command injection
+      const safeArg = shellEscape(userInput);
+    severity: CRITICAL
+
+  - id: sec003
+    name: rate_limiting
+    category: security
+    description: Rate limiting per client to prevent abuse
+    text: rate limit throttle abuse prevention per client request limit
+    example: |
+      const limiter = new RateLimiter({ windowMs: 60000, max: 100 });
+      app.use("/mcp", limiter.middleware());
+    severity: HIGH
+
+  - id: sec004
+    name: response_size_limit
+    category: security
+    description: Limit response sizes to prevent OOM
+    text: response size limit out of memory prevent large payload
+    example: |
+      const MAX_RESPONSE_SIZE = 1024 * 1024; // 1MB
+      if (result.length > MAX_RESPONSE_SIZE) {
+        return { content: [{ type: "text",
+          text: `Result too large (${result.length} bytes). Use pagination.` }],
+          isError: true };
+      }
+    severity: HIGH
+
+  - id: sec005
+    name: secrets_protection
+    category: security
+    description: Never expose secrets in tool outputs
+    text: secrets protection api keys passwords environment variables
+    rule: "NEVER include API keys, passwords, or tokens in tool responses"
+    example: |
+      // ✅ Redact secrets
+      const safeConfig = { ...config, apiKey: "***REDACTED***" };
+      // ❌ NEVER do this
+      return { content: [{ type: "text", text: process.env.API_KEY }] };
+    severity: CRITICAL
+
+  - id: sec006
+    name: scope_limitation
+    category: security
+    description: Limit server capabilities to minimal required scope
+    text: scope limitation minimal permissions principle of least privilege
+    rule: "Each server should only access what it needs"
+    example: |
+      // ✅ Read-only database server
+      server.tool("query", schema, async (input) => {
+        return db.query(input.sql); // SELECT only, no mutations
+      });
+
+  - id: sec007
+    name: timeout_handling
+    category: security
+    description: Set timeouts for all tool operations
+    text: timeout handling abort signal cancel long running operation
+    example: |
+      server.tool("fetch_data", schema, async (input) => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000);
+        try {
+          return await fetchData(input, { signal: controller.signal });
+        } finally { clearTimeout(timeout); }
+      });
+    severity: HIGH
+
+  - id: sec008
+    name: logging_audit
+    category: security
+    description: Audit logging for all tool invocations
+    text: logging audit trail tool invocation tracking
+    example: |
+      server.tool("write_file", schema, async (input) => {
+        logger.info({ tool: "write_file", input: sanitize(input), timestamp: Date.now() });
+        return await writeFile(input);
+      });
+    severity: MEDIUM

@@ -1,40 +1,14 @@
 name: csharp
-version: "6.1.2"
-display: C#/.NET
-category: language
-tier: 1
-priority: 1
+version: "6.2.1"
+category: languages
+tier: 3
+priority: 2
 
-description: |
-  Modern C# (C# 12/13/14) with .NET 9/10.
-  Covers async/await, LINQ, EF Core, ASP.NET Core, Blazor.
+domains:
+  core: 5
+  aspnet: 5
 
-triggers:
-  file_patterns:
-    - "*.cs"
-    - "*.csproj"
-    - "*.sln"
-    - "appsettings.json"
-  keywords:
-    # Language
-    - c#
-    - csharp
-    - dotnet
-    - .net
-    # Features
-    - async/await
-    - linq
-    - records
-    # Frameworks
-    - asp.net core
-    - blazor
-    - minimal api
-    - ef core
-  intents:
-    - c# code
-    - dotnet api
-    - blazor app
-    - ef core
+desc: "Modern C# (C# 12/13/14) with .NET 9/10. Covers async/await, LINQ, EF Core, ASP.NET Core, Blazor."
 
 related_skills:
   - typescript

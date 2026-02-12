@@ -1,0 +1,72 @@
+name: real-time
+version: "1.0.0"
+display: Real-time Communication
+category: cross-cutting
+tier: 1
+priority: 6
+
+desc: "Real-time communication patterns: WebSocket (full-duplex), Socket.IO (rooms/namespaces), SSE (server-push). Covers scaling, auth, reconnection, and LLM streaming."
+
+  ### Data Files (3 domains, ~21 patterns)
+  - websocket-patterns.yaml: connection, reconnect, auth, scaling (7)
+  - sse-patterns.yaml: event format, LLM streaming, NGINX config (7)
+  - socketio-patterns.yaml: rooms, namespaces, Redis adapter (7)
+
+triggers:
+  file_patterns:
+    - "**/ws/**"
+    - "**/socket/**"
+    - "**/websocket/**"
+  keywords:
+    - websocket
+    - WebSocket
+    - socket.io
+    - Socket.IO
+    - server-sent events
+    - SSE
+    - EventSource
+    - real-time
+    - real time
+    - live updates
+    - push notifications
+    - chat application
+    - collaborative editing
+    - bidirectional
+    - full-duplex
+    - streaming
+    - ws library
+    - socket connection
+
+caps:
+  # WebSocket
+  - WebSocket native API (browser + Node.js)
+  - Full-duplex bidirectional communication
+  - Connection lifecycle (open/close/error/message)
+  - Reconnection with exponential backoff
+  - Binary data support (ArrayBuffer, Blob)
+  # Socket.IO
+  - Rooms & namespaces for grouping
+  - Horizontal scaling (Redis adapter, NATS adapter)
+  - Automatic reconnection & transport fallback
+  - Acknowledgement callbacks
+  # SSE
+  - Server-Sent Events (unidirectional server → client)
+  - EventSource API with auto-reconnect
+  - Custom event types & lastEventId
+  - LLM streaming pattern (token-by-token)
+  # Production
+  - Authentication for persistent connections
+  - Heartbeat & ping-pong keep-alive
+  - Load balancing (sticky sessions vs stateless)
+  - NGINX/reverse proxy WebSocket config
+  - Horizontal scaling patterns
+
+related_skills:
+  - event-driven
+  - api-design
+  - ai-agents
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/cross-cutting/real-time/data"
+  preload_data: true

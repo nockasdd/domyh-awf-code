@@ -1,0 +1,77 @@
+name: prompt-engineering
+version: "2.0.0"
+display: Prompt Engineering Patterns
+category: ai-ml
+tier: 1
+priority: 1
+
+desc: "Prompt engineering for LLMs: chain-of-thought, few-shot, ReAct, tree-of-thought, structured output, system prompts, guardrails. Gemini 3 agentic 9-rule template, thinking controls, function calling, MCP. Multi-provider patterns (OpenAI, Anthropic, Google). 155+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - prompt
+    - prompt engineering
+    - chain of thought
+    - few-shot
+    - zero-shot
+    - system prompt
+    - llm
+    - ai
+    - instruction
+    - reasoning
+    - react pattern
+    - tree of thought
+    - structured output
+    - guardrail
+    - jailbreak
+    # Gemini 3 / v2.0
+    - gemini 3
+    - agentic template
+    - thinking
+    - thinking budget
+    - function calling
+    - compositional function
+    - MCP function calling
+    - grounding
+    - context caching
+  intents:
+    - write prompts
+    - prompt design
+    - LLM integration
+    - AI instruction
+    - agentic system design
+
+caps:
+  - Chain-of-thought (CoT) prompting
+  - Few-shot / zero-shot learning
+  - ReAct (Reasoning + Acting)
+  - Tree-of-thought (ToT)
+  - Structured output (JSON mode, Pydantic, Zod)
+  - System prompt design
+  - Prompt injection defense
+  - Multi-turn conversation design
+  - Evaluation and testing prompts
+  - Tool use / function calling
+  - RAG prompt patterns
+  - Multi-provider patterns (OpenAI, Anthropic, Google)
+  # v2.0
+  - Gemini 3 agentic 9-rule template
+  - Thinking controls (levels, budgets, summaries)
+  - Function calling (parallel, compositional, MCP)
+  - Context caching strategies
+  - Grounding with Google Search
+
+related_skills:
+  - ai-agents
+  - gemini-live
+  - gemini-media-gen
+
+data_files:
+  - data/reasoning-patterns.yaml
+  - data/output-patterns.yaml
+  - data/safety-patterns.yaml
+  - data/provider-patterns.yaml
+  # v2.0
+  - data/gemini3-patterns.yaml
+  - data/tool-patterns.yaml

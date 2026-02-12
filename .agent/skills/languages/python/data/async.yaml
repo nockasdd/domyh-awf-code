@@ -1,0 +1,265 @@
+# =============================================================================
+# Python Async Patterns (Feb 2026)
+# Version: Python 3.13/3.14
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: async
+  version: "3.14"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: py101
+    name: TaskGroup (Structured Concurrency)
+    category: concurrency
+    version: "3.11+"
+    description: |
+      Structured concurrency with TaskGroup.
+      Automatic cancellation on exception. Replaces gather for most cases.
+    text: taskgroup structured concurrency async gather parallel
+    example: |
+      import asyncio
+      from typing import Any
+
+      async def fetch_user(user_id: int) -> dict[str, Any]:
+          await asyncio.sleep(0.1)  # Simulate API call
+          return {"id": user_id, "name": f"User {user_id}"}
+
+      async def fetch_posts(user_id: int) -> list[dict]:
+          await asyncio.sleep(0.1)
+          return [{"id": 1, "title": "Hello"}]
+
+      # ✅ TaskGroup for structured concurrency
+      async def get_user_data(user_id: int) -> dict[str, Any]:
+          async with asyncio.TaskGroup() as tg:
+              user_task = tg.create_task(fetch_user(user_id))
+              posts_task = tg.create_task(fetch_posts(user_id))
+          
+          # All tasks complete or all cancelled on error
+          return {
+              "user": user_task.result(),
+              "posts": posts_task.result(),
+          }
+
+      # ✅ Exception handling
+      async def fetch_all_or_fail():
+          try:
+              async with asyncio.TaskGroup() as tg:
+                  tg.create_task(fetch_user(1))
+                  tg.create_task(failing_task())  # If this fails
+          except* ValueError as eg:
+              # ExceptionGroup handling (3.11+)
+              for exc in eg.exceptions:
+                  print(f"Caught: {exc}")
+    severity: HIGH
+    docs_url: https://docs.python.org/3/library/asyncio-task.html#task-groups
+
+  - id: py102
+    name: asyncio.to_thread
+    category: concurrency
+    version: "3.9+"
+    description: |
+      Run blocking code in thread pool without blocking event loop.
+      Use for file I/O, CPU-bound tasks, or sync libraries.
+    text: to_thread blocking sync thread pool executor
+    example: |
+      import asyncio
+      import time
+      from pathlib import Path
+
+      # ✅ Blocking file I/O in async context
+      async def read_file_async(path: Path) -> str:
+          return await asyncio.to_thread(path.read_text)
+
+      # ✅ CPU-bound work
+      def cpu_intensive_sync(n: int) -> int:
+          """Sync function - would block event loop"""
+          return sum(i * i for i in range(n))
+
+      async def process_data(n: int) -> int:
+          # Run in thread pool
+          result = await asyncio.to_thread(cpu_intensive_sync, n)
+          return result
+
+      # ✅ Sync library integration
+      import requests  # Sync library
+
+      async def fetch_with_requests(url: str) -> str:
+          response = await asyncio.to_thread(requests.get, url)
+          return response.text
+
+      # ✅ Multiple blocking operations
+      async def process_files(paths: list[Path]) -> list[str]:
+          async with asyncio.TaskGroup() as tg:
+              tasks = [
+                  tg.create_task(read_file_async(p))
+                  for p in paths
+              ]
+          return [t.result() for t in tasks]
+    severity: HIGH
+    docs_url: https://docs.python.org/3/library/asyncio-task.html#asyncio.to_thread
+
+  - id: py103
+    name: Timeout and Cancellation
+    category: control-flow
+    version: "3.11+"
+    description: |
+      Proper timeout handling with asyncio.timeout.
+      Replaces wait_for for cleaner cancellation.
+    text: timeout cancellation cancel asyncio wait_for
+    example: |
+      import asyncio
+      from contextlib import asynccontextmanager
+
+      # ✅ Modern timeout (3.11+)
+      async def fetch_with_timeout(url: str) -> str:
+          async with asyncio.timeout(5.0):
+              # Auto-cancelled after 5 seconds
+              return await fetch(url)
+
+      # ✅ Nested timeouts
+      async def complex_operation():
+          async with asyncio.timeout(30):  # Overall timeout
+              await step1()
+              async with asyncio.timeout(10):  # Step-specific
+                  await step2()
+              await step3()
+
+      # ✅ Deadline-based timeout
+      async def with_deadline():
+          deadline = asyncio.get_event_loop().time() + 5.0
+          async with asyncio.timeout_at(deadline):
+              await long_operation()
+
+      # ✅ Graceful cancellation handling
+      async def cancellable_task():
+          try:
+              while True:
+                  await asyncio.sleep(1)
+                  await do_work()
+          except asyncio.CancelledError:
+              # Cleanup before propagating
+              await cleanup()
+              raise
+
+      # ✅ Shield from cancellation
+      async def protected_operation():
+          # This won't be cancelled even if parent is
+          result = await asyncio.shield(critical_db_write())
+          return result
+    severity: HIGH
+    docs_url: https://docs.python.org/3/library/asyncio-task.html#timeouts
+
+  - id: py104
+    name: Async Generators and Iterators
+    category: iteration
+    version: "3.6+"
+    description: |
+      Async iteration patterns for streaming data.
+      Memory-efficient processing of large datasets.
+    text: async generator iterator yield stream aiter anext
+    example: |
+      from typing import AsyncIterator
+      import asyncio
+
+      # ✅ Async generator
+      async def fetch_pages(url: str) -> AsyncIterator[dict]:
+          page = 1
+          while True:
+              data = await fetch(f"{url}?page={page}")
+              if not data["items"]:
+                  break
+              yield data
+              page += 1
+
+      # ✅ Consuming async iterator
+      async def process_all_pages(url: str) -> list[dict]:
+          results = []
+          async for page in fetch_pages(url):
+              results.extend(page["items"])
+          return results
+
+      # ✅ Async comprehension
+      async def get_active_users():
+          return [
+              user async for user in fetch_users()
+              if user["active"]
+          ]
+
+      # ✅ aiter/anext for manual iteration
+      async def get_first_n(ait: AsyncIterator, n: int) -> list:
+          results = []
+          for _ in range(n):
+              try:
+                  results.append(await anext(ait))
+              except StopAsyncIteration:
+                  break
+          return results
+
+      # ✅ Buffered async iteration
+      async def buffered_process(items: AsyncIterator, batch_size: int = 100):
+          batch = []
+          async for item in items:
+              batch.append(item)
+              if len(batch) >= batch_size:
+                  await process_batch(batch)
+                  batch = []
+          if batch:
+              await process_batch(batch)
+    severity: MEDIUM
+    docs_url: https://peps.python.org/pep-0525/
+
+  - id: py105
+    name: httpx Async Client
+    category: http
+    version: "3.9+"
+    description: |
+      Modern async HTTP client. Preferred over aiohttp for new projects.
+      HTTP/2 support, connection pooling, streaming.
+    text: httpx http client async requests api connection pool
+    example: |
+      import httpx
+      from typing import Any
+
+      # ✅ Async context manager (connection pooling)
+      async def fetch_users() -> list[dict[str, Any]]:
+          async with httpx.AsyncClient(
+              base_url="https://api.example.com",
+              timeout=httpx.Timeout(10.0),
+              headers={"Authorization": f"Bearer {token}"},
+          ) as client:
+              response = await client.get("/users")
+              response.raise_for_status()
+              return response.json()
+
+      # ✅ Parallel requests
+      async def fetch_multiple(urls: list[str]) -> list[dict]:
+          async with httpx.AsyncClient() as client:
+              async with asyncio.TaskGroup() as tg:
+                  tasks = [
+                      tg.create_task(client.get(url))
+                      for url in urls
+                  ]
+              return [t.result().json() for t in tasks]
+
+      # ✅ Streaming response
+      async def download_large_file(url: str, path: str):
+          async with httpx.AsyncClient() as client:
+              async with client.stream("GET", url) as response:
+                  async with aiofiles.open(path, "wb") as f:
+                      async for chunk in response.aiter_bytes(8192):
+                          await f.write(chunk)
+
+      # ✅ Retry with tenacity
+      from tenacity import retry, stop_after_attempt, wait_exponential
+
+      @retry(stop=stop_after_attempt(3), wait=wait_exponential())
+      async def fetch_with_retry(url: str) -> dict:
+          async with httpx.AsyncClient() as client:
+              response = await client.get(url)
+              response.raise_for_status()
+              return response.json()
+    severity: HIGH
+    docs_url: https://www.python-httpx.org/

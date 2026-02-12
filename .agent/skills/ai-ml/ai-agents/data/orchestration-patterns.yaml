@@ -1,0 +1,101 @@
+# AI Agent Orchestration Patterns - HSA AI Agents Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: ai-agents
+  domain: orchestration
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: orch001
+    name: supervisor
+    category: orchestration
+    description: Single supervisor routes tasks to specialized agents
+    text: supervisor orchestrator router delegate specialized agent
+    example: |
+      // LangGraph supervisor
+      const graph = new StateGraph({ channels: { messages, next } })
+        .addNode("supervisor", supervisorAgent)
+        .addNode("researcher", researchAgent)
+        .addNode("coder", codingAgent)
+        .addEdge("supervisor", routeToAgent)
+        .compile();
+    best_for: "Complex tasks with clear sub-task boundaries"
+
+  - id: orch002
+    name: swarm
+    category: orchestration
+    description: Peer-to-peer agents collaborate without central control
+    text: swarm peer collaborative decentralized agents handoff
+    example: |
+      // OpenAI Swarm pattern
+      const triage = new Agent({ name: "Triage", handoffs: [sales, support] });
+      const sales = new Agent({ name: "Sales", tools: [createQuote] });
+    best_for: "Customer service, collaborative workflows"
+
+  - id: orch003
+    name: sequential
+    category: orchestration
+    description: Linear pipeline of agents, output feeds next input
+    text: sequential pipeline chain linear flow step by step
+    example: |
+      const pipeline = research.pipe(draft).pipe(review).pipe(publish);
+      const result = await pipeline.invoke({ topic: "MCP best practices" });
+    best_for: "Content creation, ETL, simple workflows"
+
+  - id: orch004
+    name: hierarchical
+    category: orchestration
+    description: Manager agents delegate to worker agents recursively
+    text: hierarchical manager worker delegation tree recursive
+    best_for: "Enterprise workflows, complex project management"
+
+  - id: orch005
+    name: langgraph_setup
+    category: framework
+    description: LangGraph state machine for agent workflows
+    text: langgraph state graph node edge checkpoint persistence
+    example: |
+      const graph = new StateGraph(AgentState)
+        .addNode("agent", callModel)
+        .addNode("tools", toolNode)
+        .addEdge(START, "agent")
+        .addConditionalEdges("agent", shouldContinue, { continue: "tools", end: END })
+        .addEdge("tools", "agent")
+        .compile({ checkpointer: new MemorySaver() });
+
+  - id: orch006
+    name: crewai_setup
+    category: framework
+    description: CrewAI role-based multi-agent collaboration
+    text: crewai crew agent task role goal backstory
+    example: |
+      researcher = Agent(role="Researcher", goal="Find information", tools=[search])
+      writer = Agent(role="Writer", goal="Write content")
+      crew = Crew(agents=[researcher, writer], tasks=[research_task, write_task])
+
+  - id: orch007
+    name: hitl
+    category: production
+    description: Human-in-the-loop approval for critical actions
+    text: human in the loop approval review critical destructive confirm
+    example: |
+      // LangGraph interrupt pattern
+      .addNode("approval", async (state) => {
+        return { needsApproval: true, action: state.proposedAction };
+        // Graph pauses here until human approves
+      })
+
+  - id: orch008
+    name: error_recovery
+    category: production
+    description: Agent error recovery and retry strategies
+    text: error recovery retry fallback checkpoint resume
+    example: |
+      const config = {
+        maxRetries: 3,
+        fallbackModel: "gpt-4o-mini",
+        checkpointOnSuccess: true
+      };

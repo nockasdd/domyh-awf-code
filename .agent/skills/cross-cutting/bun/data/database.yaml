@@ -1,0 +1,85 @@
+# =============================================================================
+# Bun 1.3+ Database Patterns (Feb 2026)
+# =============================================================================
+# Built-in database clients for PostgreSQL, MySQL, SQLite
+
+metadata:
+  skill: bun
+  domain: database
+  version: "1.3.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: bun010
+    name: Bun.sql (PostgreSQL)
+    category: database
+    version: "1.2+"
+    description: Built-in PostgreSQL client with tagged template syntax (50% faster than Postgres.js)
+    text: postgresql postgres database query sql tagged template client Bun.sql
+    example: |
+      const db = Bun.sql`postgres://user:pass@localhost/db`;
+      const users = await db`SELECT * FROM users WHERE id = ${id}`;
+      // Parameterized queries prevent SQL injection
+      await db`INSERT INTO users (name, email) VALUES (${name}, ${email})`;
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/sql
+
+  - id: bun011
+    name: Bun.mysql
+    category: database
+    version: "1.3+"
+    description: Built-in MySQL client with unified SQL API
+    text: mysql mariadb database query client sql
+    example: |
+      const db = Bun.sql`mysql://user:pass@localhost/db`;
+      const results = await db`SELECT * FROM products WHERE price > ${100}`;
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/sql
+
+  - id: bun012
+    name: Database (SQLite)
+    category: database
+    version: "1.0+"
+    description: High-performance native SQLite3 driver (inspired by better-sqlite3)
+    text: sqlite embedded database prepare statement query sync bun:sqlite
+    example: |
+      import { Database } from "bun:sqlite";
+      const db = new Database("app.db");
+      db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT)");
+      const stmt = db.prepare("SELECT * FROM users WHERE id = ?");
+      const user = stmt.get(1);
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/sqlite
+
+  - id: bun013
+    name: Bun.redis
+    category: database
+    version: "1.3+"
+    description: Built-in Redis client for caching and pub/sub
+    text: redis cache key value store pubsub publish subscribe
+    example: |
+      const redis = Bun.redis("redis://localhost:6379");
+      await redis.set("key", "value");
+      const value = await redis.get("key");
+      // Pub/Sub
+      await redis.publish("channel", "message");
+    severity: HIGH
+    docs_url: https://bun.sh/docs/api/redis
+
+  - id: bun014
+    name: Unified SQL API
+    category: database
+    version: "1.3+"
+    description: Single API for PostgreSQL, MySQL, SQLite with same tagged template syntax
+    text: unified sql api postgresql mysql sqlite tagged template
+    example: |
+      // Same syntax for all databases
+      const pg = Bun.sql`postgres://...`;
+      const mysql = Bun.sql`mysql://...`;
+
+      // Both work the same way
+      await pg`SELECT * FROM users`;
+      await mysql`SELECT * FROM users`;
+    severity: MEDIUM
+    docs_url: https://bun.sh/docs/api/sql

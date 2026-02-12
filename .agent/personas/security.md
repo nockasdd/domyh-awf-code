@@ -1,6 +1,6 @@
 ---
 name: security
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "sec-001"
 
 # =============================================================================
@@ -66,6 +66,9 @@ tools:
     - list_dir
     - search_web # For CVE lookup
     - read_url_content
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - run_command # Security risk
     - delete_file
@@ -206,4 +209,4 @@ output_template: |
   2. [Secondary fix]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Security Persona
+# DOMYH Awesome Code • Security Persona

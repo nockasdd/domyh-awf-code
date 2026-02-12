@@ -1,0 +1,210 @@
+# =============================================================================
+# Flutter Core Patterns (Feb 2026)
+# =============================================================================
+# Widgets, Dart 3.7, Build patterns
+
+metadata:
+  skill: flutter
+  domain: core
+  version: "3.29"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: flt001
+    name: Widget Composition
+    category: architecture
+    version: "1.0+"
+    description: Compose UIs from small, focused widgets
+    text: widget stateless stateful composition build context
+    example: |
+      // ✅ Prefer StatelessWidget when possible
+      class UserCard extends StatelessWidget {
+        final User user;
+        const UserCard({super.key, required this.user});
+
+        @override
+        Widget build(BuildContext context) {
+          return Card(
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.avatarUrl),
+              ),
+              title: Text(user.name),
+              subtitle: Text(user.email),
+            ),
+          );
+        }
+      }
+
+      // ✅ Use const constructors for performance
+      const SizedBox(height: 16);
+      const Text('Hello');
+      const Icon(Icons.star);
+    severity: HIGH
+    docs_url: https://docs.flutter.dev/development/ui/widgets-intro
+
+  - id: flt002
+    name: Dart 3.7 Features
+    category: language
+    version: "3.7+"
+    description: Modern Dart features - digit separators, wildcards
+    text: dart 3.7 digit separator wildcard underscore formatter
+    example: |
+      // ✅ Digit separators (readability)
+      const billion = 1_000_000_000;
+      const hex = 0xFF_EC_DE_5D;
+      const binary = 0b1010_1100_1111_0000;
+
+      // ✅ Wildcard variables - elegant callback handling
+      future.then((_) => print('Done!')); // Underscore as wildcard
+
+      // ✅ Pattern matching with wildcards
+      switch (result) {
+        case Success(value: _): print('Success!');
+        case Failure(error: final e): print('Error: $e');
+      }
+
+      // ✅ Improved formatter - auto trailing commas
+      // Formatter now adds/removes trailing commas based on line length
+    severity: MEDIUM
+    docs_url: https://dart.dev/language
+
+  - id: flt003
+    name: Sealed Classes & Patterns
+    category: language
+    version: "3.0+"
+    description: Type-safe exhaustive pattern matching with sealed classes
+    text: sealed class pattern matching switch case exhaustive
+    example: |
+      // ✅ Sealed class for exhaustive pattern matching
+      sealed class Result<T> {
+        const Result();
+      }
+
+      class Success<T> extends Result<T> {
+        final T value;
+        const Success(this.value);
+      }
+
+      class Failure<T> extends Result<T> {
+        final Exception error;
+        const Failure(this.error);
+      }
+
+      // ✅ Pattern matching in switch (exhaustive!)
+      String handleResult(Result<User> result) {
+        return switch (result) {
+          Success(value: final user) => 'Hello, ${user.name}!',
+          Failure(error: final e) => 'Error: ${e.toString()}',
+        };
+      }
+
+      // ✅ if-case pattern matching
+      if (result case Success(value: final user)) {
+        print('User: ${user.name}');
+      }
+    severity: HIGH
+    docs_url: https://dart.dev/language/patterns
+
+  - id: flt004
+    name: Records & Destructuring
+    category: language
+    version: "3.0+"
+    description: Anonymous tuples and destructuring patterns
+    text: record tuple destructuring named field pattern
+    example: |
+      // ✅ Records (anonymous tuples)
+      (String, int) getUserInfo() => ('Alice', 25);
+
+      final (name, age) = getUserInfo();
+      print('$name is $age years old');
+
+      // ✅ Named fields in records
+      ({String name, int age}) getUser() => (name: 'Alice', age: 25);
+
+      final (:name, :age) = getUser();
+
+      // ✅ Use in function returns
+      (bool success, String? error) validateEmail(String email) {
+        if (email.contains('@')) {
+          return (true, null);
+        }
+        return (false, 'Invalid email format');
+      }
+
+      final (isValid, error) = validateEmail('test@example.com');
+    severity: MEDIUM
+    docs_url: https://dart.dev/language/records
+
+  - id: flt005
+    name: Freezed for Immutable Models
+    category: data
+    version: "2.0+"
+    description: Code generation for immutable data classes
+    text: freezed immutable copyWith json serializable model
+    example: |
+      import 'package:freezed_annotation/freezed_annotation.dart';
+
+      part 'user.freezed.dart';
+      part 'user.g.dart';
+
+      // ✅ Immutable data class with freezed
+      @freezed
+      class User with _$User {
+        const factory User({
+          required String id,
+          required String email,
+          required String name,
+          @Default(false) bool isActive,
+          DateTime? lastLoginAt,
+        }) = _User;
+
+        factory User.fromJson(Map<String, dynamic> json) =>
+            _$UserFromJson(json);
+      }
+
+      // Usage
+      final user = User(id: '1', email: 'a@b.com', name: 'Alice');
+      final updated = user.copyWith(isActive: true);  // Immutable update
+
+      // Run: dart run build_runner build --delete-conflicting-outputs
+    severity: HIGH
+    docs_url: https://pub.dev/packages/freezed
+
+  - id: flt006
+    name: Feature-First Structure
+    category: architecture
+    version: "1.0+"
+    description: Organize code by feature, not by type
+    text: project structure feature folder architecture organization
+    example: |
+      # ✅ Feature-First Project Structure
+      lib/
+      ├── main.dart
+      ├── app/
+      │   ├── app.dart              # MaterialApp setup
+      │   └── router.dart           # Navigation
+      ├── core/
+      │   ├── constants/
+      │   ├── network/
+      │   │   ├── api_client.dart
+      │   │   └── interceptors.dart
+      │   └── theme/
+      │       └── app_theme.dart
+      ├── features/
+      │   ├── auth/
+      │   │   ├── data/             # datasources, models, repositories
+      │   │   ├── domain/           # entities, usecases
+      │   │   └── presentation/     # pages, widgets, providers
+      │   └── home/
+      │       └── ...
+      └── shared/
+          └── widgets/
+
+      # ✅ Benefits:
+      # - Each feature is self-contained
+      # - Easy to add/remove features
+      # - Clear dependencies between features
+    severity: MEDIUM
+    docs_url: https://docs.flutter.dev/development/packages-and-plugins/developing-packages

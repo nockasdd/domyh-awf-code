@@ -1,0 +1,58 @@
+name: tdd-workflow
+version: "6.2.1"
+display: Test-Driven Development
+category: cross-cutting
+tier: 1
+priority: 1
+
+desc: "TDD methodology: Red-Green-Refactor, BDD, ATDD, property-based testing. Coverage strategies, test doubles, mutation testing. 12 languages, 180+ patterns."
+
+triggers:
+  file_patterns:
+    - "*.test.*"
+    - "*.spec.*"
+    - "*_test.*"
+    - "test_*.*"
+  keywords:
+    - tdd
+    - test-driven
+    - red-green-refactor
+    - bdd
+    - atdd
+    - failing test
+    - test first
+    - coverage
+    - mutation testing
+    - test double
+    - mock
+    - stub
+    - spy
+    - fixture
+    - property-based
+  intents:
+    - test-driven development
+    - write tests first
+    - TDD workflow
+    - coverage strategy
+
+caps:
+  - Red-Green-Refactor cycle
+  - BDD (Behavior-Driven Development)
+  - ATDD (Acceptance Test-Driven Development)
+  - Property-based testing
+  - Test doubles (mock, stub, spy, fake, dummy)
+  - Mutation testing
+  - Coverage strategies
+  - Test naming conventions
+  - Arrange-Act-Assert pattern
+  - Given-When-Then format
+  - Test isolation
+  - Parameterized tests
+
+data_files:
+  - data/core-tdd-cycle.yaml
+  - data/test-doubles.yaml
+  - data/coverage-strategies.yaml
+  - data/bdd-atdd-patterns.yaml
+  - data/language-patterns.yaml
+  - data/anti-patterns.yaml

@@ -1,0 +1,496 @@
+metadata:
+  skill: domyh-design
+  domain: react_native
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: react-native.yaml
+  patterns_count: 51
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Components
+    guideline: Use functional components
+    description: Hooks-based components are standard
+    do: Functional components with hooks
+    don_t: Class components
+    code_good: const App = () => { }
+    code_bad: class App extends Component
+    severity: Medium
+    docs_url: https://reactnative.dev/docs/intro-react
+  - id: "2"
+    category: Components
+    guideline: Keep components small
+    description: Single responsibility principle
+    do: Split into smaller components
+    don_t: Large monolithic components
+    code_good: <Header /><Content /><Footer />
+    code_bad: 500+ line component
+    severity: Medium
+  - id: "3"
+    category: Components
+    guideline: Use TypeScript
+    description: Type safety for props and state
+    do: TypeScript for new projects
+    don_t: JavaScript without types
+    code_good: "const Button: FC<Props> = () => { }"
+    code_bad: const Button = (props) => { }
+    severity: Medium
+  - id: "4"
+    category: Components
+    guideline: Colocate component files
+    description: Keep related files together
+    do: Component folder with styles
+    don_t: Flat structure
+    code_good: components/Button/index.tsx styles.ts
+    code_bad: components/Button.tsx styles/button.ts
+    severity: Low
+  - id: "5"
+    category: Styling
+    guideline: Use StyleSheet.create
+    description: Optimized style objects
+    do: StyleSheet for all styles
+    don_t: Inline style objects
+    code_good: "StyleSheet.create({ container: {} })"
+    code_bad: "style={{ margin: 10 }}"
+    severity: High
+    docs_url: https://reactnative.dev/docs/stylesheet
+  - id: "6"
+    category: Styling
+    guideline: Avoid inline styles
+    description: Prevent object recreation
+    do: Styles in StyleSheet
+    don_t: Inline style objects in render
+    code_good: style={styles.container}
+    code_bad: "style={{ margin: 10, padding: 5 }}"
+    severity: Medium
+  - id: "7"
+    category: Styling
+    guideline: Use flexbox for layout
+    description: React Native uses flexbox
+    do: flexDirection alignItems justifyContent
+    don_t: Absolute positioning everywhere
+    code_good: "flexDirection: 'row'"
+    code_bad: "position: 'absolute' everywhere"
+    severity: Medium
+    docs_url: https://reactnative.dev/docs/flexbox
+  - id: "8"
+    category: Styling
+    guideline: Handle platform differences
+    description: Platform-specific styles
+    do: Platform.select or .ios/.android files
+    don_t: Same styles for both platforms
+    code_good: "Platform.select({ ios: {}, android: {} })"
+    code_bad: Hardcoded iOS values
+    severity: Medium
+    docs_url: https://reactnative.dev/docs/platform-specific-code
+  - id: "9"
+    category: Styling
+    guideline: Use responsive dimensions
+    description: Scale for different screens
+    do: Dimensions or useWindowDimensions
+    don_t: Fixed pixel values
+    code_good: useWindowDimensions()
+    code_bad: "width: 375"
+    severity: Medium
+  - id: "10"
+    category: Navigation
+    guideline: Use React Navigation
+    description: Standard navigation library
+    do: React Navigation for routing
+    don_t: Manual navigation management
+    code_good: createStackNavigator()
+    code_bad: Custom navigation state
+    severity: Medium
+    docs_url: https://reactnavigation.org/
+  - id: "11"
+    category: Navigation
+    guideline: Type navigation params
+    description: Type-safe navigation
+    do: Typed navigation props
+    don_t: Untyped navigation
+    code_good: navigation.navigate<RootStackParamList>('Home', { id })
+    code_bad: navigation.navigate('Home', { id })
+    severity: Medium
+  - id: "12"
+    category: Navigation
+    guideline: Use deep linking
+    description: Support URL-based navigation
+    do: Configure linking prop
+    don_t: No deep link support
+    code_good: "linking: { prefixes: [] }"
+    code_bad: No linking configuration
+    severity: Medium
+    docs_url: https://reactnavigation.org/docs/deep-linking/
+  - id: "13"
+    category: Navigation
+    guideline: Handle back button
+    description: Android back button handling
+    do: useFocusEffect with BackHandler
+    don_t: Ignore back button
+    code_good: BackHandler.addEventListener
+    code_bad: No back handler
+    severity: High
+  - id: "14"
+    category: State
+    guideline: Use useState for local state
+    description: Simple component state
+    do: useState for UI state
+    don_t: Class component state
+    code_good: const [count, setCount] = useState(0)
+    code_bad: "this.state = { count: 0 }"
+    severity: Medium
+  - id: "15"
+    category: State
+    guideline: Use useReducer for complex state
+    description: Complex state logic
+    do: useReducer for related state
+    don_t: Multiple useState for related values
+    code_good: useReducer(reducer initialState)
+    code_bad: 5+ useState calls
+    severity: Medium
+  - id: "16"
+    category: State
+    guideline: Use context sparingly
+    description: Context for global state
+    do: Context for theme auth locale
+    don_t: Context for frequently changing data
+    code_good: ThemeContext for app theme
+    code_bad: Context for list item data
+    severity: Medium
+  - id: "17"
+    category: State
+    guideline: Consider Zustand or Redux
+    description: External state management
+    do: Zustand for simple Redux for complex
+    don_t: useState for global state
+    code_good: create((set) => ({ }))
+    code_bad: Prop drilling global state
+    severity: Medium
+  - id: "18"
+    category: Lists
+    guideline: Use FlatList for long lists
+    description: Virtualized list rendering
+    do: FlatList for 50+ items
+    don_t: ScrollView with map
+    code_good: <FlatList data={items} />
+    code_bad: <ScrollView>{items.map()}</ScrollView>
+    severity: High
+    docs_url: https://reactnative.dev/docs/flatlist
+  - id: "19"
+    category: Lists
+    guideline: Provide keyExtractor
+    description: Unique keys for list items
+    do: keyExtractor with stable ID
+    don_t: Index as key
+    code_good: keyExtractor={(item) => item.id}
+    code_bad: keyExtractor={(_, index) => index}
+    severity: High
+  - id: "20"
+    category: Lists
+    guideline: Optimize renderItem
+    description: Memoize list item components
+    do: React.memo for list items
+    don_t: Inline render function
+    code_good: renderItem={({ item }) => <MemoizedItem item={item} />}
+    code_bad: renderItem={({ item }) => <View>...</View>}
+    severity: High
+  - id: "21"
+    category: Lists
+    guideline: Use getItemLayout for fixed height
+    description: Skip measurement for performance
+    do: getItemLayout when height known
+    don_t: Dynamic measurement for fixed items
+    code_good: "getItemLayout={(_, index) => ({ length: 50, offset: 50 * index, index })}"
+    code_bad: No getItemLayout for fixed height
+    severity: Medium
+  - id: "22"
+    category: Lists
+    guideline: Implement windowSize
+    description: Control render window
+    do: Smaller windowSize for memory
+    don_t: Default windowSize for large lists
+    code_good: windowSize={5}
+    code_bad: windowSize={21} for huge lists
+    severity: Medium
+  - id: "23"
+    category: Performance
+    guideline: Use React.memo
+    description: Prevent unnecessary re-renders
+    do: memo for pure components
+    don_t: No memoization
+    code_good: export default memo(MyComponent)
+    code_bad: export default MyComponent
+    severity: Medium
+  - id: "24"
+    category: Performance
+    guideline: Use useCallback for handlers
+    description: Stable function references
+    do: useCallback for props
+    don_t: New function on every render
+    code_good: useCallback(() => {}, [deps])
+    code_bad: () => handlePress()
+    severity: Medium
+  - id: "25"
+    category: Performance
+    guideline: Use useMemo for expensive ops
+    description: Cache expensive calculations
+    do: useMemo for heavy computations
+    don_t: Recalculate every render
+    code_good: useMemo(() => expensive(), [deps])
+    code_bad: const result = expensive()
+    severity: Medium
+  - id: "26"
+    category: Performance
+    guideline: Avoid anonymous functions in JSX
+    description: Prevent re-renders
+    do: Named handlers or useCallback
+    don_t: Inline arrow functions
+    code_good: onPress={handlePress}
+    code_bad: onPress={() => doSomething()}
+    severity: Medium
+  - id: "27"
+    category: Performance
+    guideline: Use Hermes engine
+    description: Improved startup and memory
+    do: Enable Hermes in build
+    don_t: JavaScriptCore for new projects
+    code_good: "hermes_enabled: true"
+    code_bad: "hermes_enabled: false"
+    severity: Medium
+    docs_url: https://reactnative.dev/docs/hermes
+  - id: "28"
+    category: Images
+    guideline: Use expo-image
+    description: Modern performant image component for React Native
+    do: Use expo-image for caching, blurring, and performance
+    don_t: Use default Image for heavy lists or unmaintained libraries
+    code_good: <Image source={url} cachePolicy='memory-disk' /> (expo-image)
+    code_bad: <FastImage source={url} />
+    severity: Medium
+    docs_url: https://docs.expo.dev/versions/latest/sdk/image/
+  - id: "29"
+    category: Images
+    guideline: Specify image dimensions
+    description: Prevent layout shifts
+    do: width and height for remote images
+    don_t: No dimensions for network images
+    code_good: "<Image style={{ width: 100 height: 100 }} />"
+    code_bad: <Image source={{ uri }} /> no size
+    severity: High
+  - id: "30"
+    category: Images
+    guideline: Use resizeMode
+    description: Control image scaling
+    do: resizeMode cover contain
+    don_t: Stretch images
+    code_good: resizeMode="cover"
+    code_bad: No resizeMode
+    severity: Low
+  - id: "31"
+    category: Forms
+    guideline: Use controlled inputs
+    description: State-controlled form fields
+    do: value + onChangeText
+    don_t: Uncontrolled inputs
+    code_good: <TextInput value={text} onChangeText={setText} />
+    code_bad: <TextInput defaultValue={text} />
+    severity: Medium
+  - id: "32"
+    category: Forms
+    guideline: Handle keyboard
+    description: Manage keyboard visibility
+    do: KeyboardAvoidingView
+    don_t: Content hidden by keyboard
+    code_good: <KeyboardAvoidingView behavior="padding">
+    code_bad: No keyboard handling
+    severity: High
+    docs_url: https://reactnative.dev/docs/keyboardavoidingview
+  - id: "33"
+    category: Forms
+    guideline: Use proper keyboard types
+    description: Appropriate keyboard for input
+    do: keyboardType for input type
+    don_t: Default keyboard for all
+    code_good: keyboardType="email-address"
+    code_bad: keyboardType="default" for email
+    severity: Low
+  - id: "34"
+    category: Touch
+    guideline: Use Pressable
+    description: Modern touch handling
+    do: Pressable for touch interactions
+    don_t: TouchableOpacity for new code
+    code_good: <Pressable onPress={} />
+    code_bad: <TouchableOpacity onPress={} />
+    severity: Low
+    docs_url: https://reactnative.dev/docs/pressable
+  - id: "35"
+    category: Touch
+    guideline: Provide touch feedback
+    description: Visual feedback on press
+    do: Ripple or opacity change
+    don_t: No feedback on press
+    code_good: "android_ripple={{ color: 'gray' }}"
+    code_bad: No press feedback
+    severity: Medium
+  - id: "36"
+    category: Touch
+    guideline: Set hitSlop for small targets
+    description: Increase touch area
+    do: hitSlop for icons and small buttons
+    don_t: Tiny touch targets
+    code_good: "hitSlop={{ top: 10 bottom: 10 }}"
+    code_bad: 44x44 with no hitSlop
+    severity: Medium
+  - id: "37"
+    category: Animation
+    guideline: Use Reanimated
+    description: High-performance animations
+    do: react-native-reanimated
+    don_t: Animated API for complex
+    code_good: useSharedValue useAnimatedStyle
+    code_bad: Animated.timing for gesture
+    severity: Medium
+    docs_url: https://docs.swmansion.com/react-native-reanimated/
+  - id: "38"
+    category: Animation
+    guideline: Run on UI thread
+    description: worklets for smooth animation
+    do: Run animations on UI thread
+    don_t: JS thread animations
+    code_good: runOnUI(() => {})
+    code_bad: Animated on JS thread
+    severity: High
+  - id: "39"
+    category: Animation
+    guideline: Use gesture handler
+    description: Native gesture recognition
+    do: react-native-gesture-handler
+    don_t: JS-based gesture handling
+    code_good: <GestureDetector>
+    code_bad: <View onTouchMove={} />
+    severity: Medium
+    docs_url: https://docs.swmansion.com/react-native-gesture-handler/
+  - id: "40"
+    category: Async
+    guideline: Handle loading states
+    description: Show loading indicators
+    do: ActivityIndicator during load
+    don_t: Empty screen during load
+    code_good: "{isLoading ? <ActivityIndicator /> : <Content />}"
+    code_bad: No loading state
+    severity: Medium
+  - id: "41"
+    category: Async
+    guideline: Handle errors gracefully
+    description: Error boundaries and fallbacks
+    do: Error UI for failed requests
+    don_t: Crash on error
+    code_good: "{error ? <ErrorView /> : <Content />}"
+    code_bad: No error handling
+    severity: High
+  - id: "42"
+    category: Async
+    guideline: Cancel async operations
+    description: Cleanup on unmount
+    do: AbortController or cleanup
+    don_t: Memory leaks from async
+    code_good: useEffect cleanup
+    code_bad: No cleanup for subscriptions
+    severity: High
+  - id: "43"
+    category: Accessibility
+    guideline: Add accessibility labels
+    description: Describe UI elements
+    do: accessibilityLabel for all interactive
+    don_t: Missing labels
+    code_good: accessibilityLabel="Submit form"
+    code_bad: <Pressable> without label
+    severity: High
+    docs_url: https://reactnative.dev/docs/accessibility
+  - id: "44"
+    category: Accessibility
+    guideline: Use accessibility roles
+    description: Semantic meaning
+    do: accessibilityRole for elements
+    don_t: Wrong roles
+    code_good: accessibilityRole="button"
+    code_bad: No role for button
+    severity: Medium
+  - id: "45"
+    category: Accessibility
+    guideline: Support screen readers
+    description: Test with TalkBack/VoiceOver
+    do: Test with screen readers
+    don_t: Skip accessibility testing
+    code_good: Regular TalkBack testing
+    code_bad: No screen reader testing
+    severity: High
+  - id: "46"
+    category: Testing
+    guideline: Use React Native Testing Library
+    description: Component testing
+    do: render and fireEvent
+    don_t: Enzyme or manual testing
+    code_good: render(<Component />)
+    code_bad: shallow(<Component />)
+    severity: Medium
+    docs_url: https://callstack.github.io/react-native-testing-library/
+  - id: "47"
+    category: Testing
+    guideline: Test on real devices
+    description: Real device behavior
+    do: Test on iOS and Android devices
+    don_t: Simulator only
+    code_good: Device testing in CI
+    code_bad: Simulator only testing
+    severity: High
+  - id: "48"
+    category: Testing
+    guideline: Use Detox for E2E
+    description: End-to-end testing
+    do: Detox for critical flows
+    don_t: Manual E2E testing
+    code_good: detox test
+    code_bad: Manual testing only
+    severity: Medium
+    docs_url: https://wix.github.io/Detox/
+  - id: "49"
+    category: Native
+    guideline: Use native modules carefully
+    description: Bridge has overhead
+    do: Batch native calls
+    don_t: Frequent bridge crossing
+    code_good: Batch updates
+    code_bad: Call native on every keystroke
+    severity: High
+  - id: "50"
+    category: Native
+    guideline: Use Expo when possible
+    description: Simplified development
+    do: Expo for standard features
+    don_t: Bare RN for simple apps
+    code_good: expo install package
+    code_bad: react-native link package
+    severity: Low
+    docs_url: https://docs.expo.dev/
+  - id: "51"
+    category: Native
+    guideline: Handle permissions
+    description: Request permissions properly
+    do: Check and request permissions
+    don_t: Assume permissions granted
+    code_good: PermissionsAndroid.request()
+    code_bad: Access without permission check
+    severity: High
+    docs_url: https://reactnative.dev/docs/permissionsandroid

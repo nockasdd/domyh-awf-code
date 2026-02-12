@@ -1,0 +1,103 @@
+# Electron Testing Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: testing
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: test001
+    name: Playwright Electron
+    category: testing
+    version: all
+    description: E2E testing with Playwright's Electron support
+    text: playwright electron e2e test automation browser window launch
+    example: |
+      // e2e/app.spec.ts
+      import { test, expect, _electron as electron } from '@playwright/test';
+
+      test('app launches', async () => {
+        const app = await electron.launch({ args: ['./dist/main.js'] });
+        const window = await app.firstWindow();
+        
+        await expect(window).toHaveTitle(/MyApp/);
+        
+        // Test IPC
+        const result = await window.evaluate(() => {
+          return window.electronAPI.getVersion();
+        });
+        expect(result).toMatch(/\d+\.\d+\.\d+/);
+        
+        await app.close();
+      });
+    severity: HIGH
+    recommended: true
+    docs_url: https://playwright.dev/docs/api/class-electron
+
+  - id: test002
+    name: Vitest Electron
+    category: testing
+    version: all
+    description: Unit testing with Vitest for main/preload logic
+    text: vitest electron unit test mock module fast esm
+    example: |
+      // vitest.config.ts
+      import { defineConfig } from 'vitest/config';
+
+      export default defineConfig({
+        test: {
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+          coverage: { provider: 'v8' }
+        }
+      });
+
+      // src/main/__tests__/ipc.test.ts
+      import { describe, it, expect, vi } from 'vitest';
+
+      describe('IPC handlers', () => {
+        it('validates input', () => {
+          expect(validatePath('../etc/passwd')).toBe(false);
+        });
+      });
+    severity: HIGH
+    docs_url: https://vitest.dev
+
+  - id: test003
+    name: WebDriver
+    category: testing
+    version: all
+    description: Selenium-style E2E testing with WebDriverIO
+    text: webdriver selenium chromedriver e2e automated browser driver
+    example: |
+      // wdio.conf.js
+      module.exports = {
+        services: ['electron'],
+        capabilities: [{
+          browserName: 'electron',
+          'wdio:electronServiceOptions': {
+            appBinaryPath: './dist/MyApp.exe'
+          }
+        }]
+      };
+    severity: MEDIUM
+    docs_url: https://webdriver.io/docs/electron
+
+  - id: test004
+    name: electron-mocha
+    category: testing
+    version: all
+    description: Run Mocha tests in Electron environment
+    text: electron mocha test runner node browser environment
+    example: |
+      # package.json
+      {
+        "scripts": {
+          "test": "electron-mocha --renderer test/**/*.spec.js"
+        }
+      }
+    severity: LOW

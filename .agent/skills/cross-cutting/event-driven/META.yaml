@@ -1,0 +1,108 @@
+name: event-driven
+version: "1.0.0"
+display: Event-Driven Architecture
+category: cross-cutting
+tier: 1
+priority: 7
+
+desc: "Event-driven architecture patterns: message queues (Kafka, RabbitMQ, NATS), pub/sub, event sourcing, CQRS, saga pattern. Covers production patterns like DLQ, idempotency, and schema evolution."
+
+  ### Data Files (3 domains, ~24 patterns)
+  - eda-patterns.yaml: pub/sub, event sourcing, CQRS, saga (8)
+  - broker-comparison.yaml: Kafka vs RabbitMQ vs NATS feature matrix (8)
+  - production-patterns.yaml: DLQ, idempotency, schema evolution (8)
+
+triggers:
+  file_patterns:
+    # Kafka
+    - "kafka.config.*"
+    - "**/kafka/**"
+    # RabbitMQ
+    - "rabbitmq.conf"
+    - "**/amqp/**"
+    # NATS
+    - "nats.conf"
+    - "**/nats/**"
+    # General
+    - "**/events/**"
+    - "**/consumers/**"
+    - "**/producers/**"
+  keywords:
+    # Core concepts
+    - event driven
+    - event-driven architecture
+    - EDA
+    - message queue
+    - message broker
+    - pub/sub
+    - publish subscribe
+    # Brokers
+    - kafka
+    - Apache Kafka
+    - rabbitmq
+    - RabbitMQ
+    - NATS
+    - nats jetstream
+    - AMQP
+    # Patterns
+    - event sourcing
+    - CQRS
+    - command query responsibility segregation
+    - saga pattern
+    - choreography
+    - orchestration saga
+    - event-carried state transfer
+    # Production
+    - dead letter queue
+    - DLQ
+    - competing consumers
+    - consumer group
+    - idempotent consumer
+    - exactly-once semantics
+    - at-least-once
+    # Schema
+    - event schema
+    - schema registry
+    - avro
+    - schema evolution
+
+caps:
+  # Patterns
+  - Publish/Subscribe (topic-based, queue-based)
+  - Event Sourcing (immutable event log, replay)
+  - CQRS (separate read/write models)
+  - Saga Pattern (orchestration vs choreography)
+  - Event-Carried State Transfer
+  - Competing Consumers for horizontal scaling
+  # Kafka
+  - Kafka: partitioning, consumer groups, offsets
+  - Kafka: exactly-once semantics (idempotent producers + transactions)
+  - Kafka Connect & Kafka Streams
+  - Kafka: topic design & retention policies
+  # RabbitMQ
+  - RabbitMQ: exchanges (direct, topic, fanout, headers)
+  - RabbitMQ: quorum queues (RAFT-based HA)
+  - RabbitMQ: routing keys & bindings
+  - RabbitMQ: publisher confirms & consumer ACKs
+  # NATS
+  - NATS: core NATS (fire-and-forget, sub-ms latency)
+  - NATS: JetStream (persistence, exactly-once)
+  - NATS: request-reply pattern
+  # Production
+  - Dead Letter Queue (DLQ) management & recovery
+  - Idempotent consumers (deduplication)
+  - Schema evolution (backward/forward compatibility)
+  - Event versioning strategies
+  - Monitoring & alerting (consumer lag, throughput)
+
+related_skills:
+  - microservices
+  - api-design
+  - database
+  - docker
+  - kubernetes
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/cross-cutting/event-driven/data"
+  preload_data: true

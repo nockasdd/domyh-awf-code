@@ -1,0 +1,282 @@
+# =============================================================================
+# Core Web Vitals 2026 Patterns (Feb 2026)
+# =============================================================================
+# LCP, INP, CLS thresholds and measurement
+
+metadata:
+  skill: web-perf
+  domain: core-web-vitals
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 10
+
+patterns:
+  - id: cwv001
+    name: LCP (Largest Contentful Paint)
+    category: loading
+    threshold_good: "< 2.5s"
+    threshold_poor: "> 4.0s"
+    description: Time until main content visible (largest image or text block)
+    text: lcp largest contentful paint loading performance main content
+    impact: User perceives page as loaded
+    example: |
+      <!-- Optimize LCP element -->
+      <img
+        src="hero.webp"
+        fetchpriority="high"
+        width="1200"
+        height="600"
+        alt="Hero"
+      >
+
+      <!-- Preload critical resources -->
+      <link rel="preload" href="hero.webp" as="image">
+    severity: CRITICAL
+    docs_url: https://web.dev/lcp/
+
+  - id: cwv002
+    name: INP (Interaction to Next Paint)
+    category: responsiveness
+    threshold_good: "< 200ms"
+    threshold_poor: "> 500ms"
+    description: Overall responsiveness to user interactions (replaced FID in 2024)
+    text: inp interaction next paint responsiveness click tap input latency
+    impact: User feels site is responsive
+    example: |
+      // Break up long tasks
+      async function heavyOperation() {
+        const chunks = splitIntoChunks(data);
+        for (const chunk of chunks) {
+          processChunk(chunk);
+          // Yield to main thread
+          await scheduler.yield();
+        }
+      }
+
+      // Use requestIdleCallback for non-urgent work
+      requestIdleCallback(() => {
+        analytics.track('page_view');
+      });
+    severity: CRITICAL
+    docs_url: https://web.dev/inp/
+
+  - id: cwv003
+    name: CLS (Cumulative Layout Shift)
+    category: stability
+    threshold_good: "< 0.1"
+    threshold_poor: "> 0.25"
+    description: Visual stability - do elements shift while loading?
+    text: cls cumulative layout shift stability visual jank movement
+    impact: User doesn't misclick or lose reading position
+    example: |
+      <!-- Always set dimensions -->
+      <img 
+        src="product.webp" 
+        width="300" 
+        height="200"
+        alt="Product"
+      >
+
+      <!-- Reserve space for dynamic content -->
+      <div class="ad-slot" style="min-height: 250px;">
+        <!-- Ad loads here -->
+      </div>
+
+      /* CSS for font loading */
+      @font-face {
+        font-family: 'Custom';
+        font-display: swap;
+        src: url('custom.woff2') format('woff2');
+      }
+    severity: CRITICAL
+    docs_url: https://web.dev/cls/
+
+  - id: cwv004
+    name: TTFB (Time to First Byte)
+    category: server
+    threshold_good: "< 800ms"
+    threshold_poor: "> 1800ms"
+    description: Server response time - affects all other metrics
+    text: ttfb time first byte server response latency backend
+    impact: Foundation for all loading metrics
+    example: |
+      # Server-side optimizations
+      - Use CDN with edge caching
+      - Optimize database queries
+      - Enable HTTP/2 or HTTP/3
+      - Add cache headers:
+        Cache-Control: public, max-age=31536000
+
+      # Preconnect to origins
+      <link rel="preconnect" href="https://api.example.com">
+    severity: HIGH
+    docs_url: https://web.dev/ttfb/
+
+  - id: cwv005
+    name: FCP (First Contentful Paint)
+    category: loading
+    threshold_good: "< 1.8s"
+    threshold_poor: "> 3.0s"
+    description: First content rendered - something is happening
+    text: fcp first contentful paint loading render start
+    impact: User sees progress, reducing abandonment
+    example: |
+      <!-- Inline critical CSS -->
+      <style>
+        .hero { background: #3b82f6; min-height: 100vh; }
+        .nav { height: 60px; background: #1e293b; }
+      </style>
+
+      <!-- Defer non-critical CSS -->
+      <link rel="preload" href="styles.css" as="style" onload="this.rel='stylesheet'">
+    severity: HIGH
+    docs_url: https://web.dev/fcp/
+
+  - id: cwv006
+    name: Mobile-First 2026
+    category: ranking
+    version: "2026"
+    description: Mobile Core Web Vitals carry more weight in 2026 rankings
+    text: mobile first ranking google seo performance scores mobile-centric
+    impact: Mobile scores increasingly important for SEO
+    example: |
+      <!-- Mobile-First Optimization Checklist -->
+
+      1. Test on real mobile devices, not just emulation
+      2. Use responsive images with srcset
+      3. Minimize JavaScript (target < 100KB gzipped)
+      4. Prioritize above-the-fold content
+      5. Use touch-appropriate interaction targets (48px+)
+
+      <!-- Lighthouse: Run mobile audit -->
+      lighthouse https://example.com --preset=desktop,mobile
+
+      <!-- Focus metrics for mobile -->
+      - LCP: Target < 2.0s (stricter than desktop)
+      - INP: Critical on touch devices
+      - CLS: Font loading crucial on slow connections
+    severity: CRITICAL
+    docs_url: https://web.dev/vitals/
+
+  - id: cwv007
+    name: Real User Monitoring (RUM)
+    category: measurement
+    version: "2025+"
+    description: Lab data + Field data = Complete picture (RUM increasingly important)
+    text: rum real user monitoring field data crux chrome ux report
+    impact: Google uses CrUX field data for rankings
+    example: |
+      // web-vitals library for field data
+      import { onLCP, onINP, onCLS } from 'web-vitals';
+
+      // Collect real user metrics
+      onLCP(metric => sendToAnalytics(metric));
+      onINP(metric => sendToAnalytics(metric));
+      onCLS(metric => sendToAnalytics(metric));
+
+      // Check CrUX data via PageSpeed Insights API
+      // or BigQuery for historical trends
+
+      // Key insight: Lab data (Lighthouse) != Field data (CrUX)
+      // Both are needed, but field data affects rankings
+    severity: HIGH
+    docs_url: https://web.dev/vitals-field-measurement-best-practices/
+
+  # ✅ NEW: 2026 INP Optimization & Trends
+  - id: cwv008
+    name: INP Optimization Strategies
+    category: responsiveness
+    version: "2026"
+    description: |
+      Deep INP optimization: Web Workers, DOM batching, input delay reduction.
+      INP stable since March 2024, now critical for rankings.
+    text: inp optimization web workers dom batching input delay main thread
+    example: |
+      // ✅ 1. Web Workers for CPU-intensive tasks
+      const worker = new Worker('processor.js');
+      worker.postMessage({ data: heavyData });
+      worker.onmessage = (e) => updateUI(e.data);
+
+      // ✅ 2. DOM Read/Write Batching (avoid layout thrashing)
+      // BAD: read-write interleaved
+      elements.forEach(el => {
+        const width = el.offsetWidth;  // Force layout
+        el.style.width = width + 10;   // Force layout again
+      });
+
+      // GOOD: batch reads, then writes
+      const widths = elements.map(el => el.offsetWidth);
+      elements.forEach((el, i) => el.style.width = widths[i] + 10);
+
+      // ✅ 3. Yield to main thread
+      await scheduler.yield();
+
+      // ✅ 4. Remove recurring timers that block interaction
+      // Avoid: setInterval(() => heavyWork(), 100);
+    severity: CRITICAL
+    docs_url: https://web.dev/optimize-inp/
+
+  - id: cwv009
+    name: Stricter 2026 Thresholds
+    category: ranking
+    version: "2026"
+    description: |
+      2026 trends: stricter thresholds expected, real user data > lab scores,
+      accessibility increasingly linked with performance.
+    text: thresholds 2026 stricter field data real user accessibility seo
+    example: |
+      // 2026 Performance Trends
+
+      // 1. Stricter thresholds coming
+      // - LCP: May tighten to < 2.0s for "good"
+      // - INP: < 200ms threshold now, may become < 150ms
+
+      // 2. Field data trumps lab data
+      // - Lighthouse 10.0 ≠ Real user experience
+      // - CrUX data directly affects rankings
+
+      // 3. Test on real devices
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        // Apply mobile-specific optimizations
+      }
+
+      // 4. Monitor with RUM
+      import { onINP } from 'web-vitals';
+      onINP(({ value, delta }) => {
+        if (value > 200) console.warn('Poor INP:', value);
+      });
+    severity: HIGH
+    docs_url: https://web.dev/vitals/
+
+  - id: cwv010
+    name: Accessibility-Performance Link
+    category: quality
+    version: "2026"
+    description: |
+      Cleaner content = faster + more accessible.
+      Heavy pop-ups, banners, animations hurt both.
+    text: accessibility a11y performance link clean content structure semantic
+    example: |
+      <!-- ✅ Clean structure = Fast + Accessible -->
+
+      <!-- 1. Reduce heavy pop-ups and banners -->
+      <!-- They hurt CLS and accessibility -->
+
+      <!-- 2. Prefer reduced motion -->
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+      }
+
+      <!-- 3. Semantic HTML = less JavaScript -->
+      <nav aria-label="Main">...</nav>
+      <main>...</main>
+      <footer>...</footer>
+
+      <!-- 4. Skip links for keyboard users -->
+      <a href="#main" class="skip-link">Skip to content</a>
+
+      <!-- 5. Focus visible for interactability -->
+      :focus-visible { outline: 2px solid #3b82f6; }
+    severity: HIGH
+    docs_url: https://web.dev/accessibility/

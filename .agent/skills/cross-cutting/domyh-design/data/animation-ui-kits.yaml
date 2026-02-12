@@ -1,0 +1,198 @@
+metadata:
+  skill: domyh-design
+  domain: animation_ui_kits
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "Animated UI component kit registry — copy-paste component libraries"
+  patterns_count: 10
+  columns:
+    - name
+    - url
+    - framework
+    - component_count
+    - style
+    - install_method
+    - best_for
+
+kits:
+  - id: kit_001
+    name: Magic UI
+    url: https://magicui.design
+    framework: [react, nextjs, tailwind]
+    component_count: 150+
+    style: Modern SaaS, landing pages
+    install_method: copy-paste (shadcn style)
+    license: MIT
+    best_for: Landing pages, SaaS marketing sites
+    notable_components:
+      - animated-beam
+      - bento-grid
+      - blur-fade
+      - dock
+      - globe
+      - marquee
+      - number-ticker
+      - particles
+      - shimmer-button
+      - sparkles-text
+      - typing-animation
+    decision_trigger: Need wow-factor animated sections for React/Next.js marketing site
+
+  - id: kit_002
+    name: Aceternity UI
+    url: https://ui.aceternity.com
+    framework: [react, nextjs, tailwind]
+    component_count: 200+
+    style: Trendy, dark mode, premium
+    install_method: copy-paste
+    license: MIT
+    best_for: Hero sections, portfolios, premium landing pages
+    notable_components:
+      - 3d-card-effect
+      - aurora-background
+      - background-beams
+      - card-hover-effect
+      - floating-navbar
+      - hero-parallax
+      - infinite-moving-cards
+      - lamp-effect
+      - sparkles
+      - spotlight
+      - text-generate-effect
+      - tracing-beam
+      - wavy-background
+    decision_trigger: Need premium animated hero/background sections in Next.js
+
+  - id: kit_003
+    name: Motion Primitives
+    url: https://motion-primitives.com
+    framework: [react, nextjs, tailwind, framer-motion]
+    component_count: 50+
+    style: Composable, minimal
+    install_method: copy-paste
+    license: MIT
+    best_for: Building custom animated components from primitives
+    notable_components:
+      - accordion
+      - animated-number
+      - cursor
+      - disclosure
+      - in-view
+      - morphing-dialog
+      - scroll-progress
+      - text-effect
+      - transition-panel
+    decision_trigger: Need composable animation building blocks, not full components
+
+  - id: kit_004
+    name: Inspira UI
+    url: https://inspira-ui.com
+    framework: [vue, nuxt, tailwind]
+    component_count: 60+
+    style: Modern, animated Vue components
+    install_method: copy-paste
+    license: MIT
+    best_for: Vue/Nuxt projects needing animated components similar to Magic UI
+    notable_components:
+      - animated-gradient-text
+      - blur-fade
+      - globe
+      - marquee
+      - number-ticker
+      - particles
+      - sparkles-text
+      - text-reveal
+      - typing-animation
+    decision_trigger: Vue/Nuxt project — equivalent of Magic UI for Vue ecosystem
+
+  - id: kit_005
+    name: Animate UI
+    url: https://animate-ui.com
+    framework: [react, shadcn, tailwind, framer-motion]
+    component_count: 80+
+    style: shadcn variant with animation
+    install_method: copy-paste (npx animate-ui)
+    license: MIT
+    best_for: Extending shadcn/ui with animated variants
+    notable_components:
+      - animated-accordion
+      - animated-dialog
+      - animated-dropdown
+      - animated-tabs
+      - animated-tooltip
+      - text-morphing
+      - cursor-glow
+    decision_trigger: Already using shadcn/ui and want animated component variants
+
+  - id: kit_006
+    name: Framer Motion Recipes
+    url: https://www.framer.com/motion
+    framework: [react]
+    component_count: official
+    style: Reference implementation
+    install_method: npm install framer-motion
+    license: MIT
+    best_for: Learning animation patterns, reference for custom implementations
+    notable_components:
+      - layout-animation
+      - page-transitions
+      - shared-layout
+      - gesture-animations
+      - scroll-animations
+    decision_trigger: Need official Framer Motion example patterns
+
+  - id: kit_007
+    name: Lottie Files
+    url: https://lottiefiles.com
+    framework: [any, react, vue, web]
+    component_count: 100K+ animations
+    style: Vector animation marketplace
+    install_method: npm install @lottiefiles/dotlottie-web
+    license: Various (per animation)
+    best_for: Micro-illustrations, loading states, onboarding, empty states
+    notable_components:
+      - loading-spinners
+      - success-check
+      - error-alerts
+      - onboarding-illustrations
+      - empty-state-animations
+    decision_trigger: Need vector illustrations or micro-animations without After Effects
+
+  - id: kit_008
+    name: Rive
+    url: https://rive.app
+    framework: [any, react, vue, flutter, ios, android]
+    component_count: varies
+    style: Interactive runtime animations
+    install_method: npm install @rive-app/react-canvas
+    license: Freemium
+    best_for: Interactive animations, game-like UI, state machines
+    notable_components:
+      - interactive-buttons
+      - character-animations
+      - loading-states
+      - toggle-switches
+      - pull-to-refresh
+    decision_trigger: Need interactive state-machine-driven animations (Lottie alternative)
+
+  - id: kit_009
+    name: Tailwind Animations (by cruip)
+    url: https://tw-animations.vercel.app
+    framework: [tailwind]
+    component_count: 20+
+    style: Curated Tailwind animation examples
+    install_method: copy-paste
+    license: MIT
+    best_for: Quick reference for common Tailwind animation patterns
+    decision_trigger: Need quick Tailwind-only animation code snippets
+
+  - id: kit_010
+    name: Animista
+    url: https://animista.net
+    framework: [css-only]
+    component_count: 100+
+    style: CSS-only animation generator
+    install_method: copy-paste CSS
+    license: Free
+    best_for: Generate custom CSS @keyframes animations interactively
+    decision_trigger: Need custom CSS animation without any library

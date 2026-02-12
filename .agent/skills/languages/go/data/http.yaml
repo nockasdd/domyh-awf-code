@@ -1,0 +1,507 @@
+# =============================================================================
+# Go HTTP Patterns (Feb 2026)
+# Version: Go 1.24/1.25
+# =============================================================================
+
+metadata:
+  skill: go
+  domain: http
+  version: "1.25"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: go201
+    name: Gin Middleware Pattern
+    category: http
+    version: "gin 1.10+"
+    description: |
+      Gin middleware patterns for request processing.
+      Auth, logging, recovery, CORS.
+    text: gin middleware handler router group cors auth
+    example: |
+      import (
+          "github.com/gin-gonic/gin"
+          "time"
+      )
+
+      // ✅ Custom middleware
+      func Logger() gin.HandlerFunc {
+          return func(c *gin.Context) {
+              start := time.Now()
+              path := c.Request.URL.Path
+              
+              // Process request
+              c.Next()
+              
+              // Log after response
+              latency := time.Since(start)
+              status := c.Writer.Status()
+              
+              slog.Info("request",
+                  "method", c.Request.Method,
+                  "path", path,
+                  "status", status,
+                  "latency", latency,
+                  "ip", c.ClientIP(),
+              )
+          }
+      }
+
+      // ✅ Auth middleware
+      func AuthRequired() gin.HandlerFunc {
+          return func(c *gin.Context) {
+              token := c.GetHeader("Authorization")
+              if token == "" {
+                  c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+                  return
+              }
+              
+              user, err := validateToken(token)
+              if err != nil {
+                  c.AbortWithStatusJSON(401, gin.H{"error": "invalid token"})
+                  return
+              }
+              
+              c.Set("user", user)
+              c.Next()
+          }
+      }
+
+      // ✅ Timeout middleware
+      func Timeout(timeout time.Duration) gin.HandlerFunc {
+          return func(c *gin.Context) {
+              ctx, cancel := context.WithTimeout(c.Request.Context(), timeout)
+              defer cancel()
+              
+              c.Request = c.Request.WithContext(ctx)
+              
+              done := make(chan struct{})
+              go func() {
+                  c.Next()
+                  close(done)
+              }()
+              
+              select {
+              case <-done:
+                  return
+              case <-ctx.Done():
+                  c.AbortWithStatusJSON(504, gin.H{"error": "timeout"})
+              }
+          }
+      }
+
+      // ✅ Router setup with middleware
+      func SetupRouter() *gin.Engine {
+          r := gin.New()
+          
+          // Global middleware
+          r.Use(gin.Recovery())
+          r.Use(Logger())
+          r.Use(Timeout(30 * time.Second))
+          
+          // Public routes
+          public := r.Group("/api/v1")
+          {
+              public.POST("/login", loginHandler)
+          }
+          
+          // Protected routes
+          protected := r.Group("/api/v1")
+          protected.Use(AuthRequired())
+          {
+              protected.GET("/users", listUsers)
+              protected.POST("/users", createUser)
+          }
+          
+          return r
+      }
+    severity: HIGH
+    docs_url: https://gin-gonic.com/docs/
+
+  - id: go202
+    name: Echo Middleware Pattern
+    category: http
+    version: "echo 4.12+"
+    description: |
+      Echo framework middleware patterns.
+      Cleaner middleware signature than Gin.
+    text: echo middleware handler router group
+    example: |
+      import (
+          "github.com/labstack/echo/v4"
+          "github.com/labstack/echo/v4/middleware"
+      )
+
+      // ✅ Custom Echo middleware
+      func RequestLogger() echo.MiddlewareFunc {
+          return func(next echo.HandlerFunc) echo.HandlerFunc {
+              return func(c echo.Context) error {
+                  start := time.Now()
+                  
+                  err := next(c)
+                  
+                  slog.Info("request",
+                      "method", c.Request().Method,
+                      "path", c.Path(),
+                      "status", c.Response().Status,
+                      "latency", time.Since(start),
+                  )
+                  
+                  return err
+              }
+          }
+      }
+
+      // ✅ JWT middleware with custom claims
+      type JWTClaims struct {
+          UserID int    `json:"user_id"`
+          Email  string `json:"email"`
+          jwt.RegisteredClaims
+      }
+
+      func JWTMiddleware(secret string) echo.MiddlewareFunc {
+          config := echojwt.Config{
+              SigningKey: []byte(secret),
+              NewClaimsFunc: func(c echo.Context) jwt.Claims {
+                  return new(JWTClaims)
+              },
+          }
+          return echojwt.WithConfig(config)
+      }
+
+      // Get user from context
+      func GetUser(c echo.Context) *JWTClaims {
+          token := c.Get("user").(*jwt.Token)
+          return token.Claims.(*JWTClaims)
+      }
+
+      // ✅ Router setup
+      func SetupEcho() *echo.Echo {
+          e := echo.New()
+          
+          // Built-in middleware
+          e.Use(middleware.Recover())
+          e.Use(middleware.CORS())
+          e.Use(RequestLogger())
+          
+          // Rate limiting
+          e.Use(middleware.RateLimiter(
+              middleware.NewRateLimiterMemoryStore(20),
+          ))
+          
+          // Routes
+          api := e.Group("/api/v1")
+          api.POST("/login", login)
+          
+          // Protected
+          protected := api.Group("")
+          protected.Use(JWTMiddleware(os.Getenv("JWT_SECRET")))
+          protected.GET("/users", listUsers)
+          
+          return e
+      }
+    severity: MEDIUM
+    docs_url: https://echo.labstack.com/docs/middleware
+
+  - id: go203
+    name: Fiber Performance
+    category: http
+    version: "fiber 2.52+"
+    description: |
+      Fiber for high-performance APIs.
+      Express-like syntax, fasthttp under the hood.
+    text: fiber fasthttp performance express route
+    example: |
+      import (
+          "github.com/gofiber/fiber/v2"
+          "github.com/gofiber/fiber/v2/middleware/cache"
+          "github.com/gofiber/fiber/v2/middleware/compress"
+          "github.com/gofiber/fiber/v2/middleware/limiter"
+      )
+
+      // ✅ Fiber app setup
+      func SetupFiber() *fiber.App {
+          app := fiber.New(fiber.Config{
+              Prefork:       true,  // Multiple processes
+              CaseSensitive: true,
+              StrictRouting: true,
+              ServerHeader:  "API",
+              AppName:       "MyAPI v1.0",
+          })
+          
+          // Compression
+          app.Use(compress.New(compress.Config{
+              Level: compress.LevelBestSpeed,
+          }))
+          
+          // Rate limiting
+          app.Use(limiter.New(limiter.Config{
+              Max:        100,
+              Expiration: time.Minute,
+          }))
+          
+          // Response caching
+          app.Use("/api/static", cache.New(cache.Config{
+              Expiration:   5 * time.Minute,
+              CacheControl: true,
+          }))
+          
+          return app
+      }
+
+      // ✅ Handler with validation
+      type CreateUserInput struct {
+          Name  string `json:"name" validate:"required,min=2"`
+          Email string `json:"email" validate:"required,email"`
+      }
+
+      func CreateUser(c *fiber.Ctx) error {
+          var input CreateUserInput
+          
+          if err := c.BodyParser(&input); err != nil {
+              return c.Status(400).JSON(fiber.Map{
+                  "error": "Invalid body",
+              })
+          }
+          
+          if err := validate.Struct(input); err != nil {
+              return c.Status(422).JSON(fiber.Map{
+                  "error": "Validation failed",
+              })
+          }
+          
+          user, err := userService.Create(input)
+          if err != nil {
+              return c.Status(500).JSON(fiber.Map{
+                  "error": err.Error(),
+              })
+          }
+          
+          return c.Status(201).JSON(user)
+      }
+
+      // ✅ Route groups
+      func SetupRoutes(app *fiber.App) {
+          api := app.Group("/api/v1")
+          
+          // Auth routes
+          auth := api.Group("/auth")
+          auth.Post("/login", Login)
+          auth.Post("/register", Register)
+          
+          // Protected routes
+          users := api.Group("/users")
+          users.Use(JWTProtected())
+          users.Get("/", ListUsers)
+          users.Post("/", CreateUser)
+      }
+    severity: MEDIUM
+    docs_url: https://docs.gofiber.io/
+
+  - id: go204
+    name: Chi Router
+    category: http
+    version: "chi 5.1+"
+    description: |
+      Chi for idiomatic Go routing with stdlib compatibility.
+      Minimal, composable, 100% net/http compatible.
+    text: chi router stdlib compatible middleware
+    example: |
+      import (
+          "net/http"
+          "github.com/go-chi/chi/v5"
+          "github.com/go-chi/chi/v5/middleware"
+      )
+
+      // ✅ Chi router setup
+      func SetupChi() *chi.Mux {
+          r := chi.NewRouter()
+          
+          // Built-in middleware
+          r.Use(middleware.RequestID)
+          r.Use(middleware.RealIP)
+          r.Use(middleware.Logger)
+          r.Use(middleware.Recoverer)
+          r.Use(middleware.Timeout(30 * time.Second))
+          
+          return r
+      }
+
+      // ✅ RESTful resource pattern
+      func UserRoutes() chi.Router {
+          r := chi.NewRouter()
+          
+          r.Get("/", ListUsers)           // GET /users
+          r.Post("/", CreateUser)         // POST /users
+          
+          r.Route("/{userID}", func(r chi.Router) {
+              r.Use(UserCtx)              // Load user into context
+              r.Get("/", GetUser)         // GET /users/123
+              r.Put("/", UpdateUser)      // PUT /users/123
+              r.Delete("/", DeleteUser)   // DELETE /users/123
+          })
+          
+          return r
+      }
+
+      // ✅ Context middleware
+      func UserCtx(next http.Handler) http.Handler {
+          return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+              userID := chi.URLParam(r, "userID")
+              
+              user, err := userService.GetByID(r.Context(), userID)
+              if err != nil {
+                  http.Error(w, "User not found", 404)
+                  return
+              }
+              
+              ctx := context.WithValue(r.Context(), "user", user)
+              next.ServeHTTP(w, r.WithContext(ctx))
+          })
+      }
+
+      // ✅ Full app setup
+      func main() {
+          r := SetupChi()
+          
+          // Mount sub-routers
+          r.Mount("/api/v1/users", UserRoutes())
+          r.Mount("/api/v1/posts", PostRoutes())
+          
+          // Static files
+          r.Handle("/static/*", http.StripPrefix("/static/",
+              http.FileServer(http.Dir("./static")),
+          ))
+          
+          http.ListenAndServe(":8080", r)
+      }
+    severity: MEDIUM
+    docs_url: https://go-chi.io/
+
+  - id: go205
+    name: Circuit Breaker Pattern
+    category: resilience
+    version: "1.0+"
+    description: |
+      Circuit breaker for graceful failure handling.
+      Prevent cascade failures in distributed systems.
+    text: circuit breaker resilience failure timeout retry
+    example: |
+      import (
+          "errors"
+          "sync"
+          "time"
+      )
+
+      type State int
+
+      const (
+          StateClosed State = iota
+          StateOpen
+          StateHalfOpen
+      )
+
+      type CircuitBreaker struct {
+          mu               sync.Mutex
+          state            State
+          failures         int
+          successes        int
+          maxFailures      int
+          timeout          time.Duration
+          lastFailureTime  time.Time
+          halfOpenMax      int
+      }
+
+      func NewCircuitBreaker(maxFailures int, timeout time.Duration) *CircuitBreaker {
+          return &CircuitBreaker{
+              state:       StateClosed,
+              maxFailures: maxFailures,
+              timeout:     timeout,
+              halfOpenMax: 3,
+          }
+      }
+
+      // ✅ Execute with circuit breaker protection
+      func (cb *CircuitBreaker) Execute(fn func() error) error {
+          cb.mu.Lock()
+          
+          switch cb.state {
+          case StateOpen:
+              if time.Since(cb.lastFailureTime) > cb.timeout {
+                  cb.state = StateHalfOpen
+                  cb.successes = 0
+              } else {
+                  cb.mu.Unlock()
+                  return errors.New("circuit breaker open")
+              }
+          }
+          
+          cb.mu.Unlock()
+          
+          err := fn()
+          
+          cb.mu.Lock()
+          defer cb.mu.Unlock()
+          
+          if err != nil {
+              cb.failures++
+              cb.lastFailureTime = time.Now()
+              
+              if cb.failures >= cb.maxFailures {
+                  cb.state = StateOpen
+              }
+              return err
+          }
+          
+          if cb.state == StateHalfOpen {
+              cb.successes++
+              if cb.successes >= cb.halfOpenMax {
+                  cb.state = StateClosed
+                  cb.failures = 0
+              }
+          } else {
+              cb.failures = 0
+          }
+          
+          return nil
+      }
+
+      // ✅ Usage with HTTP client
+      var cb = NewCircuitBreaker(5, 30*time.Second)
+
+      func FetchWithBreaker(url string) ([]byte, error) {
+          var result []byte
+          
+          err := cb.Execute(func() error {
+              resp, err := http.Get(url)
+              if err != nil {
+                  return err
+              }
+              defer resp.Body.Close()
+              
+              if resp.StatusCode >= 500 {
+                  return fmt.Errorf("server error: %d", resp.StatusCode)
+              }
+              
+              result, err = io.ReadAll(resp.Body)
+              return err
+          })
+          
+          return result, err
+      }
+
+      // ✅ Or use sony/gobreaker library
+      import "github.com/sony/gobreaker"
+
+      var breaker = gobreaker.NewCircuitBreaker(gobreaker.Settings{
+          Name:        "HTTP",
+          MaxRequests: 3,
+          Interval:    10 * time.Second,
+          Timeout:     30 * time.Second,
+          ReadyToTrip: func(counts gobreaker.Counts) bool {
+              return counts.ConsecutiveFailures > 5
+          },
+      })
+    severity: HIGH
+    docs_url: https://pkg.go.dev/github.com/sony/gobreaker

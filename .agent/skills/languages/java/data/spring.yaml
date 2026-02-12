@@ -1,0 +1,437 @@
+# =============================================================================
+# Java Spring Boot Patterns (Feb 2026)
+# Version: Spring Boot 3.3+
+# =============================================================================
+
+metadata:
+  skill: java
+  domain: spring
+  version: "3.3"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: java101
+    name: Spring Boot 3.3 WebFlux
+    category: web
+    version: "SpringBoot3.3"
+    description: |
+      Reactive web applications with WebFlux.
+      Non-blocking I/O, reactive streams.
+    text: webflux reactive mono flux webclient
+    example: |
+      import org.springframework.web.bind.annotation.*;
+      import org.springframework.web.reactive.function.client.WebClient;
+      import reactor.core.publisher.Flux;
+      import reactor.core.publisher.Mono;
+
+      // ✅ Reactive REST controller
+      @RestController
+      @RequestMapping("/api/users")
+      public class UserController {
+          
+          private final UserRepository repository;
+          
+          @GetMapping
+          public Flux<User> getAllUsers() {
+              return repository.findAll();
+          }
+          
+          @GetMapping("/{id}")
+          public Mono<User> getUser(@PathVariable String id) {
+              return repository.findById(id)
+                  .switchIfEmpty(Mono.error(new NotFoundException()));
+          }
+          
+          @PostMapping
+          public Mono<User> createUser(@RequestBody User user) {
+              return repository.save(user);
+          }
+      }
+
+      // ✅ WebClient for HTTP calls
+      @Service
+      public class ExternalApiService {
+          private final WebClient client = WebClient.create();
+          
+          public Mono<Data> fetchData(String url) {
+              return client.get()
+                  .uri(url)
+                  .retrieve()
+                  .bodyToMono(Data.class)
+                  .timeout(Duration.ofSeconds(5))
+                  .retryWhen(Retry.backoff(3, Duration.ofMillis(100)));
+          }
+      }
+
+      // ✅ Combine reactive streams
+      public Mono<OrderDetails> getOrderDetails(String orderId) {
+          return Mono.zip(
+              orderRepository.findById(orderId),
+              userRepository.findById(orderId),
+              productRepository.findByOrderId(orderId).collectList()
+          ).map(tuple -> new OrderDetails(
+              tuple.getT1(),
+              tuple.getT2(),
+              tuple.getT3()
+          ));
+      }
+    severity: HIGH
+    docs_url: https://docs.spring.io/spring-framework/reference/web/webflux.html
+
+  - id: java102
+    name: Spring Data JPA
+    category: data
+    version: "SpringData3"
+    description: |
+      Repository pattern with Spring Data.
+      Query methods, projections, specifications.
+    text: jpa repository hibernate entity query specification
+    example: |
+      import org.springframework.data.jpa.repository.*;
+      import org.springframework.data.domain.*;
+
+      // ✅ Entity
+      @Entity
+      @Table(name = "users")
+      public class User {
+          @Id
+          @GeneratedValue(strategy = GenerationType.IDENTITY)
+          private Long id;
+          
+          @Column(nullable = false)
+          private String name;
+          
+          @Column(unique = true)
+          private String email;
+          
+          @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+          private List<Order> orders = new ArrayList<>();
+      }
+
+      // ✅ Repository with query methods
+      public interface UserRepository extends JpaRepository<User, Long> {
+          
+          Optional<User> findByEmail(String email);
+          
+          List<User> findByNameContainingIgnoreCase(String name);
+          
+          @Query("SELECT u FROM User u WHERE u.createdAt > :since")
+          List<User> findRecentUsers(@Param("since") LocalDateTime since);
+          
+          @Query(value = "SELECT * FROM users WHERE status = ?1", 
+                 nativeQuery = true)
+          List<User> findByStatusNative(String status);
+          
+          @Modifying
+          @Query("UPDATE User u SET u.active = false WHERE u.lastLogin < :date")
+          int deactivateInactiveUsers(@Param("date") LocalDateTime date);
+      }
+
+      // ✅ Projections
+      public interface UserSummary {
+          String getName();
+          String getEmail();
+      }
+
+      List<UserSummary> findByActive(boolean active);
+
+      // ✅ Pagination and Sorting
+      Page<User> findAll(Pageable pageable);
+
+      // Usage:
+      Pageable page = PageRequest.of(0, 20, Sort.by("createdAt").descending());
+      Page<User> users = repository.findAll(page);
+
+      // ✅ Specification for dynamic queries
+      public class UserSpecs {
+          public static Specification<User> hasEmail(String email) {
+              return (root, query, cb) -> 
+                  email == null ? null : cb.equal(root.get("email"), email);
+          }
+          
+          public static Specification<User> nameContains(String name) {
+              return (root, query, cb) ->
+                  name == null ? null : cb.like(root.get("name"), "%" + name + "%");
+          }
+      }
+
+      // Combine specs
+      repository.findAll(hasEmail(email).and(nameContains(name)));
+    severity: HIGH
+    docs_url: https://docs.spring.io/spring-data/jpa/reference/
+
+  - id: java103
+    name: Spring Security 6
+    category: security
+    version: "SpringSecurity6"
+    description: |
+      Modern security configuration with lambda DSL.
+      JWT authentication, method security.
+    text: security authentication authorization jwt oauth2
+    example: |
+      import org.springframework.security.config.annotation.web.builders.*;
+      import org.springframework.security.web.SecurityFilterChain;
+
+      // ✅ Security configuration (Spring Security 6+)
+      @Configuration
+      @EnableWebSecurity
+      @EnableMethodSecurity
+      public class SecurityConfig {
+          
+          @Bean
+          public SecurityFilterChain securityFilterChain(HttpSecurity http) 
+              throws Exception {
+              return http
+                  .csrf(csrf -> csrf.disable())
+                  .sessionManagement(session -> 
+                      session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                  .authorizeHttpRequests(auth -> auth
+                      .requestMatchers("/api/public/**").permitAll()
+                      .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                      .anyRequest().authenticated()
+                  )
+                  .oauth2ResourceServer(oauth2 -> oauth2
+                      .jwt(jwt -> jwt.decoder(jwtDecoder()))
+                  )
+                  .build();
+          }
+          
+          @Bean
+          public JwtDecoder jwtDecoder() {
+              return NimbusJwtDecoder.withPublicKey(publicKey).build();
+          }
+          
+          @Bean
+          public PasswordEncoder passwordEncoder() {
+              return new BCryptPasswordEncoder();
+          }
+      }
+
+      // ✅ Method security
+      @Service
+      public class OrderService {
+          
+          @PreAuthorize("hasRole('ADMIN') or #userId == principal.id")
+          public Order getOrder(Long userId, Long orderId) {
+              return orderRepository.findById(orderId).orElseThrow();
+          }
+          
+          @PostAuthorize("returnObject.userId == principal.id")
+          public Order createOrder(Order order) {
+              return orderRepository.save(order);
+          }
+      }
+
+      // ✅ Custom UserDetailsService
+      @Service
+      public class CustomUserDetailsService implements UserDetailsService {
+          
+          private final UserRepository userRepository;
+          
+          @Override
+          public UserDetails loadUserByUsername(String username) {
+              return userRepository.findByEmail(username)
+                  .map(u -> User.builder()
+                      .username(u.getEmail())
+                      .password(u.getPassword())
+                      .roles(u.getRoles().toArray(String[]::new))
+                      .build())
+                  .orElseThrow(() -> 
+                      new UsernameNotFoundException("User not found"));
+          }
+      }
+    severity: HIGH
+    docs_url: https://docs.spring.io/spring-security/reference/
+
+  - id: java104
+    name: Spring Validation
+    category: validation
+    version: "SpringBoot3"
+    description: |
+      Bean validation with annotations.
+      Custom validators, groups.
+    text: validation bean annotations constraints groups
+    example: |
+      import jakarta.validation.constraints.*;
+      import org.springframework.validation.annotation.Validated;
+
+      // ✅ DTO with validation
+      public record CreateUserRequest(
+          @NotBlank(message = "Name is required")
+          @Size(min = 2, max = 50)
+          String name,
+          
+          @NotBlank
+          @Email(message = "Invalid email format")
+          String email,
+          
+          @NotBlank
+          @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$",
+                   message = "Password must contain uppercase, lowercase, digit")
+          String password,
+          
+          @Min(18) @Max(120)
+          Integer age,
+          
+          @NotEmpty
+          List<@NotBlank String> roles
+      ) {}
+
+      // ✅ Controller with validation
+      @RestController
+      @RequestMapping("/api/users")
+      @Validated
+      public class UserController {
+          
+          @PostMapping
+          public ResponseEntity<User> createUser(
+              @RequestBody @Valid CreateUserRequest request
+          ) {
+              return ResponseEntity.ok(userService.create(request));
+          }
+          
+          @GetMapping("/{id}")
+          public User getUser(@PathVariable @Positive Long id) {
+              return userService.findById(id);
+          }
+      }
+
+      // ✅ Custom validator
+      @Constraint(validatedBy = UniqueEmailValidator.class)
+      @Target({ElementType.FIELD, ElementType.PARAMETER})
+      @Retention(RetentionPolicy.RUNTIME)
+      public @interface UniqueEmail {
+          String message() default "Email already exists";
+          Class<?>[] groups() default {};
+          Class<? extends Payload>[] payload() default {};
+      }
+
+      public class UniqueEmailValidator 
+          implements ConstraintValidator<UniqueEmail, String> {
+          
+          @Autowired
+          private UserRepository userRepository;
+          
+          @Override
+          public boolean isValid(String email, ConstraintValidatorContext ctx) {
+              return !userRepository.existsByEmail(email);
+          }
+      }
+
+      // ✅ Global exception handler
+      @RestControllerAdvice
+      public class ValidationExceptionHandler {
+          
+          @ExceptionHandler(MethodArgumentNotValidException.class)
+          public ResponseEntity<Map<String, String>> handleValidation(
+              MethodArgumentNotValidException ex
+          ) {
+              Map<String, String> errors = ex.getBindingResult()
+                  .getFieldErrors()
+                  .stream()
+                  .collect(Collectors.toMap(
+                      FieldError::getField,
+                      FieldError::getDefaultMessage
+                  ));
+              return ResponseEntity.badRequest().body(errors);
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.spring.io/spring-framework/reference/core/validation.html
+
+  - id: java105
+    name: Spring Boot Testing
+    category: testing
+    version: "SpringBoot3"
+    description: |
+      Testing with JUnit 5, MockMvc, Testcontainers.
+      Slice tests, integration tests.
+    text: junit mockito testcontainers mockmvc integration
+    example: |
+      import org.junit.jupiter.api.*;
+      import org.springframework.beans.factory.annotation.Autowired;
+      import org.springframework.boot.test.context.SpringBootTest;
+      import org.springframework.boot.test.mock.mockito.MockBean;
+      import org.springframework.test.web.servlet.MockMvc;
+      import org.testcontainers.containers.PostgreSQLContainer;
+
+      // ✅ Web layer test (slice test)
+      @WebMvcTest(UserController.class)
+      class UserControllerTest {
+          
+          @Autowired
+          private MockMvc mockMvc;
+          
+          @MockBean
+          private UserService userService;
+          
+          @Test
+          void shouldReturnUser() throws Exception {
+              given(userService.findById(1L))
+                  .willReturn(new User(1L, "John", "john@email.com"));
+              
+              mockMvc.perform(get("/api/users/1"))
+                  .andExpect(status().isOk())
+                  .andExpect(jsonPath("$.name").value("John"))
+                  .andExpect(jsonPath("$.email").value("john@email.com"));
+          }
+          
+          @Test
+          void shouldRejectInvalidRequest() throws Exception {
+              mockMvc.perform(post("/api/users")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content("{}"))
+                  .andExpect(status().isBadRequest());
+          }
+      }
+
+      // ✅ Repository test with Testcontainers
+      @DataJpaTest
+      @Testcontainers
+      class UserRepositoryTest {
+          
+          @Container
+          static PostgreSQLContainer<?> postgres = 
+              new PostgreSQLContainer<>("postgres:16");
+          
+          @DynamicPropertySource
+          static void configureProperties(DynamicPropertyRegistry registry) {
+              registry.add("spring.datasource.url", postgres::getJdbcUrl);
+              registry.add("spring.datasource.username", postgres::getUsername);
+              registry.add("spring.datasource.password", postgres::getPassword);
+          }
+          
+          @Autowired
+          private UserRepository repository;
+          
+          @Test
+          void shouldFindByEmail() {
+              repository.save(new User("John", "john@email.com"));
+              
+              Optional<User> found = repository.findByEmail("john@email.com");
+              
+              assertThat(found).isPresent();
+              assertThat(found.get().getName()).isEqualTo("John");
+          }
+      }
+
+      // ✅ Full integration test
+      @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+      class ApplicationIntegrationTest {
+          
+          @Autowired
+          private TestRestTemplate restTemplate;
+          
+          @Test
+          void shouldCreateAndRetrieveUser() {
+              var request = new CreateUserRequest("John", "john@email.com");
+              
+              var response = restTemplate.postForEntity(
+                  "/api/users", request, User.class);
+              
+              assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing

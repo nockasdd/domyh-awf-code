@@ -1,0 +1,96 @@
+# Terraform Provider Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TF-PROV-001
+    name: AWS Provider
+    category: aws
+    description: Common AWS resource patterns.
+    example: |
+      terraform {
+        required_providers {
+          aws = { source = "hashicorp/aws", version = "~> 5.0" }
+        }
+      }
+
+      provider "aws" {
+        region = var.aws_region
+        default_tags {
+          tags = { Environment = var.environment, ManagedBy = "terraform" }
+        }
+      }
+
+      # VPC + Subnets
+      module "vpc" {
+        source  = "terraform-aws-modules/vpc/aws"
+        version = "~> 5.0"
+        name    = "${var.project}-vpc"
+        cidr    = "10.0.0.0/16"
+        azs             = ["us-east-1a", "us-east-1b"]
+        private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+        public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+        enable_nat_gateway = true
+      }
+
+  - id: TF-PROV-002
+    name: GCP Provider
+    category: gcp
+    description: Common GCP resource patterns.
+    example: |
+      provider "google" {
+        project = var.project_id
+        region  = var.region
+      }
+
+      resource "google_cloud_run_v2_service" "api" {
+        name     = "api-service"
+        location = var.region
+        template {
+          containers {
+            image = "gcr.io/${var.project_id}/api:latest"
+            resources {
+              limits = { cpu = "1", memory = "512Mi" }
+            }
+          }
+        }
+      }
+
+  - id: TF-PROV-003
+    name: Azure Provider
+    category: azure
+    description: Common Azure resource patterns.
+    example: |
+      provider "azurerm" {
+        features {}
+        subscription_id = var.subscription_id
+      }
+
+      resource "azurerm_resource_group" "main" {
+        name     = "rg-${var.project}-${var.environment}"
+        location = var.location
+      }
+
+  - id: TF-PROV-004
+    name: Multi-cloud Pattern
+    category: multi-cloud
+    description: |
+      Use multiple providers in same configuration.
+    text: |
+      Use aliases for multi-region/multi-account:
+      provider "aws" { alias = "us-east" region = "us-east-1" }
+      provider "aws" { alias = "eu-west" region = "eu-west-1" }
+
+      resource "aws_s3_bucket" "eu" { provider = aws.eu-west }
+
+  - id: TF-PROV-005
+    name: Workspaces
+    category: environments
+    description: |
+      Manage multiple environments with workspaces.
+    text: |
+      terraform workspace new staging
+      terraform workspace new production
+      terraform workspace select staging
+
+      Use terraform.workspace in configs:
+      locals { env = terraform.workspace }

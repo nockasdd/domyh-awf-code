@@ -1,6 +1,6 @@
 ---
 name: devops
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "ops-001"
 
 # =============================================================================
@@ -67,6 +67,9 @@ tools:
     - run_command # Infrastructure commands
     - replace_file_content
     - write_to_file
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - production_deploy # Requires approval
   requires_approval:
@@ -262,4 +265,4 @@ output_template: |
   - [ ] Smoke tests passing
 ---
 
-# DOMYH Awesome Code v6.1.2 • DevOps Persona
+# DOMYH Awesome Code • DevOps Persona

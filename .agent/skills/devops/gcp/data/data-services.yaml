@@ -1,0 +1,97 @@
+# GCP Data Services — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: GCP-DAT-001
+    name: Firestore
+    category: database
+    description: |
+      NoSQL document database with real-time sync.
+    example: |
+      import { getFirestore, collection, doc, setDoc, getDocs, query, where } from "firebase/firestore";
+
+      const db = getFirestore();
+
+      // Create/Update
+      await setDoc(doc(db, "users", "alice"), {
+        name: "Alice", email: "alice@example.com", createdAt: new Date()
+      });
+
+      // Query
+      const q = query(collection(db, "users"), where("name", "==", "Alice"));
+      const snapshot = await getDocs(q);
+      snapshot.forEach(doc => console.log(doc.data()));
+
+  - id: GCP-DAT-002
+    name: BigQuery
+    category: analytics
+    description: |
+      Serverless data warehouse for analytics.
+    example: |
+      // Node.js client
+      import { BigQuery } from "@google-cloud/bigquery";
+      const bq = new BigQuery();
+
+      const [rows] = await bq.query({
+        query: "SELECT name, COUNT(*) as count FROM `project.dataset.events` GROUP BY name ORDER BY count DESC LIMIT 10",
+        location: "US"
+      });
+
+  - id: GCP-DAT-003
+    name: Cloud Storage
+    category: storage
+    description: |
+      Object storage for files and media.
+    example: |
+      import { Storage } from "@google-cloud/storage";
+      const storage = new Storage();
+      const bucket = storage.bucket("my-bucket");
+
+      // Upload
+      await bucket.upload("local-file.pdf", { destination: "uploads/file.pdf" });
+
+      // Download
+      await bucket.file("uploads/file.pdf").download({ destination: "downloaded.pdf" });
+
+      // Signed URL (temporary access)
+      const [url] = await bucket.file("uploads/file.pdf")
+        .getSignedUrl({ action: "read", expires: Date.now() + 3600000 });
+
+  - id: GCP-DAT-004
+    name: Pub/Sub
+    category: messaging
+    description: |
+      Asynchronous messaging service.
+    example: |
+      import { PubSub } from "@google-cloud/pubsub";
+      const pubsub = new PubSub();
+
+      // Publish
+      const topic = pubsub.topic("orders");
+      await topic.publishMessage({ json: { orderId: "123", amount: 99.99 } });
+
+      // Subscribe
+      const subscription = pubsub.subscription("orders-worker");
+      subscription.on("message", (msg) => {
+        const order = JSON.parse(msg.data.toString());
+        processOrder(order);
+        msg.ack();
+      });
+
+  - id: GCP-DAT-005
+    name: IAM Best Practices
+    category: security
+    description: |
+      GCP IAM configuration.
+    text: |
+      Principles:
+      - Use service accounts (not user accounts) for services
+      - Least privilege: minimal roles per service
+      - Workload Identity for GKE → no key files
+      - Short-lived credentials (1h max)
+
+      Common roles:
+      roles/run.invoker — Invoke Cloud Run
+      roles/cloudfunctions.invoker — Invoke Functions
+      roles/storage.objectViewer — Read GCS objects
+      roles/bigquery.dataViewer — Read BigQuery

@@ -1,28 +1,12 @@
 name: fsharp
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 
-description: |
-  F# development patterns for F# 8+.
-  Functional-first on .NET, type providers, computation expressions.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.fs"
-    - "*.fsx"
-    - "*.fsproj"
-  keywords:
-    - fsharp
-    - f#
-    - dotnet fsharp
-    - giraffe
-    - saturn
-    - fable
-  intents:
-    - fsharp project
-    - dotnet functional
-    - fable frontend
+desc: "F# development patterns for F# 8+. Functional-first on .NET, type providers, computation expressions."
 
 related_skills:
   - csharp

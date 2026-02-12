@@ -1,0 +1,97 @@
+# =============================================================================
+# grounding.yaml — Grounding with Google Search Patterns
+# =============================================================================
+# 6 patterns for real-time web grounding and citation building
+# Source: https://ai.google.dev/gemini-api/docs/grounding
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 6
+
+overview:
+  description: "Connect Gemini to real-time web content via Google Search"
+  benefits:
+    - "Increase factual accuracy (reduce hallucinations)"
+    - "Access real-time information"
+    - "Provide verifiable citations"
+  supported_languages: "All available languages"
+
+how_it_works:
+  flow:
+    - step: "User Prompt"
+      desc: "Your app sends prompt with google_search tool enabled"
+    - step: "Prompt Analysis"
+      desc: "Model determines if search can improve answer"
+    - step: "Google Search"
+      desc: "Model auto-generates and executes search queries"
+    - step: "Results Processing"
+      desc: "Model synthesizes search results into response"
+    - step: "Grounded Response"
+      desc: "Response includes text + groundingMetadata with citations"
+
+api_usage:
+  enable:
+    python: |
+      from google import genai
+      from google.genai import types
+
+      client = genai.Client(api_key="API_KEY")
+      response = client.models.generate_content(
+          model="gemini-2.5-flash",
+          contents="Who won Euro 2024?",
+          config=types.GenerateContentConfig(
+              tools=[types.Tool(google_search=types.GoogleSearch())]
+          )
+      )
+    javascript: |
+      const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: "Who won Euro 2024?",
+          config: { tools: [{ googleSearch: {} }] }
+      });
+
+response_structure:
+  groundingMetadata:
+    webSearchQueries:
+      desc: "Array of search queries used"
+      use: "Debugging, understanding model reasoning"
+    searchEntryPoint:
+      desc: "HTML/CSS for search suggestion widget"
+      use: "Required by Terms of Service for web display"
+    groundingChunks:
+      desc: "Array of web sources (uri + title)"
+      use: "Build source list, link verification"
+    groundingSupports:
+      desc: "Maps text segments to source citations"
+      fields:
+        - "segment.startIndex / endIndex — text range"
+        - "segment.text — the grounded text"
+        - "groundingChunkIndices — which sources support this claim"
+      use: "Build inline citations, highlight sourced claims"
+
+building_citations:
+  description: "How to create inline citations from grounding response"
+  steps:
+    - "Parse groundingChunks for source URLs"
+    - "Parse groundingSupports for text-to-source mapping"
+    - "For each support, link text range to source(s)"
+    - "Render as [text](source_url) or footnotes"
+  example: |
+    # Text: "Spain won Euro 2024, defeating England 2-1"
+    # groundingSupports[0].groundingChunkIndices = [0]
+    # groundingChunks[0].web.uri = "https://..."
+    # → "Spain won Euro 2024 [1], defeating England 2-1"
+
+url_context_tool:
+  description: "Combine grounding with specific URL analysis"
+  how: "Use URL context tool alongside Google Search"
+  benefit: "Ground in both public web AND specific URLs you provide"
+
+pricing:
+  description: "Grounding incurs search API costs"
+  tip: "Use grounding selectively — not all queries need real-time data"
+  free_tier: "Available with API key"
+
+# =============================================================================
+# _DOMYH Awesome Code • Grounding v1.0_
+# =============================================================================

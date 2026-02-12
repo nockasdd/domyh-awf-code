@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_python
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-python.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: PY-001
+    pattern_name: FastAPI OAuth2
+    description: Built-in OAuth2 password bearer flow
+    library: fastapi
+    security_level: high
+    keywords:
+      - fastapi
+      - oauth2
+  - id: PY-002
+    pattern_name: OAuth2PasswordBearer
+    description: Token dependency injection
+    library: fastapi.security
+    security_level: high
+    keywords:
+      - bearer
+      - token
+  - id: PY-003
+    pattern_name: OAuth2PasswordRequestForm
+    description: Login form handling
+    library: fastapi.security
+    security_level: medium
+    keywords:
+      - form
+      - login
+  - id: PY-004
+    pattern_name: FastAPI HTTPBearer
+    description: Bearer token from Authorization header
+    library: fastapi.security
+    security_level: high
+    keywords:
+      - bearer
+      - header
+  - id: PY-005
+    pattern_name: PyJWT Library
+    description: JWT encoding and decoding
+    library: pyjwt
+    security_level: high
+    keywords:
+      - jwt
+      - pyjwt
+  - id: PY-006
+    pattern_name: python-jose
+    description: JOSE implementation with JWE
+    library: python-jose
+    security_level: high
+    keywords:
+      - jose
+      - jwe
+  - id: PY-007
+    pattern_name: Flask-Login
+    description: Session-based user authentication
+    library: flask-login
+    security_level: high
+    keywords:
+      - flask
+      - session
+  - id: PY-008
+    pattern_name: Flask User Mixin
+    description: User model interface
+    library: flask-login
+    security_level: medium
+    keywords:
+      - mixin
+      - user
+  - id: PY-009
+    pattern_name: Flask Login Required
+    description: Route protection decorator
+    library: flask-login
+    security_level: high
+    keywords:
+      - decorator
+      - protect
+  - id: PY-010
+    pattern_name: Flask-JWT-Extended
+    description: Full JWT support for Flask
+    library: flask-jwt-extended
+    security_level: high
+    keywords:
+      - flask
+      - jwt
+  - id: PY-011
+    pattern_name: Django Authentication
+    description: Built-in auth framework
+    library: django.contrib.auth
+    security_level: high
+    keywords:
+      - django
+      - builtin
+  - id: PY-012
+    pattern_name: Django User Model
+    description: Default user implementation
+    library: django.contrib.auth
+    security_level: high
+    keywords:
+      - user
+      - model
+  - id: PY-013
+    pattern_name: Django Login Required
+    description: View protection decorator
+    library: django.contrib.auth
+    security_level: high
+    keywords:
+      - decorator
+      - view
+  - id: PY-014
+    pattern_name: Django REST JWT
+    description: JWT for DRF applications
+    library: rest_framework_simplejwt
+    security_level: high
+    keywords:
+      - drf
+      - jwt
+  - id: PY-015
+    pattern_name: Django Allauth
+    description: Social auth for Django
+    library: django-allauth
+    security_level: medium
+    keywords:
+      - social
+      - allauth
+  - id: PY-016
+    pattern_name: Passlib Password Hash
+    description: Multi-algorithm password hashing
+    library: passlib
+    security_level: critical
+    keywords:
+      - passlib
+      - hash
+  - id: PY-017
+    pattern_name: Bcrypt CryptContext
+    description: Recommended password context
+    library: passlib[bcrypt]
+    security_level: critical
+    keywords:
+      - bcrypt
+      - context
+  - id: PY-018
+    pattern_name: Authlib OAuth Client
+    description: Full OAuth 1.0 and 2.0 client
+    library: authlib
+    security_level: high
+    keywords:
+      - authlib
+      - oauth
+  - id: PY-019
+    pattern_name: Authlib OAuth Server
+    description: OAuth2 server implementation
+    library: authlib
+    security_level: high
+    keywords:
+      - server
+      - provider
+  - id: PY-020
+    pattern_name: Social Auth
+    description: Multi-provider social login
+    library: python-social-auth
+    security_level: medium
+    keywords:
+      - social
+      - providers
+  - id: PY-021
+    pattern_name: HTTPX OAuth
+    description: Async OAuth2 with HTTPX
+    library: httpx-oauth
+    security_level: high
+    keywords:
+      - async
+      - httpx
+  - id: PY-022
+    pattern_name: Starlette Auth
+    description: Auth for Starlette apps
+    library: starlette
+    security_level: high
+    keywords:
+      - starlette
+      - auth
+  - id: PY-023
+    pattern_name: itsdangerous Token
+    description: Signed token generation
+    library: itsdangerous
+    security_level: high
+    keywords:
+      - signed
+      - tokens
+  - id: PY-024
+    pattern_name: py-webauthn
+    description: WebAuthn server library
+    library: py-webauthn
+    security_level: critical
+    keywords:
+      - webauthn
+      - passkey
+  - id: PY-025
+    pattern_name: Duo Universal
+    description: Duo MFA integration
+    library: duo-universal-python
+    security_level: high
+    keywords:
+      - duo
+      - mfa

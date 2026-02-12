@@ -1,0 +1,98 @@
+# WCAG 2.2 Guidelines Data
+# Perceivable, Operable, Understandable, Robust
+
+guidelines:
+  perceivable:
+    - id: "1.1.1"
+      name: "Non-text Content"
+      level: A
+      rule: "Provide text alternatives for non-text content"
+      patterns:
+        - element: "img"
+          fix: 'Add alt attribute: <img alt="Description">'
+          decorative: 'Use alt="" for decorative images'
+        - element: "svg"
+          fix: 'Add <title> and role="img" for meaningful SVG'
+        - element: "video"
+          fix: "Provide captions and audio descriptions"
+
+    - id: "1.4.3"
+      name: "Contrast (Minimum)"
+      level: AA
+      rule: "Text has contrast ratio of at least 4.5:1"
+      exceptions: ["Large text (3:1)", "Logos", "Disabled elements"]
+
+    - id: "1.4.11"
+      name: "Non-text Contrast"
+      level: AA
+      rule: "UI components and graphics have 3:1 contrast ratio"
+      applies_to: ["Borders", "Icons", "Focus indicators", "Charts"]
+
+    - id: "1.4.13"
+      name: "Content on Hover or Focus"
+      level: AA
+      rule: "Additional content triggered by hover/focus must be dismissible, hoverable, and persistent"
+
+  operable:
+    - id: "2.1.1"
+      name: "Keyboard"
+      level: A
+      rule: "All functionality available via keyboard"
+      patterns:
+        click: "Every onClick must also handle onKeyDown (Enter/Space)"
+        focus_order: "Tab order matches visual order"
+        no_trap: "User can always Tab away"
+
+    - id: "2.4.7"
+      name: "Focus Visible"
+      level: AA
+      rule: "Keyboard focus indicator is visible"
+      css: |
+        :focus-visible {
+          outline: 3px solid #005fcc;
+          outline-offset: 2px;
+        }
+
+    - id: "2.4.11"
+      name: "Focus Not Obscured (Minimum)"
+      level: AA
+      new_in: "WCAG 2.2"
+      rule: "Focused element is not entirely hidden by other elements"
+
+    - id: "2.5.8"
+      name: "Target Size (Minimum)"
+      level: AA
+      new_in: "WCAG 2.2"
+      rule: "Touch targets are at least 24x24 CSS pixels"
+      recommended: "44x44 CSS pixels for mobile"
+
+  understandable:
+    - id: "3.1.1"
+      name: "Language of Page"
+      level: A
+      rule: 'Set lang attribute: <html lang="en">'
+
+    - id: "3.3.1"
+      name: "Error Identification"
+      level: A
+      rule: "Identify and describe input errors in text"
+      pattern: |
+        <input aria-invalid="true" aria-describedby="error-msg">
+        <span id="error-msg" role="alert">Email is required</span>
+
+    - id: "3.3.8"
+      name: "Accessible Authentication"
+      level: AA
+      new_in: "WCAG 2.2"
+      rule: "No cognitive function test for authentication"
+      allowed: ["Passkeys", "Password managers", "OAuth", "Email link"]
+
+  robust:
+    - id: "4.1.2"
+      name: "Name, Role, Value"
+      level: A
+      rule: "All UI components have accessible name and role"
+      techniques:
+        - "Use semantic HTML elements (<button>, <nav>, <main>)"
+        - "Add aria-label when no visible text"
+        - "Use aria-labelledby to reference visible label"

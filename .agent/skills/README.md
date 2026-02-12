@@ -1,4 +1,4 @@
-# 📁 Skills — DOMYH Awesome Code v6.1.2
+# 📁 Skills — DOMYH Awesome Code
 
 > Tech-specific patterns loaded via Progressive Disclosure
 
@@ -6,24 +6,27 @@
 
 ## Quick Reference
 
-| Metric          | Value                  |
-| --------------- | ---------------------- |
-| Total Skills    | 22                     |
-| Total META Size | 7.2KB                  |
-| Avg per skill   | 329 bytes (~82 tokens) |
-| Max active      | 3 skills               |
+| Metric          | Value                 |
+| --------------- | --------------------- |
+| Total Skills    | 82                    |
+| Total META Size | ~17KB                 |
+| Avg per skill   | ~300 bytes (~100 tok) |
+| Max detected    | 5 META.yaml           |
+| Max active T2   | 3 SKILL.md            |
 
 ---
 
 ## Categories
 
-| Category      | Skills                                                                        | Priority   |
-| ------------- | ----------------------------------------------------------------------------- | ---------- |
-| **Core**      | security                                                                      | 0 (always) |
-| **Language**  | go, python, typescript, rust, cpp, csharp, java, php, kotlin, swift, lua, asm | 1          |
-| **Framework** | react, vue, nextjs                                                            | 2          |
-| **DevOps**    | docker, kubernetes, aws, ci-cd                                                | 3          |
-| **Support**   | database, testing                                                             | 2          |
+| Category               | Skills                                                                                                | Priority   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- | ---------- |
+| **Core** (6)           | security, api-design, error-handling, logging, observability, authentication                          | 0 (always) |
+| **Language** (28)      | go, python, typescript, javascript, rust, cpp, c, csharp, java, php, kotlin, swift, lua, asm, ...     | 1          |
+| **Framework** (8)      | react, vue, nextjs, nuxt, angular, svelte, flutter, react-native                                      | 2          |
+| **DevOps** (7)         | docker, kubernetes, aws, ci-cd, terraform, gcp, azure                                                 | 3          |
+| **Cross-cutting** (21) | testing, database, sql, tailwind, electron, coding-rules, domyh-design, web-perf, playwright, ...     | 4          |
+| **Tooling** (5)        | mcp, api-protocols, ide-extension, cli-dev, browser-agent                                             | 5          |
+| **AI-ML** (7)          | ai-agents, prompt-engineering, rag-patterns, vector-search, gemini-media-gen, gemini-tts, gemini-live | 6          |
 
 ---
 
@@ -37,13 +40,13 @@
 
 ---
 
-## META.yaml Schema (v6.1.2)
+## META.yaml Schema (v6.2.1)
 
 ```yaml
 name: skill-id          # lowercase, hyphen-separated
 display: Display Name   # Human-readable
-category: language      # core|language|framework|devops|support
-priority: 1             # 0-5 (lower = higher)
+category: language      # core|language|framework|devops|cross-cutting|tooling|ai-ml
+priority: 1             # 0-6 (lower = higher)
 desc: "Short desc"      # Max 80 chars
 keywords: [kw1, kw2]    # Max 5-7 keywords
 detect: [*.ext, file]   # File patterns
@@ -66,4 +69,4 @@ caps: [cap1, cap2]      # Max 3 capabilities
 
 ---
 
-_DOMYH Awesome Code v6.1_
+_DOMYH Awesome Code _

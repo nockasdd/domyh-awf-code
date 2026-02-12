@@ -1,14 +1,10 @@
 name: typescript
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
-tier: 1
+tier: 3
 
-description: |
-  Type-safe JavaScript development for TypeScript 5.5/5.6.
-  Covers type patterns, ESM, decorators, advanced inference.
+desc: "Type-safe JavaScript development for TypeScript 5.8/6.0. Zod validation, Effect-TS, Iterator Helpers, using declaration."
 
-triggers:
-  file_patterns:
     - "tsconfig.json"
     - "*.ts"
     - "*.tsx"

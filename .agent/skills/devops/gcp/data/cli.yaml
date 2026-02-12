@@ -1,0 +1,39 @@
+# GCP CLI Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: GCP-CLI-001
+    name: gcloud Essential Commands
+    category: cli
+    description: |
+      Most common gcloud commands.
+    text: |
+      # Auth & Config
+      gcloud auth login
+      gcloud auth application-default login
+      gcloud config set project PROJECT_ID
+      gcloud config set compute/region us-central1
+
+      # Info
+      gcloud info
+      gcloud projects list
+      gcloud services list --enabled
+
+      # Common operations
+      gcloud run services list
+      gcloud functions list
+      gcloud compute instances list
+      gcloud container clusters list
+
+  - id: GCP-CLI-002
+    name: gcloud Formatting
+    category: cli
+    description: |
+      Format gcloud output.
+    text: |
+      --format=json    → JSON output
+      --format=yaml    → YAML output
+      --format=csv     → CSV output
+      --format="table(name,status,region)"  → Custom table
+      --filter="name:my-*"   → Filter results
+      --quiet          → No prompts

@@ -1,0 +1,67 @@
+name: error-handling
+version: "6.2.1"
+display: Error Handling Patterns
+category: core
+tier: 1
+priority: 1
+
+desc: "Comprehensive error handling patterns: Result/Either (Rust/FP), exceptions (Python/Java/PHP), errors as values (Go/C), RAII (C++), resilience (circuit breaker, retry, backoff). 12 languages, 250+ patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - error
+    - exception
+    - handling
+    - result
+    - either
+    - try
+    - catch
+    - throw
+    - panic
+    - recover
+    - circuit-breaker
+    - retry
+    - backoff
+    - resilience
+    - validation
+    - error-code
+    - fallback
+  intents:
+    - error handling
+    - exception design
+    - retry pattern
+    - circuit breaker
+
+caps:
+  - Result/Either patterns (Rust/Scala/FP)
+  - Exceptions (Python/Java/C#/PHP/Ruby)
+  - Errors as values (Go/C)
+  - std::expected C++23 and RAII
+  - Swift throws/Result/async-await
+  - Kotlin runCatching/coroutines
+  - Circuit breaker pattern
+  - Retry with exponential backoff + jitter
+  - Error taxonomy (transient/permanent)
+  - Error code design and catalogs
+  - UI error patterns (React boundaries)
+  - API error patterns (RFC 9457)
+  - Anti-patterns detection
+
+    - search_error_patterns
+    - get_resilience_pattern
+    - get_language_patterns
+
+data_files:
+  - data/core-patterns.yaml
+  - data/language-c-cpp.yaml
+  - data/language-go-rust.yaml
+  - data/language-python-java.yaml
+  - data/language-swift-kotlin.yaml
+  - data/language-typescript-php-ruby.yaml
+  - data/resilience-patterns.yaml
+  - data/error-codes.yaml
+  - data/error-messages.yaml
+  - data/ui-error-patterns.yaml
+  - data/api-error-patterns.yaml
+  - data/anti-patterns.yaml

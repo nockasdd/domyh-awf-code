@@ -1,0 +1,152 @@
+# Distributed Database Patterns - HSA Database Skill
+# NewSQL, Cloud-native, Multi-region
+# Updated: 2026-02-05
+
+patterns:
+  # TiDB
+  - id: dist001
+    database: TiDB
+    type: NewSQL
+    category: distributed
+    description: MySQL-compatible, horizontal scaling, HTAP
+    use_cases:
+      - MySQL replacement at scale
+      - Real-time analytics + OLTP
+      - Multi-region deployment
+    example: "CREATE PLACEMENT POLICY asia PRIMARY_REGION='ap-east-1'"
+    connection: "Compatible with MySQL drivers"
+
+  # CockroachDB
+  - id: dist002
+    database: CockroachDB
+    type: NewSQL
+    category: distributed
+    description: PostgreSQL-compatible, survivable, serializable
+    use_cases:
+      - Global applications
+      - Zero-downtime deployments
+      - Regulatory compliance (data locality)
+    example: "SET locality = 'region=us-east,zone=a'"
+    connection: "Compatible with PostgreSQL drivers"
+
+  # PlanetScale
+  - id: dist003
+    database: PlanetScale
+    type: MySQL
+    category: managed
+    description: MySQL-powered serverless, branching, non-blocking migrations
+    use_cases:
+      - Serverless MySQL
+      - Schema branching (Git-like)
+      - Zero-downtime schema changes
+    example: "pscale branch create main feature-branch"
+    connection: "MySQL-compatible, edge-ready"
+
+  # Vitess
+  - id: dist004
+    database: Vitess
+    type: MySQL
+    category: sharding
+    description: MySQL sharding, YouTube-scale
+    use_cases:
+      - MySQL horizontal scaling
+      - Connection pooling
+      - Query routing
+    example: "VSchema defines sharding strategy"
+    connection: "VTGate handles routing"
+
+  # SurrealDB
+  - id: dist005
+    database: SurrealDB
+    type: Multi-model
+    category: distributed
+    description: Document, graph, relational in one database
+    use_cases:
+      - Real-time collaboration
+      - Graph traversal + documents
+      - Embedded or server mode
+    example: |
+      DEFINE TABLE user SCHEMAFULL;
+      RELATE user:1->knows->user:2;
+    connection: "HTTP, WebSocket, Rust SDK"
+
+  # DynamoDB
+  - id: dist006
+    database: DynamoDB
+    type: NoSQL
+    category: managed
+    description: AWS serverless key-value/document, single-digit ms
+    use_cases:
+      - Session storage
+      - Gaming leaderboards
+      - IoT data ingestion
+    example: "PK: USER#123, SK: ORDER#456"
+    connection: "AWS SDK, PartiQL"
+
+  # Neo4j
+  - id: dist007
+    database: Neo4j
+    type: Graph
+    category: specialized
+    description: Property graph, Cypher queries
+    use_cases:
+      - Social networks
+      - Recommendation engines
+      - Fraud detection
+    example: "MATCH (u:User)-[:FOLLOWS]->(f) RETURN f"
+    connection: "Bolt protocol, drivers for all languages"
+
+  # Neon
+  - id: dist008
+    database: Neon
+    type: PostgreSQL
+    category: serverless
+    description: Serverless PostgreSQL, branching, autoscaling
+    use_cases:
+      - Serverless PostgreSQL
+      - Database branching for dev/preview
+      - Pay-per-query
+    example: "neon branches create --name feature-x"
+    connection: "PostgreSQL-compatible"
+
+  # Supabase
+  - id: dist009
+    database: Supabase
+    type: PostgreSQL
+    category: platform
+    description: Open-source Firebase alternative, PostgreSQL
+    use_cases:
+      - Realtime subscriptions
+      - Auth + Storage + Edge Functions
+      - Rapid prototyping
+    example: "supabase.from('users').select('*').subscribe()"
+    connection: "PostgreSQL, REST, Realtime"
+
+  # ClickHouse
+  - id: dist010
+    database: ClickHouse
+    type: OLAP
+    category: analytics
+    description: Column-oriented, real-time analytics at scale
+    use_cases:
+      - Log analytics
+      - Time-series at scale
+      - Business intelligence
+    example: "SELECT toStartOfHour(ts), count() FROM logs GROUP BY 1"
+    connection: "HTTP, native protocol, JDBC"
+
+anti_patterns:
+  - id: dist_ap001
+    pattern: Single-region for global apps
+    description: High latency for distant users
+    fix: Use multi-region databases (CockroachDB, TiDB, DynamoDB Global Tables)
+
+  - id: dist_ap002
+    pattern: Traditional DB for serverless
+    description: Connection limits, cold starts
+    fix: Use serverless DBs (PlanetScale, Neon, DynamoDB)
+
+  - id: dist_ap003
+    pattern: Relational for highly connected data
+    description: JOIN explosions for graph queries
+    fix: Use graph databases (Neo4j, SurrealDB)

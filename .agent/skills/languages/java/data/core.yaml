@@ -1,0 +1,307 @@
+# =============================================================================
+# Java Core Patterns (Feb 2026)
+# Version: Java 21/23 LTS
+# =============================================================================
+
+metadata:
+  skill: java
+  domain: core
+  version: "21LTS"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: java001
+    name: Virtual Threads
+    category: concurrency
+    version: "Java21"
+    description: |
+      Lightweight threads for high-throughput concurrency.
+      Project Loom - millions of threads.
+    text: virtual threads loom lightweight concurrency scalability
+    example: |
+      import java.util.concurrent.*;
+
+      // ✅ Create virtual threads
+      Thread vt = Thread.startVirtualThread(() -> {
+          System.out.println("Hello from virtual thread");
+      });
+
+      // ✅ ExecutorService with virtual threads
+      try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+          IntStream.range(0, 10_000).forEach(i -> {
+              executor.submit(() -> {
+                  Thread.sleep(Duration.ofSeconds(1));
+                  return i;
+              });
+          });
+      }  // Auto-closes and waits for completion
+
+      // ✅ Structured Concurrency (Preview Java 21)
+      try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+          Supplier<String> user  = scope.fork(() -> fetchUser());
+          Supplier<String> order = scope.fork(() -> fetchOrder());
+          
+          scope.join();           // Wait for all
+          scope.throwIfFailed();  // Propagate errors
+          
+          return new Response(user.get(), order.get());
+      }
+
+      // ✅ ScopedValues (replaces ThreadLocal for virtual threads)
+      private static final ScopedValue<User> CURRENT_USER = ScopedValue.newInstance();
+
+      ScopedValue.where(CURRENT_USER, user).run(() -> {
+          // CURRENT_USER available in this scope
+          processRequest();
+      });
+
+      // In processRequest():
+      User user = CURRENT_USER.get();  // No ThreadLocal pollution
+    severity: HIGH
+    docs_url: https://openjdk.org/jeps/444
+
+  - id: java002
+    name: Records
+    category: types
+    version: "Java16+"
+    description: |
+      Immutable data carriers with less boilerplate.
+      Auto-generates equals, hashCode, toString.
+    text: record immutable data carrier dto
+    example: |
+      // ✅ Basic record
+      public record Point(int x, int y) {}
+
+      Point p = new Point(3, 4);
+      System.out.println(p.x());  // Component accessor
+      System.out.println(p);      // Point[x=3, y=4]
+
+      // ✅ Compact constructor for validation
+      public record Range(int start, int end) {
+          public Range {  // Compact constructor
+              if (start > end) {
+                  throw new IllegalArgumentException("start > end");
+              }
+          }
+      }
+
+      // ✅ Additional methods
+      public record User(String name, String email) {
+          // Custom method
+          public String displayName() {
+              return name.toUpperCase();
+          }
+          
+          // Static factory
+          public static User of(String name) {
+              return new User(name, name + "@default.com");
+          }
+      }
+
+      // ✅ Record with generic types
+      public record Pair<A, B>(A first, B second) {}
+
+      // ✅ Nested records
+      public record Order(
+          long id,
+          Customer customer,
+          List<Item> items
+      ) {
+          public record Customer(String name, String email) {}
+          public record Item(String sku, int quantity) {}
+      }
+
+      // ✅ Local records (inside methods)
+      public List<String> process(List<String> data) {
+          record Stats(long count, double avg) {}
+          // Use Stats locally
+      }
+    severity: HIGH
+    docs_url: https://openjdk.org/jeps/395
+
+  - id: java003
+    name: Pattern Matching
+    category: types
+    version: "Java21"
+    description: |
+      Exhaustive switch with type patterns.
+      Record patterns, guards, unnamed patterns.
+    text: pattern matching switch instanceof sealed record
+    example: |
+      // ✅ Pattern matching for instanceof
+      if (obj instanceof String s) {
+          System.out.println(s.length());  // s already cast
+      }
+
+      // ✅ Switch with type patterns
+      String format(Object obj) {
+          return switch (obj) {
+              case Integer i -> String.format("int %d", i);
+              case Long l    -> String.format("long %d", l);
+              case Double d  -> String.format("double %f", d);
+              case String s  -> String.format("String %s", s);
+              case null      -> "null";
+              default        -> obj.toString();
+          };
+      }
+
+      // ✅ Guarded patterns
+      String describe(Object obj) {
+          return switch (obj) {
+              case Integer i when i > 0  -> "positive int";
+              case Integer i when i < 0  -> "negative int";
+              case Integer i             -> "zero";
+              case String s when s.isEmpty() -> "empty string";
+              case String s              -> "string: " + s;
+              default -> "unknown";
+          };
+      }
+
+      // ✅ Record patterns (destructuring)
+      record Point(int x, int y) {}
+
+      String describePoint(Object obj) {
+          return switch (obj) {
+              case Point(int x, int y) when x == y -> "diagonal";
+              case Point(int x, int y)             -> "x=" + x + ", y=" + y;
+              default -> "not a point";
+          };
+      }
+
+      // ✅ Nested record patterns
+      record Rectangle(Point topLeft, Point bottomRight) {}
+
+      boolean isSquare(Rectangle r) {
+          return switch (r) {
+              case Rectangle(Point(var x1, var y1), Point(var x2, var y2))
+                  when Math.abs(x2 - x1) == Math.abs(y2 - y1) -> true;
+              default -> false;
+          };
+      }
+
+      // ✅ Unnamed patterns (Java 22)
+      case Point(int x, _) -> "only care about x: " + x;
+    severity: HIGH
+    docs_url: https://openjdk.org/jeps/441
+
+  - id: java004
+    name: Sealed Classes
+    category: types
+    version: "Java17+"
+    description: |
+      Restricted class hierarchies.
+      Exhaustive pattern matching support.
+    text: sealed permits non-sealed final hierarchy
+    example: |
+      // ✅ Sealed class with permits
+      public sealed class Shape 
+          permits Circle, Rectangle, Triangle {
+      }
+
+      public final class Circle extends Shape {
+          private final double radius;
+          public Circle(double radius) { this.radius = radius; }
+      }
+
+      public final class Rectangle extends Shape {
+          private final double width, height;
+          public Rectangle(double w, double h) { width = w; height = h; }
+      }
+
+      public non-sealed class Triangle extends Shape {
+          // Can be extended further
+      }
+
+      // ✅ Exhaustive switch (compiler checks all cases)
+      double area(Shape shape) {
+          return switch (shape) {
+              case Circle c    -> Math.PI * c.radius() * c.radius();
+              case Rectangle r -> r.width() * r.height();
+              case Triangle t  -> 0.5 * t.base() * t.height();
+              // No default needed - compiler knows all cases
+          };
+      }
+
+      // ✅ Sealed interface with record implementations
+      public sealed interface Result<T> 
+          permits Success, Failure {
+      }
+
+      public record Success<T>(T value) implements Result<T> {}
+      public record Failure<T>(String error) implements Result<T> {}
+
+      // ✅ Handle Result
+      String handleResult(Result<String> result) {
+          return switch (result) {
+              case Success<String>(var value) -> "Success: " + value;
+              case Failure<String>(var error) -> "Error: " + error;
+          };
+      }
+    severity: MEDIUM
+    docs_url: https://openjdk.org/jeps/409
+
+  - id: java005
+    name: Text Blocks and String Templates
+    category: strings
+    version: "Java21+"
+    description: |
+      Multi-line strings and string interpolation.
+      Clean SQL, JSON, HTML literals.
+    text: text block template string interpolation multiline
+    example: |
+      // ✅ Text blocks (multi-line strings)
+      String json = """
+          {
+              "name": "John",
+              "age": 30,
+              "city": "NYC"
+          }
+          """;
+
+      // ✅ SQL queries
+      String sql = """
+          SELECT u.name, u.email, o.total
+          FROM users u
+          JOIN orders o ON u.id = o.user_id
+          WHERE o.status = 'PENDING'
+          ORDER BY o.created_at DESC
+          """;
+
+      // ✅ HTML template
+      String html = """
+          <html>
+              <head><title>%s</title></head>
+              <body>
+                  <h1>Welcome, %s!</h1>
+              </body>
+          </html>
+          """.formatted(title, username);
+
+      // ✅ String Templates (Preview Java 21+)
+      // Using STR processor
+      String name = "John";
+      int age = 30;
+      String message = STR."Hello \{name}, you are \{age} years old.";
+
+      // ✅ FMT processor (with format specifiers)
+      double price = 49.99;
+      String formatted = FMT."Price: $%.2f\{price}";
+
+      // ✅ Custom template processor
+      record User(String name, String email) {}
+      User user = new User("John", "john@email.com");
+
+      String query = STR."""
+          SELECT * FROM users
+          WHERE name = '\{user.name()}'
+          AND email = '\{user.email()}'
+          """;
+
+      // ✅ Escaping in text blocks
+      String escaped = """
+          Line with \\backslash
+          Line with \"""quotes\"""
+          """;
+    severity: MEDIUM
+    docs_url: https://openjdk.org/jeps/430

@@ -1,0 +1,150 @@
+# =============================================================================
+# PostgreSQL Query Patterns (Feb 2026)
+# =============================================================================
+# Common query patterns and advanced SQL features
+
+metadata:
+  skill: sql
+  domain: queries
+  version: "17.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: sql030
+    name: Common Table Expression (CTE)
+    category: query
+    version: "8.4+"
+    description: WITH clause for readable, reusable query parts
+    text: cte common table expression with recursive query readable
+    example: |
+      WITH active_customers AS (
+        SELECT id, name, email
+          FROM customers
+          WHERE is_active = true
+      ),
+      recent_orders AS (
+        SELECT customer_id, count(*) as order_count
+          FROM orders
+          WHERE created_at > now() - interval '30 days'
+          GROUP BY customer_id
+      )
+      SELECT c.name, r.order_count
+        FROM active_customers c
+        JOIN recent_orders r ON c.id = r.customer_id;
+
+      -- PG17: Improved CTE planning and materialization
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/queries-with.html
+
+  - id: sql031
+    name: Window Functions
+    category: query
+    version: "8.4+"
+    description: Perform calculations across related rows
+    text: window function rank row_number partition over running total
+    example: |
+      -- Row number by category
+      SELECT 
+        product_name,
+        category,
+        price,
+        ROW_NUMBER() OVER (
+          PARTITION BY category 
+          ORDER BY price DESC
+        ) as rank
+        FROM products;
+
+      -- Running total
+      SELECT 
+        date, 
+        amount,
+        SUM(amount) OVER (ORDER BY date) as running_total
+        FROM transactions;
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/tutorial-window.html
+
+  - id: sql032
+    name: UPSERT (ON CONFLICT)
+    category: dml
+    version: "9.5+"
+    description: Insert or update on conflict
+    text: upsert insert on conflict update nothing do merge
+    example: |
+      -- Update on conflict
+      INSERT INTO products (sku, name, price)
+        VALUES ('ABC123', 'Widget', 29.99)
+        ON CONFLICT (sku) 
+        DO UPDATE SET 
+          name = EXCLUDED.name,
+          price = EXCLUDED.price,
+          updated_at = now();
+
+      -- Insert or ignore
+      INSERT INTO logs (event_id, message)
+        VALUES ('evt123', 'User login')
+        ON CONFLICT (event_id) DO NOTHING;
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/sql-insert.html#SQL-ON-CONFLICT
+
+  - id: sql033
+    name: LATERAL Join
+    category: query
+    version: "9.3+"
+    description: Subquery that references preceding FROM items
+    text: lateral join subquery correlated top n per group
+    example: |
+      -- Top 3 orders per customer
+      SELECT c.name, o.*
+        FROM customers c
+        CROSS JOIN LATERAL (
+          SELECT * FROM orders
+            WHERE customer_id = c.id
+            ORDER BY created_at DESC
+            LIMIT 3
+        ) o;
+
+      -- More efficient than correlated subqueries
+    severity: MEDIUM
+    docs_url: https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-LATERAL
+
+  - id: sql034
+    name: Transaction & Savepoints
+    category: safety
+    version: "8.0+"
+    description: ACID transactions with partial rollback support
+    text: transaction begin commit rollback savepoint isolation
+    example: |
+      BEGIN;
+
+      INSERT INTO orders (id, total) VALUES (1, 100.00);
+      SAVEPOINT order_created;
+
+      -- Try to update inventory
+      UPDATE products SET stock = stock - 1 WHERE id = 42;
+
+      -- If error, rollback to savepoint
+      ROLLBACK TO order_created;
+
+      -- Or commit all
+      COMMIT;
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/sql-savepoint.html
+
+  - id: sql035
+    name: Parallel COPY (PG18)
+    category: bulk
+    version: "18+"
+    description: PG18 parallel COPY FROM for faster bulk imports
+    text: parallel copy from import bulk load csv pg18
+    example: |
+      -- PG18: Parallel COPY FROM
+      SET max_parallel_workers = 4;
+
+      COPY large_table FROM '/data/input.csv'
+        WITH (FORMAT csv, HEADER true);
+
+      -- Significant speedup for large imports
+      -- Works with CSV, binary formats
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/18/sql-copy.html

@@ -1,0 +1,179 @@
+# =============================================================================
+# C Core Patterns (Feb 2026)
+# Version: C23/C2x
+# =============================================================================
+
+metadata:
+  skill: c
+  domain: core
+  version: "C23"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: c001
+    name: C23 typeof
+    category: types
+    version: "C23"
+    description: |
+      typeof operator for type inference (C23).
+      Like C++ auto but for C.
+    text: typeof typeof_unqual type inference c23
+    example: |
+      // ✅ C23 typeof - infer type from expression
+      int arr[10];
+      typeof(arr[0]) x = 5;  // x is int
+
+      typeof(arr) ptr;       // ptr is int[10]
+      typeof_unqual(arr) y;  // y is int[10] (removes const/volatile)
+
+      // ✅ Use in macros for type-safe generics
+      #define max(a, b) ({ \
+          typeof(a) _a = (a); \
+          typeof(b) _b = (b); \
+          _a > _b ? _a : _b; \
+      })
+
+      // ✅ Create variables matching another
+      void process(int* data, size_t len) {
+          typeof(*data) sum = 0;  // sum is int
+          for (size_t i = 0; i < len; i++) {
+              sum += data[i];
+          }
+      }
+
+      // ✅ Function pointer type inference
+      int add(int a, int b) { return a + b; }
+      typeof(add)* func_ptr = add;  // Function pointer
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/c/language/typeof
+
+  - id: c002
+    name: C23 constexpr
+    category: constants
+    version: "C23"
+    description: |
+      Compile-time constants with constexpr.
+      Arrays with computed sizes.
+    text: constexpr compile-time constant static
+    example: |
+      // ✅ C23 constexpr - compile-time evaluation
+      constexpr int BUFFER_SIZE = 1024;
+      constexpr int DOUBLE_BUF = BUFFER_SIZE * 2;
+
+      // ✅ Use in array declarations
+      char buffer[BUFFER_SIZE];  // Works at compile time
+
+      // ✅ constexpr with expressions
+      constexpr int fib5 = 5;  // Must be evaluable at compile time
+
+      // ✅ Difference from const
+      const int runtime_val = get_runtime_value();  // Runtime
+      constexpr int compile_val = 42;               // Compile time
+
+      // ❌ Cannot use runtime values
+      // constexpr int bad = runtime_val;  // Error!
+
+      // ✅ Type qualifiers preserved
+      constexpr const char* msg = "Hello";
+
+      // ✅ Static assertions with constexpr
+      static_assert(BUFFER_SIZE >= 512, "Buffer too small");
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/c/language/constexpr
+
+  - id: c003
+    name: C23 nullptr
+    category: pointers
+    version: "C23"
+    description: |
+      Type-safe null pointer constant.
+      Replaces NULL macro issues.
+    text: nullptr null pointer nullptr_t type-safe
+    example: |
+      #include <stddef.h>  // For nullptr_t
+
+      // ✅ C23 nullptr - type-safe null
+      int* ptr = nullptr;  // Clear intent
+
+      // ✅ Why nullptr is better than NULL
+      // NULL is typically defined as ((void*)0) or just 0
+      // This can cause issues with function overloading (in C++)
+      // and varargs
+
+      // ❌ Problem with NULL in varargs
+      void log_ptr(const char* fmt, ...) { /* ... */ }
+      // log_ptr("ptr: %p", NULL);    // May pass as int 0!
+      log_ptr("ptr: %p", nullptr);    // ✅ Correct: passes as pointer
+
+      // ✅ nullptr_t type
+      typedef typeof(nullptr) nullptr_t;  // Or from <stddef.h>
+
+      void accepts_null(nullptr_t n) {
+          // Only accepts nullptr
+      }
+
+      // ✅ Comparison
+      if (ptr == nullptr) {
+          // Handle null case
+      }
+
+      // ✅ In structs
+      struct Node {
+          int value;
+          struct Node* next;
+      };
+
+      struct Node node = { .value = 42, .next = nullptr };
+    severity: MEDIUM
+    docs_url: https://en.cppreference.com/w/c/types/nullptr_t
+
+  - id: c004
+    name: C23 Embed Directive
+    category: preprocessor
+    version: "C23"
+    description: |
+      Embed binary files directly in source.
+      Replacement for xxd/bin2c.
+    text: embed binary include resource file
+    example: |
+      // ✅ C23 #embed - include binary files
+
+      // Embed an image as array
+      static const unsigned char icon[] = {
+          #embed "icon.png"
+      };
+      static const size_t icon_size = sizeof(icon);
+
+      // ✅ With limit parameter
+      static const unsigned char header[] = {
+          #embed "large_file.bin" limit(1024)
+      };
+
+      // ✅ With prefix/suffix
+      static const unsigned char data[] = {
+          #embed "data.bin" prefix(0xAA, 0xBB,) suffix(, 0xCC, 0xDD)
+      };
+
+      // ✅ Conditional embedding
+      #if __has_embed("config.bin")
+          static const unsigned char config[] = {
+              #embed "config.bin"
+          };
+      #else
+          static const unsigned char config[] = {0};
+      #endif
+
+      // ✅ Use embedded data
+      void process_icon(void) {
+          for (size_t i = 0; i < icon_size; i++) {
+              process_byte(icon[i]);
+          }
+      }
+
+      // Benefits over xxd:
+      // - No build step
+      // - Compile-time size known
+      // - Works with any build system
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/c/preprocessor/embed

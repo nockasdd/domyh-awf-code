@@ -1,0 +1,280 @@
+# =============================================================================
+# Assembly Core Patterns (Feb 2026)
+# Version: x86-64 / ARM64
+# =============================================================================
+
+metadata:
+  skill: asm
+  domain: core
+  version: "x86-64"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: asm001
+    name: x86-64 Basics
+    category: x86-64
+    version: "x86-64"
+    description: |
+      x86-64 assembly fundamentals.
+      Registers, memory, calling conventions.
+    text: x86 x64 registers mov instructions basic
+    example: |
+      ; ✅ x86-64 registers
+      ; RAX, RBX, RCX, RDX - General purpose (64-bit)
+      ; RSI, RDI           - Source/Destination index
+      ; RBP, RSP           - Base/Stack pointer
+      ; R8-R15             - Additional registers
+      ; RIP                - Instruction pointer
+      ; RFLAGS             - Flags register
+
+      section .data
+          hello db "Hello, World!", 10, 0
+          number dq 42
+
+      section .bss
+          buffer resb 1024
+
+      section .text
+          global _start
+
+      _start:
+          ; ✅ Move data
+          mov rax, 60          ; syscall number
+          mov rdi, 0           ; exit code
+          
+          ; ✅ Memory access
+          mov rax, [number]    ; Load from memory
+          mov [buffer], rax    ; Store to memory
+          
+          ; ✅ Addressing modes
+          mov rax, [rbx]           ; Direct
+          mov rax, [rbx + 8]       ; Offset
+          mov rax, [rbx + rcx*8]   ; Indexed
+          mov rax, [rbx + rcx*4 + 16]  ; Full
+          
+          ; ✅ Arithmetic
+          add rax, rbx
+          sub rax, 10
+          imul rax, rcx
+          inc rax
+          dec rbx
+          
+          ; ✅ System call (Linux x86-64)
+          mov rax, 1           ; sys_write
+          mov rdi, 1           ; stdout
+          lea rsi, [hello]     ; message
+          mov rdx, 14          ; length
+          syscall
+
+          ; ✅ Exit
+          mov rax, 60          ; sys_exit
+          xor rdi, rdi         ; exit code 0
+          syscall
+    severity: HIGH
+    docs_url: https://www.felixcloutier.com/x86/
+
+  - id: asm002
+    name: Calling Conventions
+    category: abi
+    version: "x86-64"
+    description: |
+      System V AMD64 and Windows x64 ABIs.
+      Parameter passing, stack alignment.
+    text: calling convention abi system-v windows cdecl
+    example: |
+      ; ✅ System V AMD64 ABI (Linux, macOS, BSD)
+      ; Arguments: RDI, RSI, RDX, RCX, R8, R9, then stack
+      ; Return: RAX, RDX
+      ; Caller-saved: RAX, RCX, RDX, RSI, RDI, R8-R11
+      ; Callee-saved: RBX, RBP, R12-R15
+      ; Stack: 16-byte aligned before CALL
+
+      ; Function: int add(int a, int b)
+      add:
+          push rbp
+          mov rbp, rsp
+          
+          ; a in EDI, b in ESI
+          lea eax, [edi + esi]
+          
+          pop rbp
+          ret
+
+      ; ✅ Calling a function
+      call_example:
+          push rbp
+          mov rbp, rsp
+          sub rsp, 16          ; Align stack (8 + 8 = 16)
+          
+          mov edi, 10          ; First arg
+          mov esi, 20          ; Second arg
+          call add             ; Result in EAX
+          
+          leave
+          ret
+
+      ; ✅ Windows x64 ABI
+      ; Arguments: RCX, RDX, R8, R9, then stack
+      ; Shadow space: 32 bytes reserved on stack
+      ; Return: RAX
+      ; Callee-saved: RBX, RBP, RDI, RSI, R12-R15
+
+      ; Windows function call
+      windows_call:
+          push rbp
+          mov rbp, rsp
+          sub rsp, 32          ; Shadow space
+          
+          mov rcx, 10          ; First arg (Windows)
+          mov rdx, 20          ; Second arg
+          call add
+          
+          add rsp, 32
+          pop rbp
+          ret
+
+      ; ✅ Variadic functions (printf)
+      ; AL = number of vector registers used
+      call_printf:
+          mov edi, format
+          mov esi, 42
+          xor eax, eax         ; No XMM registers used
+          call printf
+    severity: HIGH
+    docs_url: https://wiki.osdev.org/System_V_ABI
+
+  - id: asm003
+    name: SIMD Instructions
+    category: simd
+    version: "x86-64"
+    description: |
+      SSE, AVX, AVX-512 vectorization.
+      Parallel data processing.
+    text: simd sse avx avx512 vectorization xmm ymm zmm
+    example: |
+      ; ✅ SSE - 128-bit (XMM0-XMM15)
+      section .data
+          align 16
+          floats1: dd 1.0, 2.0, 3.0, 4.0
+          floats2: dd 5.0, 6.0, 7.0, 8.0
+          result:  dd 0.0, 0.0, 0.0, 0.0
+
+      section .text
+      sse_add:
+          movaps xmm0, [floats1]    ; Load 4 floats
+          movaps xmm1, [floats2]    ; Load 4 floats
+          addps xmm0, xmm1          ; Add all 4 at once
+          movaps [result], xmm0     ; Store result
+          ret
+
+      ; ✅ AVX - 256-bit (YMM0-YMM15)
+      section .data
+          align 32
+          doubles: dq 1.0, 2.0, 3.0, 4.0
+
+      avx_example:
+          vmovapd ymm0, [doubles]   ; Load 4 doubles
+          vaddpd ymm1, ymm0, ymm0   ; Double all values
+          vmovapd [doubles], ymm1   ; Store
+          vzeroupper                ; Clear upper YMM bits
+          ret
+
+      ; ✅ AVX-512 - 512-bit (ZMM0-ZMM31)
+      avx512_example:
+          vmovaps zmm0, [array]     ; Load 16 floats
+          vaddps zmm0, zmm0, zmm0   ; Add to self
+          vmovaps [array], zmm0     ; Store
+          ret
+
+      ; ✅ Practical: Vector dot product (SSE)
+      dot_product:
+          ; xmm0, xmm1 = vectors
+          mulps xmm0, xmm1          ; Multiply elements
+          haddps xmm0, xmm0         ; Horizontal add
+          haddps xmm0, xmm0         ; Again
+          ; Result in xmm0[0]
+          ret
+
+      ; ✅ Check CPU support
+      check_avx:
+          mov eax, 1
+          cpuid
+          and ecx, 0x18000000       ; AVX bit 28
+          ret
+    severity: MEDIUM
+    docs_url: https://www.intel.com/content/www/us/en/docs/intrinsics-guide/
+
+  - id: asm004
+    name: ARM64 Basics
+    category: arm64
+    version: "ARM64"
+    description: |
+      ARM64 (AArch64) assembly fundamentals.
+      Registers, instructions, NEON SIMD.
+    text: arm64 aarch64 registers neon apple silicon
+    example: |
+      // ✅ ARM64 registers
+      // X0-X30  - 64-bit general purpose (W0-W30 = 32-bit)
+      // SP      - Stack pointer
+      // PC      - Program counter
+      // XZR/WZR - Zero register
+      // V0-V31  - 128-bit NEON/FP (D0-D31 = 64-bit, S0-S31 = 32-bit)
+
+      .section .data
+      hello: .asciz "Hello, ARM64!\n"
+
+      .section .text
+      .global _start
+
+      _start:
+          // ✅ Move and arithmetic
+          mov x0, #10           // Immediate
+          mov x1, x0            // Register
+          add x2, x0, x1        // x2 = x0 + x1
+          sub x3, x2, #5        // x3 = x2 - 5
+          
+          // ✅ Memory access
+          ldr x4, [x5]          // Load
+          str x4, [x5]          // Store
+          ldr x4, [x5, #16]     // Offset
+          ldr x4, [x5, x6]      // Register offset
+          ldp x4, x5, [sp]      // Load pair
+          stp x4, x5, [sp, #-16]! // Store pair, pre-index
+          
+          // ✅ Branching
+          cmp x0, x1
+          beq equal             // Branch if equal
+          bne not_equal         // Branch if not equal
+          bl function           // Branch and link (call)
+          ret                   // Return
+          
+          // ✅ System call (Linux ARM64)
+          mov x0, #1            // stdout
+          ldr x1, =hello        // message
+          mov x2, #14           // length
+          mov x8, #64           // sys_write
+          svc #0                // Supervisor call
+          
+          // ✅ Exit
+          mov x0, #0            // Exit code
+          mov x8, #93           // sys_exit
+          svc #0
+
+      // ✅ NEON SIMD
+      neon_add:
+          ld1 {v0.4s}, [x0]     // Load 4 floats
+          ld1 {v1.4s}, [x1]     // Load 4 floats
+          fadd v0.4s, v0.4s, v1.4s  // Add
+          st1 {v0.4s}, [x2]     // Store
+          ret
+
+      // ✅ ARM64 calling convention
+      // X0-X7: Arguments and return
+      // X8: Indirect result
+      // X9-X15: Temporaries
+      // X19-X28: Callee-saved
+      // X29: Frame pointer
+      // X30: Link register (return address)
+    severity: MEDIUM
+    docs_url: https://developer.arm.com/documentation/

@@ -1,0 +1,508 @@
+metadata:
+  skill: domyh-design
+  domain: flutter
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: flutter.yaml
+  patterns_count: 52
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Widgets
+    guideline: Use StatelessWidget when possible
+    description: Immutable widgets are simpler
+    do: StatelessWidget for static UI
+    don_t: StatefulWidget for everything
+    code_good: class MyWidget extends StatelessWidget
+    code_bad: class MyWidget extends StatefulWidget (static)
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html
+  - id: "2"
+    category: Widgets
+    guideline: Keep widgets small
+    description: Single responsibility principle
+    do: Extract widgets into smaller pieces
+    don_t: Large build methods
+    code_good: "Column(children: [Header() Content()])"
+    code_bad: 500+ line build method
+    severity: Medium
+  - id: "3"
+    category: Widgets
+    guideline: Use const constructors
+    description: Compile-time constants for performance
+    do: const MyWidget() when possible
+    don_t: Non-const for static widgets
+    code_good: const Text('Hello')
+    code_bad: Text('Hello') for literals
+    severity: High
+    docs_url: https://dart.dev/guides/language/language-tour#constant-constructors
+  - id: "4"
+    category: Widgets
+    guideline: Prefer composition over inheritance
+    description: Combine widgets using children
+    do: Compose widgets
+    don_t: Extend widget classes
+    code_good: "Container(child: MyContent())"
+    code_bad: class MyContainer extends Container
+    severity: Medium
+  - id: "5"
+    category: State
+    guideline: Use setState correctly
+    description: Minimal state in StatefulWidget
+    do: setState for UI state changes
+    don_t: setState for business logic
+    code_good: setState(() { _counter++; })
+    code_bad: Complex logic in setState
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/State/setState.html
+  - id: "6"
+    category: State
+    guideline: Avoid setState in build
+    description: Never call setState during build
+    do: setState in callbacks only
+    don_t: setState in build method
+    code_good: "onPressed: () => setState(() {})"
+    code_bad: build() { setState(); }
+    severity: High
+  - id: "7"
+    category: State
+    guideline: Use state management for complex apps
+    description: Provider Riverpod BLoC
+    do: State management for shared state
+    don_t: setState for global state
+    code_good: Provider.of<MyState>(context)
+    code_bad: Global setState calls
+    severity: Medium
+  - id: "8"
+    category: State
+    guideline: Prefer Riverpod or Provider
+    description: Recommended state solutions
+    do: Riverpod for new projects
+    don_t: InheritedWidget manually
+    code_good: ref.watch(myProvider)
+    code_bad: Custom InheritedWidget
+    severity: Medium
+    docs_url: https://riverpod.dev/
+  - id: "9"
+    category: State
+    guideline: Dispose resources
+    description: Clean up controllers and subscriptions
+    do: dispose() for cleanup
+    don_t: Memory leaks from subscriptions
+    code_good: "@override void dispose() { controller.dispose(); }"
+    code_bad: No dispose implementation
+    severity: High
+  - id: "10"
+    category: Layout
+    guideline: Use Column and Row
+    description: Basic layout widgets
+    do: Column Row for linear layouts
+    don_t: Stack for simple layouts
+    code_good: "Column(children: [Text(), Button()])"
+    code_bad: Stack for vertical list
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/Column-class.html
+  - id: "11"
+    category: Layout
+    guideline: Use Expanded and Flexible
+    description: Control flex behavior
+    do: Expanded to fill space
+    don_t: Fixed sizes in flex containers
+    code_good: "Expanded(child: Container())"
+    code_bad: "Container(width: 200) in Row"
+    severity: Medium
+  - id: "12"
+    category: Layout
+    guideline: Use SizedBox for spacing
+    description: Consistent spacing
+    do: SizedBox for gaps
+    don_t: Container for spacing only
+    code_good: "SizedBox(height: 16)"
+    code_bad: "Container(height: 16)"
+    severity: Low
+  - id: "13"
+    category: Layout
+    guideline: Use LayoutBuilder for responsive
+    description: Respond to constraints
+    do: LayoutBuilder for adaptive layouts
+    don_t: Fixed sizes for responsive
+    code_good: "LayoutBuilder(builder: (context constraints) {})"
+    code_bad: "Container(width: 375)"
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+  - id: "14"
+    category: Layout
+    guideline: Avoid deep nesting
+    description: Keep widget tree shallow
+    do: Extract deeply nested widgets
+    don_t: 10+ levels of nesting
+    code_good: Extract widget to method or class
+    code_bad: Column(Row(Column(Row(...))))
+    severity: Medium
+  - id: "15"
+    category: Lists
+    guideline: Use ListView.builder
+    description: Lazy list building
+    do: ListView.builder for long lists
+    don_t: ListView with children for large lists
+    code_good: "ListView.builder(itemCount: 100, itemBuilder: ...)"
+    code_bad: "ListView(children: items.map(...).toList())"
+    severity: High
+    docs_url: https://api.flutter.dev/flutter/widgets/ListView-class.html
+  - id: "16"
+    category: Lists
+    guideline: Provide itemExtent when known
+    description: Skip measurement
+    do: itemExtent for fixed height items
+    don_t: No itemExtent for uniform lists
+    code_good: "ListView.builder(itemExtent: 50)"
+    code_bad: ListView.builder without itemExtent
+    severity: Medium
+  - id: "17"
+    category: Lists
+    guideline: Use keys for stateful items
+    description: Preserve widget state
+    do: Key for stateful list items
+    don_t: No key for dynamic lists
+    code_good: "ListTile(key: ValueKey(item.id))"
+    code_bad: ListTile without key
+    severity: High
+  - id: "18"
+    category: Lists
+    guideline: Use SliverList for custom scroll
+    description: Custom scroll effects
+    do: CustomScrollView with Slivers
+    don_t: Nested ListViews
+    code_good: "CustomScrollView(slivers: [SliverList()])"
+    code_bad: ListView inside ListView
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/SliverList-class.html
+  - id: "19"
+    category: Navigation
+    guideline: Use Navigator 2.0 or GoRouter
+    description: Declarative routing
+    do: go_router for navigation
+    don_t: Navigator.push for complex apps
+    code_good: "GoRouter(routes: [...])"
+    code_bad: Navigator.push everywhere
+    severity: Medium
+    docs_url: https://pub.dev/packages/go_router
+  - id: "20"
+    category: Navigation
+    guideline: Use named routes
+    description: Organized navigation
+    do: Named routes for clarity
+    don_t: Anonymous routes
+    code_good: Navigator.pushNamed(context '/home')
+    code_bad: Navigator.push(context MaterialPageRoute())
+    severity: Low
+  - id: "21"
+    category: Navigation
+    guideline: Handle back button (PopScope)
+    description: Android back behavior and predictive back (Android 14+)
+    do: Use PopScope widget (WillPopScope is deprecated)
+    don_t: Use WillPopScope
+    code_good: "PopScope(canPop: false, onPopInvoked: (didPop) => ...)"
+    code_bad: "WillPopScope(onWillPop: ...)"
+    severity: High
+    docs_url: https://api.flutter.dev/flutter/widgets/PopScope-class.html
+  - id: "22"
+    category: Navigation
+    guideline: Pass typed arguments
+    description: Type-safe route arguments
+    do: Typed route arguments
+    don_t: Dynamic arguments
+    code_good: "MyRoute(id: '123')"
+    code_bad: "arguments: {'id': '123'}"
+    severity: Medium
+  - id: "23"
+    category: Async
+    guideline: Use FutureBuilder
+    description: Async UI building
+    do: FutureBuilder for async data
+    don_t: setState for async
+    code_good: "FutureBuilder(future: fetchData())"
+    code_bad: fetchData().then((d) => setState())
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
+  - id: "24"
+    category: Async
+    guideline: Use StreamBuilder
+    description: Stream UI building
+    do: StreamBuilder for streams
+    don_t: Manual stream subscription
+    code_good: "StreamBuilder(stream: myStream)"
+    code_bad: stream.listen in initState
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html
+  - id: "25"
+    category: Async
+    guideline: Handle loading and error states
+    description: Complete async UI states
+    do: ConnectionState checks
+    don_t: Only success state
+    code_good: if (snapshot.connectionState == ConnectionState.waiting)
+    code_bad: No loading indicator
+    severity: High
+  - id: "26"
+    category: Async
+    guideline: Cancel subscriptions
+    description: Clean up stream subscriptions
+    do: Cancel in dispose
+    don_t: Memory leaks
+    code_good: subscription.cancel() in dispose
+    code_bad: No subscription cleanup
+    severity: High
+  - id: "27"
+    category: Theming
+    guideline: Use ThemeData
+    description: Consistent theming
+    do: ThemeData for app theme
+    don_t: Hardcoded colors
+    code_good: Theme.of(context).primaryColor
+    code_bad: Color(0xFF123456) everywhere
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/material/ThemeData-class.html
+  - id: "28"
+    category: Theming
+    guideline: Use ColorScheme
+    description: Material 3 color system
+    do: ColorScheme for colors
+    don_t: Individual color properties
+    code_good: "colorScheme: ColorScheme.fromSeed()"
+    code_bad: "primaryColor: Colors.blue"
+    severity: Medium
+  - id: "29"
+    category: Theming
+    guideline: Access theme via context
+    description: Dynamic theme access
+    do: Theme.of(context)
+    don_t: Static theme reference
+    code_good: Theme.of(context).textTheme.bodyLarge
+    code_bad: "TextStyle(fontSize: 16)"
+    severity: Medium
+  - id: "30"
+    category: Theming
+    guideline: Support dark mode
+    description: Respect system theme
+    do: darkTheme in MaterialApp
+    don_t: Light theme only
+    code_good: "MaterialApp(theme: light, darkTheme: dark)"
+    code_bad: "MaterialApp(theme: light)"
+    severity: Medium
+  - id: "31"
+    category: Animation
+    guideline: Use implicit animations
+    description: Simple animations
+    do: AnimatedContainer AnimatedOpacity
+    don_t: Explicit for simple transitions
+    code_good: "AnimatedContainer(duration: Duration())"
+    code_bad: AnimationController for fade
+    severity: Low
+    docs_url: https://api.flutter.dev/flutter/widgets/AnimatedContainer-class.html
+  - id: "32"
+    category: Animation
+    guideline: Use AnimationController for complex
+    description: Fine-grained control
+    do: AnimationController with Ticker
+    don_t: Implicit for complex sequences
+    code_good: "AnimationController(vsync: this)"
+    code_bad: AnimatedContainer for staggered
+    severity: Medium
+  - id: "33"
+    category: Animation
+    guideline: Dispose AnimationControllers
+    description: Clean up animation resources
+    do: dispose() for controllers
+    don_t: Memory leaks
+    code_good: controller.dispose() in dispose
+    code_bad: No controller disposal
+    severity: High
+  - id: "34"
+    category: Animation
+    guideline: Use Hero for transitions
+    description: Shared element transitions
+    do: Hero for navigation animations
+    don_t: Manual shared element
+    code_good: "Hero(tag: 'image' child: Image())"
+    code_bad: Custom shared element animation
+    severity: Low
+    docs_url: https://api.flutter.dev/flutter/widgets/Hero-class.html
+  - id: "35"
+    category: Forms
+    guideline: Use Form widget
+    description: Form validation
+    do: Form with GlobalKey
+    don_t: Individual validation
+    code_good: "Form(key: _formKey child: ...)"
+    code_bad: TextField without Form
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/Form-class.html
+  - id: "36"
+    category: Forms
+    guideline: Use TextEditingController
+    description: Control text input
+    do: Controller for text fields
+    don_t: onChanged for all text
+    code_good: final controller = TextEditingController()
+    code_bad: "onChanged: (v) => setState()"
+    severity: Medium
+  - id: "37"
+    category: Forms
+    guideline: Validate on submit
+    description: Form validation flow
+    do: _formKey.currentState!.validate()
+    don_t: Skip validation
+    code_good: if (_formKey.currentState!.validate())
+    code_bad: Submit without validation
+    severity: High
+  - id: "38"
+    category: Forms
+    guideline: Dispose controllers
+    description: Clean up text controllers
+    do: dispose() for controllers
+    don_t: Memory leaks
+    code_good: controller.dispose() in dispose
+    code_bad: No controller disposal
+    severity: High
+  - id: "39"
+    category: Performance
+    guideline: Use const widgets
+    description: Reduce rebuilds
+    do: const for static widgets
+    don_t: No const for literals
+    code_good: const Icon(Icons.add)
+    code_bad: Icon(Icons.add)
+    severity: High
+  - id: "40"
+    category: Performance
+    guideline: Avoid rebuilding entire tree
+    description: Minimal rebuild scope
+    do: Isolate changing widgets
+    don_t: setState on parent
+    code_good: Consumer only around changing widget
+    code_bad: setState on root widget
+    severity: High
+  - id: "41"
+    category: Performance
+    guideline: Use RepaintBoundary
+    description: Isolate repaints
+    do: RepaintBoundary for animations
+    don_t: Full screen repaints
+    code_good: "RepaintBoundary(child: AnimatedWidget())"
+    code_bad: Animation without boundary
+    severity: Medium
+    docs_url: https://api.flutter.dev/flutter/widgets/RepaintBoundary-class.html
+  - id: "42"
+    category: Performance
+    guideline: Profile with DevTools
+    description: Measure before optimizing
+    do: Flutter DevTools profiling
+    don_t: Guess at performance
+    code_good: DevTools performance tab
+    code_bad: Optimize without measuring
+    severity: Medium
+    docs_url: https://docs.flutter.dev/tools/devtools
+  - id: "43"
+    category: Accessibility
+    guideline: Use Semantics widget
+    description: Screen reader support
+    do: Semantics for accessibility
+    don_t: Missing accessibility info
+    code_good: "Semantics(label: 'Submit button')"
+    code_bad: GestureDetector without semantics
+    severity: High
+    docs_url: https://api.flutter.dev/flutter/widgets/Semantics-class.html
+  - id: "44"
+    category: Accessibility
+    guideline: Support large fonts
+    description: MediaQuery text scaling
+    do: MediaQuery.textScaleFactor
+    don_t: Fixed font sizes
+    code_good: "style: Theme.of(context).textTheme"
+    code_bad: "TextStyle(fontSize: 14)"
+    severity: High
+  - id: "45"
+    category: Accessibility
+    guideline: Test with screen readers
+    description: TalkBack and VoiceOver
+    do: Test accessibility regularly
+    don_t: Skip accessibility testing
+    code_good: Regular TalkBack testing
+    code_bad: No screen reader testing
+    severity: High
+  - id: "46"
+    category: Testing
+    guideline: Use widget tests
+    description: Test widget behavior
+    do: WidgetTester for UI tests
+    don_t: Unit tests only
+    code_good: testWidgets('...' (tester) async {})
+    code_bad: Only test() for UI
+    severity: Medium
+    docs_url: https://docs.flutter.dev/testing
+  - id: "47"
+    category: Testing
+    guideline: Use integration tests
+    description: Full app testing
+    do: integration_test package
+    don_t: Manual testing only
+    code_good: IntegrationTestWidgetsFlutterBinding
+    code_bad: Manual E2E testing
+    severity: Medium
+  - id: "48"
+    category: Testing
+    guideline: Mock dependencies
+    description: Isolate tests
+    do: Mockito or mocktail
+    don_t: Real dependencies in tests
+    code_good: when(mock.method()).thenReturn()
+    code_bad: Real API calls in tests
+    severity: Medium
+  - id: "49"
+    category: Platform
+    guideline: Use Platform checks
+    description: Platform-specific code
+    do: Platform.isIOS Platform.isAndroid
+    don_t: Same code for all platforms
+    code_good: if (Platform.isIOS) {}
+    code_bad: Hardcoded iOS behavior
+    severity: Medium
+  - id: "50"
+    category: Platform
+    guideline: Use kIsWeb for web
+    description: Web platform detection
+    do: kIsWeb for web checks
+    don_t: Platform for web
+    code_good: if (kIsWeb) {}
+    code_bad: Platform.isWeb (doesn't exist)
+    severity: Medium
+  - id: "51"
+    category: Packages
+    guideline: Use pub.dev packages
+    description: Community packages
+    do: Popular maintained packages
+    don_t: Custom implementations
+    code_good: cached_network_image
+    code_bad: Custom image cache
+    severity: Medium
+    docs_url: https://pub.dev/
+  - id: "52"
+    category: Packages
+    guideline: Check package quality
+    description: Quality before adding
+    do: Pub points and popularity
+    don_t: Any package without review
+    code_good: 100+ pub points
+    code_bad: Unmaintained packages
+    severity: Medium

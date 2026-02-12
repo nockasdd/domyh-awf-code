@@ -1,0 +1,164 @@
+metadata:
+  skill: coding-rules
+  domain: performance_benchmarks
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: performance-benchmarks.yaml
+  patterns_count: 12
+  columns:
+    - category
+    - scenario
+    - rust
+    - cpp
+    - go
+    - java
+    - csharp
+    - nodejs
+    - python
+    - winner
+    - source
+patterns:
+  - id: item_001
+    category: Raw Speed
+    scenario: CPU-bound compute
+    rust: 100%
+    cpp: 98-102%
+    go: 70-80%
+    java: 50-60%
+    csharp: 50-60%
+    nodejs: 30-40%
+    python: 5-10%
+    winner: Rust/C++ (tie)
+    source: Benchmarks 2025
+  - id: item_002
+    category: Raw Speed
+    scenario: I/O bound
+    rust: 100%
+    cpp: 95-100%
+    go: 90-95%
+    java: 85-90%
+    csharp: 85-90%
+    nodejs: 95-100%
+    python: 60-70%
+    winner: Node.js/Rust
+    source: Dev benchmarks
+  - id: item_003
+    category: Concurrency
+    scenario: Thread pool
+    rust: 100%
+    cpp: 95-100%
+    go: 85-90%
+    java: 80-85%
+    csharp: 80-85%
+    nodejs: 80-85%
+    python: 20-30%
+    winner: Rust/C++
+    source: WhatsApp case study
+  - id: item_004
+    category: Concurrency
+    scenario: async/await
+    rust: 100%
+    cpp: 90-95%
+    go: 95-100%
+    java: 75-80%
+    csharp: 80-85%
+    nodejs: 95-100%
+    python: 80-85%
+    winner: Rust/Go/Node
+    source: Real-world tests
+  - id: item_005
+    category: Memory
+    scenario: Peak usage
+    rust: 100%
+    cpp: 100-105%
+    go: 150-200%
+    java: 200-300%
+    csharp: 200-300%
+    nodejs: 150-200%
+    python: 300-500%
+    winner: Rust/C++
+    source: WhatsApp/Meta
+  - id: item_006
+    category: Memory
+    scenario: Startup time
+    rust: 100%
+    cpp: 100%
+    go: 50-70%
+    java: 200-500%
+    csharp: 200-500%
+    nodejs: 80-120%
+    python: 100-150%
+    winner: Go (fastest)
+    source: Cold start benchmarks
+  - id: item_007
+    category: Safety
+    scenario: Buffer overflow
+    rust: 0% (compile)
+    cpp: 0% (ASan)
+    go: 0% (runtime)
+    java: 0% (GC)
+    csharp: 0% (GC)
+    nodejs: 0% (GC)
+    python: 0% (GC)
+    winner: Rust (compile-time)
+    source: CISA 2025
+  - id: item_008
+    category: Safety
+    scenario: Memory leak
+    rust: 0% (RAII)
+    cpp: varies
+    go: 0% (GC)
+    java: 0% (GC)
+    csharp: 0% (GC)
+    nodejs: 0% (GC)
+    python: 0% (GC)
+    winner: Rust/GC langs
+    source: Industry data
+  - id: item_009
+    category: Web
+    scenario: HTTP req/s
+    rust: 100%
+    cpp: 95-100%
+    go: 85-90%
+    java: 70-80%
+    csharp: 75-85%
+    nodejs: 90-95%
+    python: 50-60%
+    winner: Rust (Actix)
+    source: TechEmpower 2025
+  - id: item_010
+    category: Web
+    scenario: Latency p99
+    rust: 1x
+    cpp: 1.1x
+    go: 1.2x
+    java: 1.5x
+    csharp: 1.4x
+    nodejs: 1.3x
+    python: 2-3x
+    winner: Rust
+    source: Production benchmarks
+  - id: item_011
+    category: Development
+    scenario: Lines of code
+    rust: 1.0x
+    cpp: 1.5-2x
+    go: 0.8x
+    java: 0.5x
+    csharp: 0.8x
+    nodejs: 0.7x
+    python: 0.4x
+    winner: Python (least)
+    source: Industry average
+  - id: item_012
+    category: Development
+    scenario: Compile time
+    rust: slow
+    cpp: slow
+    go: fast
+    java: N/A (JIT)
+    csharp: N/A (JIT)
+    nodejs: fast
+    python: N/A
+    winner: Go/Node
+    source: Developer experience

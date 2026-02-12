@@ -1,0 +1,198 @@
+metadata:
+  skill: security
+  domain: ruby_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: ruby-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_code
+patterns:
+  - id: RB-01
+    name: Mass Assignment
+    severity: CRITICAL
+    category: Injection
+    description: Unprotected attributes allow overwriting sensitive fields
+    detection_pattern: params\\.permit|attr_accessible(?!.*:role)
+    fix_pattern: Use strong_parameters with explicit permit list
+    cwe: CWE-915
+    example_code: '# BAD\nUser.create(params[:user])\n# GOOD\nUser.create(params.require(:user).permit(:name, :email))'
+  - id: RB-02
+    name: Marshal Deserialization
+    severity: CRITICAL
+    category: Injection
+    description: Marshal.load on untrusted data leads to RCE
+    detection_pattern: Marshal\\.load(?!.*trusted)
+    fix_pattern: Use JSON.parse instead of Marshal for untrusted data
+    cwe: CWE-502
+    example_code: '# RCE via Marshal\nMarshal.load(Base64.decode64(cookies[:session]))\n# SAFE: Use JSON\nJSON.parse(data)'
+  - id: RB-03
+    name: YAML.load Unsafe
+    severity: CRITICAL
+    category: Injection
+    description: YAML.load executes arbitrary Ruby code
+    detection_pattern: YAML\\.load(?!_file|.*permitted)
+    fix_pattern: Use YAML.safe_load with permitted_classes
+    cwe: CWE-502
+    example_code: '# RCE via YAML\nYAML.load(user_input)\n# SAFE\nYAML.safe_load(user_input, permitted_classes: [Date])'
+  - id: RB-04
+    name: ERB Injection SSTI
+    severity: CRITICAL
+    category: Injection
+    description: User input in ERB template leads to code execution
+    detection_pattern: ERB\\.new\\(.*\\#\\{|render.*inline.*params
+    fix_pattern: Never use user input in ERB templates directly
+    cwe: CWE-94
+    example_code: '# SSTI\nERB.new(\<%= #{params[:name]} %>\").result\n# SAFE: Escape output"'
+  - id: RB-05
+    name: Command Injection system
+    severity: CRITICAL
+    category: Injection
+    description: User input in system/exec/backticks
+    detection_pattern: system\\(.*\\#\\{|`.*\\#\\{|exec\\(.*\\+
+    fix_pattern: Use array form or shellwords escape
+    cwe: CWE-78
+    example_code: '# Vulnerable\nsystem(\ls #{params[:dir]}\")\n# SAFE\nsystem(''ls'''
+  - id: RB-06
+    name: SQL Injection Raw
+    severity: CRITICAL
+    category: Injection
+    description: Raw SQL with string interpolation
+    detection_pattern: where\\(.*\\#\\{|find_by_sql.*\\#\\{
+    fix_pattern: Use parameterized queries with ?
+    cwe: CWE-89
+    example_code: '# SQLi\nUser.where(\name = ''#{params[:name]}''\")\n# SAFE\nUser.where(name: params[:name])"'
+  - id: RB-07
+    name: Open Redirect
+    severity: HIGH
+    category: Web
+    description: Unvalidated redirect_to with user input
+    detection_pattern: redirect_to\\s+params|redirect_to.*url(?!_for)
+    fix_pattern: Whitelist allowed redirect paths
+    cwe: CWE-601
+    example_code: '# Open redirect\nredirect_to params[:url]\n# SAFE\nredirect_to url_for(params[:path].presence_in(ALLOWED))'
+  - id: RB-08
+    name: Path Traversal send_file
+    severity: HIGH
+    category: Web
+    description: send_file with user-controlled path
+    detection_pattern: send_file.*params|send_data.*File\\.read.*params
+    fix_pattern: Validate path within allowed directory
+    cwe: CWE-22
+    example_code: '# Path traversal\nsend_file(params[:file])\n# SAFE\nsend_file(Rails.root.join(''public'', File.basename(params[:file])))'
+  - id: RB-09
+    name: Eval Code Execution
+    severity: CRITICAL
+    category: Injection
+    description: eval/instance_eval on user input
+    detection_pattern: eval\\(.*params|instance_eval.*user
+    fix_pattern: Never use eval on user input
+    cwe: CWE-94
+    example_code: '# RCE\neval(params[:code])\n# SAFE: Use whitelist of allowed operations'
+  - id: RB-10
+    name: render inline XSS
+    severity: HIGH
+    category: Web
+    description: render inline without escaping
+    detection_pattern: render.*inline.*params(?!.*escape)
+    fix_pattern: Use html_safe only on trusted content
+    cwe: CWE-79
+    example_code: '# XSS\nrender inline: params[:content]\n# SAFE\nrender inline: ERB::Util.html_escape(params[:content])'
+  - id: RB-11
+    name: Insecure Regex ReDoS
+    severity: MEDIUM
+    category: DoS
+    description: Regex with nested quantifiers vulnerable to ReDoS
+    detection_pattern: Regexp\\.new.*\\+\\*|\\(.*\\*\\)\\+
+    fix_pattern: Use timeout or safe regex patterns
+    cwe: CWE-1333
+    example_code: '# ReDoS vulnerable\n/(a+)+$/.match(user_input)\n# SAFE: Use timeout or re2 gem'
+  - id: RB-12
+    name: Session Fixation
+    severity: HIGH
+    category: Auth
+    description: Session not regenerated after login
+    detection_pattern: session\\[:user_id\\]\\s*=(?!.*reset_session)
+    fix_pattern: Call reset_session before setting user
+    cwe: CWE-384
+    example_code: '# Fixation\nsession[:user_id] = user.id\n# SAFE\nreset_session; session[:user_id] = user.id'
+  - id: RB-13
+    name: CSRF Token Skip
+    severity: HIGH
+    category: Web
+    description: skip_forgery_protection without API check
+    detection_pattern: skip_forgery_protection|protect_from_forgery.*except
+    fix_pattern: Only skip for stateless API endpoints
+    cwe: CWE-352
+    example_code: '# Risky\nskip_forgery_protection\n# SAFE\nprotect_from_forgery with: :null_session, if: -> { request.format.json? }'
+  - id: RB-14
+    name: Weak Password Hash
+    severity: HIGH
+    category: Crypto
+    description: Using MD5/SHA1 for password storage
+    detection_pattern: Digest::(MD5|SHA1).*password|digest.*password
+    fix_pattern: Use bcrypt via has_secure_password
+    cwe: CWE-328
+    example_code: '# Weak\nDigest::SHA1.hexdigest(password)\n# SAFE\nhas_secure_password'
+  - id: RB-15
+    name: Constant Comparison Timing
+    severity: MEDIUM
+    category: Crypto
+    description: String comparison vulnerable to timing attack
+    detection_pattern: ==.*secret|secret.*==(?!.*secure_compare)
+    fix_pattern: Use ActiveSupport::SecurityUtils.secure_compare
+    cwe: CWE-208
+    example_code: '# Timing attack\nparams[:token] == secret_token\n# SAFE\nActiveSupport::SecurityUtils.secure_compare(params[:token], secret_token)'
+  - id: RB-16
+    name: File.read Arbitrary
+    severity: HIGH
+    category: LFI
+    description: File.read with user input allows LFI
+    detection_pattern: File\\.(read|open).*params
+    fix_pattern: Validate path and use safe_join
+    cwe: CWE-22
+    example_code: '# LFI\nFile.read(params[:path])\n# SAFE: Validate and restrict to allowed directory'
+  - id: RB-17
+    name: Paperclip/Shrine RCE
+    severity: CRITICAL
+    category: Upload
+    description: Image processing without validation
+    detection_pattern: has_attached_file|Shrine(?!.*validate)
+    fix_pattern: Validate content type and use imagemagick safely
+    cwe: CWE-434
+    example_code: '# RCE via ImageMagick\nhas_attached_file :avatar\n# SAFE: Validate and restrict types'
+  - id: RB-18
+    name: ActiveRecord Serialize
+    severity: HIGH
+    category: Injection
+    description: serialize with unsafe coder class
+    detection_pattern: serialize.*Marshal|serialize(?!.*JSON|coder)
+    fix_pattern: Use JSON coder for serialization
+    cwe: CWE-502
+    example_code: '# Unsafe\nserialize :data, Marshal\n# SAFE\nserialize :data, JSON'
+  - id: RB-19
+    name: Logger Injection
+    severity: MEDIUM
+    category: Log
+    description: User input in logs without sanitization
+    detection_pattern: Rails\\.logger\\.(info|debug).*params
+    fix_pattern: Sanitize user input before logging
+    cwe: CWE-117
+    example_code: '# Log injection\nRails.logger.info(\User: #{params[:user]}\")\n# SAFE: Filter and sanitize"'
+  - id: RB-20
+    name: Rack CRLF Injection
+    severity: HIGH
+    category: Web
+    description: User input in headers allows CRLF
+    detection_pattern: response\\.headers\\[.*\\]\\s*=.*params
+    fix_pattern: Validate header values
+    cwe: CWE-113
+    example_code: '# CRLF\nresponse.headers[''X-Custom''] = params[:header]\n# SAFE: Validate alphanumeric only'

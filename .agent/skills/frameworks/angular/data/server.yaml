@@ -1,0 +1,175 @@
+# =============================================================================
+# Angular Server/SSR Patterns (Feb 2026)
+# =============================================================================
+# Zoneless, Hydration, Rendering Modes
+
+metadata:
+  skill: angular
+  domain: server
+  version: "20.2"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: ang007
+    name: Zoneless Change Detection
+    category: performance
+    version: "20.2+"
+    description: |
+      Remove Zone.js dependency for improved performance.
+      Stable API in Angular 20.2 (no longer experimental).
+    text: zoneless zone.js change detection performance signals
+    example: |
+      // ✅ Angular 20.2: Zoneless STABLE (not experimental anymore)
+      import { bootstrapApplication } from "@angular/platform-browser";
+      import { provideZonelessChangeDetection } from "@angular/core";
+
+      bootstrapApplication(AppComponent, {
+        providers: [
+          provideZonelessChangeDetection(), // ✅ Stable API
+        ],
+      });
+
+      // ✅ Component with signals works automatically
+      @Component({
+        selector: "app-root",
+        standalone: true,
+        template: `<p>{{ message() }}</p>`,
+      })
+      export class AppComponent {
+        message = signal("Hello");
+        // No Zone.js needed - signals trigger change detection
+      }
+
+      // Benefits:
+      // - ~45KB smaller bundle (no zone.js)
+      // - Faster initial load
+      // - Simpler debugging
+      // - Better performance
+    severity: CRITICAL
+    docs_url: https://angular.dev/guide/experimental/zoneless
+
+  - id: ang008
+    name: Incremental Hydration
+    category: ssr
+    version: "20.2+"
+    description: |
+      On-demand hydration for SSR applications.
+      Stable in Angular 20.2+ (replaces @defer hydration).
+    text: hydration ssr server side rendering incremental partial
+    example: |
+      // ✅ Angular 20.2+: On-demand hydration for SSR
+      import { 
+        provideClientHydration, 
+        withIncrementalHydration 
+      } from '@angular/platform-browser';
+
+      bootstrapApplication(AppComponent, {
+        providers: [
+          provideClientHydration(
+            withIncrementalHydration(), // ✅ Stable in v20.2
+            withEventReplay(),          // ✅ Default in v19+
+          ),
+        ],
+      });
+
+      // In templates - hydrate on viewport visibility
+      @Component({
+        template: `
+          @defer (hydrate on viewport) {
+            <heavy-component />
+          }
+
+          @defer (hydrate on idle) {
+            <analytics-widget />
+          }
+
+          @defer (hydrate on interaction) {
+            <interactive-form />
+          }
+        `,
+      })
+      export class AppComponent {}
+
+      // Available triggers:
+      // - on viewport: When enters viewport
+      // - on idle: When browser idle
+      // - on interaction: When user interacts
+      // - on immediate: Hydrate immediately
+      // - on timer(Xms): After delay
+    severity: HIGH
+    docs_url: https://angular.dev/guide/hydration
+
+  - id: ang009
+    name: Route-level Rendering Modes
+    category: ssr
+    version: "20+"
+    description: |
+      Configure rendering mode per route (Prerender, SSR, Client).
+      Production-ready in Angular 20+.
+    text: route rendering mode prerender ssr client server
+    example: |
+      // ✅ Angular 20+: Production-ready route rendering configuration
+      import { Routes, RenderMode, ServerRoute } from "@angular/router";
+
+      // Server routes configuration
+      const serverRoutes: ServerRoute[] = [
+        { path: "/", renderMode: RenderMode.Prerender },      // Static at build
+        { path: "/dashboard/**", renderMode: RenderMode.Server }, // SSR
+        { path: "/static/**", renderMode: RenderMode.Client },    // SPA
+      ];
+
+      export const routes: Routes = [
+        { path: "", component: HomeComponent },
+        { 
+          path: "dashboard", 
+          loadComponent: () => import("./dashboard").then(m => m.DashboardComponent)
+        },
+      ];
+
+      // RenderMode options:
+      // - Prerender: Generate static HTML at build time
+      // - Server: Server-side render on each request
+      // - Client: Client-side only (SPA mode)
+    severity: HIGH
+    docs_url: https://angular.dev/guide/routing/render-modes
+
+  - id: ang010
+    name: TypeScript 5.9 Integration
+    category: tooling
+    version: "21+"
+    description: |
+      Full TypeScript 5.9 compatibility with enhanced template type checking
+      and host bindings IntelliSense.
+    text: typescript 5.9 type checking template host bindings
+    example: |
+      // ✅ Angular 21+: TypeScript 5.9 features
+
+      @Component({
+        selector: 'app-button',
+        standalone: true,
+        // ✅ Host bindings with full IntelliSense
+        host: {
+          '[class.primary]': 'variant() === "primary"',
+          '[class.disabled]': 'disabled()',
+          '(click)': 'handleClick($event)',
+        },
+        template: `<ng-content />`,
+      })
+      export class ButtonComponent {
+        variant = input<'primary' | 'secondary'>('primary');
+        disabled = input(false);
+
+        handleClick(event: MouseEvent) {
+          if (!this.disabled()) {
+            // Handle click
+          }
+        }
+      }
+
+      // Enhanced template type checking:
+      // - Stricter null checks in templates
+      // - Better error messages
+      // - Full generic support
+    severity: MEDIUM
+    docs_url: https://angular.dev/reference/releases

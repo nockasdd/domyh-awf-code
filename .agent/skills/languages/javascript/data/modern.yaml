@@ -1,0 +1,269 @@
+# =============================================================================
+# JavaScript Modern Patterns (Feb 2026)
+# Version: ES2025/ES2026
+# =============================================================================
+
+metadata:
+  skill: javascript
+  domain: modern
+  version: "ES2026"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: js201
+    name: ESM Modules
+    category: modules
+    version: "ES2015+"
+    description: |
+      ECMAScript Modules best practices.
+      Named exports, dynamic import, top-level await.
+    text: esm modules import export dynamic import default
+    example: |
+      // ✅ Named exports (preferred)
+      // math.js
+      export function add(a, b) { return a + b; }
+      export function subtract(a, b) { return a - b; }
+      export const PI = 3.14159;
+
+      // ✅ Import named exports
+      import { add, subtract, PI } from './math.js';
+
+      // ✅ Import all as namespace
+      import * as math from './math.js';
+      math.add(1, 2);
+
+      // ✅ Re-export pattern (barrel file)
+      // utils/index.js
+      export { add, subtract } from './math.js';
+      export { formatDate } from './date.js';
+      export { validate } from './validation.js';
+
+      // ✅ Dynamic import (code splitting)
+      async function loadModule() {
+        const { heavyFunction } = await import('./heavy-module.js');
+        return heavyFunction();
+      }
+
+      // ✅ Top-level await (ES2022)
+      // Only in ESM modules
+      const config = await fetch('/config.json').then(r => r.json());
+      const db = await connectDatabase(config.dbUrl);
+
+      export { db, config };
+
+      // ✅ Import assertions (ES2025)
+      import data from './data.json' with { type: 'json' };
+      import styles from './styles.css' with { type: 'css' };
+
+      // ✅ package.json for ESM
+      // {
+      //   "type": "module",
+      //   "exports": {
+      //     ".": "./dist/index.js",
+      //     "./utils": "./dist/utils.js"
+      //   }
+      // }
+    severity: HIGH
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
+
+  - id: js202
+    name: Decorators (ES2025)
+    category: metaprogramming
+    version: "ES2025"
+    description: |
+      Native JavaScript decorators.
+      Class, method, field, accessor decorators.
+    text: decorator class method field accessor metadata
+    example: |
+      // ✅ Method decorator
+      function logged(originalMethod, context) {
+        const methodName = context.name;
+        
+        return function (...args) {
+          console.log(`Calling ${methodName} with`, args);
+          const result = originalMethod.call(this, ...args);
+          console.log(`${methodName} returned`, result);
+          return result;
+        };
+      }
+
+      class Calculator {
+        @logged
+        add(a, b) {
+          return a + b;
+        }
+      }
+
+      // ✅ Class decorator
+      function sealed(target, context) {
+        Object.seal(target);
+        Object.seal(target.prototype);
+      }
+
+      @sealed
+      class User {
+        name = '';
+      }
+
+      // ✅ Field decorator
+      function readonly(_, context) {
+        return function (initialValue) {
+          return {
+            get() { return initialValue; },
+            set() { throw new Error(`${context.name} is readonly`); }
+          };
+        };
+      }
+
+      class Config {
+        @readonly
+        version = '1.0.0';
+      }
+
+      // ✅ Accessor decorator
+      function validate(validator) {
+        return function (accessor, context) {
+          return {
+            get() {
+              return accessor.get.call(this);
+            },
+            set(value) {
+              if (!validator(value)) {
+                throw new Error(`Invalid value for ${context.name}`);
+              }
+              accessor.set.call(this, value);
+            }
+          };
+        };
+      }
+
+      class Form {
+        @validate(v => v.length > 0)
+        accessor name = '';
+        
+        @validate(v => v.includes('@'))
+        accessor email = '';
+      }
+    severity: MEDIUM
+    docs_url: https://github.com/tc39/proposal-decorators
+
+  - id: js203
+    name: Temporal API
+    category: datetime
+    version: "ES2026 (Stage 3)"
+    description: |
+      Modern date/time API replacing Date.
+      Immutable, time zone aware, precise.
+    text: temporal date time duration timezone instant
+    example: |
+      // ✅ Temporal.Now - Current time
+      const now = Temporal.Now.instant();
+      const today = Temporal.Now.plainDateISO();
+      const currentTime = Temporal.Now.plainTimeISO();
+      const zonedNow = Temporal.Now.zonedDateTimeISO('America/New_York');
+
+      // ✅ PlainDate - Date without time/timezone
+      const date = Temporal.PlainDate.from('2026-02-05');
+      const nextWeek = date.add({ days: 7 });
+      const diff = nextWeek.since(date); // P7D
+
+      // ✅ PlainTime - Time without date/timezone
+      const time = Temporal.PlainTime.from('14:30:00');
+      const later = time.add({ hours: 2, minutes: 30 }); // 17:00:00
+
+      // ✅ ZonedDateTime - Full datetime with timezone
+      const meeting = Temporal.ZonedDateTime.from({
+        year: 2026,
+        month: 2,
+        day: 5,
+        hour: 14,
+        timeZone: 'America/New_York'
+      });
+
+      // Convert timezone
+      const inTokyo = meeting.withTimeZone('Asia/Tokyo');
+
+      // ✅ Duration - Time periods
+      const duration = Temporal.Duration.from({ hours: 2, minutes: 30 });
+      const totalMinutes = duration.total('minutes'); // 150
+
+      // ✅ Comparison (immutable operations)
+      if (Temporal.PlainDate.compare(date1, date2) > 0) {
+        console.log('date1 is after date2');
+      }
+
+      // ✅ Formatting
+      const formatted = date.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      // ✅ Parsing with validation
+      try {
+        const parsed = Temporal.PlainDate.from('2026-02-30'); // Throws!
+      } catch (e) {
+        console.log('Invalid date');
+      }
+    severity: MEDIUM
+    docs_url: https://tc39.es/proposal-temporal/docs/
+
+  - id: js204
+    name: Record and Tuple (Stage 2)
+    category: data-structures
+    version: "Future (Stage 2)"
+    description: |
+      Immutable primitive data structures.
+      Deep equality by value, hashable.
+    text: record tuple immutable primitive value equality
+    example: |
+      // ✅ Record - immutable object-like
+      // Note: Stage 2 proposal, syntax may change
+      const point = #{ x: 1, y: 2 };
+      const point2 = #{ x: 1, y: 2 };
+
+      // Value equality
+      console.log(point === point2); // true (unlike objects)
+
+      // Immutable - creates new record
+      const moved = #{ ...point, x: point.x + 1 }; // #{ x: 2, y: 2 }
+
+      // ✅ Tuple - immutable array-like
+      const coords = #[1, 2, 3];
+      const coords2 = #[1, 2, 3];
+
+      console.log(coords === coords2); // true
+
+      // Immutable operations
+      const extended = #[...coords, 4]; // #[1, 2, 3, 4]
+
+      // ✅ Nested records and tuples
+      const user = #{
+        name: 'Alice',
+        tags: #['admin', 'active'],
+        address: #{ city: 'NYC', zip: '10001' }
+      };
+
+      // ✅ Use as Map/Set keys (value equality)
+      const cache = new Map();
+      cache.set(#{ x: 1, y: 2 }, 'result');
+      cache.get(#{ x: 1, y: 2 }); // 'result' (works! unlike objects)
+
+      // ✅ Pattern matching (future)
+      // Works well with pattern matching proposal
+      function process(data) {
+        switch (data) {
+          case #{ type: 'point', x: _, y: _ }:
+            return 'It's a point';
+          case #{ type: 'circle', r: _ }:
+            return 'It's a circle';
+        }
+      }
+
+      // ✅ Current workaround with Object.freeze
+      const immutable = Object.freeze({ x: 1, y: 2 });
+      // But no value equality: {} !== {}
+    severity: LOW
+    docs_url: https://github.com/tc39/proposal-record-tuple

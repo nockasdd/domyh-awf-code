@@ -1,0 +1,415 @@
+metadata:
+  skill: security
+  domain: cwe_top25
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: cwe-top25.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - rank_2024
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - example_vuln
+    - example_fix
+patterns:
+  - id: CWE-79
+    name: Cross-site Scripting (XSS)
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "1"
+    description: "Rendering untrusted data in HTML without encoding. #1 in 2024 (was #2)"
+    detection_pattern: (innerHTML|document\\.write|dangerouslySetInnerHTML)
+    fix_pattern: HTML entity encoding, CSP headers, sanitize libraries
+    languages:
+      - javascript
+      - typescript
+    example_vuln: "// BAD: Direct HTML injection
+
+      element.innerHTML = userInput"
+    example_fix: "// GOOD: Text content or sanitize
+
+      element.textContent = userInput
+
+      // or: DOMPurify.sanitize(userInput)"
+  - id: CWE-787
+    name: Out-of-bounds Write
+    severity: CRITICAL
+    category: Memory
+    rank_2024: "2"
+    description: "Writing data past buffer end. #2 in 2024 (was #1)"
+    detection_pattern: (strcpy|strcat|sprintf|gets\\()
+    fix_pattern: "Use safe functions: strncpy, snprintf, fgets with size limits"
+    languages:
+      - c
+      - cpp
+    example_vuln: "// BAD: Buffer overflow
+
+      char buf[10]; strcpy(buf, userInput);"
+    example_fix: '// GOOD: Bounded copy
+
+      char buf[10]; strncpy(buf, userInput, sizeof(buf)-1); buf[sizeof(buf)-1] = ''\\0'';'
+  - id: CWE-89
+    name: SQL Injection
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "3"
+    description: Constructing SQL queries from untrusted input without parameterization.
+    detection_pattern: (query.*\\+|execute.*\\+|SELECT.*\\$\\{)
+    fix_pattern: Parameterized queries, ORM, prepared statements
+    languages: all
+    example_vuln: "// BAD: String concatenation
+
+      db.query(`SELECT * FROM users WHERE name = '${name}'`)"
+    example_fix: "// GOOD: Prepared statement
+
+      db.query('SELECT * FROM users WHERE name = ?', [name])"
+  - id: CWE-352
+    name: Cross-Site Request Forgery (CSRF)
+    severity: HIGH
+    category: Session
+    rank_2024: "4"
+    description: Forging requests from authenticated users. Jumped 5 positions in 2024.
+    detection_pattern: (form.*method.*post|fetch\\(.*method.*POST)
+    fix_pattern: CSRF tokens, SameSite cookies, double-submit cookies
+    languages: all
+    example_vuln: "// BAD: No CSRF protection
+
+      <form method='POST' action='/transfer'>"
+    example_fix: "// GOOD: CSRF token
+
+      <input type='hidden' name='csrf' value='{{token}}'>"
+  - id: CWE-22
+    name: Path Traversal
+    severity: HIGH
+    category: Injection
+    rank_2024: "5"
+    description: "Using user input to access files outside intended directory. Moved to #5."
+    detection_pattern: (readFile\\(|open\\(|include\\().*req\\.(params|query|body)
+    fix_pattern: Path normalization, jail to base directory, allowlisting
+    languages: all
+    example_vuln: "// BAD: Path traversal
+
+      fs.readFile('/uploads/' + req.query.file)"
+    example_fix: "// GOOD: Path normalization
+
+      const safePath = path.resolve('/uploads', path.basename(req.query.file))"
+  - id: CWE-125
+    name: Out-of-bounds Read
+    severity: HIGH
+    category: Memory
+    rank_2024: "6"
+    description: Reading data beyond buffer boundaries (information leak).
+    detection_pattern: (buffer\\[|array\\[|ptr\\+)
+    fix_pattern: Bounds checking, safe iterators, span/slice types
+    languages:
+      - c
+      - cpp
+      - rust
+    example_vuln: "// BAD: Array out of bounds
+
+      for(int i=0; i<=len; i++) buf[i]"
+    example_fix: "// GOOD: Proper bounds
+
+      for(int i=0; i<len; i++) buf[i]"
+  - id: CWE-78
+    name: OS Command Injection
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "7"
+    description: Executing shell commands with untrusted input.
+    detection_pattern: (exec\\(|system\\(|popen\\(|shell_exec)
+    fix_pattern: Avoid shell, use safe APIs, input validation
+    languages: all
+    example_vuln: "// BAD: Shell command injection
+
+      exec(`rm -rf ${userPath}`)"
+    example_fix: "// GOOD: Use safe API
+
+      fs.rmSync(path.resolve(safeBaseDir, userPath), { recursive: true })"
+  - id: CWE-416
+    name: Use After Free
+    severity: CRITICAL
+    category: Memory
+    rank_2024: "8"
+    description: Accessing memory after it has been freed.
+    detection_pattern: (free\\(.*\\)|delete\\s+|\\.release\\(\\))
+    fix_pattern: Smart pointers, RAII, null after free
+    languages:
+      - c
+      - cpp
+      - rust
+    example_vuln: "// BAD: Use after free
+
+      free(ptr); printf('%s', ptr);"
+    example_fix: "// GOOD: Null after free
+
+      free(ptr); ptr = NULL;"
+  - id: CWE-862
+    name: Missing Authorization
+    severity: CRITICAL
+    category: AuthZ
+    rank_2024: "9"
+    description: Lack of proper checks to ensure users have necessary permissions.
+    detection_pattern: (app\\.(get|post|put|delete)\\()(?!.*authorize)
+    fix_pattern: Authorization middleware, RBAC/ABAC, deny by default
+    languages: all
+    example_vuln: "// BAD: No authz check
+
+      app.get('/admin/users', getUsers)"
+    example_fix: "// GOOD: Authorization middleware
+
+      app.get('/admin/users', requireRole('admin'), getUsers)"
+  - id: CWE-434
+    name: Unrestricted File Upload
+    severity: HIGH
+    category: Injection
+    rank_2024: "10"
+    description: Allowing upload of executable files or scripts.
+    detection_pattern: (file.*upload|multer|formidable)
+    fix_pattern: File type validation, rename files, store outside webroot
+    languages: all
+    example_vuln: "// BAD: No file type check
+
+      app.post('/upload', multer().single('file'))"
+    example_fix: "// GOOD: Validate MIME and extension
+
+      if (!ALLOWED_TYPES.includes(file.mimetype)) throw new Error('Invalid type')"
+  - id: CWE-94
+    name: Code Injection
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "11"
+    description: Injecting and executing arbitrary code. Jumped 12 positions in 2024!
+    detection_pattern: (eval\\(|new Function\\(|vm\\.runInContext)
+    fix_pattern: Avoid eval, use safe parsers, sandbox execution
+    languages: all
+    example_vuln: "// BAD: Code injection
+
+      eval(userInput)"
+    example_fix: "// GOOD: Safe alternative
+
+      JSON.parse(userInput) // for data parsing"
+  - id: CWE-20
+    name: Improper Input Validation
+    severity: HIGH
+    category: Validation
+    rank_2024: "12"
+    description: Not validating user input for type, length, format, range.
+    detection_pattern: (parseInt\\(|Number\\(|JSON\\.parse\\()
+    fix_pattern: Schema validation (Zod, Joi), type checking, range validation
+    languages: all
+    example_vuln: "// BAD: No validation
+
+      const age = parseInt(req.body.age)"
+    example_fix: "// GOOD: Schema validation
+
+      const schema = z.object({ age: z.number().min(0).max(150) })"
+  - id: CWE-77
+    name: Command Injection
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "13"
+    description: Improper neutralization of special elements in a command.
+    detection_pattern: (spawn\\(|execFile\\().*\\$
+    fix_pattern: Use arrays for args, avoid shell, sanitize input
+    languages: all
+    example_vuln: "// BAD: Command injection risk
+
+      spawn('cmd', `/c ${userInput}`)"
+    example_fix: "// GOOD: Separate args
+
+      spawn('cmd', ['/c', sanitize(userInput)], { shell: false })"
+  - id: CWE-287
+    name: Improper Authentication
+    severity: CRITICAL
+    category: AuthN
+    rank_2024: "14"
+    description: Incorrect or insufficient authentication mechanisms.
+    detection_pattern: (password.*==|token.*===)
+    fix_pattern: Use timing-safe comparison, secure session, MFA
+    languages: all
+    example_vuln: "// BAD: Timing attack vulnerable
+
+      if (token === storedToken)"
+    example_fix: "// GOOD: Timing-safe compare
+
+      crypto.timingSafeEqual(Buffer.from(token), Buffer.from(storedToken))"
+  - id: CWE-269
+    name: Improper Privilege Management
+    severity: HIGH
+    category: AuthZ
+    rank_2024: "15"
+    description: Flaws in how privileges are assigned, managed, or enforced.
+    detection_pattern: (setRole|addPermission|elevate)
+    fix_pattern: Principle of least privilege, regular audits, separation of duties
+    languages: all
+    example_vuln: "// BAD: Overly broad permissions
+
+      user.role = 'superadmin'"
+    example_fix: "// GOOD: Minimal required permissions
+
+      user.permissions = ['read:own_data', 'write:own_data']"
+  - id: CWE-502
+    name: Deserialization of Untrusted Data
+    severity: CRITICAL
+    category: Injection
+    rank_2024: "16"
+    description: Deserializing data from untrusted sources without validation.
+    detection_pattern: (pickle\\.load|unserialize|ObjectInputStream|JSON\\.parse\\(.*body)
+    fix_pattern: Avoid native deserialization, use JSON, validate schema
+    languages: all
+    example_vuln: "// BAD: Unsafe deserialization (Python)
+
+      pickle.loads(user_data)"
+    example_fix: "// GOOD: Safe JSON with schema
+
+      data = json.loads(user_data); validate(data, schema)"
+  - id: CWE-200
+    name: Exposure of Sensitive Information
+    severity: MEDIUM
+    category: Disclosure
+    rank_2024: "17"
+    description: Sensitive data revealed to unauthorized actors.
+    detection_pattern: (console\\.log.*password|log.*secret|res\\.send.*error\\.stack)
+    fix_pattern: Sanitize logs, custom error pages, filter responses
+    languages: all
+    example_vuln: "// BAD: Expose stack trace
+
+      res.status(500).send(error.stack)"
+    example_fix: "// GOOD: Generic error
+
+      res.status(500).json({ error: 'Internal server error' })"
+  - id: CWE-863
+    name: Incorrect Authorization
+    severity: HIGH
+    category: AuthZ
+    rank_2024: "18"
+    description: Authorization performed incorrectly, leading to unauthorized access.
+    detection_pattern: (if.*role.*!=|unless.*admin)
+    fix_pattern: Centralized authz, policy-based access, audit logs
+    languages: all
+    example_vuln: "// BAD: Inverted logic
+
+      if (user.role != 'admin') allowAccess()"
+    example_fix: "// GOOD: Explicit check
+
+      if (user.role === 'admin') allowAccess()"
+  - id: CWE-918
+    name: Server-Side Request Forgery (SSRF)
+    severity: HIGH
+    category: Injection
+    rank_2024: "19"
+    description: Server makes requests to attacker-controlled URLs.
+    detection_pattern: (fetch\\(|axios\\.|request\\().*user
+    fix_pattern: URL allowlisting, disable redirects, network segmentation
+    languages: all
+    example_vuln: "// BAD: Fetch user URL
+
+      fetch(req.query.url)"
+    example_fix: "// GOOD: Allowlist validation
+
+      if (!ALLOWED_HOSTS.includes(new URL(url).host)) throw new Error('Blocked')"
+  - id: CWE-119
+    name: Memory Buffer Bounds
+    severity: CRITICAL
+    category: Memory
+    rank_2024: "20"
+    description: Operations that read/write outside intended memory buffer.
+    detection_pattern: (memcpy|memmove|buffer\\[.*\\+)
+    fix_pattern: Bounds checking, AddressSanitizer, safe functions
+    languages:
+      - c
+      - cpp
+    example_vuln: "// BAD: No bounds check
+
+      memcpy(dest, src, len)"
+    example_fix: "// GOOD: Check bounds first
+
+      if (len <= sizeof(dest)) memcpy(dest, src, len)"
+  - id: CWE-476
+    name: NULL Pointer Dereference
+    severity: HIGH
+    category: Memory
+    rank_2024: "21"
+    description: Program attempts to use a pointer that has NULL value.
+    detection_pattern: (->|\\*ptr)(?!.*if.*null)
+    fix_pattern: Null checks, Optional types, smart pointers
+    languages:
+      - c
+      - cpp
+      - java
+    example_vuln: "// BAD: No null check
+
+      printf('%s', ptr->name);"
+    example_fix: "// GOOD: Check first
+
+      if (ptr != NULL) printf('%s', ptr->name);"
+  - id: CWE-798
+    name: Hard-coded Credentials
+    severity: CRITICAL
+    category: Secrets
+    rank_2024: "22"
+    description: Embedding credentials directly into code.
+    detection_pattern: (password.*=.*['\]|apiKey.*=.*['\"]|secret.*=.*['\"])"
+    fix_pattern: Environment variables, secrets manager, rotation
+    languages: all
+    example_vuln: "// BAD: Hardcoded secret
+
+      const API_KEY = 'sk-1234567890'"
+    example_fix: "// GOOD: Environment variable
+
+      const API_KEY = process.env.API_KEY"
+  - id: CWE-190
+    name: Integer Overflow
+    severity: HIGH
+    category: Math
+    rank_2024: "23"
+    description: Arithmetic creates value larger than max representable.
+    detection_pattern: (\\+\\+|\\+=|\\*=)(?!.*overflow)
+    fix_pattern: Safe math libraries, range checks, big integers
+    languages:
+      - c
+      - cpp
+      - java
+    example_vuln: "// BAD: Potential overflow
+
+      int total = a + b;"
+    example_fix: "// GOOD: Check overflow
+
+      if (a > INT_MAX - b) throw new Error('Overflow');"
+  - id: CWE-400
+    name: Uncontrolled Resource Consumption
+    severity: MEDIUM
+    category: DoS
+    rank_2024: "24"
+    description: Consuming excessive system resources (DoS).
+    detection_pattern: (while.*true|for.*;;|setTimeout.*0)
+    fix_pattern: Rate limiting, timeouts, resource quotas
+    languages: all
+    example_vuln: "// BAD: Unbounded recursion
+
+      function loop() { loop(); }"
+    example_fix: "// GOOD: With limit
+
+      function loop(depth = 0) { if (depth > 100) return; loop(depth + 1); }"
+  - id: CWE-306
+    name: Missing Authentication
+    severity: CRITICAL
+    category: AuthN
+    rank_2024: "25"
+    description: Critical function lacks proper authentication.
+    detection_pattern: (app\\.(get|post|put|delete)\\()(?!.*auth)
+    fix_pattern: Auth middleware on all protected routes
+    languages: all
+    example_vuln: "// BAD: No auth
+
+      app.delete('/api/users/:id', deleteUser)"
+    example_fix: "// GOOD: Auth middleware
+
+      app.delete('/api/users/:id', requireAuth, deleteUser)"

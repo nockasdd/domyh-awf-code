@@ -1,0 +1,80 @@
+metadata:
+  skill: coding-rules
+  domain: solid_principles
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: solid-principles.yaml
+  patterns_count: 5
+  columns:
+    - principle
+    - full_name
+    - cpp
+    - csharp
+    - java
+    - python
+    - go
+    - rust
+    - typescript
+    - implementation_mechanism
+    - common_violation
+patterns:
+  - id: item_001
+    principle: S
+    full_name: Single Responsibility
+    cpp: ✅ class per header
+    csharp: ✅ partial classes
+    java: ✅ small classes
+    python: ✅ modules
+    go: ✅ packages
+    rust: ✅ modules + crates
+    typescript: ✅ modules
+    implementation_mechanism: One class = one reason to change
+    common_violation: God class with 10+ methods
+  - id: item_002
+    principle: O
+    full_name: Open/Closed
+    cpp: ✅ virtual/templates
+    csharp: ✅ interfaces
+    java: ✅ interfaces
+    python: ✅ ABC/protocols
+    go: ✅ interfaces
+    rust: ✅ traits
+    typescript: ✅ interfaces
+    implementation_mechanism: Extend via inheritance not modification
+    common_violation: Switch statements on types
+  - id: item_003
+    principle: L
+    full_name: Liskov Substitution
+    cpp: ✅ contracts
+    csharp: ✅ contracts
+    java: ✅ contracts
+    python: ✅ protocols
+    go: ✅ interfaces
+    rust: ✅ trait bounds
+    typescript: ✅ interfaces
+    implementation_mechanism: Derived honors base contract
+    common_violation: Square extends Rectangle problem
+  - id: item_004
+    principle: I
+    full_name: Interface Segregation
+    cpp: ✅ abstract classes
+    csharp: ✅ interfaces
+    java: ✅ interfaces
+    python: ✅ ABC
+    go: ✅ small interfaces
+    rust: ✅ small traits
+    typescript: ✅ interfaces
+    implementation_mechanism: Many small > one large
+    common_violation: Fat interface with 20+ methods
+  - id: item_005
+    principle: D
+    full_name: Dependency Inversion
+    cpp: ✅ pimpl/factory
+    csharp: ✅ DI containers
+    java: ✅ Spring DI
+    python: ✅ constructor DI
+    go: ✅ interface DI
+    rust: ✅ trait objects
+    typescript: ✅ DI frameworks
+    implementation_mechanism: Depend on abstractions
+    common_violation: Direct new() in high-level code

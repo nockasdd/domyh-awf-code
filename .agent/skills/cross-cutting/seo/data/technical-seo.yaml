@@ -1,0 +1,75 @@
+# Technical SEO Patterns
+
+patterns:
+  - name: sitemap
+    file: "sitemap.xml"
+    template: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>https://example.com/</loc>
+          <lastmod>2025-01-01</lastmod>
+          <changefreq>weekly</changefreq>
+          <priority>1.0</priority>
+        </url>
+      </urlset>
+    rules:
+      - "Max 50,000 URLs per sitemap"
+      - "Max 50MB uncompressed"
+      - "Submit to Google Search Console"
+      - "Reference in robots.txt"
+
+  - name: robots-txt
+    file: "robots.txt"
+    template: |
+      User-agent: *
+      Allow: /
+      Disallow: /api/
+      Disallow: /admin/
+      Sitemap: https://example.com/sitemap.xml
+    rules:
+      - "Allow all crawlers by default"
+      - "Block sensitive/private paths"
+      - "Include sitemap reference"
+      - "Don't block CSS/JS files"
+
+  - name: canonical-url
+    description: "Prevent duplicate content issues"
+    html: '<link rel="canonical" href="https://example.com/page">'
+    rules:
+      - "Every page must have canonical URL"
+      - "Self-referencing canonicals are OK"
+      - "Use absolute URLs"
+      - "Canonical must return 200"
+
+  - name: meta-tags
+    essential:
+      title:
+        format: "Primary Keyword — Secondary | Brand"
+        length: "50-60 characters"
+      description:
+        format: "Compelling summary with target keyword"
+        length: "150-160 characters"
+      viewport: "width=device-width, initial-scale=1"
+
+  - name: heading-hierarchy
+    rules:
+      - "Single h1 per page"
+      - "h1 contains primary keyword"
+      - "Hierarchy: h1 → h2 → h3 (no skipping)"
+      - "Use headings for structure, not styling"
+
+  - name: image-seo
+    rules:
+      - "Descriptive file names (blue-widget.jpg not IMG_001.jpg)"
+      - "Alt text with keywords where natural"
+      - "WebP/AVIF format for compression"
+      - "Lazy load below-fold images"
+      - "Responsive srcset for different sizes"
+
+  - name: hreflang
+    description: "Multi-language/region support"
+    html: |
+      <link rel="alternate" hreflang="en" href="https://example.com/en/page">
+      <link rel="alternate" hreflang="vi" href="https://example.com/vi/page">
+      <link rel="alternate" hreflang="x-default" href="https://example.com/page">

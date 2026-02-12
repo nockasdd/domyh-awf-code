@@ -1,0 +1,157 @@
+# Tauri Plugin Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TAURI-PLG-001
+    name: Official Plugins
+    category: plugins
+    description: |
+      Tauri 2.0 official plugin ecosystem.
+    text: |
+      | Plugin | Crate | Purpose |
+      |--------|-------|---------|
+      | fs | tauri-plugin-fs | File system read/write |
+      | dialog | tauri-plugin-dialog | Open/save dialogs |
+      | shell | tauri-plugin-shell | Run system commands |
+      | http | tauri-plugin-http | HTTP requests |
+      | notification | tauri-plugin-notification | System notifications |
+      | clipboard | tauri-plugin-clipboard-manager | Clipboard access |
+      | updater | tauri-plugin-updater | Auto-updates |
+      | store | tauri-plugin-store | Key-value storage |
+      | sql | tauri-plugin-sql | SQLite/MySQL/PostgreSQL |
+      | log | tauri-plugin-log | Structured logging |
+      | process | tauri-plugin-process | Process management |
+      | os | tauri-plugin-os | OS information |
+    example: |
+      // Cargo.toml
+      [dependencies]
+      tauri-plugin-fs = "2"
+      tauri-plugin-dialog = "2"
+
+      // main.rs
+      tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
+        .run(tauri::generate_context!())
+        .expect("error");
+
+  - id: TAURI-PLG-002
+    name: Custom Plugin Development
+    category: plugins
+    description: |
+      Create custom Tauri plugins.
+    text: |
+      Plugin structure:
+      1. Define commands in Rust
+      2. Create TypeScript API bindings
+      3. Register with Builder::plugin()
+    example: |
+      // Rust plugin
+      use tauri::plugin::{Builder, TauriPlugin};
+      use tauri::Runtime;
+
+      #[tauri::command]
+      fn my_command(input: String) -> Result<String, String> {
+        Ok(format!("Processed: {}", input))
+      }
+
+      pub fn init<R: Runtime>() -> TauriPlugin<R> {
+        Builder::new("my-plugin")
+          .invoke_handler(tauri::generate_handler![my_command])
+          .build()
+      }
+
+  - id: TAURI-PLG-003
+    name: Plugin State Management
+    category: plugins
+    description: |
+      Share state between plugin commands.
+    text: |
+      Use tauri::State<T> to inject managed state.
+      State must be Send + Sync + 'static.
+    example: |
+      use std::sync::Mutex;
+      struct AppState { counter: Mutex<i32> }
+
+      #[tauri::command]
+      fn increment(state: tauri::State<AppState>) -> i32 {
+        let mut counter = state.counter.lock().unwrap();
+        *counter += 1;
+        *counter
+      }
+
+      tauri::Builder::default()
+        .manage(AppState { counter: Mutex::new(0) })
+
+  - id: TAURI-PLG-004
+    name: Frontend Plugin API
+    category: plugins
+    description: |
+      TypeScript bindings for plugin commands.
+    example: |
+      // @tauri-apps/api usage
+      import { invoke } from "@tauri-apps/api/core";
+
+      // Plugin namespace
+      import { open } from "@tauri-apps/plugin-dialog";
+      import { readTextFile } from "@tauri-apps/plugin-fs";
+
+      const file = await open({ filters: [{ name: "Text", extensions: ["txt"] }] });
+      if (file) {
+        const content = await readTextFile(file.path);
+      }
+
+  - id: TAURI-PLG-005
+    name: Event System
+    category: communication
+    description: |
+      Emit and listen events between frontend and Rust.
+    text: |
+      Types:
+      - Global events: app-wide
+      - Window events: per-window
+      - Webview events: per-webview
+    example: |
+      // Rust → Frontend
+      app.emit("download-progress", ProgressPayload { percent: 50 })?;
+
+      // Frontend → Rust  
+      import { emit, listen } from "@tauri-apps/api/event";
+      const unlisten = await listen("download-progress", (event) => {
+        console.log(`Progress: ${event.payload.percent}%`);
+      });
+
+  - id: TAURI-PLG-006
+    name: Tray Icon Plugin
+    category: system
+    description: |
+      System tray icon with menu.
+    example: |
+      use tauri::tray::{TrayIconBuilder, MouseButton, MouseButtonState};
+
+      TrayIconBuilder::new()
+        .icon(app.default_window_icon().unwrap().clone())
+        .menu(&menu)
+        .on_menu_event(|app, event| {
+          match event.id.as_ref() {
+            "quit" => app.exit(0),
+            "show" => { /* show window */ },
+            _ => {}
+          }
+        })
+        .build(app)?;
+
+  - id: TAURI-PLG-007
+    name: Multi-window Plugin
+    category: system
+    description: |
+      Create and manage multiple windows.
+    example: |
+      // Create new window from Rust
+      let _new_window = tauri::WebviewWindowBuilder::new(
+        app, "settings",
+        tauri::WebviewUrl::App("settings.html".into())
+      )
+      .title("Settings")
+      .inner_size(600.0, 400.0)
+      .build()?;

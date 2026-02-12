@@ -1,0 +1,160 @@
+# =============================================================================
+# modern-api-patterns.yaml — Modern API Patterns (GraphQL, tRPC, gRPC)
+# =============================================================================
+
+version: "1.0.0"
+
+graphql:
+  overview:
+    description: "Query language for APIs — client specifies data shape"
+    best_for: "Frontend-driven APIs, mobile apps, aggregation"
+
+  approaches:
+    schema_first: |
+      # schema.graphql
+      type Query {
+        user(id: ID!): User
+        users(limit: Int = 10): [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        email: String!
+        posts: [Post!]!
+      }
+
+      type Mutation {
+        createUser(input: CreateUserInput!): User!
+      }
+
+    code_first: |
+      // TypeGraphQL (TypeScript)
+      @ObjectType()
+      class User {
+        @Field(() => ID)
+        id: string;
+
+        @Field()
+        name: string;
+
+        @Field(() => [Post])
+        posts: Post[];
+      }
+
+      @Resolver(User)
+      class UserResolver {
+        @Query(() => User)
+        async user(@Arg("id") id: string): Promise<User> {
+          return this.userService.findById(id);
+        }
+      }
+
+  federation:
+    description: "Compose multiple GraphQL services into a unified graph"
+    architecture: |
+      Gateway (Apollo Router)
+        ├── Users Subgraph → type User @key(fields: "id") { id, name, email }
+        ├── Orders Subgraph → type Order { id, user: User, total }
+        └── Reviews Subgraph → type Review { id, user: User, rating }
+
+  performance:
+    dataloader: |
+      // Solve N+1 problem
+      const userLoader = new DataLoader(async (ids: string[]) => {
+        const users = await db.users.findMany({ where: { id: { in: ids } } });
+        return ids.map(id => users.find(u => u.id === id));
+      });
+    pagination: "Cursor-based (Relay spec) for infinite scroll"
+    caching: "Persisted queries, CDN caching with @cacheControl"
+
+trpc:
+  overview:
+    description: "End-to-end typesafe APIs — no code generation needed"
+    best_for: "Full-stack TypeScript apps (Next.js, T3 Stack)"
+
+  server: |
+    // server/trpc.ts
+    import { initTRPC } from '@trpc/server';
+    import { z } from 'zod';
+
+    const t = initTRPC.create();
+    const router = t.router;
+    const publicProcedure = t.procedure;
+
+    export const appRouter = router({
+      user: router({
+        getById: publicProcedure
+          .input(z.object({ id: z.string() }))
+          .query(async ({ input }) => {
+            return db.user.findUnique({ where: { id: input.id } });
+          }),
+
+        create: publicProcedure
+          .input(z.object({
+            name: z.string().min(1),
+            email: z.string().email(),
+          }))
+          .mutation(async ({ input }) => {
+            return db.user.create({ data: input });
+          }),
+      }),
+    });
+
+  client: |
+    // Client usage (fully typed!)
+    const user = await trpc.user.getById.query({ id: '123' });
+    // ^? { id: string, name: string, email: string }
+
+    await trpc.user.create.mutate({
+      name: 'John',
+      email: 'john@example.com',
+    });
+
+  middleware: |
+    const isAuth = t.middleware(async ({ ctx, next }) => {
+      if (!ctx.session) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      return next({ ctx: { ...ctx, user: ctx.session.user } });
+    });
+    const protectedProcedure = publicProcedure.use(isAuth);
+
+grpc:
+  overview:
+    description: "HTTP/2 + Protocol Buffers — high performance"
+    best_for: "Internal microservices, streaming, polyglot"
+
+  streaming_types:
+    - unary: "Single request → single response"
+    - server_streaming: "Single request → stream of responses"
+    - client_streaming: "Stream of requests → single response"
+    - bidirectional: "Stream of requests ↔ stream of responses"
+
+  interceptors: |
+    // Go gRPC interceptor (middleware)
+    func LoggingInterceptor(
+        ctx context.Context,
+        req interface{},
+        info *grpc.UnaryServerInfo,
+        handler grpc.UnaryHandler,
+    ) (interface{}, error) {
+        start := time.Now()
+        resp, err := handler(ctx, req)
+        log.Info("grpc call",
+            "method", info.FullMethod,
+            "duration", time.Since(start),
+            "error", err,
+        )
+        return resp, err
+    }
+
+decision_guide:
+  - scenario: "Full-stack TypeScript, same repo"
+    choice: "tRPC"
+  - scenario: "Multiple frontend clients, flexible queries"
+    choice: "GraphQL"
+  - scenario: "High-performance internal services"
+    choice: "gRPC"
+  - scenario: "Public API, broad compatibility"
+    choice: "REST"
+
+# _DOMYH Awesome Code • Modern API Patterns_

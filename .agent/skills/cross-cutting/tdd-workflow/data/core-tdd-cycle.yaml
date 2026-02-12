@@ -1,0 +1,104 @@
+# TDD Core Cycle Patterns
+# Red-Green-Refactor methodology
+
+patterns:
+  - name: red-phase-failing-test
+    phase: red
+    description: "Write a failing test that defines desired behavior"
+    rules:
+      - "Test MUST fail before writing production code"
+      - "Test should fail for the RIGHT reason (not syntax/import error)"
+      - "One test at a time — do not batch"
+      - "Test name clearly describes expected behavior"
+    example:
+      language: typescript
+      code: |
+        // RED: Test fails — function doesn't exist yet
+        describe('calculateDiscount', () => {
+          it('should apply 10% discount for orders over $100', () => {
+            const result = calculateDiscount(150);
+            expect(result).toBe(135);
+          });
+        });
+
+  - name: green-phase-minimal-code
+    phase: green
+    description: "Write the SIMPLEST code that makes the test pass"
+    rules:
+      - "Write MINIMAL code — no optimization"
+      - "Hardcode if only one test case exists"
+      - "Don't generalize prematurely"
+      - "All tests must pass (green)"
+    example:
+      language: typescript
+      code: |
+        // GREEN: Simplest possible implementation
+        function calculateDiscount(amount: number): number {
+          return amount * 0.9;
+        }
+
+  - name: refactor-phase-clean
+    phase: refactor
+    description: "Improve code quality without changing behavior"
+    rules:
+      - "All tests MUST still pass after refactoring"
+      - "Remove duplication (DRY)"
+      - "Improve naming and readability"
+      - "Extract functions/classes if needed"
+      - "No new functionality during refactor"
+    checklist:
+      - "Any duplicated code?"
+      - "Are names clear and descriptive?"
+      - "Can any method be simplified?"
+      - "Is the test itself clean?"
+
+  - name: triangulation
+    phase: red
+    description: "Add more test cases to force generalization"
+    when: "Green phase used hardcoded value"
+    example:
+      language: typescript
+      code: |
+        // Triangulate: Force real logic
+        it('should apply 10% for $200 order', () => {
+          expect(calculateDiscount(200)).toBe(180);
+        });
+        it('should NOT apply discount for $50 order', () => {
+          expect(calculateDiscount(50)).toBe(50);
+        });
+
+  - name: baby-steps
+    description: "Take the smallest possible step at each phase"
+    rules:
+      - "Each commit should be tiny and atomic"
+      - "If stuck longer than 5 min, revert and try smaller step"
+      - "Timebox each Red-Green cycle to 10 minutes max"
+
+  - name: transformation-priority-premise
+    description: "Order of code transformations from simple to complex"
+    transformations:
+      - "({}→nil) no code → return nil/null"
+      - "(nil→constant) return a constant"
+      - "(constant→variable) replace constant with variable"
+      - "(unconditional→conditional) add if/else"
+      - "(scalar→collection) single → list/array"
+      - "(statement→recursion) iterate → recurse"
+      - "(value→type) change type representation"
+
+  - name: outside-in-tdd
+    description: "Start from acceptance test, drill down to unit tests"
+    flow:
+      - "Write acceptance test (E2E/integration) — RED"
+      - "Write unit test for first component — RED"
+      - "Implement component — GREEN"
+      - "Repeat for next component"
+      - "Acceptance test passes — done"
+
+  - name: inside-out-tdd
+    description: "Start from domain/core logic, build outward"
+    flow:
+      - "Write unit test for core domain — RED"
+      - "Implement domain logic — GREEN"
+      - "Write integration test — RED"
+      - "Wire up infrastructure — GREEN"
+      - "Add acceptance test at the end"

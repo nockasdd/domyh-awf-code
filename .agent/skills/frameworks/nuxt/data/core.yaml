@@ -1,0 +1,321 @@
+# =============================================================================
+# Nuxt Core Patterns (Feb 2026)
+# =============================================================================
+# Nuxt 4, Data Fetching, App Directory
+
+metadata:
+  skill: nuxt
+  domain: core
+  version: "4.3"
+  updated: "2026-02-11"
+  patterns_count: 6
+  columns:
+    [
+      id,
+      name,
+      category,
+      version,
+      description,
+      text,
+      example,
+      severity,
+      docs_url,
+    ]
+
+patterns:
+  - id: nuxt001
+    name: App Directory Structure
+    category: architecture
+    version: "4+"
+    description: |
+      Nuxt 4's reorganized app/ directory for cleaner projects.
+      Consolidates application code in one location.
+    text: app directory structure pages components layouts
+    example: |
+      # ✅ Nuxt 4: New app/ directory structure
+      my-app/
+      ├── app/
+      │   ├── pages/              # File-based routing
+      │   │   ├── index.vue       # /
+      │   │   ├── about.vue       # /about
+      │   │   └── users/
+      │   │       ├── index.vue   # /users
+      │   │       └── [id].vue    # /users/:id
+      │   ├── components/         # Auto-imported components
+      │   │   ├── AppHeader.vue
+      │   │   └── AppFooter.vue
+      │   ├── layouts/
+      │   │   ├── default.vue
+      │   │   └── admin.vue
+      │   ├── composables/        # Auto-imported composables
+      │   │   └── useAuth.ts
+      │   ├── utils/              # Auto-imported utilities
+      │   └── app.vue             # App entry point
+      ├── server/                 # Nitro server
+      │   ├── api/
+      │   │   └── users.get.ts
+      │   └── middleware/
+      ├── public/
+      ├── nuxt.config.ts
+      └── package.json
+
+      # ✅ Benefits:
+      # - Cleaner separation of concerns
+      # - Faster development server
+      # - Better TypeScript contexts
+    severity: CRITICAL
+    docs_url: https://nuxt.com/docs/getting-started/directory-structure
+
+  - id: nuxt002
+    name: useAsyncData & useFetch
+    category: data-fetching
+    version: "3+"
+    description: |
+      Smart data fetching with automatic caching and sharing.
+      Nuxt 4 returns shallowRef for better performance.
+    text: useAsyncData useFetch data fetch cache shallow ref
+    example: |
+      <script setup lang="ts">
+      // ✅ useFetch for simple API calls
+      const { data: users, pending, error, refresh } = await useFetch('/api/users');
+
+      // ✅ useAsyncData for complex fetching
+      const { data: user } = await useAsyncData('user', () => {
+        return $fetch(`/api/users/${route.params.id}`);
+      });
+
+      // ✅ Nuxt 4: Data sharing with key
+      // Components using same key share data automatically
+      const { data: posts } = await useFetch('/api/posts', {
+        key: 'posts-list',  // Shared across components
+      });
+
+      // ✅ Nuxt 4: shallowRef by default (less reactivity overhead)
+      // Data changes require reassignment, not deep mutation
+      const { data } = await useFetch('/api/data', {
+        deep: true,  // Opt into deep reactivity if needed
+      });
+
+      // ✅ getCachedData for controlling cache
+      const { data } = await useFetch('/api/data', {
+        getCachedData(key) {
+          return nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+        },
+      });
+      </script>
+
+      <template>
+        <div v-if="pending">Loading...</div>
+        <div v-else-if="error">Error: {{ error.message }}</div>
+        <ul v-else>
+          <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+        </ul>
+      </template>
+    severity: CRITICAL
+    docs_url: https://nuxt.com/docs/getting-started/data-fetching
+
+  - id: nuxt003
+    name: Auto-imports
+    category: dx
+    version: "3+"
+    description: Components, composables, utils auto-imported
+    text: auto import components composables utils
+    example: |
+      <!-- ✅ Components from components/ are auto-imported -->
+      <template>
+        <AppHeader />
+        <NuxtPage />
+        <AppFooter />
+      </template>
+
+      <script setup lang="ts">
+      // ✅ Vue APIs auto-imported
+      const count = ref(0);
+      const doubled = computed(() => count.value * 2);
+
+      // ✅ Nuxt composables auto-imported
+      const route = useRoute();
+      const router = useRouter();
+      const { data } = await useFetch('/api/users');
+
+      // ✅ Custom composables from composables/ auto-imported
+      // composables/useAuth.ts
+      export function useAuth() {
+        const user = useState<User | null>('user', () => null);
+        async function login(credentials: Credentials) {
+          // ...
+        }
+        return { user, login };
+      }
+
+      // Usage (no import needed!)
+      const { user, login } = useAuth();
+
+      // ✅ Utilities from utils/ auto-imported (Nuxt 4)
+      // utils/format.ts
+      export function formatDate(date: Date) {
+        return new Intl.DateTimeFormat().format(date);
+      }
+
+      // Usage
+      const formatted = formatDate(new Date());
+      </script>
+    severity: HIGH
+    docs_url: https://nuxt.com/docs/guide/concepts/auto-imports
+
+  - id: nuxt004
+    name: Layouts
+    category: rendering
+    version: "3+"
+    description: Page layouts with slot-based composition
+    text: layout default slot page transition nested
+    example: |
+      <!-- layouts/default.vue -->
+      <template>
+        <div class="min-h-screen">
+          <AppHeader />
+          <main class="container mx-auto py-8">
+            <slot />
+          </main>
+          <AppFooter />
+        </div>
+      </template>
+
+      <!-- layouts/admin.vue -->
+      <template>
+        <div class="flex">
+          <AdminSidebar />
+          <main class="flex-1 p-8">
+            <slot />
+          </main>
+        </div>
+      </template>
+
+      <!-- pages/dashboard.vue -->
+      <script setup>
+      // ✅ Specify layout
+      definePageMeta({
+        layout: 'admin',
+      });
+      </script>
+
+      <template>
+        <h1>Dashboard</h1>
+      </template>
+
+      <!-- ✅ Programmatic layout -->
+      <script setup>
+      const route = useRoute();
+
+      // Change layout based on condition
+      definePageMeta({
+        layout: false,  // Disable layout
+      });
+
+      // Or use setPageLayout
+      setPageLayout('admin');
+      </script>
+    severity: MEDIUM
+    docs_url: https://nuxt.com/docs/guide/directory-structure/layouts
+
+  - id: nuxt005
+    name: Route Middleware
+    category: routing
+    version: "3+"
+    description: Route guards for auth and redirects
+    text: middleware auth guard redirect defineNuxtRouteMiddleware
+    example: |
+      // middleware/auth.ts
+      export default defineNuxtRouteMiddleware((to) => {
+        const { user } = useAuth();
+
+        // ✅ Redirect if not authenticated
+        if (!user.value && to.path !== '/login') {
+          return navigateTo('/login');
+        }
+      });
+
+      // middleware/admin.ts
+      export default defineNuxtRouteMiddleware(() => {
+        const { user } = useAuth();
+
+        if (user.value?.role !== 'admin') {
+          return abortNavigation('Not authorized');
+        }
+      });
+
+      // ✅ Apply to page
+      // pages/dashboard.vue
+      <script setup>
+      definePageMeta({
+        middleware: 'auth',
+      });
+      </script>
+
+      // ✅ Multiple middleware
+      <script setup>
+      definePageMeta({
+        middleware: ['auth', 'admin'],
+      });
+      </script>
+
+      // ✅ Global middleware (runs on every route)
+      // middleware/analytics.global.ts
+      export default defineNuxtRouteMiddleware((to, from) => {
+        analytics.track('page_view', { path: to.path });
+      });
+    severity: HIGH
+    docs_url: https://nuxt.com/docs/guide/directory-structure/middleware
+
+  - id: nuxt006
+    name: NuxtLink & Navigation
+    category: routing
+    version: "3+"
+    description: Client-side navigation with prefetching
+    text: NuxtLink navigateTo prefetch router push replace
+    example: |
+      <template>
+        <!-- ✅ NuxtLink for client-side navigation -->
+        <NuxtLink to="/">Home</NuxtLink>
+        <NuxtLink to="/about">About</NuxtLink>
+
+        <!-- Dynamic route -->
+        <NuxtLink :to="`/users/${user.id}`">
+          {{ user.name }}
+        </NuxtLink>
+
+        <!-- With params -->
+        <NuxtLink :to="{ name: 'users-id', params: { id: user.id } }">
+          Profile
+        </NuxtLink>
+
+        <!-- ✅ Prefetch control -->
+        <NuxtLink to="/heavy-page" :prefetch="false">
+          Don't prefetch
+        </NuxtLink>
+
+        <!-- External link -->
+        <NuxtLink to="https://nuxt.com" external target="_blank">
+          Nuxt Website
+        </NuxtLink>
+      </template>
+
+      <script setup lang="ts">
+      // ✅ Programmatic navigation
+      const router = useRouter();
+
+      function goToUser(id: string) {
+        navigateTo(`/users/${id}`);
+      }
+
+      // With replace (no history entry)
+      navigateTo('/dashboard', { replace: true });
+
+      // External redirect
+      navigateTo('https://nuxt.com', { external: true });
+
+      // With route object
+      navigateTo({ name: 'users-id', params: { id: '123' } });
+      </script>
+    severity: MEDIUM
+    docs_url: https://nuxt.com/docs/api/components/nuxt-link

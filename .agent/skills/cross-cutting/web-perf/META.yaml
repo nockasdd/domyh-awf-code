@@ -1,19 +1,25 @@
 name: web-perf
-version: "6.1.2"
+version: "6.2.1"
 category: support
-tier: 1
+tier: 3
 
-description: |
-  Core Web Vitals audit and web performance optimization.
-  Chrome DevTools MCP integration for systematic profiling.
+desc: "Core Web Vitals 2026 audit and web performance optimization. Chrome DevTools MCP integration for systematic profiling."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 38
+  domains:
+    core-web-vitals: 10
+    lcp-optimization: 8
+    inp-optimization: 8
+    cls-optimization: 6
+    measurement: 6
+
     - "*.html"
     - "lighthouse.json"
     - "web-vitals.*"
+    - "lighthouserc.js"
   keywords:
-    # Core Web Vitals
+    # Core Web Vitals 2025
     - web performance
     - core web vitals
     - lighthouse
@@ -27,28 +33,54 @@ triggers:
     - inp
     - tbt
     - speed index
+    - largest contentful paint
+    - interaction to next paint
+    - cumulative layout shift
+    # LCP Optimization
+    - preload lcp
+    - fetchpriority
+    - critical css
+    - webp avif
+    - lazy loading
+    # INP Optimization
+    - long tasks
+    - web workers
+    - code splitting
+    - debounce throttle
+    - scheduler.yield
+    # CLS Prevention
+    - image dimensions
+    - font display swap
+    - content-visibility
+    - layout shift
     # Issues
     - render blocking
-    - layout shift
     - slow loading
     - first paint
-    - largest contentful paint
     # Tools
     - chrome devtools
     - performance profiling
     - network waterfall
     - bundle size
+    - pagespeed insights
+    - crux
+    - web-vitals library
   intents:
     - audit performance
     - optimize page load
     - reduce bundle size
     - fix core web vitals
     - improve lighthouse score
+    - optimize lcp
+    - improve inp
+    - prevent cls
 
 related_skills:
   - react
   - nextjs
-  - ui-ux-pro-max
+  - vue
+  - tailwind
+  - domyh-design
 
 prevent_confusion_with:
   - testing: "web-perf audits performance, testing verifies correctness"

@@ -1,0 +1,89 @@
+# Terraform CI/CD Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: TF-CI-001
+    name: GitHub Actions Pipeline
+    category: ci-cd
+    description: |
+      Terraform CI/CD with GitHub Actions.
+    example: |
+      # .github/workflows/terraform.yml
+      name: Terraform
+      on:
+        pull_request:
+          paths: ["infra/**"]
+        push:
+          branches: [main]
+          paths: ["infra/**"]
+
+      jobs:
+        plan:
+          runs-on: ubuntu-latest
+          if: github.event_name == 'pull_request'
+          steps:
+            - uses: actions/checkout@v4
+            - uses: hashicorp/setup-terraform@v3
+            - run: terraform init
+            - run: terraform plan -no-color -out=plan.tfplan
+            - uses: actions/github-script@v7
+              with:
+                script: |
+                  github.rest.issues.createComment({
+                    issue_number: context.issue.number,
+                    body: '```\n' + '${{ steps.plan.outputs.stdout }}' + '\n```'
+                  })
+        
+        apply:
+          runs-on: ubuntu-latest
+          if: github.ref == 'refs/heads/main'
+          steps:
+            - uses: actions/checkout@v4
+            - uses: hashicorp/setup-terraform@v3
+            - run: terraform init
+            - run: terraform apply -auto-approve
+
+  - id: TF-CI-002
+    name: Pre-commit Hooks
+    category: quality
+    description: |
+      Quality checks before commit.
+    text: |
+      Tools:
+      - terraform fmt: Format HCL files
+      - terraform validate: Syntax validation
+      - tflint: Linting rules
+      - tfsec/trivy: Security scanning
+      - terraform-docs: Auto-generate docs
+    example: |
+      # .pre-commit-config.yaml
+      repos:
+        - repo: https://github.com/antonbabenko/pre-commit-terraform
+          hooks:
+            - id: terraform_fmt
+            - id: terraform_validate
+            - id: terraform_tflint
+            - id: terraform_trivy
+            - id: terraform_docs
+
+  - id: TF-CI-003
+    name: State Locking
+    category: safety
+    description: |
+      Prevent concurrent state modifications.
+    text: |
+      AWS: DynamoDB table for lock
+      GCP: GCS bucket with locking
+      Azure: Blob storage with lease
+
+      Always enable locking in CI/CD to prevent race conditions.
+
+  - id: TF-CI-004
+    name: Drift Detection
+    category: monitoring
+    description: |
+      Detect infrastructure drift from desired state.
+    text: |
+      Schedule: terraform plan in CI (daily/weekly)
+      Alert on: plan shows changes not in code
+      Tools: Spacelift, env0, Terraform Cloud

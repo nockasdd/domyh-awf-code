@@ -1,0 +1,156 @@
+metadata:
+  skill: logging
+  domain: language_kotlin
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-kotlin.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: KT-001
+    category: kotlin-logging
+    library: kotlin-logging
+    name: KotlinLogging.logger
+    description: Create logger
+    example: private val logger = KotlinLogging.logger {}
+    when_to_use: Kotlin projects
+  - id: KT-002
+    category: kotlin-logging
+    library: kotlin-logging
+    name: logger.info
+    description: Log at info level
+    example: logger.info { "User $userId logged in" }
+    when_to_use: General events
+  - id: KT-003
+    category: kotlin-logging
+    library: kotlin-logging
+    name: logger.debug
+    description: Log at debug level
+    example: logger.debug { "Processing $item" }
+    when_to_use: Debugging
+  - id: KT-004
+    category: kotlin-logging
+    library: kotlin-logging
+    name: logger.error
+    description: Log errors with exception
+    example: logger.error(e) { "Failed to process" }
+    when_to_use: Error handling
+  - id: KT-005
+    category: kotlin-logging
+    library: kotlin-logging
+    name: logger.warn
+    description: Log warnings
+    example: logger.warn { "Retry attempt $attempt" }
+    when_to_use: Potential issues
+  - id: KT-006
+    category: kotlin-logging
+    library: kotlin-logging
+    name: Lazy Evaluation
+    description: Lambda defers evaluation
+    example: 'logger.debug { "Expensive: ${computeDebugInfo()}" }'
+    when_to_use: Performance
+  - id: KT-007
+    category: kotlin-logging
+    library: kotlin-logging
+    name: withLoggingContext
+    description: Context propagation
+    example: withLoggingContext("requestId" to reqId) { ... }
+    when_to_use: Request context
+  - id: KT-008
+    category: timber
+    library: Timber
+    name: Timber.plant
+    description: Initialize Timber
+    example: Timber.plant(Timber.DebugTree())
+    when_to_use: Android app setup
+  - id: KT-009
+    category: timber
+    library: Timber
+    name: Timber.d
+    description: Debug log
+    example: Timber.d("User %s logged in", userId)
+    when_to_use: Android debugging
+  - id: KT-010
+    category: timber
+    library: Timber
+    name: Timber.e
+    description: Error log
+    example: Timber.e(exception, "Failed to load data")
+    when_to_use: Android errors
+  - id: KT-011
+    category: timber
+    library: Timber
+    name: Timber.i
+    description: Info log
+    example: Timber.i("App started")
+    when_to_use: Android info
+  - id: KT-012
+    category: timber
+    library: Timber
+    name: Timber.w
+    description: Warning log
+    example: Timber.w("Network slow")
+    when_to_use: Android warnings
+  - id: KT-013
+    category: timber
+    library: Timber
+    name: Custom Tree
+    description: Custom logging tree
+    example: "class CrashlyticsTree : Timber.Tree() { override fun log(...) }"
+    when_to_use: Crashlytics integration
+  - id: KT-014
+    category: timber
+    library: Timber
+    name: Release Tree
+    description: Production tree
+    example: "class ReleaseTree : Timber.Tree() { /* no debug */ }"
+    when_to_use: Production logging
+  - id: KT-015
+    category: timber
+    library: Timber
+    name: Tag Override
+    description: Custom tag
+    example: Timber.tag("CustomTag").d("message")
+    when_to_use: Custom log tags
+  - id: KT-016
+    category: android
+    library: Android
+    name: Log.d
+    description: Android SDK logging
+    example: Log.d(TAG, "message")
+    when_to_use: Basic Android logging
+  - id: KT-017
+    category: android
+    library: Android
+    name: BuildConfig.DEBUG
+    description: Conditional logging
+    example: if (BuildConfig.DEBUG) Log.d(TAG, msg)
+    when_to_use: Debug builds only
+  - id: KT-018
+    category: ktor
+    library: Ktor
+    name: call.application.log
+    description: Ktor server logging
+    example: call.application.environment.log.info("Request received")
+    when_to_use: Ktor applications
+  - id: KT-019
+    category: coroutines
+    library: Coroutines
+    name: MDC Context
+    description: Coroutine MDC propagation
+    example: withContext(MDCContext()) { ... }
+    when_to_use: Async context
+  - id: KT-020
+    category: coroutines
+    library: Coroutines
+    name: Structured Concurrency
+    description: Log scope lifecycle
+    example: logger.info { "Scope $this starting" }
+    when_to_use: Coroutine debugging

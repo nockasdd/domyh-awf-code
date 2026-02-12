@@ -1,0 +1,334 @@
+# =============================================================================
+# C++ Modern Patterns (Feb 2026)
+# Version: C++20/23/26
+# =============================================================================
+
+metadata:
+  skill: cpp
+  domain: modern
+  version: "C++26"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: cpp101
+    name: Smart Pointers
+    category: memory
+    version: "C++11+"
+    description: |
+      RAII-based memory management.
+      unique_ptr, shared_ptr, weak_ptr.
+    text: smart pointer unique_ptr shared_ptr weak_ptr make_unique
+    example: |
+      #include <memory>
+
+      // ✅ unique_ptr - exclusive ownership
+      auto widget = std::make_unique<Widget>(args...);
+
+      // Move semantics
+      auto other = std::move(widget);  // widget is now nullptr
+
+      // Custom deleter
+      auto file = std::unique_ptr<FILE, decltype(&fclose)>(
+          fopen("file.txt", "r"), &fclose
+      );
+
+      // ✅ shared_ptr - shared ownership
+      auto shared = std::make_shared<Resource>();
+      auto copy = shared;  // Reference count: 2
+
+      std::println("Use count: {}", shared.use_count());
+
+      // ✅ weak_ptr - non-owning observer
+      std::weak_ptr<Resource> observer = shared;
+
+      if (auto locked = observer.lock()) {
+          // Resource still exists
+          locked->use();
+      }
+
+      // ✅ Factory pattern with unique_ptr
+      class Animal {
+      public:
+          virtual ~Animal() = default;
+          virtual void speak() = 0;
+      };
+
+      std::unique_ptr<Animal> create_animal(const std::string& type) {
+          if (type == "dog") return std::make_unique<Dog>();
+          if (type == "cat") return std::make_unique<Cat>();
+          return nullptr;
+      }
+
+      // ✅ shared_ptr with custom allocator
+      auto obj = std::allocate_shared<Widget>(my_allocator);
+
+      // ✅ enable_shared_from_this
+      class Node : public std::enable_shared_from_this<Node> {
+      public:
+          std::shared_ptr<Node> get_shared() {
+              return shared_from_this();
+          }
+      };
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/memory
+
+  - id: cpp102
+    name: Move Semantics
+    category: performance
+    version: "C++11+"
+    description: |
+      Efficient resource transfer without copying.
+      Move constructors, forwarding references.
+    text: move semantics rvalue forward perfect forwarding
+    example: |
+      #include <utility>
+
+      class Buffer {
+          std::unique_ptr<char[]> data_;
+          size_t size_;
+          
+      public:
+          // ✅ Move constructor
+          Buffer(Buffer&& other) noexcept
+              : data_(std::move(other.data_))
+              , size_(std::exchange(other.size_, 0))
+          {}
+          
+          // ✅ Move assignment
+          Buffer& operator=(Buffer&& other) noexcept {
+              if (this != &other) {
+                  data_ = std::move(other.data_);
+                  size_ = std::exchange(other.size_, 0);
+              }
+              return *this;
+          }
+          
+          // Copy operations deleted
+          Buffer(const Buffer&) = delete;
+          Buffer& operator=(const Buffer&) = delete;
+      };
+
+      // ✅ Perfect forwarding
+      template<typename T, typename... Args>
+      std::unique_ptr<T> make_unique_wrapper(Args&&... args) {
+          return std::make_unique<T>(std::forward<Args>(args)...);
+      }
+
+      // ✅ std::exchange for clean moves
+      class Socket {
+          int fd_;
+      public:
+          Socket(Socket&& other) noexcept
+              : fd_(std::exchange(other.fd_, -1)) {}
+      };
+
+      // ✅ Return by value (implicit move)
+      std::vector<int> create_data() {
+          std::vector<int> result(1000);
+          // ...
+          return result;  // Moved, not copied (NRVO or implicit move)
+      }
+
+      // ✅ Sink parameter pattern
+      void store_data(std::string data) {  // By value
+          // Either moved or copied depending on caller
+          storage_.push_back(std::move(data));
+      }
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/language/move_constructor
+
+  - id: cpp103
+    name: Ranges (C++20)
+    category: algorithms
+    version: "C++20"
+    description: |
+      Composable range adapters and views.
+      Lazy evaluation, pipeline syntax.
+    text: ranges views filter transform take drop pipeline
+    example: |
+      #include <ranges>
+      #include <vector>
+      #include <algorithm>
+
+      namespace views = std::views;
+      namespace ranges = std::ranges;
+
+      // ✅ Pipeline syntax
+      std::vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+      auto result = nums
+          | views::filter([](int n) { return n % 2 == 0; })
+          | views::transform([](int n) { return n * n; })
+          | views::take(3);
+
+      // result: 4, 16, 36 (lazy, computed on demand)
+
+      for (int n : result) {
+          std::println("{}", n);
+      }
+
+      // ✅ Convert to container (C++23)
+      auto vec = result | ranges::to<std::vector>();
+
+      // ✅ Useful views
+      auto evens = nums | views::filter([](int n) { return n % 2 == 0; });
+      auto doubled = nums | views::transform([](int n) { return n * 2; });
+      auto first5 = nums | views::take(5);
+      auto skip3 = nums | views::drop(3);
+      auto reversed = nums | views::reverse;
+      auto chunked = nums | views::chunk(3);  // C++23
+      auto slid = nums | views::slide(3);     // C++23
+
+      // ✅ Generate views
+      auto iota = views::iota(1, 100);  // 1, 2, 3, ..., 99
+      auto repeat = views::repeat(42);   // 42, 42, 42, ... (infinite)
+
+      // ✅ Range algorithms
+      auto it = ranges::find(nums, 5);
+      auto [min, max] = ranges::minmax(nums);
+      bool all_positive = ranges::all_of(nums, [](int n) { return n > 0; });
+
+      ranges::sort(nums);
+      ranges::reverse(nums);
+
+      // ✅ Projection parameter
+      struct Person { std::string name; int age; };
+      std::vector<Person> people = {...};
+
+      ranges::sort(people, {}, &Person::age);  // Sort by age
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/ranges
+
+  - id: cpp104
+    name: std::format and std::print (C++20/23)
+    category: io
+    version: "C++20/23"
+    description: |
+      Type-safe, extensible string formatting.
+      Python-like format syntax.
+    text: format print println format_to formatting
+    example: |
+      #include <format>
+      #include <print>  // C++23
+
+      // ✅ std::format (C++20)
+      std::string result = std::format("Hello, {}!", "World");
+      std::string formatted = std::format("Value: {:.2f}, Hex: {:#x}", 3.14159, 255);
+
+      // ✅ std::print/println (C++23)
+      std::println("Hello, {}!", "World");
+      std::println("Name: {}, Age: {}", name, age);
+      std::print("No newline");
+
+      // ✅ Format specifiers
+      std::println("{:>10}", "right");     // Right-align, width 10
+      std::println("{:<10}", "left");      // Left-align
+      std::println("{:^10}", "center");    // Center
+      std::println("{:*^10}", "pad");      // Padding with *
+
+      std::println("{:.3f}", 3.14159);     // 3 decimal places
+      std::println("{:08d}", 42);          // Zero-padded
+      std::println("{:#b}", 42);           // Binary: 0b101010
+      std::println("{:#o}", 42);           // Octal: 052
+      std::println("{:#x}", 42);           // Hex: 0x2a
+
+      // ✅ Positional arguments
+      std::println("{1} {0} {1}", "a", "b");  // "b a b"
+
+      // ✅ Named arguments (with std::make_format_args)
+      // Not directly supported, but can simulate
+
+      // ✅ Custom formatter
+      struct Point { int x, y; };
+
+      template<>
+      struct std::formatter<Point> : std::formatter<std::string> {
+          auto format(const Point& p, auto& ctx) const {
+              return std::format_to(ctx.out(), "({}, {})", p.x, p.y);
+          }
+      };
+
+      Point p{10, 20};
+      std::println("Point: {}", p);  // "Point: (10, 20)"
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/utility/format
+
+  - id: cpp105
+    name: RAII Pattern
+    category: patterns
+    version: "C++"
+    description: |
+      Resource Acquisition Is Initialization.
+      Automatic cleanup via destructors.
+    text: raii resource management destructor scope guard
+    example: |
+      // ✅ Classic RAII wrapper
+      class FileHandle {
+          FILE* file_;
+          
+      public:
+          explicit FileHandle(const char* path, const char* mode)
+              : file_(fopen(path, mode))
+          {
+              if (!file_) throw std::runtime_error("Failed to open file");
+          }
+          
+          ~FileHandle() {
+              if (file_) fclose(file_);
+          }
+          
+          // Non-copyable
+          FileHandle(const FileHandle&) = delete;
+          FileHandle& operator=(const FileHandle&) = delete;
+          
+          // Movable
+          FileHandle(FileHandle&& other) noexcept
+              : file_(std::exchange(other.file_, nullptr)) {}
+          
+          FILE* get() const { return file_; }
+      };
+
+      // ✅ Scope guard for cleanup actions
+      template<typename F>
+      class ScopeGuard {
+          F cleanup_;
+          bool dismissed_ = false;
+          
+      public:
+          explicit ScopeGuard(F&& f) : cleanup_(std::forward<F>(f)) {}
+          ~ScopeGuard() { if (!dismissed_) cleanup_(); }
+          void dismiss() { dismissed_ = true; }
+          
+          ScopeGuard(const ScopeGuard&) = delete;
+          ScopeGuard& operator=(const ScopeGuard&) = delete;
+      };
+
+      // Usage
+      void process() {
+          auto* resource = acquire_resource();
+          ScopeGuard guard([&] { release_resource(resource); });
+          
+          // If exception, guard releases resource
+          do_work(resource);
+          
+          // On success path, may dismiss guard
+          // guard.dismiss();
+      }
+
+      // ✅ Lock guard
+      std::mutex mtx;
+      {
+          std::lock_guard lock(mtx);  // RAII lock
+          // Critical section
+      }  // Automatically unlocked
+
+      // ✅ unique_lock for more control
+      {
+          std::unique_lock lock(mtx, std::defer_lock);
+          // ...
+          lock.lock();
+          // ...
+      }
+    severity: HIGH
+    docs_url: https://en.cppreference.com/w/cpp/language/raii

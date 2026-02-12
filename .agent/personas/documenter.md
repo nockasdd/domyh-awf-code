@@ -1,6 +1,6 @@
 ---
 name: documenter
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "doc-001"
 
 # =============================================================================
@@ -67,6 +67,9 @@ tools:
     - replace_file_content
     - write_to_file
     - search_web # For reference docs
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - run_command # Docs don't run code
   requires_approval: []
@@ -256,4 +259,4 @@ output_template: |
   - [Link to API reference]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Documenter Persona
+# DOMYH Awesome Code • Documenter Persona

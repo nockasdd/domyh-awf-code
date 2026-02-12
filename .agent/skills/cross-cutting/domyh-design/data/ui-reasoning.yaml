@@ -1,0 +1,1019 @@
+metadata:
+  skill: domyh-design
+  domain: ui_reasoning
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: ui-reasoning.yaml
+  patterns_count: 100
+  columns:
+    - "No"
+    - UI_Category
+    - Recommended_Pattern
+    - Style_Priority
+    - Color_Mood
+    - Typography_Mood
+    - Key_Effects
+    - Decision_Rules
+    - Anti_Patterns
+    - Severity
+patterns:
+  - id: "1"
+    ui_category: SaaS (General)
+    recommended_pattern: Hero + Features + CTA
+    style_priority: Glassmorphism + Flat Design
+    color_mood: Trust blue + Accent contrast
+    typography_mood: Professional + Hierarchy
+    key_effects: Subtle hover (200-250ms) + Smooth transitions
+    decision_rules: '{"if_ux_focused": "prioritize-minimalism", "if_data_heavy": "add-glassmorphism"}'
+    anti_patterns: Excessive animation + Dark mode by default
+    severity: HIGH
+  - id: "2"
+    ui_category: Micro SaaS
+    recommended_pattern: Minimal & Direct + Demo
+    style_priority: Flat Design + Vibrant & Block
+    color_mood: Vibrant primary + White space
+    typography_mood: Bold + Clean typography
+    key_effects: Large CTA hover (300ms) + Scroll reveal
+    decision_rules: '{"if_quick_onboarding": "reduce-steps", "if_demo_available": "feature-interactive-demo"}'
+    anti_patterns: Complex onboarding flow + Cluttered layout
+    severity: HIGH
+  - id: "3"
+    ui_category: E-commerce
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Vibrant & Block-based
+    color_mood: Brand primary + Success green
+    typography_mood: Engaging + Clear hierarchy
+    key_effects: Card hover lift (200ms) + Scale effect
+    decision_rules: '{"if_luxury": "switch-to-liquid-glass", "if_conversion_focused": "add-urgency-colors"}'
+    anti_patterns: Flat design without depth + Text-heavy pages
+    severity: HIGH
+  - id: "4"
+    ui_category: E-commerce Luxury
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Liquid Glass + Glassmorphism
+    color_mood: Premium colors + Minimal accent
+    typography_mood: Elegant + Refined typography
+    key_effects: Chromatic aberration + Fluid animations (400-600ms)
+    decision_rules: '{"if_checkout": "emphasize-trust", "if_hero_needed": "use-3d-hyperrealism"}'
+    anti_patterns: Vibrant & Block-based + Playful colors
+    severity: HIGH
+  - id: "5"
+    ui_category: Healthcare App
+    recommended_pattern: Social Proof-Focused
+    style_priority: Neumorphism + Accessible & Ethical
+    color_mood: Calm blue + Health green
+    typography_mood: Readable + Large type (16px+)
+    key_effects: Soft box-shadow + Smooth press (150ms)
+    decision_rules: '{"must_have": "wcag-aaa-compliance", "if_medication": "red-alert-colors"}'
+    anti_patterns: Bright neon colors + Motion-heavy animations + AI purple/pink gradients
+    severity: HIGH
+  - id: "6"
+    ui_category: Fintech/Crypto
+    recommended_pattern: Conversion-Optimized
+    style_priority: Glassmorphism + Dark Mode (OLED)
+    color_mood: Dark tech colors + Vibrant accents
+    typography_mood: Modern + Confident typography
+    key_effects: Real-time chart animations + Alert pulse/glow
+    decision_rules: '{"must_have": "security-badges", "if_real_time": "add-streaming-data"}'
+    anti_patterns: Light backgrounds + No security indicators
+    severity: HIGH
+  - id: "7"
+    ui_category: Education
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Claymorphism + Micro-interactions
+    color_mood: Playful colors + Clear hierarchy
+    typography_mood: Friendly + Engaging typography
+    key_effects: Soft press (200ms) + Fluffy elements
+    decision_rules: '{"if_gamification": "add-progress-animation", "if_children": "increase-playfulness"}'
+    anti_patterns: Dark modes + Complex jargon
+    severity: MEDIUM
+  - id: "8"
+    ui_category: Portfolio/Personal
+    recommended_pattern: Storytelling-Driven
+    style_priority: Motion-Driven + Minimalism
+    color_mood: Brand primary + Artistic
+    typography_mood: Expressive + Variable typography
+    key_effects: Parallax (3-5 layers) + Scroll-triggered reveals
+    decision_rules: '{"if_creative_field": "add-brutalism", "if_minimal_portfolio": "reduce-motion"}'
+    anti_patterns: Corporate templates + Generic layouts
+    severity: MEDIUM
+  - id: "9"
+    ui_category: Government/Public
+    recommended_pattern: Minimal & Direct
+    style_priority: Accessible & Ethical + Minimalism
+    color_mood: Professional blue + High contrast
+    typography_mood: Clear + Large typography
+    key_effects: Clear focus rings (3-4px) + Skip links
+    decision_rules: '{"must_have": "wcag-aaa", "must_have": "keyboard-navigation"}'
+    anti_patterns: Ornate design + Low contrast + Motion effects + AI purple/pink gradients
+    severity: HIGH
+  - id: "10"
+    ui_category: Fintech (Banking)
+    recommended_pattern: Trust & Authority
+    style_priority: Minimalism + Accessible & Ethical
+    color_mood: Navy + Trust Blue + Gold
+    typography_mood: Professional + Trustworthy
+    key_effects: Smooth state transitions + Number animations
+    decision_rules: '{"must_have": "security-first", "if_dashboard": "use-dark-mode"}'
+    anti_patterns: Playful design + Unclear fees + AI purple/pink gradients
+    severity: HIGH
+  - id: "11"
+    ui_category: Social Media App
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Vibrant + Engagement colors
+    typography_mood: Modern + Bold typography
+    key_effects: Large scroll animations + Icon animations
+    decision_rules: '{"if_engagement_metric": "add-motion", "if_content_focused": "minimize-chrome"}'
+    anti_patterns: Heavy skeuomorphism + Accessibility ignored
+    severity: MEDIUM
+  - id: "12"
+    ui_category: Startup Landing
+    recommended_pattern: Hero-Centric + Trust
+    style_priority: Motion-Driven + Vibrant & Block
+    color_mood: Bold primaries + Accent contrast
+    typography_mood: Modern + Energetic typography
+    key_effects: Scroll-triggered animations + Parallax
+    decision_rules: '{"if_pre_launch": "use-waitlist-pattern", "if_video_ready": "add-hero-video"}'
+    anti_patterns: Static design + No video + Poor mobile
+    severity: HIGH
+  - id: "13"
+    ui_category: Gaming
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: 3D & Hyperrealism + Retro-Futurism
+    color_mood: Vibrant + Neon + Immersive
+    typography_mood: Bold + Impactful typography
+    key_effects: WebGL 3D rendering + Glitch effects
+    decision_rules: '{"if_competitive": "add-real-time-stats", "if_casual": "increase-playfulness"}'
+    anti_patterns: Minimalist design + Static assets
+    severity: HIGH
+  - id: "14"
+    ui_category: Creative Agency
+    recommended_pattern: Storytelling-Driven
+    style_priority: Brutalism + Motion-Driven
+    color_mood: Bold primaries + Artistic freedom
+    typography_mood: Bold + Expressive typography
+    key_effects: CRT scanlines + Neon glow + Glitch effects
+    decision_rules: '{"must_have": "case-studies", "if_boutique": "increase-artistic-freedom"}'
+    anti_patterns: Corporate minimalism + Hidden portfolio
+    severity: HIGH
+  - id: "15"
+    ui_category: Wellness/Mental Health
+    recommended_pattern: Social Proof-Focused
+    style_priority: Neumorphism + Accessible & Ethical
+    color_mood: Calm Pastels + Trust colors
+    typography_mood: Calming + Readable typography
+    key_effects: Soft press + Breathing animations
+    decision_rules: '{"must_have": "privacy-first", "if_meditation": "add-breathing-animation"}'
+    anti_patterns: Bright neon + Motion overload
+    severity: HIGH
+  - id: "16"
+    ui_category: Restaurant/Food
+    recommended_pattern: Hero-Centric + Conversion
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Warm colors (Orange Red Brown)
+    typography_mood: Appetizing + Clear typography
+    key_effects: Food image reveal + Menu hover effects
+    decision_rules: '{"must_have": "high_quality_images", "if_delivery": "emphasize-speed"}'
+    anti_patterns: Low-quality imagery + Outdated hours
+    severity: HIGH
+  - id: "17"
+    ui_category: Real Estate
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Glassmorphism + Minimalism
+    color_mood: Trust Blue + Gold + White
+    typography_mood: Professional + Confident
+    key_effects: 3D property tour zoom + Map hover
+    decision_rules: '{"if_luxury": "add-3d-models", "must_have": "map-integration"}'
+    anti_patterns: Poor photos + No virtual tours
+    severity: HIGH
+  - id: "18"
+    ui_category: Travel/Tourism
+    recommended_pattern: Storytelling-Driven + Hero
+    style_priority: Aurora UI + Motion-Driven
+    color_mood: Vibrant destination + Sky Blue
+    typography_mood: Inspirational + Engaging
+    key_effects: Destination parallax + Itinerary animations
+    decision_rules: '{"if_experience_focused": "use-storytelling", "must_have": "mobile-booking"}'
+    anti_patterns: Generic photos + Complex booking
+    severity: HIGH
+  - id: "19"
+    ui_category: SaaS Dashboard
+    recommended_pattern: Data-Dense Dashboard
+    style_priority: Data-Dense + Heat Map
+    color_mood: Cool to Hot gradients + Neutral grey
+    typography_mood: Clear + Readable typography
+    key_effects: Hover tooltips + Chart zoom + Real-time pulse
+    decision_rules: '{"must_have": "real-time-updates", "if_large_dataset": "prioritize-performance"}'
+    anti_patterns: Ornate design + Slow rendering
+    severity: HIGH
+  - id: "20"
+    ui_category: B2B SaaS Enterprise
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Trust & Authority + Minimal
+    color_mood: Professional blue + Neutral grey
+    typography_mood: Formal + Clear typography
+    key_effects: Subtle section transitions + Feature reveals
+    decision_rules: '{"must_have": "case-studies", "must_have": "roi-messaging"}'
+    anti_patterns: Playful design + Hidden features + AI purple/pink gradients
+    severity: HIGH
+  - id: "21"
+    ui_category: Music/Entertainment
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Dark Mode (OLED) + Vibrant & Block-based
+    color_mood: Dark (#121212) + Vibrant accents + Album art colors
+    typography_mood: Modern + Bold typography
+    key_effects: Waveform visualization + Playlist animations
+    decision_rules: '{"must_have": "audio-player-ux", "if_discovery_focused": "add-playlist-recommendations"}'
+    anti_patterns: Cluttered layout + Poor audio player UX
+    severity: HIGH
+  - id: "22"
+    ui_category: Video Streaming/OTT
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Dark Mode (OLED) + Motion-Driven
+    color_mood: Dark bg + Poster colors + Brand accent
+    typography_mood: Bold + Engaging typography
+    key_effects: Video player animations + Content carousel (parallax)
+    decision_rules: '{"must_have": "continue-watching", "if_personalized": "add-recommendations"}'
+    anti_patterns: Static layout + Slow video player
+    severity: HIGH
+  - id: "23"
+    ui_category: Job Board/Recruitment
+    recommended_pattern: Conversion-Optimized + Feature-Rich
+    style_priority: Flat Design + Minimalism
+    color_mood: Professional Blue + Success Green + Neutral
+    typography_mood: Clear + Professional typography
+    key_effects: Search/filter animations + Application flow
+    decision_rules: '{"must_have": "advanced-search", "if_salary_focused": "highlight-compensation"}'
+    anti_patterns: Outdated forms + Hidden filters
+    severity: HIGH
+  - id: "24"
+    ui_category: Marketplace (P2P)
+    recommended_pattern: Feature-Rich Showcase + Social Proof
+    style_priority: Vibrant & Block-based + Flat Design
+    color_mood: Trust colors + Category colors + Success green
+    typography_mood: Modern + Engaging typography
+    key_effects: Review star animations + Listing hover effects
+    decision_rules: '{"must_have": "seller-profiles", "must_have": "secure-payment"}'
+    anti_patterns: Low trust signals + Confusing layout
+    severity: HIGH
+  - id: "25"
+    ui_category: Logistics/Delivery
+    recommended_pattern: Feature-Rich Showcase + Real-Time
+    style_priority: Minimalism + Flat Design
+    color_mood: Blue (#2563EB) + Orange (tracking) + Green
+    typography_mood: Clear + Functional typography
+    key_effects: Real-time tracking animation + Status pulse
+    decision_rules: '{"must_have": "tracking-map", "must_have": "delivery-updates"}'
+    anti_patterns: Static tracking + No map integration + AI purple/pink gradients
+    severity: HIGH
+  - id: "26"
+    ui_category: Agriculture/Farm Tech
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Organic Biophilic + Flat Design
+    color_mood: Earth Green (#4A7C23) + Brown + Sky Blue
+    typography_mood: Clear + Informative typography
+    key_effects: Data visualization + Weather animations
+    decision_rules: '{"must_have": "sensor-dashboard", "if_crop_focused": "add-health-indicators"}'
+    anti_patterns: Generic design + Ignored accessibility + AI purple/pink gradients
+    severity: MEDIUM
+  - id: "27"
+    ui_category: Construction/Architecture
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Minimalism + 3D & Hyperrealism
+    color_mood: Grey (#4A4A4A) + Orange (safety) + Blueprint Blue
+    typography_mood: Professional + Bold typography
+    key_effects: 3D model viewer + Timeline animations
+    decision_rules: '{"must_have": "project-portfolio", "if_team_collaboration": "add-real-time-updates"}'
+    anti_patterns: 2D-only layouts + Poor image quality + AI purple/pink gradients
+    severity: HIGH
+  - id: "28"
+    ui_category: Automotive/Car Dealership
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Motion-Driven + 3D & Hyperrealism
+    color_mood: Brand colors + Metallic + Dark/Light
+    typography_mood: Bold + Confident typography
+    key_effects: 360 product view + Configurator animations
+    decision_rules: '{"must_have": "vehicle-comparison", "must_have": "financing-calculator"}'
+    anti_patterns: Static product pages + Poor UX
+    severity: HIGH
+  - id: "29"
+    ui_category: Photography Studio
+    recommended_pattern: Storytelling-Driven + Hero-Centric
+    style_priority: Motion-Driven + Minimalism
+    color_mood: Black + White + Minimal accent
+    typography_mood: Elegant + Minimal typography
+    key_effects: Full-bleed gallery + Before/after reveal
+    decision_rules: '{"must_have": "portfolio-showcase", "if_booking": "add-calendar-system"}'
+    anti_patterns: Heavy text + Poor image showcase
+    severity: HIGH
+  - id: "30"
+    ui_category: Coworking Space
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Vibrant & Block-based + Glassmorphism
+    color_mood: Energetic colors + Wood tones + Brand
+    typography_mood: Modern + Engaging typography
+    key_effects: Space tour video + Amenity reveal animations
+    decision_rules: '{"must_have": "virtual-tour", "must_have": "booking-system"}'
+    anti_patterns: Outdated photos + Confusing layout
+    severity: MEDIUM
+  - id: "31"
+    ui_category: Cleaning Service
+    recommended_pattern: Conversion-Optimized + Trust
+    style_priority: Soft UI Evolution + Flat Design
+    color_mood: Fresh Blue (#00B4D8) + Clean White + Green
+    typography_mood: Friendly + Clear typography
+    key_effects: Before/after gallery + Service package reveal
+    decision_rules: '{"must_have": "price-transparency", "must_have": "trust-badges"}'
+    anti_patterns: Poor before/after imagery + Hidden pricing
+    severity: HIGH
+  - id: "32"
+    ui_category: Home Services
+    recommended_pattern: Conversion-Optimized + Trust
+    style_priority: Flat Design + Trust & Authority
+    color_mood: Trust Blue + Safety Orange + Grey
+    typography_mood: Professional + Clear typography
+    key_effects: Emergency contact highlight + Service menu animations
+    decision_rules: '{"must_have": "emergency-contact", "must_have": "certifications-display"}'
+    anti_patterns: Hidden contact info + No certifications
+    severity: HIGH
+  - id: "33"
+    ui_category: Childcare/Daycare
+    recommended_pattern: Social Proof-Focused + Trust
+    style_priority: Claymorphism + Vibrant & Block-based
+    color_mood: Playful pastels + Safe colors + Warm
+    typography_mood: Friendly + Playful typography
+    key_effects: Parent portal animations + Activity gallery reveal
+    decision_rules: '{"must_have": "parent-communication", "must_have": "safety-certifications"}'
+    anti_patterns: Generic design + Hidden safety info
+    severity: HIGH
+  - id: "34"
+    ui_category: Senior Care/Elderly
+    recommended_pattern: Trust & Authority + Accessible
+    style_priority: Accessible & Ethical + Soft UI Evolution
+    color_mood: Calm Blue + Warm neutrals + Large text
+    typography_mood: Large + Clear typography (18px+)
+    key_effects: Large touch targets + Clear navigation
+    decision_rules: '{"must_have": "wcag-aaa", "must_have": "family-portal"}'
+    anti_patterns: Small text + Complex navigation + AI purple/pink gradients
+    severity: HIGH
+  - id: "35"
+    ui_category: Medical Clinic
+    recommended_pattern: Trust & Authority + Conversion
+    style_priority: Accessible & Ethical + Minimalism
+    color_mood: Medical Blue (#0077B6) + Trust White
+    typography_mood: Professional + Readable typography
+    key_effects: Online booking flow + Doctor profile reveals
+    decision_rules: '{"must_have": "appointment-booking", "must_have": "insurance-info"}'
+    anti_patterns: Outdated interface + Confusing booking + AI purple/pink gradients
+    severity: HIGH
+  - id: "36"
+    ui_category: Pharmacy/Drug Store
+    recommended_pattern: Conversion-Optimized + Trust
+    style_priority: Flat Design + Accessible & Ethical
+    color_mood: Pharmacy Green + Trust Blue + Clean White
+    typography_mood: Clear + Functional typography
+    key_effects: Prescription upload flow + Refill reminders
+    decision_rules: '{"must_have": "prescription-management", "must_have": "drug-interaction-warnings"}'
+    anti_patterns: Confusing layout + Privacy concerns + AI purple/pink gradients
+    severity: HIGH
+  - id: "37"
+    ui_category: Dental Practice
+    recommended_pattern: Social Proof-Focused + Conversion
+    style_priority: Soft UI Evolution + Minimalism
+    color_mood: Fresh Blue + White + Smile Yellow
+    typography_mood: Friendly + Professional typography
+    key_effects: Before/after gallery + Patient testimonial carousel
+    decision_rules: '{"must_have": "before-after-gallery", "must_have": "appointment-system"}'
+    anti_patterns: Poor imagery + No testimonials
+    severity: HIGH
+  - id: "38"
+    ui_category: Veterinary Clinic
+    recommended_pattern: Social Proof-Focused + Trust
+    style_priority: Claymorphism + Accessible & Ethical
+    color_mood: Caring Blue + Pet colors + Warm
+    typography_mood: Friendly + Welcoming typography
+    key_effects: Pet profile management + Service animations
+    decision_rules: '{"must_have": "pet-portal", "must_have": "emergency-contact"}'
+    anti_patterns: Generic design + Hidden services
+    severity: MEDIUM
+  - id: "39"
+    ui_category: News/Media Platform
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Minimalism + Flat Design
+    color_mood: Brand colors + High contrast
+    typography_mood: Clear + Readable typography
+    key_effects: Breaking news badge + Article reveal animations
+    decision_rules: '{"must_have": "mobile-first-reading", "must_have": "category-navigation"}'
+    anti_patterns: Cluttered layout + Slow loading
+    severity: HIGH
+  - id: "40"
+    ui_category: Legal Services
+    recommended_pattern: Trust & Authority + Minimal
+    style_priority: Trust & Authority + Minimalism
+    color_mood: Navy Blue (#1E3A5F) + Gold + White
+    typography_mood: Professional + Authoritative typography
+    key_effects: Practice area reveal + Attorney profile animations
+    decision_rules: '{"must_have": "case-results", "must_have": "credential-display"}'
+    anti_patterns: Outdated design + Hidden credentials + AI purple/pink gradients
+    severity: HIGH
+  - id: "41"
+    ui_category: Beauty/Spa/Wellness Service
+    recommended_pattern: Hero-Centric + Social Proof
+    style_priority: Soft UI Evolution + Neumorphism
+    color_mood: Soft pastels (Pink Sage Cream) + Gold accents
+    typography_mood: Elegant + Calming typography
+    key_effects: Soft shadows + Smooth transitions (200-300ms) + Gentle hover
+    decision_rules: '{"must_have": "booking-system", "must_have": "before-after-gallery", "if_luxury": "add-gold-accents"}'
+    anti_patterns: Bright neon colors + Harsh animations + Dark mode
+    severity: HIGH
+  - id: "42"
+    ui_category: Service Landing Page
+    recommended_pattern: Hero-Centric + Trust & Authority
+    style_priority: Minimalism + Social Proof-Focused
+    color_mood: Brand primary + Trust colors
+    typography_mood: Professional + Clear typography
+    key_effects: Testimonial carousel + CTA hover (200ms)
+    decision_rules: '{"must_have": "social-proof", "must_have": "clear-cta"}'
+    anti_patterns: Complex navigation + Hidden contact info
+    severity: HIGH
+  - id: "43"
+    ui_category: B2B Service
+    recommended_pattern: Feature-Rich Showcase + Trust
+    style_priority: Trust & Authority + Minimalism
+    color_mood: Professional blue + Neutral grey
+    typography_mood: Formal + Clear typography
+    key_effects: Section transitions + Feature reveals
+    decision_rules: '{"must_have": "case-studies", "must_have": "roi-messaging"}'
+    anti_patterns: Playful design + Hidden credentials + AI purple/pink gradients
+    severity: HIGH
+  - id: "44"
+    ui_category: Financial Dashboard
+    recommended_pattern: Data-Dense Dashboard
+    style_priority: Dark Mode (OLED) + Data-Dense
+    color_mood: Dark bg + Red/Green alerts + Trust blue
+    typography_mood: Clear + Readable typography
+    key_effects: Real-time number animations + Alert pulse
+    decision_rules: '{"must_have": "real-time-updates", "must_have": "high-contrast"}'
+    anti_patterns: Light mode default + Slow rendering
+    severity: HIGH
+  - id: "45"
+    ui_category: Analytics Dashboard
+    recommended_pattern: Data-Dense + Drill-Down
+    style_priority: Data-Dense + Heat Map
+    color_mood: Cool→Hot gradients + Neutral grey
+    typography_mood: Clear + Functional typography
+    key_effects: Hover tooltips + Chart zoom + Filter animations
+    decision_rules: '{"must_have": "data-export", "if_large_dataset": "virtualize-lists"}'
+    anti_patterns: Ornate design + No filtering
+    severity: HIGH
+  - id: "46"
+    ui_category: Productivity Tool
+    recommended_pattern: Interactive Demo + Feature-Rich
+    style_priority: Flat Design + Micro-interactions
+    color_mood: Clear hierarchy + Functional colors
+    typography_mood: Clean + Efficient typography
+    key_effects: Quick actions (150ms) + Task animations
+    decision_rules: '{"must_have": "keyboard-shortcuts", "if_collaboration": "add-real-time-cursors"}'
+    anti_patterns: Complex onboarding + Slow performance
+    severity: HIGH
+  - id: "47"
+    ui_category: Design System/Component Library
+    recommended_pattern: Feature-Rich + Documentation
+    style_priority: Minimalism + Accessible & Ethical
+    color_mood: Clear hierarchy + Code-like structure
+    typography_mood: Monospace + Clear typography
+    key_effects: Code copy animations + Component previews
+    decision_rules: '{"must_have": "search", "must_have": "code-examples"}'
+    anti_patterns: Poor documentation + No live preview
+    severity: HIGH
+  - id: "48"
+    ui_category: AI/Chatbot Platform
+    recommended_pattern: Interactive Demo + Minimal
+    style_priority: AI-Native UI + Minimalism
+    color_mood: Neutral + AI Purple (#6366F1)
+    typography_mood: Modern + Clear typography
+    key_effects: Streaming text + Typing indicators + Fade-in
+    decision_rules: '{"must_have": "conversational-ui", "must_have": "context-awareness"}'
+    anti_patterns: Heavy chrome + Slow response feedback
+    severity: HIGH
+  - id: "49"
+    ui_category: NFT/Web3 Platform
+    recommended_pattern: Feature-Rich Showcase
+    style_priority: Cyberpunk UI + Glassmorphism
+    color_mood: Dark + Neon + Gold (#FFD700)
+    typography_mood: Bold + Modern typography
+    key_effects: Wallet connect animations + Transaction feedback
+    decision_rules: '{"must_have": "wallet-integration", "must_have": "gas-fees-display"}'
+    anti_patterns: Light mode default + No transaction status
+    severity: HIGH
+  - id: "50"
+    ui_category: Creator Economy Platform
+    recommended_pattern: Social Proof + Feature-Rich
+    style_priority: Vibrant & Block-based + Bento Box Grid
+    color_mood: Vibrant + Brand colors
+    typography_mood: Modern + Bold typography
+    key_effects: Engagement counter animations + Profile reveals
+    decision_rules: '{"must_have": "creator-profiles", "must_have": "monetization-display"}'
+    anti_patterns: Generic layout + Hidden earnings
+    severity: MEDIUM
+  - id: "51"
+    ui_category: Sustainability/ESG Platform
+    recommended_pattern: Trust & Authority + Data
+    style_priority: Organic Biophilic + Minimalism
+    color_mood: Green (#228B22) + Earth tones
+    typography_mood: Clear + Informative typography
+    key_effects: Progress indicators + Impact animations
+    decision_rules: '{"must_have": "data-transparency", "must_have": "certification-badges"}'
+    anti_patterns: Greenwashing visuals + No data
+    severity: HIGH
+  - id: "52"
+    ui_category: Remote Work/Collaboration
+    recommended_pattern: Feature-Rich + Real-Time
+    style_priority: Soft UI Evolution + Minimalism
+    color_mood: Calm Blue + Neutral grey
+    typography_mood: Clean + Readable typography
+    key_effects: Real-time presence indicators + Notification badges
+    decision_rules: '{"must_have": "status-indicators", "must_have": "video-integration"}'
+    anti_patterns: Cluttered interface + No presence
+    severity: HIGH
+  - id: "53"
+    ui_category: Pet Tech App
+    recommended_pattern: Storytelling + Feature-Rich
+    style_priority: Claymorphism + Vibrant & Block-based
+    color_mood: Playful + Warm colors
+    typography_mood: Friendly + Playful typography
+    key_effects: Pet profile animations + Health tracking charts
+    decision_rules: '{"must_have": "pet-profiles", "if_health": "add-vet-integration"}'
+    anti_patterns: Generic design + No personality
+    severity: MEDIUM
+  - id: "54"
+    ui_category: Smart Home/IoT Dashboard
+    recommended_pattern: Real-Time Monitoring
+    style_priority: Glassmorphism + Dark Mode (OLED)
+    color_mood: Dark + Status indicator colors
+    typography_mood: Clear + Functional typography
+    key_effects: Device status pulse + Quick action animations
+    decision_rules: '{"must_have": "real-time-controls", "must_have": "energy-monitoring"}'
+    anti_patterns: Slow updates + No automation
+    severity: HIGH
+  - id: "55"
+    ui_category: EV/Charging Ecosystem
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Minimalism + Aurora UI
+    color_mood: Electric Blue (#009CD1) + Green
+    typography_mood: Modern + Clear typography
+    key_effects: Range estimation animations + Map interactions
+    decision_rules: '{"must_have": "charging-map", "must_have": "range-calculator"}'
+    anti_patterns: Poor map UX + Hidden costs
+    severity: HIGH
+  - id: "56"
+    ui_category: Subscription Box Service
+    recommended_pattern: Feature-Rich + Conversion
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Brand + Excitement colors
+    typography_mood: Engaging + Clear typography
+    key_effects: Unboxing reveal animations + Product carousel
+    decision_rules: '{"must_have": "personalization-quiz", "must_have": "subscription-management"}'
+    anti_patterns: Confusing pricing + No unboxing preview
+    severity: HIGH
+  - id: "57"
+    ui_category: Podcast Platform
+    recommended_pattern: Storytelling + Feature-Rich
+    style_priority: Dark Mode (OLED) + Minimalism
+    color_mood: Dark + Audio waveform accents
+    typography_mood: Modern + Clear typography
+    key_effects: Waveform visualizations + Episode transitions
+    decision_rules: '{"must_have": "audio-player-ux", "must_have": "episode-discovery"}'
+    anti_patterns: Poor audio player + Cluttered layout
+    severity: HIGH
+  - id: "58"
+    ui_category: Dating App
+    recommended_pattern: Social Proof + Feature-Rich
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Warm + Romantic (Pink/Red gradients)
+    typography_mood: Modern + Friendly typography
+    key_effects: Profile card swipe + Match animations
+    decision_rules: '{"must_have": "profile-cards", "must_have": "safety-features"}'
+    anti_patterns: Generic profiles + No safety
+    severity: HIGH
+  - id: "59"
+    ui_category: Micro-Credentials/Badges
+    recommended_pattern: Trust & Authority + Feature
+    style_priority: Minimalism + Flat Design
+    color_mood: Trust Blue + Gold (#FFD700)
+    typography_mood: Professional + Clear typography
+    key_effects: Badge reveal animations + Progress tracking
+    decision_rules: '{"must_have": "credential-verification", "must_have": "progress-display"}'
+    anti_patterns: No verification + Hidden progress
+    severity: MEDIUM
+  - id: "60"
+    ui_category: Knowledge Base/Documentation
+    recommended_pattern: FAQ + Minimal
+    style_priority: Minimalism + Accessible & Ethical
+    color_mood: Clean hierarchy + Minimal color
+    typography_mood: Clear + Readable typography
+    key_effects: Search highlight + Smooth scrolling
+    decision_rules: '{"must_have": "search-first", "must_have": "version-switching"}'
+    anti_patterns: Poor navigation + No search
+    severity: HIGH
+  - id: "61"
+    ui_category: Hyperlocal Services
+    recommended_pattern: Conversion + Feature-Rich
+    style_priority: Minimalism + Vibrant & Block-based
+    color_mood: Location markers + Trust colors
+    typography_mood: Clear + Functional typography
+    key_effects: Map hover + Provider card reveals
+    decision_rules: '{"must_have": "map-integration", "must_have": "booking-system"}'
+    anti_patterns: No map + Hidden reviews
+    severity: HIGH
+  - id: "62"
+    ui_category: Luxury/Premium Brand
+    recommended_pattern: Storytelling + Feature-Rich
+    style_priority: Liquid Glass + Glassmorphism
+    color_mood: Black + Gold (#FFD700) + White
+    typography_mood: Elegant + Refined typography
+    key_effects: Slow parallax + Premium reveals (400-600ms)
+    decision_rules: '{"must_have": "high-quality-imagery", "must_have": "storytelling"}'
+    anti_patterns: Cheap visuals + Fast animations
+    severity: HIGH
+  - id: "63"
+    ui_category: Fitness/Gym App
+    recommended_pattern: Feature-Rich + Data
+    style_priority: Vibrant & Block-based + Dark Mode (OLED)
+    color_mood: "Energetic (Orange #FF6B35) + Dark bg"
+    typography_mood: Bold + Motivational typography
+    key_effects: Progress ring animations + Achievement unlocks
+    decision_rules: '{"must_have": "progress-tracking", "must_have": "workout-plans"}'
+    anti_patterns: Static design + No gamification
+    severity: HIGH
+  - id: "64"
+    ui_category: Hotel/Hospitality
+    recommended_pattern: Hero-Centric + Social Proof
+    style_priority: Liquid Glass + Minimalism
+    color_mood: Warm neutrals + Gold (#D4AF37)
+    typography_mood: Elegant + Welcoming typography
+    key_effects: Room gallery + Amenity reveals
+    decision_rules: '{"must_have": "room-booking", "must_have": "virtual-tour"}'
+    anti_patterns: Poor photos + Complex booking
+    severity: HIGH
+  - id: "65"
+    ui_category: Wedding/Event Planning
+    recommended_pattern: Storytelling + Social Proof
+    style_priority: Soft UI Evolution + Aurora UI
+    color_mood: Soft Pink (#FFD6E0) + Gold + Cream
+    typography_mood: Elegant + Romantic typography
+    key_effects: Gallery reveals + Timeline animations
+    decision_rules: '{"must_have": "portfolio-gallery", "must_have": "planning-tools"}'
+    anti_patterns: Generic templates + No portfolio
+    severity: HIGH
+  - id: "66"
+    ui_category: Insurance Platform
+    recommended_pattern: Conversion + Trust
+    style_priority: Trust & Authority + Flat Design
+    color_mood: Trust Blue (#0066CC) + Green + Neutral
+    typography_mood: Clear + Professional typography
+    key_effects: Quote calculator animations + Policy comparison
+    decision_rules: '{"must_have": "quote-calculator", "must_have": "policy-comparison"}'
+    anti_patterns: Confusing pricing + No trust signals + AI purple/pink gradients
+    severity: HIGH
+  - id: "67"
+    ui_category: Banking/Traditional Finance
+    recommended_pattern: Trust & Authority + Feature
+    style_priority: Minimalism + Accessible & Ethical
+    color_mood: Navy (#0A1628) + Trust Blue + Gold
+    typography_mood: Professional + Trustworthy typography
+    key_effects: Smooth number animations + Security indicators
+    decision_rules: '{"must_have": "security-first", "must_have": "accessibility"}'
+    anti_patterns: Playful design + Poor security UX + AI purple/pink gradients
+    severity: HIGH
+  - id: "68"
+    ui_category: Online Course/E-learning
+    recommended_pattern: Feature-Rich + Social Proof
+    style_priority: Claymorphism + Vibrant & Block-based
+    color_mood: Vibrant learning colors + Progress green
+    typography_mood: Friendly + Engaging typography
+    key_effects: Progress bar animations + Certificate reveals
+    decision_rules: '{"must_have": "progress-tracking", "must_have": "video-player"}'
+    anti_patterns: Boring design + No gamification
+    severity: HIGH
+  - id: "69"
+    ui_category: Non-profit/Charity
+    recommended_pattern: Storytelling + Trust
+    style_priority: Accessible & Ethical + Organic Biophilic
+    color_mood: Cause-related colors + Trust + Warm
+    typography_mood: Heartfelt + Readable typography
+    key_effects: Impact counter animations + Story reveals
+    decision_rules: '{"must_have": "impact-stories", "must_have": "donation-transparency"}'
+    anti_patterns: No impact data + Hidden financials
+    severity: HIGH
+  - id: "70"
+    ui_category: Florist/Plant Shop
+    recommended_pattern: Hero-Centric + Conversion
+    style_priority: Organic Biophilic + Vibrant & Block-based
+    color_mood: Natural Green + Floral pinks/purples
+    typography_mood: Elegant + Natural typography
+    key_effects: Product reveal + Seasonal transitions
+    decision_rules: '{"must_have": "delivery-scheduling", "must_have": "care-guides"}'
+    anti_patterns: Poor imagery + No seasonal content
+    severity: MEDIUM
+  - id: "71"
+    ui_category: Bakery/Cafe
+    recommended_pattern: Hero-Centric + Conversion
+    style_priority: Vibrant & Block-based + Soft UI Evolution
+    color_mood: Warm Brown + Cream + Appetizing accents
+    typography_mood: Warm + Inviting typography
+    key_effects: Menu hover + Order animations
+    decision_rules: '{"must_have": "menu-display", "must_have": "online-ordering"}'
+    anti_patterns: Poor food photos + Hidden hours
+    severity: HIGH
+  - id: "72"
+    ui_category: Coffee Shop
+    recommended_pattern: Hero-Centric + Minimal
+    style_priority: Minimalism + Organic Biophilic
+    color_mood: Coffee Brown (#6F4E37) + Cream + Warm
+    typography_mood: Cozy + Clean typography
+    key_effects: Menu transitions + Loyalty animations
+    decision_rules: '{"must_have": "menu", "if_loyalty": "add-rewards-system"}'
+    anti_patterns: Generic design + No atmosphere
+    severity: MEDIUM
+  - id: "73"
+    ui_category: Brewery/Winery
+    recommended_pattern: Storytelling + Hero-Centric
+    style_priority: Motion-Driven + Storytelling-Driven
+    color_mood: Deep amber/burgundy + Gold + Craft
+    typography_mood: Artisanal + Heritage typography
+    key_effects: Tasting note reveals + Heritage timeline
+    decision_rules: '{"must_have": "product-showcase", "must_have": "story-heritage"}'
+    anti_patterns: Generic product pages + No story
+    severity: HIGH
+  - id: "74"
+    ui_category: Airline
+    recommended_pattern: Conversion + Feature-Rich
+    style_priority: Minimalism + Glassmorphism
+    color_mood: Sky Blue + Brand colors + Trust
+    typography_mood: Clear + Professional typography
+    key_effects: Flight search animations + Boarding pass reveals
+    decision_rules: '{"must_have": "flight-search", "must_have": "mobile-first"}'
+    anti_patterns: Complex booking + Poor mobile
+    severity: HIGH
+  - id: "75"
+    ui_category: Magazine/Blog
+    recommended_pattern: Storytelling + Hero-Centric
+    style_priority: Swiss Modernism 2.0 + Motion-Driven
+    color_mood: Editorial colors + Brand + Clean white
+    typography_mood: Editorial + Elegant typography
+    key_effects: Article transitions + Category reveals
+    decision_rules: '{"must_have": "article-showcase", "must_have": "newsletter-signup"}'
+    anti_patterns: Poor typography + Slow loading
+    severity: HIGH
+  - id: "76"
+    ui_category: Freelancer Platform
+    recommended_pattern: Feature-Rich + Conversion
+    style_priority: Flat Design + Minimalism
+    color_mood: Professional Blue + Success Green
+    typography_mood: Clear + Professional typography
+    key_effects: Skill match animations + Review reveals
+    decision_rules: '{"must_have": "portfolio-display", "must_have": "skill-matching"}'
+    anti_patterns: Poor profiles + No reviews
+    severity: HIGH
+  - id: "77"
+    ui_category: Consulting Firm
+    recommended_pattern: Trust & Authority + Minimal
+    style_priority: Trust & Authority + Minimalism
+    color_mood: Navy + Gold + Professional grey
+    typography_mood: Authoritative + Clear typography
+    key_effects: Case study reveals + Team profiles
+    decision_rules: '{"must_have": "case-studies", "must_have": "thought-leadership"}'
+    anti_patterns: Generic content + No credentials + AI purple/pink gradients
+    severity: HIGH
+  - id: "78"
+    ui_category: Marketing Agency
+    recommended_pattern: Storytelling + Feature-Rich
+    style_priority: Brutalism + Motion-Driven
+    color_mood: Bold brand colors + Creative freedom
+    typography_mood: Bold + Expressive typography
+    key_effects: Portfolio reveals + Results animations
+    decision_rules: '{"must_have": "portfolio", "must_have": "results-metrics"}'
+    anti_patterns: Boring design + Hidden work
+    severity: HIGH
+  - id: "79"
+    ui_category: Event Management
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Event theme colors + Excitement accents
+    typography_mood: Bold + Engaging typography
+    key_effects: Countdown timer + Registration flow
+    decision_rules: '{"must_have": "registration", "must_have": "agenda-display"}'
+    anti_patterns: Confusing registration + No countdown
+    severity: HIGH
+  - id: "80"
+    ui_category: Conference/Webinar Platform
+    recommended_pattern: Feature-Rich + Conversion
+    style_priority: Glassmorphism + Minimalism
+    color_mood: Professional Blue + Video accent
+    typography_mood: Professional + Clear typography
+    key_effects: Live stream integration + Agenda transitions
+    decision_rules: '{"must_have": "registration", "must_have": "speaker-profiles"}'
+    anti_patterns: Poor video UX + No networking
+    severity: HIGH
+  - id: "81"
+    ui_category: Membership/Community
+    recommended_pattern: Social Proof + Conversion
+    style_priority: Vibrant & Block-based + Soft UI Evolution
+    color_mood: Community brand colors + Engagement
+    typography_mood: Friendly + Engaging typography
+    key_effects: Member counter + Benefit reveals
+    decision_rules: '{"must_have": "member-benefits", "must_have": "pricing-tiers"}'
+    anti_patterns: Hidden benefits + No community proof
+    severity: HIGH
+  - id: "82"
+    ui_category: Newsletter Platform
+    recommended_pattern: Minimal + Conversion
+    style_priority: Minimalism + Flat Design
+    color_mood: Brand primary + Clean white + CTA
+    typography_mood: Clean + Readable typography
+    key_effects: Subscribe form + Archive reveals
+    decision_rules: '{"must_have": "subscribe-form", "must_have": "sample-content"}'
+    anti_patterns: Complex signup + No preview
+    severity: MEDIUM
+  - id: "83"
+    ui_category: Digital Products/Downloads
+    recommended_pattern: Feature-Rich + Conversion
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Product colors + Brand + Success green
+    typography_mood: Modern + Clear typography
+    key_effects: Product preview + Instant delivery animations
+    decision_rules: '{"must_have": "product-preview", "must_have": "instant-delivery"}'
+    anti_patterns: No preview + Slow delivery
+    severity: HIGH
+  - id: "84"
+    ui_category: Church/Religious Organization
+    recommended_pattern: Hero-Centric + Social Proof
+    style_priority: Accessible & Ethical + Soft UI Evolution
+    color_mood: Warm Gold + Deep Purple/Blue + White
+    typography_mood: Welcoming + Clear typography
+    key_effects: Service time highlights + Event calendar
+    decision_rules: '{"must_have": "service-times", "must_have": "community-events"}'
+    anti_patterns: Outdated design + Hidden info
+    severity: MEDIUM
+  - id: "85"
+    ui_category: Sports Team/Club
+    recommended_pattern: Hero-Centric + Feature-Rich
+    style_priority: Vibrant & Block-based + Motion-Driven
+    color_mood: Team colors + Energetic accents
+    typography_mood: Bold + Impactful typography
+    key_effects: Score animations + Schedule reveals
+    decision_rules: '{"must_have": "schedule", "must_have": "roster"}'
+    anti_patterns: Static content + Poor fan engagement
+    severity: HIGH
+  - id: "86"
+    ui_category: Museum/Gallery
+    recommended_pattern: Storytelling + Feature-Rich
+    style_priority: Minimalism + Motion-Driven
+    color_mood: Art-appropriate neutrals + Exhibition accents
+    typography_mood: Elegant + Minimal typography
+    key_effects: Virtual tour + Collection reveals
+    decision_rules: '{"must_have": "virtual-tour", "must_have": "exhibition-info"}'
+    anti_patterns: Cluttered layout + No online access
+    severity: HIGH
+  - id: "87"
+    ui_category: Theater/Cinema
+    recommended_pattern: Hero-Centric + Conversion
+    style_priority: Dark Mode (OLED) + Motion-Driven
+    color_mood: Dark + Spotlight accents + Gold
+    typography_mood: Dramatic + Bold typography
+    key_effects: Seat selection + Trailer reveals
+    decision_rules: '{"must_have": "showtimes", "must_have": "seat-selection"}'
+    anti_patterns: Poor booking UX + No trailers
+    severity: HIGH
+  - id: "88"
+    ui_category: Language Learning App
+    recommended_pattern: Feature-Rich + Social Proof
+    style_priority: Claymorphism + Vibrant & Block-based
+    color_mood: Playful colors + Progress indicators
+    typography_mood: Friendly + Clear typography
+    key_effects: Progress animations + Achievement unlocks
+    decision_rules: '{"must_have": "progress-tracking", "must_have": "gamification"}'
+    anti_patterns: Boring design + No motivation
+    severity: HIGH
+  - id: "89"
+    ui_category: Coding Bootcamp
+    recommended_pattern: Feature-Rich + Social Proof
+    style_priority: Dark Mode (OLED) + Minimalism
+    color_mood: Code editor colors + Brand + Success
+    typography_mood: Technical + Clear typography
+    key_effects: Terminal animations + Career outcome reveals
+    decision_rules: '{"must_have": "curriculum", "must_have": "career-outcomes"}'
+    anti_patterns: Light mode only + Hidden results
+    severity: HIGH
+  - id: "90"
+    ui_category: Cybersecurity Platform
+    recommended_pattern: Trust & Authority + Real-Time
+    style_priority: Cyberpunk UI + Dark Mode (OLED)
+    color_mood: Matrix Green (#00FF00) + Deep Black
+    typography_mood: Technical + Clear typography
+    key_effects: Threat visualization + Alert animations
+    decision_rules: '{"must_have": "real-time-monitoring", "must_have": "threat-display"}'
+    anti_patterns: Light mode + Poor data viz
+    severity: HIGH
+  - id: "91"
+    ui_category: Developer Tool/IDE
+    recommended_pattern: Minimal + Documentation
+    style_priority: Dark Mode (OLED) + Minimalism
+    color_mood: Dark syntax theme + Blue focus
+    typography_mood: Monospace + Functional typography
+    key_effects: Syntax highlighting + Command palette
+    decision_rules: '{"must_have": "keyboard-shortcuts", "must_have": "documentation"}'
+    anti_patterns: Light mode default + Slow performance
+    severity: HIGH
+  - id: "92"
+    ui_category: Biotech/Life Sciences
+    recommended_pattern: Storytelling + Data
+    style_priority: Glassmorphism + Clean Science
+    color_mood: Sterile White + DNA Blue + Life Green
+    typography_mood: Scientific + Clear typography
+    key_effects: Data visualization + Research reveals
+    decision_rules: '{"must_have": "data-accuracy", "must_have": "clean-aesthetic"}'
+    anti_patterns: Cluttered data + Poor credibility
+    severity: HIGH
+  - id: "93"
+    ui_category: Space Tech/Aerospace
+    recommended_pattern: Immersive + Feature-Rich
+    style_priority: Holographic/HUD + Dark Mode
+    color_mood: Deep Space Black + Star White + Metallic
+    typography_mood: Futuristic + Precise typography
+    key_effects: Telemetry animations + 3D renders
+    decision_rules: '{"must_have": "high-tech-feel", "must_have": "precision-data"}'
+    anti_patterns: Generic design + No immersion
+    severity: HIGH
+  - id: "94"
+    ui_category: Architecture/Interior
+    recommended_pattern: Portfolio + Hero-Centric
+    style_priority: Exaggerated Minimalism + High Imagery
+    color_mood: Monochrome + Gold Accent + High Imagery
+    typography_mood: Architectural + Elegant typography
+    key_effects: Project gallery + Blueprint reveals
+    decision_rules: '{"must_have": "high-res-images", "must_have": "project-portfolio"}'
+    anti_patterns: Poor imagery + Cluttered layout
+    severity: HIGH
+  - id: "95"
+    ui_category: Quantum Computing
+    recommended_pattern: Immersive + Interactive
+    style_priority: Holographic/HUD + Dark Mode
+    color_mood: Quantum Blue (#00FFFF) + Deep Black
+    typography_mood: Futuristic + Scientific typography
+    key_effects: Probability visualizations + Qubit state animations
+    decision_rules: '{"must_have": "complexity-visualization", "must_have": "scientific-credibility"}'
+    anti_patterns: Generic tech design + No viz
+    severity: HIGH
+  - id: "96"
+    ui_category: Biohacking/Longevity App
+    recommended_pattern: Data-Dense + Storytelling
+    style_priority: Biomimetic/Organic 2.0 + Minimalism
+    color_mood: Cellular Pink/Red + DNA Blue + White
+    typography_mood: Scientific + Clear typography
+    key_effects: Biological data viz + Progress animations
+    decision_rules: '{"must_have": "data-privacy", "must_have": "scientific-credibility"}'
+    anti_patterns: Generic health app + No privacy
+    severity: HIGH
+  - id: "97"
+    ui_category: Autonomous Drone Fleet
+    recommended_pattern: Real-Time + Feature-Rich
+    style_priority: HUD/Sci-Fi FUI + Real-Time
+    color_mood: Tactical Green + Alert Red + Map Dark
+    typography_mood: Technical + Functional typography
+    key_effects: Telemetry animations + 3D spatial awareness
+    decision_rules: '{"must_have": "real-time-telemetry", "must_have": "safety-alerts"}'
+    anti_patterns: Slow updates + Poor spatial viz
+    severity: HIGH
+  - id: "98"
+    ui_category: Generative Art Platform
+    recommended_pattern: Showcase + Feature-Rich
+    style_priority: Minimalism + Gen Z Chaos
+    color_mood: Neutral (#F5F5F5) + User Content
+    typography_mood: Minimal + Content-focused typography
+    key_effects: Gallery masonry + Minting animations
+    decision_rules: '{"must_have": "fast-loading", "must_have": "creator-attribution"}'
+    anti_patterns: Heavy chrome + Slow loading
+    severity: HIGH
+  - id: "99"
+    ui_category: Spatial Computing OS
+    recommended_pattern: Immersive + Interactive
+    style_priority: Spatial UI (VisionOS) + Glassmorphism
+    color_mood: Frosted Glass + System Colors + Depth
+    typography_mood: Spatial + Readable typography
+    key_effects: Depth hierarchy + Gaze interactions
+    decision_rules: '{"must_have": "depth-hierarchy", "must_have": "environment-awareness"}'
+    anti_patterns: 2D design + No spatial depth
+    severity: HIGH
+  - id: "100"
+    ui_category: Sustainable Energy/Climate
+    recommended_pattern: Data + Trust
+    style_priority: Organic Biophilic + E-Ink/Paper
+    color_mood: Earth Green + Sky Blue + Solar Yellow
+    typography_mood: Clear + Informative typography
+    key_effects: Impact viz + Progress animations
+    decision_rules: '{"must_have": "data-transparency", "must_have": "impact-visualization"}'
+    anti_patterns: Greenwashing + No real data
+    severity: HIGH

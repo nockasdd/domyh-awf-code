@@ -1,0 +1,369 @@
+metadata:
+  skill: security
+  domain: mobile_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: mobile-security.yaml
+  patterns_count: 35
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - platform
+    - description
+    - detection_pattern
+    - fix_pattern
+    - example_vuln
+    - example_fix
+patterns:
+  - id: MS-01
+    name: Insecure Data Storage
+    severity: CRITICAL
+    category: Storage
+    platform: Both
+    description: Sensitive data stored unencrypted in SharedPreferences or UserDefaults
+    detection_pattern: (SharedPreferences|UserDefaults|NSUserDefaults).*put.*(password|token|secret|key)
+    fix_pattern: Use EncryptedSharedPreferences or Keychain
+    example_vuln: sharedPrefs.edit().putString('password', pwd)
+    example_fix: val encPrefs = EncryptedSharedPreferences.create(...)\nencPrefs.edit().putString('password', pwd)
+  - id: MS-02
+    name: Hardcoded Credentials
+    severity: CRITICAL
+    category: Secrets
+    platform: Both
+    description: API keys secrets or passwords hardcoded in source or resources
+    detection_pattern: (api.*key|password|secret|token)\\s*=\\s*['\][^'\"]{8
+    fix_pattern: '}[''\"]"'
+    example_vuln: Use secure key management at runtime not build time
+    example_fix: const API_KEY = 'sk-1234567890abcdef'
+  - id: MS-03
+    name: Exported Components Vulnerable
+    severity: HIGH
+    category: Android
+    platform: Android
+    description: Activities services receivers exported without permission checks
+    detection_pattern: <(activity|service|receiver).*exported\\s*=\\s*\true\"(?!.*permission)"
+    fix_pattern: Set exported=false or require custom permissions
+    example_vuln: <activity android:exported='true' />
+    example_fix: <activity android:exported='true'\n  android:permission='com.app.INTERNAL' />
+  - id: MS-04
+    name: Intent Injection
+    severity: HIGH
+    category: Android
+    platform: Android
+    description: Intent data used without validation enabling injection
+    detection_pattern: getIntent\\(\\)\\.get.*(String|Extra|Data)(?!.*valid)
+    fix_pattern: Validate all Intent extras before use
+    example_vuln: val url = intent.getStringExtra('url')
+    example_fix: val url = intent.getStringExtra('url')\nif (!isValidUrl(url)) return
+  - id: MS-05
+    name: Content Provider SQL Injection
+    severity: CRITICAL
+    category: Android
+    platform: Android
+    description: Content provider query without parameterized selection
+    detection_pattern: query\\(.*selection.*\\+(?!.*param)
+    fix_pattern: Use parameterized selection with selectionArgs
+    example_vuln: query(uri, null, 'id=' + input, null)
+    example_fix: query(uri, null, 'id=?', arrayOf(input))
+  - id: MS-06
+    name: WebView JavaScript Enabled
+    severity: HIGH
+    category: WebView
+    platform: Both
+    description: WebView with JavaScript enabled handling untrusted content
+    detection_pattern: setJavaScriptEnabled\\s*\\(\\s*true\\s*\\)
+    fix_pattern: Disable JS if not needed validate all loaded URLs
+    example_vuln: webView.settings.javaScriptEnabled = true
+    example_fix: if (isTrustedUrl(url)) {\n  webView.settings.javaScriptEnabled = true\n}
+  - id: MS-07
+    name: WebView File Access
+    severity: HIGH
+    category: WebView
+    platform: Android
+    description: WebView allows file:// access enabling local file theft
+    detection_pattern: setAllowFileAccess\\s*\\(\\s*true\\s*\\)
+    fix_pattern: Disable file access unless needed restrict to app files
+    example_vuln: webView.settings.allowFileAccess = true
+    example_fix: webView.settings.allowFileAccess = false\nwebView.settings.allowFileAccessFromFileURLs = false
+  - id: MS-08
+    name: Insecure Deep Links
+    severity: HIGH
+    category: Scheme
+    platform: Both
+    description: Deep link handlers do not validate parameters
+    detection_pattern: (intent\\.data|url\\.queryItems)(?!.*valid)
+    fix_pattern: Validate all deep link parameters use allowlists
+    example_vuln: val action = intent.data?.getQueryParameter('action')
+    example_fix: val action = intent.data?.getQueryParameter('action')\nif (action !in ALLOWED_ACTIONS) return
+  - id: MS-09
+    name: Broadcast Receiver Unprotected
+    severity: HIGH
+    category: Android
+    platform: Android
+    description: Broadcast receiver without permission protection
+    detection_pattern: registerReceiver\\(.*IntentFilter(?!.*permission)
+    fix_pattern: Use LocalBroadcastManager or require permissions
+    example_vuln: registerReceiver(receiver, filter)
+    example_fix: LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
+  - id: MS-10
+    name: Keychain Misconfiguration
+    severity: HIGH
+    category: iOS
+    platform: iOS
+    description: Keychain access not properly restricted to app
+    detection_pattern: kSecAttrAccessible.*Always|kSecAttrAccessGroupToken
+    fix_pattern: Use AfterFirstUnlock or WhenPasscodeSetThisDeviceOnly
+    example_vuln: "kSecAttrAccessible: kSecAttrAccessibleAlways"
+    example_fix: "kSecAttrAccessible: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly"
+  - id: MS-11
+    name: Biometric Bypass
+    severity: HIGH
+    category: Auth
+    platform: Both
+    description: Biometric auth can be bypassed via Frida or Xposed
+    detection_pattern: BiometricPrompt|LAContext(?!.*fallback.*false)
+    fix_pattern: Combine biometric with server-side verification
+    example_vuln: LAContext().evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics)
+    example_fix: // Combine with server challenge\nlet challenge = fetchServerChallenge()\nvalidateBiometricWithChallenge(challenge)
+  - id: MS-12
+    name: Clipboard Exposure
+    severity: MEDIUM
+    category: Privacy
+    platform: Both
+    description: Sensitive data copied to clipboard without timeout
+    detection_pattern: (UIPasteboard|ClipboardManager)\\.set(?!.*expir)
+    fix_pattern: Clear clipboard after timeout or use sensitive mode
+    example_vuln: UIPasteboard.general.string = password
+    example_fix: "UIPasteboard.general.setItems([[:password]], options: [.expirationDate: Date().addingTimeInterval(30)])"
+  - id: MS-13
+    name: Screenshot Allowed
+    severity: MEDIUM
+    category: Privacy
+    platform: Both
+    description: Sensitive screens can be captured via screenshot
+    detection_pattern: (?<!FLAG_SECURE).*setContentView|(?<!ViewController).*viewDidLoad
+    fix_pattern: Set FLAG_SECURE or use screenshot detection
+    example_vuln: setContentView(R.layout.login)
+    example_fix: window.setFlags(FLAG_SECURE, FLAG_SECURE)\nsetContentView(R.layout.login)
+  - id: MS-14
+    name: Background Snapshot
+    severity: MEDIUM
+    category: Privacy
+    platform: iOS
+    description: App snapshot visible in app switcher with sensitive data
+    detection_pattern: applicationDidEnterBackground(?!.*blur|overlay)
+    fix_pattern: Add blur overlay when entering background
+    example_vuln: func applicationDidEnterBackground() { }
+    example_fix: func applicationDidEnterBackground() {\n  window?.addSubview(blurOverlay)\n}
+  - id: MS-15
+    name: Insecure Logging
+    severity: HIGH
+    category: Privacy
+    platform: Both
+    description: Sensitive data logged to console or files
+    detection_pattern: (Log\\.|NSLog|print|console\\.log).*password|token|secret
+    fix_pattern: Remove sensitive data from logs use debug-only logging
+    example_vuln: "Log.d('Auth', 'Token: ' + token)"
+    example_fix: "if (BuildConfig.DEBUG) Log.d('Auth', 'Token: [REDACTED]')"
+  - id: MS-16
+    name: Certificate Transparency Missing
+    severity: MEDIUM
+    category: Network
+    platform: Both
+    description: App does not verify Certificate Transparency logs
+    detection_pattern: (?<!CT|transparency).*TrustManager|URLSession
+    fix_pattern: Enable CT verification for critical connections
+    example_vuln: // No CT check
+    example_fix: // Enable CT\nconnection.enableCertificateTransparency = true
+  - id: MS-17
+    name: Weak Crypto Algorithm
+    severity: HIGH
+    category: Crypto
+    platform: Both
+    description: Using deprecated crypto like MD5 SHA1 DES RC4
+    detection_pattern: (MD5|SHA1|DES|RC4|ECB)(?!.*deprecated|legacy)
+    fix_pattern: "Use modern algorithms: SHA-256+ AES-GCM Argon2"
+    example_vuln: MessageDigest.getInstance('MD5')
+    example_fix: MessageDigest.getInstance('SHA-256')
+  - id: MS-18
+    name: Insecure Random
+    severity: HIGH
+    category: Crypto
+    platform: Both
+    description: Using non-cryptographic random for security tokens
+    detection_pattern: (Random|Math\\.random|rand\\(\\))(?!.*Secure)
+    fix_pattern: Use SecureRandom or platform crypto APIs
+    example_vuln: val token = Random().nextInt().toString()
+    example_fix: val token = SecureRandom().nextBytes(32).toHex()
+  - id: MS-19
+    name: Missing Certificate Validation
+    severity: CRITICAL
+    category: Network
+    platform: Both
+    description: TLS certificate validation disabled or incomplete
+    detection_pattern: (ALLOW_ALL|TrustManager.*checkServerTrusted.*\\{\\s*\\})
+    fix_pattern: Always validate certificates use system trust store
+    example_vuln: override fun checkServerTrusted() { }
+    example_fix: override fun checkServerTrusted(chain, authType) {\n  defaultTrustManager.checkServerTrusted(chain, authType)\n}
+  - id: MS-20
+    name: Cleartext Traffic
+    severity: HIGH
+    category: Network
+    platform: Both
+    description: App allows HTTP cleartext traffic
+    detection_pattern: (cleartextTrafficPermitted|NSAllowsArbitraryLoads|http://)
+    fix_pattern: Enforce HTTPS only via network security config
+    example_vuln: android:usesCleartextTraffic='true'
+    example_fix: android:usesCleartextTraffic='false'\n// Or network_security_config.xml
+  - id: MS-21
+    name: Privacy Controls Missing M6
+    severity: HIGH
+    category: Privacy
+    platform: Both
+    description: Inadequate privacy controls for PII collection - OWASP 2024
+    detection_pattern: (collect|track|analytics)(?!.*consent|gdpr|privacy)
+    fix_pattern: Implement consent mechanisms and privacy controls
+    example_vuln: analytics.track(userId, event)
+    example_fix: if (userConsent.analytics) analytics.track(userId, event)
+  - id: MS-22
+    name: Data Minimization Failure
+    severity: MEDIUM
+    category: Privacy
+    platform: Both
+    description: App collects more data than necessary
+    detection_pattern: (collect|store).*(location|contacts|photos)(?!.*required)
+    fix_pattern: Collect only necessary data explain purpose
+    example_vuln: requestPermissions([CONTACTS, LOCATION, CAMERA])
+    example_fix: // Only request what's needed\nrequestPermissions([CAMERA]) // For QR scan only
+  - id: MS-23
+    name: Third Party SDK Risks
+    severity: HIGH
+    category: Privacy
+    platform: Both
+    description: Unvetted third-party SDKs with excessive permissions
+    detection_pattern: (facebook|google|firebase|analytics)(?!.*privacy.*reviewed)
+    fix_pattern: Audit SDK permissions and data collection
+    example_vuln: implementation 'com.analytics:sdk:1.0'
+    example_fix: '// Audit SDK before adding\n// Check: permissions, data collection, privacy policy'
+  - id: MS-24
+    name: Insecure Backup
+    severity: HIGH
+    category: Storage
+    platform: Android
+    description: App data included in auto-backup without encryption
+    detection_pattern: android:allowBackup\\s*=\\s*\true\"(?!.*fullBackupContent)"
+    fix_pattern: Disable backup or use encrypted backup rules
+    example_vuln: android:allowBackup='true'
+    example_fix: android:allowBackup='false'\n// Or use backup_rules.xml with encryption
+  - id: MS-25
+    name: Missing App Transport Security
+    severity: HIGH
+    category: Network
+    platform: iOS
+    description: ATS disabled allowing insecure connections
+    detection_pattern: NSAllowsArbitraryLoads.*true
+    fix_pattern: Enable ATS and only allow specific exceptions
+    example_vuln: "NSAllowsArbitraryLoads: true"
+    example_fix: 'NSAllowsArbitraryLoads: false\n// Add specific domain exceptions only'
+  - id: MS-26
+    name: Insecure IPC
+    severity: HIGH
+    category: Android
+    platform: Android
+    description: Inter-process communication without validation
+    detection_pattern: Messenger|AIDL|ContentProvider(?!.*permission|validate)
+    fix_pattern: Validate all IPC inputs and require permissions
+    example_vuln: "override fun onBind(intent: Intent) = binder"
+    example_fix: 'override fun onBind(intent: Intent): IBinder? {\n  if (!validateCaller()) return null\n  return binder\n}'
+  - id: MS-27
+    name: Tapjacking Vulnerable
+    severity: MEDIUM
+    category: Android
+    platform: Android
+    description: Views do not filter touch events behind overlays
+    detection_pattern: setOnClickListener(?!.*filterTouchesWhenObscured)
+    fix_pattern: Enable filterTouchesWhenObscured for sensitive buttons
+    example_vuln: button.setOnClickListener { transfer() }
+    example_fix: button.filterTouchesWhenObscured = true\nbutton.setOnClickListener { transfer() }
+  - id: MS-28
+    name: Pending Intent Mutable
+    severity: HIGH
+    category: Android
+    platform: Android
+    description: Mutable PendingIntent can be hijacked
+    detection_pattern: PendingIntent\\.get.*(?!.*FLAG_IMMUTABLE)
+    fix_pattern: Use FLAG_IMMUTABLE for PendingIntents
+    example_vuln: PendingIntent.getActivity(ctx, 0, intent, 0)
+    example_fix: PendingIntent.getActivity(ctx, 0, intent, FLAG_IMMUTABLE)
+  - id: MS-29
+    name: Task Affinity Hijack
+    severity: MEDIUM
+    category: Android
+    platform: Android
+    description: Default task affinity allows activity hijacking
+    detection_pattern: <activity(?!.*taskAffinity=\\").*>"
+    fix_pattern: Set empty taskAffinity for sensitive activities
+    example_vuln: <activity android:name='.PaymentActivity'/>
+    example_fix: <activity android:name='.PaymentActivity'\n  android:taskAffinity='' />
+  - id: MS-30
+    name: URL Scheme Hijack
+    severity: HIGH
+    category: iOS
+    platform: iOS
+    description: Custom URL scheme can be hijacked by malicious apps
+    detection_pattern: CFBundleURLSchemes(?!.*universal.*link)
+    fix_pattern: Use Universal Links instead of custom schemes
+    example_vuln: <string>myapp</string> // Custom scheme
+    example_fix: '// Use Universal Links\nassociated-domains: applinks:example.com'
+  - id: MS-31
+    name: Extension Data Leak
+    severity: MEDIUM
+    category: iOS
+    platform: iOS
+    description: App extensions share sensitive data insecurely
+    detection_pattern: NSExtensionActivationRule.*TRUEPREDICATE
+    fix_pattern: Restrict extension activation to specific types
+    example_vuln: "NSExtensionActivationRule: TRUEPREDICATE"
+    example_fix: 'NSExtensionActivationSupportsText: true\n// Only allow text sharing'
+  - id: MS-32
+    name: Face ID Fallback
+    severity: MEDIUM
+    category: iOS
+    platform: iOS
+    description: Face ID falls back to passcode without warning
+    detection_pattern: LAPolicy.*deviceOwnerAuthentication(?!.*biometrics)
+    fix_pattern: Use biometricsOnly policy for sensitive operations
+    example_vuln: context.evaluatePolicy(.deviceOwnerAuthentication)
+    example_fix: context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics)
+  - id: MS-33
+    name: Simulator Detection Missing
+    severity: MEDIUM
+    category: Mobile
+    platform: Both
+    description: App does not detect simulator or emulator environment
+    detection_pattern: (TARGET_IPHONE_SIMULATOR|Build\\.FINGERPRINT)(?!.*detect)
+    fix_pattern: Detect simulators and disable sensitive features
+    example_vuln: // No simulator check
+    example_fix: '#if targetEnvironment(simulator)\n  sensitiveFeatures.isEnabled = false\n#endif'
+  - id: MS-34
+    name: Debug Assertions
+    severity: LOW
+    category: Debug
+    platform: Both
+    description: Debug assertions expose internal state in production
+    detection_pattern: (assert|NSAssert|precondition).*secret|password
+    fix_pattern: Remove sensitive assertions or use production guards
+    example_vuln: 'assert(password.length > 8, ''Password: \(password)'')'
+    example_fix: assert(password.length > 8) // No sensitive data
+  - id: MS-35
+    name: Universal Links Bypass
+    severity: MEDIUM
+    category: iOS
+    platform: iOS
+    description: Universal Links validation can be bypassed
+    detection_pattern: apple-app-site-association(?!.*appID.*teamID)
+    fix_pattern: Verify applinks domain and AASA file properly
+    example_vuln: // Malformed AASA file
+    example_fix: // Properly configured AASA with correct team ID and bundle ID

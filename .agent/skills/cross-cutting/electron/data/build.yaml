@@ -1,0 +1,105 @@
+# Electron Build Tools Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: build
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: build001
+    name: electron-vite
+    category: build
+    version: all
+    description: Fast Vite-based build tool with HMR for Electron
+    text: electron vite build tool fast hmr bundler dev hot reload
+    example: |
+      # Install
+      npm create @electron-vite/quick-start@latest my-app
+      # Dev
+      npx electron-vite dev
+      # Build
+      npx electron-vite build
+    severity: HIGH
+    recommended: true
+    docs_url: https://electron-vite.org
+
+  - id: build002
+    name: electron-builder
+    category: packaging
+    version: all
+    description: Complete solution for packaging and distribution
+    text: electron builder package distribute installer dmg nsis exe deb
+    example: |
+      # package.json
+      "build": {
+        "appId": "com.yourcompany.app",
+        "mac": { "target": ["dmg", "zip"] },
+        "win": { "target": ["nsis"] },
+        "linux": { "target": ["deb", "AppImage"] }
+      }
+    severity: HIGH
+    docs_url: https://www.electron.build
+
+  - id: build003
+    name: electron-forge
+    category: build
+    version: all
+    description: Official Electron scaffolding and build tool
+    text: electron forge scaffold template official plugin maker packager
+    example: |
+      # Create new app
+      npm init electron-app@latest my-app -- --template=vite-typescript
+      # Package
+      npx electron-forge package
+      # Make distributables
+      npx electron-forge make
+    severity: HIGH
+    docs_url: https://www.electronforge.io
+
+  - id: build004
+    name: externalizeDepsPlugin
+    category: build
+    version: all
+    description: Externalize Node.js dependencies from bundle
+    text: externalize deps plugin native module node addon exclude
+    example: |
+      // electron.vite.config.ts
+      import { externalizeDepsPlugin } from 'electron-vite';
+
+      export default defineConfig({
+        main: { plugins: [externalizeDepsPlugin()] },
+        preload: { plugins: [externalizeDepsPlugin()] }
+      });
+    severity: MEDIUM
+
+  - id: build005
+    name: electron-rebuild
+    category: build
+    version: all
+    description: Rebuild native modules for Electron's Node.js version
+    text: electron rebuild native module node gyp addon binding
+    example: |
+      # After npm install
+      npx electron-rebuild
+      # Or in package.json
+      "postinstall": "electron-rebuild"
+    severity: MEDIUM
+    docs_url: https://github.com/electron/rebuild
+
+  - id: build006
+    name: asar
+    category: packaging
+    version: all
+    description: Archive format for Electron app resources
+    text: asar archive package resources bundle app protection
+    example: |
+      # electron-builder.json
+      {
+        "asar": true,
+        "asarUnpack": ["**/*.node", "**/node_modules/sharp/**"]
+      }
+    severity: LOW

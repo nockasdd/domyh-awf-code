@@ -1,366 +1,106 @@
 ---
-name: review
-trigger: ["/review", "pr", "code review"]
-persona: developer
 description: "👀 Code review for PRs: logic, quality, security, and tests verification"
+skills: { required: [security], contextual: [auto] }
 ---
 
-# 👀 /review — Review Pro v3.1
+# 👀 /review — Review Pro
 
-> Comprehensive Code Review
-> 📚 5 Categories • Actionable Feedback • Best Practices
-
----
-
-## 🔄 REVIEW FLOW
-
-```
-User: /review [target]
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 1: GET CHANGES                    │
-│ ▸ Identify PR/commit/files              │
-│ ▸ Load diff                             │
-│ ▸ Context analysis                      │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 2: REVIEW                         │
-│ ▸ Logic & Correctness                   │
-│ ▸ Code Quality                          │
-│ ▸ Security                              │
-│ ▸ Performance                           │
-│ ▸ Tests                                 │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 3: FEEDBACK                       │
-│ ▸ Categorize findings                   │
-│ ▸ Provide suggestions                   │
-│ ▸ Prioritize issues                     │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 4: DECISION                       │
-│ ▸ Approve / Comment / Request Changes   │
-└─────────────────────────────────────────┘
-```
+> 5-Category AI-Powered Code Review
+> 📚 Logic • Quality • Security • Performance • Tests • Auto-Diff
 
 ---
 
-## 🎯 COMMANDS
+## REVIEW FLOW
 
-| Command            | Description             |
-| ------------------ | ----------------------- |
-| `/review`          | Review current changes  |
-| `/review [file]`   | Review specific file    |
-| `/review pr #123`  | Review GitHub PR        |
-| `/review security` | Security-focused review |
-| `/review quick`    | Quick sanity check      |
+1. **CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), load review context (`hsa_get_context`), read changed files. Auto-detect review scope: staged changes, uncommitted, or PR
+2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Show: `[Analyzing] 12 files changed, 3 high-risk`
+3. **REVIEW** — Apply 5-category checklist on changed code, inline comments with severity
+4. **SELF-REVIEW** — Agent re-reads own findings, removes false positives, verifies evidence accuracy
+5. **REPORT** — Structured feedback with severity, approve/comment/request changes decision
+6. **SYNC** — `hsa_check_changes` to update index
 
 ---
 
-## ✅ REVIEW CHECKLIST
+## COMMANDS
+
+| Command            | Description                       |
+| ------------------ | --------------------------------- |
+| `/review`          | Review staged/uncommitted changes |
+| `/review [file]`   | Review specific file              |
+| `/review pr #123`  | Review GitHub PR                  |
+| `/review security` | Security-focused review           |
+| `/review quick`    | Quick sanity check                |
+| `/review --diff`   | Review only changed lines         |
+
+---
+
+## 5-CATEGORY CHECKLIST
 
 ### 1️⃣ Logic & Correctness
 
-```yaml
-logic:
-  - Does the code do what it's supposed to?
-  - Are edge cases handled?
-  - Is the business logic accurate?
-  - Are there off-by-one errors?
-  - Is error handling complete?
-  - Are race conditions handled?
-```
+- Edge cases handled? Off-by-one errors? Null/nil safety? Race conditions? Error propagation?
 
 ### 2️⃣ Code Quality
 
-```yaml
-quality:
-  - Is the code readable?
-  - Are names meaningful and consistent?
-  - Is there code duplication?
-  - Is complexity manageable?
-  - Does it follow project conventions?
-  - Are comments helpful (not redundant)?
-```
+- DRY (no duplication)? Single responsibility? Clear naming? Appropriate comments? Consistent style?
 
 ### 3️⃣ Security
 
-```yaml
-security:
-  - Is user input validated?
-  - Are there injection vulnerabilities?
-  - Are secrets hardcoded?
-  - Is authentication/authorization correct?
-  - Is sensitive data exposed in logs?
-  - Are dependencies secure?
-```
+- Input validation? SQL injection safe? XSS prevention? Auth/authz checked? Secrets in code? OWASP Top 10?
 
 ### 4️⃣ Performance
 
-```yaml
-performance:
-  - Are there N+1 queries?
-  - Is there unnecessary computation?
-  - Are large datasets handled efficiently?
-  - Is caching considered?
-  - Are there memory leaks?
-```
+- N+1 queries? Unnecessary computation? Large datasets handled? Caching considered? Memory leaks?
 
 ### 5️⃣ Tests
 
-```yaml
-tests:
-  - Are tests included for new code?
-  - Do tests cover edge cases?
-  - Are tests meaningful (not just for coverage)?
-  - Do all tests pass?
-  - Is mocking appropriate?
+- Tests for new code? Edge cases covered? Meaningful (not just coverage)? All tests pass? Mocking appropriate?
+
+---
+
+## FEEDBACK TYPES
+
+| Type          | Severity     | Action Required       |
+| ------------- | ------------ | --------------------- |
+| 🔴 Blocker    | Critical     | Must fix before merge |
+| 🟠 Issue      | Important    | Should fix            |
+| 🟡 Suggestion | Nice to have | Consider              |
+| 🔵 Nitpick    | Style        | Optional              |
+| 💡 Praise     | Positive     | None                  |
+
+### Feedback Format
+
+```
+🟠 **Issue** `file.ts:42` (Confidence: 8/10)
+**Finding:** Missing null check before accessing `user.id`
+**Risk:** NullPointerException in production
+**Fix:** `if (!user) return res.status(404).json({ error: 'User not found' })`
 ```
 
 ---
 
-## 💬 FEEDBACK FORMAT
+## GITHUB CLI
 
-### Comment Types
-
-```yaml
-types:
-  blocker:
-    emoji: "🔴"
-    description: "Must fix before merge"
-
-  issue:
-    emoji: "🟠"
-    description: "Should fix, but can discuss"
-
-  suggestion:
-    emoji: "💡"
-    description: "Nice to have improvement"
-
-  nitpick:
-    emoji: "🔵"
-    description: "Style preference, optional"
-
-  question:
-    emoji: "❓"
-    description: "Need clarification"
-
-  praise:
-    emoji: "👏"
-    description: "Good job, highlight"
-```
-
-### Comment Template
-
-````markdown
-📍 `file.ts:42`
-
-🟠 **Issue:** Potential null pointer exception
-
-The `user` object might be null if the query returns no results.
-
-**Suggestion:**
-
-```typescript
-// Before
-const name = user.name;
-
-// After
-const name = user?.name ?? "Unknown";
-```
-````
-
-**Impact:** Runtime crash if user not found
-
-````
+| Operation       | Command                                   |
+| --------------- | ----------------------------------------- |
+| List PRs        | `gh pr list`                              |
+| View PR         | `gh pr view #123`                         |
+| PR diff         | `gh pr diff #123`                         |
+| Checkout        | `gh pr checkout #123`                     |
+| Approve         | `gh pr review --approve`                  |
+| Comment         | `gh pr review --comment -b "msg"`         |
+| Request changes | `gh pr review --request-changes -b "msg"` |
 
 ---
 
-## 📊 REVIEW REPORT
+## SAST TOOL INTEGRATION
 
-```markdown
-👀 CODE REVIEW REPORT
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PR: #123 - Add user authentication
-Author: @developer
-Files: 12 changed (+450/-120)
-
-## Summary
-
-| Category | Status | Issues |
-|----------|--------|--------|
-| Logic | ⚠️ | 2 |
-| Quality | ✅ | 0 |
-| Security | 🔴 | 1 |
-| Performance | ✅ | 0 |
-| Tests | ⚠️ | 1 |
-
-## Findings
-
-### 🔴 Blockers (1)
-
-1. **[Security]** `auth/login.ts:45`
-   - Hardcoded JWT secret in code
-   - Must move to environment variable
-
-### 🟠 Issues (2)
-
-1. **[Logic]** `user/service.ts:78`
-   - Missing null check on user lookup
-
-2. **[Logic]** `user/controller.ts:32`
-   - Error message exposes internal details
-
-### 💡 Suggestions (1)
-
-1. **[Tests]** `auth/login.test.ts`
-   - Missing test for invalid token scenario
-
-### 👏 Praise
-
-- Clean separation of concerns
-- Good use of TypeScript types
-- Comprehensive input validation
-
-## Decision
-
-❌ **Request Changes**
-
-Please address the security blocker before merge.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-````
-
----
-
-## 🔧 DECISION MATRIX
-
-| Status                 | When to Use                     |
-| ---------------------- | ------------------------------- |
-| ✅ **Approve**         | All checks pass, no blockers    |
-| 💬 **Comment**         | Minor suggestions, non-blocking |
-| ❌ **Request Changes** | Blockers that must be fixed     |
-
----
-
-## 🤖 AI-ASSISTED REVIEW
+> If available, run BEFORE AI review for higher accuracy:
 
 ```yaml
-ai_review:
-  role: "AI as first-pass reviewer"
-  human_oversight: required
-
-  ai_focus:
-    - Style consistency
-    - Basic logic errors
-    - Security patterns (OWASP)
-    - Performance issues
-    - Missing test coverage
-
-  human_focus:
-    - Business logic validation
-    - Architectural decisions
-    - Context-specific tradeoffs
-    - Final approval
-
-  workflow:
-    1_ai_scan: "AI identifies potential issues"
-    2_prioritize: "Rank by severity (blocker > issue > nit)"
-    3_human_review: "Developer validates suggestions"
-    4_feedback: "Accept/reject improves AI"
+pre_review_tools:
+  javascript: "npx eslint --format json {files}; npm audit --json"
+  python: "ruff check {files} --output-format json; bandit -r {files} -f json"
+  go: "go vet {files}; govulncheck ./..."
+  general: "semgrep --config auto --json {files}"
 ```
-
----
-
-## 📊 PR COMPLEXITY SCORING
-
-```yaml
-complexity_score:
-  formula: |
-    files_changed * 0.2 +
-    lines_added * 0.01 +
-    lines_removed * 0.01 +
-    cyclomatic_increase * 0.3
-
-  levels:
-    simple: "< 10 → Quick review (15 min)"
-    medium: "10-30 → Standard review (30 min)"
-    complex: "> 30 → Deep review needed (1h+)"
-
-  recommendations:
-    simple: "Single reviewer sufficient"
-    medium: "Primary + secondary reviewer"
-    complex: "Split PR if possible, architecture review"
-```
-
----
-
-## 🔗 GITHUB CLI INTEGRATION
-
-```yaml
-github_cli:
-  view:
-    pr_list: "gh pr list"
-    pr_view: "gh pr view #123"
-    pr_diff: "gh pr diff #123"
-    pr_checks: "gh pr checks #123"
-
-  checkout:
-    local: "gh pr checkout #123"
-
-  review:
-    approve: "gh pr review --approve"
-    comment: "gh pr review --comment -b 'LGTM'"
-    request_changes: "gh pr review --request-changes -b 'Please fix...'"
-
-  comment:
-    inline: "gh pr comment --body 'comment'"
-    file_line: "Use web UI for inline comments"
-```
-
----
-
-## 📋 BEST PRACTICES
-
-```yaml
-reviewer:
-  - Review < 400 lines at a time
-  - Take breaks after 60 minutes
-  - Focus on logic, not style (use linters)
-  - Be constructive, not critical
-  - Ask questions when unclear
-  - Praise good code
-  - Use conventional comment prefixes
-
-author:
-  - Keep PRs small and focused
-  - Write clear PR descriptions
-  - Self-review before requesting
-  - Respond to all comments
-  - Don't take feedback personally
-```
-
----
-
-## ⚙️ TOKEN OPTIMIZATION
-
-```yaml
-token_saving:
-  - Focus on critical files first
-  - Use checklist approach
-  - Group similar issues
-  - AI pre-filter before human review
-```
-
----
-
-_DOMYH Awesome Code v6.1.2 • Review Pro v3.1 • AI-Assisted Reviews_

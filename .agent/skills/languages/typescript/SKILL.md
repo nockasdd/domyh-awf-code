@@ -1,12 +1,12 @@
 ---
 name: typescript
 detect: ["tsconfig.json", "*.ts", "*.tsx", "*.mts", "*.cts"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# TypeScript Patterns — DOMYH Awesome Code v6.1.2
+# TypeScript Patterns — DOMYH Awesome Code
 
 > **Version**: TypeScript 5.5/5.6 (2025-2026)
 > **Philosophy**: Type-safe, inference-first, ESM-native
@@ -303,4 +303,4 @@ const invalidUser: User = { id: "string" };
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • TypeScript 5.5/5.6_
+_DOMYH Awesome Code • TypeScript 5.5/5.6_

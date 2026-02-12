@@ -5,7 +5,7 @@ trigger: always_on
 # 📜 Rules System
 
 > Constitutional hierarchy with modular composition  
-> _DOMYH Awesome Code v6.1.2 • Agentic Personas_
+> _DOMYH Awesome Code • Agentic Personas_
 
 ---
 
@@ -68,19 +68,20 @@ Additional **modular rules** can be composed for specific use cases.
 
 Composable rule modules for specific use cases:
 
-| Module                    | Purpose                   | Personas            |
-| ------------------------- | ------------------------- | ------------------- |
-| `reflection.yaml`         | Self-improvement patterns | All                 |
-| `context-management.yaml` | Token efficiency          | All                 |
-| `evidence.yaml`           | Evidence requirements     | Auditor, Debugger   |
-| `stop-conditions.yaml`    | When to pause             | All                 |
-| `edit-verification.yaml`  | Code edit verification    | Developer, Debugger |
-| `terminal-safety.yaml`    | Terminal command safety   | Developer, DevOps   |
-| `git-workflow.yaml`       | Git operations            | Developer, DevOps   |
-| `quality.yaml`            | Code quality standards    | Developer, Tester   |
-| `language.yaml`           | Language/i18n rules       | All                 |
-| `yagni.yaml`              | YAGNI enforcement         | Developer, Planner  |
-| `online-research.yaml`    | Web research guidelines   | Researcher          |
+| Module                          | Purpose                      | Personas            |
+| ------------------------------- | ---------------------------- | ------------------- |
+| `stop-conditions.yaml`          | When to pause                | All                 |
+| `edit-verification.yaml`        | Code edit verification       | Developer, Debugger |
+| `terminal-safety.yaml`          | Terminal command safety      | Developer, DevOps   |
+| `git-workflow.yaml`             | Git operations               | Developer, DevOps   |
+| `quality.yaml`                  | Code quality standards       | Developer, Tester   |
+| `language.yaml`                 | Language/i18n rules          | All                 |
+| `yagni.yaml`                    | YAGNI enforcement            | Developer, Planner  |
+| `online-research.yaml`          | Web research guidelines      | Researcher          |
+| `agent-delegation.yaml`         | Task delegation patterns     | Orchestrator        |
+| `performance-optimization.yaml` | Perf optimization guidelines | Developer, DevOps   |
+
+> **Merged into constitutional tiers** (in `archive/`): `reflection.yaml`, `context-management.yaml`, `evidence.yaml`
 
 📁 Location: `modules/*.yaml`
 
@@ -91,11 +92,12 @@ Composable rule modules for specific use cases:
 ```
 .agent/rules/
 ├── README.md                    # This file
+├── SACRED_RULES.xml             # Core XML rules (always active)
 ├── constitutional/              # v6.0 Constitutional hierarchy
 │   ├── tier-0-core.yaml         # Immutable principles
 │   ├── tier-1-safety.yaml       # Safety rules
 │   └── tier-2-execution.yaml    # Quality guidelines
-├── modules/                     # v6.0 Modular rules
+├── modules/                     # v6.0 Modular rules (10 YAML files)
 │   ├── reflection.yaml          # Self-improvement
 │   ├── context-management.yaml  # Token efficiency
 │   ├── evidence.yaml            # Evidence requirements
@@ -108,7 +110,19 @@ Composable rule modules for specific use cases:
 │   ├── yagni.yaml               # YAGNI enforcement
 │   └── online-research.yaml     # Web research
 ├── data/                        # Supporting data files
-└── [legacy .md files]           # Old rules (to be deprecated)
+│   └── build-systems.yaml       # Build system detection data
+├── archive/                     # Merged/legacy rules
+│   ├── constitutional/          # Constitutional YAML tiers
+│   ├── reflection.yaml          # Merged into Tier 2
+│   ├── context-management.yaml  # Merged into Tier 2
+│   ├── evidence.yaml            # Merged into Tier 2
+│   ├── duplication-prevention.md # DRY enforcement
+│   └── incremental-changes.md   # Step-by-step modifications
+└── [Standalone Rules]           # Active standalone rules
+    ├── project-detection.md     # Project/stack detection
+    ├── shell-commands.md        # Shell syntax per platform
+    ├── prompt-injection-guard.md # Security: CVE-2025 protection
+    └── validation-framework.md  # Input validation patterns
 ```
 
 ---
@@ -168,7 +182,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.1.2"
+version: "6.2.1"
 rule_id: "MOD-XXX-001"
 
 description: |
@@ -220,4 +234,4 @@ Before any action, verify:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Constitutional Rules System • Agentic Personas_
+_DOMYH Awesome Code • Constitutional Rules System • Agentic Personas_

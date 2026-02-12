@@ -1,0 +1,269 @@
+metadata:
+  skill: security
+  domain: cloud_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: cloud-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - provider
+    - description
+    - detection_pattern
+    - fix_pattern
+    - example_vuln
+    - example_fix
+patterns:
+  - id: CLOUD-01
+    name: Public S3 Bucket
+    severity: CRITICAL
+    category: Storage
+    provider: AWS
+    description: S3 bucket allows public read or write access
+    detection_pattern: (ACL.*public|PublicAccessBlock.*false|s3:GetObject.*Principal.*\\*)
+    fix_pattern: Block public access enable encryption and logging
+    example_vuln: "ACL: 'public-read'"
+    example_fix: 'PublicAccessBlockConfiguration:\n  BlockPublicAcls: true\n  BlockPublicPolicy: true'
+  - id: CLOUD-02
+    name: IMDS v1 Enabled
+    severity: CRITICAL
+    category: Compute
+    provider: AWS
+    description: EC2 metadata service v1 vulnerable to SSRF attacks
+    detection_pattern: (HttpTokens.*optional|IMDSv1)
+    fix_pattern: Force IMDSv2 with required tokens
+    example_vuln: "HttpTokens: 'optional'"
+    example_fix: 'MetadataOptions:\n  HttpTokens: ''required''\n  HttpPutResponseHopLimit: 1'
+  - id: CLOUD-03
+    name: Overly Permissive IAM
+    severity: CRITICAL
+    category: IAM
+    provider: All
+    description: IAM policy with * permissions or resources
+    detection_pattern: (Action.*\\*|Resource.*\\*|Effect.*Allow.*\\*)
+    fix_pattern: Apply least privilege specific actions and resources
+    example_vuln: 'Effect: ''Allow''\nAction: ''*''\nResource: ''*'''
+    example_fix: 'Effect: ''Allow''\nAction: ''s3:GetObject''\nResource: ''arn:aws:s3:::mybucket/*'''
+  - id: CLOUD-04
+    name: Cross-Account Trust
+    severity: HIGH
+    category: IAM
+    provider: AWS
+    description: IAM role trusts external accounts without conditions
+    detection_pattern: (Principal.*arn:aws.*:root)(?!.*Condition)
+    fix_pattern: Add external ID and MFA conditions for cross-account
+    example_vuln: "Principal: 'arn:aws:iam::123456789:root'"
+    example_fix: 'Principal: ''arn:aws:iam::123456789:root''\nCondition:\n  StringEquals:\n    sts:ExternalId: ''secret-id'''
+  - id: CLOUD-05
+    name: Unencrypted Storage
+    severity: HIGH
+    category: Storage
+    provider: All
+    description: Storage not encrypted at rest
+    detection_pattern: (Encrypted.*false|SSEConfiguration.*null)
+    fix_pattern: Enable encryption with customer-managed keys
+    example_vuln: "Encrypted: false"
+    example_fix: 'Encrypted: true\nKMSMasterKeyID: ''alias/my-key'''
+  - id: CLOUD-06
+    name: Public Security Group
+    severity: HIGH
+    category: Network
+    provider: AWS
+    description: Security group allows 0.0.0.0/0 ingress on sensitive ports
+    detection_pattern: (CidrIp.*0\\.0\\.0\\.0/0.*(22|3389|3306|5432))
+    fix_pattern: Restrict ingress to specific IPs or VPN
+    example_vuln: 'CidrIp: ''0.0.0.0/0''\nFromPort: 22'
+    example_fix: 'CidrIp: ''10.0.0.0/8''\nFromPort: 22'
+  - id: CLOUD-07
+    name: Missing VPC Flow Logs
+    severity: MEDIUM
+    category: Network
+    provider: AWS
+    description: VPC flow logs not enabled for network monitoring
+    detection_pattern: (FlowLog)(?!.*Enable)
+    fix_pattern: Enable VPC flow logs for security monitoring
+    example_vuln: // No flow logs configured
+    example_fix: FlowLogIds:\n  - fl-xxxxxxxx
+  - id: CLOUD-08
+    name: Default VPC Used
+    severity: MEDIUM
+    category: Network
+    provider: AWS
+    description: Resources deployed in default VPC with weak isolation
+    detection_pattern: (vpc-.*default|DefaultVpc)
+    fix_pattern: Use custom VPCs with proper network segmentation
+    example_vuln: "VpcId: 'vpc-default'"
+    example_fix: "VpcId: 'vpc-custom-isolated'"
+  - id: CLOUD-09
+    name: Container Escape Risk
+    severity: CRITICAL
+    category: Container
+    provider: All
+    description: Container running as root or with privileged mode
+    detection_pattern: (privileged.*true|runAsRoot|USER root)
+    fix_pattern: Run as non-root user disable privileges
+    example_vuln: 'securityContext:\n  privileged: true'
+    example_fix: 'securityContext:\n  runAsNonRoot: true\n  allowPrivilegeEscalation: false'
+  - id: CLOUD-10
+    name: Secrets in Environment
+    severity: CRITICAL
+    category: Secrets
+    provider: All
+    description: Secrets passed via environment variables
+    detection_pattern: (env.*SECRET|env.*PASSWORD|env.*API_KEY)
+    fix_pattern: "Use secrets manager: Vault AWS Secrets Manager"
+    example_vuln: 'env:\n  - name: DB_PASSWORD\n    value: ''plaintext'''
+    example_fix: 'env:\n  - name: DB_PASSWORD\n    valueFrom:\n      secretKeyRef:\n        name: db-secret'
+  - id: CLOUD-11
+    name: Missing Secrets Rotation
+    severity: HIGH
+    category: Secrets
+    provider: All
+    description: Secrets without automatic rotation configured
+    detection_pattern: (rotation.*false|RotationEnabled.*false)
+    fix_pattern: Enable automatic rotation every 30-90 days
+    example_vuln: "RotationEnabled: false"
+    example_fix: 'RotationEnabled: true\nRotationLambdaARN: ''arn:aws:lambda:...'''
+  - id: CLOUD-12
+    name: Public Load Balancer
+    severity: MEDIUM
+    category: Network
+    provider: All
+    description: Internal resources exposed via public load balancer
+    detection_pattern: (Scheme.*internet-facing|PublicIpAddress).*internal
+    fix_pattern: Use internal load balancers for internal services
+    example_vuln: "Type: 'internet-facing'"
+    example_fix: "Type: 'internal'"
+  - id: CLOUD-13
+    name: Missing WAF
+    severity: MEDIUM
+    category: Network
+    provider: All
+    description: No Web Application Firewall protecting endpoints
+    detection_pattern: (ALB|CloudFront)(?!.*WAF|WebACL)
+    fix_pattern: Attach WAF with OWASP rules for protection
+    example_vuln: // No WAF attached
+    example_fix: "WebACLId: 'arn:aws:wafv2:...:webacl/owasp-rules'"
+  - id: CLOUD-14
+    name: CloudTrail Disabled
+    severity: HIGH
+    category: Audit
+    provider: AWS
+    description: CloudTrail not enabled for API audit logging
+    detection_pattern: (IsLogging.*false|trailArn.*null)
+    fix_pattern: Enable CloudTrail with multi-region logging
+    example_vuln: "IsLogging: false"
+    example_fix: 'IsLogging: true\nIsMultiRegionTrail: true\nIncludeGlobalServiceEvents: true'
+  - id: CLOUD-15
+    name: Logging Disabled
+    severity: HIGH
+    category: Audit
+    provider: All
+    description: Resource logging and monitoring not configured
+    detection_pattern: (Logging.*Disabled|AccessLog.*false)
+    fix_pattern: Enable access logging and monitoring
+    example_vuln: "AccessLoggingEnabled: false"
+    example_fix: 'AccessLoggingEnabled: true\nAccessLogBucket: ''logs-bucket'''
+  - id: CLOUD-16
+    name: Serverless Cold Start Attack
+    severity: MEDIUM
+    category: Serverless
+    provider: All
+    description: Lambda or function injection via cold start
+    detection_pattern: (handler.*eval|import.*user)
+    fix_pattern: Validate all inputs sanitize function context
+    example_vuln: exports.handler = async (event) => eval(event.code)
+    example_fix: exports.handler = async (event) => {\n  const validated = schema.parse(event)\n  // Process validated input\n}
+  - id: CLOUD-17
+    name: Missing Resource Tags
+    severity: LOW
+    category: Ops
+    provider: All
+    description: Resources without proper tagging for security tracking
+    detection_pattern: (Tags.*\\[\\]|tags.*null)
+    fix_pattern: Apply consistent security and ownership tags
+    example_vuln: "Tags: []"
+    example_fix: 'Tags:\n  - Key: ''Environment''\n    Value: ''production''\n  - Key: ''Owner''\n    Value: ''security-team'''
+  - id: CLOUD-18
+    name: Insecure Blob Storage
+    severity: HIGH
+    category: Storage
+    provider: Azure
+    description: Azure Blob allows anonymous access
+    detection_pattern: (AllowBlobPublicAccess.*true|publicAccess.*Blob)
+    fix_pattern: Disable public access use SAS tokens or RBAC
+    example_vuln: "AllowBlobPublicAccess: true"
+    example_fix: "AllowBlobPublicAccess: false"
+  - id: CLOUD-19
+    name: GCP Default Service Account
+    severity: HIGH
+    category: IAM
+    provider: GCP
+    description: Using default compute service account with editor role
+    detection_pattern: (compute@.*gserviceaccount|Editor|Owner)
+    fix_pattern: Create custom service account with minimal permissions
+    example_vuln: "serviceAccountEmail: '123-compute@...'"
+    example_fix: "serviceAccountEmail: 'custom-sa@project.iam'"
+  - id: CLOUD-20
+    name: Kubernetes RBAC Missing
+    severity: HIGH
+    category: K8s
+    provider: All
+    description: No RBAC configured allowing privileged operations
+    detection_pattern: (rbac.*disabled|--authorization-mode.*AlwaysAllow)
+    fix_pattern: Enable RBAC with proper role bindings
+    example_vuln: --authorization-mode=AlwaysAllow
+    example_fix: --authorization-mode=RBAC
+  - id: CLOUD-21
+    name: Pod Security Standards
+    severity: MEDIUM
+    category: K8s
+    provider: All
+    description: Pods running without security standards enforcement
+    detection_pattern: (PodSecurityPolicy.*null|pod-security.*disabled)
+    fix_pattern: "Enable Pod Security Standards: restricted baseline"
+    example_vuln: // No PSS enforcement
+    example_fix: 'apiVersion: policy/v1\nkind: PodSecurityPolicy\nspec:\n  privileged: false'
+  - id: CLOUD-22
+    name: Missing Network Policy
+    severity: MEDIUM
+    category: K8s
+    provider: All
+    description: No network policies for pod-to-pod traffic control
+    detection_pattern: (NetworkPolicy)(?!.*defined)
+    fix_pattern: Implement network policies for namespace isolation
+    example_vuln: // No network policies
+    example_fix: 'kind: NetworkPolicy\nspec:\n  podSelector: {}\n  policyTypes: [Ingress, Egress]'
+  - id: CLOUD-23
+    name: Terraform State Exposure
+    severity: CRITICAL
+    category: IaC
+    provider: All
+    description: Terraform state file with secrets stored insecurely
+    detection_pattern: (terraform\\.tfstate|backend.*s3)(?!.*encrypt)
+    fix_pattern: Use encrypted remote backend with locking
+    example_vuln: backend 'local' {}
+    example_fix: backend 's3' {\n  encrypt = true\n  dynamodb_table = 'tf-locks'\n}
+  - id: CLOUD-24
+    name: IaC Secrets Hardcoded
+    severity: CRITICAL
+    category: IaC
+    provider: All
+    description: Secrets hardcoded in Infrastructure as Code
+    detection_pattern: (password.*=.*['\]|secret.*=.*['\"]|api_key.*=.*['\"])"
+    fix_pattern: Use variables with secrets from vault
+    example_vuln: password = 'mysecret'
+    example_fix: password = var.db_password // From secrets manager
+  - id: CLOUD-25
+    name: Missing CSPM
+    severity: HIGH
+    category: Ops
+    provider: All
+    description: No Cloud Security Posture Management in place
+    detection_pattern: (cspm|posture.*management)(?!.*enabled)
+    fix_pattern: Implement CSPM for continuous compliance monitoring
+    example_vuln: // No CSPM configured
+    example_fix: "// Enable: AWS Security Hub, Azure Defender, GCP SCC"

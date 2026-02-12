@@ -1,6 +1,6 @@
 # JavaScript — Advanced Patterns
 
-> DOMYH Awesome Code v6.1.2 — Tier 3 Reference
+> DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -527,4 +527,4 @@ test.describe("Login Flow", () => {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — JavaScript Advanced Patterns — 2025-2026_
+_DOMYH Awesome Code — JavaScript Advanced Patterns — 2025-2026_

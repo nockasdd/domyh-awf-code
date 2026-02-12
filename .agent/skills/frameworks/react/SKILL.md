@@ -1,14 +1,14 @@
 ---
 name: react
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
-version: "6.1.2"
+version: "6.2.1"
 category: frontend
 tier: 1
 ---
 
-# React Patterns — DOMYH Awesome Code v6.1.2
+# React Patterns — DOMYH Awesome Code
 
-> **Version**: React 19 (2025-2026)
+> **Version**: React 19.2+ (2025-2026)
 > **Philosophy**: Server-first, compiler-optimized, hooks-based
 
 ---
@@ -16,7 +16,7 @@ tier: 1
 ## 🎯 When to Use This Skill
 
 Use for: React SPAs, component libraries, client-side apps.
-**NOT for**: SSR (→ nextjs), mobile-first (→ flutter).
+**NOT for**: SSR (→ nextjs or Vite RSC plugin), mobile-first (→ flutter).
 
 ---
 
@@ -98,15 +98,11 @@ function LikeButton({ likes }: { likes: number }) {
 ### useActionState
 
 ```tsx
-import { useActionState, useFormStatus } from "react";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return <button disabled={pending}>{pending ? "..." : "Submit"}</button>;
-}
+// React 19: returns [state, action, isPending] triple
+import { useActionState } from "react";
 
 function Form() {
-  const [state, action] = useActionState(async (prev, formData) => {
+  const [state, action, isPending] = useActionState(async (prev, formData) => {
     const result = await submit(formData);
     return result.success ? null : result.error;
   }, null);
@@ -114,7 +110,7 @@ function Form() {
   return (
     <form action={action}>
       <input name="email" required />
-      <SubmitButton />
+      <button disabled={isPending}>{isPending ? "..." : "Submit"}</button>
       {state && <p className="text-red-500">{state}</p>}
     </form>
   );
@@ -260,4 +256,4 @@ For advanced performance optimization, see [ADVANCED.md](./ADVANCED.md#vercel-pe
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • React 19_
+_DOMYH Awesome Code • React 19_

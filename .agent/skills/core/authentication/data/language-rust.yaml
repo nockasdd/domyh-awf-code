@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_rust
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-rust.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: RS-001
+    pattern_name: jsonwebtoken Crate
+    description: JWT creation and validation
+    library: jsonwebtoken
+    security_level: high
+    keywords:
+      - jwt
+      - crate
+  - id: RS-002
+    pattern_name: JWT Signing RS256
+    description: RSA key pair signing
+    library: jsonwebtoken
+    security_level: high
+    keywords:
+      - rs256
+      - rsa
+  - id: RS-003
+    pattern_name: JWT Claims Struct
+    description: Derive Serialize Deserialize claims
+    library: jsonwebtoken
+    security_level: medium
+    keywords:
+      - claims
+      - serde
+  - id: RS-004
+    pattern_name: axum-jwt-auth
+    description: JWT middleware for Axum
+    library: axum-jwt-auth
+    security_level: high
+    keywords:
+      - axum
+      - jwt
+  - id: RS-005
+    pattern_name: JWKS Fetching
+    description: Remote key set validation
+    library: axum-jwt-auth
+    security_level: high
+    keywords:
+      - jwks
+      - remote
+  - id: RS-006
+    pattern_name: actix-jwt-auth-middleware
+    description: JWT for Actix-web
+    library: actix-jwt-auth-middleware
+    security_level: high
+    keywords:
+      - actix
+      - jwt
+  - id: RS-007
+    pattern_name: oxide-auth
+    description: OAuth2 server framework
+    library: oxide-auth
+    security_level: high
+    keywords:
+      - oauth2
+      - server
+  - id: RS-008
+    pattern_name: oxide-auth-axum
+    description: OAuth2 for Axum
+    library: oxide-auth-axum
+    security_level: high
+    keywords:
+      - axum
+      - oauth2
+  - id: RS-009
+    pattern_name: oauth2-rs
+    description: OAuth2 client library
+    library: oauth2
+    security_level: high
+    keywords:
+      - oauth2
+      - client
+  - id: RS-010
+    pattern_name: torii
+    description: Modular auth ecosystem
+    library: torii
+    security_level: high
+    keywords:
+      - modular
+      - auth
+  - id: RS-011
+    pattern_name: Argon2 Hashing
+    description: Password hashing with argon2
+    library: argon2
+    security_level: critical
+    keywords:
+      - argon2
+      - password
+  - id: RS-012
+    pattern_name: bcrypt Crate
+    description: Bcrypt password hashing
+    library: bcrypt
+    security_level: critical
+    keywords:
+      - bcrypt
+      - hash
+  - id: RS-013
+    pattern_name: Tower HTTP Auth
+    description: Auth extractors for Tower
+    library: tower-http
+    security_level: high
+    keywords:
+      - tower
+      - auth
+  - id: RS-014
+    pattern_name: actix-identity
+    description: Identity management for Actix
+    library: actix-identity
+    security_level: high
+    keywords:
+      - actix
+      - identity
+  - id: RS-015
+    pattern_name: actix-session
+    description: Session handling for Actix
+    library: actix-session
+    security_level: high
+    keywords:
+      - actix
+      - session
+  - id: RS-016
+    pattern_name: axum-sessions
+    description: Session middleware for Axum
+    library: async-session
+    security_level: high
+    keywords:
+      - axum
+      - session
+  - id: RS-017
+    pattern_name: Cookie Crate
+    description: Secure cookie handling
+    library: cookie
+    security_level: high
+    keywords:
+      - cookie
+      - secure
+  - id: RS-018
+    pattern_name: CSRF Protection
+    description: CSRF tokens for Rust
+    library: csrf
+    security_level: critical
+    keywords:
+      - csrf
+      - token
+  - id: RS-019
+    pattern_name: webauthn-rs
+    description: WebAuthn server library
+    library: webauthn-rs
+    security_level: critical
+    keywords:
+      - webauthn
+      - passkey
+  - id: RS-020
+    pattern_name: oauth2-passkey-axum
+    description: Google OAuth and Passkeys
+    library: oauth2-passkey-axum
+    security_level: critical
+    keywords:
+      - passkey
+      - google
+  - id: RS-021
+    pattern_name: Rocket Auth
+    description: Auth for Rocket framework
+    library: rocket_auth
+    security_level: high
+    keywords:
+      - rocket
+      - auth
+  - id: RS-022
+    pattern_name: Ring Crypto
+    description: Low-level crypto primitives
+    library: ring
+    security_level: critical
+    keywords:
+      - crypto
+      - ring
+  - id: RS-023
+    pattern_name: rustls TLS
+    description: Pure Rust TLS
+    library: rustls
+    security_level: high
+    keywords:
+      - tls
+      - https
+  - id: RS-024
+    pattern_name: axum-extra Cookies
+    description: Cookie jar for Axum
+    library: axum-extra
+    security_level: medium
+    keywords:
+      - cookies
+      - jar
+  - id: RS-025
+    pattern_name: Rate Limiting
+    description: Governor rate limiter
+    library: governor
+    security_level: high
+    keywords:
+      - ratelimit
+      - governor

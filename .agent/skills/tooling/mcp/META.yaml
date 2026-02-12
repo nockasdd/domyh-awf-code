@@ -1,0 +1,80 @@
+name: mcp
+version: "1.0.0"
+display: Model Context Protocol
+category: tooling
+tier: 1
+priority: 1
+
+desc: "MCP server & client development. JSON-RPC 2.0, transport (stdio/Streamable HTTP), tool/resource/prompt primitives, OAuth 2.1, and production patterns."
+
+  ### Data Files (3 domains, ~24 patterns)
+  - transport-patterns.yaml: stdio vs Streamable HTTP, config (8)
+  - tool-design.yaml: stateless tools, pagination, error handling (8)
+  - security.yaml: OAuth 2.1 flows, input validation, rate limiting (8)
+
+triggers:
+  file_patterns:
+    # Config
+    - "mcp.json"
+    - "mcp-config.json"
+    - ".mcp.json"
+    - "claude_desktop_config.json"
+    # Server structure
+    - "**/mcp-server/**"
+    - "**/mcp/**/*.ts"
+    - "**/tools/*.ts"
+    - "**/resources/*.ts"
+    - "**/prompts/*.ts"
+  keywords:
+    # Core
+    - MCP
+    - Model Context Protocol
+    - mcp server
+    - mcp client
+    - mcp tool
+    - mcp resource
+    - mcp prompt
+    # Protocol
+    - JSON-RPC
+    - JSON-RPC 2.0
+    - jsonrpc
+    # Transport
+    - stdio transport
+    - streamable http
+    - sse transport
+    # SDK
+    - "@modelcontextprotocol/sdk"
+    - "mcp sdk"
+    - "from mcp import"
+    # Primitives
+    - tool definition
+    - resource template
+    - prompt template
+    # Auth
+    - OAuth 2.1
+    - mcp auth
+
+caps:
+  - JSON-RPC 2.0 protocol (request/response/notification)
+  - Host ↔ Client ↔ Server architecture
+  - Transport: stdio (local/dev) vs Streamable HTTP (remote/prod)
+  - Tool primitives: stateless, idempotent, JSON Schema validation
+  - Resource primitives: URI templates, dynamic content
+  - Prompt primitives: reusable prompt templates
+  - OAuth 2.1 authentication (mandatory for HTTP transport)
+  - Bounded context per server (single responsibility)
+  - Pagination tokens for large result sets
+  - Error classification (recoverable vs fatal, -32xxx codes)
+  - Input validation & sanitization
+  - Containerized deployment patterns
+  - SDK patterns: TypeScript (@modelcontextprotocol/sdk), Python (mcp)
+
+related_skills:
+  - ai-agents
+  - api-protocols
+  - security
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/tooling/mcp/data"
+  preload_data: true

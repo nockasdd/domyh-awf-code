@@ -1,0 +1,69 @@
+# Azure CLI Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: AZ-CLI-001
+    name: az Essential Commands
+    category: cli
+    description: |
+      Most common Azure CLI commands.
+    text: |
+      # Auth & Config
+      az login
+      az account set --subscription "my-sub"
+      az account show
+      az group list
+
+      # Resource management
+      az group create --name my-rg --location eastus
+      az resource list --resource-group my-rg
+
+      # Container Registry
+      az acr create --resource-group my-rg --name myregistry --sku Basic
+      az acr login --name myregistry
+
+      # Key Vault
+      az keyvault create --name my-kv --resource-group my-rg
+      az keyvault secret set --name MySecret --value "secret-value" --vault-name my-kv
+      az keyvault secret show --name MySecret --vault-name my-kv
+
+  - id: AZ-CLI-002
+    name: az Output & Query
+    category: cli
+    description: |
+      Format and query Azure CLI output.
+    text: |
+      --output json    → JSON output (default)
+      --output table   → Table format
+      --output tsv     → Tab-separated values
+      --query          → JMESPath query
+
+      Examples:
+      az vm list --query "[].{Name:name, State:powerState}" --output table
+      az webapp list --query "[?resourceGroup=='my-rg'].name" --output tsv
+
+  - id: AZ-CLI-003
+    name: Bicep (ARM Alternative)
+    category: iac
+    description: |
+      Azure-native IaC language (alternative to Terraform for Azure-only).
+    example: |
+      // main.bicep
+      param location string = resourceGroup().location
+      param appName string
+
+      resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+        name: '${appName}-plan'
+        location: location
+        sku: { name: 'B1', tier: 'Basic' }
+      }
+
+      resource webApp 'Microsoft.Web/sites@2023-01-01' = {
+        name: appName
+        location: location
+        properties: {
+          serverFarmId: appServicePlan.id
+        }
+      }
+
+      // Deploy: az deployment group create --resource-group my-rg --template-file main.bicep

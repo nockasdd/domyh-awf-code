@@ -1,0 +1,255 @@
+# =============================================================================
+# Next.js Core Patterns (Feb 2026)
+# =============================================================================
+# App Router, Server Components, Turbopack
+
+metadata:
+  skill: nextjs
+  domain: core
+  version: "16"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: next001
+    name: App Router Structure
+    category: architecture
+    version: "13+"
+    description: File-based routing with layouts and nested routes
+    text: app router layout page folder structure route
+    example: |
+      # ✅ Next.js App Router Structure
+      my-app/
+      ├── app/
+      │   ├── layout.tsx          # Root layout
+      │   ├── page.tsx            # Home page (/)
+      │   ├── loading.tsx         # Loading UI
+      │   ├── error.tsx           # Error boundary
+      │   ├── not-found.tsx       # 404 page
+      │   ├── (auth)/             # Route group (no URL segment)
+      │   │   ├── login/page.tsx
+      │   │   └── register/page.tsx
+      │   ├── dashboard/
+      │   │   ├── layout.tsx      # Nested layout
+      │   │   ├── page.tsx
+      │   │   └── settings/page.tsx
+      │   └── api/
+      │       └── users/route.ts  # API route
+      ├── components/
+      │   ├── ui/                 # shadcn components
+      │   └── features/           # Feature components
+      ├── lib/
+      │   ├── db.ts               # Database client
+      │   └── utils.ts            # Utilities
+      └── next.config.ts
+    severity: CRITICAL
+    docs_url: https://nextjs.org/docs/app
+
+  - id: next002
+    name: Server Components
+    category: rendering
+    version: "13+"
+    description: Default async components with direct data access
+    text: server component async await fetch database rsc
+    example: |
+      // app/posts/page.tsx
+      // ✅ Server Component - default, no directive needed
+      import { db } from "@/lib/db";
+
+      export default async function PostsPage() {
+        // Direct database access - no API needed
+        const posts = await db.post.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 10,
+        });
+
+        return (
+          <div>
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        );
+      }
+
+      // ✅ Static metadata
+      export const metadata = {
+        title: "Posts",
+        description: "All blog posts",
+      };
+
+      // ✅ Dynamic metadata
+      export async function generateMetadata({
+        params,
+      }: {
+        params: Promise<{ id: string }>;
+      }) {
+        const { id } = await params;
+        const post = await getPost(id);
+        return {
+          title: post.title,
+          openGraph: { images: [post.image] },
+        };
+      }
+    severity: CRITICAL
+    docs_url: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+
+  - id: next003
+    name: Turbopack (Default in 16)
+    category: tooling
+    version: "16+"
+    description: |
+      Fast Rust-based bundler, default since Next.js 16.
+      2-5x faster production builds, 10x faster refresh.
+    text: turbopack bundler fast build rust webpack
+    example: |
+      # ✅ Turbopack is DEFAULT in Next.js 16
+      # No configuration needed - automatic performance boost
+
+      # next.config.ts - optional tuning
+      export default {
+        experimental: {
+          turbopack: {
+            fileSystemCache: true,  // Persistent cache (beta)
+          }
+        }
+      }
+
+      # Benefits:
+      # - 2-5x faster production builds
+      # - 10x faster Fast Refresh
+      # - Incremental bundling
+      # - Built-in HMR optimization
+
+      # Migration from webpack:
+      # - Most webpack.config.js options work unchanged
+      # - Custom loaders need Turbopack equivalents
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/architecture/turbopack
+
+  - id: next004
+    name: Client Components
+    category: rendering
+    version: "13+"
+    description: Interactive components with useState, useEffect
+    text: use client useState useEffect interactivity client
+    example: |
+      "use client";
+
+      import { useState } from "react";
+      import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+      // ✅ Mark with "use client" for interactivity
+      export function UserForm({ userId }: { userId: string }) {
+        const queryClient = useQueryClient();
+
+        const { data: user, isLoading } = useQuery({
+          queryKey: ["user", userId],
+          queryFn: () => fetch(`/api/users/${userId}`).then(r => r.json()),
+        });
+
+        const mutation = useMutation({
+          mutationFn: (data: FormData) =>
+            fetch(`/api/users/${userId}`, {
+              method: "PATCH",
+              body: data,
+            }),
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["user", userId] });
+          },
+        });
+
+        if (isLoading) return <Skeleton />;
+
+        return (
+          <form action={mutation.mutate}>
+            <input name="name" defaultValue={user.name} />
+            <button type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Saving..." : "Save"}
+            </button>
+          </form>
+        );
+      }
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/building-your-application/rendering/client-components
+
+  - id: next005
+    name: Async Request APIs
+    category: routing
+    version: "15+"
+    description: params and searchParams are now Promises
+    text: params searchParams async await promise route
+    example: |
+      // app/users/[id]/page.tsx
+      // ✅ params is now a Promise (Next.js 15+)
+      export default async function UserPage({
+        params,
+      }: {
+        params: Promise<{ id: string }>;
+      }) {
+        const { id } = await params;
+        const user = await fetchUser(id);
+        return <UserProfile user={user} />;
+      }
+
+      // ✅ searchParams is also a Promise
+      export default async function SearchPage({
+        searchParams,
+      }: {
+        searchParams: Promise<{ q?: string }>;
+      }) {
+        const { q } = await searchParams;
+        const results = await search(q);
+        return <SearchResults results={results} />;
+      }
+
+      // ⚠️ Breaking change from 14 → 15
+      // Old: ({ params: { id } }) => ...
+      // New: async ({ params }) => { const { id } = await params; ... }
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/api-reference/file-conventions/page
+
+  - id: next006
+    name: API Routes
+    category: api
+    version: "13+"
+    description: Route handlers for REST APIs
+    text: api route handler get post put delete rest
+    example: |
+      // app/api/users/route.ts
+      import { NextRequest, NextResponse } from "next/server";
+
+      export async function GET(request: NextRequest) {
+        const searchParams = request.nextUrl.searchParams;
+        const page = parseInt(searchParams.get("page") || "1");
+
+        const users = await db.user.findMany({
+          skip: (page - 1) * 10,
+          take: 10,
+        });
+
+        return NextResponse.json(users);
+      }
+
+      export async function POST(request: NextRequest) {
+        const body = await request.json();
+        const user = await db.user.create({ data: body });
+        return NextResponse.json(user, { status: 201 });
+      }
+
+      // app/api/users/[id]/route.ts
+      export async function GET(
+        request: NextRequest,
+        { params }: { params: Promise<{ id: string }> },
+      ) {
+        const { id } = await params;
+        const user = await db.user.findUnique({ where: { id } });
+
+        if (!user) {
+          return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(user);
+      }
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/route-handlers

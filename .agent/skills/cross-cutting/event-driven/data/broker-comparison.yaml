@@ -1,0 +1,123 @@
+# Message Broker Comparison - HSA Event-Driven Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: event-driven
+  domain: broker-comparison
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: bkr001
+    name: kafka_overview
+    category: broker
+    description: Apache Kafka - distributed streaming platform
+    text: kafka streaming platform distributed log partitions consumer group
+    features:
+      throughput: "1M+ msg/s per broker"
+      latency: "10-50ms (batching)"
+      persistence: "Always (configurable retention)"
+      delivery: "At-least-once (exactly-once with transactions)"
+      ordering: "Per partition"
+      best_for: "Event streaming, data pipelines, event sourcing"
+    example: |
+      const kafka = new Kafka({ brokers: ["localhost:9092"] });
+      const producer = kafka.producer();
+      await producer.send({ topic: "events", messages: [{ key: orderId, value: data }] });
+
+  - id: bkr002
+    name: rabbitmq_overview
+    category: broker
+    description: RabbitMQ - mature message broker with flexible routing
+    text: rabbitmq AMQP exchange queue routing binding acknowledge
+    features:
+      throughput: "50K-100K msg/s"
+      latency: "5-20ms"
+      persistence: "Configurable per queue"
+      delivery: "At-least-once (publisher confirms + consumer ACK)"
+      ordering: "Per queue"
+      best_for: "Business workflows, complex routing, task queues"
+    example: |
+      const channel = await connection.createChannel();
+      await channel.assertQueue("tasks", { durable: true });
+      channel.sendToQueue("tasks", Buffer.from(JSON.stringify(task)));
+
+  - id: bkr003
+    name: nats_overview
+    category: broker
+    description: NATS - ultra-low latency cloud-native messaging
+    text: NATS jetstream core lightweight cloud-native IoT microservices
+    features:
+      throughput: "200K-400K msg/s (JetStream)"
+      latency: "<1ms (core), 1-5ms (JetStream)"
+      persistence: "JetStream only"
+      delivery: "At-most-once (core), exactly-once (JetStream)"
+      ordering: "Per subject"
+      best_for: "Real-time, IoT, cloud-native, low latency"
+    example: |
+      const nc = await connect({ servers: "localhost:4222" });
+      nc.publish("orders.created", encode(order));
+      const sub = nc.subscribe("orders.*");
+
+  - id: bkr004
+    name: selection_guide
+    category: reference
+    description: Decision matrix for choosing a message broker
+    text: selection guide choose broker decision matrix when to use
+    decision_matrix:
+      high_throughput_streaming: "Kafka"
+      complex_routing_workflows: "RabbitMQ"
+      ultra_low_latency: "NATS"
+      event_sourcing: "Kafka"
+      task_queue: "RabbitMQ"
+      iot_edge: "NATS"
+      cloud_native_simple: "NATS"
+      enterprise_integration: "RabbitMQ"
+
+  - id: bkr005
+    name: kafka_partitioning
+    category: broker
+    description: Kafka partition strategy for ordering and scaling
+    text: kafka partition key ordering consumer group scalability
+    example: |
+      // Partition by order ID → all events for same order in same partition
+      await producer.send({
+        topic: "orders",
+        messages: [{ key: order.id, value: JSON.stringify(event) }]
+      });
+
+  - id: bkr006
+    name: rabbitmq_exchanges
+    category: broker
+    description: RabbitMQ exchange types and routing patterns
+    text: rabbitmq exchange direct topic fanout headers routing
+    types:
+      direct: "Route by exact routing key match"
+      topic: "Route by pattern (order.* or order.#)"
+      fanout: "Broadcast to all bound queues"
+      headers: "Route by message headers"
+
+  - id: bkr007
+    name: nats_jetstream
+    category: broker
+    description: NATS JetStream for persistent streaming
+    text: nats jetstream persistence stream consumer durable exactly-once
+    example: |
+      const jsm = await nc.jetstreamManager();
+      await jsm.streams.add({ name: "ORDERS", subjects: ["orders.>"] });
+      const js = nc.jetstream();
+      await js.publish("orders.created", encode(order));
+
+  - id: bkr008
+    name: migration_guide
+    category: reference
+    description: Migration considerations when switching brokers
+    text: migration broker switch considerations compatibility
+    considerations:
+      - "Message format compatibility (serialize/deserialize)"
+      - "Delivery guarantee differences"
+      - "Ordering guarantee differences"
+      - "Consumer group / queue semantics"
+      - "Monitoring & operations tooling"
+      - "Dual-write period for zero-downtime migration"

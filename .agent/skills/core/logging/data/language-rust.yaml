@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_rust
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-rust.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: RS-001
+    category: tracing
+    library: tracing
+    name: info! macro
+    description: Log at info level
+    example: info!(user_id = %id, "User logged in")
+    when_to_use: General events
+  - id: RS-002
+    category: tracing
+    library: tracing
+    name: debug! macro
+    description: Log at debug level
+    example: debug!(value = ?obj, "Processing")
+    when_to_use: Debugging
+  - id: RS-003
+    category: tracing
+    library: tracing
+    name: error! macro
+    description: Log errors with context
+    example: error!(error = %e, "Operation failed")
+    when_to_use: Error handling
+  - id: RS-004
+    category: tracing
+    library: tracing
+    name: warn! macro
+    description: Log warnings
+    example: warn!(retries = count, "Retrying operation")
+    when_to_use: Potential issues
+  - id: RS-005
+    category: tracing
+    library: tracing
+    name: trace! macro
+    description: Detailed tracing
+    example: trace!("Entering function")
+    when_to_use: Fine-grained debugging
+  - id: RS-006
+    category: tracing
+    library: tracing
+    name: span!
+    description: Create named span
+    example: let span = span!(Level::INFO, "my_span", key = value)
+    when_to_use: Operation tracking
+  - id: RS-007
+    category: tracing
+    library: tracing
+    name: "#[instrument]"
+    description: Auto-instrument function
+    example: "#[instrument(skip(password))]"
+    when_to_use: Function tracing
+  - id: RS-008
+    category: tracing
+    library: tracing
+    name: instrument attrs
+    description: Skip or rename fields
+    example: "#[instrument(fields(user_id = %id), skip_all)]"
+    when_to_use: Selective instrumentation
+  - id: RS-009
+    category: tracing
+    library: tracing
+    name: Span::enter
+    description: Enter a span
+    example: let _guard = span.enter()
+    when_to_use: Manual span lifecycle
+  - id: RS-010
+    category: tracing
+    library: tracing
+    name: in_scope
+    description: Execute code in span
+    example: span.in_scope(|| { /* code */ })
+    when_to_use: Closure-based spans
+  - id: RS-011
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: fmt::init
+    description: Simple subscriber init
+    example: tracing_subscriber::fmt::init()
+    when_to_use: Quick setup
+  - id: RS-012
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: fmt().init
+    description: Custom formatting
+    example: tracing_subscriber::fmt().with_max_level(Level::DEBUG).init()
+    when_to_use: Custom configuration
+  - id: RS-013
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: json
+    description: JSON output
+    example: tracing_subscriber::fmt().json().init()
+    when_to_use: Production logging
+  - id: RS-014
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: with_env_filter
+    description: Environment-based filter
+    example: EnvFilter::from_default_env()
+    when_to_use: RUST_LOG control
+  - id: RS-015
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: Layer
+    description: Custom subscriber layer
+    example: "impl<S> Layer<S> for MyLayer where S: Subscriber"
+    when_to_use: Custom processing
+  - id: RS-016
+    category: tracing-subscriber
+    library: tracing-subscriber
+    name: Registry
+    description: Compose multiple layers
+    example: Registry::default().with(layer1).with(layer2)
+    when_to_use: Multi-layer setup
+  - id: RS-017
+    category: tracing-appender
+    library: tracing-appender
+    name: rolling
+    description: Rolling file appender
+    example: tracing_appender::rolling::daily(dir, prefix)
+    when_to_use: Log rotation
+  - id: RS-018
+    category: tracing-appender
+    library: tracing-appender
+    name: non_blocking
+    description: Non-blocking writer
+    example: let (writer, guard) = tracing_appender::non_blocking(appender)
+    when_to_use: Async file writes
+  - id: RS-019
+    category: log
+    library: log
+    name: log facade
+    description: Standard log macros
+    example: log::info!("Message")
+    when_to_use: Compatibility layer
+  - id: RS-020
+    category: log
+    library: log
+    name: tracing-log
+    description: Bridge log to tracing
+    example: LogTracer::init()
+    when_to_use: Legacy compatibility
+  - id: RS-021
+    category: async
+    library: tracing
+    name: Future instrumentation
+    description: .instrument() for futures
+    example: async_fn().instrument(span).await
+    when_to_use: Async tracing
+  - id: RS-022
+    category: async
+    library: tracing
+    name: Instrument trait
+    description: Instrument futures
+    example: use tracing::Instrument; fut.instrument(span)
+    when_to_use: Explicit instrumentation
+  - id: RS-023
+    category: otel
+    library: tracing-opentelemetry
+    name: OpenTelemetry layer
+    description: Export to OTel
+    example: OpenTelemetryLayer::new(tracer)
+    when_to_use: Distributed tracing
+  - id: RS-024
+    category: general
+    library: any
+    name: Error Display
+    description: "%e for Display formatting"
+    example: error!(%error, "Failed")
+    when_to_use: Error messages
+  - id: RS-025
+    category: general
+    library: any
+    name: Debug Display
+    description: ?obj for Debug formatting
+    example: debug!(?complex_struct, "State")
+    when_to_use: Debug output

@@ -1,0 +1,347 @@
+# =============================================================================
+# Haskell Core Patterns (Feb 2026)
+# Version: GHC 9.8/9.10
+# =============================================================================
+
+metadata:
+  skill: haskell
+  domain: core
+  version: "9.10"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: hs001
+    name: Type Classes
+    category: types
+    version: "Haskell"
+    description: |
+      Polymorphism via type classes.
+      Custom instances, constraints.
+    text: class instance typeclass constraint deriving
+    example: |
+      -- ✅ Define a type class
+      class Printable a where
+        printValue :: a -> String
+        
+        -- Default implementation
+        printLine :: a -> String
+        printLine x = printValue x ++ "\n"
+
+      -- ✅ Instances
+      instance Printable Int where
+        printValue = show
+
+      instance Printable Bool where
+        printValue True  = "yes"
+        printValue False = "no"
+
+      instance Printable a => Printable [a] where
+        printValue xs = "[" ++ intercalate ", " (map printValue xs) ++ "]"
+
+      -- ✅ Multiple constraints
+      combine :: (Show a, Ord a) => [a] -> String
+      combine = show . sort
+
+      -- ✅ Data type with deriving
+      data User = User
+        { userId   :: Int
+        , userName :: String
+        , userAge  :: Int
+        } deriving (Show, Eq, Ord, Generic)
+
+      -- Generic JSON
+      instance ToJSON User
+      instance FromJSON User
+
+      -- ✅ Newtype with deriving via
+      newtype UserId = UserId Int
+        deriving (Show, Eq, Ord)
+        deriving (ToJSON, FromJSON) via Int
+
+      -- ✅ Associated types
+      class Container c where
+        type Elem c
+        empty :: c
+        insert :: Elem c -> c -> c
+        member :: Elem c -> c -> Bool
+
+      instance Container [a] where
+        type Elem [a] = a
+        empty = []
+        insert = (:)
+        member = elem
+    severity: HIGH
+    docs_url: https://wiki.haskell.org/Type_class
+
+  - id: hs002
+    name: Monads
+    category: types
+    version: "Haskell"
+    description: |
+      Monadic composition.
+      do notation, common monads.
+    text: monad bind do maybe either io return
+    example: |
+      -- ✅ Maybe monad for nullable values
+      safeDivide :: Int -> Int -> Maybe Int
+      safeDivide _ 0 = Nothing
+      safeDivide x y = Just (x `div` y)
+
+      -- Chain with do notation
+      calculate :: Int -> Int -> Int -> Maybe Int
+      calculate a b c = do
+        x <- safeDivide a b
+        y <- safeDivide x c
+        return (x + y)
+
+      -- ✅ Either monad for errors
+      data AppError = NotFound | InvalidInput String | DatabaseError
+        deriving Show
+
+      getUser :: Int -> Either AppError User
+      getUser id
+        | id <= 0   = Left (InvalidInput "Invalid ID")
+        | id > 1000 = Left NotFound
+        | otherwise = Right (User id "John" 30)
+
+      processUser :: Int -> Either AppError String
+      processUser id = do
+        user <- getUser id
+        validated <- validateUser user
+        return (userName validated)
+
+      -- ✅ IO monad
+      main :: IO ()
+      main = do
+        putStrLn "Enter your name:"
+        name <- getLine
+        putStrLn $ "Hello, " ++ name ++ "!"
+
+      -- ✅ List monad for nondeterminism
+      pairs :: [(Int, Int)]
+      pairs = do
+        x <- [1, 2, 3]
+        y <- [4, 5, 6]
+        guard (x + y > 6)
+        return (x, y)
+      -- Result: [(1,6),(2,5),(2,6),(3,4),(3,5),(3,6)]
+
+      -- ✅ Reader monad for config
+      type Config = String
+      type App = Reader Config
+
+      getConfigValue :: App String
+      getConfigValue = ask
+
+      runApp :: Config -> App a -> a
+      runApp config app = runReader app config
+    severity: HIGH
+    docs_url: https://wiki.haskell.org/Monad
+
+  - id: hs003
+    name: Algebraic Data Types
+    category: types
+    version: "Haskell"
+    description: |
+      Sum and product types.
+      Pattern matching, records.
+    text: data type sum product pattern record
+    example: |
+      -- ✅ Sum type (tagged union)
+      data Shape
+        = Circle Double           -- radius
+        | Rectangle Double Double -- width, height
+        | Triangle Double Double Double -- sides
+        deriving (Show, Eq)
+
+      area :: Shape -> Double
+      area (Circle r) = pi * r * r
+      area (Rectangle w h) = w * h
+      area (Triangle a b c) =
+        let s = (a + b + c) / 2
+        in sqrt (s * (s-a) * (s-b) * (s-c))
+
+      -- ✅ Product type (record)
+      data Person = Person
+        { personName :: String
+        , personAge  :: Int
+        , personEmail :: Maybe String
+        } deriving (Show, Eq)
+
+      -- Record update
+      birthday :: Person -> Person
+      birthday p = p { personAge = personAge p + 1 }
+
+      -- ✅ Recursive types
+      data List a = Nil | Cons a (List a)
+        deriving (Show, Eq, Functor)
+
+      data Tree a
+        = Leaf a
+        | Node (Tree a) a (Tree a)
+        deriving (Show, Eq, Functor, Foldable, Traversable)
+
+      -- ✅ GADT (advanced)
+      {-# LANGUAGE GADTs #-}
+      data Expr a where
+        LitInt  :: Int -> Expr Int
+        LitBool :: Bool -> Expr Bool
+        Add     :: Expr Int -> Expr Int -> Expr Int
+        If      :: Expr Bool -> Expr a -> Expr a -> Expr a
+
+      eval :: Expr a -> a
+      eval (LitInt n)    = n
+      eval (LitBool b)   = b
+      eval (Add e1 e2)   = eval e1 + eval e2
+      eval (If cond t f) = if eval cond then eval t else eval f
+
+      -- ✅ Phantom types
+      data Validated
+      data Unvalidated
+
+      newtype Email (status :: *) = Email String
+
+      validateEmail :: Email Unvalidated -> Maybe (Email Validated)
+      validateEmail (Email s)
+        | '@' `elem` s = Just (Email s)
+        | otherwise    = Nothing
+    severity: HIGH
+    docs_url: https://wiki.haskell.org/Algebraic_data_type
+
+  - id: hs004
+    name: Functors and Applicatives
+    category: types
+    version: "Haskell"
+    description: |
+      Higher-kinded abstractions.
+      Functor, Applicative, Traversable.
+    text: functor fmap applicative traverse pure
+    example: |
+      -- ✅ Functor - apply function inside context
+      -- fmap :: Functor f => (a -> b) -> f a -> f b
+
+      doubled :: Maybe Int
+      doubled = fmap (*2) (Just 5)  -- Just 10
+
+      -- Infix <$>
+      result = (*2) <$> Just 5  -- Just 10
+
+      -- ✅ Custom Functor
+      data Box a = Box a deriving Show
+
+      instance Functor Box where
+        fmap f (Box a) = Box (f a)
+
+      -- ✅ Applicative - function in context applied to value in context
+      -- (<*>) :: Applicative f => f (a -> b) -> f a -> f b
+
+      add :: Int -> Int -> Int
+      add = (+)
+
+      result :: Maybe Int
+      result = add <$> Just 3 <*> Just 5  -- Just 8
+
+      -- Using liftA2
+      result' = liftA2 add (Just 3) (Just 5)
+
+      -- ✅ Validate multiple fields
+      data User = User String Int deriving Show
+
+      mkUser :: Maybe String -> Maybe Int -> Maybe User
+      mkUser name age = User <$> name <*> age
+
+      -- ✅ Traversable - sequence effects
+      -- traverse :: (Traversable t, Applicative f) => (a -> f b) -> t a -> f (t b)
+
+      -- Parse all strings, fail if any fails
+      parseAll :: [String] -> Maybe [Int]
+      parseAll = traverse readMaybe
+
+      -- Fetch all users in parallel
+      fetchUsers :: [Int] -> IO [User]
+      fetchUsers ids = traverse fetchUser ids
+
+      -- ✅ sequence - swap container and effect
+      -- sequence :: (Traversable t, Monad m) => t (m a) -> m (t a)
+
+      maybeList :: [Maybe Int] -> Maybe [Int]
+      maybeList = sequence
+
+      ioList :: [IO a] -> IO [a]
+      ioList = sequence
+    severity: MEDIUM
+    docs_url: https://wiki.haskell.org/Functor
+
+  - id: hs005
+    name: Servant API
+    category: web
+    version: "Servant"
+    description: |
+      Type-safe REST APIs.
+      API types, handlers, clients.
+    text: servant api handler server client type
+    example: |
+      {-# LANGUAGE DataKinds #-}
+      {-# LANGUAGE TypeOperators #-}
+
+      import Servant
+
+      -- ✅ Define API as types
+      type UserAPI =
+             "users" :> Get '[JSON] [User]
+        :<|> "users" :> Capture "id" Int :> Get '[JSON] User
+        :<|> "users" :> ReqBody '[JSON] CreateUser :> Post '[JSON] User
+        :<|> "users" :> Capture "id" Int :> Delete '[JSON] NoContent
+
+      -- ✅ Data types
+      data User = User
+        { userId   :: Int
+        , userName :: String
+        , userEmail :: String
+        } deriving (Generic, Show)
+
+      instance ToJSON User
+      instance FromJSON User
+
+      data CreateUser = CreateUser
+        { newName  :: String
+        , newEmail :: String
+        } deriving (Generic)
+
+      instance FromJSON CreateUser
+
+      -- ✅ Handlers
+      server :: Server UserAPI
+      server = getUsers :<|> getUser :<|> createUser :<|> deleteUser
+        where
+          getUsers :: Handler [User]
+          getUsers = return [User 1 "John" "john@email.com"]
+          
+          getUser :: Int -> Handler User
+          getUser id = do
+            case lookup id userDb of
+              Just user -> return user
+              Nothing   -> throwError err404
+          
+          createUser :: CreateUser -> Handler User
+          createUser req = do
+            let user = User 2 (newName req) (newEmail req)
+            return user
+          
+          deleteUser :: Int -> Handler NoContent
+          deleteUser _ = return NoContent
+
+      -- ✅ Run server
+      main :: IO ()
+      main = run 8080 $ serve (Proxy :: Proxy UserAPI) server
+
+      -- ✅ Generate client
+      getUsers' :: ClientM [User]
+      getUser' :: Int -> ClientM User
+      createUser' :: CreateUser -> ClientM User
+      deleteUser' :: Int -> ClientM NoContent
+
+      (getUsers' :<|> getUser' :<|> createUser' :<|> deleteUser') = client (Proxy :: Proxy UserAPI)
+    severity: MEDIUM
+    docs_url: https://docs.servant.dev/

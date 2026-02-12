@@ -1,0 +1,195 @@
+metadata:
+  skill: observability
+  domain: otel_core
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: otel-core.yaml
+  patterns_count: 30
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: OTEL-001
+    name: SDK Initialization
+    category: OpenTelemetry
+    description: Initialize OTel SDK in app startup
+    example: Configure TracerProvider, MeterProvider
+    level: beginner
+  - id: OTEL-002
+    name: TracerProvider
+    category: OpenTelemetry
+    description: Factory for creating Tracers
+    example: Set exporter, sampler, resource
+    level: intermediate
+  - id: OTEL-003
+    name: MeterProvider
+    category: OpenTelemetry
+    description: Factory for creating Meters
+    example: Configure views, readers
+    level: intermediate
+  - id: OTEL-004
+    name: LoggerProvider
+    category: OpenTelemetry
+    description: Factory for creating Loggers
+    example: Bridge existing logging frameworks
+    level: intermediate
+  - id: OTEL-005
+    name: OTLP Exporter
+    category: OpenTelemetry
+    description: Export telemetry via OTLP
+    example: Send to collector or backend
+    level: beginner
+  - id: OTEL-006
+    name: Collector
+    category: OpenTelemetry
+    description: Receive, process, export telemetry
+    example: Central pipeline for all signals
+    level: intermediate
+  - id: OTEL-007
+    name: Collector Processors
+    category: OpenTelemetry
+    description: Transform telemetry in collector
+    example: batch, filter, attributes processors
+    level: advanced
+  - id: OTEL-008
+    name: Semantic Conventions
+    category: OpenTelemetry
+    description: Standardized attribute names
+    example: http.method, db.system, rpc.service
+    level: intermediate
+  - id: OTEL-009
+    name: Resource Attributes
+    category: OpenTelemetry
+    description: Describe the entity producing telemetry
+    example: service.name, host.id, cloud.provider
+    level: beginner
+  - id: OTEL-010
+    name: Auto-Instrumentation
+    category: OpenTelemetry
+    description: Zero-code instrumentation
+    example: OTel agents for frameworks
+    level: beginner
+  - id: OTEL-011
+    name: Manual Instrumentation
+    category: OpenTelemetry
+    description: Add custom spans/metrics
+    example: tracer.startSpan(), meter.createCounter()
+    level: intermediate
+  - id: OTEL-012
+    name: Span Creation
+    category: OpenTelemetry
+    description: Create a unit of work trace
+    example: withSpan('operation', () => {})
+    level: beginner
+  - id: OTEL-013
+    name: Span Attributes
+    category: OpenTelemetry
+    description: Add metadata to spans
+    example: span.setAttribute('user.id', userId)
+    level: beginner
+  - id: OTEL-014
+    name: Span Events
+    category: OpenTelemetry
+    description: Add timestamped events to span
+    example: span.addEvent('cache_miss')
+    level: intermediate
+  - id: OTEL-015
+    name: Span Links
+    category: OpenTelemetry
+    description: Connect related but non-parent traces
+    example: Batch processing links
+    level: advanced
+  - id: OTEL-016
+    name: Span Status
+    category: OpenTelemetry
+    description: Mark span as ok/error
+    example: span.setStatus(StatusCode.ERROR)
+    level: beginner
+  - id: OTEL-017
+    name: Context API
+    category: OpenTelemetry
+    description: Propagate context across async
+    example: Context.current(), with(context)
+    level: intermediate
+  - id: OTEL-018
+    name: W3C TraceContext
+    category: OpenTelemetry
+    description: Standard trace propagation headers
+    example: traceparent, tracestate
+    level: intermediate
+  - id: OTEL-019
+    name: Baggage
+    category: OpenTelemetry
+    description: Pass user-defined key-value pairs
+    example: tenant_id in baggage
+    level: intermediate
+  - id: OTEL-020
+    name: Metrics Types
+    category: OpenTelemetry
+    description: Counter, UpDownCounter, Histogram, Gauge
+    example: Choose appropriate type
+    level: beginner
+  - id: OTEL-021
+    name: Metric Views
+    category: OpenTelemetry
+    description: Customize metric aggregation
+    example: Drop attributes, change aggregation
+    level: advanced
+  - id: OTEL-022
+    name: Exemplars
+    category: OpenTelemetry
+    description: Link metrics to traces
+    example: Trace context in histogram bucket
+    level: advanced
+  - id: OTEL-023
+    name: OTel Bridge
+    category: OpenTelemetry
+    description: Connect existing instrumentation to OTel
+    example: OpenTracing/OpenCensus bridge
+    level: advanced
+  - id: OTEL-024
+    name: SDK Configuration
+    category: OpenTelemetry
+    description: Environment-based config
+    example: OTEL_EXPORTER_OTLP_ENDPOINT
+    level: beginner
+  - id: OTEL-025
+    name: Span Sampling
+    category: OpenTelemetry
+    description: Control which spans are recorded
+    example: ParentBased, TraceIdRatio
+    level: intermediate
+  - id: OTEL-026
+    name: Batch Processing
+    category: OpenTelemetry
+    description: Batch telemetry before export
+    example: BatchSpanProcessor
+    level: intermediate
+  - id: OTEL-027
+    name: Delta vs Cumulative
+    category: OpenTelemetry
+    description: Temporality for metrics
+    example: Delta for StatsD, Cumulative for Prometheus
+    level: advanced
+  - id: OTEL-028
+    name: OTLP Protocol
+    category: OpenTelemetry
+    description: Binary protocol for telemetry
+    example: gRPC or HTTP/protobuf
+    level: intermediate
+  - id: OTEL-029
+    name: SDK vs API
+    category: OpenTelemetry
+    description: Separation of concerns
+    example: Libraries use API, apps configure SDK
+    level: intermediate
+  - id: OTEL-030
+    name: Zero-Dependency API
+    category: OpenTelemetry
+    description: No-op API for libraries
+    example: Instrumented libraries without SDK overhead
+    level: advanced

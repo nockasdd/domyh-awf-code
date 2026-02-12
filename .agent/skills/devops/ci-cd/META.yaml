@@ -1,53 +1,54 @@
 name: ci-cd
-version: "6.1.2"
-display: CI/CD Pipelines
-category: devops
-tier: 1
-priority: 1
+version: "6.2.1"
+category: infrastructure
+tier: 3
 
-description: |
-  CI/CD pipeline patterns for GitHub Actions, GitLab CI, Azure DevOps, Jenkins.
-  Covers automation, deployment strategies, security scanning.
+desc: "CI/CD pipeline patterns for GitHub Actions, GitLab CI, and GitOps. Includes SLSA Build Level 3, ARM64 runners, security scanning."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 20
+  domains:
+    github-actions: 6
+    gitlab-ci: 5
+    security: 5
+    deployment: 4
+
     - ".github/workflows/*.yml"
     - ".gitlab-ci.yml"
-    - "azure-pipelines.yml"
     - "Jenkinsfile"
+    - "azure-pipelines.yml"
     - ".circleci/config.yml"
   keywords:
     # General
-    - ci/cd
-    - continuous integration
+    - ci cd
     - pipeline
-    - devops
-    # Platforms
+    - continuous integration
+    - continuous deployment
+    - workflow
+    # GitHub Actions
     - github actions
-    - gitlab ci
-    - azure devops
-    - jenkins
-    # Deployment
-    - deploy
-    - staging
-    - production
-    - canary
-    - blue-green
+    - actions workflow
+    - reusable workflow
+    - composite action
+    - arm64 runner
+    - slsa attestation
+    # Security
+    - dependency review
+    - code scanning
+    - secret scanning
+    - artifact attestation
+    - supply chain
   intents:
-    - setup ci cd
     - create pipeline
-    - github workflow
-    - deploy automation
+    - setup ci
+    - deploy workflow
+    - secure pipeline
 
 related_skills:
   - docker
   - kubernetes
+  - aws
   - security
 
-caps:
-  - GitHub Actions (matrix, reusable, OIDC)
-  - GitLab CI (stages, artifacts)
-  - Azure DevOps (multi-stage)
-  - Jenkins (Declarative pipelines)
-  - Security scanning (SAST, DAST)
-  - Progressive deployment
+prevent_confusion_with:
+  - aws: "ci-cd is platform-agnostic, aws covers AWS-specific deployment"

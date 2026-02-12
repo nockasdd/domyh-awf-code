@@ -1,0 +1,260 @@
+# =============================================================================
+# Deno 2.2+ Runtime Patterns (Feb 2026)
+# =============================================================================
+# Core runtime APIs and server patterns
+
+metadata:
+  skill: deno
+  domain: runtime
+  version: "2.6.0"
+  updated: "2026-02-05"
+  patterns_count: 12
+
+patterns:
+  - id: deno001
+    name: Deno.serve
+    category: server
+    version: "2.0+"
+    description: High-performance HTTP server with async iterator support
+    text: http server web request response handler Deno.serve
+    example: |
+      Deno.serve({ port: 3000 }, async (req) => {
+        const url = new URL(req.url);
+        if (url.pathname === "/api") {
+          return Response.json({ status: "ok" });
+        }
+        return new Response("Hello World");
+      });
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/runtime/http_server_apis
+
+  - id: deno002
+    name: Deno.openKv
+    category: database
+    version: "1.32+"
+    description: Built-in key-value store with ACID transactions
+    text: kv key value store persistent database kvstore
+    example: |
+      const kv = await Deno.openKv();
+
+      // Set value
+      await kv.set(["users", "user1"], { name: "Alice" });
+
+      // Get value
+      const result = await kv.get(["users", "user1"]);
+      console.log(result.value);
+
+      // Atomic transactions
+      await kv.atomic()
+        .set(["count"], 1)
+        .commit();
+    severity: HIGH
+    docs_url: https://docs.deno.com/deploy/kv/manual
+
+  - id: deno003
+    name: "npm: specifier"
+    category: compatibility
+    version: "1.28+"
+    description: "Direct npm package usage with npm: prefix"
+    text: npm import package module compatibility node
+    example: |
+      // Import npm packages directly
+      import express from "npm:express@4";
+      import _ from "npm:lodash";
+
+      // Works with most npm packages
+      const app = express();
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/node/npm_specifiers
+
+  - id: deno004
+    name: "jsr: specifier"
+    category: registry
+    version: "2.0+"
+    description: JavaScript Registry (JSR) for type-safe modules
+    text: jsr javascript registry import module std standard
+    example: |
+      // Import from JSR
+      import { copy } from "jsr:@std/fs@1";
+      import { assertEquals } from "jsr:@std/assert@1";
+
+      // Standard library
+      import { parse } from "jsr:@std/yaml@1";
+    severity: HIGH
+    docs_url: https://jsr.io
+
+  - id: deno005
+    name: TypeScript Support
+    category: language
+    version: "1.0+"
+    description: First-class TypeScript support without configuration
+    text: typescript types strict native support type checking
+    example: |
+      // No tsconfig needed - just write .ts files
+      interface User {
+        id: number;
+        name: string;
+      }
+
+      function greet(user: User): string {
+        return `Hello, ${user.name}!`;
+      }
+
+      // Type check: deno check main.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/advanced/typescript
+
+  - id: deno006
+    name: WebAssembly Support
+    category: wasm
+    version: "2.1+"
+    description: First-class WebAssembly module imports
+    text: webassembly wasm import module native performance
+    example: |
+      // Import Wasm directly
+      import { add } from "./math.wasm";
+
+      console.log(add(1, 2)); // 3
+
+      // Also works with fetch
+      const wasm = await WebAssembly.instantiateStreaming(
+        fetch("./module.wasm")
+      );
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/runtime/webassembly
+
+  - id: deno007
+    name: "jsr: in package.json"
+    category: compatibility
+    version: "2.6+"
+    description: Use JSR packages directly in package.json (Feb 2026)
+    text: jsr package.json npm compatibility registry dependencies
+    example: |
+      // package.json - Deno 2.6+ supports jsr: scheme
+      {
+        "dependencies": {
+          "@std/fs": "jsr:@std/fs@1",
+          "@std/yaml": "jsr:@std/yaml@1",
+          "express": "npm:express@4"
+        }
+      }
+
+      // Run: deno install && deno run main.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/node/npm_specifiers
+
+  - id: deno008
+    name: "deno init --npm"
+    category: tooling
+    version: "2.1+"
+    description: Scaffold projects using npm templates (Vite, Next.js, etc.)
+    text: init scaffold template npm vite nextjs project setup
+    example: |
+      # Create Vite project
+      deno init --npm vite
+
+      # Create other npm-based projects
+      deno init --npm create-remix
+      deno init --npm nuxi
+
+      # Run the project
+      cd my-project && deno task dev
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/tools/init
+
+  # ✅ NEW: Deno 2.2-2.3 Features (Feb-May 2025)
+  - id: deno009
+    name: Built-in OpenTelemetry
+    category: observability
+    version: "2.2+"
+    description: |
+      Native OpenTelemetry support for logs, metrics, traces.
+      Auto-instruments console.log, Deno.serve, fetch.
+    text: opentelemetry otel tracing metrics logs observability monitoring
+    example: |
+      // ✅ Deno 2.2+: Enable OpenTelemetry
+      // Run: OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 deno run main.ts
+
+      // Auto-instrumented:
+      Deno.serve((req) => {
+        console.log("Request received"); // → Log exported
+        return new Response("Hello");    // → Span exported
+      });
+
+      // Manual instrumentation with npm package
+      import { trace } from "npm:@opentelemetry/api";
+
+      const tracer = trace.getTracer("my-app");
+      const span = tracer.startSpan("custom-operation");
+      span.end();
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/observability
+
+  - id: deno010
+    name: Local npm Packages
+    category: development
+    version: "2.3+"
+    description: Use local npm packages for testing and development
+    text: local npm development test link packages nodeModulesDir
+    example: |
+      // deno.json - Configure local npm packages
+      {
+        "nodeModulesDir": "auto",  // or "manual"
+        "imports": {
+          "my-local-pkg": "./packages/my-local-pkg"
+        }
+      }
+
+      // Use local package
+      import { myFunction } from "my-local-pkg";
+
+      // Install: deno install
+      // Works like npm link for local development
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/node
+
+  - id: deno011
+    name: Improved deno compile
+    category: tooling
+    version: "2.3+"
+    description: |
+      Compiled binaries support FFI and Node native add-ons.
+      Deno.build.standalone boolean for runtime detection.
+    text: compile standalone binary ffi native addon executable
+    example: |
+      // ✅ Compiled binary with FFI support
+      // Requires: deno compile --allow-ffi
+
+      import { dlopen } from "bun:ffi"; // Works in compiled binary
+
+      // Detect if running as standalone
+      if (Deno.build.standalone) {
+        console.log("Running as compiled executable");
+      }
+
+      // Exclude files from bundle
+      // deno compile --exclude=dev.config.ts main.ts
+    severity: HIGH
+    docs_url: https://docs.deno.com/runtime/manual/tools/compiler
+
+  - id: deno012
+    name: Explicit Resource Management
+    category: language
+    version: "2.3+"
+    description: TypeScript 5.8 using keyword for automatic resource cleanup
+    text: using resource management dispose cleanup async
+    example: |
+      // ✅ Deno 2.3+: Explicit resource management
+      async function readFile() {
+        using file = await Deno.open("data.txt");
+        // File is automatically closed when scope exits
+        
+        const content = await file.readable.getReader().read();
+        return content;
+      }
+
+      // Async version
+      await using db = await Deno.openKv();
+      // KV is automatically closed
+    severity: MEDIUM
+    docs_url: https://docs.deno.com/runtime/manual/advanced/typescript

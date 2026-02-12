@@ -1,0 +1,295 @@
+metadata:
+  skill: security
+  domain: cpp_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: cpp-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: CPP-01
+    name: Vector Out of Bounds
+    severity: HIGH
+    category: Memory
+    description: std::vector accessed without bounds check
+    detection_pattern: \\[.*\\](?!.*at\\(|check|bound)
+    fix_pattern: Use .at() for bounds checking or validate index first
+    cwe: CWE-125
+    cve_reference: n/a
+    example_vuln: return vec[user_index];
+    example_fix: return vec.at(user_index); // throws if OOB
+  - id: CPP-02
+    name: Use After Move
+    severity: HIGH
+    category: Memory
+    description: Object used after std::move leaving it in unspecified state
+    detection_pattern: std::move\\(.*\\).*\\n.*\\1(?!.*=)
+    fix_pattern: Don't use object after move assign new value first
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: std::move(obj); obj.method();
+    example_fix: auto tmp = std::move(obj); // Don't use obj anymore
+  - id: CPP-03
+    name: Smart Pointer Misuse
+    severity: HIGH
+    category: Memory
+    description: unique_ptr released or raw pointer from shared_ptr mismanaged
+    detection_pattern: (release|get)\\(\\)(?!.*delete|\\.use_count)
+    fix_pattern: Avoid raw pointers from smart pointers maintain ownership
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: int *raw = unique.release(); // Must manually delete
+    example_fix: auto raw = unique.get(); // Still managed by unique_ptr
+  - id: CPP-04
+    name: Exception in Destructor
+    severity: CRITICAL
+    category: Error
+    description: Exception thrown in destructor can cause std::terminate
+    detection_pattern: ~\\w+.*throw(?!.*noexcept)
+    fix_pattern: Mark destructors noexcept or catch all exceptions
+    cwe: CWE-248
+    cve_reference: n/a
+    example_vuln: ~MyClass() { throw Error(); }
+    example_fix: ~MyClass() noexcept { try { cleanup(); } catch (...) {} }
+  - id: CPP-05
+    name: Virtual Destructor Missing
+    severity: HIGH
+    category: Memory
+    description: Base class without virtual destructor causes memory leak
+    detection_pattern: class.*public.*\\{(?!.*virtual.*~)
+    fix_pattern: Add virtual destructor to polymorphic base classes
+    cwe: CWE-401
+    cve_reference: n/a
+    example_vuln: "class Base { public: ~Base() {} };"
+    example_fix: "class Base { public: virtual ~Base() = default; };"
+  - id: CPP-06
+    name: Buffer Overflow memcpy
+    severity: CRITICAL
+    category: Memory
+    description: memcpy without size validation from destination
+    detection_pattern: memcpy\\(.*,.*,.*\\)(?!.*sizeof.*dest)
+    fix_pattern: Validate copy size against destination buffer size
+    cwe: CWE-120
+    cve_reference: CVE-2024-9400
+    example_vuln: memcpy(dest, src, src_len);
+    example_fix: if (src_len > sizeof(dest)) return; memcpy(dest, src, src_len);
+  - id: CPP-07
+    name: Integer Conversion
+    severity: HIGH
+    category: Math
+    description: Implicit narrowing conversion loses data
+    detection_pattern: (int|short).*=.*(size_t|long long)(?!.*check)
+    fix_pattern: Use explicit cast with range check or same-size types
+    cwe: CWE-681
+    cve_reference: n/a
+    example_vuln: int size = container.size();
+    example_fix: if (container.size() > INT_MAX) throw; int size = static_cast<int>(container.size());
+  - id: CPP-08
+    name: RTTI Exploitation
+    severity: HIGH
+    category: Memory
+    description: dynamic_cast or typeid on invalid object causes UB
+    detection_pattern: (dynamic_cast|typeid)\\(.*\\*(?!.*nullptr)
+    fix_pattern: Check pointer validity before RTTI operations
+    cwe: CWE-476
+    cve_reference: n/a
+    example_vuln: return typeid(*ptr).name();
+    example_fix: if (ptr == nullptr) throw; return typeid(*ptr).name();
+  - id: CPP-09
+    name: Thread Data Race
+    severity: CRITICAL
+    category: Concurrency
+    description: Shared data accessed from threads without synchronization
+    detection_pattern: std::thread.*\\[\\&\\].*shared(?!.*mutex|atomic)
+    fix_pattern: Use mutex lock_guard or atomic for shared data
+    cwe: CWE-362
+    cve_reference: n/a
+    example_vuln: int shared = 0; std::thread([&]{ shared++; });
+    example_fix: std::atomic<int> shared{0}; std::thread([&]{ shared++; });
+  - id: CPP-10
+    name: String View Dangling
+    severity: HIGH
+    category: Memory
+    description: string_view outlives source string causing dangling reference
+    detection_pattern: string_view.*=.*std::string\\((?!.*static|const)
+    fix_pattern: Ensure source string outlives string_view
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: string_view sv = std::string(\temp\");"
+    example_fix: std::string str = \persistent\"; string_view sv = str;"
+  - id: CPP-11
+    name: Lambda Capture Reference
+    severity: HIGH
+    category: Memory
+    description: Lambda captures reference to local that goes out of scope
+    detection_pattern: \\[\\&.*\\].*return.*lambda|async.*\\[\\&\\]
+    fix_pattern: Capture by value or ensure lifetime extends beyond lambda use
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: auto f = [&local]{ return local; }; return f;
+    example_fix: auto f = [local]{ return local; }; return f; // Copy
+  - id: CPP-12
+    name: Unordered Container Invalidation
+    severity: HIGH
+    category: Memory
+    description: Iterator used after container modification invalidates it
+    detection_pattern: (insert|erase).*\\n.*\\+\\+?it(?!.*=)
+    fix_pattern: Reassign iterator after modifying operation or use returned iterator
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: map.erase(it); ++it;
+    example_fix: it = map.erase(it); // erase returns next valid iterator
+  - id: CPP-13
+    name: Regex Catastrophic Backtracking
+    severity: HIGH
+    category: DoS
+    description: User regex causes exponential time complexity ReDoS
+    detection_pattern: std::regex\\(.*input(?!.*timeout)
+    fix_pattern: Validate regex complexity or use bounded RE2 library
+    cwe: CWE-1333
+    cve_reference: n/a
+    example_vuln: std::regex re(user_pattern);
+    example_fix: // Use RE2 with complexity limits\nRE2::Options opts; opts.set_max_mem(1024);
+  - id: CPP-14
+    name: Placement New Alignment
+    severity: CRITICAL
+    category: Memory
+    description: Placement new on misaligned memory causes UB
+    detection_pattern: new\\s*\\(.*\\)(?!.*alignas|alignof)
+    fix_pattern: Use alignas or std::aligned_storage for placement new
+    cwe: CWE-119
+    cve_reference: n/a
+    example_vuln: char buf[sizeof(T)]; new(buf) T();
+    example_fix: alignas(T) char buf[sizeof(T)]; new(buf) T();
+  - id: CPP-15
+    name: Optional Unchecked Access
+    severity: HIGH
+    category: Memory
+    description: std::optional value accessed without checking has_value
+    detection_pattern: optional.*\\.value\\(\\)(?!.*has_value|if)
+    fix_pattern: Check has_value() or use value_or() before accessing
+    cwe: CWE-476
+    cve_reference: n/a
+    example_vuln: return opt.value();
+    example_fix: return opt.value_or(default_val); // Or check has_value()
+  - id: CPP-16
+    name: Shared Ptr Race
+    severity: CRITICAL
+    category: Concurrency
+    description: Non-atomic shared_ptr operations across threads
+    detection_pattern: shared_ptr.*=.*(?!.*atomic|mutex).*thread
+    fix_pattern: Use atomic operations on shared_ptr across threads
+    cwe: CWE-362
+    cve_reference: n/a
+    example_vuln: std::thread([&]{ ptr = other_ptr; });
+    example_fix: std::atomic_store(&ptr, other_ptr);
+  - id: CPP-17
+    name: VTable Corruption
+    severity: CRITICAL
+    category: Memory
+    description: Object memory overwritten before virtual call corrupts vtable
+    detection_pattern: memset\\(.*this|memcpy.*obj(?!.*POD)
+    fix_pattern: Never use memset/memcpy on objects with virtual functions
+    cwe: CWE-843
+    cve_reference: n/a
+    example_vuln: memset(this, 0, sizeof(*this)); method();
+    example_fix: // Use constructor initialization instead of memset
+  - id: CPP-18
+    name: Throwing operator new
+    severity: HIGH
+    category: Error
+    description: Custom operator new throws but code expects nullptr
+    detection_pattern: new\\s*\\(std::nothrow\\)(?!.*nullptr_check)
+    fix_pattern: Use std::nothrow and check for nullptr or catch bad_alloc
+    cwe: CWE-252
+    cve_reference: n/a
+    example_vuln: int *p = new int[huge]; *p = 0;
+    example_fix: int *p = new(std::nothrow) int[huge]; if (!p) return;
+  - id: CPP-19
+    name: Static Initialization Fiasco
+    severity: HIGH
+    category: Concurrency
+    description: Static object depends on another static in different TU
+    detection_pattern: static.*=.*other_static(?!.*Meyers)
+    fix_pattern: Use Meyers singleton or function-local static
+    cwe: CWE-362
+    cve_reference: n/a
+    example_vuln: static Foo foo(bar); // bar may not exist yet
+    example_fix: static Foo& getFoo() { static Foo foo; return foo; }
+  - id: CPP-20
+    name: const_cast UB
+    severity: CRITICAL
+    category: Memory
+    description: const_cast used to modify const object causes UB
+    detection_pattern: const_cast.*=(?!.*mutable)
+    fix_pattern: Avoid modifying originally const data use mutable members
+    cwe: CWE-704
+    cve_reference: n/a
+    example_vuln: const_cast<int&>(const_val) = 42;
+    example_fix: // Use mutable member or redesign
+  - id: CPP-21
+    name: Nullptr Arithmetic
+    severity: HIGH
+    category: Memory
+    description: Pointer arithmetic on nullptr causes UB
+    detection_pattern: nullptr.*\\+|\\+.*nullptr
+    fix_pattern: Check for nullptr before any pointer arithmetic
+    cwe: CWE-476
+    cve_reference: n/a
+    example_vuln: int *p = nullptr; int *q = p + 5;
+    example_fix: if (p == nullptr) return; int *q = p + 5;
+  - id: CPP-22
+    name: Aliasing Violation Strict
+    severity: CRITICAL
+    category: Memory
+    description: Strict aliasing violated via pointer cast causing UB
+    detection_pattern: reinterpret_cast.*\\*(?!.*char|byte)
+    fix_pattern: Use memcpy for type punning or char* for aliasing
+    cwe: CWE-704
+    cve_reference: n/a
+    example_vuln: float f = *reinterpret_cast<float*>(&i);
+    example_fix: float f; memcpy(&f, &i, sizeof(f));
+  - id: CPP-23
+    name: ODR Violation Inline
+    severity: HIGH
+    category: Link
+    description: Different definitions of inline function across TUs
+    detection_pattern: inline.*\\{.*#ifdef(?!.*same_def)
+    fix_pattern: Ensure inline functions have identical definitions in all TUs
+    cwe: CWE-704
+    cve_reference: n/a
+    example_vuln: // header.h has different inline body per TU
+    example_fix: // Move inline definition to single header
+  - id: CPP-24
+    name: Dangling Span
+    severity: HIGH
+    category: Memory
+    description: std::span outlives underlying container
+    detection_pattern: span.*=.*vector\\{.*\\}|span.*temporary
+    fix_pattern: Ensure container outlives span make span const if temporary
+    cwe: CWE-416
+    cve_reference: n/a
+    example_vuln: std::span<int> s = std::vector<int>{1,2,3};
+    example_fix: std::vector<int> v{1,2,3}; std::span<int> s = v;
+  - id: CPP-25
+    name: Exception Safety Guarantee
+    severity: HIGH
+    category: Error
+    description: Code lacks basic or strong exception safety guarantee
+    detection_pattern: throw.*(?!.*RAII|unique_ptr|lock_guard)
+    fix_pattern: Use RAII wrappers for exception safety
+    cwe: CWE-460
+    cve_reference: n/a
+    example_vuln: void f() { p = new T; throw E; }
+    example_fix: void f() { auto p = std::make_unique<T>(); throw E; }

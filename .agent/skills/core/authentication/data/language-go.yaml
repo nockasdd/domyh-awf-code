@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: language_go
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-go.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - library
+    - security_level
+    - keywords
+patterns:
+  - id: GO-001
+    pattern_name: golang-jwt/v5
+    description: Standard JWT library for Go
+    library: golang-jwt/v5
+    security_level: high
+    keywords:
+      - jwt
+      - parsing
+  - id: GO-002
+    pattern_name: JWT Signing RS256
+    description: RSA signing with private key
+    library: golang-jwt/v5
+    security_level: high
+    keywords:
+      - rs256
+      - signing
+  - id: GO-003
+    pattern_name: JWT Verification
+    description: Validate signature and claims
+    library: golang-jwt/v5
+    security_level: critical
+    keywords:
+      - verify
+      - validate
+  - id: GO-004
+    pattern_name: Custom Claims Struct
+    description: Type-safe claims with struct embedding
+    library: golang-jwt/v5
+    security_level: medium
+    keywords:
+      - claims
+      - struct
+  - id: GO-005
+    pattern_name: x/oauth2 Package
+    description: Official OAuth2 client library
+    library: golang.org/x/oauth2
+    security_level: high
+    keywords:
+      - oauth2
+      - client
+  - id: GO-006
+    pattern_name: OAuth2 Config
+    description: Client ID secret and endpoints
+    library: golang.org/x/oauth2
+    security_level: high
+    keywords:
+      - config
+      - setup
+  - id: GO-007
+    pattern_name: Token Source
+    description: Automatic token refresh handling
+    library: golang.org/x/oauth2
+    security_level: high
+    keywords:
+      - refresh
+      - source
+  - id: GO-008
+    pattern_name: Authorization Code Flow
+    description: Exchange code for tokens
+    library: golang.org/x/oauth2
+    security_level: high
+    keywords:
+      - authz-code
+      - exchange
+  - id: GO-009
+    pattern_name: Goth Multi-Provider
+    description: OAuth for multiple providers
+    library: markbates/goth
+    security_level: medium
+    keywords:
+      - goth
+      - providers
+  - id: GO-010
+    pattern_name: Session Store
+    description: Gorilla sessions for state
+    library: gorilla/sessions
+    security_level: high
+    keywords:
+      - sessions
+      - gorilla
+  - id: GO-011
+    pattern_name: Secure Cookie Store
+    description: Encrypted cookie sessions
+    library: gorilla/securecookie
+    security_level: high
+    keywords:
+      - cookie
+      - encrypted
+  - id: GO-012
+    pattern_name: CSRF Protection
+    description: Gorilla CSRF middleware
+    library: gorilla/csrf
+    security_level: critical
+    keywords:
+      - csrf
+      - middleware
+  - id: GO-013
+    pattern_name: Bcrypt Hashing
+    description: Password hashing with bcrypt
+    library: golang.org/x/crypto/bcrypt
+    security_level: critical
+    keywords:
+      - bcrypt
+      - hash
+  - id: GO-014
+    pattern_name: Argon2 Hashing
+    description: Memory-hard password hashing
+    library: golang.org/x/crypto/argon2
+    security_level: critical
+    keywords:
+      - argon2
+      - hash
+  - id: GO-015
+    pattern_name: Casbin Authorization
+    description: RBAC ABAC policy engine
+    library: casbin/casbin
+    security_level: high
+    keywords:
+      - rbac
+      - casbin
+  - id: GO-016
+    pattern_name: JWT Middleware
+    description: HTTP middleware for JWT auth
+    library: custom
+    security_level: high
+    keywords:
+      - middleware
+      - auth
+  - id: GO-017
+    pattern_name: Context User Storage
+    description: Store user in request context
+    library: stdlib
+    security_level: medium
+    keywords:
+      - context
+      - user
+  - id: GO-018
+    pattern_name: Rate Limiter
+    description: Login attempt rate limiting
+    library: go.uber.org/ratelimit
+    security_level: high
+    keywords:
+      - ratelimit
+      - login
+  - id: GO-019
+    pattern_name: Fiber JWT Middleware
+    description: JWT for Fiber framework
+    library: gofiber/jwt
+    security_level: high
+    keywords:
+      - fiber
+      - jwt
+  - id: GO-020
+    pattern_name: Gin JWT Middleware
+    description: JWT for Gin framework
+    library: gin-contrib/jwt
+    security_level: high
+    keywords:
+      - gin
+      - jwt
+  - id: GO-021
+    pattern_name: Echo JWT Middleware
+    description: JWT for Echo framework
+    library: labstack/echo
+    security_level: high
+    keywords:
+      - echo
+      - jwt
+  - id: GO-022
+    pattern_name: Chi Middleware Chain
+    description: Auth middleware for Chi
+    library: go-chi/chi
+    security_level: medium
+    keywords:
+      - chi
+      - middleware
+  - id: GO-023
+    pattern_name: PASETO Tokens
+    description: Platform-Agnostic Security Tokens
+    library: o1egl/paseto
+    security_level: high
+    keywords:
+      - paseto
+      - tokens
+  - id: GO-024
+    pattern_name: OIDC Client
+    description: OpenID Connect client
+    library: coreos/go-oidc
+    security_level: high
+    keywords:
+      - oidc
+      - openid
+  - id: GO-025
+    pattern_name: WebAuthn Server
+    description: Passkey server implementation
+    library: go-webauthn/webauthn
+    security_level: critical
+    keywords:
+      - webauthn
+      - passkey

@@ -1,0 +1,199 @@
+# =============================================================================
+# cqrs-patterns.yaml — CQRS Implementation Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# CORE CONCEPT
+# =============================================================================
+
+overview:
+  description: |
+    Command Query Responsibility Segregation separates read and write
+    models for optimized performance and scalability.
+
+  architecture: |
+    ┌─────────────────────────────────────────────────┐
+    │  Client                                         │
+    │  ├── Commands (Write) → Command Handler         │
+    │  │                       → Domain Model         │
+    │  │                       → Event Store          │
+    │  │                       → Domain Events        │
+    │  │                                ↓             │
+    │  │                       → Projections          │
+    │  │                                ↓             │
+    │  └── Queries (Read) ←── Read Model (Views)      │
+    └─────────────────────────────────────────────────┘
+
+# =============================================================================
+# COMMAND SIDE
+# =============================================================================
+
+command_side:
+  patterns:
+    command:
+      description: "Immutable intent to change state"
+      example: |
+        // Go
+        type CreateOrderCommand struct {
+            OrderID    string
+            CustomerID string
+            Items      []OrderItem
+            CreatedAt  time.Time
+        }
+
+        type CommandHandler interface {
+            Handle(ctx context.Context, cmd Command) error
+        }
+
+        type CreateOrderHandler struct {
+            repo  OrderRepository
+            bus   EventBus
+        }
+
+        func (h *CreateOrderHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
+            order, err := domain.NewOrder(cmd.OrderID, cmd.CustomerID, cmd.Items)
+            if err != nil {
+                return err
+            }
+            if err := h.repo.Save(ctx, order); err != nil {
+                return err
+            }
+            return h.bus.Publish(ctx, order.DomainEvents()...)
+        }
+
+    command_bus:
+      description: "Routes commands to handlers"
+      example_typescript: |
+        interface Command {
+          readonly type: string;
+        }
+
+        type CommandHandler<T extends Command> = (cmd: T) => Promise<void>;
+
+        class CommandBus {
+          private handlers = new Map<string, CommandHandler<any>>();
+
+          register<T extends Command>(type: string, handler: CommandHandler<T>) {
+            this.handlers.set(type, handler);
+          }
+
+          async dispatch<T extends Command>(cmd: T): Promise<void> {
+            const handler = this.handlers.get(cmd.type);
+            if (!handler) throw new Error(`No handler for ${cmd.type}`);
+            await handler(cmd);
+          }
+        }
+
+# =============================================================================
+# QUERY SIDE
+# =============================================================================
+
+query_side:
+  patterns:
+    read_model:
+      description: "Denormalized views optimized for reads"
+      strategies:
+        - name: "Materialized View"
+          description: "Pre-computed query results"
+          storage: "Redis, Elasticsearch, read-replica DB"
+
+        - name: "Projection"
+          description: "Build read model from events"
+          storage: "Eventual consistency with event stream"
+
+    example: |
+      // Go — Query Handler
+      type GetOrderQuery struct {
+          OrderID string
+      }
+
+      type OrderView struct {
+          OrderID      string    `json:"order_id"`
+          CustomerName string    `json:"customer_name"`
+          Items        []string  `json:"items"`
+          Total        float64   `json:"total"`
+          Status       string    `json:"status"`
+          CreatedAt    time.Time `json:"created_at"`
+      }
+
+      type OrderQueryHandler struct {
+          readDB *sql.DB // Separate read database
+      }
+
+      func (h *OrderQueryHandler) Handle(ctx context.Context, q GetOrderQuery) (*OrderView, error) {
+          return h.readDB.QueryOrder(ctx, q.OrderID)
+      }
+
+# =============================================================================
+# PROJECTIONS
+# =============================================================================
+
+projections:
+  description: "Transform events into read models"
+
+  strategies:
+    - name: "Synchronous Projection"
+      consistency: "Strong"
+      latency: "Added to write path"
+      use_when: "Read model must be immediately consistent"
+
+    - name: "Asynchronous Projection"
+      consistency: "Eventual"
+      latency: "Minimal write impact"
+      use_when: "Eventual consistency acceptable"
+
+  example: |
+    // Projection: OrderEvents → OrderSummaryView
+    type OrderProjection struct {
+        viewStore ViewStore
+    }
+
+    func (p *OrderProjection) Handle(event DomainEvent) error {
+        switch e := event.(type) {
+        case OrderCreated:
+            return p.viewStore.Insert(OrderSummary{
+                ID:     e.OrderID,
+                Status: "created",
+                Total:  e.Total,
+            })
+        case OrderPaid:
+            return p.viewStore.Update(e.OrderID, map[string]any{
+                "status":  "paid",
+                "paid_at": e.PaidAt,
+            })
+        case OrderShipped:
+            return p.viewStore.Update(e.OrderID, map[string]any{
+                "status":      "shipped",
+                "tracking_no": e.TrackingNumber,
+            })
+        }
+        return nil
+    }
+
+# =============================================================================
+# DECISION GUIDE
+# =============================================================================
+
+decision_guide:
+  use_cqrs_when:
+    - "Read and write models have different shapes"
+    - "Read:write ratio is heavily skewed (10:1+)"
+    - "Need independent scaling of reads vs writes"
+    - "Complex domain with rich behavior"
+
+  avoid_cqrs_when:
+    - "Simple CRUD application"
+    - "Small team without distributed systems experience"
+    - "Strong consistency required everywhere"
+
+  common_mistakes:
+    - mistake: "Using CQRS for simple CRUD"
+      impact: "Unnecessary complexity"
+    - mistake: "Not handling eventual consistency"
+      impact: "Stale data shown to users"
+    - mistake: "Shared database for read/write"
+      impact: "Defeats the purpose of separation"
+
+# _DOMYH Awesome Code • CQRS Patterns_

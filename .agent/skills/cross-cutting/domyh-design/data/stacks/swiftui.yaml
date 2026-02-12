@@ -1,0 +1,486 @@
+metadata:
+  skill: domyh-design
+  domain: swiftui
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: swiftui.yaml
+  patterns_count: 50
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Views
+    guideline: Use struct for views
+    description: SwiftUI views are value types
+    do: "struct MyView: View"
+    don_t: "class MyView: View"
+    code_good: "struct ContentView: View { var body: some View }"
+    code_bad: "class ContentView: View"
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/view
+  - id: "2"
+    category: Views
+    guideline: Keep views small and focused
+    description: Single responsibility for each view
+    do: Extract subviews for complex layouts
+    don_t: Large monolithic views
+    code_good: Extract HeaderView FooterView
+    code_bad: 500+ line View struct
+    severity: Medium
+  - id: "3"
+    category: Views
+    guideline: Use body computed property
+    description: body returns the view hierarchy
+    do: "var body: some View { }"
+    don_t: func body() -> some View
+    code_good: 'var body: some View { Text("Hello") }'
+    code_bad: func body() -> Text
+    severity: High
+  - id: "4"
+    category: Views
+    guideline: Prefer composition over inheritance
+    description: Compose views using ViewBuilder
+    do: Combine smaller views
+    don_t: Inheritance hierarchies
+    code_good: VStack { Header() Content() }
+    code_bad: class SpecialView extends BaseView
+    severity: Medium
+  - id: "5"
+    category: State
+    guideline: Use @State for local state
+    description: Simple value types owned by view
+    do: "@State for view-local primitives"
+    don_t: "@State for shared data"
+    code_good: "@State private var count = 0"
+    code_bad: "@State var sharedData: Model"
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/state
+  - id: "6"
+    category: State
+    guideline: Use @Binding for two-way data
+    description: Pass mutable state to child views
+    do: "@Binding for child input"
+    don_t: "@State in child for parent data"
+    code_good: "@Binding var isOn: Bool"
+    code_bad: $isOn to pass binding
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/binding
+  - id: "7"
+    category: State
+    guideline: Use @StateObject for reference types
+    description: ObservableObject owned by view
+    do: "@StateObject for view-created objects"
+    don_t: "@ObservedObject for owned objects"
+    code_good: "@StateObject private var vm = ViewModel()"
+    code_bad: "@ObservedObject var vm = ViewModel()"
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/stateobject
+  - id: "8"
+    category: State
+    guideline: Use @ObservedObject for injected objects
+    description: Reference types passed from parent
+    do: "@ObservedObject for injected dependencies"
+    don_t: "@StateObject for injected objects"
+    code_good: "@ObservedObject var vm: ViewModel"
+    code_bad: "@StateObject var vm: ViewModel (injected)"
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/observedobject
+  - id: "9"
+    category: State
+    guideline: Use @EnvironmentObject for shared state
+    description: App-wide state injection
+    do: "@EnvironmentObject for global state"
+    don_t: Prop drilling through views
+    code_good: "@EnvironmentObject var settings: Settings"
+    code_bad: Pass settings through 5 views
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/environmentobject
+  - id: "10"
+    category: State
+    guideline: Use @Published in ObservableObject
+    description: Automatically publish property changes
+    do: "@Published for observed properties"
+    don_t: Manual objectWillChange calls
+    code_good: "@Published var items: [Item] = []"
+    code_bad: "var items: [Item] { didSet { objectWillChange.send() } }"
+    severity: Medium
+  - id: "11"
+    category: Observable
+    guideline: Use @Observable macro (iOS 17+)
+    description: Modern observation without Combine
+    do: "@Observable class for view models"
+    don_t: ObservableObject for new projects
+    code_good: "@Observable class ViewModel { }"
+    code_bad: "class ViewModel: ObservableObject"
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/observation
+  - id: "12"
+    category: Observable
+    guideline: Use @Bindable for @Observable
+    description: Create bindings from @Observable
+    do: "@Bindable var vm for bindings"
+    don_t: "@Binding with @Observable"
+    code_good: "@Bindable var viewModel"
+    code_bad: $viewModel.name with @Observable
+    severity: Medium
+  - id: "13"
+    category: Layout
+    guideline: Use VStack HStack ZStack
+    description: Standard stack-based layouts
+    do: Stacks for linear arrangements
+    don_t: GeometryReader for simple layouts
+    code_good: VStack { Text() Image() }
+    code_bad: GeometryReader for vertical list
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/vstack
+  - id: "14"
+    category: Layout
+    guideline: Use LazyVStack LazyHStack for lists
+    description: Lazy loading for performance
+    do: Lazy stacks for long lists
+    don_t: Regular stacks for 100+ items
+    code_good: LazyVStack { ForEach(items) }
+    code_bad: VStack { ForEach(largeArray) }
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/lazyvstack
+  - id: "15"
+    category: Layout
+    guideline: Use GeometryReader sparingly
+    description: Only when needed for sizing
+    do: GeometryReader for responsive layouts
+    don_t: GeometryReader everywhere
+    code_good: GeometryReader for aspect ratio
+    code_bad: GeometryReader wrapping everything
+    severity: Medium
+  - id: "16"
+    category: Layout
+    guideline: Use spacing and padding consistently
+    description: Consistent spacing throughout app
+    do: Design system spacing values
+    don_t: Magic numbers for spacing
+    code_good: .padding(16) or .padding()
+    code_bad: .padding(13), .padding(17)
+    severity: Low
+  - id: "17"
+    category: Layout
+    guideline: Use frame modifiers correctly
+    description: Set explicit sizes when needed
+    do: ".frame(maxWidth: .infinity)"
+    don_t: Fixed sizes for responsive content
+    code_good: ".frame(maxWidth: .infinity)"
+    code_bad: ".frame(width: 375)"
+    severity: Medium
+  - id: "18"
+    category: Modifiers
+    guideline: Order modifiers correctly
+    description: Modifier order affects rendering
+    do: Background before padding for full coverage
+    don_t: Wrong modifier order
+    code_good: .padding().background(Color.red)
+    code_bad: .background(Color.red).padding()
+    severity: High
+  - id: "19"
+    category: Modifiers
+    guideline: Create custom ViewModifiers
+    description: Reusable modifier combinations
+    do: ViewModifier for repeated styling
+    don_t: Duplicate modifier chains
+    code_good: "struct CardStyle: ViewModifier"
+    code_bad: .shadow().cornerRadius() everywhere
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/viewmodifier
+  - id: "20"
+    category: Modifiers
+    guideline: Use conditional modifiers carefully
+    description: Avoid changing view identity
+    do: if-else with same view type
+    don_t: Conditional that changes view identity
+    code_good: "Text(title).foregroundColor(isActive ? .blue : .gray)"
+    code_bad: if isActive { Text().bold() } else { Text() }
+    severity: Medium
+  - id: "21"
+    category: Navigation
+    guideline: Use NavigationStack (iOS 16+)
+    description: Modern navigation with type-safe paths
+    do: NavigationStack with navigationDestination
+    don_t: NavigationView for new projects
+    code_good: NavigationStack { }
+    code_bad: NavigationView { } (deprecated)
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/navigationstack
+  - id: "22"
+    category: Navigation
+    guideline: Use navigationDestination
+    description: Type-safe navigation destinations
+    do: .navigationDestination(for:)
+    don_t: NavigationLink(destination:)
+    code_good: ".navigationDestination(for: Item.self)"
+    code_bad: "NavigationLink(destination: DetailView())"
+    severity: Medium
+  - id: "23"
+    category: Navigation
+    guideline: Use @Environment for dismiss
+    description: Programmatic navigation dismissal
+    do: '@Environment(\.dismiss) var dismiss'
+    don_t: presentationMode (deprecated)
+    code_good: '@Environment(\.dismiss) var dismiss'
+    code_bad: '@Environment(\.presentationMode)'
+    severity: Low
+  - id: "24"
+    category: Lists
+    guideline: Use List for scrollable content
+    description: Built-in scrolling and styling
+    do: List for standard scrollable content
+    don_t: ScrollView + VStack for simple lists
+    code_good: List { ForEach(items) { } }
+    code_bad: ScrollView { VStack { ForEach } }
+    severity: Low
+    docs_url: https://developer.apple.com/documentation/swiftui/list
+  - id: "25"
+    category: Lists
+    guideline: Provide stable identifiers
+    description: Use Identifiable or explicit id
+    do: Identifiable protocol or id parameter
+    don_t: Index as identifier
+    code_good: "ForEach(items) where Item: Identifiable"
+    code_bad: 'ForEach(items.indices, id: \.self)'
+    severity: High
+  - id: "26"
+    category: Lists
+    guideline: Use onDelete and onMove
+    description: Standard list editing
+    do: onDelete for swipe to delete
+    don_t: Custom delete implementation
+    code_good: ".onDelete(perform: delete)"
+    code_bad: .onTapGesture for delete
+    severity: Low
+  - id: "27"
+    category: Forms
+    guideline: Use Form for settings
+    description: Grouped input controls
+    do: Form for settings screens
+    don_t: Manual grouping for forms
+    code_good: Form { Section { Toggle() } }
+    code_bad: VStack { Toggle() }
+    severity: Low
+    docs_url: https://developer.apple.com/documentation/swiftui/form
+  - id: "28"
+    category: Forms
+    guideline: Use @FocusState for keyboard
+    description: Manage keyboard focus
+    do: "@FocusState for text field focus"
+    don_t: Manual first responder handling
+    code_good: "@FocusState private var isFocused: Bool"
+    code_bad: UIKit first responder
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/focusstate
+  - id: "29"
+    category: Forms
+    guideline: Validate input properly
+    description: Show validation feedback
+    do: Real-time validation feedback
+    don_t: Submit without validation
+    code_good: TextField with validation state
+    code_bad: TextField without error handling
+    severity: Medium
+  - id: "30"
+    category: Async
+    guideline: Use .task for async work
+    description: Automatic cancellation on view disappear
+    do: .task for view lifecycle async
+    don_t: onAppear with Task
+    code_good: .task { await loadData() }
+    code_bad: onAppear { Task { await loadData() } }
+    severity: Medium
+    docs_url: https://developer.apple.com/documentation/swiftui/view/task(priority:_:)
+  - id: "31"
+    category: Async
+    guideline: Handle loading states
+    description: Show progress during async operations
+    do: ProgressView during loading
+    don_t: Empty view during load
+    code_good: if isLoading { ProgressView() }
+    code_bad: No loading indicator
+    severity: Medium
+  - id: "32"
+    category: Async
+    guideline: Use @MainActor for UI updates
+    description: Ensure UI updates on main thread
+    do: "@MainActor on view models"
+    don_t: Manual DispatchQueue.main
+    code_good: "@MainActor class ViewModel"
+    code_bad: DispatchQueue.main.async
+    severity: Medium
+  - id: "33"
+    category: Animation
+    guideline: Use withAnimation
+    description: Animate state changes
+    do: withAnimation for state transitions
+    don_t: No animation for state changes
+    code_good: withAnimation { isExpanded.toggle() }
+    code_bad: isExpanded.toggle()
+    severity: Low
+    docs_url: https://developer.apple.com/documentation/swiftui/withanimation(_:_:)
+  - id: "34"
+    category: Animation
+    guideline: Use .animation modifier
+    description: Apply animations to views
+    do: .animation(.spring()) on view
+    don_t: Manual animation timing
+    code_good: .animation(.easeInOut)
+    code_bad: CABasicAnimation equivalent
+    severity: Low
+  - id: "35"
+    category: Animation
+    guideline: Respect reduced motion
+    description: Check accessibility settings
+    do: Check accessibilityReduceMotion
+    don_t: Ignore motion preferences
+    code_good: '@Environment(\.accessibilityReduceMotion)'
+    code_bad: Always animate regardless
+    severity: High
+  - id: "36"
+    category: Preview
+    guideline: "Use #Preview macro (Xcode 15+)"
+    description: Modern preview syntax
+    do: "#Preview for view previews"
+    don_t: PreviewProvider protocol
+    code_good: "#Preview { ContentView() }"
+    code_bad: "struct ContentView_Previews: PreviewProvider"
+    severity: Low
+  - id: "37"
+    category: Preview
+    guideline: Create multiple previews
+    description: Test different states and devices
+    do: Multiple previews for states
+    don_t: Single preview only
+    code_good: '#Preview("Light") { } #Preview("Dark") { }'
+    code_bad: Single preview configuration
+    severity: Low
+  - id: "38"
+    category: Preview
+    guideline: Use preview data
+    description: Dedicated preview mock data
+    do: Static preview data
+    don_t: Production data in previews
+    code_good: Item.preview for preview
+    code_bad: Fetch real data in preview
+    severity: Low
+  - id: "39"
+    category: Performance
+    guideline: Avoid expensive body computations
+    description: Body should be fast to compute
+    do: Precompute in view model
+    don_t: Heavy computation in body
+    code_good: vm.computedValue in body
+    code_bad: Complex calculation in body
+    severity: High
+  - id: "40"
+    category: Performance
+    guideline: Use Equatable views
+    description: Skip unnecessary view updates
+    do: Equatable for complex views
+    don_t: Default equality for all views
+    code_good: "struct MyView: View Equatable"
+    code_bad: No Equatable conformance
+    severity: Medium
+  - id: "41"
+    category: Performance
+    guideline: Profile with Instruments
+    description: Measure before optimizing
+    do: Use SwiftUI Instruments
+    don_t: Guess at performance issues
+    code_good: Profile with Instruments
+    code_bad: Optimize without measuring
+    severity: Medium
+  - id: "42"
+    category: Accessibility
+    guideline: Add accessibility labels
+    description: Describe UI elements
+    do: .accessibilityLabel for context
+    don_t: Missing labels
+    code_good: .accessibilityLabel("Close button")
+    code_bad: Button without label
+    severity: High
+    docs_url: https://developer.apple.com/documentation/swiftui/view/accessibilitylabel(_:)-1d7jv
+  - id: "43"
+    category: Accessibility
+    guideline: Support Dynamic Type
+    description: Respect text size preferences
+    do: Scalable fonts and layouts
+    don_t: Fixed font sizes
+    code_good: .font(.body) with Dynamic Type
+    code_bad: ".font(.system(size: 16))"
+    severity: High
+  - id: "44"
+    category: Accessibility
+    guideline: Use semantic views
+    description: Proper accessibility traits
+    do: Correct accessibilityTraits
+    don_t: Wrong semantic meaning
+    code_good: Button for actions Image for display
+    code_bad: Image that acts like button
+    severity: Medium
+  - id: "45"
+    category: Testing
+    guideline: Use ViewInspector for testing
+    description: Third-party view testing
+    do: ViewInspector for unit tests
+    don_t: UI tests only
+    code_good: ViewInspector assertions
+    code_bad: Only XCUITest
+    severity: Medium
+  - id: "46"
+    category: Testing
+    guideline: Test view models
+    description: Unit test business logic
+    do: XCTest for view model
+    don_t: Skip view model testing
+    code_good: Test ViewModel methods
+    code_bad: No unit tests
+    severity: Medium
+  - id: "47"
+    category: Testing
+    guideline: Use preview as visual test
+    description: Previews catch visual regressions
+    do: Multiple preview configurations
+    don_t: No visual verification
+    code_good: Preview different states
+    code_bad: Single preview only
+    severity: Low
+  - id: "48"
+    category: Architecture
+    guideline: Use MVVM pattern
+    description: Separate view and logic
+    do: ViewModel for business logic
+    don_t: Logic in View
+    code_good: ObservableObject ViewModel
+    code_bad: "@State for complex logic"
+    severity: Medium
+  - id: "49"
+    category: Architecture
+    guideline: Keep views dumb
+    description: Views display view model state
+    do: View reads from ViewModel
+    don_t: Business logic in View
+    code_good: view.items from vm.items
+    code_bad: Complex filtering in View
+    severity: Medium
+  - id: "50"
+    category: Architecture
+    guideline: Use dependency injection
+    description: Inject dependencies for testing
+    do: Initialize with dependencies
+    don_t: Hard-coded dependencies
+    code_good: "init(service: ServiceProtocol)"
+    code_bad: let service = RealService()
+    severity: Medium

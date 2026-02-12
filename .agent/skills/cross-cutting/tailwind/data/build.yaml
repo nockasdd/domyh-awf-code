@@ -1,0 +1,143 @@
+# Tailwind CSS 4.0 - Build & Performance Patterns
+# Vite plugin, Oxide engine, Lightning CSS, optimization
+# Source: tailwindcss.com/docs/installation (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: build
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: build001
+    name: "Vite Plugin"
+    category: build
+    version: "4.0+"
+    description: |
+      First-party Vite plugin for optimal performance.
+      Replaces PostCSS setup. No autoprefixer needed.
+    text: "@tailwindcss/vite vite plugin performance bundler"
+    example: |
+      // vite.config.ts
+      import tailwindcss from '@tailwindcss/vite'
+
+      export default defineConfig({
+        plugins: [tailwindcss()],
+      })
+
+      /* app.css */
+      @import "tailwindcss";
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/installation/vite"
+
+  - id: build002
+    name: "PostCSS Plugin"
+    category: build
+    version: "4.0+"
+    description: |
+      PostCSS plugin for non-Vite build tools.
+      Use @tailwindcss/postcss package.
+    text: "@tailwindcss/postcss webpack next.js nuxt bundler"
+    example: |
+      // postcss.config.js
+      export default {
+        plugins: {
+          '@tailwindcss/postcss': {},
+        },
+      }
+
+      /* No autoprefixer needed - built in */
+      /* No postcss-import needed - built in */
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/installation/postcss"
+
+  - id: build003
+    name: "Oxide Engine"
+    category: performance
+    version: "4.0+"
+    description: |
+      Rust-based engine for blazing fast builds.
+      5x faster full builds, 100x faster incremental.
+    text: "oxide engine rust performance fast build speed"
+    example: |
+      /* Performance stats for v4 Oxide engine */
+
+      | Metric          | v3      | v4 Oxide |
+      |-----------------|---------|----------|
+      | Full build      | 960ms   | 105ms    |
+      | Incremental     | 10ms    | <0.2ms   |
+      | Install size    | -       | 35% less |
+
+      /* No configuration needed - automatic */
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/blog/tailwindcss-v4"
+
+  - id: build004
+    name: "Lightning CSS"
+    category: performance
+    version: "4.0+"
+    description: |
+      Built-in modern CSS processing via Lightning CSS.
+      Handles imports, prefixes, and transforms.
+    text: "lightning css autoprefixer vendor prefix modern syntax"
+    example: |
+      /* Features handled automatically by Lightning CSS */
+
+      ✓ @import bundling
+      ✓ Vendor prefixes (autoprefixer replacement)
+      ✓ CSS nesting
+      ✓ Modern color functions
+      ✓ Media query ranges
+      ✓ Custom media queries
+
+      /* No additional plugins needed */
+    severity: MEDIUM
+    docs_url: "https://lightningcss.dev/"
+
+  - id: build005
+    name: "Content Detection"
+    category: build
+    version: "4.0+"
+    description: |
+      Automatic template file detection.
+      No manual content configuration needed.
+    text: "content auto detect template source file scan"
+    example: |
+      /* v4 auto-detects these files: */
+      *.html, *.js, *.ts, *.jsx, *.tsx
+      *.vue, *.svelte, *.astro
+
+      /* Override with @source if needed */
+      @source "./src/**/*.{html,js,jsx,tsx}";
+      @source not "./src/deprecated/*";
+      @source not "./node_modules";
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/detecting-classes-in-source-files"
+
+  - id: build006
+    name: "Production Build"
+    category: optimization
+    version: "4.0+"
+    description: |
+      Optimize for production with tree-shaking
+      and minification. Remove unused styles.
+    text: "production build minify tree-shake optimize css size"
+    example: |
+      /* Optimization strategies */
+
+      /* 1. Remove unused color scales */
+      @theme {
+        --color-*: initial;
+        --color-blue-*: #...;  /* Keep only needed */
+      }
+
+      /* 2. Exclude directories */
+      @source not "./examples/*";
+      @source not "./tests/*";
+
+      /* 3. Use safelist sparingly */
+      @source inline;
+      .dynamic-class { @apply bg-blue-500; }
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/optimizing-for-production"

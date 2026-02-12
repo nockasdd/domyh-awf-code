@@ -1,0 +1,70 @@
+# TDD Anti-Patterns
+# Common mistakes and how to fix them
+
+anti_patterns:
+  - name: the-liar
+    description: "Test that passes but doesn't actually verify anything"
+    symptom: "No meaningful assertions, or assert true === true"
+    fix: "Every test must assert the specific expected outcome"
+    severity: critical
+
+  - name: excessive-setup
+    description: "Test requires 50+ lines of setup code"
+    symptom: "Setup is longer than the test itself"
+    fix: "Use factories, builders, or test fixtures. Simplify SUT"
+    severity: high
+
+  - name: the-giant
+    description: "Single test that verifies too many things"
+    symptom: "20+ assertions in one test"
+    fix: "Split into focused tests — one concept per test"
+    severity: high
+
+  - name: the-mockery
+    description: "Mocking everything, testing nothing real"
+    symptom: "Only testing mock interactions, not actual behavior"
+    fix: "Mock boundaries only (DB, API, filesystem). Test logic directly"
+    severity: high
+
+  - name: the-inspector
+    description: "Test tightly coupled to implementation details"
+    symptom: "Test breaks when refactoring internal code"
+    fix: "Test behavior (public API) not implementation"
+    severity: medium
+
+  - name: second-class-citizen
+    description: "Test code treated as less important than production code"
+    symptom: "Copy-paste in tests, no refactoring, poor naming"
+    fix: "Apply same quality standards to test code"
+    severity: medium
+
+  - name: the-slow-poke
+    description: "Tests that take too long to run"
+    symptom: "Full suite takes 10+ minutes"
+    fix: "Mock I/O, use in-memory DB, parallelize tests"
+    severity: medium
+
+  - name: the-free-ride
+    description: "Adding assertions to existing test instead of new test"
+    symptom: "Test name doesn't match what it verifies"
+    fix: "Each test should verify ONE specific behavior"
+    severity: low
+
+  - name: test-after-code
+    description: "Writing tests after implementation (not TDD)"
+    symptom: "Tests match implementation, not requirements"
+    fix: "Write tests FIRST — they should describe behavior"
+    severity: low
+
+  - name: flaky-test
+    description: "Test that fails intermittently"
+    causes:
+      - "Race conditions in async code"
+      - "Shared mutable state between tests"
+      - "Time-dependent logic"
+      - "Network calls in tests"
+    fix:
+      - "Isolate test state"
+      - "Use deterministic clocks"
+      - "Mock external calls"
+      - "Run in isolation"

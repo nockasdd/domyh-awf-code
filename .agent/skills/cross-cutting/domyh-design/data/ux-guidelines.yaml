@@ -1,0 +1,1009 @@
+metadata:
+  skill: domyh-design
+  domain: ux_guidelines
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: ux-guidelines.yaml
+  patterns_count: 99
+  columns:
+    - "No"
+    - Category
+    - Issue
+    - Platform
+    - Description
+    - Do
+    - Don't
+    - Code Example Good
+    - Code Example Bad
+    - Severity
+patterns:
+  - id: "1"
+    category: Navigation
+    issue: Smooth Scroll
+    platform: Web
+    description: Anchor links should scroll smoothly to target section
+    do: "Use scroll-behavior: smooth on html element"
+    don_t: Jump directly without transition
+    code_example_good: "html { scroll-behavior: smooth; }"
+    code_example_bad: <a href='#section'> without CSS
+    severity: High
+  - id: "2"
+    category: Navigation
+    issue: Sticky Navigation
+    platform: Web
+    description: Fixed nav should not obscure content
+    do: Add padding-top to body equal to nav height
+    don_t: Let nav overlap first section content
+    code_example_good: pt-20 (if nav is h-20)
+    code_example_bad: No padding compensation
+    severity: Medium
+  - id: "3"
+    category: Navigation
+    issue: Active State
+    platform: All
+    description: Current page/section should be visually indicated
+    do: Highlight active nav item with color/underline
+    don_t: No visual feedback on current location
+    code_example_good: text-primary border-b-2
+    code_example_bad: All links same style
+    severity: Medium
+  - id: "4"
+    category: Navigation
+    issue: Back Button
+    platform: Mobile
+    description: Users expect back to work predictably
+    do: Preserve navigation history properly
+    don_t: Break browser/app back button behavior
+    code_example_good: history.pushState()
+    code_example_bad: location.replace()
+    severity: High
+  - id: "5"
+    category: Navigation
+    issue: Deep Linking
+    platform: All
+    description: URLs should reflect current state for sharing
+    do: Update URL on state/view changes
+    don_t: Static URLs for dynamic content
+    code_example_good: Use query params or hash
+    code_example_bad: Single URL for all states
+    severity: Medium
+  - id: "6"
+    category: Navigation
+    issue: Breadcrumbs
+    platform: Web
+    description: Show user location in site hierarchy
+    do: Use for sites with 3+ levels of depth
+    don_t: Use for flat single-level sites
+    code_example_good: Home > Category > Product
+    code_example_bad: Only on deep nested pages
+    severity: Low
+  - id: "7"
+    category: Animation
+    issue: Excessive Motion
+    platform: All
+    description: Too many animations cause distraction and motion sickness
+    do: Animate 1-2 key elements per view maximum
+    don_t: Animate everything that moves
+    code_example_good: Single hero animation
+    code_example_bad: animate-bounce on 5+ elements
+    severity: High
+  - id: "8"
+    category: Animation
+    issue: Duration Timing
+    platform: All
+    description: Animations should feel responsive not sluggish
+    do: Use 150-300ms for micro-interactions
+    don_t: Use animations longer than 500ms for UI
+    code_example_good: transition-all duration-200
+    code_example_bad: duration-1000
+    severity: Medium
+  - id: "9"
+    category: Animation
+    issue: Reduced Motion
+    platform: All
+    description: Respect user's motion preferences
+    do: Check prefers-reduced-motion media query
+    don_t: Ignore accessibility motion settings
+    code_example_good: "@media (prefers-reduced-motion: reduce)"
+    code_example_bad: No motion query check
+    severity: High
+  - id: "10"
+    category: Animation
+    issue: Loading States
+    platform: All
+    description: Show feedback during async operations
+    do: Use skeleton screens or spinners
+    don_t: Leave UI frozen with no feedback
+    code_example_good: animate-pulse skeleton
+    code_example_bad: Blank screen while loading
+    severity: High
+  - id: "11"
+    category: Animation
+    issue: Hover vs Tap
+    platform: All
+    description: Hover effects don't work on touch devices
+    do: Use click/tap for primary interactions
+    don_t: Rely only on hover for important actions
+    code_example_good: onClick handler
+    code_example_bad: onMouseEnter only
+    severity: High
+  - id: "12"
+    category: Animation
+    issue: Continuous Animation
+    platform: All
+    description: Infinite animations are distracting
+    do: Use for loading indicators only
+    don_t: Use for decorative elements
+    code_example_good: animate-spin on loader
+    code_example_bad: animate-bounce on icons
+    severity: Medium
+  - id: "13"
+    category: Animation
+    issue: Transform Performance
+    platform: Web
+    description: Some CSS properties trigger expensive repaints
+    do: Use transform and opacity for animations
+    don_t: Animate width/height/top/left properties
+    code_example_good: "transform: translateY()"
+    code_example_bad: "top: 10px animation"
+    severity: Medium
+  - id: "14"
+    category: Animation
+    issue: Easing Functions
+    platform: All
+    description: Linear motion feels robotic
+    do: Use ease-out for entering ease-in for exiting
+    don_t: Use linear for UI transitions
+    code_example_good: ease-out
+    code_example_bad: linear
+    severity: Low
+  - id: "15"
+    category: Layout
+    issue: Z-Index Management
+    platform: Web
+    description: Stacking context conflicts cause hidden elements
+    do: Define z-index scale system (10 20 30 50)
+    don_t: Use arbitrary large z-index values
+    code_example_good: z-10 z-20 z-50
+    code_example_bad: z-[9999]
+    severity: High
+  - id: "16"
+    category: Layout
+    issue: Overflow Hidden
+    platform: Web
+    description: Hidden overflow can clip important content
+    do: Test all content fits within containers
+    don_t: Blindly apply overflow-hidden
+    code_example_good: overflow-auto with scroll
+    code_example_bad: overflow-hidden truncating content
+    severity: Medium
+  - id: "17"
+    category: Layout
+    issue: Fixed Positioning
+    platform: Web
+    description: Fixed elements can overlap or be inaccessible
+    do: Account for safe areas and other fixed elements
+    don_t: Stack multiple fixed elements carelessly
+    code_example_good: Fixed nav + fixed bottom with gap
+    code_example_bad: Multiple overlapping fixed elements
+    severity: Medium
+  - id: "18"
+    category: Layout
+    issue: Stacking Context
+    platform: Web
+    description: New stacking contexts reset z-index
+    do: Understand what creates new stacking context
+    don_t: Expect z-index to work across contexts
+    code_example_good: Parent with z-index isolates children
+    code_example_bad: "z-index: 9999 not working"
+    severity: Medium
+  - id: "19"
+    category: Layout
+    issue: Content Jumping
+    platform: Web
+    description: Layout shift when content loads is jarring
+    do: Reserve space for async content
+    don_t: Let images/content push layout around
+    code_example_good: aspect-ratio or fixed height
+    code_example_bad: No dimensions on images
+    severity: High
+  - id: "20"
+    category: Layout
+    issue: Viewport Units
+    platform: Web
+    description: 100vh can be problematic on mobile browsers
+    do: Use dvh or account for mobile browser chrome
+    don_t: Use 100vh for full-screen mobile layouts
+    code_example_good: min-h-dvh or min-h-screen
+    code_example_bad: h-screen on mobile
+    severity: Medium
+  - id: "21"
+    category: Layout
+    issue: Container Width
+    platform: Web
+    description: Content too wide is hard to read
+    do: Limit max-width for text content (65-75ch)
+    don_t: Let text span full viewport width
+    code_example_good: max-w-prose or max-w-3xl
+    code_example_bad: Full width paragraphs
+    severity: Medium
+  - id: "22"
+    category: Touch
+    issue: Touch Target Size
+    platform: Mobile
+    description: Small buttons are hard to tap accurately
+    do: Minimum 44x44px touch targets
+    don_t: Tiny clickable areas
+    code_example_good: min-h-[44px] min-w-[44px]
+    code_example_bad: w-6 h-6 buttons
+    severity: High
+  - id: "23"
+    category: Touch
+    issue: Touch Spacing
+    platform: Mobile
+    description: Adjacent touch targets need adequate spacing
+    do: Minimum 8px gap between touch targets
+    don_t: Tightly packed clickable elements
+    code_example_good: gap-2 between buttons
+    code_example_bad: gap-0 or gap-1
+    severity: Medium
+  - id: "24"
+    category: Touch
+    issue: Gesture Conflicts
+    platform: Mobile
+    description: Custom gestures can conflict with system
+    do: Avoid horizontal swipe on main content
+    don_t: Override system gestures
+    code_example_good: Vertical scroll primary
+    code_example_bad: Horizontal swipe carousel only
+    severity: Medium
+  - id: "25"
+    category: Touch
+    issue: Tap Delay
+    platform: Mobile
+    description: 300ms tap delay feels laggy
+    do: Use touch-action CSS or fastclick
+    don_t: Default mobile tap handling
+    code_example_good: "touch-action: manipulation"
+    code_example_bad: No touch optimization
+    severity: Medium
+  - id: "26"
+    category: Touch
+    issue: Pull to Refresh
+    platform: Mobile
+    description: Accidental refresh is frustrating
+    do: Disable where not needed
+    don_t: Enable by default everywhere
+    code_example_good: "overscroll-behavior: contain"
+    code_example_bad: Default overscroll
+    severity: Low
+  - id: "27"
+    category: Touch
+    issue: Haptic Feedback
+    platform: Mobile
+    description: Tactile feedback improves interaction feel
+    do: Use for confirmations and important actions
+    don_t: Overuse vibration feedback
+    code_example_good: navigator.vibrate(10)
+    code_example_bad: Vibrate on every tap
+    severity: Low
+  - id: "28"
+    category: Interaction
+    issue: Focus States
+    platform: All
+    description: Keyboard users need visible focus indicators
+    do: Use visible focus rings on interactive elements
+    don_t: Remove focus outline without replacement
+    code_example_good: focus:ring-2 focus:ring-blue-500
+    code_example_bad: outline-none without alternative
+    severity: High
+  - id: "29"
+    category: Interaction
+    issue: Hover States
+    platform: Web
+    description: Visual feedback on interactive elements
+    do: Change cursor and add subtle visual change
+    don_t: No hover feedback on clickable elements
+    code_example_good: hover:bg-gray-100 cursor-pointer
+    code_example_bad: No hover style
+    severity: Medium
+  - id: "30"
+    category: Interaction
+    issue: Active States
+    platform: All
+    description: Show immediate feedback on press/click
+    do: Add pressed/active state visual change
+    don_t: No feedback during interaction
+    code_example_good: active:scale-95
+    code_example_bad: No active state
+    severity: Medium
+  - id: "31"
+    category: Interaction
+    issue: Disabled States
+    platform: All
+    description: Clearly indicate non-interactive elements
+    do: Reduce opacity and change cursor
+    don_t: Confuse disabled with normal state
+    code_example_good: opacity-50 cursor-not-allowed
+    code_example_bad: Same style as enabled
+    severity: Medium
+  - id: "32"
+    category: Interaction
+    issue: Loading Buttons
+    platform: All
+    description: Prevent double submission during async actions
+    do: Disable button and show loading state
+    don_t: Allow multiple clicks during processing
+    code_example_good: disabled={loading} spinner
+    code_example_bad: Button clickable while loading
+    severity: High
+  - id: "33"
+    category: Interaction
+    issue: Error Feedback
+    platform: All
+    description: Users need to know when something fails
+    do: Show clear error messages near problem
+    don_t: Silent failures with no feedback
+    code_example_good: Red border + error message
+    code_example_bad: No indication of error
+    severity: High
+  - id: "34"
+    category: Interaction
+    issue: Success Feedback
+    platform: All
+    description: Confirm successful actions to users
+    do: Show success message or visual change
+    don_t: No confirmation of completed action
+    code_example_good: Toast notification or checkmark
+    code_example_bad: Action completes silently
+    severity: Medium
+  - id: "35"
+    category: Interaction
+    issue: Confirmation Dialogs
+    platform: All
+    description: Prevent accidental destructive actions
+    do: Confirm before delete/irreversible actions
+    don_t: Delete without confirmation
+    code_example_good: Are you sure modal
+    code_example_bad: Direct delete on click
+    severity: High
+  - id: "36"
+    category: Accessibility
+    issue: Color Contrast
+    platform: All
+    description: Text must be readable against background
+    do: Minimum 4.5:1 ratio for normal text
+    don_t: Low contrast text
+    code_example_good: "#333 on white (7:1)"
+    code_example_bad: "#999 on white (2.8:1)"
+    severity: High
+  - id: "37"
+    category: Accessibility
+    issue: Color Only
+    platform: All
+    description: Don't convey information by color alone
+    do: Use icons/text in addition to color
+    don_t: Red/green only for error/success
+    code_example_good: Red text + error icon
+    code_example_bad: Red border only for error
+    severity: High
+  - id: "38"
+    category: Accessibility
+    issue: Alt Text
+    platform: All
+    description: Images need text alternatives
+    do: Descriptive alt text for meaningful images
+    don_t: Empty or missing alt attributes
+    code_example_good: alt='Dog playing in park'
+    code_example_bad: alt='' for content images
+    severity: High
+  - id: "39"
+    category: Accessibility
+    issue: Heading Hierarchy
+    platform: Web
+    description: Screen readers use headings for navigation
+    do: Use sequential heading levels h1-h6
+    don_t: Skip heading levels or misuse for styling
+    code_example_good: h1 then h2 then h3
+    code_example_bad: h1 then h4
+    severity: Medium
+  - id: "40"
+    category: Accessibility
+    issue: ARIA Labels
+    platform: All
+    description: Interactive elements need accessible names
+    do: Add aria-label for icon-only buttons
+    don_t: Icon buttons without labels
+    code_example_good: aria-label='Close menu'
+    code_example_bad: <button><Icon/></button>
+    severity: High
+  - id: "41"
+    category: Accessibility
+    issue: Keyboard Navigation
+    platform: Web
+    description: All functionality accessible via keyboard
+    do: Tab order matches visual order
+    don_t: Keyboard traps or illogical tab order
+    code_example_good: tabIndex for custom order
+    code_example_bad: Unreachable elements
+    severity: High
+  - id: "42"
+    category: Accessibility
+    issue: Screen Reader
+    platform: All
+    description: Content should make sense when read aloud
+    do: Use semantic HTML and ARIA properly
+    don_t: Div soup with no semantics
+    code_example_good: <nav> <main> <article>
+    code_example_bad: <div> for everything
+    severity: Medium
+  - id: "43"
+    category: Accessibility
+    issue: Form Labels
+    platform: All
+    description: Inputs must have associated labels
+    do: Use label with for attribute or wrap input
+    don_t: Placeholder-only inputs
+    code_example_good: <label for='email'>
+    code_example_bad: placeholder='Email' only
+    severity: High
+  - id: "44"
+    category: Accessibility
+    issue: Error Messages
+    platform: All
+    description: Error messages must be announced
+    do: Use aria-live or role=alert for errors
+    don_t: Visual-only error indication
+    code_example_good: role='alert'
+    code_example_bad: Red border only
+    severity: High
+  - id: "45"
+    category: Accessibility
+    issue: Skip Links
+    platform: Web
+    description: Allow keyboard users to skip navigation
+    do: Provide skip to main content link
+    don_t: No skip link on nav-heavy pages
+    code_example_good: Skip to main content link
+    code_example_bad: 100 tabs to reach content
+    severity: Medium
+  - id: "46"
+    category: Performance
+    issue: Image Optimization
+    platform: All
+    description: Large images slow page load
+    do: Use appropriate size and format (WebP)
+    don_t: Unoptimized full-size images
+    code_example_good: srcset with multiple sizes
+    code_example_bad: 4000px image for 400px display
+    severity: High
+  - id: "47"
+    category: Performance
+    issue: Lazy Loading
+    platform: All
+    description: Load content as needed
+    do: Lazy load below-fold images and content
+    don_t: Load everything upfront
+    code_example_good: loading='lazy'
+    code_example_bad: All images eager load
+    severity: Medium
+  - id: "48"
+    category: Performance
+    issue: Code Splitting
+    platform: Web
+    description: Large bundles slow initial load
+    do: Split code by route/feature
+    don_t: Single large bundle
+    code_example_good: dynamic import()
+    code_example_bad: All code in main bundle
+    severity: Medium
+  - id: "49"
+    category: Performance
+    issue: Caching
+    platform: Web
+    description: Repeat visits should be fast
+    do: Set appropriate cache headers
+    don_t: No caching strategy
+    code_example_good: Cache-Control headers
+    code_example_bad: Every request hits server
+    severity: Medium
+  - id: "50"
+    category: Performance
+    issue: Font Loading
+    platform: Web
+    description: Web fonts can block rendering
+    do: Use font-display swap or optional
+    don_t: Invisible text during font load
+    code_example_good: "font-display: swap"
+    code_example_bad: FOIT (Flash of Invisible Text)
+    severity: Medium
+  - id: "51"
+    category: Performance
+    issue: Third Party Scripts
+    platform: Web
+    description: External scripts can block rendering
+    do: Load non-critical scripts async/defer
+    don_t: Synchronous third-party scripts
+    code_example_good: async or defer attribute
+    code_example_bad: <script src='...'> in head
+    severity: Medium
+  - id: "52"
+    category: Performance
+    issue: Bundle Size
+    platform: Web
+    description: Large JavaScript slows interaction
+    do: Monitor and minimize bundle size
+    don_t: Ignore bundle size growth
+    code_example_good: Bundle analyzer
+    code_example_bad: No size monitoring
+    severity: Medium
+  - id: "53"
+    category: Performance
+    issue: Render Blocking
+    platform: Web
+    description: CSS/JS can block first paint
+    do: Inline critical CSS defer non-critical
+    don_t: Large blocking CSS files
+    code_example_good: Critical CSS inline
+    code_example_bad: All CSS in head
+    severity: Medium
+  - id: "54"
+    category: Forms
+    issue: Input Labels
+    platform: All
+    description: Every input needs a visible label
+    do: Always show label above or beside input
+    don_t: Placeholder as only label
+    code_example_good: <label>Email</label><input>
+    code_example_bad: placeholder='Email' only
+    severity: High
+  - id: "55"
+    category: Forms
+    issue: Error Placement
+    platform: All
+    description: Errors should appear near the problem
+    do: Show error below related input
+    don_t: Single error message at top of form
+    code_example_good: Error under each field
+    code_example_bad: All errors at form top
+    severity: Medium
+  - id: "56"
+    category: Forms
+    issue: Inline Validation
+    platform: All
+    description: Validate as user types or on blur
+    do: Validate on blur for most fields
+    don_t: Validate only on submit
+    code_example_good: onBlur validation
+    code_example_bad: Submit-only validation
+    severity: Medium
+  - id: "57"
+    category: Forms
+    issue: Input Types
+    platform: All
+    description: Use appropriate input types
+    do: Use email tel number url etc
+    don_t: Text input for everything
+    code_example_good: type='email'
+    code_example_bad: type='text' for email
+    severity: Medium
+  - id: "58"
+    category: Forms
+    issue: Autofill Support
+    platform: Web
+    description: Help browsers autofill correctly
+    do: Use autocomplete attribute properly
+    don_t: Block or ignore autofill
+    code_example_good: autocomplete='email'
+    code_example_bad: autocomplete='off' everywhere
+    severity: Medium
+  - id: "59"
+    category: Forms
+    issue: Required Indicators
+    platform: All
+    description: Mark required fields clearly
+    do: Use asterisk or (required) text
+    don_t: No indication of required fields
+    code_example_good: "* required indicator"
+    code_example_bad: Guess which are required
+    severity: Medium
+  - id: "60"
+    category: Forms
+    issue: Password Visibility
+    platform: All
+    description: Let users see password while typing
+    do: Toggle to show/hide password
+    don_t: No visibility toggle
+    code_example_good: Show/hide password button
+    code_example_bad: Password always hidden
+    severity: Medium
+  - id: "61"
+    category: Forms
+    issue: Submit Feedback
+    platform: All
+    description: Confirm form submission status
+    do: Show loading then success/error state
+    don_t: No feedback after submit
+    code_example_good: Loading -> Success message
+    code_example_bad: Button click with no response
+    severity: High
+  - id: "62"
+    category: Forms
+    issue: Input Affordance
+    platform: All
+    description: Inputs should look interactive
+    do: Use distinct input styling
+    don_t: Inputs that look like plain text
+    code_example_good: Border/background on inputs
+    code_example_bad: Borderless inputs
+    severity: Medium
+  - id: "63"
+    category: Forms
+    issue: Mobile Keyboards
+    platform: Mobile
+    description: Show appropriate keyboard for input type
+    do: Use inputmode attribute
+    don_t: Default keyboard for all inputs
+    code_example_good: inputmode='numeric'
+    code_example_bad: Text keyboard for numbers
+    severity: Medium
+  - id: "64"
+    category: Responsive
+    issue: Mobile First
+    platform: Web
+    description: Design for mobile then enhance for larger
+    do: Start with mobile styles then add breakpoints
+    don_t: Desktop-first causing mobile issues
+    code_example_good: "Default mobile + md: lg: xl:"
+    code_example_bad: Desktop default + max-width queries
+    severity: Medium
+  - id: "65"
+    category: Responsive
+    issue: Breakpoint Testing
+    platform: Web
+    description: Test at all common screen sizes
+    do: Test at 320 375 414 768 1024 1440
+    don_t: Only test on your device
+    code_example_good: Multiple device testing
+    code_example_bad: Single device development
+    severity: Medium
+  - id: "66"
+    category: Responsive
+    issue: Touch Friendly
+    platform: Web
+    description: Mobile layouts need touch-sized targets
+    do: Increase touch targets on mobile
+    don_t: Same tiny buttons on mobile
+    code_example_good: Larger buttons on mobile
+    code_example_bad: Desktop-sized targets on mobile
+    severity: High
+  - id: "67"
+    category: Responsive
+    issue: Readable Font Size
+    platform: All
+    description: Text must be readable on all devices
+    do: Minimum 16px body text on mobile
+    don_t: Tiny text on mobile
+    code_example_good: text-base or larger
+    code_example_bad: text-xs for body text
+    severity: High
+  - id: "68"
+    category: Responsive
+    issue: Viewport Meta
+    platform: Web
+    description: Set viewport for mobile devices
+    do: Use width=device-width initial-scale=1
+    don_t: Missing or incorrect viewport
+    code_example_good: <meta name='viewport'...>
+    code_example_bad: No viewport meta tag
+    severity: High
+  - id: "69"
+    category: Responsive
+    issue: Horizontal Scroll
+    platform: Web
+    description: Avoid horizontal scrolling
+    do: Ensure content fits viewport width
+    don_t: Content wider than viewport
+    code_example_good: max-w-full overflow-x-hidden
+    code_example_bad: Horizontal scrollbar on mobile
+    severity: High
+  - id: "70"
+    category: Responsive
+    issue: Image Scaling
+    platform: Web
+    description: Images should scale with container
+    do: "Use max-width: 100% on images"
+    don_t: Fixed width images overflow
+    code_example_good: max-w-full h-auto
+    code_example_bad: width='800' fixed
+    severity: Medium
+  - id: "71"
+    category: Responsive
+    issue: Table Handling
+    platform: Web
+    description: Tables can overflow on mobile
+    do: Use horizontal scroll or card layout
+    don_t: Wide tables breaking layout
+    code_example_good: overflow-x-auto wrapper
+    code_example_bad: Table overflows viewport
+    severity: Medium
+  - id: "72"
+    category: Typography
+    issue: Line Height
+    platform: All
+    description: Adequate line height improves readability
+    do: Use 1.5-1.75 for body text
+    don_t: Cramped or excessive line height
+    code_example_good: leading-relaxed (1.625)
+    code_example_bad: leading-none (1)
+    severity: Medium
+  - id: "73"
+    category: Typography
+    issue: Line Length
+    platform: Web
+    description: Long lines are hard to read
+    do: Limit to 65-75 characters per line
+    don_t: Full-width text on large screens
+    code_example_good: max-w-prose
+    code_example_bad: Full viewport width text
+    severity: Medium
+  - id: "74"
+    category: Typography
+    issue: Font Size Scale
+    platform: All
+    description: Consistent type hierarchy aids scanning
+    do: Use consistent modular scale
+    don_t: Random font sizes
+    code_example_good: Type scale (12 14 16 18 24 32)
+    code_example_bad: Arbitrary sizes
+    severity: Medium
+  - id: "75"
+    category: Typography
+    issue: Font Loading
+    platform: Web
+    description: Fonts should load without layout shift
+    do: Reserve space with fallback font
+    don_t: Layout shift when fonts load
+    code_example_good: "font-display: swap + similar fallback"
+    code_example_bad: No fallback font
+    severity: Medium
+  - id: "76"
+    category: Typography
+    issue: Contrast Readability
+    platform: All
+    description: Body text needs good contrast
+    do: Use darker text on light backgrounds
+    don_t: Gray text on gray background
+    code_example_good: text-gray-900 on white
+    code_example_bad: text-gray-400 on gray-100
+    severity: High
+  - id: "77"
+    category: Typography
+    issue: Heading Clarity
+    platform: All
+    description: Headings should stand out from body
+    do: Clear size/weight difference
+    don_t: Headings similar to body text
+    code_example_good: Bold + larger size
+    code_example_bad: Same size as body
+    severity: Medium
+  - id: "78"
+    category: Feedback
+    issue: Loading Indicators
+    platform: All
+    description: Show system status during waits
+    do: Show spinner/skeleton for operations > 300ms
+    don_t: No feedback during loading
+    code_example_good: Skeleton or spinner
+    code_example_bad: Frozen UI
+    severity: High
+  - id: "79"
+    category: Feedback
+    issue: Empty States
+    platform: All
+    description: Guide users when no content exists
+    do: Show helpful message and action
+    don_t: Blank empty screens
+    code_example_good: No items yet. Create one!
+    code_example_bad: Empty white space
+    severity: Medium
+  - id: "80"
+    category: Feedback
+    issue: Error Recovery
+    platform: All
+    description: Help users recover from errors
+    do: Provide clear next steps
+    don_t: Error without recovery path
+    code_example_good: Try again button + help link
+    code_example_bad: Error message only
+    severity: Medium
+  - id: "81"
+    category: Feedback
+    issue: Progress Indicators
+    platform: All
+    description: Show progress for multi-step processes
+    do: Step indicators or progress bar
+    don_t: No indication of progress
+    code_example_good: Step 2 of 4 indicator
+    code_example_bad: No step information
+    severity: Medium
+  - id: "82"
+    category: Feedback
+    issue: Toast Notifications
+    platform: All
+    description: Transient messages for non-critical info
+    do: Auto-dismiss after 3-5 seconds
+    don_t: Toasts that never disappear
+    code_example_good: Auto-dismiss toast
+    code_example_bad: Persistent toast
+    severity: Medium
+  - id: "83"
+    category: Feedback
+    issue: Confirmation Messages
+    platform: All
+    description: Confirm successful actions
+    do: Brief success message
+    don_t: Silent success
+    code_example_good: Saved successfully toast
+    code_example_bad: No confirmation
+    severity: Medium
+  - id: "84"
+    category: Content
+    issue: Truncation
+    platform: All
+    description: Handle long content gracefully
+    do: Truncate with ellipsis and expand option
+    don_t: Overflow or broken layout
+    code_example_good: line-clamp-2 with expand
+    code_example_bad: Overflow or cut off
+    severity: Medium
+  - id: "85"
+    category: Content
+    issue: Date Formatting
+    platform: All
+    description: Use locale-appropriate date formats
+    do: Use relative or locale-aware dates
+    don_t: Ambiguous date formats
+    code_example_good: 2 hours ago or locale format
+    code_example_bad: 01/02/03
+    severity: Low
+  - id: "86"
+    category: Content
+    issue: Number Formatting
+    platform: All
+    description: Format large numbers for readability
+    do: Use thousand separators or abbreviations
+    don_t: Long unformatted numbers
+    code_example_good: 1.2K or 1,234
+    code_example_bad: "1234567"
+    severity: Low
+  - id: "87"
+    category: Content
+    issue: Placeholder Content
+    platform: All
+    description: Show realistic placeholders during dev
+    do: Use realistic sample data
+    don_t: Lorem ipsum everywhere
+    code_example_good: Real sample content
+    code_example_bad: Lorem ipsum
+    severity: Low
+  - id: "88"
+    category: Onboarding
+    issue: User Freedom
+    platform: All
+    description: Users should be able to skip tutorials
+    do: Provide Skip and Back buttons
+    don_t: Force linear unskippable tour
+    code_example_good: Skip Tutorial button
+    code_example_bad: Locked overlay until finished
+    severity: Medium
+  - id: "89"
+    category: Search
+    issue: Autocomplete
+    platform: Web
+    description: Help users find results faster
+    do: Show predictions as user types
+    don_t: Require full type and enter
+    code_example_good: Debounced fetch + dropdown
+    code_example_bad: No suggestions
+    severity: Medium
+  - id: "90"
+    category: Search
+    issue: No Results
+    platform: Web
+    description: Dead ends frustrate users
+    do: Show 'No results' with suggestions
+    don_t: Blank screen or '0 results'
+    code_example_good: Try searching for X instead
+    code_example_bad: No results found.
+    severity: Medium
+  - id: "91"
+    category: Data Entry
+    issue: Bulk Actions
+    platform: Web
+    description: Editing one by one is tedious
+    do: Allow multi-select and bulk edit
+    don_t: Single row actions only
+    code_example_good: Checkbox column + Action bar
+    code_example_bad: Repeated actions per row
+    severity: Low
+  - id: "92"
+    category: AI Interaction
+    issue: Disclaimer
+    platform: All
+    description: Users need to know they talk to AI
+    do: Clearly label AI generated content
+    don_t: Present AI as human
+    code_example_good: AI Assistant label
+    code_example_bad: Fake human name without label
+    severity: High
+  - id: "93"
+    category: AI Interaction
+    issue: Streaming
+    platform: All
+    description: Waiting for full text is slow
+    do: Stream text response token by token
+    don_t: Show loading spinner for 10s+
+    code_example_good: Typewriter effect
+    code_example_bad: Spinner until 100% complete
+    severity: Medium
+  - id: "94"
+    category: Spatial UI
+    issue: Gaze Hover
+    platform: VisionOS
+    description: Elements should respond to eye tracking before pinch
+    do: Scale/highlight element on look
+    don_t: Static element until pinch
+    code_example_good: hoverEffect()
+    code_example_bad: onTap only
+    severity: High
+  - id: "95"
+    category: Spatial UI
+    issue: Depth Layering
+    platform: VisionOS
+    description: UI needs Z-depth to separate content from environment
+    do: Use glass material and z-offset
+    don_t: Flat opaque panels blocking view
+    code_example_good: .glassBackgroundEffect()
+    code_example_bad: bg-white
+    severity: Medium
+  - id: "96"
+    category: Sustainability
+    issue: Auto-Play Video
+    platform: Web
+    description: Video consumes massive data and energy
+    do: Click-to-play or pause when off-screen
+    don_t: Auto-play high-res video loops
+    code_example_good: playsInline muted preload='none'
+    code_example_bad: autoplay loop
+    severity: Medium
+  - id: "97"
+    category: Sustainability
+    issue: Asset Weight
+    platform: Web
+    description: Heavy 3D/Image assets increase carbon footprint
+    do: Compress and lazy load 3D models
+    don_t: Load 50MB textures
+    code_example_good: Draco compression
+    code_example_bad: Raw .obj files
+    severity: Medium
+  - id: "98"
+    category: AI Interaction
+    issue: Feedback Loop
+    platform: All
+    description: AI needs user feedback to improve
+    do: Thumps up/down or 'Regenerate'
+    don_t: Static output only
+    code_example_good: Feedback component
+    code_example_bad: Read-only text
+    severity: Low
+  - id: "99"
+    category: Accessibility
+    issue: Motion Sensitivity
+    platform: All
+    description: Parallax/Scroll-jacking causes nausea
+    do: Respect prefers-reduced-motion
+    don_t: Force scroll effects
+    code_example_good: "@media (prefers-reduced-motion)"
+    code_example_bad: ScrollTrigger.create()
+    severity: High

@@ -1,0 +1,495 @@
+# =============================================================================
+# Kotlin Android/Compose Patterns (Feb 2026)
+# Version: Jetpack Compose 1.6+
+# =============================================================================
+
+metadata:
+  skill: kotlin
+  domain: android
+  version: "1.6"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: kt101
+    name: Jetpack Compose Basics
+    category: ui
+    version: "Compose1.6"
+    description: |
+      Declarative UI with Compose.
+      Composables, state, modifiers.
+    text: compose composable state modifier remember ui
+    example: |
+      import androidx.compose.runtime.*
+      import androidx.compose.material3.*
+      import androidx.compose.foundation.layout.*
+      import androidx.compose.ui.Modifier
+
+      // ✅ Basic Composable
+      @Composable
+      fun Greeting(name: String, modifier: Modifier = Modifier) {
+          Text(
+              text = "Hello $name!",
+              modifier = modifier.padding(16.dp),
+              style = MaterialTheme.typography.headlineMedium
+          )
+      }
+
+      // ✅ State management
+      @Composable
+      fun Counter() {
+          var count by remember { mutableStateOf(0) }
+          
+          Column(
+              horizontalAlignment = Alignment.CenterHorizontally,
+              modifier = Modifier.padding(16.dp)
+          ) {
+              Text("Count: $count")
+              Spacer(modifier = Modifier.height(8.dp))
+              Button(onClick = { count++ }) {
+                  Text("Increment")
+              }
+          }
+      }
+
+      // ✅ State hoisting
+      @Composable
+      fun CounterStateless(
+          count: Int,
+          onIncrement: () -> Unit,
+          modifier: Modifier = Modifier
+      ) {
+          Button(onClick = onIncrement, modifier = modifier) {
+              Text("Count: $count")
+          }
+      }
+
+      @Composable
+      fun CounterScreen() {
+          var count by rememberSaveable { mutableStateOf(0) }
+          CounterStateless(
+              count = count,
+              onIncrement = { count++ }
+          )
+      }
+
+      // ✅ List with LazyColumn
+      @Composable
+      fun UserList(users: List<User>) {
+          LazyColumn(
+              contentPadding = PaddingValues(16.dp),
+              verticalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+              items(users, key = { it.id }) { user ->
+                  UserCard(user)
+              }
+          }
+      }
+
+      // ✅ Modifiers
+      @Composable
+      fun StyledCard() {
+          Card(
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(16.dp)
+                  .clickable { /* handle click */ }
+                  .shadow(4.dp, RoundedCornerShape(8.dp))
+          ) {
+              Text("Content", modifier = Modifier.padding(16.dp))
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.android.com/jetpack/compose
+
+  - id: kt102
+    name: Compose Navigation
+    category: navigation
+    version: "Navigation2.7"
+    description: |
+      Type-safe navigation with NavHost.
+      Arguments, deep links, nested graphs.
+    text: navigation navhost navcontroller route type-safe
+    example: |
+      import androidx.navigation.compose.*
+      import kotlinx.serialization.Serializable
+
+      // ✅ Type-safe routes (Compose Navigation 2.8+)
+      @Serializable
+      sealed class Screen {
+          @Serializable
+          data object Home : Screen()
+          
+          @Serializable
+          data class Profile(val userId: String) : Screen()
+          
+          @Serializable
+          data class Settings(val tab: Int = 0) : Screen()
+      }
+
+      // ✅ NavHost setup
+      @Composable
+      fun AppNavigation() {
+          val navController = rememberNavController()
+          
+          NavHost(
+              navController = navController,
+              startDestination = Screen.Home
+          ) {
+              composable<Screen.Home> {
+                  HomeScreen(
+                      onProfileClick = { userId ->
+                          navController.navigate(Screen.Profile(userId))
+                      }
+                  )
+              }
+              
+              composable<Screen.Profile> { backStackEntry ->
+                  val profile: Screen.Profile = backStackEntry.toRoute()
+                  ProfileScreen(userId = profile.userId)
+              }
+              
+              composable<Screen.Settings> { backStackEntry ->
+                  val settings: Screen.Settings = backStackEntry.toRoute()
+                  SettingsScreen(initialTab = settings.tab)
+              }
+          }
+      }
+
+      // ✅ Navigate with popBackStack
+      fun NavController.navigateToProfile(userId: String) {
+          navigate(Screen.Profile(userId)) {
+              popUpTo(Screen.Home) { inclusive = false }
+              launchSingleTop = true
+          }
+      }
+
+      // ✅ Bottom navigation
+      @Composable
+      fun MainScreen() {
+          val navController = rememberNavController()
+          
+          Scaffold(
+              bottomBar = {
+                  NavigationBar {
+                      NavigationBarItem(
+                          selected = currentRoute == "home",
+                          onClick = { navController.navigate(Screen.Home) },
+                          icon = { Icon(Icons.Default.Home, "Home") },
+                          label = { Text("Home") }
+                      )
+                      // More items...
+                  }
+              }
+          ) { padding ->
+              NavHost(
+                  navController = navController,
+                  startDestination = Screen.Home,
+                  modifier = Modifier.padding(padding)
+              ) {
+                  // Destinations
+              }
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.android.com/guide/navigation/compose
+
+  - id: kt103
+    name: ViewModel with Compose
+    category: architecture
+    version: "Lifecycle2.7"
+    description: |
+      State management with ViewModel.
+      StateFlow, collectAsState.
+    text: viewmodel stateflow collectasstate lifecycle mvvm
+    example: |
+      import androidx.lifecycle.ViewModel
+      import androidx.lifecycle.viewModelScope
+      import kotlinx.coroutines.flow.*
+      import kotlinx.coroutines.launch
+
+      // ✅ ViewModel with StateFlow
+      class UsersViewModel(
+          private val repository: UserRepository
+      ) : ViewModel() {
+          
+          private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+          val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+          
+          init {
+              loadUsers()
+          }
+          
+          fun loadUsers() {
+              viewModelScope.launch {
+                  _uiState.value = UiState.Loading
+                  try {
+                      val users = repository.getUsers()
+                      _uiState.value = UiState.Success(users)
+                  } catch (e: Exception) {
+                      _uiState.value = UiState.Error(e.message ?: "Unknown error")
+                  }
+              }
+          }
+          
+          fun deleteUser(id: String) {
+              viewModelScope.launch {
+                  repository.deleteUser(id)
+                  loadUsers()  // Refresh
+              }
+          }
+      }
+
+      sealed class UiState {
+          object Loading : UiState()
+          data class Success(val users: List<User>) : UiState()
+          data class Error(val message: String) : UiState()
+      }
+
+      // ✅ Composable with ViewModel
+      @Composable
+      fun UsersScreen(
+          viewModel: UsersViewModel = hiltViewModel()
+      ) {
+          val uiState by viewModel.uiState.collectAsState()
+          
+          when (val state = uiState) {
+              is UiState.Loading -> LoadingIndicator()
+              is UiState.Success -> UserList(
+                  users = state.users,
+                  onDelete = viewModel::deleteUser
+              )
+              is UiState.Error -> ErrorMessage(
+                  message = state.message,
+                  onRetry = viewModel::loadUsers
+              )
+          }
+      }
+
+      // ✅ One-time events
+      class LoginViewModel : ViewModel() {
+          private val _events = MutableSharedFlow<LoginEvent>()
+          val events = _events.asSharedFlow()
+          
+          fun login(email: String, password: String) {
+              viewModelScope.launch {
+                  try {
+                      repository.login(email, password)
+                      _events.emit(LoginEvent.Success)
+                  } catch (e: Exception) {
+                      _events.emit(LoginEvent.Error(e.message))
+                  }
+              }
+          }
+      }
+
+      @Composable
+      fun LoginScreen(viewModel: LoginViewModel, onSuccess: () -> Unit) {
+          LaunchedEffect(Unit) {
+              viewModel.events.collect { event ->
+                  when (event) {
+                      is LoginEvent.Success -> onSuccess()
+                      is LoginEvent.Error -> showSnackbar(event.message)
+                  }
+              }
+          }
+      }
+    severity: HIGH
+    docs_url: https://developer.android.com/topic/libraries/architecture/viewmodel
+
+  - id: kt104
+    name: Hilt Dependency Injection
+    category: di
+    version: "Hilt2.51"
+    description: |
+      Compile-time DI for Android.
+      Modules, ViewModels, scopes.
+    text: hilt inject module viewmodel provides dependency
+    example: |
+      import dagger.hilt.android.HiltAndroidApp
+      import dagger.hilt.android.lifecycle.HiltViewModel
+      import dagger.hilt.components.SingletonComponent
+      import javax.inject.Inject
+      import javax.inject.Singleton
+
+      // ✅ Application setup
+      @HiltAndroidApp
+      class MyApplication : Application()
+
+      // ✅ Activity/Fragment
+      @AndroidEntryPoint
+      class MainActivity : ComponentActivity() {
+          @Inject
+          lateinit var analytics: Analytics
+      }
+
+      // ✅ ViewModel with injection
+      @HiltViewModel
+      class UserViewModel @Inject constructor(
+          private val userRepository: UserRepository,
+          private val savedStateHandle: SavedStateHandle
+      ) : ViewModel() {
+          private val userId: String = savedStateHandle.get<String>("userId")!!
+      }
+
+      // ✅ Module with bindings
+      @Module
+      @InstallIn(SingletonComponent::class)
+      abstract class RepositoryModule {
+          
+          @Binds
+          @Singleton
+          abstract fun bindUserRepository(
+              impl: UserRepositoryImpl
+          ): UserRepository
+      }
+
+      // ✅ Module with provides
+      @Module
+      @InstallIn(SingletonComponent::class)
+      object NetworkModule {
+          
+          @Provides
+          @Singleton
+          fun provideRetrofit(): Retrofit {
+              return Retrofit.Builder()
+                  .baseUrl(BASE_URL)
+                  .addConverterFactory(MoshiConverterFactory.create())
+                  .build()
+          }
+          
+          @Provides
+          @Singleton
+          fun provideApiService(retrofit: Retrofit): ApiService {
+              return retrofit.create(ApiService::class.java)
+          }
+      }
+
+      // ✅ Scopes
+      @ViewModelScoped
+      class UserSession @Inject constructor()
+
+      @ActivityRetainedScoped
+      class AnalyticsTracker @Inject constructor()
+
+      // ✅ Qualifiers
+      @Qualifier
+      @Retention(AnnotationRetention.BINARY)
+      annotation class IoDispatcher
+
+      @Module
+      @InstallIn(SingletonComponent::class)
+      object DispatcherModule {
+          @Provides
+          @IoDispatcher
+          fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+      }
+    severity: MEDIUM
+    docs_url: https://developer.android.com/training/dependency-injection/hilt-android
+
+  - id: kt105
+    name: Room Database
+    category: data
+    version: "Room2.6"
+    description: |
+      SQLite abstraction with Room.
+      Entities, DAOs, relations, migrations.
+    text: room database dao entity flow migration
+    example: |
+      import androidx.room.*
+      import kotlinx.coroutines.flow.Flow
+
+      // ✅ Entity
+      @Entity(tableName = "users")
+      data class UserEntity(
+          @PrimaryKey(autoGenerate = true)
+          val id: Long = 0,
+          
+          @ColumnInfo(name = "full_name")
+          val name: String,
+          
+          val email: String,
+          
+          @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
+          val createdAt: Long = System.currentTimeMillis()
+      )
+
+      // ✅ DAO
+      @Dao
+      interface UserDao {
+          @Query("SELECT * FROM users ORDER BY created_at DESC")
+          fun getAllUsers(): Flow<List<UserEntity>>
+          
+          @Query("SELECT * FROM users WHERE id = :id")
+          suspend fun getUserById(id: Long): UserEntity?
+          
+          @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
+          suspend fun findByEmail(email: String): UserEntity?
+          
+          @Insert(onConflict = OnConflictStrategy.REPLACE)
+          suspend fun insert(user: UserEntity): Long
+          
+          @Update
+          suspend fun update(user: UserEntity)
+          
+          @Delete
+          suspend fun delete(user: UserEntity)
+          
+          @Query("DELETE FROM users")
+          suspend fun deleteAll()
+          
+          @Transaction
+          suspend fun replaceAll(users: List<UserEntity>) {
+              deleteAll()
+              users.forEach { insert(it) }
+          }
+      }
+
+      // ✅ Database
+      @Database(
+          entities = [UserEntity::class, OrderEntity::class],
+          version = 2,
+          exportSchema = true
+      )
+      @TypeConverters(Converters::class)
+      abstract class AppDatabase : RoomDatabase() {
+          abstract fun userDao(): UserDao
+          abstract fun orderDao(): OrderDao
+      }
+
+      // ✅ Type converters
+      class Converters {
+          @TypeConverter
+          fun fromTimestamp(value: Long?): Date? = value?.let { Date(it) }
+          
+          @TypeConverter
+          fun dateToTimestamp(date: Date?): Long? = date?.time
+      }
+
+      // ✅ Migration
+      val MIGRATION_1_2 = object : Migration(1, 2) {
+          override fun migrate(database: SupportSQLiteDatabase) {
+              database.execSQL(
+                  "ALTER TABLE users ADD COLUMN created_at INTEGER DEFAULT 0"
+              )
+          }
+      }
+
+      // ✅ Database builder
+      @Module
+      @InstallIn(SingletonComponent::class)
+      object DatabaseModule {
+          @Provides
+          @Singleton
+          fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+              return Room.databaseBuilder(
+                  context,
+                  AppDatabase::class.java,
+                  "app.db"
+              )
+              .addMigrations(MIGRATION_1_2)
+              .build()
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://developer.android.com/training/data-storage/room

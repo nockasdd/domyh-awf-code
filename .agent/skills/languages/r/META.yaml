@@ -1,63 +1,12 @@
 name: r
-version: "6.1.2"
+version: "6.2.1"
 category: data
-tier: 2
+tier: 3
 
-description: |
-  R development patterns for R 4.4+.
-  Covers Tidyverse, ggplot2, Shiny, statistical modeling.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.R"
-    - "*.Rmd"
-    - "*.qmd"
-    - "DESCRIPTION"
-    - ".Rproj"
-    - "renv.lock"
-  keywords:
-    # Core
-    - r programming
-    - r language
-    - r 4.4
-    - rstats
-    - cran
-    - renv
-    # Tidyverse
-    - tidyverse
-    - dplyr
-    - ggplot2
-    - tidyr
-    - purrr
-    - readr
-    - stringr
-    - lubridate
-    # Shiny
-    - shiny
-    - shiny app
-    - shinydashboard
-    - golem
-    # Data
-    - data.table
-    - data frame
-    - tibble
-    # ML
-    - caret
-    - mlr3
-    - tidymodels
-    # Stats
-    - regression
-    - anova
-    - hypothesis test
-    # Viz
-    - ggplot
-    - plotly r
-    - leaflet r
-  intents:
-    - create r project
-    - data analysis r
-    - statistical analysis
-    - shiny dashboard
+desc: "R development patterns for R 4.4+. Covers Tidyverse, ggplot2, Shiny, statistical modeling."
 
 related_skills:
   - python

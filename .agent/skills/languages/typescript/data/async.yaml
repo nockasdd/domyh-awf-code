@@ -1,0 +1,397 @@
+# =============================================================================
+# TypeScript Async Patterns (Feb 2026)
+# Version: TypeScript 5.8/ES2025
+# =============================================================================
+
+metadata:
+  skill: typescript
+  domain: async
+  version: "5.8"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: ts201
+    name: Promise Utilities
+    category: async
+    version: "ES2020+"
+    description: |
+      Modern Promise utilities and patterns.
+      allSettled, any, withResolvers.
+    text: promise all settled any withResolvers concurrent
+    example: |
+      // ✅ Promise.allSettled - all results, no short-circuit
+      async function fetchAllUsers(ids: number[]): Promise<Map<number, User | Error>> {
+        const results = await Promise.allSettled(
+          ids.map(id => fetchUser(id))
+        );
+        
+        return new Map(
+          results.map((result, i) => [
+            ids[i],
+            result.status === 'fulfilled' ? result.value : result.reason,
+          ])
+        );
+      }
+
+      // ✅ Promise.any - first success wins
+      async function fetchFromMirrors(url: string): Promise<Response> {
+        const mirrors = [
+          `https://mirror1.example.com${url}`,
+          `https://mirror2.example.com${url}`,
+          `https://mirror3.example.com${url}`,
+        ];
+        
+        try {
+          return await Promise.any(mirrors.map(fetch));
+        } catch (error) {
+          if (error instanceof AggregateError) {
+            console.error('All mirrors failed:', error.errors);
+          }
+          throw error;
+        }
+      }
+
+      // ✅ Promise.withResolvers (ES2024)
+      function createDeferred<T>() {
+        const { promise, resolve, reject } = Promise.withResolvers<T>();
+        return { promise, resolve, reject };
+      }
+
+      // Usage: External control over promise
+      const deferred = createDeferred<string>();
+
+      setTimeout(() => deferred.resolve('done'), 1000);
+
+      // Or in event handler
+      button.onclick = () => deferred.resolve('clicked');
+
+      const result = await deferred.promise;
+
+      // ✅ Parallel with limit
+      async function parallelLimit<T, R>(
+        items: T[],
+        limit: number,
+        fn: (item: T) => Promise<R>
+      ): Promise<R[]> {
+        const results: R[] = [];
+        const executing: Promise<void>[] = [];
+        
+        for (const item of items) {
+          const p = fn(item).then(result => {
+            results.push(result);
+          });
+          executing.push(p);
+          
+          if (executing.length >= limit) {
+            await Promise.race(executing);
+            executing.splice(executing.findIndex(p => p), 1);
+          }
+        }
+        
+        await Promise.all(executing);
+        return results;
+      }
+    severity: HIGH
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+  - id: ts202
+    name: Result Pattern
+    category: error-handling
+    version: "TypeScript 4.0+"
+    description: |
+      Functional error handling without exceptions.
+      Inspired by Rust Result type.
+    text: result pattern error handling either ok err
+    example: |
+      // ✅ Result type definition
+      type Result<T, E = Error> =
+        | { ok: true; value: T }
+        | { ok: false; error: E };
+
+      // Helper functions
+      function Ok<T>(value: T): Result<T, never> {
+        return { ok: true, value };
+      }
+
+      function Err<E>(error: E): Result<never, E> {
+        return { ok: false, error };
+      }
+
+      // ✅ Usage in functions
+      async function fetchUser(id: number): Promise<Result<User, ApiError>> {
+        try {
+          const response = await fetch(`/api/users/${id}`);
+          
+          if (!response.ok) {
+            return Err({
+              code: response.status,
+              message: `User ${id} not found`,
+            });
+          }
+          
+          const user = await response.json();
+          return Ok(user);
+        } catch (error) {
+          return Err({
+            code: 500,
+            message: error instanceof Error ? error.message : 'Unknown error',
+          });
+        }
+      }
+
+      // ✅ Consuming Result
+      async function getUserName(id: number): Promise<string> {
+        const result = await fetchUser(id);
+        
+        if (!result.ok) {
+          console.error(`Error ${result.error.code}: ${result.error.message}`);
+          return 'Unknown User';
+        }
+        
+        return result.value.name;
+      }
+
+      // ✅ Chaining Results
+      function map<T, U, E>(result: Result<T, E>, fn: (value: T) => U): Result<U, E> {
+        return result.ok ? Ok(fn(result.value)) : result;
+      }
+
+      function flatMap<T, U, E>(
+        result: Result<T, E>,
+        fn: (value: T) => Result<U, E>
+      ): Result<U, E> {
+        return result.ok ? fn(result.value) : result;
+      }
+
+      // Usage
+      const nameResult = map(await fetchUser(1), user => user.name);
+    severity: MEDIUM
+    docs_url: https://www.typescriptlang.org/docs/handbook/2/narrowing.html
+
+  - id: ts203
+    name: AbortController Pattern
+    category: cancellation
+    version: "ES2017+"
+    description: |
+      Cancel async operations with AbortController.
+      Timeout, user cancellation, cleanup.
+    text: abort controller cancel timeout signal cleanup
+    example: |
+      // ✅ Basic AbortController usage
+      async function fetchWithTimeout(
+        url: string,
+        timeoutMs: number
+      ): Promise<Response> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          return response;
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      }
+
+      // ✅ User cancellation
+      function createCancellableRequest() {
+        const controller = new AbortController();
+        
+        const request = async (url: string) => {
+          const response = await fetch(url, { signal: controller.signal });
+          return response.json();
+        };
+        
+        const cancel = () => controller.abort();
+        
+        return { request, cancel };
+      }
+
+      // Usage
+      const { request, cancel } = createCancellableRequest();
+      button.onclick = cancel; // Cancel on button click
+      const data = await request('/api/data');
+
+      // ✅ AbortSignal.timeout (modern)
+      async function fetchWithModernTimeout(url: string): Promise<Response> {
+        return fetch(url, { signal: AbortSignal.timeout(5000) });
+      }
+
+      // ✅ Combine multiple signals
+      function combineSignals(...signals: AbortSignal[]): AbortSignal {
+        const controller = new AbortController();
+        
+        for (const signal of signals) {
+          if (signal.aborted) {
+            controller.abort(signal.reason);
+            break;
+          }
+          signal.addEventListener('abort', () => {
+            controller.abort(signal.reason);
+          });
+        }
+        
+        return controller.signal;
+      }
+
+      // Usage: timeout + user cancellation
+      const userController = new AbortController();
+      const combined = combineSignals(
+        userController.signal,
+        AbortSignal.timeout(30000)
+      );
+
+      await fetch(url, { signal: combined });
+    severity: HIGH
+    docs_url: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+
+  - id: ts204
+    name: Iterator Helpers (ES2025)
+    category: iteration
+    version: "ES2025"
+    description: |
+      Built-in iterator helper methods.
+      map, filter, take, drop, flatMap on iterators.
+    text: iterator helpers map filter take drop flatMap
+    example: |
+      // ✅ Iterator helpers (ES2025)
+      // Available on all iterators, not just arrays
+
+      function* numbers() {
+        let i = 0;
+        while (true) yield i++;
+      }
+
+      // Chain operations lazily
+      const result = numbers()
+        .filter(n => n % 2 === 0)  // Even numbers
+        .map(n => n * 2)           // Double them
+        .take(5)                    // First 5
+        .toArray();                 // Materialize
+
+      console.log(result); // [0, 4, 8, 12, 16]
+
+      // ✅ Available methods
+      const iter = [1, 2, 3, 4, 5].values();
+
+      iter.map(x => x * 2);        // Transform each element
+      iter.filter(x => x > 2);     // Keep matching elements
+      iter.take(3);                // First n elements
+      iter.drop(2);                // Skip first n elements
+      iter.flatMap(x => [x, x]);   // Map and flatten
+      iter.reduce((a, b) => a + b);// Reduce to single value
+      iter.toArray();              // Convert to array
+      iter.forEach(console.log);   // Side effect each element
+      iter.some(x => x > 3);       // Any match?
+      iter.every(x => x > 0);      // All match?
+      iter.find(x => x === 3);     // First match
+
+      // ✅ Lazy evaluation benefit
+      function* infiniteUsers() {
+        let id = 0;
+        while (true) {
+          yield fetchUserSync(id++);
+        }
+      }
+
+      // Only fetches 10 active users, not all
+      const activeUsers = infiniteUsers()
+        .filter(user => user.active)
+        .take(10)
+        .toArray();
+
+      // ✅ Working with async iterators
+      async function* fetchPages(url: string) {
+        let page = 1;
+        while (true) {
+          const data = await fetch(`${url}?page=${page++}`).then(r => r.json());
+          if (!data.items.length) break;
+          yield* data.items;
+        }
+      }
+
+      // Async iterator helpers (proposal)
+      for await (const item of fetchPages('/api/items')) {
+        process(item);
+      }
+    severity: MEDIUM
+    docs_url: https://github.com/tc39/proposal-iterator-helpers
+
+  - id: ts205
+    name: Explicit Resource Management
+    category: cleanup
+    version: "ES2025/TS 5.2+"
+    description: |
+      using declaration for automatic cleanup.
+      RAII pattern in JavaScript/TypeScript.
+    text: using declaration dispose asyncDispose cleanup RAII
+    example: |
+      // ✅ using declaration (ES2025 / TS 5.2+)
+      // Automatically calls Symbol.dispose when scope exits
+
+      class FileHandle {
+        constructor(public path: string) {
+          console.log(`Opening ${path}`);
+        }
+        
+        read(): string {
+          return 'file contents';
+        }
+        
+        [Symbol.dispose](): void {
+          console.log(`Closing ${this.path}`);
+        }
+      }
+
+      function processFile(path: string): string {
+        using file = new FileHandle(path);
+        return file.read();
+        // file automatically closed here
+      }
+
+      // ✅ Async disposal
+      class DatabaseConnection {
+        async execute(sql: string): Promise<any> {
+          // ...
+        }
+        
+        async [Symbol.asyncDispose](): Promise<void> {
+          console.log('Closing database connection');
+          await this.execute('COMMIT');
+        }
+      }
+
+      async function queryDatabase() {
+        await using db = await getConnection();
+        const result = await db.execute('SELECT * FROM users');
+        return result;
+        // Connection automatically closed
+      }
+
+      // ✅ Multiple resources
+      async function copyFile(src: string, dest: string) {
+        await using srcFile = await openFile(src, 'r');
+        await using destFile = await openFile(dest, 'w');
+        
+        const content = await srcFile.read();
+        await destFile.write(content);
+        // Both files closed in reverse order
+      }
+
+      // ✅ DisposableStack for dynamic resources
+      async function processMultiple(paths: string[]) {
+        await using stack = new AsyncDisposableStack();
+        
+        const files = paths.map(path => {
+          const file = new FileHandle(path);
+          stack.use(file); // Track for disposal
+          return file;
+        });
+        
+        // Process files...
+        
+        // All files closed when stack disposes
+      }
+    severity: HIGH
+    docs_url: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management

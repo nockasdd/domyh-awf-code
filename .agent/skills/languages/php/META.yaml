@@ -1,75 +1,13 @@
 name: php
-version: "6.1.2"
-category: backend
-tier: 1
+version: "6.2.1"
+category: languages
+tier: 3
 
-description: |
-  Modern PHP development patterns for PHP 8.3/8.4.
-  Covers Laravel 12, Symfony 8, Property Hooks, strict types.
+domains:
+  core: 5
+  laravel: 5
 
-triggers:
-  file_patterns:
-    - "composer.json"
-    - "*.php"
-    - "artisan"
-    - "symfony.lock"
-  keywords:
-    # Core
-    - php
-    - php 8
-    - php 8.3
-    - php 8.4
-    - composer
-    - autoload
-    # Laravel
-    - laravel
-    - artisan
-    - eloquent
-    - blade
-    - livewire
-    - inertia
-    - laravel octane
-    - laravel pulse
-    # Symfony
-    - symfony
-    - doctrine
-    - twig
-    - symfony console
-    # Features
-    - property hooks
-    - asymmetric visibility
-    - readonly class
-    - enum php
-    - match expression
-    - constructor promotion
-    - attributes php
-    - strict_types
-    # ORM
-    - eloquent model
-    - eloquent relation
-    - query builder
-    - migration php
-    # Testing
-    - phpunit
-    - pest php
-    - pest test
-    # Quality
-    - phpstan
-    - rector
-    - pint
-    - larastan
-    - psalm
-    # Patterns
-    - service container
-    - dependency injection
-    - middleware php
-    - form request
-  intents:
-    - create laravel app
-    - php migration
-    - eloquent query
-    - laravel api
-    - symfony project
+desc: "Modern PHP development patterns for PHP 8.3/8.4. Covers Laravel 12, Symfony 8, Property Hooks, strict types."
 
 related_skills:
   - database

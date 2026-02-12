@@ -1,0 +1,135 @@
+metadata:
+  skill: authentication
+  domain: anti_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: anti-patterns.yaml
+  patterns_count: 15
+  columns:
+    - id
+    - pattern_name
+    - description
+    - risk_level
+    - impact
+    - keywords
+patterns:
+  - id: ANTI-001
+    pattern_name: Storing JWT in localStorage
+    description: XSS can steal tokens from localStorage
+    risk_level: critical
+    impact: Token theft
+    keywords:
+      - localstorage
+      - xss
+  - id: ANTI-002
+    pattern_name: Long-lived Access Tokens
+    description: Hours or days expiry increases theft risk
+    risk_level: high
+    impact: Extended access
+    keywords:
+      - longlife
+      - expiry
+  - id: ANTI-003
+    pattern_name: Hardcoded Secrets
+    description: API keys in source code
+    risk_level: critical
+    impact: Credential leak
+    keywords:
+      - hardcoded
+      - secrets
+  - id: ANTI-004
+    pattern_name: MD5 Password Hash
+    description: Trivially crackable hash algorithm
+    risk_level: critical
+    impact: Password exposure
+    keywords:
+      - md5
+      - weak
+  - id: ANTI-005
+    pattern_name: SHA1 Password Hash
+    description: Rainbow table vulnerable
+    risk_level: critical
+    impact: Password exposure
+    keywords:
+      - sha1
+      - rainbow
+  - id: ANTI-006
+    pattern_name: No Salt in Hashing
+    description: Same password same hash
+    risk_level: critical
+    impact: Bulk cracking
+    keywords:
+      - nosalt
+      - hash
+  - id: ANTI-007
+    pattern_name: No Token Rotation
+    description: Refresh tokens never change
+    risk_level: high
+    impact: Session hijack
+    keywords:
+      - norotation
+      - refresh
+  - id: ANTI-008
+    pattern_name: Algorithm None Attack
+    description: Accepting unsigned JWT
+    risk_level: critical
+    impact: Bypass auth
+    keywords:
+      - none
+      - unsigned
+  - id: ANTI-009
+    pattern_name: Weak JWT Secret
+    description: Short or predictable secret
+    risk_level: critical
+    impact: Signature forge
+    keywords:
+      - weak
+      - secret
+  - id: ANTI-010
+    pattern_name: Session Fixation
+    description: Not regenerating session ID
+    risk_level: high
+    impact: Hijacking
+    keywords:
+      - fixation
+      - session
+  - id: ANTI-011
+    pattern_name: Verbose Error Messages
+    description: Revealing user exists or not
+    risk_level: medium
+    impact: Enumeration
+    keywords:
+      - verbose
+      - enumeration
+  - id: ANTI-012
+    pattern_name: No Rate Limiting
+    description: Unlimited login attempts
+    risk_level: high
+    impact: Brute force
+    keywords:
+      - noratelimit
+      - brute
+  - id: ANTI-013
+    pattern_name: Token in URL
+    description: JWT in query parameter
+    risk_level: high
+    impact: Log exposure
+    keywords:
+      - url
+      - querystring
+  - id: ANTI-014
+    pattern_name: Missing HTTPS
+    description: Transmitting tokens over HTTP
+    risk_level: critical
+    impact: Interception
+    keywords:
+      - http
+      - plaintext
+  - id: ANTI-015
+    pattern_name: Trusting Client Claims
+    description: Using unverified JWT claims
+    risk_level: critical
+    impact: Privilege escalation
+    keywords:
+      - trust
+      - unverified

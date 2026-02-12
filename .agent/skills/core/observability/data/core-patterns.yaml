@@ -1,0 +1,195 @@
+metadata:
+  skill: observability
+  domain: core_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: core-patterns.yaml
+  patterns_count: 30
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: OBS-001
+    name: Three Pillars
+    category: Core
+    description: Observability = Metrics + Logs + Traces
+    example: Collect all three for full system insight
+    level: beginner
+  - id: OBS-002
+    name: SLI Definition
+    category: Core
+    description: Service Level Indicator - measurable metric
+    example: Request latency p99 < 200ms
+    level: intermediate
+  - id: OBS-003
+    name: SLO Definition
+    category: Core
+    description: Service Level Objective - target for SLI
+    example: 99.9% of requests complete < 200ms
+    level: intermediate
+  - id: OBS-004
+    name: Error Budget
+    category: Core
+    description: Allowed failure rate from SLO
+    example: 100% - 99.9% = 0.1% error budget
+    level: intermediate
+  - id: OBS-005
+    name: Cardinality
+    category: Core
+    description: Number of unique label combinations
+    example: Limit labels to prevent metric explosion
+    level: advanced
+  - id: OBS-006
+    name: Instrumentation
+    category: Core
+    description: Adding observability code to apps
+    example: Add metrics/traces at key points
+    level: beginner
+  - id: OBS-007
+    name: Auto vs Manual
+    category: Core
+    description: Automatic vs manual instrumentation
+    example: Use auto for common libraries, manual for custom
+    level: intermediate
+  - id: OBS-008
+    name: Context Propagation
+    category: Core
+    description: Passing trace context between services
+    example: Use W3C TraceContext headers
+    level: intermediate
+  - id: OBS-009
+    name: Correlation IDs
+    category: Core
+    description: Unique ID linking related events
+    example: "request_id: uuid in logs, traces, metrics"
+    level: beginner
+  - id: OBS-010
+    name: Data Retention
+    category: Core
+    description: How long to keep observability data
+    example: "Metrics: 30d, Traces: 7d, Logs: 90d"
+    level: intermediate
+  - id: OBS-011
+    name: Sampling
+    category: Core
+    description: Collecting subset of data
+    example: 1% sample rate for high-traffic endpoints
+    level: advanced
+  - id: OBS-012
+    name: Head-based Sampling
+    category: Core
+    description: Decide to sample at trace start
+    example: Deterministic based on trace ID
+    level: intermediate
+  - id: OBS-013
+    name: Tail-based Sampling
+    category: Core
+    description: Decide after trace completes
+    example: Sample errors and slow requests
+    level: advanced
+  - id: OBS-014
+    name: Semantic Conventions
+    category: Core
+    description: Standardized naming for telemetry
+    example: http.method, http.status_code
+    level: intermediate
+  - id: OBS-015
+    name: Golden Signals
+    category: Core
+    description: Latency/Traffic/Errors/Saturation
+    example: Focus dashboards on these 4 metrics
+    level: beginner
+  - id: OBS-016
+    name: RED Method
+    category: Core
+    description: Rate/Errors/Duration for services
+    example: Request-centric monitoring
+    level: intermediate
+  - id: OBS-017
+    name: USE Method
+    category: Core
+    description: Utilization/Saturation/Errors for resources
+    example: Resource-centric monitoring
+    level: intermediate
+  - id: OBS-018
+    name: Observability vs Monitoring
+    category: Core
+    description: Understanding internal state vs watching metrics
+    example: Monitoring = known unknowns, Observability = unknown unknowns
+    level: beginner
+  - id: OBS-019
+    name: High Cardinality
+    category: Core
+    description: Too many unique label values
+    example: user_id as label = cardinality explosion
+    level: advanced
+  - id: OBS-020
+    name: Cost Optimization
+    category: Core
+    description: Managing observability costs
+    example: Sample, aggregate, tier storage
+    level: advanced
+  - id: OBS-021
+    name: Shift-Left Observability
+    category: Core
+    description: Add observability early in dev
+    example: Include in CI/CD pipelines
+    level: intermediate
+  - id: OBS-022
+    name: Observability as Code
+    category: Core
+    description: Define dashboards/alerts in code
+    example: Terraform/Pulumi for Grafana
+    level: advanced
+  - id: OBS-023
+    name: Service Maps
+    category: Core
+    description: Visualize service dependencies
+    example: Auto-generated from traces
+    level: intermediate
+  - id: OBS-024
+    name: Anomaly Detection
+    category: Core
+    description: Automatically find abnormal patterns
+    example: ML-based alerting
+    level: advanced
+  - id: OBS-025
+    name: Root Cause Analysis
+    category: Core
+    description: Determine why issues occurred
+    example: Correlate traces, logs, metrics
+    level: intermediate
+  - id: OBS-026
+    name: MTTR Reduction
+    category: Core
+    description: Mean Time To Recovery
+    example: Better observability = faster debugging
+    level: intermediate
+  - id: OBS-027
+    name: Unified Platform
+    category: Core
+    description: Single pane of glass for all signals
+    example: Grafana, Datadog, New Relic
+    level: intermediate
+  - id: OBS-028
+    name: AIOps Integration
+    category: Core
+    description: AI-powered operations
+    example: Predictive alerts, auto-remediation
+    level: advanced
+  - id: OBS-029
+    name: Edge Observability
+    category: Core
+    description: Monitor at edge/CDN level
+    example: Real user metrics from edge
+    level: advanced
+  - id: OBS-030
+    name: Continuous Profiling
+    category: Core
+    description: Always-on performance profiling
+    example: 4th pillar of observability
+    level: advanced

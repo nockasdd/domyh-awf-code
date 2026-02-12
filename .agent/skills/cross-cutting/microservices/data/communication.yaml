@@ -1,0 +1,163 @@
+# =============================================================================
+# communication.yaml — Inter-Service Communication Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# SYNCHRONOUS PATTERNS
+# =============================================================================
+
+synchronous:
+  rest:
+    description: "HTTP/JSON — simple, widely supported"
+    best_for: "Public APIs, simple CRUD, browser clients"
+    example: |
+      // Go — HTTP client with timeout and retry
+      client := &http.Client{
+          Timeout: 5 * time.Second,
+          Transport: &http.Transport{
+              MaxIdleConns:    100,
+              IdleConnTimeout: 90 * time.Second,
+          },
+      }
+
+  grpc:
+    description: "HTTP/2 + Protobuf — high performance, typed"
+    best_for: "Internal service-to-service, streaming, low latency"
+    proto_example: |
+      syntax = "proto3";
+      package order;
+
+      service OrderService {
+        rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
+        rpc GetOrder(GetOrderRequest) returns (OrderResponse);
+        rpc StreamOrders(StreamRequest) returns (stream OrderResponse);
+      }
+
+      message CreateOrderRequest {
+        string customer_id = 1;
+        repeated OrderItem items = 2;
+      }
+
+    go_example: |
+      // gRPC server
+      type orderServer struct {
+          pb.UnimplementedOrderServiceServer
+      }
+
+      func (s *orderServer) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*pb.OrderResponse, error) {
+          order, err := s.service.Create(ctx, req.CustomerId, req.Items)
+          if err != nil {
+              return nil, status.Error(codes.Internal, err.Error())
+          }
+          return toProto(order), nil
+      }
+
+  graphql:
+    description: "Query language — flexible, client-driven"
+    best_for: "Frontend-facing APIs, aggregation layer"
+    federation: |
+      # Gateway federates multiple service schemas
+      Service A: User { id, name, email }
+      Service B: Order { id, userId, total }
+      Gateway: User { id, name, email, orders: [Order] }
+
+# =============================================================================
+# ASYNCHRONOUS PATTERNS
+# =============================================================================
+
+asynchronous:
+  kafka:
+    description: "Distributed event streaming platform"
+    best_for: "High throughput, event sourcing, log aggregation"
+    patterns:
+      - name: "Event Streaming"
+        description: "Publish events to topics, consumers process"
+      - name: "Log Compaction"
+        description: "Keep latest value per key"
+      - name: "Consumer Groups"
+        description: "Parallel processing with partition assignment"
+
+    config_example: |
+      # Kafka producer config (Go)
+      config := kafka.ConfigMap{
+          "bootstrap.servers":  "localhost:9092",
+          "acks":               "all",
+          "retries":            3,
+          "enable.idempotence": true,
+      }
+
+  rabbitmq:
+    description: "Message broker with exchange routing"
+    best_for: "Task queues, routing, RPC over messages"
+    exchange_types:
+      - direct: "Route by exact routing key"
+      - topic: "Route by pattern matching (*.log.error)"
+      - fanout: "Broadcast to all bound queues"
+      - headers: "Route by message headers"
+
+  nats:
+    description: "Lightweight pub/sub messaging"
+    best_for: "IoT, edge computing, simple pub/sub"
+    features:
+      - "Core NATS: At-most-once delivery"
+      - "JetStream: At-least-once with persistence"
+      - "Key-Value: Distributed key-value store"
+
+# =============================================================================
+# API GATEWAY PATTERNS
+# =============================================================================
+
+api_gateway:
+  purpose: "Single entry point for all clients"
+  responsibilities:
+    - "Request routing"
+    - "Authentication/Authorization"
+    - "Rate limiting"
+    - "Load balancing"
+    - "Response caching"
+    - "Protocol translation"
+
+  implementations:
+    - name: Kong
+      type: "Open-source, plugin-based"
+    - name: "AWS API Gateway"
+      type: "Managed, serverless"
+    - name: Envoy
+      type: "L7 proxy, service mesh data plane"
+    - name: Traefik
+      type: "Cloud-native, auto-discovery"
+
+  bff_pattern:
+    description: "Backend for Frontend — separate gateway per client type"
+    example: |
+      Mobile BFF  → /api/mobile/...  → Mobile-optimized responses
+      Web BFF     → /api/web/...     → Rich desktop responses
+      IoT BFF     → /api/iot/...     → Minimal payloads
+
+# =============================================================================
+# DECISION GUIDE
+# =============================================================================
+
+decision_guide:
+  sync_vs_async:
+    use_sync:
+      - "Client needs immediate response"
+      - "Simple request-response"
+      - "Strong consistency required"
+    use_async:
+      - "Fire-and-forget operations"
+      - "Long-running processes"
+      - "Decoupled services"
+      - "Event-driven architecture"
+
+  protocol_selection:
+    rest: "Public APIs, browser clients, simple CRUD"
+    grpc: "Internal high-performance, streaming, polyglot"
+    graphql: "Frontend aggregation, flexible queries"
+    kafka: "Event streaming, high throughput, replay"
+    rabbitmq: "Task queues, complex routing"
+    nats: "Lightweight pub/sub, edge"
+
+# _DOMYH Awesome Code • Communication Patterns_

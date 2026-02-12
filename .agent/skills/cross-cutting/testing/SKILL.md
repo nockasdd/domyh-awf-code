@@ -8,7 +8,7 @@ detect:
     "vitest.config.*",
     "playwright.config.*",
   ]
-version: "6.1.2"
+version: "6.2.1"
 ---
 
 # Testing Patterns (2026)
@@ -17,10 +17,10 @@ version: "6.1.2"
 
 ## 📦 Data Files
 
-| File             | Content                                         | Records |
-| ---------------- | ----------------------------------------------- | ------- |
-| `frameworks.csv` | Testing frameworks across 12 languages          | 20      |
-| `patterns.csv`   | Testing patterns, best practices, anti-patterns | 15      |
+| File              | Content                                         | Records |
+| ----------------- | ----------------------------------------------- | ------- |
+| `frameworks.yaml` | Testing frameworks across 12 languages          | 20      |
+| `patterns.yaml`   | Testing patterns, best practices, anti-patterns | 15      |
 
 ## 📦 Testing Frameworks
 
@@ -232,4 +232,19 @@ test.describe("Full stack test", () => {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 — Testing Patterns (Data-Driven)_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine:
+
+| Domain    | Query Examples                     |
+| --------- | ---------------------------------- |
+| Framework | "vitest typescript mocking"        |
+| E2E       | "playwright cross-browser testing" |
+| Pattern   | "AAA arrange act assert"           |
+| Coverage  | "v8 coverage threshold"            |
+
+**Data domains**: `frameworks`, `patterns`, `pyramid`, `mocking`, `coverage`
+
+---
+
+_DOMYH Awesome Code — Testing Patterns (Data-Driven + HSA)_

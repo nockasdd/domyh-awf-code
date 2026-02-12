@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: core_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: core-patterns.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - category
+    - level
+    - languages
+patterns:
+  - id: EH-CORE-001
+    pattern: Result Type
+    description: Encapsulate success or failure in return type
+    example: "Result<T, E> or Result<Value, Error>"
+    category: Functional
+    level: BASIC
+    languages: Rust, Scala, Kotlin, Swift, TypeScript
+  - id: EH-CORE-002
+    pattern: Either Monad
+    description: Left for error and Right for value
+    example: "Either<Error, Value>"
+    category: Functional
+    level: INTERMEDIATE
+    languages: Scala, Haskell, TypeScript (fp-ts)
+  - id: EH-CORE-003
+    pattern: Option/Maybe
+    description: Represent optional values without null
+    example: "Option<T> or Maybe<T>"
+    category: Functional
+    level: BASIC
+    languages: Rust, Scala, Haskell, Swift
+  - id: EH-CORE-004
+    pattern: Error Wrapping
+    description: Add context to errors while preserving original
+    example: 'fmt.Errorf("context: %w"'
+    category: err)
+    level: Context
+    languages: BASIC
+  - id: EH-CORE-005
+    pattern: Sentinel Errors
+    description: Predefined error values for comparison
+    example: var ErrNotFound = errors.New("not found")
+    category: Definition
+    level: BASIC
+    languages: Go
+  - id: EH-CORE-006
+    pattern: Custom Error Types
+    description: Define domain-specific error types
+    example: class ValidationError extends Error
+    category: Definition
+    level: BASIC
+    languages: All
+  - id: EH-CORE-007
+    pattern: Error Factory
+    description: Create errors with consistent format
+    example: createError(code
+    category: message
+    level: context)
+    languages: Definition
+  - id: EH-CORE-008
+    pattern: Type Assertion
+    description: Check error type at runtime
+    example: errors.As(err
+    category: "&target)"
+    level: Inspection
+    languages: INTERMEDIATE
+  - id: EH-CORE-009
+    pattern: Value Assertion
+    description: Check error value at runtime
+    example: errors.Is(err
+    category: ErrNotFound)
+    level: Inspection
+    languages: BASIC
+  - id: EH-CORE-010
+    pattern: Error Chain
+    description: Link multiple errors in cause chain
+    example: raise NewError from OriginalError
+    category: Context
+    level: INTERMEDIATE
+    languages: Python
+  - id: EH-CORE-011
+    pattern: Monadic Operations
+    description: Chain operations with and_then/map
+    example: result.and_then(|v| process(v))
+    category: Functional
+    level: ADVANCED
+    languages: Rust, Scala
+  - id: EH-CORE-012
+    pattern: Early Return
+    description: Return error immediately on failure
+    example: value = try expression // ? operator
+    category: Control
+    level: BASIC
+    languages: Rust
+  - id: EH-CORE-013
+    pattern: Error Propagation
+    description: Pass errors up call stack
+    example: throw new Error() or return err
+    category: Control
+    level: BASIC
+    languages: All
+  - id: EH-CORE-014
+    pattern: Error Recovery
+    description: Transform errors into default values
+    example: result.unwrap_or(default)
+    category: Recovery
+    level: BASIC
+    languages: Rust, Swift
+  - id: EH-CORE-015
+    pattern: Error Mapping
+    description: Transform error type
+    example: result.map_err(|e| NewError::from(e))
+    category: Transform
+    level: INTERMEDIATE
+    languages: Rust
+  - id: EH-CORE-016
+    pattern: Multiple Error Types
+    description: Handle different error types
+    example: catch (SpecificError | AnotherError e)
+    category: Control
+    level: INTERMEDIATE
+    languages: Java, C#, Python
+  - id: EH-CORE-017
+    pattern: Error Context Struct
+    description: Store rich error information
+    example: struct Error { code, message, cause }
+    category: Definition
+    level: INTERMEDIATE
+    languages: All
+  - id: EH-CORE-018
+    pattern: Null Object Pattern
+    description: Return safe default instead of error
+    example: return EmptyCollection instead of null
+    category: Recovery
+    level: INTERMEDIATE
+    languages: All
+  - id: EH-CORE-019
+    pattern: Railway Oriented
+    description: Two-track error handling
+    example: Success track and Failure track
+    category: Functional
+    level: ADVANCED
+    languages: FP Languages
+  - id: EH-CORE-020
+    pattern: Error Aggregation
+    description: Collect multiple errors
+    example: AggregateException or Vec<Error>
+    category: Collection
+    level: INTERMEDIATE
+    languages: C#, Rust
+  - id: EH-CORE-021
+    pattern: Validation Accumulation
+    description: Collect all validation errors
+    example: "{errors: [field1Error"
+    category: field2Error]}
+    level: Collection
+    languages: INTERMEDIATE
+  - id: EH-CORE-022
+    pattern: Error as Event
+    description: Emit errors as observables
+    example: errorSubject.next(error)
+    category: Reactive
+    level: ADVANCED
+    languages: RxJS, RxJava
+  - id: EH-CORE-023
+    pattern: Lazy Error
+    description: Defer error evaluation
+    example: "|| Err(compute_error())"
+    category: Performance
+    level: ADVANCED
+    languages: Rust
+  - id: EH-CORE-024
+    pattern: Error Hierarchy
+    description: Organize errors in inheritance tree
+    example: BaseError -> NetworkError -> TimeoutError
+    category: Definition
+    level: INTERMEDIATE
+    languages: OOP Languages
+  - id: EH-CORE-025
+    pattern: Typed Errors
+    description: Use type system for error checking
+    example: type-safe error unions
+    category: Definition
+    level: ADVANCED
+    languages: TypeScript, Rust
+  - id: EH-CORE-026
+    pattern: Error Serialization
+    description: Convert errors for transmission
+    example: error.toJSON() or error.serialize()
+    category: Transport
+    level: INTERMEDIATE
+    languages: All
+  - id: EH-CORE-027
+    pattern: Error Deserialization
+    description: Reconstruct errors from data
+    example: Error.fromJSON(data)
+    category: Transport
+    level: INTERMEDIATE
+    languages: All
+  - id: EH-CORE-028
+    pattern: Error Logging
+    description: Record error with context
+    example: logger.error(error
+    category: "{context})"
+    level: Observability
+    languages: BASIC
+  - id: EH-CORE-029
+    pattern: Error Metrics
+    description: Track error counts and types
+    example: "errorCounter.inc({type: 'validation'})"
+    category: Observability
+    level: INTERMEDIATE
+    languages: All
+  - id: EH-CORE-030
+    pattern: Error Alerting
+    description: Notify on critical errors
+    example: alert.send(error) if error.severity == CRITICAL
+    category: Observability
+    level: ADVANCED
+    languages: All

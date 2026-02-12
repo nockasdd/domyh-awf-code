@@ -2,94 +2,88 @@ name: javascript
 display: JavaScript Development
 category: web
 priority: 1
-version: "6.1.2"
+version: "6.2.1"
+tier: 3
+
 desc: "JavaScript ES2025/ES2026 - Node.js, Bun, Deno, React, Vue"
 
-keywords:
-  # Core
-  - javascript
-  - js
-  - ecmascript
-  - es2024
-  - es2025
-  - es2026
-  - vanilla js
+domains:
+  core: 6
+  async: 4
+  modern: 4
 
-  # Runtime
-  - node.js
-  - nodejs
-  - node
-  - bun
-  - deno
-  - v8
-
-  # Package Manager
-  - npm
-  - pnpm
-  - yarn
-  - package.json
-
-  # Build Tools
-  - vite
-  - esbuild
-  - rollup
-  - webpack
-  - bundler
-
-  # Backend Frameworks
-  - express
-  - fastify
-  - hono
-  - koa
-  - nestjs
-
-  # Frontend Frameworks
-  - react
-  - vue
-  - svelte
-  - solid
-  - next.js
-  - nuxt
-
-  # Language Features
-  - async await
-  - promise
-  - arrow function
-  - destructuring
-  - spread operator
-  - modules
-  - esm
-
-  # Testing
-  - jest
-  - vitest
-  - mocha
-  - playwright
-  - cypress
-
-  # Utilities
-  - lodash
-  - date-fns
-  - zod
-  - axios
-
-  # IDE
-  - vscode
-  - webstorm
-
-detect:
-  files:
     - "*.js"
     - "*.mjs"
     - "*.cjs"
     - "package.json"
     - ".eslintrc*"
-  patterns:
-    - "require("
-    - "import {"
-    - "export {"
-    - "const {"
-    - "async function"
+  keywords:
+    # Core
+    - javascript
+    - js
+    - ecmascript
+    - es2024
+    - es2025
+    - es2026
+    - vanilla js
+    # Runtime
+    - node.js
+    - nodejs
+    - node
+    - bun
+    - deno
+    - v8
+    # Package Manager
+    - npm
+    - pnpm
+    - yarn
+    - package.json
+    # Build Tools
+    - vite
+    - esbuild
+    - rollup
+    - webpack
+    - bundler
+    # Backend Frameworks
+    - express
+    - fastify
+    - hono
+    - koa
+    - nestjs
+    # Frontend Frameworks
+    - react
+    - vue
+    - svelte
+    - solid
+    - next.js
+    - nuxt
+    # Language Features
+    - async await
+    - promise
+    - arrow function
+    - destructuring
+    - spread operator
+    - modules
+    - esm
+    # Testing
+    - jest
+    - vitest
+    - mocha
+    - playwright
+    - cypress
+    # Utilities
+    - lodash
+    - date-fns
+    - zod
+    - axios
+    # IDE
+    - vscode
+    - webstorm
+  intents:
+    - javascript project
+    - node api
+    - frontend app
+    - js bundler
 
 caps:
   - ES2025/ES2026 modern features
@@ -99,8 +93,7 @@ caps:
   - Frontend frameworks (React, Vue, Svelte)
   - Modern async patterns
 
-related:
+related_skills:
   - typescript
   - react
   - vue
-  - nodejs

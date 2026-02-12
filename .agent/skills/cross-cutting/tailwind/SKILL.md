@@ -7,14 +7,14 @@ detect:
     "@tailwind",
     '@import "tailwindcss"',
   ]
-version: "6.1.2"
+version: "6.2.1"
 category: styling
 tier: 1
 ---
 
-# Tailwind CSS Patterns — DOMYH Awesome Code v6.1.2
+# Tailwind CSS Patterns — DOMYH Awesome Code
 
-> **Version**: Tailwind CSS 4 (2025-2026)
+> **Version**: Tailwind CSS 4.1 (2025-2026)
 > **Philosophy**: CSS-first configuration, utility-first styling
 
 ---
@@ -26,42 +26,36 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 
 ---
 
-## 📦 Recommended Stack (2025-2026)
+## 📦 What's New in Tailwind CSS 4.1 (2025)
 
-### Core
-
-| Tool               | Use Case            |
-| ------------------ | ------------------- |
-| **Tailwind CSS 4** | Utility-first 🏆    |
-| **Vite plugin**    | Bundler integration |
-| **PostCSS**        | Processing          |
-
-### Components
-
-| Library         | Use Case              |
-| --------------- | --------------------- |
-| **shadcn/ui**   | Radix + Tailwind 🏆   |
-| **Headless UI** | Accessible primitives |
-| **DaisyUI**     | Component library     |
-
-### IDE Support
-
-| IDE                        | Features                       |
-| -------------------------- | ------------------------------ |
-| **VS Code + IntelliSense** | Autocomplete, hover preview 🏆 |
-| **WebStorm**               | Built-in Tailwind support      |
+| Feature                   | Description           |
+| ------------------------- | --------------------- |
+| **text-shadow-\***        | Text shadow utilities |
+| **mask-\***               | Image/gradient masks  |
+| **pointer-\***            | Input device queries  |
+| **drop-shadow-\<color\>** | Colored drop shadows  |
+| **noscript variant**      | No-JS styling         |
+| **@source not**           | Ignore directories    |
 
 ---
 
-## 🆕 Tailwind CSS 4 Features
+## 📦 Recommended Stack
 
-### CSS-First Configuration
+| Tool                 | Use Case              |
+| -------------------- | --------------------- |
+| **Tailwind CSS 4.1** | Utility-first 🏆      |
+| **Vite plugin**      | Bundler integration   |
+| **shadcn/ui**        | Radix + Tailwind 🏆   |
+| **Headless UI**      | Accessible primitives |
+
+---
+
+## 🆕 CSS-First Configuration (v4+)
 
 ```css
 /* app.css - No more tailwind.config.js! */
 @import "tailwindcss";
 
-/* 🆕 Define theme in CSS */
 @theme {
   /* Colors */
   --color-primary: #3b82f6;
@@ -92,43 +86,83 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 }
 ```
 
-### Custom Utilities
+---
 
-```css
-/* 🆕 @utility replaces @layer utilities */
-@utility scrollbar-hidden {
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-@utility text-balance {
-  text-wrap: balance;
-}
-
-/* Usage: <p class="scrollbar-hidden text-balance">...</p> */
-```
-
-### New Utilities in v4
+## 🆕 Text Shadow Utilities (v4.1)
 
 ```html
-<!-- Container Queries -->
-<div class="@container">
-  <div class="@lg:flex @md:grid">...</div>
+<!-- Text shadows with size variants -->
+<h1 class="text-shadow-sm">Subtle shadow</h1>
+<h1 class="text-shadow-md">Medium shadow</h1>
+<h1 class="text-shadow-lg">Large shadow</h1>
+
+<!-- Colored text shadows -->
+<h1 class="text-shadow-lg text-shadow-blue-500/50">Blue glow effect</h1>
+
+<!-- Dark mode compatible -->
+<h1 class="text-shadow-lg dark:text-shadow-white/20">Adaptive shadow</h1>
+```
+
+---
+
+## 🆕 Mask Utilities (v4.1)
+
+```html
+<!-- Gradient masks -->
+<div class="mask-linear-to-b">Fades to transparent at bottom</div>
+
+<div class="mask-radial">Circular fade from center</div>
+
+<!-- Image masks -->
+<div class="mask-[url('/mask.svg')]">Custom shape mask</div>
+
+<!-- Combine with gradients -->
+<img src="/photo.jpg" class="mask-linear-to-r from-black to-transparent" />
+```
+
+---
+
+## 🆕 Pointer Media Queries (v4.1)
+
+```html
+<!-- Target touch devices -->
+<button
+  class="
+  p-2 pointer-fine:p-1
+  pointer-coarse:p-4 pointer-coarse:text-lg
+"
+>
+  Touch-friendly button
+</button>
+
+<!-- Hover only on pointer devices -->
+<div
+  class="
+  any-pointer-fine:hover:scale-105
+  any-pointer-coarse:active:scale-95
+"
+>
+  Adaptive interaction
 </div>
+```
 
-<!-- Field Sizing -->
-<textarea class="field-sizing-content"></textarea>
+---
 
-<!-- Color Scheme -->
-<html class="color-scheme-dark">
-  <!-- 3D Transforms -->
-  <div class="rotate-x-12 rotate-y-6 perspective-500">
-    <!-- Inert State -->
-    <div class="inert:opacity-50 inert:pointer-events-none"></div>
-  </div>
-</html>
+## 🆕 Colored Drop Shadows (v4.1)
+
+```html
+<!-- Colored drop shadows -->
+<div class="drop-shadow-lg drop-shadow-blue-500/50">Blue shadow</div>
+
+<!-- Multiple shadows -->
+<div
+  class="
+  drop-shadow-md drop-shadow-red-500/30
+  hover:drop-shadow-lg hover:drop-shadow-red-500/50
+"
+>
+  Hover glow effect
+</div>
 ```
 
 ---
@@ -138,7 +172,6 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 ### Component Styling
 
 ```html
-<!-- ✅ Organized utility groups -->
 <button
   class="
   /* Layout */
@@ -151,9 +184,11 @@ Use for: Utility-first CSS, rapid UI development, design systems.
   bg-primary text-white
   /* Effects */
   rounded-lg shadow-md
+  /* 🆕 Text shadow */
+  text-shadow-sm
   /* States */
   hover:bg-primary/90 focus:ring-2 focus:ring-primary/50
-  /* Transitions */
+  /* Transition */
   transition-all duration-200
   /* Disabled */
   disabled:opacity-50 disabled:cursor-not-allowed
@@ -163,48 +198,32 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 </button>
 ```
 
-### Component Extraction (Sparingly)
-
-```css
-/* components.css */
-@utility btn-primary {
-  @apply inline-flex items-center justify-center gap-2
-         px-4 py-2 min-w-32
-         text-sm font-medium
-         bg-primary text-white
-         rounded-lg shadow-md
-         hover:bg-primary/90 focus:ring-2 focus:ring-primary/50
-         transition-all duration-200
-         disabled:opacity-50 disabled:cursor-not-allowed;
-}
-
-/* ⚠️ Use sparingly - prefer utilities inline */
-```
-
 ### Responsive Design
 
 ```html
 <!-- Mobile-first approach -->
 <div
   class="
-  /* Mobile */
   flex flex-col gap-4 p-4
-  /* Tablet */
   md:flex-row md:gap-6 md:p-6
-  /* Desktop */
   lg:gap-8 lg:p-8
-  /* Large */
   xl:max-w-7xl xl:mx-auto
 "
 ></div>
 ```
 
+### Container Queries
+
+```html
+<div class="@container">
+  <div class="@lg:flex @md:grid @sm:block">Adapts to container size</div>
+</div>
+```
+
 ### Dark Mode
 
 ```html
-<!-- With OS preference -->
 <html class="dark:bg-gray-900 dark:text-white">
-  <!-- Toggle-based -->
   <button
     class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
     onclick="document.documentElement.classList.toggle('dark')"
@@ -238,23 +257,45 @@ Use for: Utility-first CSS, rapid UI development, design systems.
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
-  --radius-full: 9999px;
 }
 ```
 
 ---
 
-## ⚡ Performance Best Practices
+## 🆕 New Variants (v4.1)
+
+```html
+<!-- noscript variant -->
+<div class="hidden noscript:block">JavaScript is disabled</div>
+
+<!-- user-valid/user-invalid -->
+<input
+  class="
+  border-gray-300
+  user-valid:border-green-500
+  user-invalid:border-red-500
+"
+/>
+
+<!-- inverted-colors -->
+<div class="inverted-colors:invert">Respects OS accessibility setting</div>
+```
+
+---
+
+## ⚡ Build Optimization
 
 ```css
-/* ✅ Limit theme scope */
+/* Limit theme scope */
 @theme {
-  /* Only define what you need */
-  --color-*: initial; /* Remove unused color scales */
+  --color-*: initial; /* Remove unused colors */
 }
 
-/* ✅ Content configuration for tree-shaking */
+/* Content configuration */
 @source "./src/**/*.{html,js,ts,jsx,tsx,vue,svelte}";
+
+/* Ignore directories */
+@source not "./src/legacy/*";
 ```
 
 ---
@@ -272,16 +313,34 @@ Use for: Utility-first CSS, rapid UI development, design systems.
 
 - [ ] Configure content sources
 - [ ] Remove unused color scales
-- [ ] Minify for production
 - [ ] Use JIT (default in v4)
+- [ ] @source not for unused paths
 
 ### Design System
 
-- [ ] Define semantic colors
-- [ ] Create custom utilities sparingly
-- [ ] Document design tokens
+- [ ] Define semantic colors in @theme
 - [ ] Use CSS variables for theming
+- [ ] Document design tokens
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Tailwind CSS 4_
+## 🔌 HSA Integration
+
+Data files available in `data/` directory (indexed by HSA engine):
+
+| File              | Content                            |
+| ----------------- | ---------------------------------- |
+| `config.yaml`     | CSS-first @theme configuration     |
+| `utilities.yaml`  | Utility class patterns             |
+| `variants.yaml`   | New v4 variants (not-\*, starting) |
+| `responsive.yaml` | Breakpoints, container queries     |
+| `states.yaml`     | Hover, focus, active patterns      |
+| `theme.yaml`      | Design token structure             |
+| `build.yaml`      | Build optimization, @source        |
+| `migration.yaml`  | v3 → v4 migration guide            |
+
+Agent reads these YAML files directly for pattern lookup.
+
+---
+
+_DOMYH Awesome Code • Tailwind CSS 4.1 • 2026_

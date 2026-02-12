@@ -1,0 +1,84 @@
+# =============================================================================
+# turborepo-patterns.yaml — Turborepo Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+pipeline:
+  description: "Define task relationships and caching"
+  config: |
+    // turbo.json
+    {
+      "$schema": "https://turbo.build/schema.json",
+      "globalDependencies": ["**/.env.*local"],
+      "pipeline": {
+        "build": {
+          "dependsOn": ["^build"],
+          "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+        },
+        "test": {
+          "dependsOn": ["build"],
+          "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
+        },
+        "lint": {
+          "outputs": []
+        },
+        "dev": {
+          "cache": false,
+          "persistent": true
+        }
+      }
+    }
+
+filtering:
+  description: "Run tasks for specific packages"
+  commands:
+    - "turbo run build --filter=@org/web"
+    - "turbo run build --filter=@org/web..."
+    - "turbo run build --filter=...@org/ui"
+    - "turbo run build --filter='./apps/*'"
+    - "turbo run build --filter='[HEAD~1]'"
+
+caching:
+  local:
+    location: "node_modules/.cache/turbo"
+    config: "Automatic based on pipeline outputs"
+
+  remote:
+    vercel: |
+      # Link to Vercel for remote cache
+      npx turbo login
+      npx turbo link
+
+    self_hosted: |
+      # turbo.json
+      {
+        "remoteCache": {
+          "signature": true,
+          "enabled": true
+        }
+      }
+
+  cache_outputs:
+    - "dist/**"
+    - ".next/**"
+    - "!.next/cache/**"
+    - "coverage/**"
+
+task_hashing:
+  description: "Turborepo hashes inputs to determine cache hits"
+  inputs:
+    - "Source files (src/**)"
+    - "Dependencies (package.json)"
+    - "Environment variables"
+    - "Global dependencies (turbo.json)"
+
+migration_from_lerna: |
+  # 1. Install turborepo
+  npm install turbo --save-dev
+
+  # 2. Create turbo.json (replaces lerna.json commands)
+  # 3. Update package.json scripts
+  # 4. Remove lerna.json
+
+# _DOMYH Awesome Code • Turborepo Patterns_

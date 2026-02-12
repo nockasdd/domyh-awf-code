@@ -1,12 +1,12 @@
 ---
 name: web-perf
 detect: ["lighthouse.json", "web-vitals.*", ".lighthouserc.js"]
-version: "6.1.2"
+version: "6.2.1"
 category: support
 tier: 1
 ---
 
-# Web Performance Audit — DOMYH Awesome Code v6.1.2
+# Web Performance Audit — DOMYH Awesome Code
 
 > **Source**: Cloudflare Web-Perf Best Practices
 > **Focus**: Core Web Vitals, Network Optimization, Accessibility
@@ -154,4 +154,19 @@ medium:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Web-Perf • Core Web Vitals_
+## 🔌 HSA Integration
+
+Data powered by HSA BM25 search engine:
+
+| Domain    | Query Examples                 |
+| --------- | ------------------------------ |
+| CWV       | "LCP optimization preload"     |
+| Network   | "render blocking CSS defer"    |
+| Framework | "Next.js image optimization"   |
+| Audit     | "Lighthouse performance score" |
+
+**Data domains**: `cwv`, `network`, `framework`, `audit`
+
+---
+
+_DOMYH Awesome Code • Web-Perf • Core Web Vitals • HSA-Powered_

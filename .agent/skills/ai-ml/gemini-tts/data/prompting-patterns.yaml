@@ -1,0 +1,81 @@
+# =============================================================================
+# prompting-patterns.yaml — TTS Style Prompting Patterns
+# =============================================================================
+# 8 patterns for controlling TTS output via natural language prompts
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 8
+
+style_prompts:
+  description: "Use natural language to direct voice style"
+  principle: "System instruction sets the voice persona and delivery style"
+
+  patterns:
+    news_anchor:
+      prompt: "Read this in a professional, authoritative news anchor voice with clear enunciation."
+      use_case: "News summaries, announcements"
+
+    podcast_host:
+      prompt: "Read this in a warm, conversational podcast host voice. Be engaging and natural."
+      use_case: "Podcast scripts, casual narration"
+
+    storyteller:
+      prompt: "Read this like a bedtime story narrator — gentle, expressive, with dramatic pauses."
+      use_case: "Audiobooks, children's content"
+
+    instructor:
+      prompt: "Read this like a patient, clear teacher explaining a concept. Emphasize key terms."
+      use_case: "Educational content, tutorials"
+
+    dramatic:
+      prompt: "Read this with dramatic flair, varying pace and intensity for emotional impact."
+      use_case: "Theater scripts, dramatic readings"
+
+    meditation:
+      prompt: "Read this in a calm, soothing meditation guide voice. Slow pace, soft tone."
+      use_case: "Guided meditation, relaxation content"
+
+    sports_commentator:
+      prompt: "Read this with the energy and excitement of a live sports commentator."
+      use_case: "Sports updates, exciting announcements"
+
+    documentary:
+      prompt: "Read this in a BBC documentary narrator style — informative, measured, with gravitas."
+      use_case: "Documentary narration, educational videos"
+
+emotionally_rich_text:
+  description: "Write text that naturally triggers expressive delivery"
+  tips:
+    - "Use punctuation for natural pauses: commas, ellipses, em dashes"
+    - "Exclamation marks increase energy: 'Amazing!' vs 'Amazing.'"
+    - "Question marks trigger interrogative intonation"
+    - "Longer sentences → more natural flow"
+    - "Short sentences → punchy, impactful delivery"
+
+  example_text: |
+    Have you ever wondered... what makes a great voice?
+    It's not just about clarity — it's about emotion.
+    The way a pause... can build anticipation.
+    The way excitement can make your heart race!
+    And sometimes, a whisper is the most powerful tool of all.
+
+alignment_strategies:
+  description: "Ensure voice style matches content tone"
+  rules:
+    - "Match prompt style to content genre (don't use news voice for poetry)"
+    - "Use markup tags for fine-grained moments within a consistent style"
+    - "Test with short segments before full narration"
+    - "Pro model best for style adherence"
+    - "Multi-speaker: assign different styles per speaker"
+
+multi_language:
+  description: "TTS supports multiple languages"
+  tips:
+    - "Specify language in prompt: 'Read in Vietnamese with natural pronunciation'"
+    - "Model auto-detects language from text"
+    - "Code-switching (mixed languages) works but quality varies"
+
+# =============================================================================
+# _DOMYH Awesome Code • TTS Prompting Patterns v1.0_
+# =============================================================================

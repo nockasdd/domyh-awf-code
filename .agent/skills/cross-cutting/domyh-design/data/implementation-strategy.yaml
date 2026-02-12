@@ -1,0 +1,107 @@
+metadata:
+  skill: domyh-design
+  domain: implementation_strategy
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: implementation-strategy.yaml
+  patterns_count: 10
+  columns:
+    - phase
+    - component_priority
+    - implementation_approach
+    - directory_structure
+    - testing_strategy
+    - team_size
+    - timeline
+    - decision_rules
+patterns:
+  - id: item_001
+    phase: MVP
+    component_priority: Focus 20% most-used (Button/Input/Card/Modal)
+    implementation_approach: Library + Headless (Radix/shadcn)
+    directory_structure: Simple (src/components/pages)
+    testing_strategy: Manual + Unit
+    team_size: 1-3 developers
+    timeline: 1-2 weeks
+    decision_rules: '{"speed_critical": "use-library", "brand_unique": "delay-customization"}'
+  - id: item_002
+    phase: MVP-Plus
+    component_priority: Add Table/Form/Menu/Toast
+    implementation_approach: Library + Selective Custom
+    directory_structure: Simple with hooks
+    testing_strategy: Unit + Integration
+    team_size: 2-5 developers
+    timeline: 2-4 weeks
+    decision_rules: '{"if_data_heavy": "prioritize-table", "if_form_heavy": "prioritize-validation"}'
+  - id: item_003
+    phase: Growth
+    component_priority: Extend existing + Add complex components
+    implementation_approach: Headless + Custom wrappers
+    directory_structure: Feature-Sliced (app/features/shared)
+    testing_strategy: Unit + Integration + E2E
+    team_size: 3-8 developers
+    timeline: 1-3 months
+    decision_rules: '{"if_brand_differentiation": "add-custom-design", "if_scale_needed": "add-design-tokens"}'
+  - id: item_004
+    phase: Scale
+    component_priority: Design system components + Variants
+    implementation_approach: Custom + Design Tokens
+    directory_structure: Feature-Sliced + Monorepo
+    testing_strategy: Full test pyramid
+    team_size: 5-15 developers
+    timeline: 3-6 months
+    decision_rules: '{"must_have": "design-tokens", "must_have": "storybook"}'
+  - id: item_005
+    phase: Enterprise
+    component_priority: Full design system + Multi-brand
+    implementation_approach: Custom + Token-based + Theming
+    directory_structure: Monorepo + Micro-frontends
+    testing_strategy: Full + Visual regression
+    team_size: 10-50+ developers
+    timeline: 6-12 months
+    decision_rules: '{"must_have": "multi-theme", "must_have": "accessibility-audit"}'
+  - id: item_006
+    phase: Prototype
+    component_priority: Minimal viable UI
+    implementation_approach: Pre-built templates
+    directory_structure: Flat (single folder)
+    testing_strategy: None or minimal
+    team_size: 1 developer
+    timeline: 1-3 days
+    decision_rules: '{"speed_first": "use-template", "throw_away": "skip-patterns"}'
+  - id: item_007
+    phase: Redesign
+    component_priority: Replace incrementally + Parallel systems
+    implementation_approach: Strangler Fig pattern
+    directory_structure: Feature-Sliced + Legacy bridge
+    testing_strategy: Full + A/B testing
+    team_size: 5-10 developers
+    timeline: 3-6 months
+    decision_rules: '{"must_have": "feature-flags", "must_have": "parallel-run"}'
+  - id: item_008
+    phase: Startup-Seed
+    component_priority: Balance speed + quality
+    implementation_approach: shadcn + Tailwind
+    directory_structure: Simple with conventions
+    testing_strategy: Unit + Critical E2E
+    team_size: 2-4 developers
+    timeline: 2-4 weeks
+    decision_rules: '{"if_funded": "invest-in-foundation", "if_bootstrapped": "prioritize-speed"}'
+  - id: item_009
+    phase: Agency-Project
+    component_priority: Client-specific branding
+    implementation_approach: Headless + Client tokens
+    directory_structure: Template-based
+    testing_strategy: Client acceptance
+    team_size: 2-5 developers
+    timeline: 1-2 months
+    decision_rules: '{"must_have": "brand-customization", "if_recurring": "build-template"}'
+  - id: item_010
+    phase: Open-Source
+    component_priority: Community-friendly + Extensible
+    implementation_approach: Headless primitives + Examples
+    directory_structure: Feature-Sliced + Docs
+    testing_strategy: Full + Community CI
+    team_size: 1-10 contributors
+    timeline: Ongoing
+    decision_rules: '{"must_have": "documentation", "must_have": "contribution-guide"}'

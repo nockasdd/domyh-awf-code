@@ -1,0 +1,373 @@
+metadata:
+  skill: domyh-design
+  domain: landing
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: landing.yaml
+  patterns_count: 27
+  columns:
+    - "No"
+    - Pattern Name
+    - Keywords
+    - Section Order
+    - Primary CTA Placement
+    - Color Strategy
+    - Recommended Effects
+    - Conversion Optimization
+patterns:
+  - id: "1"
+    pattern_name: Hero + Features + CTA
+    keywords:
+      - hero
+      - hero-centric
+      - features
+      - feature-rich
+      - cta
+      - call-to-action
+    section_order: 1. Hero with headline/image, 2. Value prop, 3. Key features (3-5), 4. CTA section, 5. Footer
+    primary_cta_placement: Hero (sticky) + Bottom
+    color_strategy: "Hero: Brand primary or vibrant. Features: Card bg #FAFAFA. CTA: Contrasting accent color"
+    recommended_effects: Hero parallax, feature card hover lift, CTA glow on hover
+    conversion_optimization: Deep CTA placement. Use contrasting color (at least 7:1 contrast ratio). Sticky navbar CTA.
+  - id: "2"
+    pattern_name: Hero + Testimonials + CTA
+    keywords:
+      - hero
+      - testimonials
+      - social-proof
+      - trust
+      - reviews
+      - cta
+    section_order: 1. Hero, 2. Problem statement, 3. Solution overview, 4. Testimonials carousel, 5. CTA
+    primary_cta_placement: Hero (sticky) + Post-testimonials
+    color_strategy: "Hero: Brand color. Testimonials: Light bg #F5F5F5. Quotes: Italic, muted color #666. CTA: Vibrant"
+    recommended_effects: Testimonial carousel slide animations, quote marks animations, avatar fade-in
+    conversion_optimization: Social proof before CTA. Use 3-5 testimonials. Include photo + name + role. CTA after social proof.
+  - id: "3"
+    pattern_name: Product Demo + Features
+    keywords:
+      - demo
+      - product-demo
+      - features
+      - showcase
+      - interactive
+    section_order: 1. Hero, 2. Product video/mockup (center), 3. Feature breakdown per section, 4. Comparison (optional), 5. CTA
+    primary_cta_placement: Video center + CTA right/bottom
+    color_strategy: "Video surround: Brand color overlay. Features: Icon color #0080FF. Text: Dark #222"
+    recommended_effects: Video play button pulse, feature scroll reveals, demo interaction highlights
+    conversion_optimization: Embedded product demo increases engagement. Use interactive mockup if possible. Auto-play video muted.
+  - id: "4"
+    pattern_name: Minimal Single Column
+    keywords:
+      - minimal
+      - simple
+      - direct
+      - single-column
+      - clean
+    section_order: 1. Hero headline, 2. Short description, 3. Benefit bullets (3 max), 4. CTA, 5. Footer
+    primary_cta_placement: Center, large CTA button
+    color_strategy: "Minimalist: Brand + white #FFFFFF + accent. Buttons: High contrast 7:1+. Text: Black/Dark grey"
+    recommended_effects: Minimal hover effects. Smooth scroll. CTA scale on hover (subtle)
+    conversion_optimization: Single CTA focus. Large typography. Lots of whitespace. No nav clutter. Mobile-first.
+  - id: "5"
+    pattern_name: Funnel (3-Step Conversion)
+    keywords:
+      - funnel
+      - conversion
+      - steps
+      - wizard
+      - onboarding
+    section_order: 1. Hero, 2. Step 1 (problem), 3. Step 2 (solution), 4. Step 3 (action), 5. CTA progression
+    primary_cta_placement: "Each step: mini-CTA. Final: main CTA"
+    color_strategy: "Step colors: 1 (Red/Problem), 2 (Orange/Process), 3 (Green/Solution). CTA: Brand color"
+    recommended_effects: Step number animations, progress bar fill, step transitions smooth scroll
+    conversion_optimization: Progressive disclosure. Show only essential info per step. Use progress indicators. Multiple CTAs.
+  - id: "6"
+    pattern_name: Comparison Table + CTA
+    keywords:
+      - comparison
+      - table
+      - compare
+      - versus
+      - cta
+    section_order: 1. Hero, 2. Problem intro, 3. Comparison table (product vs competitors), 4. Pricing (optional), 5. CTA
+    primary_cta_placement: "Table: Right column. CTA: Below table"
+    color_strategy: "Table: Alternating rows (white/light grey). Your product: Highlight #FFFACD (light yellow) or green. Text: Dark"
+    recommended_effects: Table row hover highlight, price toggle animations, feature checkmark animations
+    conversion_optimization: Use comparison to show unique value. Highlight your product row. Include 'free trial' in pricing row.
+  - id: "7"
+    pattern_name: Lead Magnet + Form
+    keywords:
+      - lead
+      - form
+      - signup
+      - capture
+      - email
+      - magnet
+    section_order: 1. Hero (benefit headline), 2. Lead magnet preview (ebook cover, checklist, etc), 3. Form (minimal fields), 4. CTA submit
+    primary_cta_placement: "Form CTA: Submit button"
+    color_strategy: "Lead magnet: Professional design. Form: Clean white bg. Inputs: Light border #CCCCCC. CTA: Brand color"
+    recommended_effects: Form focus state animations, input validation animations, success confirmation animation
+    conversion_optimization: Form fields ≤ 3 for best conversion. Offer valuable lead magnet preview. Show form submission progress.
+  - id: "8"
+    pattern_name: Pricing Page + CTA
+    keywords:
+      - pricing
+      - plans
+      - tiers
+      - comparison
+      - cta
+    section_order: 1. Hero (pricing headline), 2. Price comparison cards, 3. Feature comparison table, 4. FAQ section, 5. Final CTA
+    primary_cta_placement: "Each card: CTA button. Sticky CTA in nav"
+    color_strategy: "Free: Grey, Starter: Blue, Pro: Green/Gold, Enterprise: Dark. Cards: 1px border, shadow"
+    recommended_effects: Price toggle animation (monthly/yearly), card comparison highlight, FAQ accordion open/close
+    conversion_optimization: Recommend starter plan (pre-select/highlight). Show annual discount (20-30%). Use FAQs to address concerns.
+  - id: "9"
+    pattern_name: Video-First Hero
+    keywords:
+      - video
+      - hero
+      - media
+      - visual
+      - engaging
+    section_order: 1. Hero with video background, 2. Key features overlay, 3. Benefits section, 4. CTA
+    primary_cta_placement: Overlay on video (center/bottom) + Bottom section
+    color_strategy: Dark overlay 60% on video. Brand accent for CTA. White text on dark.
+    recommended_effects: Video autoplay muted, parallax scroll, text fade-in on scroll
+    conversion_optimization: 86% higher engagement with video. Add captions for accessibility. Compress video for performance.
+  - id: "10"
+    pattern_name: Scroll-Triggered Storytelling
+    keywords:
+      - storytelling
+      - scroll
+      - narrative
+      - story
+      - immersive
+    section_order: 1. Intro hook, 2. Chapter 1 (problem), 3. Chapter 2 (journey), 4. Chapter 3 (solution), 5. Climax CTA
+    primary_cta_placement: End of each chapter (mini) + Final climax CTA
+    color_strategy: Progressive reveal. Each chapter has distinct color. Building intensity.
+    recommended_effects: ScrollTrigger animations, parallax layers, progressive disclosure, chapter transitions
+    conversion_optimization: "Narrative increases time-on-page 3x. Use progress indicator. Mobile: simplify animations."
+  - id: "11"
+    pattern_name: AI Personalization Landing
+    keywords:
+      - ai
+      - personalization
+      - smart
+      - recommendation
+      - dynamic
+    section_order: 1. Dynamic hero (personalized), 2. Relevant features, 3. Tailored testimonials, 4. Smart CTA
+    primary_cta_placement: Context-aware placement based on user segment
+    color_strategy: Adaptive based on user data. A/B test color variations per segment.
+    recommended_effects: Dynamic content swap, fade transitions, personalized product recommendations
+    conversion_optimization: 20%+ conversion with personalization. Requires analytics integration. Fallback for new users.
+  - id: "12"
+    pattern_name: Waitlist/Coming Soon
+    keywords:
+      - waitlist
+      - coming-soon
+      - launch
+      - early-access
+      - notify
+    section_order: 1. Hero with countdown, 2. Product teaser/preview, 3. Email capture form, 4. Social proof (waitlist count)
+    primary_cta_placement: Email form prominent (above fold) + Sticky form on scroll
+    color_strategy: "Anticipation: Dark + accent highlights. Countdown in brand color. Urgency indicators."
+    recommended_effects: Countdown timer animation, email validation feedback, success confetti, social share buttons
+    conversion_optimization: Scarcity + exclusivity. Show waitlist count. Early access benefits. Referral program.
+  - id: "13"
+    pattern_name: Comparison Table Focus
+    keywords:
+      - comparison
+      - table
+      - versus
+      - compare
+      - features
+    section_order: 1. Hero (problem statement), 2. Comparison matrix (you vs competitors), 3. Feature deep-dive, 4. Winner CTA
+    primary_cta_placement: After comparison table (highlighted row) + Bottom
+    color_strategy: Your product column highlighted (accent bg or green). Competitors neutral. Checkmarks green.
+    recommended_effects: Table row hover highlight, feature checkmark animations, sticky comparison header
+    conversion_optimization: Show value vs competitors. 35% higher conversion. Be factual. Include pricing if favorable.
+  - id: "14"
+    pattern_name: Pricing-Focused Landing
+    keywords:
+      - pricing
+      - price
+      - cost
+      - plans
+      - subscription
+    section_order: 1. Hero (value proposition), 2. Pricing cards (3 tiers), 3. Feature comparison, 4. FAQ, 5. Final CTA
+    primary_cta_placement: Each pricing card + Sticky CTA in nav + Bottom
+    color_strategy: "Popular plan highlighted (brand color border/bg). Free: grey. Enterprise: dark/premium."
+    recommended_effects: Price toggle monthly/annual animation, card hover lift, FAQ accordion smooth open
+    conversion_optimization: Annual discount 20-30%. Recommend mid-tier (most popular badge). Address objections in FAQ.
+  - id: "15"
+    pattern_name: App Store Style Landing
+    keywords:
+      - app
+      - mobile
+      - download
+      - store
+      - install
+    section_order: 1. Hero with device mockup, 2. Screenshots carousel, 3. Features with icons, 4. Reviews/ratings, 5. Download CTAs
+    primary_cta_placement: Download buttons prominent (App Store + Play Store) throughout
+    color_strategy: Dark/light matching app store feel. Star ratings in gold. Screenshots with device frames.
+    recommended_effects: Device mockup rotations, screenshot slider, star rating animations, download button pulse
+    conversion_optimization: Show real screenshots. Include ratings (4.5+ stars). QR code for mobile. Platform-specific CTAs.
+  - id: "16"
+    pattern_name: FAQ/Documentation Landing
+    keywords:
+      - faq
+      - documentation
+      - help
+      - support
+      - questions
+    section_order: 1. Hero with search bar, 2. Popular categories, 3. FAQ accordion, 4. Contact/support CTA
+    primary_cta_placement: Search bar prominent + Contact CTA for unresolved questions
+    color_strategy: Clean, high readability. Minimal color. Category icons in brand color. Success green for resolved.
+    recommended_effects: Search autocomplete, smooth accordion open/close, category hover, helpful feedback buttons
+    conversion_optimization: Reduce support tickets. Track search analytics. Show related articles. Contact escalation path.
+  - id: "17"
+    pattern_name: Immersive/Interactive Experience
+    keywords:
+      - immersive
+      - interactive
+      - experience
+      - 3d
+      - animation
+    section_order: 1. Full-screen interactive element, 2. Guided product tour, 3. Key benefits revealed, 4. CTA after completion
+    primary_cta_placement: After interaction complete + Skip option for impatient users
+    color_strategy: Immersive experience colors. Dark background for focus. Highlight interactive elements.
+    recommended_effects: WebGL, 3D interactions, gamification elements, progress indicators, reward animations
+    conversion_optimization: 40% higher engagement. Performance trade-off. Provide skip option. Mobile fallback essential.
+  - id: "18"
+    pattern_name: Event/Conference Landing
+    keywords:
+      - event
+      - conference
+      - meetup
+      - registration
+      - schedule
+    section_order: 1. Hero (date/location/countdown), 2. Speakers grid, 3. Agenda/schedule, 4. Sponsors, 5. Register CTA
+    primary_cta_placement: Register CTA sticky + After speakers + Bottom
+    color_strategy: Urgency colors (countdown). Event branding. Speaker cards professional. Sponsor logos neutral.
+    recommended_effects: Countdown timer, speaker hover cards with bio, agenda tabs, early bird countdown
+    conversion_optimization: Early bird pricing with deadline. Social proof (past attendees). Speaker credibility. Multi-ticket discounts.
+  - id: "19"
+    pattern_name: Product Review/Ratings Focused
+    keywords:
+      - reviews
+      - ratings
+      - testimonials
+      - social-proof
+      - stars
+    section_order: 1. Hero (product + aggregate rating), 2. Rating breakdown, 3. Individual reviews, 4. Buy/CTA
+    primary_cta_placement: After reviews summary + Buy button alongside reviews
+    color_strategy: Trust colors. Star ratings gold. Verified badge green. Review sentiment colors.
+    recommended_effects: Star fill animations, review filtering, helpful vote interactions, photo lightbox
+    conversion_optimization: User-generated content builds trust. Show verified purchases. Filter by rating. Respond to negative reviews.
+  - id: "20"
+    pattern_name: Community/Forum Landing
+    keywords:
+      - community
+      - forum
+      - social
+      - members
+      - discussion
+    section_order: 1. Hero (community value prop), 2. Popular topics/categories, 3. Active members showcase, 4. Join CTA
+    primary_cta_placement: Join button prominent + After member showcase
+    color_strategy: Warm, welcoming. Member photos add humanity. Topic badges in brand colors. Activity indicators green.
+    recommended_effects: Member avatars animation, activity feed live updates, topic hover previews, join success celebration
+    conversion_optimization: Show active community (member count, posts today). Highlight benefits. Preview content. Easy onboarding.
+  - id: "21"
+    pattern_name: Before-After Transformation
+    keywords:
+      - before-after
+      - transformation
+      - results
+      - comparison
+    section_order: 1. Hero (problem state), 2. Transformation slider/comparison, 3. How it works, 4. Results CTA
+    primary_cta_placement: After transformation reveal + Bottom
+    color_strategy: "Contrast: muted/grey (before) vs vibrant/colorful (after). Success green for results."
+    recommended_effects: Slider comparison interaction, before/after reveal animations, result counters, testimonial videos
+    conversion_optimization: Visual proof of value. 45% higher conversion. Real results. Specific metrics. Guarantee offer.
+  - id: "22"
+    pattern_name: Marketplace / Directory
+    keywords:
+      - marketplace
+      - directory
+      - search
+      - listing
+    section_order: 1. Hero (Search focused), 2. Categories, 3. Featured Listings, 4. Trust/Safety, 5. CTA (Become a host/seller)
+    primary_cta_placement: Hero Search Bar + Navbar 'List your item'
+    color_strategy: "Search: High contrast. Categories: Visual icons. Trust: Blue/Green."
+    recommended_effects: Search autocomplete animation
+    conversion_optimization: map hover pins
+  - id: "23"
+    pattern_name: Newsletter / Content First
+    keywords:
+      - newsletter
+      - content
+      - writer
+      - blog
+      - subscribe
+    section_order: 1. Hero (Value Prop + Form), 2. Recent Issues/Archives, 3. Social Proof (Subscriber count), 4. About Author
+    primary_cta_placement: Hero inline form + Sticky header form
+    color_strategy: Minimalist. Paper-like background. Text focus. Accent color for Subscribe.
+    recommended_effects: Text highlight animations
+    conversion_optimization: typewriter effect
+  - id: "24"
+    pattern_name: Webinar Registration
+    keywords:
+      - webinar
+      - registration
+      - event
+      - training
+      - live
+    section_order: 1. Hero (Topic + Timer + Form), 2. What you'll learn, 3. Speaker Bio, 4. Urgency/Bonuses, 5. Form (again)
+    primary_cta_placement: Hero (Right side form) + Bottom anchor
+    color_strategy: "Urgency: Red/Orange. Professional: Blue/Navy. Form: High contrast white."
+    recommended_effects: Countdown timer
+    conversion_optimization: speaker avatar float
+  - id: "25"
+    pattern_name: Enterprise Gateway
+    keywords:
+      - enterprise
+      - corporate
+      - gateway
+      - solutions
+      - portal
+    section_order: 1. Hero (Video/Mission), 2. Solutions by Industry, 3. Solutions by Role, 4. Client Logos, 5. Contact Sales
+    primary_cta_placement: Contact Sales (Primary) + Login (Secondary)
+    color_strategy: "Corporate: Navy/Grey. High integrity. Conservative accents."
+    recommended_effects: Slow video background
+    conversion_optimization: logo carousel
+  - id: "26"
+    pattern_name: Portfolio Grid
+    keywords:
+      - portfolio
+      - grid
+      - showcase
+      - gallery
+      - masonry
+    section_order: 1. Hero (Name/Role), 2. Project Grid (Masonry), 3. About/Philosophy, 4. Contact
+    primary_cta_placement: Project Card Hover + Footer Contact
+    color_strategy: "Neutral background (let work shine). Text: Black/White. Accent: Minimal."
+    recommended_effects: Image lazy load reveal
+    conversion_optimization: hover overlay info
+  - id: "27"
+    pattern_name: Horizontal Scroll Journey
+    keywords:
+      - horizontal
+      - scroll
+      - journey
+      - gallery
+      - storytelling
+      - panoramic
+    section_order: 1. Intro (Vertical), 2. The Journey (Horizontal Track), 3. Detail Reveal, 4. Vertical Footer
+    primary_cta_placement: Floating Sticky CTA or End of Horizontal Track
+    color_strategy: "Continuous palette transition. Chapter colors. Progress bar #000000."
+    recommended_effects: Scroll-jacking (careful), parallax layers, horizontal slide, progress indicator
+    conversion_optimization:
+      "Immersive product discovery. High engagement. Keep navigation visible.
+
+      28,Bento Grid Showcase,bento"

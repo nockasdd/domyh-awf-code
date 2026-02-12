@@ -1,0 +1,543 @@
+metadata:
+  skill: domyh-design
+  domain: html_tailwind
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: html-tailwind.yaml
+  patterns_count: 55
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Animation
+    guideline: Use Tailwind animate utilities
+    description: Built-in animations are optimized and respect reduced-motion
+    do: Use animate-pulse animate-spin animate-ping
+    don_t: Custom @keyframes for simple effects
+    code_good: animate-pulse
+    code_bad: "@keyframes pulse {...}"
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/animation
+  - id: "2"
+    category: Animation
+    guideline: Limit bounce animations
+    description: Continuous bounce is distracting and causes motion sickness
+    do: Use animate-bounce sparingly on CTAs only
+    don_t: Multiple bounce animations on page
+    code_good: Single CTA with animate-bounce
+    code_bad: 5+ elements with animate-bounce
+    severity: High
+  - id: "3"
+    category: Animation
+    guideline: Transition duration
+    description: Use appropriate transition speeds for UI feedback
+    do: duration-150 to duration-300 for UI
+    don_t: duration-1000 or longer for UI elements
+    code_good: transition-all duration-200
+    code_bad: transition-all duration-1000
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/transition-duration
+  - id: "4"
+    category: Animation
+    guideline: Hover transitions
+    description: Add smooth transitions on hover state changes
+    do: Add transition class with hover states
+    don_t: Instant hover changes without transition
+    code_good: hover:bg-gray-100 transition-colors
+    code_bad: hover:bg-gray-100 (no transition)
+    severity: Low
+  - id: "5"
+    category: Z-Index
+    guideline: Use Tailwind z-* scale
+    description: Consistent stacking context with predefined scale
+    do: z-0 z-10 z-20 z-30 z-40 z-50
+    don_t: Arbitrary z-index values
+    code_good: z-50 for modals
+    code_bad: z-[9999]
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/z-index
+  - id: "6"
+    category: Z-Index
+    guideline: Fixed elements z-index
+    description: Fixed navigation and modals need explicit z-index
+    do: z-50 for nav z-40 for dropdowns
+    don_t: Relying on DOM order for stacking
+    code_good: fixed top-0 z-50
+    code_bad: fixed top-0 (no z-index)
+    severity: High
+  - id: "7"
+    category: Z-Index
+    guideline: Negative z-index for backgrounds
+    description: Use negative z-index for decorative backgrounds
+    do: z-[-1] for background elements
+    don_t: Positive z-index for backgrounds
+    code_good: -z-10 for decorative
+    code_bad: z-10 for background
+    severity: Low
+  - id: "8"
+    category: Layout
+    guideline: Container max-width
+    description: Limit content width for readability
+    do: max-w-7xl mx-auto for main content
+    don_t: Full-width content on large screens
+    code_good: max-w-7xl mx-auto px-4
+    code_bad: w-full (no max-width)
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/container
+  - id: "9"
+    category: Layout
+    guideline: Responsive padding
+    description: Adjust padding for different screen sizes
+    do: px-4 md:px-6 lg:px-8
+    don_t: Same padding all sizes
+    code_good: px-4 sm:px-6 lg:px-8
+    code_bad: px-8 (same all sizes)
+    severity: Medium
+  - id: "10"
+    category: Layout
+    guideline: Grid gaps
+    description: Use consistent gap utilities for spacing
+    do: gap-4 gap-6 gap-8
+    don_t: Margins on individual items
+    code_good: grid gap-6
+    code_bad: grid with mb-4 on each item
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/gap
+  - id: "11"
+    category: Layout
+    guideline: Flexbox alignment
+    description: Use flex utilities for alignment
+    do: items-center justify-between
+    don_t: Multiple nested wrappers
+    code_good: flex items-center justify-between
+    code_bad: Nested divs for alignment
+    severity: Low
+  - id: "12"
+    category: Images
+    guideline: Aspect ratio
+    description: Maintain consistent image aspect ratios
+    do: aspect-video aspect-square
+    don_t: No aspect ratio on containers
+    code_good: aspect-video rounded-lg
+    code_bad: No aspect control
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/aspect-ratio
+  - id: "13"
+    category: Images
+    guideline: Object fit
+    description: Control image scaling within containers
+    do: object-cover object-contain
+    don_t: Stretched distorted images
+    code_good: object-cover w-full h-full
+    code_bad: No object-fit
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/object-fit
+  - id: "14"
+    category: Images
+    guideline: Lazy loading
+    description: Defer loading of off-screen images
+    do: loading='lazy' on images
+    don_t: All images eager load
+    code_good: <img loading='lazy'>
+    code_bad: <img> without lazy
+    severity: High
+  - id: "15"
+    category: Images
+    guideline: Responsive images
+    description: Serve appropriate image sizes
+    do: srcset and sizes attributes
+    don_t: Same large image all devices
+    code_good: srcset with multiple sizes
+    code_bad: 4000px image everywhere
+    severity: High
+  - id: "16"
+    category: Typography
+    guideline: Prose plugin
+    description: Use @tailwindcss/typography for rich text
+    do: prose prose-lg for article content
+    don_t: Custom styles for markdown
+    code_good: prose prose-lg max-w-none
+    code_bad: Custom text styling
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/typography-plugin
+  - id: "17"
+    category: Typography
+    guideline: Line height
+    description: Use appropriate line height for readability
+    do: leading-relaxed for body text
+    don_t: Default tight line height
+    code_good: leading-relaxed (1.625)
+    code_bad: leading-none or leading-tight
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/line-height
+  - id: "18"
+    category: Typography
+    guideline: Font size scale
+    description: Use consistent text size scale
+    do: text-sm text-base text-lg text-xl
+    don_t: Arbitrary font sizes
+    code_good: text-lg
+    code_bad: text-[17px]
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/font-size
+  - id: "19"
+    category: Typography
+    guideline: Text truncation
+    description: Handle long text gracefully
+    do: truncate or line-clamp-*
+    don_t: Overflow breaking layout
+    code_good: line-clamp-2
+    code_bad: No overflow handling
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/text-overflow
+  - id: "20"
+    category: Colors
+    guideline: Opacity utilities
+    description: Use color opacity utilities
+    do: bg-black/50 text-white/80
+    don_t: Separate opacity class
+    code_good: bg-black/50
+    code_bad: bg-black opacity-50
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/background-color
+  - id: "21"
+    category: Colors
+    guideline: Dark mode
+    description: "Support dark mode with dark: prefix"
+    do: dark:bg-gray-900 dark:text-white
+    don_t: No dark mode support
+    code_good: dark:bg-gray-900
+    code_bad: Only light theme
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/dark-mode
+  - id: "22"
+    category: Colors
+    guideline: Semantic colors
+    description: Use semantic color naming in config
+    do: primary secondary danger success
+    don_t: Generic color names in components
+    code_good: bg-primary
+    code_bad: bg-blue-500 everywhere
+    severity: Medium
+  - id: "23"
+    category: Spacing
+    guideline: Consistent spacing scale
+    description: Use Tailwind spacing scale consistently
+    do: p-4 m-6 gap-8
+    don_t: Arbitrary pixel values
+    code_good: p-4 (1rem)
+    code_bad: p-[15px]
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/customizing-spacing
+  - id: "24"
+    category: Spacing
+    guideline: Negative margins
+    description: Use sparingly for overlapping effects
+    do: -mt-4 for overlapping elements
+    don_t: Negative margins for layout fixing
+    code_good: -mt-8 for card overlap
+    code_bad: -m-2 to fix spacing issues
+    severity: Medium
+  - id: "25"
+    category: Spacing
+    guideline: Space between
+    description: Use space-y-* for vertical lists
+    do: space-y-4 on flex/grid column
+    don_t: Margin on each child
+    code_good: space-y-4
+    code_bad: Each child has mb-4
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/space
+  - id: "26"
+    category: Forms
+    guideline: Focus states
+    description: Always show focus indicators
+    do: focus:ring-2 focus:ring-blue-500
+    don_t: Remove focus outline
+    code_good: focus:ring-2 focus:ring-offset-2
+    code_bad: focus:outline-none (no replacement)
+    severity: High
+  - id: "27"
+    category: Forms
+    guideline: Input sizing
+    description: Consistent input dimensions
+    do: h-10 px-3 for inputs
+    don_t: Inconsistent input heights
+    code_good: h-10 w-full px-3
+    code_bad: Various heights per input
+    severity: Medium
+  - id: "28"
+    category: Forms
+    guideline: Disabled states
+    description: Clear disabled styling
+    do: disabled:opacity-50 disabled:cursor-not-allowed
+    don_t: No disabled indication
+    code_good: disabled:opacity-50
+    code_bad: Same style as enabled
+    severity: Medium
+  - id: "29"
+    category: Forms
+    guideline: Placeholder styling
+    description: Style placeholder text appropriately
+    do: placeholder:text-gray-400
+    don_t: Dark placeholder text
+    code_good: placeholder:text-gray-400
+    code_bad: Default dark placeholder
+    severity: Low
+  - id: "30"
+    category: Responsive
+    guideline: Mobile-first approach
+    description: Start with mobile styles and add breakpoints
+    do: "Default mobile + md: lg: xl:"
+    don_t: Desktop-first approach
+    code_good: text-sm md:text-base
+    code_bad: text-base max-md:text-sm
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/responsive-design
+  - id: "31"
+    category: Responsive
+    guideline: Breakpoint testing
+    description: Test at standard breakpoints
+    do: 320 375 768 1024 1280 1536
+    don_t: Only test on development device
+    code_good: Test all breakpoints
+    code_bad: Single device testing
+    severity: High
+  - id: "32"
+    category: Responsive
+    guideline: Hidden/shown utilities
+    description: Control visibility per breakpoint
+    do: hidden md:block
+    don_t: Different content per breakpoint
+    code_good: hidden md:flex
+    code_bad: Separate mobile/desktop components
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/display
+  - id: "33"
+    category: Buttons
+    guideline: Button sizing
+    description: Consistent button dimensions
+    do: px-4 py-2 or px-6 py-3
+    don_t: Inconsistent button sizes
+    code_good: px-4 py-2 text-sm
+    code_bad: Various padding per button
+    severity: Medium
+  - id: "34"
+    category: Buttons
+    guideline: Touch targets
+    description: Minimum 44px touch target on mobile
+    do: min-h-[44px] on mobile
+    don_t: Small buttons on mobile
+    code_good: min-h-[44px] min-w-[44px]
+    code_bad: h-8 w-8 on mobile
+    severity: High
+  - id: "35"
+    category: Buttons
+    guideline: Loading states
+    description: Show loading feedback
+    do: disabled + spinner icon
+    don_t: Clickable during loading
+    code_good: <Button disabled><Spinner/></Button>
+    code_bad: Button without loading state
+    severity: High
+  - id: "36"
+    category: Buttons
+    guideline: Icon buttons
+    description: Accessible icon-only buttons
+    do: aria-label on icon buttons
+    don_t: Icon button without label
+    code_good: <button aria-label='Close'><XIcon/></button>
+    code_bad: <button><XIcon/></button>
+    severity: High
+  - id: "37"
+    category: Cards
+    guideline: Card structure
+    description: Consistent card styling
+    do: rounded-lg shadow-md p-6
+    don_t: Inconsistent card styles
+    code_good: rounded-2xl shadow-lg p-6
+    code_bad: Mixed card styling
+    severity: Low
+  - id: "38"
+    category: Cards
+    guideline: Card hover states
+    description: Interactive cards should have hover feedback
+    do: hover:shadow-lg transition-shadow
+    don_t: No hover on clickable cards
+    code_good: hover:shadow-xl transition-shadow
+    code_bad: Static cards that are clickable
+    severity: Medium
+  - id: "39"
+    category: Cards
+    guideline: Card spacing
+    description: Consistent internal card spacing
+    do: space-y-4 for card content
+    don_t: Inconsistent internal spacing
+    code_good: space-y-4 or p-6
+    code_bad: Mixed mb-2 mb-4 mb-6
+    severity: Low
+  - id: "40"
+    category: Accessibility
+    guideline: Screen reader text
+    description: Provide context for screen readers
+    do: sr-only for hidden labels
+    don_t: Missing context for icons
+    code_good: <span class='sr-only'>Close menu</span>
+    code_bad: No label for icon button
+    severity: High
+    docs_url: https://tailwindcss.com/docs/screen-readers
+  - id: "41"
+    category: Accessibility
+    guideline: Focus visible
+    description: Show focus only for keyboard users
+    do: focus-visible:ring-2
+    don_t: Focus on all interactions
+    code_good: focus-visible:ring-2
+    code_bad: focus:ring-2 (shows on click too)
+    severity: Medium
+  - id: "42"
+    category: Accessibility
+    guideline: Reduced motion
+    description: Respect user motion preferences
+    do: motion-reduce:animate-none
+    don_t: Ignore motion preferences
+    code_good: motion-reduce:transition-none
+    code_bad: No reduced motion support
+    severity: High
+    docs_url: https://tailwindcss.com/docs/hover-focus-and-other-states#prefers-reduced-motion
+  - id: "43"
+    category: Performance
+    guideline: Configure content paths
+    description: Tailwind needs to know where classes are used
+    do: Use 'content' array in config
+    don_t: Use deprecated 'purge' option (v2)
+    code_good: "content: ['./src/**/*.{js,ts,jsx,tsx}']"
+    code_bad: "purge: [...]"
+    severity: High
+    docs_url: https://tailwindcss.com/docs/content-configuration
+  - id: "44"
+    category: Performance
+    guideline: JIT mode
+    description: Use JIT for faster builds and smaller bundles
+    do: JIT enabled (default in v3)
+    don_t: Full CSS in development
+    code_good: Tailwind v3 defaults
+    code_bad: Tailwind v2 without JIT
+    severity: Medium
+  - id: "45"
+    category: Performance
+    guideline: Avoid @apply bloat
+    description: Use @apply sparingly
+    do: Direct utilities in HTML
+    don_t: Heavy @apply usage
+    code_good: class='px-4 py-2 rounded'
+    code_bad: "@apply px-4 py-2 rounded;"
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/reusing-styles
+  - id: "46"
+    category: Plugins
+    guideline: Official plugins
+    description: Use official Tailwind plugins
+    do: "@tailwindcss/forms typography aspect-ratio"
+    don_t: Custom implementations
+    code_good: "@tailwindcss/forms"
+    code_bad: Custom form reset CSS
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/plugins
+  - id: "47"
+    category: Plugins
+    guideline: Custom utilities
+    description: Create utilities for repeated patterns
+    do: Custom utility in config
+    don_t: Repeated arbitrary values
+    code_good: Custom shadow utility
+    code_bad: shadow-[0_4px_20px_rgba(0,0,0,0.1)] everywhere
+    severity: Medium
+  - id: "48"
+    category: Layout
+    guideline: Container Queries
+    description: Use @container for component-based responsiveness
+    do: "Use @container and @lg: etc."
+    don_t: Media queries for component internals
+    code_good: "@container @lg:grid-cols-2"
+    code_bad: "@media (min-width: ...) inside component"
+    severity: Medium
+    docs_url: https://github.com/tailwindlabs/tailwindcss-container-queries
+  - id: "49"
+    category: Interactivity
+    guideline: Group and Peer
+    description: Style based on parent/sibling state
+    do: group-hover peer-checked
+    don_t: JS for simple state interactions
+    code_good: group-hover:text-blue-500
+    code_bad: onMouseEnter={() => setHover(true)}
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state
+  - id: "50"
+    category: Customization
+    guideline: Arbitrary Values
+    description: Use [] for one-off values
+    do: w-[350px] for specific needs
+    don_t: Creating config for single use
+    code_good: top-[117px] (if strictly needed)
+    code_bad: "style={{ top: '117px' }}"
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values
+  - id: "51"
+    category: Colors
+    guideline: Theme color variables
+    description: Define colors in Tailwind theme and use directly
+    do: bg-primary text-success border-cta
+    don_t: bg-[var(--color-primary)] text-[var(--color-success)]
+    code_good: bg-primary
+    code_bad: bg-[var(--color-primary)]
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/customizing-colors
+  - id: "52"
+    category: Colors
+    guideline: Use bg-linear-to-* for gradients
+    description: Tailwind v4 uses bg-linear-to-* syntax for gradients
+    do: bg-linear-to-r bg-linear-to-b
+    don_t: bg-gradient-to-* (deprecated in v4)
+    code_good: bg-linear-to-r from-blue-500 to-purple-500
+    code_bad: bg-gradient-to-r from-blue-500 to-purple-500
+    severity: Medium
+    docs_url: https://tailwindcss.com/docs/background-image
+  - id: "53"
+    category: Layout
+    guideline: Use shrink-0 shorthand
+    description: Shorter class name for flex-shrink-0
+    do: shrink-0 shrink
+    don_t: flex-shrink-0 flex-shrink
+    code_good: shrink-0
+    code_bad: flex-shrink-0
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/flex-shrink
+  - id: "54"
+    category: Layout
+    guideline: Use size-* for square dimensions
+    description: Single utility for equal width and height
+    do: size-4 size-8 size-12
+    don_t: Separate h-* w-* for squares
+    code_good: size-6
+    code_bad: h-6 w-6
+    severity: Low
+    docs_url: https://tailwindcss.com/docs/size
+  - id: "55"
+    category: Images
+    guideline: SVG explicit dimensions
+    description: Add width/height attributes to SVGs to prevent layout shift before CSS loads
+    do: <svg class='size-6' width='24' height='24'>
+    don_t: SVG without explicit dimensions
+    code_good: <svg class='size-6' width='24' height='24'>
+    code_bad: <svg class='size-6'>
+    severity: High

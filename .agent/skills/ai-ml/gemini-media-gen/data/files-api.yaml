@@ -1,0 +1,96 @@
+# =============================================================================
+# files-api.yaml — Gemini Files API Patterns
+# =============================================================================
+# 6 patterns for file upload, management, and multimodal usage
+# Source: https://ai.google.dev/gemini-api/docs/files
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 6
+
+overview:
+  storage: "20GB per project"
+  max_file_size: "2GB"
+  retention: "48 hours (auto-deleted)"
+  cost: "Free"
+  download: "Cannot download uploaded files"
+
+supported_types:
+  images: ["image/jpeg", "image/png", "image/gif", "image/webp", "image/heic"]
+  video:
+    [
+      "video/mp4",
+      "video/mpeg",
+      "video/quicktime",
+      "video/webm",
+      "video/x-msvideo",
+    ]
+  audio:
+    [
+      "audio/aac",
+      "audio/flac",
+      "audio/mp3",
+      "audio/m4a",
+      "audio/ogg",
+      "audio/wav",
+    ]
+  documents: ["application/pdf", "text/plain", "text/csv", "text/html"]
+
+operations:
+  upload:
+    desc: "Upload a file for use in generation"
+    python: |
+      from google import genai
+      client = genai.Client(api_key="API_KEY")
+      file = client.files.upload(file="video.mp4")
+      print(f"URI: {file.uri}, State: {file.state}")
+    javascript: |
+      const file = await ai.files.upload({ file: "video.mp4" });
+      console.log(`URI: ${file.uri}, State: ${file.state}`);
+
+  check_status:
+    desc: "Wait for video/large file processing"
+    python: |
+      import time
+      while file.state.name == "PROCESSING":
+          time.sleep(5)
+          file = client.files.get(name=file.name)
+      if file.state.name == "FAILED":
+          raise ValueError("File processing failed")
+
+  use_in_generation:
+    desc: "Reference uploaded file in model request"
+    python: |
+      response = client.models.generate_content(
+          model="gemini-2.5-flash",
+          contents=[file, "Summarize this video in 3 bullet points"]
+      )
+
+  list_files:
+    desc: "List all uploaded files"
+    python: |
+      for f in client.files.list():
+          print(f"{f.name}: {f.size_bytes} bytes, {f.state}")
+
+  get_metadata:
+    desc: "Get file metadata by name"
+    python: |
+      file = client.files.get(name="files/abc123")
+      print(f"Name: {file.display_name}, Types: {file.mime_type}")
+
+  delete_file:
+    desc: "Delete a file before 48h auto-expiry"
+    python: |
+      client.files.delete(name=file.name)
+
+best_practices:
+  - "Upload large files (>20MB) via Files API instead of inline"
+  - "Video processing takes 30s-5min depending on size"
+  - "Check state before using: PROCESSING → ACTIVE → use in request"
+  - "Delete sensitive files immediately after use"
+  - "Use display_name for easier file management"
+  - "Files API works across all Gemini models"
+
+# =============================================================================
+# _DOMYH Awesome Code • Files API v1.0_
+# =============================================================================

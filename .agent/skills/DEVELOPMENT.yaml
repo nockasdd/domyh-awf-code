@@ -1,5 +1,6 @@
 # DOMYH Awesome Code — Skill Development Guide
 # How to create and maintain skills
+# Version: 6.2.1
 
 # =============================================================================
 # 📋 OVERVIEW
@@ -62,7 +63,7 @@ workflow:
       template: |
         name: new-skill
         display: New Skill Name
-        category: language  # or framework, devops, support
+        category: language  # or framework, devops, cross-cutting
         priority: 2
         desc: "Brief description under 80 chars"
         keywords:
@@ -93,7 +94,7 @@ workflow:
     4_write_advanced:
       action: "Create ADVANCED.md (optional but recommended)"
       sections:
-        - "# DOMYH Awesome Code v6.1.2 — Tier 3 Reference"
+        - "# DOMYH Awesome Code  — Tier 3 Reference"
         - "## Overview"
         - "## Advanced Patterns"
         - "## Edge Cases"
@@ -149,10 +150,10 @@ categories:
     description: "Infrastructure and deployment"
     examples: [docker, kubernetes, aws, ci-cd]
 
-  support:
-    priority: 2
+  cross-cutting:
+    priority: 4
     description: "Cross-cutting concerns"
-    examples: [database, testing]
+    examples: [database, testing, tailwind, audit-pro]
 
 # =============================================================================
 # 🎯 BEST PRACTICES

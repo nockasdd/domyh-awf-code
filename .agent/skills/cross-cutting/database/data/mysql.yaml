@@ -1,0 +1,130 @@
+# MySQL Patterns - HSA Database Skill
+# Version: MySQL 9.4 (Jul 2025)
+# Updated: 2026-02-05
+
+patterns:
+  # Performance
+  - id: my001
+    pattern: InnoDB Buffer Pool
+    category: performance
+    version: "8+"
+    description: Set innodb_buffer_pool_size to 50-70% RAM
+    example: "innodb_buffer_pool_size = 8G"
+    severity: CRITICAL
+
+  - id: my002
+    pattern: Parallel Query
+    category: performance
+    version: "9"
+    description: MySQL 9 parallel query execution across CPU cores
+    example: "SET SESSION parallel_degree = 4"
+    severity: MEDIUM
+
+  - id: my003
+    pattern: Covering Index
+    category: optimization
+    version: all
+    description: Include all columns in index to avoid table lookup
+    example: "CREATE INDEX idx ON orders (user_id, status, created_at)"
+    severity: HIGH
+
+  - id: my004
+    pattern: Invisible Indexes
+    category: optimization
+    version: "8+"
+    description: Test index removal impact without dropping
+    example: "ALTER TABLE orders ALTER INDEX idx_status INVISIBLE"
+    severity: MEDIUM
+
+  # New in MySQL 9
+  - id: my005
+    pattern: Vector Data Type
+    category: data
+    version: "9.0"
+    description: Native vector support for ML/AI workloads
+    example: "embedding VECTOR(1536)"
+    severity: MEDIUM
+
+  - id: my006
+    pattern: JSON Duality Views
+    category: data
+    version: "9.4"
+    description: Expose relational data as JSON documents
+    example: "CREATE JSON DUALITY VIEW users_json AS SELECT * FROM users"
+    severity: LOW
+
+  - id: my007
+    pattern: JavaScript Stored Programs
+    category: data
+    version: "9.0"
+    description: Create functions/procedures in JavaScript
+    example: "CREATE FUNCTION js_func() RETURNS ... LANGUAGE JAVASCRIPT ..."
+    severity: LOW
+
+  # Debug
+  - id: my008
+    pattern: Slow Query Log
+    category: debug
+    version: all
+    description: Enable and analyze slow query log
+    example: "slow_query_log = 1, long_query_time = 0.5"
+    severity: HIGH
+
+  - id: my009
+    pattern: EXPLAIN ANALYZE JSON
+    category: debug
+    version: "9.2"
+    description: JSON output for execution plans
+    example: "EXPLAIN ANALYZE FORMAT=JSON SELECT ..."
+    severity: MEDIUM
+
+  # Security
+  - id: my010
+    pattern: Prepared Statements
+    category: security
+    version: all
+    description: Always use prepared statements for SQL injection prevention
+    example: "PREPARE stmt FROM 'SELECT * FROM users WHERE id = ?'"
+    severity: CRITICAL
+
+  - id: my011
+    pattern: caching_sha2_password
+    category: security
+    version: "9"
+    description: Default auth method (mysql_native_password removed)
+    example: "CREATE USER 'app'@'%' IDENTIFIED BY 'password'"
+    severity: MEDIUM
+
+  # Scaling
+  - id: my012
+    pattern: Partitioning
+    category: scaling
+    version: all
+    description: Partition large tables by date/range
+    example: "PARTITION BY RANGE (YEAR(created_at))"
+    severity: MEDIUM
+
+  - id: my013
+    pattern: Group Replication
+    category: scaling
+    version: "8+"
+    description: Multi-primary clustering for high availability
+    example: "Plugin: group_replication"
+    severity: HIGH
+
+  # HeatWave
+  - id: my014
+    pattern: HeatWave Lakehouse
+    category: analytics
+    version: "9.1+"
+    description: Query data from object storage
+    example: "SELECT * FROM ... INTO OUTFILE 's3://bucket/'"
+    severity: LOW
+
+  - id: my015
+    pattern: HeatWave AutoML
+    category: analytics
+    version: "9.4"
+    description: Natural language to ML models
+    example: "CALL sys.ML_TRAIN('table', 'target', NULL)"
+    severity: LOW

@@ -1,0 +1,78 @@
+name: browser-agent
+version: "1.0.0"
+display: Browser Agent
+category: tooling
+tier: 1
+priority: 1
+
+desc: "AI browser agent verification patterns: 5-phase comprehensive testing flow, interactive element discovery, systematic interaction testing, evidence-based reporting. Forces agents to test ALL interactive elements (dropdowns, modals, buttons, hover) not just surface-level checks."
+
+  ### Data Files (5 domains, ~40 patterns)
+  - verification-flow.yaml: 5-phase comprehensive testing flow (5)
+  - subagent-patterns.yaml: Task templates for browser_subagent tool (5)
+  - element-discovery.yaml: Element categorization from accessibility tree (15)
+  - recording-patterns.yaml: WebP video recording best practices (6)
+  - reporting-patterns.yaml: Evidence-based reporting templates (4)
+
+triggers:
+  file_patterns: []
+  keywords:
+    # Core
+    - browser agent
+    - browser subagent
+    - browser_subagent
+    - verify frontend
+    - test UI
+    - check website
+    - verify implementation
+    - frontend verification
+    - browser verification
+    # Vietnamese
+    - kiểm tra frontend
+    - kiểm tra giao diện
+    - xác minh frontend
+    # Interaction-specific
+    - test dropdown
+    - test modal
+    - verify button
+    - test hover
+    - comprehensive frontend test
+    - test all interactions
+  intents:
+    - verify frontend works
+    - test the website
+    - check if UI is working
+    - comprehensive frontend test
+    - test all interactive elements
+    - verify dropdown modal button
+
+caps:
+  - 5-phase comprehensive verification flow (load → discover → test → a11y → report)
+  - Interactive element discovery from accessibility snapshot tree
+  - Systematic interaction testing for EACH discovered element
+  - Task description templates for browser_subagent tool
+  - WebP recording patterns and naming conventions
+  - Evidence-based reporting with screenshots and pass/fail
+  - Error detection via console messages and network requests
+  - Dropdown/Modal/Button/Hover verification integration
+  - Multi-page verification workflows
+  - Complex interaction chains (button → modal → form → success)
+
+data_files:
+  - data/verification-flow.yaml
+  - data/subagent-patterns.yaml
+  - data/element-discovery.yaml
+  - data/recording-patterns.yaml
+  - data/reporting-patterns.yaml
+
+related_skills:
+  - playwright
+  - testing
+  - accessibility
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/tooling/browser-agent/data"
+  preload_data: true
+
+# _DOMYH Awesome Code • Browser Agent Skill META v1.0.0_

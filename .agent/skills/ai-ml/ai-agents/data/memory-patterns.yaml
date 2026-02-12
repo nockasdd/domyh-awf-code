@@ -1,0 +1,123 @@
+# Memory Patterns - HSA AI Agents Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: ai-agents
+  domain: memory
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: mem001
+    name: buffer_memory
+    category: short-term
+    description: Simple conversation buffer (in-memory)
+    text: buffer memory conversation history chat in-memory session
+    example: |
+      const memory = new BufferMemory({ returnMessages: true });
+      await memory.saveContext({ input: "Hello" }, { output: "Hi there!" });
+
+  - id: mem002
+    name: summary_memory
+    category: short-term
+    description: Summarize old messages to save context window
+    text: summary memory compress context window token save
+    example: |
+      const memory = new ConversationSummaryMemory({
+        llm: new ChatOpenAI({ model: "gpt-4o-mini" }),
+        returnMessages: true
+      });
+    best_for: "Long conversations that exceed context window"
+
+  - id: mem003
+    name: vector_memory
+    category: long-term
+    description: Vector store for persistent semantic recall
+    text: vector memory embedding persistent recall search semantic
+    example: |
+      const memory = new VectorStoreRetrieverMemory({
+        vectorStore: await Chroma.fromDocuments(docs, embeddings),
+        memoryKey: "relevant_history"
+      });
+
+  - id: mem004
+    name: entity_memory
+    category: long-term
+    description: Track entities mentioned in conversations
+    text: entity memory track people places things mentioned
+    example: |
+      const memory = new EntityMemory({
+        llm: new ChatOpenAI(),
+        entityStore: new InMemoryEntityStore()
+      });
+
+  - id: mem005
+    name: knowledge_graph_memory
+    category: long-term
+    description: Knowledge graph for structured relationships
+    text: knowledge graph memory relationships entities structured
+    note: "Used by MCP Memory Server for persistent knowledge"
+
+  - id: mem006
+    name: window_memory
+    category: short-term
+    description: Sliding window of last K messages
+    text: window memory sliding last k messages buffer limit
+    example: |
+      const memory = new BufferWindowMemory({ k: 10, returnMessages: true });
+    best_for: "Fixed context budget, recent context focus"
+
+  - id: mem007
+    name: checkpoint_persistence
+    category: production
+    description: Checkpoint agent state for resume/replay
+    text: checkpoint persistence save resume replay state recovery
+    example: |
+      // LangGraph checkpointer
+      const checkpointer = new SqliteSaver("checkpoints.db");
+      const graph = workflow.compile({ checkpointer });
+      // Resume from checkpoint
+      await graph.invoke(null, { configurable: { thread_id: "abc" } });
+
+  - id: mem008
+    name: memory_strategy_selection
+    category: reference
+    description: Decision matrix for choosing memory type
+    text: memory strategy selection guide choose type
+    decision_matrix:
+      buffer:
+        {
+          duration: "Session",
+          storage: "RAM",
+          tokens: "High",
+          best_for: "Short chats",
+        }
+      summary:
+        {
+          duration: "Session",
+          storage: "RAM",
+          tokens: "Low",
+          best_for: "Long chats",
+        }
+      window:
+        {
+          duration: "Session",
+          storage: "RAM",
+          tokens: "Medium",
+          best_for: "Recent context",
+        }
+      vector:
+        {
+          duration: "Persistent",
+          storage: "Vector DB",
+          tokens: "Low",
+          best_for: "Knowledge recall",
+        }
+      entity:
+        {
+          duration: "Persistent",
+          storage: "DB",
+          tokens: "Medium",
+          best_for: "Entity tracking",
+        }

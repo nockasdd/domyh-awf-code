@@ -1,0 +1,314 @@
+# =============================================================================
+# Zig Async Patterns (Feb 2026)
+# Version: Zig 0.14+
+# =============================================================================
+
+metadata:
+  skill: zig
+  domain: async
+  version: "0.14"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: zig101
+    name: Async/Await (deprecated)
+    category: concurrency
+    version: "Zig 0.11"
+    description: |
+      NOTE: Async removed in 0.12. Use threads or io_uring.
+      Legacy pattern for reference.
+    text: async await suspend resume frame
+    example: |
+      // ⚠️ ASYNC REMOVED in Zig 0.12+
+      // This is legacy code for reference only
+
+      // ✅ Modern alternative: io_uring or threads
+      const std = @import("std");
+
+      // Use std.Thread for concurrency
+      fn modernConcurrency() !void {
+          var threads: [4]std.Thread = undefined;
+          
+          for (&threads, 0..) |*thread, i| {
+              thread.* = try std.Thread.spawn(.{}, worker, .{i});
+          }
+          
+          for (threads) |thread| {
+              thread.join();
+          }
+      }
+
+      fn worker(id: usize) void {
+          std.debug.print("Worker {} running\n", .{id});
+      }
+
+      // ✅ For high-performance I/O, use io_uring (Linux)
+      // or platform-specific async I/O
+
+      // ✅ Alternative: Zig's std.event.Loop (being redesigned)
+      // Check latest Zig documentation for updates
+    severity: LOW
+    docs_url: https://ziglang.org/documentation/master/
+
+  - id: zig102
+    name: Build System
+    category: build
+    version: "Zig"
+    description: |
+      build.zig for project configuration.
+      Dependencies, cross-compilation.
+    text: build.zig build system package dependencies
+    example: |
+      const std = @import("std");
+
+      pub fn build(b: *std.Build) void {
+          // ✅ Standard target and optimization
+          const target = b.standardTargetOptions(.{});
+          const optimize = b.standardOptimizeOption(.{});
+          
+          // ✅ Main executable
+          const exe = b.addExecutable(.{
+              .name = "myapp",
+              .root_source_file = b.path("src/main.zig"),
+              .target = target,
+              .optimize = optimize,
+          });
+          
+          // ✅ Link C library
+          exe.linkSystemLibrary("sqlite3");
+          exe.linkLibC();
+          
+          // ✅ Add dependency (build.zig.zon)
+          const clap = b.dependency("clap", .{
+              .target = target,
+              .optimize = optimize,
+          });
+          exe.root_module.addImport("clap", clap.module("clap"));
+          
+          // ✅ Install artifact
+          b.installArtifact(exe);
+          
+          // ✅ Run step
+          const run_cmd = b.addRunArtifact(exe);
+          run_cmd.step.dependOn(b.getInstallStep());
+          
+          if (b.args) |args| {
+              run_cmd.addArgs(args);
+          }
+          
+          const run_step = b.step("run", "Run the app");
+          run_step.dependOn(&run_cmd.step);
+          
+          // ✅ Test step
+          const tests = b.addTest(.{
+              .root_source_file = b.path("src/main.zig"),
+              .target = target,
+              .optimize = optimize,
+          });
+          
+          const test_step = b.step("test", "Run tests");
+          test_step.dependOn(&b.addRunArtifact(tests).step);
+      }
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#Build-System
+
+  - id: zig103
+    name: C Interop
+    category: ffi
+    version: "Zig"
+    description: |
+      Seamless C library integration.
+      @cImport, translate-c, linking.
+    text: c interop ffi cimport translate extern
+    example: |
+      const std = @import("std");
+
+      // ✅ Import C headers directly
+      const c = @cImport({
+          @cInclude("stdio.h");
+          @cInclude("stdlib.h");
+          @cInclude("mylib.h");
+      });
+
+      pub fn main() void {
+          // ✅ Call C functions
+          _ = c.printf("Hello from C!\n");
+          
+          // ✅ Use C types
+          var ptr: [*c]c.char = c.malloc(100);
+          defer c.free(ptr);
+          
+          // ✅ Pass Zig strings to C
+          const zig_str = "Hello";
+          _ = c.puts(zig_str.ptr);  // .ptr gives [*:0]u8
+      }
+
+      // ✅ Export Zig functions to C
+      export fn add_numbers(a: c_int, b: c_int) c_int {
+          return a + b;
+      }
+
+      // ✅ Extern C function declarations
+      extern "c" fn external_func(x: c_int) c_int;
+
+      // ✅ Packed structs for C compatibility
+      const CStruct = extern struct {
+          field1: c_int,
+          field2: c_uint,
+          field3: [32]u8,
+      };
+
+      // ✅ Build.zig linking
+      // exe.linkSystemLibrary("openssl");
+      // exe.addIncludePath(.{ .path = "/usr/include" });
+      // exe.addLibraryPath(.{ .path = "/usr/lib" });
+
+      // ✅ Translate-c output
+      // zig translate-c header.h > bindings.zig
+    severity: HIGH
+    docs_url: https://ziglang.org/documentation/master/#C-Interop
+
+  - id: zig104
+    name: Thread Pool
+    category: concurrency
+    version: "Zig"
+    description: |
+      Standard library thread pool.
+      Parallel work distribution.
+    text: thread pool parallel concurrent worker
+    example: |
+      const std = @import("std");
+
+      // ✅ Use standard library thread pool
+      pub fn parallelProcess(items: []Item) !void {
+          var pool: std.Thread.Pool = undefined;
+          try pool.init(.{
+              .allocator = allocator,
+              .n_jobs = null,  // Uses available CPUs
+          });
+          defer pool.deinit();
+          
+          // ✅ Spawn parallel work
+          for (items, 0..) |item, i| {
+              pool.spawn(processItem, .{item, i});
+          }
+          
+          // Wait for completion
+          pool.wait();
+      }
+
+      fn processItem(item: Item, index: usize) void {
+          std.debug.print("Processing item {}\n", .{index});
+          // Do work...
+      }
+
+      // ✅ Manual thread management
+      fn manualThreads() !void {
+          const cpu_count = try std.Thread.getCpuCount();
+          var threads = try allocator.alloc(std.Thread, cpu_count);
+          defer allocator.free(threads);
+          
+          for (threads, 0..) |*t, i| {
+              t.* = try std.Thread.spawn(.{}, worker, .{i});
+          }
+          
+          for (threads) |t| {
+              t.join();
+          }
+      }
+
+      // ✅ Thread-safe data with Mutex
+      var mutex = std.Thread.Mutex{};
+      var shared_data: u64 = 0;
+
+      fn safeIncrement() void {
+          mutex.lock();
+          defer mutex.unlock();
+          shared_data += 1;
+      }
+
+      // ✅ Atomic operations
+      var counter = std.atomic.Value(u64).init(0);
+
+      fn atomicIncrement() void {
+          _ = counter.fetchAdd(1, .seq_cst);
+      }
+    severity: MEDIUM
+    docs_url: https://ziglang.org/documentation/master/#Thread-Pool
+
+  - id: zig105
+    name: I/O Patterns
+    category: io
+    version: "Zig"
+    description: |
+      File and network I/O patterns.
+      Buffered I/O, memory mapping.
+    text: io file network buffered reader writer
+    example: |
+      const std = @import("std");
+
+      // ✅ File I/O
+      fn readFile(path: []const u8) ![]u8 {
+          const file = try std.fs.cwd().openFile(path, .{});
+          defer file.close();
+          
+          // Read entire file
+          return file.readToEndAlloc(allocator, 10 * 1024 * 1024);
+      }
+
+      // ✅ Buffered writer
+      fn writeBuffered(path: []const u8, data: []const u8) !void {
+          const file = try std.fs.cwd().createFile(path, .{});
+          defer file.close();
+          
+          var buffered = std.io.bufferedWriter(file.writer());
+          try buffered.writer().writeAll(data);
+          try buffered.flush();
+      }
+
+      // ✅ Line-by-line reading
+      fn processLines(path: []const u8) !void {
+          const file = try std.fs.cwd().openFile(path, .{});
+          defer file.close();
+          
+          var reader = std.io.bufferedReader(file.reader());
+          var line_buf: [4096]u8 = undefined;
+          
+          while (reader.reader().readUntilDelimiter(&line_buf, '\n')) |line| {
+              std.debug.print("{s}\n", .{line});
+          } else |err| {
+              if (err != error.EndOfStream) return err;
+          }
+      }
+
+      // ✅ TCP client
+      fn tcpClient(host: []const u8, port: u16) !void {
+          const stream = try std.net.tcpConnectToHost(allocator, host, port);
+          defer stream.close();
+          
+          try stream.writer().writeAll("GET / HTTP/1.1\r\n\r\n");
+          
+          var buf: [4096]u8 = undefined;
+          const n = try stream.read(&buf);
+          std.debug.print("Received: {s}\n", .{buf[0..n]});
+      }
+
+      // ✅ TCP server
+      fn tcpServer(port: u16) !void {
+          var server = std.net.StreamServer.init(.{});
+          defer server.deinit();
+          
+          try server.listen(std.net.Address.parseIp("0.0.0.0", port) catch unreachable);
+          
+          while (true) {
+              if (server.accept()) |conn| {
+                  defer conn.stream.close();
+                  // Handle connection
+              } else |err| {
+                  std.debug.print("Accept error: {}\n", .{err});
+              }
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://ziglang.org/documentation/master/#IO

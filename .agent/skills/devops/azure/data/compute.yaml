@@ -1,0 +1,83 @@
+# Azure Compute Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: AZ-CMP-001
+    name: Azure Functions
+    category: serverless
+    description: |
+      Azure serverless functions.
+    example: |
+      // TypeScript HTTP trigger
+      import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+
+      export async function httpTrigger(
+        request: HttpRequest,
+        context: InvocationContext
+      ): Promise<HttpResponseInit> {
+        const name = request.query.get("name") || (await request.text());
+        return { body: `Hello, ${name}!` };
+      }
+
+      app.http("httpTrigger", {
+        methods: ["GET", "POST"],
+        authLevel: "anonymous",
+        handler: httpTrigger
+      });
+
+  - id: AZ-CMP-002
+    name: Azure Container Apps
+    category: containers
+    description: |
+      Serverless containers on Azure.
+    text: |
+      Similar to Cloud Run.
+      Auto-scaling, Dapr integration, revision management.
+    example: |
+      az containerapp create \
+        --name my-api \
+        --resource-group my-rg \
+        --environment my-env \
+        --image myregistry.azurecr.io/api:latest \
+        --target-port 3000 \
+        --ingress external \
+        --min-replicas 1 \
+        --max-replicas 10
+
+  - id: AZ-CMP-003
+    name: Azure App Service
+    category: paas
+    description: |
+      Platform-as-a-Service for web apps.
+    text: |
+      Supports: .NET, Node.js, Python, Java, PHP, Ruby
+      Features: Deployment slots, auto-scale, custom domains, SSL
+
+      az webapp create --name my-webapp --resource-group my-rg --plan my-plan
+
+  - id: AZ-CMP-004
+    name: AKS (Azure Kubernetes)
+    category: kubernetes
+    description: |
+      Managed Kubernetes on Azure.
+    text: |
+      az aks create --resource-group my-rg --name my-cluster \
+        --node-count 3 --generate-ssh-keys \
+        --tier standard
+
+      az aks get-credentials --resource-group my-rg --name my-cluster
+      kubectl get nodes
+
+  - id: AZ-CMP-005
+    name: Service Selection
+    category: comparison
+    description: |
+      Azure compute service comparison.
+    text: |
+      | Service | Best For | Scale | Cost Model |
+      |---------|----------|-------|-----------|
+      | Functions | Events | Auto | Per execution |
+      | Container Apps | Containers | Auto | Per vCPU/memory |
+      | App Service | Web apps | Auto | Per plan |
+      | AKS | Complex apps | Semi-auto | Per node |
+      | VMs | Custom | Manual | Per hour |

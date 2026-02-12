@@ -1,0 +1,165 @@
+# Socket.IO Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: SIO-001
+    name: Server Setup
+    category: setup
+    description: |
+      Socket.IO server with Express.
+    example: |
+      import { Server } from "socket.io";
+      import { createServer } from "http";
+      import express from "express";
+
+      const app = express();
+      const httpServer = createServer(app);
+      const io = new Server(httpServer, {
+        cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
+        pingTimeout: 60000,
+        pingInterval: 25000
+      });
+
+      io.on("connection", (socket) => {
+        console.log(`Connected: ${socket.id}`);
+        socket.on("disconnect", (reason) => console.log(`Disconnected: ${reason}`));
+      });
+
+      httpServer.listen(3001);
+
+  - id: SIO-002
+    name: Rooms and Namespaces
+    category: organization
+    description: |
+      Group connections using rooms and namespaces.
+    text: |
+      Rooms: Group sockets within a namespace. Dynamic join/leave.
+      Namespaces: Separate communication channels. Defined on server.
+
+      Room → For grouping users (e.g., chat rooms, game lobbies)
+      Namespace → For separating features (e.g., /chat, /admin)
+    example: |
+      // Rooms
+      socket.join(`room:${roomId}`);
+      socket.leave(`room:${roomId}`);
+
+      io.to(`room:${roomId}`).emit("message", data);     // To room
+      socket.to(`room:${roomId}`).emit("message", data);  // Except sender
+
+      // Namespaces
+      const chatNs = io.of("/chat");
+      const adminNs = io.of("/admin");
+
+      chatNs.on("connection", (socket) => {
+        socket.on("sendMessage", (msg) => {
+          chatNs.emit("newMessage", msg);
+        });
+      });
+
+  - id: SIO-003
+    name: Redis Adapter (Scaling)
+    category: scaling
+    description: |
+      Scale Socket.IO across multiple server instances.
+    text: |
+      Without adapter: Each server only knows its own connections.
+      With Redis adapter: All servers share events via Redis Pub/Sub.
+    example: |
+      import { createAdapter } from "@socket.io/redis-adapter";
+      import { createClient } from "redis";
+
+      const pubClient = createClient({ url: "redis://localhost:6379" });
+      const subClient = pubClient.duplicate();
+
+      await Promise.all([pubClient.connect(), subClient.connect()]);
+
+      io.adapter(createAdapter(pubClient, subClient));
+      // Now io.to("room").emit() works across all instances
+
+  - id: SIO-004
+    name: Authentication Middleware
+    category: security
+    description: |
+      Authenticate Socket.IO connections.
+    example: |
+      io.use(async (socket, next) => {
+        const token = socket.handshake.auth.token;
+        if (!token) return next(new Error("Authentication required"));
+        
+        try {
+          const user = await verifyJWT(token);
+          socket.data.user = user;
+          next();
+        } catch (err) {
+          next(new Error("Invalid token"));
+        }
+      });
+
+      // Client
+      const socket = io("http://localhost:3001", {
+        auth: { token: "Bearer eyJ..." }
+      });
+
+  - id: SIO-005
+    name: Acknowledgement Callbacks
+    category: reliability
+    description: |
+      Confirm message delivery with ack callbacks.
+    example: |
+      // Client sends with ack
+      socket.emit("sendMessage", { text: "Hello" }, (response) => {
+        console.log("Server confirmed:", response);
+      });
+
+      // Server handles with ack
+      socket.on("sendMessage", (data, callback) => {
+        saveMessage(data);
+        callback({ status: "ok", id: newMessageId });
+      });
+
+  - id: SIO-006
+    name: Error Handling
+    category: reliability
+    description: |
+      Handle connection errors and disconnections.
+    example: |
+      // Client-side
+      socket.on("connect_error", (err) => {
+        console.error("Connection error:", err.message);
+        if (err.message === "Invalid token") {
+          refreshToken();
+        }
+      });
+
+      socket.on("disconnect", (reason) => {
+        if (reason === "io server disconnect") {
+          socket.connect(); // Server disconnected, try reconnecting
+        }
+        // else: client will auto-reconnect
+      });
+
+  - id: SIO-007
+    name: Connection State Recovery
+    category: reliability
+    description: |
+      Socket.IO v4.6+ connection state recovery.
+    text: |
+      Server stores missed packets + room memberships.
+      Client reconnects and gets missed events automatically.
+    example: |
+      // Server: Enable recovery
+      const io = new Server(httpServer, {
+        connectionStateRecovery: {
+          maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+          skipMiddlewares: true
+        }
+      });
+
+      // Client: Check if recovered
+      socket.on("connect", () => {
+        if (socket.recovered) {
+          console.log("Connection recovered, missed events replayed");
+        } else {
+          console.log("Fresh connection, fetch initial state");
+        }
+      });

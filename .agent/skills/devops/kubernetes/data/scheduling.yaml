@@ -1,0 +1,267 @@
+# =============================================================================
+# Kubernetes Scheduling Patterns (Feb 2026)
+# =============================================================================
+# Kueue, Priority Classes, Affinity, Topology Spread
+
+metadata:
+  skill: kubernetes
+  domain: scheduling
+  version: "1.33.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: k8s030
+    name: Kueue (Job Queuing)
+    category: scheduling
+    version: "1.27+"
+    description: Advanced job queuing and fair scheduling for ML workloads
+    text: kueue job queue scheduling batch ml gpu priority
+    example: |
+      # Install Kueue
+      kubectl apply -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.11.0/manifests.yaml
+
+      # Create ResourceFlavor for GPU nodes
+      apiVersion: kueue.x-k8s.io/v1beta1
+      kind: ResourceFlavor
+      metadata:
+        name: gpu-spot
+      spec:
+        nodeLabels:
+          node.kubernetes.io/instance-type: g5.xlarge
+
+      # Create ClusterQueue
+      apiVersion: kueue.x-k8s.io/v1beta1
+      kind: ClusterQueue
+      metadata:
+        name: ml-team
+      spec:
+        namespaceSelector: {}
+        resourceGroups:
+          - coveredResources: ["cpu", "memory", "nvidia.com/gpu"]
+            flavors:
+              - name: gpu-spot
+                resources:
+                  - name: cpu
+                    nominalQuota: 100
+                  - name: memory
+                    nominalQuota: 400Gi
+                  - name: nvidia.com/gpu
+                    nominalQuota: 8
+
+      # Submit Job to queue
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: training-job
+        labels:
+          kueue.x-k8s.io/queue-name: ml-team
+      spec:
+        suspend: true  # Kueue will unsuspend when resources available
+        template:
+          spec:
+            containers:
+              - name: trainer
+                image: pytorch:latest
+                resources:
+                  requests:
+                    nvidia.com/gpu: 1
+    severity: HIGH
+    docs_url: https://kueue.sigs.k8s.io/
+
+  - id: k8s031
+    name: Priority Classes
+    category: scheduling
+    version: "1.14+"
+    description: Pod priority and preemption for critical workloads
+    text: priority class preemption scheduling critical workload
+    example: |
+      # System-critical priority
+      apiVersion: scheduling.k8s.io/v1
+      kind: PriorityClass
+      metadata:
+        name: system-critical
+      value: 1000000
+      globalDefault: false
+      preemptionPolicy: PreemptLowerPriority
+      description: "Critical system components"
+
+      # High priority (can preempt)
+      apiVersion: scheduling.k8s.io/v1
+      kind: PriorityClass
+      metadata:
+        name: high-priority
+      value: 100000
+      preemptionPolicy: PreemptLowerPriority
+
+      # Low priority (no preemption, can be evicted)
+      apiVersion: scheduling.k8s.io/v1
+      kind: PriorityClass
+      metadata:
+        name: low-priority
+      value: 1000
+      preemptionPolicy: Never
+      description: "Background jobs, can be evicted"
+
+      # Use in Pod
+      spec:
+        priorityClassName: high-priority
+        containers:
+          - name: app
+
+      # Built-in priority classes:
+      # - system-cluster-critical (2B)
+      # - system-node-critical (2B)
+    severity: MEDIUM
+    docs_url: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+
+  - id: k8s032
+    name: Pod Affinity/Anti-Affinity
+    category: scheduling
+    version: "1.0+"
+    description: Co-locate or spread pods based on labels
+    text: affinity anti-affinity scheduling colo cation spread pods
+    example: |
+      apiVersion: apps/v1
+      kind: Deployment
+      spec:
+        template:
+          spec:
+            affinity:
+              # Prefer same node as cache pods
+              podAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 100
+                    podAffinityTerm:
+                      labelSelector:
+                        matchLabels:
+                          app: redis
+                      topologyKey: kubernetes.io/hostname
+
+              # Never on same node as other replicas
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchLabels:
+                        app: api
+                    topologyKey: kubernetes.io/hostname
+
+              # Prefer SSD nodes
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 50
+                    preference:
+                      matchExpressions:
+                        - key: disk-type
+                          operator: In
+                          values: ["ssd"]
+
+      # Topology keys:
+      # - kubernetes.io/hostname (node level)
+      # - topology.kubernetes.io/zone (zone level)
+      # - topology.kubernetes.io/region (region level)
+    severity: MEDIUM
+    docs_url: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+
+  - id: k8s033
+    name: Topology Spread Constraints
+    category: scheduling
+    version: "1.19+"
+    description: Evenly distribute pods across zones/nodes
+    text: topology spread zones nodes distribution availability
+    example: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: web
+      spec:
+        replicas: 6
+        template:
+          spec:
+            topologySpreadConstraints:
+              # Spread across zones
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: web
+                # K8s 1.27+: Consider only schedulable domains
+                nodeTaintsPolicy: Honor
+
+              # Spread across nodes
+              - maxSkew: 1
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: web
+
+      # Result with 3 zones, 6 replicas:
+      # - zone-a: 2 pods
+      # - zone-b: 2 pods
+      # - zone-c: 2 pods
+
+      # whenUnsatisfiable options:
+      # - DoNotSchedule: hard constraint
+      # - ScheduleAnyway: soft constraint (prefer even)
+    severity: HIGH
+    docs_url: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
+  - id: k8s034
+    name: Resource Quotas
+    category: scheduling
+    version: "1.0+"
+    description: Limit resource consumption per namespace
+    text: resource quota namespace limits cpu memory storage
+    example: |
+      # Namespace resource quota
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: production-quota
+        namespace: production
+      spec:
+        hard:
+          # Compute limits
+          requests.cpu: "100"
+          requests.memory: 200Gi
+          limits.cpu: "200"
+          limits.memory: 400Gi
+
+          # Storage limits
+          requests.storage: 500Gi
+          persistentvolumeclaims: 20
+
+          # Object count limits
+          pods: 100
+          services: 50
+          secrets: 100
+          configmaps: 100
+
+          # GPU limits
+          requests.nvidia.com/gpu: 4
+
+      # Limit ranges for defaults
+      apiVersion: v1
+      kind: LimitRange
+      metadata:
+        name: default-limits
+        namespace: production
+      spec:
+        limits:
+          - type: Container
+            default:
+              cpu: 500m
+              memory: 512Mi
+            defaultRequest:
+              cpu: 100m
+              memory: 128Mi
+            max:
+              cpu: 4
+              memory: 8Gi
+
+      # Check quota usage:
+      kubectl describe quota -n production
+    severity: MEDIUM
+    docs_url: https://kubernetes.io/docs/concepts/policy/resource-quotas/

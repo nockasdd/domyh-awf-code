@@ -1,0 +1,77 @@
+# BDD and ATDD Patterns
+# Behavior-Driven and Acceptance Test-Driven Development
+
+patterns:
+  - name: gherkin-syntax
+    type: bdd
+    description: "Given-When-Then scenarios for behavior specification"
+    format: |
+      Feature: [Business capability]
+        Background: [Shared setup]
+        Scenario: [Specific case]
+          Given [initial context]
+          When [action occurs]
+          Then [expected outcome]
+          And [additional outcome]
+    tools:
+      javascript: "Cucumber.js"
+      python: "behave, pytest-bdd"
+      java: "Cucumber-JVM"
+      ruby: "Cucumber"
+      csharp: "SpecFlow"
+      go: "godog"
+
+  - name: scenario-outline
+    type: bdd
+    description: "Parameterized scenarios for data-driven testing"
+    example: |
+      Scenario Outline: Discount calculation
+        Given a cart with total <total>
+        When discount type is <type>
+        Then final price is <expected>
+        Examples:
+          | total | type      | expected |
+          | 100   | percent10 | 90       |
+          | 200   | flat20    | 180      |
+          | 50    | none      | 50       |
+
+  - name: three-amigos
+    type: atdd
+    description: "Collaborative specification by developer, tester, and business"
+    participants:
+      - role: business
+        focus: "What should happen? Why?"
+      - role: developer
+        focus: "How to implement? Edge cases?"
+      - role: tester
+        focus: "What could go wrong? Missing scenarios?"
+    output: "Agreed acceptance criteria as executable specifications"
+
+  - name: specification-by-example
+    type: atdd
+    description: "Use concrete examples to define behavior"
+    process:
+      - "Derive scope from business goal"
+      - "Specify using key examples"
+      - "Refine examples with stakeholders"
+      - "Automate examples as tests"
+      - "Validate frequently"
+
+  - name: living-documentation
+    type: bdd
+    description: "Tests serve as always-current documentation"
+    benefits:
+      - "Specs are executable — always up to date"
+      - "Non-technical stakeholders can read scenarios"
+      - "Single source of truth for behavior"
+
+  - name: user-story-mapping
+    type: atdd
+    description: "Map user stories to acceptance criteria to tests"
+    flow:
+      - step: "User Story"
+        format: "As a [role], I want [feature], so that [benefit]"
+      - step: "Acceptance Criteria"
+        format: "Given-When-Then scenarios"
+      - step: "Test Cases"
+        format: "Automated BDD/ATDD tests"

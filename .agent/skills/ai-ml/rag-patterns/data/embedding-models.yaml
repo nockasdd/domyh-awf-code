@@ -1,0 +1,76 @@
+# =============================================================================
+# embedding-models.yaml — Embedding Model Selection
+# =============================================================================
+
+version: "1.0.0"
+
+models:
+  openai:
+    - name: "text-embedding-3-small"
+      dimensions: 1536
+      max_tokens: 8191
+      price_per_1M: "$0.02"
+      best_for: "Cost-effective, general purpose"
+
+    - name: "text-embedding-3-large"
+      dimensions: 3072
+      max_tokens: 8191
+      price_per_1M: "$0.13"
+      best_for: "Highest quality, retrieval-critical"
+
+  cohere:
+    - name: "embed-v4"
+      dimensions: 1024
+      max_tokens: 512
+      features: ["search_document", "search_query", "classification"]
+      best_for: "Multilingual, separate query/doc models"
+
+  jina:
+    - name: "jina-embeddings-v3"
+      dimensions: 1024
+      max_tokens: 8192
+      best_for: "Long documents, code"
+
+  local:
+    - name: "BAAI/bge-m3"
+      dimensions: 1024
+      max_tokens: 8192
+      best_for: "Self-hosted, multilingual, free"
+
+    - name: "sentence-transformers/all-MiniLM-L6-v2"
+      dimensions: 384
+      max_tokens: 256
+      best_for: "Lightweight, fast, prototyping"
+
+selection_guide:
+  decision_tree:
+    - question: "Budget matters?"
+      yes: "text-embedding-3-small or local BGE-M3"
+      no: "text-embedding-3-large"
+
+    - question: "Need multilingual?"
+      yes: "Cohere embed-v4 or BGE-M3"
+      no: "OpenAI models"
+
+    - question: "Self-hosted required?"
+      yes: "BGE-M3 or sentence-transformers"
+      no: "OpenAI or Cohere (managed)"
+
+    - question: "Long documents (>2K tokens)?"
+      yes: "Jina v3 or BGE-M3 (8K context)"
+      no: "Any model works"
+
+  dimensionality:
+    description: |
+      Higher dimensions = better quality but more storage/compute.
+      OpenAI 3-large supports Matryoshka (reduce dims without retraining).
+    example: |
+      # Reduce OpenAI 3-large from 3072 to 256 dimensions
+      from openai import OpenAI
+      response = client.embeddings.create(
+          model="text-embedding-3-large",
+          input="text",
+          dimensions=256  # Matryoshka reduction
+      )
+
+# _DOMYH Awesome Code • Embedding Models_

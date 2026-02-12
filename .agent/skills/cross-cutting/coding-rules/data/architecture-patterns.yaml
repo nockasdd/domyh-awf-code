@@ -1,0 +1,295 @@
+metadata:
+  skill: coding-rules
+  domain: architecture_patterns
+  version: 6.2.1
+  updated: "2026-02-12"
+  migrated_from: architecture-patterns.yaml
+  patterns_count: 10
+  columns:
+    - architecture
+    - description
+    - best_for
+    - folder_structure
+    - detail_tree
+    - frameworks
+    - separation_by
+    - testability
+    - complexity
+patterns:
+  - id: item_001
+    architecture: Clean Architecture
+    description: Dependency inversion - domain at center
+    best_for: Enterprise apps with complex business logic
+    folder_structure: Domain/Application/Infrastructure/Presentation
+    detail_tree: |
+      src/
+      ├── Domain/
+      │   ├── Entities/
+      │   ├── ValueObjects/
+      │   ├── Repositories/       # Interfaces only
+      │   └── DomainEvents/
+      ├── Application/
+      │   ├── Commands/
+      │   ├── Queries/
+      │   └── Behaviors/          # Validation, logging
+      ├── Infrastructure/
+      │   ├── Persistence/        # EF, Dapper, sqlc
+      │   ├── Messaging/          # RabbitMQ, Kafka
+      │   └── Services/           # External APIs
+      └── Presentation/
+          ├── Controllers/
+          └── Middlewares/
+    frameworks:
+      - "C#/.NET"
+      - "Java/Spring Boot"
+      - "Go"
+      - "Python/FastAPI"
+      - "TypeScript/NestJS"
+    separation_by: Dependency direction
+    testability: Excellent
+    complexity: High
+  - id: item_002
+    architecture: Vertical Slice
+    description: Organize by feature not layer
+    best_for: Feature-rich apps with independent features
+    folder_structure: Features/UserManagement Features/Orders
+    detail_tree: |
+      src/
+      ├── Features/
+      │   ├── Users/
+      │   │   ├── CreateUser.cs     # Command + Handler
+      │   │   ├── GetUser.cs        # Query + Handler
+      │   │   └── UserValidator.cs
+      │   ├── Orders/
+      │   │   ├── CreateOrder.cs
+      │   │   ├── GetOrders.cs
+      │   │   └── OrderValidator.cs
+      │   └── Products/
+      │       └── ...
+      └── Shared/
+          ├── Database/
+          └── Middleware/
+    frameworks:
+      - "C#/.NET (MediatR)"
+      - "TypeScript/NestJS"
+      - "Go"
+    separation_by: Business capability
+    testability: Excellent
+    complexity: Medium
+  - id: item_003
+    architecture: Hexagonal (Ports & Adapters)
+    description: Domain isolated by ports
+    best_for: Domain-driven design with multiple I/O
+    folder_structure: Domain/Adapters/Ports
+    detail_tree: |
+      src/
+      ├── Domain/
+      │   ├── Models/
+      │   └── Services/
+      ├── Ports/
+      │   ├── Input/              # Use case interfaces
+      │   └── Output/             # Repository interfaces
+      └── Adapters/
+          ├── Primary/            # REST, gRPC, CLI
+          │   ├── Rest/
+          │   └── Grpc/
+          └── Secondary/          # DB, Queue, Cache
+              ├── Postgres/
+              └── Redis/
+    frameworks:
+      - "Java/Spring Boot"
+      - "Go"
+      - "Rust/Axum"
+      - "TypeScript"
+    separation_by: Interface boundaries
+    testability: Excellent
+    complexity: High
+  - id: item_004
+    architecture: Layered (Traditional)
+    description: Separate by technical concern
+    best_for: Simple CRUD apps
+    folder_structure: Controllers/Services/Repositories/Models
+    detail_tree: |
+      src/
+      ├── controllers/            # HTTP handlers
+      ├── services/               # Business logic
+      ├── repositories/           # Data access
+      ├── models/                 # Data structures
+      ├── middleware/              # Auth, logging
+      └── utils/                  # Helpers
+    frameworks:
+      - "Any language"
+      - "Express.js"
+      - "Flask"
+      - "Rails"
+      - "Laravel"
+    separation_by: Technical role
+    testability: Medium
+    complexity: Low
+  - id: item_005
+    architecture: Modular Monolith
+    description: Self-contained modules
+    best_for: Large teams with clear domain boundaries
+    folder_structure: Modules/Users Modules/Orders (each with own layers)
+    detail_tree: |
+      src/
+      ├── Modules/
+      │   ├── Users/
+      │   │   ├── Domain/
+      │   │   ├── Application/
+      │   │   ├── Infrastructure/
+      │   │   └── Api/
+      │   ├── Orders/
+      │   │   ├── Domain/
+      │   │   ├── Application/
+      │   │   ├── Infrastructure/
+      │   │   └── Api/
+      │   └── Payments/
+      │       └── ...
+      └── Shared/
+          ├── Kernel/             # Shared domain
+          └── Infrastructure/
+    frameworks:
+      - "C#/.NET"
+      - "Java/Spring Boot"
+      - "Go"
+      - "Python/Django"
+    separation_by: Bounded context
+    testability: Very Good
+    complexity: Medium-High
+  - id: item_006
+    architecture: Package by Feature
+    description: Feature folders with own layers
+    best_for: Java/Android apps
+    folder_structure: user/ order/ payment/ (each with own layers)
+    detail_tree: |
+      src/
+      ├── user/
+      │   ├── UserController.java
+      │   ├── UserService.java
+      │   ├── UserRepository.java
+      │   └── User.java
+      ├── order/
+      │   ├── OrderController.java
+      │   ├── OrderService.java
+      │   ├── OrderRepository.java
+      │   └── Order.java
+      └── payment/
+          └── ...
+    frameworks:
+      - "Java/Spring Boot"
+      - "Kotlin/Android"
+      - "Go"
+    separation_by: Feature
+    testability: Good
+    complexity: Medium
+  - id: item_007
+    architecture: Feature-Sliced Design (FSD)
+    description: Hierarchical feature layers
+    best_for: Large frontend apps 50+ pages
+    folder_structure: app/pages/widgets/features/entities/shared
+    detail_tree: |
+      src/
+      ├── app/                    # Providers, routing, global styles
+      ├── pages/                  # Route-level components
+      ├── widgets/                # Page sections (Header, Sidebar)
+      ├── features/               # User interactions (auth, cart)
+      │   ├── auth/
+      │   │   ├── ui/
+      │   │   ├── model/
+      │   │   └── api/
+      │   └── cart/
+      ├── entities/               # Business models (user, product)
+      │   ├── user/
+      │   └── product/
+      └── shared/                 # UI kit, utils, configs
+          ├── ui/
+          ├── lib/
+          └── config/
+    frameworks:
+      - "React"
+      - "Vue.js"
+      - "Angular"
+      - "Svelte"
+    separation_by: Business + technical
+    testability: Very Good
+    complexity: Medium-High
+  - id: item_008
+    architecture: Atomic Design
+    description: Component hierarchy
+    best_for: Design systems and component libraries
+    folder_structure: atoms/molecules/organisms/templates/pages
+    detail_tree: |
+      src/
+      ├── atoms/                  # Button, Input, Icon, Label
+      ├── molecules/              # SearchBar, FormField, Card
+      ├── organisms/              # Header, Sidebar, DataTable
+      ├── templates/              # PageLayout, AuthLayout
+      └── pages/                  # HomePage, DashboardPage
+    frameworks:
+      - "React + Storybook"
+      - "Vue.js"
+      - "Web Components"
+    separation_by: Component complexity
+    testability: Good
+    complexity: Medium
+  - id: item_009
+    architecture: Domain-Driven Design (DDD)
+    description: Bounded contexts
+    best_for: Complex business domains
+    folder_structure: Domains/User Domains/Order + Shared
+    detail_tree: |
+      src/
+      ├── Domains/
+      │   ├── User/
+      │   │   ├── Aggregates/
+      │   │   ├── ValueObjects/
+      │   │   ├── Events/
+      │   │   └── Repositories/
+      │   ├── Order/
+      │   │   ├── Aggregates/
+      │   │   ├── Events/
+      │   │   └── Policies/
+      │   └── Payment/
+      │       └── ...
+      └── Shared/
+          ├── Kernel/             # Base types
+          └── Contracts/          # Integration events
+    frameworks:
+      - "C#/.NET"
+      - "Java/Spring Boot"
+      - "Go"
+      - "TypeScript"
+    separation_by: Domain model
+    testability: Excellent
+    complexity: High
+  - id: item_010
+    architecture: Microservices
+    description: Independent deployable services
+    best_for: Large scale distributed systems
+    folder_structure: service-user/ service-order/ (each standalone)
+    detail_tree: |
+      /
+      ├── service-user/           # Standalone service
+      │   ├── cmd/main.go
+      │   ├── internal/
+      │   ├── api/
+      │   ├── Dockerfile
+      │   └── go.mod
+      ├── service-order/
+      │   ├── src/
+      │   ├── Dockerfile
+      │   └── package.json
+      ├── shared/                 # Shared protos, contracts
+      │   └── proto/
+      ├── infra/                  # K8s, Terraform
+      └── docker-compose.yaml
+    frameworks:
+      - "Go + gRPC"
+      - "Java/Spring Cloud"
+      - "TypeScript/NestJS"
+      - "Rust/Axum"
+      - "Any (polyglot)"
+    separation_by: Service boundary
+    testability: Excellent
+    complexity: Very High

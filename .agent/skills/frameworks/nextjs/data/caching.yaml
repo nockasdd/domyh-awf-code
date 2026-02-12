@@ -1,0 +1,210 @@
+# =============================================================================
+# Next.js Caching Patterns (Feb 2026)
+# =============================================================================
+# Cache Components, revalidation, ISR
+
+metadata:
+  skill: nextjs
+  domain: caching
+  version: "16"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: next007
+    name: Cache Components (use cache)
+    category: caching
+    version: "16+"
+    description: |
+      New 'use cache' directive for component-level caching.
+      Replaces PPR flag with explicit caching.
+    text: use cache directive component caching ppr cache
+    example: |
+      // ✅ Next.js 16: Cache Components with 'use cache' directive
+      // PPR flag removed - use explicit caching instead
+
+      // app/products/page.tsx
+      import { unstable_cache } from "next/cache";
+
+      // Cache at component level
+      export default async function ProductsPage() {
+        "use cache"; // ✅ New directive
+
+        const products = await db.product.findMany();
+        return <ProductList products={products} />;
+      }
+
+      // Enhanced cache APIs
+      import { revalidateTag, updateTag, refresh } from "next/cache";
+
+      export async function updateProduct(id: string, data: ProductData) {
+        await db.product.update({ where: { id }, data });
+
+        // ✅ New cache APIs in Next.js 16
+        updateTag("products"); // Partial update
+        refresh();             // Full refresh
+        revalidateTag("products"); // Revalidate
+      }
+    severity: CRITICAL
+    docs_url: https://nextjs.org/docs/app/building-your-application/caching
+
+  - id: next008
+    name: Fetch Caching Strategies
+    category: caching
+    version: "13+"
+    description: Static, ISR, and dynamic caching with fetch options
+    text: fetch cache revalidate static isr dynamic
+    example: |
+      // ✅ Static (cached indefinitely - default)
+      const data = await fetch(url);
+
+      // ✅ Revalidate every 60 seconds (ISR)
+      const data = await fetch(url, {
+        next: { revalidate: 60 },
+      });
+
+      // ✅ No cache (always fresh)
+      const data = await fetch(url, {
+        cache: "no-store",
+      });
+
+      // ✅ Tagged cache for granular revalidation
+      const data = await fetch(url, {
+        next: { tags: ["products", "featured"] },
+      });
+
+      // ✅ Force dynamic per route
+      export const dynamic = "force-dynamic";
+      export const revalidate = 0;
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating
+
+  - id: next009
+    name: unstable_cache
+    category: caching
+    version: "14+"
+    description: Cache non-fetch async functions with tags
+    text: unstable_cache cache function database tags
+    example: |
+      import { unstable_cache } from "next/cache";
+
+      // ✅ Cache database queries
+      const getCachedUser = unstable_cache(
+        async (id: string) => db.user.findUnique({ where: { id } }),
+        ["user"],              // Cache key parts
+        { 
+          revalidate: 3600,    // TTL in seconds
+          tags: ["users"],     // For manual revalidation
+        },
+      );
+
+      // ✅ Usage in Server Component
+      export default async function UserPage({ params }) {
+        const { id } = await params;
+        const user = await getCachedUser(id);
+        return <UserProfile user={user} />;
+      }
+
+      // ✅ Revalidate by tag
+      import { revalidateTag } from "next/cache";
+
+      async function updateUser(id: string, data: UserData) {
+        await db.user.update({ where: { id }, data });
+        revalidateTag("users"); // Invalidates all getCachedUser
+      }
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/api-reference/functions/unstable_cache
+
+  - id: next010
+    name: On-Demand Revalidation
+    category: caching
+    version: "13+"
+    description: Programmatic cache invalidation
+    text: revalidatePath revalidateTag on-demand invalidate
+    example: |
+      import { revalidatePath, revalidateTag } from "next/cache";
+
+      // app/actions.ts
+      "use server";
+
+      export async function createPost(formData: FormData) {
+        const post = await db.post.create({
+          data: { title: formData.get("title") as string },
+        });
+
+        // ✅ Revalidate specific path
+        revalidatePath("/posts");
+        revalidatePath(`/posts/${post.id}`);
+
+        // ✅ Revalidate by tag
+        revalidateTag("posts");
+      }
+
+      // Webhook handler for external updates
+      // app/api/webhook/route.ts
+      export async function POST(request: Request) {
+        const body = await request.json();
+        
+        if (body.type === "product.updated") {
+          revalidateTag("products");
+        }
+
+        return Response.json({ revalidated: true });
+      }
+    severity: HIGH
+    docs_url: https://nextjs.org/docs/app/building-your-application/caching#on-demand-revalidation
+
+  - id: next011
+    name: Loading & Error States
+    category: ux
+    version: "13+"
+    description: Built-in loading and error boundaries
+    text: loading error suspense boundary streaming
+    example: |
+      // app/dashboard/loading.tsx
+      export default function Loading() {
+        return (
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-4" />
+            <div className="h-4 bg-gray-200 rounded w-full mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-3/4" />
+          </div>
+        );
+      }
+
+      // app/dashboard/error.tsx
+      "use client";
+
+      export default function Error({
+        error,
+        reset,
+      }: {
+        error: Error & { digest?: string };
+        reset: () => void;
+      }) {
+        return (
+          <div className="p-4 bg-red-50 rounded-lg">
+            <h2 className="text-red-800 font-bold">Something went wrong!</h2>
+            <p className="text-red-600">{error.message}</p>
+            <button
+              onClick={reset}
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+            >
+              Try again
+            </button>
+          </div>
+        );
+      }
+
+      // Suspense for streaming
+      import { Suspense } from "react";
+
+      export default function Page() {
+        return (
+          <Suspense fallback={<Loading />}>
+            <SlowComponent />
+          </Suspense>
+        );
+      }
+    severity: MEDIUM
+    docs_url: https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming

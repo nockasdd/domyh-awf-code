@@ -1,0 +1,63 @@
+name: vector-search
+version: "1.0.0"
+display: Vector Search & Embeddings
+category: ai-ml
+tier: 1
+priority: 2
+
+desc: "Vector databases & semantic search. Embeddings, similarity search, hybrid search (vector + BM25), indexing strategies, and production patterns."
+
+  ### Data Files (3 domains, ~21 patterns)
+  - vector-dbs.yaml: comparison table, features, pricing (7)
+  - embedding-models.yaml: model comparison, dimensions, perf (7)
+  - search-patterns.yaml: hybrid search, filtering, reranking (7)
+
+triggers:
+  file_patterns:
+    - "**/embeddings/**"
+    - "**/vector/**"
+    - "chromadb/**"
+  keywords:
+    - vector database
+    - vector search
+    - vector store
+    - embeddings
+    - semantic search
+    - similarity search
+    - cosine similarity
+    - HNSW
+    - ANN
+    - approximate nearest neighbor
+    - pinecone
+    - weaviate
+    - qdrant
+    - chromadb
+    - chroma
+    - milvus
+    - pgvector
+    - text embedding
+    - embedding model
+    - hybrid search
+    - dense retrieval
+
+caps:
+  - Embedding generation (OpenAI, Cohere, Voyage, local models)
+  - Vector DB selection (Pinecone, Weaviate, Qdrant, ChromaDB, Milvus)
+  - pgvector (PostgreSQL native vector search)
+  - Indexing strategies (HNSW, IVF, PQ, SCANN)
+  - Hybrid Search (vector + keyword BM25)
+  - Metadata filtering & namespace isolation
+  - Batch upsert & real-time indexing
+  - Distance metrics (cosine, L2 euclidean, dot product)
+  - Reranking (Cohere Rerank, cross-encoder)
+  - Chunking strategies for documents
+
+related_skills:
+  - ai-agents
+  - rag-patterns
+  - database
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/ai-ml/vector-search/data"
+  preload_data: true

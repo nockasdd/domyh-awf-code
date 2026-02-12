@@ -1,0 +1,347 @@
+metadata:
+  skill: domyh-design
+  domain: web_interface
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: web-interface.yaml
+  patterns_count: 30
+  columns:
+    - "No"
+    - Category
+    - Issue
+    - Keywords
+    - Platform
+    - Description
+    - Do
+    - Don't
+    - Code Example Good
+    - Code Example Bad
+    - Severity
+patterns:
+  - id: "1"
+    category: Accessibility
+    issue: Icon Button Labels
+    keywords: icon button aria-label
+    platform: Web
+    description: Icon-only buttons must have accessible names
+    do: Add aria-label to icon buttons
+    don_t: Icon button without label
+    code_example_good: <button aria-label='Close'><XIcon /></button>
+    code_example_bad: <button><XIcon /></button>
+    severity: Critical
+  - id: "2"
+    category: Accessibility
+    issue: Form Control Labels
+    keywords: form input label aria
+    platform: Web
+    description: All form controls need labels or aria-label
+    do: Use label element or aria-label
+    don_t: Input without accessible name
+    code_example_good: <label for='email'>Email</label><input id='email' />
+    code_example_bad: <input placeholder='Email' />
+    severity: Critical
+  - id: "3"
+    category: Accessibility
+    issue: Keyboard Handlers
+    keywords: keyboard onclick onkeydown
+    platform: Web
+    description: Interactive elements must support keyboard interaction
+    do: Add onKeyDown alongside onClick
+    don_t: Click-only interaction
+    code_example_good: <div onClick={fn} onKeyDown={fn} tabIndex={0}>
+    code_example_bad: <div onClick={fn}>
+    severity: High
+  - id: "4"
+    category: Accessibility
+    issue: Semantic HTML
+    keywords: semantic button a label
+    platform: Web
+    description: Use semantic HTML before ARIA attributes
+    do: Use button/a/label elements
+    don_t: Div with role attribute
+    code_example_good: <button onClick={fn}>Submit</button>
+    code_example_bad: <div role='button' onClick={fn}>Submit</div>
+    severity: High
+  - id: "5"
+    category: Accessibility
+    issue: Aria Live
+    keywords: aria-live polite async
+    platform: Web
+    description: Async updates need aria-live for screen readers
+    do: Add aria-live='polite' for dynamic content
+    don_t: Silent async updates
+    code_example_good: <div aria-live='polite'>{status}</div>
+    code_example_bad: <div>{status}</div> // no announcement
+    severity: Medium
+  - id: "6"
+    category: Accessibility
+    issue: Decorative Icons
+    keywords: aria-hidden decorative icon
+    platform: Web
+    description: Decorative icons should be hidden from screen readers
+    do: Add aria-hidden='true' to decorative icons
+    don_t: Decorative icon announced
+    code_example_good: <Icon aria-hidden='true' />
+    code_example_bad: <Icon /> // announced as 'image'
+    severity: Medium
+  - id: "7"
+    category: Focus
+    issue: Visible Focus States
+    keywords: focus-visible outline ring
+    platform: Web
+    description: All interactive elements need visible focus states
+    do: Use :focus-visible with ring/outline
+    don_t: No focus indication
+    code_example_good: focus-visible:ring-2 focus-visible:ring-blue-500
+    code_example_bad: outline-none // no replacement
+    severity: Critical
+  - id: "8"
+    category: Focus
+    issue: Never Remove Outline
+    keywords: outline-none focus replacement
+    platform: Web
+    description: Never remove outline without providing replacement
+    do: Replace outline with visible alternative
+    don_t: Remove outline completely
+    code_example_good: focus:outline-none focus:ring-2
+    code_example_bad: focus:outline-none // nothing else
+    severity: Critical
+  - id: "9"
+    category: Focus
+    issue: Checkbox Radio Hit Target
+    keywords: checkbox radio label target
+    platform: Web
+    description: Checkbox/radio must share hit target with label
+    do: Wrap input and label together
+    don_t: Separate tiny checkbox
+    code_example_good: <label class='flex gap-2'><input type='checkbox' /><span>Option</span></label>
+    code_example_bad: <input type='checkbox' id='x' /><label for='x'>Option</label>
+    severity: Medium
+  - id: "10"
+    category: Forms
+    issue: Autocomplete Attribute
+    keywords: autocomplete input form
+    platform: Web
+    description: Inputs need autocomplete attribute for autofill
+    do: Add appropriate autocomplete value
+    don_t: Missing autocomplete
+    code_example_good: <input autocomplete='email' type='email' />
+    code_example_bad: <input type='email' />
+    severity: High
+  - id: "11"
+    category: Forms
+    issue: Semantic Input Types
+    keywords: input type email tel url
+    platform: Web
+    description: Use semantic input type attributes
+    do: Use email/tel/url/number types
+    don_t: text type for everything
+    code_example_good: <input type='email' />
+    code_example_bad: <input type='text' /> // for email
+    severity: Medium
+  - id: "12"
+    category: Forms
+    issue: Never Block Paste
+    keywords: paste onpaste password
+    platform: Web
+    description: Never prevent paste functionality
+    do: Allow paste on all inputs
+    don_t: Block paste on password/code
+    code_example_good: <input type='password' />
+    code_example_bad: <input onPaste={e => e.preventDefault()} />
+    severity: High
+  - id: "13"
+    category: Forms
+    issue: Spellcheck Disable
+    keywords: spellcheck email code
+    platform: Web
+    description: Disable spellcheck on emails and codes
+    do: Set spellcheck='false' on codes
+    don_t: Spellcheck on technical input
+    code_example_good: <input spellCheck='false' type='email' />
+    code_example_bad: <input type='email' /> // red squiggles
+    severity: Low
+  - id: "14"
+    category: Forms
+    issue: Submit Button Enabled
+    keywords: submit button disabled loading
+    platform: Web
+    description: Keep submit enabled and show spinner during requests
+    do: Show loading spinner keep enabled
+    don_t: Disable button during submit
+    code_example_good: "<button>{loading ? <Spinner /> : 'Submit'}</button>"
+    code_example_bad: <button disabled={loading}>Submit</button>
+    severity: Medium
+  - id: "15"
+    category: Forms
+    issue: Inline Errors
+    keywords: error message inline focus
+    platform: Web
+    description: Show error messages inline near the problem field
+    do: Inline error with focus on first error
+    don_t: Single error at top
+    code_example_good: <input /><span class='text-red-500'>{error}</span>
+    code_example_bad: <div class='error'>{allErrors}</div> // at top
+    severity: High
+  - id: "16"
+    category: Performance
+    issue: Virtualize Lists
+    keywords: virtualize list 50 items
+    platform: Web
+    description: Virtualize lists exceeding 50 items
+    do: Use virtual list for large datasets
+    don_t: Render all items
+    code_example_good: <VirtualList items={items} />
+    code_example_bad: items.map(item => <Item />)
+    severity: High
+  - id: "17"
+    category: Performance
+    issue: Avoid Layout Reads
+    keywords: layout read render getboundingclientrect
+    platform: Web
+    description: Avoid layout reads during render phase
+    do: Read layout in effects or callbacks
+    don_t: getBoundingClientRect in render
+    code_example_good: useEffect(() => { el.getBoundingClientRect() })
+    code_example_bad: const rect = el.getBoundingClientRect() // in render
+    severity: Medium
+  - id: "18"
+    category: Performance
+    issue: Batch DOM Operations
+    keywords: batch dom write read
+    platform: Web
+    description: Group DOM operations to minimize reflows
+    do: Batch writes then reads
+    don_t: Interleave reads and writes
+    code_example_good: writes.forEach(w => w()); reads.forEach(r => r())
+    code_example_bad: write(); read(); write(); read(); // thrashing
+    severity: Medium
+  - id: "19"
+    category: Performance
+    issue: Preconnect CDN
+    keywords: preconnect link cdn
+    platform: Web
+    description: Add preconnect links for CDN domains
+    do: Preconnect to known domains
+    don_t: <link rel='preconnect' href='https://cdn.example.com' />
+    code_example_good: // no preconnect hint
+    code_example_bad: Low
+  - id: "20"
+    category: Performance
+    issue: Lazy Load Images
+    keywords: lazy loading image below-fold
+    platform: Web
+    description: Lazy-load images below the fold
+    do: Use loading='lazy' for below-fold images
+    don_t: Load all images eagerly
+    code_example_good: <img loading='lazy' src='...' />
+    code_example_bad: <img src='...' /> // above fold only
+    severity: Medium
+  - id: "21"
+    category: State
+    issue: URL Reflects State
+    keywords: url state query params
+    platform: Web
+    description: URL should reflect current UI state
+    do: Sync filters/tabs/pagination to URL
+    don_t: State only in memory
+    code_example_good: ?tab=settings&page=2
+    code_example_bad: useState only // lost on refresh
+    severity: High
+  - id: "22"
+    category: State
+    issue: Deep Linking
+    keywords: deep link stateful component
+    platform: Web
+    description: Stateful components should support deep-linking
+    do: Enable sharing current view via URL
+    don_t: No shareable state
+    code_example_good: "router.push({ query: { ...filters } })"
+    code_example_bad: setFilters(f) // not in URL
+    severity: Medium
+  - id: "23"
+    category: State
+    issue: Confirm Destructive Actions
+    keywords: confirm destructive delete modal
+    platform: Web
+    description: Destructive actions require confirmation
+    do: Show confirmation dialog before delete
+    don_t: Delete without confirmation
+    code_example_good: if (confirm('Delete?')) delete()
+    code_example_bad: onClick={delete} // no confirmation
+    severity: High
+  - id: "24"
+    category: Typography
+    issue: Proper Unicode
+    keywords: unicode ellipsis quotes
+    platform: Web
+    description: Use proper Unicode characters
+    do: Use ... curly quotes proper dashes
+    don_t: ASCII approximations
+    code_example_good: "'Hello...' with proper ellipsis"
+    code_example_bad: "'Hello...' with three dots"
+    severity: Low
+  - id: "25"
+    category: Typography
+    issue: Text Overflow
+    keywords: truncate line-clamp overflow
+    platform: Web
+    description: Handle text overflow properly
+    do: Use truncate/line-clamp/break-words
+    don_t: Text overflows container
+    code_example_good: <p class='truncate'>Long text...</p>
+    code_example_bad: <p>Long text...</p> // overflows
+    severity: Medium
+  - id: "26"
+    category: Typography
+    issue: Non-Breaking Spaces
+    keywords: nbsp unit brand
+    platform: Web
+    description: Use non-breaking spaces for units and brand names
+    do: Use &nbsp; between number and unit
+    don_t: 10&nbsp;kg or Next.js&nbsp;14
+    code_example_good: 10 kg // may wrap
+    code_example_bad: Low
+  - id: "27"
+    category: Anti-Pattern
+    issue: No Zoom Disable
+    keywords: viewport zoom disable
+    platform: Web
+    description: Never disable zoom in viewport meta
+    do: Allow user zoom
+    don_t: <meta name='viewport' content='width=device-width'>
+    code_example_good: <meta name='viewport' content='maximum-scale=1'>
+    code_example_bad: Critical
+  - id: "28"
+    category: Anti-Pattern
+    issue: No Transition All
+    keywords: transition all specific
+    platform: Web
+    description: "Avoid transition: all - specify properties"
+    do: Transition specific properties
+    don_t: "transition: all"
+    code_example_good: transition-colors duration-200
+    code_example_bad: transition-all duration-200
+    severity: Medium
+  - id: "29"
+    category: Anti-Pattern
+    issue: Outline Replacement
+    keywords: outline-none ring focus
+    platform: Web
+    description: Never use outline-none without replacement
+    do: Provide visible focus replacement
+    don_t: Remove outline with nothing
+    code_example_good: focus:outline-none focus:ring-2 focus:ring-blue-500
+    code_example_bad: focus:outline-none // alone
+    severity: Critical
+  - id: "30"
+    category: Anti-Pattern
+    issue: No Hardcoded Dates
+    keywords: date format intl locale
+    platform: Web
+    description: Use Intl for date/number formatting
+    do: Use Intl.DateTimeFormat
+    don_t: Hardcoded date format
+    code_example_good: new Intl.DateTimeFormat('en').format(date)
+    code_example_bad: date.toLocaleDateString() // or manual format
+    severity: Medium

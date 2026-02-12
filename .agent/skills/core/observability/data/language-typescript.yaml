@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_typescript
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-typescript.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: TS-001
+    name: OpenTelemetry SDK
+    category: TypeScript
+    description: Initialize OTel in Node.js
+    example: const sdk = new NodeSDK({...}); sdk.start()
+    library: "@opentelemetry/sdk-node"
+  - id: TS-002
+    name: TracerProvider
+    category: TypeScript
+    description: Configure tracer provider
+    example: new NodeTracerProvider()
+    library: "@opentelemetry/sdk-trace-node"
+  - id: TS-003
+    name: MeterProvider
+    category: TypeScript
+    description: Configure metrics provider
+    example: new MeterProvider()
+    library: "@opentelemetry/sdk-metrics"
+  - id: TS-004
+    name: OTLP Exporter
+    category: TypeScript
+    description: Export via OTLP
+    example: "new OTLPTraceExporter({url: '...'})"
+    library: "@opentelemetry/exporter-trace-otlp-http"
+  - id: TS-005
+    name: Auto-Instrumentation
+    category: TypeScript
+    description: Auto-instrument common libs
+    example: "registerInstrumentations({instrumentations: [...]})"
+    library: "@opentelemetry/instrumentation"
+  - id: TS-006
+    name: Manual Spans
+    category: TypeScript
+    description: Create custom spans
+    example: tracer.startActiveSpan('op', (span) => { ... })
+    library: "@opentelemetry/api"
+  - id: TS-007
+    name: Span Attributes
+    category: TypeScript
+    description: Add metadata
+    example: span.setAttribute('key', 'value')
+    library: "@opentelemetry/api"
+  - id: TS-008
+    name: Context Propagation
+    category: TypeScript
+    description: Pass context via headers
+    example: propagation.inject(context.active(), carrier)
+    library: "@opentelemetry/api"
+  - id: TS-009
+    name: prom-client
+    category: TypeScript
+    description: Create Prometheus metrics
+    example: "new client.Counter({name: '...'})"
+    library: prom-client
+  - id: TS-010
+    name: prom-client HTTP
+    category: TypeScript
+    description: Expose /metrics
+    example: res.set('Content-Type', register.contentType)
+    library: prom-client
+  - id: TS-011
+    name: prom-client Labels
+    category: TypeScript
+    description: Add dimensions
+    example: "counter.inc({method: 'GET'})"
+    library: prom-client
+  - id: TS-012
+    name: prom-client Histogram
+    category: TypeScript
+    description: Track latency
+    example: histogram.observe({...}, duration)
+    library: prom-client
+  - id: TS-013
+    name: Default Metrics
+    category: TypeScript
+    description: Collect Node.js metrics
+    example: collectDefaultMetrics()
+    library: prom-client
+  - id: TS-014
+    name: dd-trace
+    category: TypeScript
+    description: Datadog APM client
+    example: import tracer from 'dd-trace'; tracer.init()
+    library: dd-trace
+  - id: TS-015
+    name: dd-trace + OTel
+    category: TypeScript
+    description: Datadog with OTel API
+    example: "tracer.init({profiling: true})"
+    library: dd-trace
+  - id: TS-016
+    name: Express Instrumentation
+    category: TypeScript
+    description: Auto-trace Express
+    example: new ExpressInstrumentation()
+    library: "@opentelemetry/instrumentation-express"
+  - id: TS-017
+    name: HTTP Instrumentation
+    category: TypeScript
+    description: Auto-trace HTTP calls
+    example: new HttpInstrumentation()
+    library: "@opentelemetry/instrumentation-http"
+  - id: TS-018
+    name: MongoDB Tracing
+    category: TypeScript
+    description: Trace MongoDB queries
+    example: new MongoDBInstrumentation()
+    library: "@opentelemetry/instrumentation-mongodb"
+  - id: TS-019
+    name: GraphQL Tracing
+    category: TypeScript
+    description: Trace GraphQL operations
+    example: new GraphQLInstrumentation()
+    library: "@opentelemetry/instrumentation-graphql"
+  - id: TS-020
+    name: Clinic.js
+    category: TypeScript
+    description: Node.js profiling
+    example: clinic doctor -- node app.js
+    library: clinic
+  - id: TS-021
+    name: 0x
+    category: TypeScript
+    description: Flame graph profiler
+    example: 0x app.js
+    library: 0x
+  - id: TS-022
+    name: tRPC Tracing
+    category: TypeScript
+    description: Trace tRPC procedures
+    example: Custom middleware with OTel
+    library: tRPC
+  - id: TS-023
+    name: NestJS Tracing
+    category: TypeScript
+    description: Trace NestJS apps
+    example: "@opentelemetry/instrumentation-nestjs-core"
+    library: "@opentelemetry/instrumentation-nestjs"
+  - id: TS-024
+    name: Winston + Trace ID
+    category: TypeScript
+    description: Logs with trace context
+    example: "logger.info('msg', {traceId: span.spanContext().traceId})"
+    library: winston
+  - id: TS-025
+    name: Pino + OTel
+    category: TypeScript
+    description: Structured logs with traces
+    example: pino-opentelemetry-transport
+    library: pino

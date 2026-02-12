@@ -1,434 +1,161 @@
 ---
-name: refactor
-trigger: ["/refactor", "clean", "improve"]
-persona: developer
-description: "🔧 Code refactoring: identify smells → plan changes → apply → verify tests pass"
+description: "🔧 Code refactoring & cleanup: identify smells, clean dead code, organize imports, restructure — verify tests pass"
+skills: { required: [], contextual: [auto] }
 ---
 
-# 🔧 /refactor — Refactor Pro v3.1
+# 🔧 /refactor — Refactor Pro
 
-> Safe, Incremental Code Improvement
-> 📚 30+ Languages • Code Smells • Patterns
-
----
-
-## 🔄 REFACTORING FLOW
-
-```
-User: /refactor [target]
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 1: IDENTIFY                       │
-│ ▸ Detect code smells                    │
-│ ▸ Analyze complexity                    │
-│ ▸ Find duplications                     │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 2: TEST BASELINE                  │
-│ ▸ Run existing tests                    │
-│ ▸ Ensure all pass                       │
-│ ⛔ STOP if tests fail                   │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 3: PLAN                           │
-│ ▸ Define changes                        │
-│ ▸ Assess risk                           │
-│ ⛔ STOP → Confirm before apply          │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 4: REFACTOR                       │
-│ ▸ Apply changes incrementally           │
-│ ▸ Commit small batches                  │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 5: VERIFY                         │
-│ ▸ Run tests again                       │
-│ ▸ Compare before/after                  │
-│ ▸ Validate behavior unchanged           │
-└─────────────────────────────────────────┘
-```
+> Safe Code Transformation with Test Verification
+> 📚 Code Smells • Analysis Tools • Characterization Tests
 
 ---
 
-## 🎯 COMMANDS
+## REFACTOR FLOW
 
-| Command             | Description             |
-| ------------------- | ----------------------- |
-| `/refactor [file]`  | Refactor specific file  |
-| `/refactor [dir]`   | Refactor directory      |
-| `/refactor extract` | Extract method/function |
-| `/refactor rename`  | Rename symbols          |
-| `/refactor dedupe`  | Remove duplication      |
-
----
-
-## 🧪 CODE SMELLS CATALOG
-
-```yaml
-code_smells:
-  # ═══════════════════════════════════════════════════════════════
-  # BLOATERS (Size Issues)
-  # ═══════════════════════════════════════════════════════════════
-
-  long_method:
-    detect: "> 30 lines"
-    fix: Extract Method
-
-  large_class:
-    detect: "> 500 lines"
-    fix: Extract Class, Single Responsibility
-
-  long_parameter_list:
-    detect: "> 4 parameters"
-    fix: Introduce Parameter Object
-
-  # ═══════════════════════════════════════════════════════════════
-  # OBJECT-ORIENTATION ABUSERS
-  # ═══════════════════════════════════════════════════════════════
-
-  switch_statements:
-    detect: "Large switch/case"
-    fix: Replace with Polymorphism
-
-  refused_bequest:
-    detect: "Unused inherited methods"
-    fix: Replace Inheritance with Delegation
-
-  # ═══════════════════════════════════════════════════════════════
-  # CHANGE PREVENTERS
-  # ═══════════════════════════════════════════════════════════════
-
-  divergent_change:
-    detect: "Class changed for multiple reasons"
-    fix: Extract Class per responsibility
-
-  shotgun_surgery:
-    detect: "One change requires many small changes"
-    fix: Move Method, Move Field
-
-  # ═══════════════════════════════════════════════════════════════
-  # DISPENSABLES
-  # ═══════════════════════════════════════════════════════════════
-
-  duplicate_code:
-    detect: "Copy-pasted code"
-    fix: Extract Method/Class
-
-  dead_code:
-    detect: "Unreachable code"
-    fix: Remove
-
-  speculative_generality:
-    detect: "Unused abstractions"
-    fix: Collapse Hierarchy
-
-  # ═══════════════════════════════════════════════════════════════
-  # COUPLERS
-  # ═══════════════════════════════════════════════════════════════
-
-  feature_envy:
-    detect: "Method uses another class's data more"
-    fix: Move Method
-
-  inappropriate_intimacy:
-    detect: "Classes access each other's internals"
-    fix: Extract Class, Hide Delegate
-```
+1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate tests
+2. **BASELINE** — Run tests, record passing state
+3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
+4. **EXECUTE** — Apply refactoring (one commit per change) → ⛔ STOP if tests fail at any point
+5. **VERIFY** — Re-run tests, validate behavior unchanged
+6. **SYNC** — `hsa_check_changes` to update index after edits
 
 ---
 
-## 📋 REFACTORING PATTERNS
+## COMMANDS
 
-```yaml
-patterns:
-  extract_method:
-    before: |
-      function process() {
-        // 50+ lines of mixed logic
-      }
-    after: |
-      function process() {
-        validateInput();
-        transformData();
-        saveResult();
-      }
+| Command                   | Description             |
+| ------------------------- | ----------------------- |
+| `/refactor [file]`        | Refactor specific file  |
+| `/refactor [dir]`         | Refactor directory      |
+| `/refactor extract`       | Extract method/function |
+| `/refactor rename`        | Rename with references  |
+| `/refactor simplify`      | Reduce complexity       |
+| `/refactor clean imports` | Organize imports        |
+| `/refactor clean dead`    | Remove dead code        |
+| `/refactor clean all`     | Apply all cleanup       |
+| `/refactor clean --dry`   | Preview without changes |
 
-  early_return:
-    before: |
-      function foo(x) {
-        if (x) {
-          if (y) {
-            if (z) {
-              // deep nesting
-            }
-          }
-        }
-      }
-    after: |
-      function foo(x) {
-        if (!x) return;
-        if (!y) return;
-        if (!z) return;
-        // flat logic
-      }
+### Cleanup Safety Rules
 
-  replace_magic_numbers:
-    before: |
-      if (status === 1) { ... }
-      if (timeout > 30000) { ... }
-    after: |
-      const STATUS_ACTIVE = 1;
-      const TIMEOUT_MS = 30000;
-      if (status === STATUS_ACTIVE) { ... }
-      if (timeout > TIMEOUT_MS) { ... }
-```
+- Never delete without preview
+- Show exact lines before removal
+- Offer backup (`git stash`)
+- Run build after changes
+- Never auto-remove: deprecated functions, TODO files, test files, configs, migrations
 
 ---
 
-## 🔧 ANALYSIS TOOLS
+## 🎨 UI REFACTOR SUB-COMMANDS
 
-```yaml
-tools:
-  go:
-    complexity: "gocyclo"
-    duplication: "dupl"
-    lint: "golangci-lint"
+| Command                    | Description               | What It Does                                        |
+| -------------------------- | ------------------------- | --------------------------------------------------- |
+| `/refactor ui [component]` | Refactor UI component     | Break down, clean props, extract sub-components     |
+| `/refactor layout [page]`  | Restructure page layout   | Reorganize grid/flex structure, simplify nesting    |
+| `/refactor styles`         | Clean/organize CSS        | Remove dead CSS, merge duplicates, organize imports |
+| `/refactor design-system`  | Migrate to design tokens  | Extract hardcoded values → CSS custom properties    |
+| `/refactor responsive`     | Fix/add responsive design | Add container queries, fix breakpoints, fluid typo  |
+| `/refactor a11y`           | Fix accessibility issues  | Add ARIA labels, fix contrast, keyboard navigation  |
 
-  typescript:
-    complexity: "eslint --rule complexity"
-    duplication: "jscpd"
-    lint: "eslint"
+### UI Refactor Flow (with VRT Baseline)
 
-  python:
-    complexity: "radon cc"
-    duplication: "pylint --disable=all --enable=duplicate-code"
-    lint: "ruff"
+> Extends standard 6-step flow with screenshot comparison
 
-  java:
-    complexity: "pmd"
-    duplication: "simian"
-    lint: "checkstyle"
-
-  rust:
-    lint: "clippy"
-    complexity: "cargo-complexity"
-
-  csharp:
-    lint: "dotnet format"
-    complexity: "NDepend"
-```
+1. **DETECT** — Stack + scan UI component structure
+2. **BASELINE** — Run tests + capture current screenshot (Playwright `toHaveScreenshot()`)
+3. **PLAN** — Define UI changes → ⛔ **STOP — confirm before executing**
+4. **EXECUTE** — Apply refactoring (one commit per change)
+5. **COMPARE** — Screenshot after → pixelmatch diff → show visual delta
+6. **VERIFY** — Tests pass + a11y check (axe-core) + responsive check
+7. **SYNC** — `hsa_check_changes` to update index
 
 ---
 
-## 📊 REFACTOR REPORT
+## CODE SMELLS CATALOG
 
-```markdown
-🔧 REFACTOR REPORT
+### Bloaters (Size Issues)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+| Smell               | Detect                | Fix              |
+| ------------------- | --------------------- | ---------------- |
+| Long Method         | > 20 lines            | Extract Method   |
+| Large Class         | > 200 lines           | Extract Class    |
+| Long Parameter List | > 3 params            | Parameter Object |
+| Data Clumps         | Repeated field groups | Extract Class    |
+| Primitive Obsession | Raw types everywhere  | Value Objects    |
 
-Target: `src/services/user.ts`
+### Change Preventers
 
-## Smells Detected
+| Smell                | Detect                        | Fix                       |
+| -------------------- | ----------------------------- | ------------------------- |
+| Divergent Change     | One class, many reasons       | SRP, Extract Class        |
+| Shotgun Surgery      | One change → many files       | Move Method, Inline Class |
+| Parallel Inheritance | Subclass in A → subclass in B | Merge hierarchies         |
 
-| Smell          | Location   | Severity |
-| -------------- | ---------- | -------- |
-| Long Method    | L45-120    | High     |
-| Duplicate Code | L200, L350 | Medium   |
-| Magic Numbers  | L78, L92   | Low      |
+### Dispensables
 
-## Changes Applied
+| Smell                  | Detect              | Fix                  |
+| ---------------------- | ------------------- | -------------------- |
+| Duplicate Code         | Copy-paste          | Extract Method/Class |
+| Dead Code              | Unreachable         | Remove               |
+| Speculative Generality | Unused abstractions | Collapse Hierarchy   |
 
-| Change      | Before | After |
-| ----------- | ------ | ----- |
-| Complexity  | 25     | 8     |
-| Lines       | 450    | 320   |
-| Functions   | 5      | 12    |
-| Duplication | 15%    | 2%    |
+### Couplers
 
-## Test Results
-
-| Phase           | Status        |
-| --------------- | ------------- |
-| Before refactor | ✅ 45/45 pass |
-| After refactor  | ✅ 45/45 pass |
-
-## Commits
-
-1. `refactor: extract validation logic`
-2. `refactor: remove duplicate user lookup`
-3. `refactor: replace magic numbers with constants`
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+| Smell                  | Detect                           | Fix                          |
+| ---------------------- | -------------------------------- | ---------------------------- |
+| Feature Envy           | Method uses another class's data | Move Method                  |
+| Inappropriate Intimacy | Classes access internals         | Extract Class, Hide Delegate |
 
 ---
 
-## 🤖 AI SMELL DETECTION
+## REFACTORING PATTERNS
 
-```yaml
-ai_smell_detection:
-  description: "AI-assisted identification of code smells"
-
-  tools:
-    - "CodeAnt.ai (prioritized smells)"
-    - "SonarQube (quality gates)"
-    - "Cursor/Copilot (inline suggestions)"
-    - "ESLint/RuboCop (static analysis)"
-
-  workflow:
-    1_analyze: "AI scans codebase for patterns"
-    2_categorize: "Group by smell type"
-    3_prioritize: "Rank by impact (high → low)"
-    4_suggest: "AI proposes refactoring"
-    5_validate: "Human reviews changes"
-
-  commands:
-    analyze_file: "/refactor analyze [file]"
-    full_scan: "/refactor scan ."
-```
+| Pattern                    | When                        | Example                                     |
+| -------------------------- | --------------------------- | ------------------------------------------- |
+| Extract Method             | Mixed logic in one function | Split into validateInput(), transformData() |
+| Replace Magic Numbers      | Hardcoded values            | `STATUS_ACTIVE = 1`, `TIMEOUT_MS = 30000`   |
+| Replace Conditional        | Complex if/else chains      | Strategy pattern, polymorphism              |
+| Introduce Parameter Object | Many params                 | `CreateUserInput { name, email, role }`     |
+| Replace Temp with Query    | Temp var used once          | Inline as method call                       |
 
 ---
 
-## 🧪 CHARACTERIZATION TESTS
+## ANALYSIS TOOLS
 
-```yaml
-characterization_tests:
-  description: "Tests that document existing behavior"
-
-  use_when:
-    - "Legacy code without tests"
-    - "Before major refactoring"
-    - "Behavior is unclear"
-
-  process:
-    1_run: "Execute code with known inputs"
-    2_capture: "Record actual outputs"
-    3_assert: "Make output the expected value"
-    4_repeat: "Cover edge cases"
-
-  example: |
-    // Generate test from current behavior
-    it('legacy login - characterization', () => {
-      const result = legacyLogin({ user: 'test' });
-      // Captured from actual run
-      expect(result).toEqual({
-        token: expect.any(String),
-        expires: 3600
-      });
-    });
-
-  tools:
-    - "Jest snapshot testing"
-    - "Approval tests pattern"
-    - "Golden master testing"
-```
+| Language   | Complexity        | Duplication | Lint             |
+| ---------- | ----------------- | ----------- | ---------------- |
+| Go         | gocyclo           | dupl        | golangci-lint    |
+| TypeScript | eslint complexity | jscpd       | eslint           |
+| Python     | radon cc          | pylint      | ruff             |
+| Rust       | cargo clippy      | —           | clippy           |
+| Java       | PMD               | CPD         | Checkstyle       |
+| C#         | —                 | —           | Roslyn analyzers |
 
 ---
 
-## 📝 INCREMENTAL COMMIT STRATEGY
+## COMPLEXITY THRESHOLDS
 
-```yaml
-incremental_commits:
-  rule: "One refactoring = One commit"
-
-  pattern:
-    - "refactor: extract validateUser()"
-    - "refactor: rename userService → UserService"
-    - "refactor: remove duplicate lookup"
-    - "refactor: apply early return pattern"
-
-  benefits:
-    - "Easy to revert single change"
-    - "Clear audit trail"
-    - "Bisectable history"
-
-  workflow: 1. "Make one refactoring"
-    2. "Run tests"
-    3. "If pass → commit"
-    4. "Repeat"
-```
+| Metric          | Good | Warning | Critical |
+| --------------- | ---- | ------- | -------- |
+| Cyclomatic      | < 10 | 10-20   | > 20     |
+| Cognitive       | < 15 | 15-25   | > 25     |
+| Lines/function  | < 30 | 30-50   | > 50     |
+| Params/function | ≤ 3  | 4-5     | > 5      |
+| Nesting depth   | ≤ 3  | 4       | > 4      |
+| Duplication     | < 3% | 3-10%   | > 10%    |
 
 ---
 
-## 📊 COMPLEXITY METRICS
+## CHARACTERIZATION TESTS
 
-```yaml
-complexity_metrics:
-  track_before_after:
-    - cyclomatic_complexity
-    - lines_of_code
-    - duplication_percentage
-    - function_count
-    - nesting_depth
+> For legacy code without tests — document existing behavior before refactoring
 
-  command: "/refactor metrics [file]"
+1. Run code with known inputs
+2. Record actual outputs (even if "wrong")
+3. Write tests capturing current behavior
+4. Now refactor safely — tests catch regressions
 
-  output: |
-    📊 COMPLEXITY ANALYSIS
+### Mikado Method (Large Refactors)
 
-    | Metric     | Before | After | Change |
-    |------------|--------|-------|--------|
-    | Complexity | 25     | 8     | ✅ -68% |
-    | LOC        | 450    | 320   | ✅ -29% |
-    | Duplication| 15%    | 2%    | ✅ -87% |
-    | Functions  | 3      | 8     | ⬆️ +167%|
-    | Max Depth  | 5      | 2     | ✅ -60% |
-
-  thresholds:
-    complexity: "< 10 per function"
-    function_length: "< 50 lines"
-    nesting: "< 3 levels"
-```
-
----
-
-## ⚠️ GOLDEN RULES
-
-```yaml
-rules:
-  1_tests_first:
-    rule: "All tests must pass BEFORE refactoring"
-    if_no_tests: "Write characterization tests first"
-
-  2_small_steps:
-    rule: "Make one change at a time"
-    commit_after: "Each successful refactoring step"
-
-  3_no_behavior_change:
-    rule: "External behavior must remain unchanged"
-    verify: "Tests pass after each change"
-
-  4_separate_concerns:
-    rule: "Don't mix refactoring with bug fixes"
-    reason: "Easier to revert if needed"
-
-  5_ai_as_assistant:
-    rule: "AI suggests, human decides"
-    validate: "Review all AI suggestions"
-```
-
----
-
-## ⚙️ TOKEN OPTIMIZATION
-
-```yaml
-token_saving:
-  - Focus on highest-impact smells first
-  - Batch similar refactorings
-  - Use standard patterns
-  - AI pre-analysis before human review
-```
-
----
-
-_DOMYH Awesome Code v6.1.2 • Refactor Pro v3.1 • AI-Assisted Refactoring_
+1. Make one refactoring
+2. Run tests → Pass? Commit. Fail? Revert.
+3. Repeat

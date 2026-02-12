@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_csharp
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-csharp.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: CS-001
+    category: ilogger
+    library: ILogger
+    name: ILogger<T>
+    description: Generic logger injection
+    example: public MyService(ILogger<MyService> logger)
+    when_to_use: Dependency injection
+  - id: CS-002
+    category: ilogger
+    library: ILogger
+    name: LogInformation
+    description: Log at Information level
+    example: _logger.LogInformation("User {UserId} logged in", userId)
+    when_to_use: General events
+  - id: CS-003
+    category: ilogger
+    library: ILogger
+    name: LogError
+    description: Log errors with exception
+    example: _logger.LogError(ex, "Failed to process order {OrderId}", orderId)
+    when_to_use: Error handling
+  - id: CS-004
+    category: ilogger
+    library: ILogger
+    name: LogWarning
+    description: Log warnings
+    example: _logger.LogWarning("Retry {Attempt} for {Service}", attempt, service)
+    when_to_use: Potential issues
+  - id: CS-005
+    category: ilogger
+    library: ILogger
+    name: BeginScope
+    description: Create logging scope
+    example: 'using (_logger.BeginScope("OrderId: {OrderId}", orderId)) { ... }'
+    when_to_use: Scoped context
+  - id: CS-006
+    category: ilogger
+    library: ILogger
+    name: EventId
+    description: Structured event identification
+    example: _logger.LogInformation(new EventId(1001, "UserLogin"), "msg")
+    when_to_use: Event categorization
+  - id: CS-007
+    category: ilogger
+    library: ILogger
+    name: Message Templates
+    description: Structured property naming
+    example: LogInformation("User {UserId} from {IpAddress}")
+    when_to_use: Semantic logging
+  - id: CS-008
+    category: serilog
+    library: Serilog
+    name: Log.Logger
+    description: Global Serilog logger
+    example: Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger()
+    when_to_use: Serilog setup
+  - id: CS-009
+    category: serilog
+    library: Serilog
+    name: WriteTo.Console
+    description: Console sink
+    example: 'WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Message}")'
+    when_to_use: Console output
+  - id: CS-010
+    category: serilog
+    library: Serilog
+    name: WriteTo.File
+    description: File sink with rolling
+    example: 'WriteTo.File("logs/app.txt", rollingInterval: RollingInterval.Day)'
+    when_to_use: File logging
+  - id: CS-011
+    category: serilog
+    library: Serilog
+    name: Enrich.FromLogContext
+    description: Context enrichment
+    example: Enrich.FromLogContext()
+    when_to_use: Request context
+  - id: CS-012
+    category: serilog
+    library: Serilog
+    name: Enrich.WithProperty
+    description: Static enrichment
+    example: Enrich.WithProperty("Application", "MyApp")
+    when_to_use: Metadata
+  - id: CS-013
+    category: serilog
+    library: Serilog
+    name: ForContext
+    description: Contextual logger
+    example: Log.ForContext<MyClass>().Information("msg")
+    when_to_use: Class context
+  - id: CS-014
+    category: serilog
+    library: Serilog
+    name: Destructure
+    description: Object destructuring
+    example: Destructure.ByTransforming<User>(u => new { u.Id, u.Name })
+    when_to_use: Safe serialization
+  - id: CS-015
+    category: serilog
+    library: Serilog
+    name: Filter
+    description: Log filtering
+    example: Filter.ByExcluding(e => e.Properties.ContainsKey("Password"))
+    when_to_use: Security filtering
+  - id: CS-016
+    category: serilog
+    library: Serilog
+    name: JSON Formatter
+    description: JSON output
+    example: WriteTo.Console(new JsonFormatter())
+    when_to_use: Structured logging
+  - id: CS-017
+    category: nlog
+    library: NLog
+    name: LogManager.GetLogger
+    description: Get NLog logger
+    example: Logger logger = LogManager.GetCurrentClassLogger()
+    when_to_use: NLog projects
+  - id: CS-018
+    category: nlog
+    library: NLog
+    name: nlog.config
+    description: XML configuration
+    example: <targets><target name="file" type="File" fileName="app.log"/></targets>
+    when_to_use: NLog setup
+  - id: CS-019
+    category: nlog
+    library: NLog
+    name: AsyncWrapper
+    description: Async logging
+    example: <target type="AsyncWrapper"><target type="File"/></target>
+    when_to_use: Performance
+  - id: CS-020
+    category: nlog
+    library: NLog
+    name: LayoutRenderer
+    description: Custom layout
+    example: ${date:format=yyyy-MM-dd} ${level} ${message}
+    when_to_use: Output formatting
+  - id: CS-021
+    category: nlog
+    library: NLog
+    name: Structured Logging
+    description: NLog structured logs
+    example: logger.Info("User {userId} logged in", userId)
+    when_to_use: Semantic logging
+  - id: CS-022
+    category: aspnet
+    library: ASP.NET
+    name: AddLogging
+    description: Configure logging DI
+    example: services.AddLogging(builder => builder.AddSerilog())
+    when_to_use: ASP.NET integration
+  - id: CS-023
+    category: aspnet
+    library: ASP.NET
+    name: Request Logging
+    description: HTTP request logging
+    example: app.UseSerilogRequestLogging()
+    when_to_use: API logging
+  - id: CS-024
+    category: general
+    library: any
+    name: High-Performance Logging
+    description: Source generators
+    example: '[LoggerMessage(EventId = 1, Level = LogLevel.Info, Message = "msg")]'
+    when_to_use: High performance
+  - id: CS-025
+    category: general
+    library: any
+    name: Correlation Middleware
+    description: Request correlation
+    example: app.UseCorrelationId()
+    when_to_use: Distributed tracing

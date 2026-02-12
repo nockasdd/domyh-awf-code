@@ -1,0 +1,82 @@
+# Provider-Specific Patterns
+
+providers:
+  - name: openai
+    models: ["gpt-4o", "gpt-5.3-codex", "o3-mini"]
+    features:
+      function_calling:
+        description: "Structured tool use via function definitions"
+        format: |
+          tools: [{
+            type: "function",
+            function: {
+              name: "get_weather",
+              parameters: { type: "object", properties: { city: { type: "string" } } }
+            }
+          }]
+      json_mode:
+        description: "Force valid JSON output"
+        format: "response_format: { type: 'json_schema', json_schema: {...} }"
+      structured_outputs:
+        description: "Guaranteed schema-conformant JSON"
+        note: "Use strict: true for 100% schema compliance"
+    best_practices:
+      - "Use system message for role and constraints"
+      - "Function calling > JSON mode for tool use"
+      - "Temperature 0 for deterministic outputs"
+      - "Use seed parameter for reproducibility"
+
+  - name: anthropic
+    models: ["claude-sonnet-4", "claude-opus-4.6"]
+    features:
+      tool_use:
+        description: "Tool definitions with input schemas"
+        format: |
+          tools: [{
+            name: "get_weather",
+            description: "Get weather for a city",
+            input_schema: { type: "object", properties: { city: { type: "string" } } }
+          }]
+      xml_tags:
+        description: "Optimized for XML-structured prompts"
+        note: "Claude excels with <tag> structured input"
+      extended_thinking:
+        description: "Let Claude reason before answering"
+        format: "thinking: { type: 'enabled', budget_tokens: 10000 }"
+      prefill:
+        description: "Pre-fill assistant response"
+        note: "Guide output format by starting the response"
+    best_practices:
+      - "Use XML tags for structured input sections"
+      - "Prefill assistant response for format control"
+      - "Enable extended thinking for complex tasks"
+      - "Put examples in <example> tags"
+
+  - name: google
+    models: ["gemini-2.5-pro", "gemini-2.5-flash"]
+    features:
+      function_calling:
+        description: "Tool declarations similar to OpenAI"
+      grounding:
+        description: "Ground responses in Google Search"
+        note: "Reduces hallucination for factual queries"
+      code_execution:
+        description: "Built-in Python sandbox for computation"
+        note: "Model can write and run Python to verify answers"
+    best_practices:
+      - "Use grounding for factual accuracy"
+      - "Leverage code execution for math/data tasks"
+      - "System instructions in systemInstruction field"
+
+  - name: cross-provider
+    patterns:
+      - name: provider-agnostic-prompt
+        description: "Write prompts that work across all providers"
+        guidelines:
+          - "Use natural language, not provider-specific syntax"
+          - "Define output format explicitly in the prompt"
+          - "Include examples for consistency"
+          - "Test on 2+ providers before production"
+      - name: fallback-chain
+        description: "Try primary provider, fallback to secondary"
+        strategy: "Claude → GPT-4o → Gemini"

@@ -1,0 +1,239 @@
+# =============================================================================
+# Template Index — HSA Semantic Template Matching
+# =============================================================================
+# DOMYH Awesome Code Agent — Template Registry for HSA
+# Version: 6.2.1
+# =============================================================================
+
+templates:
+  # ==========================================================================
+  # Audit Templates
+  # ==========================================================================
+  - id: audit-report
+    file: audit-report.md
+    name: Audit Report
+    description: Full audit report with scores and findings
+    keywords: [audit, report, score, findings, analysis, review, assess]
+    workflows: ["/ap", "/audit"]
+    category: audit
+    priority: 100
+
+  - id: findings
+    file: findings.md
+    name: Findings Report
+    description: Detailed findings with recommendations
+    keywords: [findings, issues, recommendations, problems, solutions]
+    workflows: ["/ap", "/review"]
+    category: audit
+    priority: 90
+
+  # ==========================================================================
+  # Debug Templates
+  # ==========================================================================
+  - id: debug-report
+    file: debug-report.md
+    name: Debug Report
+    description: Bug investigation and resolution report
+    keywords: [debug, error, fix, bug, issue, root cause, trace]
+    workflows: ["/debug"]
+    category: debug
+    priority: 100
+
+  # ==========================================================================
+  # DevOps Templates
+  # ==========================================================================
+  - id: deploy-plan
+    file: deploy-plan.md
+    name: Deployment Plan
+    description: Deployment checklist and rollback plan
+    keywords: [deploy, release, production, rollback, staging, CI/CD]
+    workflows: ["/deploy"]
+    category: devops
+    priority: 100
+
+  - id: migrate-plan
+    file: migrate-plan.md
+    name: Migration Plan
+    description: Database or system migration plan
+    keywords: [migrate, migration, database, schema, upgrade, version]
+    workflows: ["/migrate"]
+    category: devops
+    priority: 95
+
+  # ==========================================================================
+  # Planning Templates
+  # ==========================================================================
+  - id: project-plan
+    file: project-plan.md
+    name: Project Plan
+    description: Full project planning template
+    keywords: [project, plan, roadmap, timeline, scope, estimate]
+    workflows: ["/plan", "/init"]
+    category: planning
+    priority: 100
+
+  - id: phase-template
+    file: phase-template.md
+    name: Phase Template
+    description: Multi-phase project tracking
+    keywords: [phase, milestone, progress, stage, sprint]
+    workflows: ["/plan", "/init"]
+    category: planning
+    priority: 90
+
+  - id: task-list
+    file: task-list.md
+    name: Task List
+    description: Structured task breakdown
+    keywords: [task, todo, checklist, breakdown, work, item]
+    workflows: ["/plan"]
+    category: planning
+    priority: 85
+
+  # ==========================================================================
+  # Documentation Templates
+  # ==========================================================================
+  - id: doc-template
+    file: doc-template.md
+    name: Documentation
+    description: General documentation template
+    keywords: [doc, document, readme, guide, tutorial, manual]
+    workflows: ["/doc"]
+    category: docs
+    priority: 100
+
+  # ==========================================================================
+  # Testing Templates
+  # ==========================================================================
+  - id: test-report
+    file: test-report.md
+    name: Test Report
+    description: Test results and coverage report
+    keywords: [test, testing, coverage, unit, integration, e2e]
+    workflows: ["/test"]
+    category: testing
+    priority: 100
+
+# =============================================================================
+# Workflow Chains (Multi-Step Prompts)
+# =============================================================================
+
+chains:
+  /review:
+    name: Code Review Chain
+    description: Systematic 4-step code review process
+    steps:
+      - order: 1
+        id: review-1
+        name: Understand Context
+        file: chains/review/step1-understand.md
+        description: Understand code and requirements
+
+      - order: 2
+        id: review-2
+        name: Analyze Issues
+        file: chains/review/step2-analyze.md
+        depends_on: review-1
+        description: Find bugs, security issues, code smells
+
+      - order: 3
+        id: review-3
+        name: Suggest Fixes
+        file: chains/review/step3-fix.md
+        depends_on: review-2
+        description: Propose solutions
+
+      - order: 4
+        id: review-4
+        name: Summarize
+        file: chains/review/step4-summary.md
+        depends_on: review-3
+        description: Final report
+
+  /debug:
+    name: Debug Chain
+    description: Systematic 5-step debugging process
+    steps:
+      - order: 1
+        id: debug-1
+        name: Reproduce
+        file: chains/debug/step1-reproduce.md
+        description: Reproduce the issue
+
+      - order: 2
+        id: debug-2
+        name: Isolate
+        file: chains/debug/step2-isolate.md
+        depends_on: debug-1
+        description: Isolate the root cause
+
+      - order: 3
+        id: debug-3
+        name: Analyze
+        file: chains/debug/step3-analyze.md
+        depends_on: debug-2
+        description: Deep analysis
+
+      - order: 4
+        id: debug-4
+        name: Fix
+        file: chains/debug/step4-fix.md
+        depends_on: debug-3
+        description: Implement fix
+
+      - order: 5
+        id: debug-5
+        name: Verify
+        file: chains/debug/step5-verify.md
+        depends_on: debug-4
+        description: Verify the fix
+
+  /implement:
+    name: Implementation Chain
+    description: Systematic 4-step feature implementation
+    steps:
+      - order: 1
+        id: impl-1
+        name: Plan
+        file: chains/implement/step1-plan.md
+        description: Create implementation plan
+
+      - order: 2
+        id: impl-2
+        name: Code
+        file: chains/implement/step2-code.md
+        depends_on: impl-1
+        description: Write the code
+
+      - order: 3
+        id: impl-3
+        name: Test
+        file: chains/implement/step3-test.md
+        depends_on: impl-2
+        description: Write and run tests
+
+      - order: 4
+        id: impl-4
+        name: Document
+        file: chains/implement/step4-doc.md
+        depends_on: impl-3
+        description: Add documentation
+
+# =============================================================================
+# Search Configuration
+# =============================================================================
+
+search:
+  engine: "hsa" # HSA v1.0.0 HybridSearch
+  algorithm: "hybrid" # 70% vector + 30% BM25
+  fusion_strategy: "weighted_sum" # weighted_sum | rrf | max_score
+  vector_weight: 0.7
+  bm25_weight: 0.3
+  min_score: 0.3
+  fallback: "bm25" # Fallback if HSA unavailable
+  # Minimum match score
+
+# =============================================================================
+# Footer
+# =============================================================================
+# _DOMYH Awesome Code • Template Index v6.2.1 • HSA Integration_

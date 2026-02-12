@@ -1,0 +1,152 @@
+# Tailwind CSS 4.0 - State & Interaction Patterns
+# Hover, focus, group, peer, and form states
+# Source: tailwindcss.com/docs/hover-focus-and-other-states (Jan 2025)
+
+metadata:
+  skill: tailwind
+  domain: states
+  version: "4.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: state001
+    name: "Group Hover"
+    category: state
+    version: "3.0+"
+    description: |
+      Style child elements when parent is hovered.
+      Add 'group' class to parent.
+    text: "group hover parent child nested interaction"
+    example: |
+      <a href="#" class="group block">
+        <img class="group-hover:opacity-75 transition" />
+        <span class="group-hover:text-blue-500">Link text</span>
+      </a>
+
+      <!-- Named groups -->
+      <div class="group/sidebar">
+        <span class="group-hover/sidebar:text-white" />
+      </div>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#group-hover"
+
+  - id: state002
+    name: "Peer"
+    category: state
+    version: "3.0+"
+    description: |
+      Style elements based on sibling state.
+      Add 'peer' class to source sibling.
+    text: "peer sibling adjacent state validation error"
+    example: |
+      <label>
+        <input type="email" class="peer" required />
+        <span class="hidden peer-invalid:block text-red-500">
+          Invalid email
+        </span>
+      </label>
+
+      <!-- Named peers -->
+      <input type="checkbox" class="peer/toggle" />
+      <div class="hidden peer-checked/toggle:block">
+        Shown when checked
+      </div>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#peer"
+
+  - id: state003
+    name: "Focus States"
+    category: state
+    version: "3.0+"
+    description: |
+      Style focus states for accessibility.
+      Use focus-visible for keyboard-only focus.
+    text: "focus focus-visible focus-within keyboard accessibility ring"
+    example: |
+      <!-- Focus ring on keyboard only -->
+      <button class="
+        focus:outline-none
+        focus-visible:ring-2 focus-visible:ring-blue-500
+      ">
+        Keyboard focus ring
+      </button>
+
+      <!-- Focus within container -->
+      <div class="focus-within:ring-2 focus-within:ring-blue-500">
+        <input type="text" />
+      </div>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#focus"
+
+  - id: state004
+    name: "Disabled State"
+    category: state
+    version: "3.0+"
+    description: |
+      Style disabled form elements.
+      Works with disabled attribute.
+    text: "disabled state form button input opacity cursor"
+    example: |
+      <button 
+        disabled
+        class="
+          bg-blue-500 text-white
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+          disabled:pointer-events-none
+        "
+      >
+        Submit
+      </button>
+    severity: HIGH
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#disabled"
+
+  - id: state005
+    name: "Aria States"
+    category: state
+    version: "3.3+"
+    description: |
+      Style based on ARIA attributes.
+      Enhances accessibility patterns.
+    text: "aria accessibility a11y attribute expanded selected checked"
+    example: |
+      <!-- Accordion with aria-expanded -->
+      <button aria-expanded="true" class="aria-expanded:bg-blue-500">
+        Panel header
+      </button>
+
+      <!-- Custom aria states -->
+      <div 
+        aria-busy="true" 
+        class="aria-busy:opacity-50 aria-busy:pointer-events-none"
+      >
+        Loading state
+      </div>
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#aria-states"
+
+  - id: state006
+    name: "Data Attributes"
+    category: state
+    version: "3.2+"
+    description: |
+      Style based on data-* attributes.
+      Useful for JavaScript-driven states.
+    text: "data attribute state active open loading js driven"
+    example: |
+      <!-- Boolean data attribute -->
+      <div data-active class="data-[active]:bg-blue-500">
+        Active item
+      </div>
+
+      <!-- Data attribute with value -->
+      <div data-size="lg" class="data-[size=lg]:text-xl">
+        Large text
+      </div>
+
+      <!-- From JavaScript -->
+      element.dataset.loading = 'true';
+      <div class="data-[loading=true]:animate-pulse" />
+    severity: MEDIUM
+    docs_url: "https://tailwindcss.com/docs/hover-focus-and-other-states#data-attributes"

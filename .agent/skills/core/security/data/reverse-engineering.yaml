@@ -1,0 +1,497 @@
+metadata:
+  skill: security
+  domain: reverse_engineering
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: reverse-engineering.yaml
+  patterns_count: 40
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - tools_defeated
+    - example_code
+patterns:
+  - id: RE-01
+    name: No Code Obfuscation
+    severity: HIGH
+    category: Static
+    description: Source code or bytecode readable without protection
+    detection_pattern: (function\\s+\\w+|class\\s+\\w+|def\\s+\\w+)(?!.*obfuscate)
+    fix_pattern: "Use obfuscation: ProGuard R8 javascript-obfuscator pyarmor"
+    languages:
+      - java
+      - kotlin
+      - javascript
+      - python
+    tools_defeated: jadx dex2jar jd-gui
+    example_code: '// BEFORE\nfunction validateLicense(key) {\n  return key === ''SECRET''\n}\n// AFTER: Use obfuscator'
+  - id: RE-02
+    name: Root Detection Missing
+    severity: CRITICAL
+    category: Mobile
+    description: App runs on rooted devices without detection
+    detection_pattern: (su|SuperSU|Magisk|busybox)(?!.*detect|check)
+    fix_pattern: Implement multi-layered root detection with fallbacks
+    languages:
+      - java
+      - kotlin
+    tools_defeated: Magisk KernelSU
+    example_code: // Detect Magisk\nval paths = arrayOf('/sbin/.magisk', '/data/adb/magisk')\nif (paths.any { File(it).exists() }) exitApp()
+  - id: RE-03
+    name: Jailbreak Detection Missing
+    severity: CRITICAL
+    category: Mobile
+    description: iOS app runs on jailbroken devices without warning
+    detection_pattern: (Cydia|checkra1n|unc0ver|Sileo)(?!.*detect)
+    fix_pattern: Implement jailbreak detection checking multiple indicators
+    languages:
+      - swift
+      - objective-c
+    tools_defeated: Electra checkra1n
+    example_code: '// Check for Cydia\nif FileManager.default.fileExists(atPath: ''/Applications/Cydia.app'') { exitApp() }'
+  - id: RE-04
+    name: Frida Detection Missing
+    severity: CRITICAL
+    category: Mobile
+    description: App does not detect Frida injection framework
+    detection_pattern: (frida|gadget|gum-js|r2frida)(?!.*detect)
+    fix_pattern: Detect Frida via port scan libraries thread names
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: Frida Objection
+    example_code: // Check Frida port 27042\nif (isPortOpen(27042)) exitApp()\n// Check loaded libraries\nif (libs.any { it.contains('frida') }) exitApp()
+  - id: RE-05
+    name: Xposed Detection Missing
+    severity: HIGH
+    category: Android
+    description: App does not detect Xposed Framework hooks
+    detection_pattern: (Xposed|EdXposed|LSPosed|de\\.robv)(?!.*detect)
+    fix_pattern: Check for Xposed via stack traces and known classes
+    languages:
+      - java
+      - kotlin
+    tools_defeated: Xposed EdXposed LSPosed
+    example_code: 'try { throw Exception() }\ncatch (e: Exception) {\n  if (e.stackTrace.any { it.className.contains(''Xposed'') }) exitApp()\n}'
+  - id: RE-06
+    name: LSPosed Detection Missing
+    severity: HIGH
+    category: Android
+    description: App does not detect LSPosed specifically - new 2024
+    detection_pattern: (LSPosed|lsposed|io\\.github\\.lsposed)(?!.*detect)
+    fix_pattern: Detect LSPosed daemon and modules
+    languages:
+      - java
+      - kotlin
+    tools_defeated: LSPosed
+    example_code: // Check LSPosed daemon\nif (File('/data/adb/lspd').exists()) exitApp()
+  - id: RE-07
+    name: Play Integrity Missing
+    severity: CRITICAL
+    category: Android
+    description: App does not use Play Integrity API - replaced SafetyNet 2024
+    detection_pattern: (SafetyNet|safetynet)(?!.*playintegrity|PlayIntegrity)
+    fix_pattern: Migrate to Play Integrity API for device attestation
+    languages:
+      - java
+      - kotlin
+    tools_defeated: Magisk modules
+    example_code: // Play Integrity API (2024+)\nval integrityRequest = IntegrityManager.createRequest(nonce)\nintegrityManager.requestIntegrityToken(integrityRequest)
+  - id: RE-08
+    name: Debugger Detection Missing
+    severity: HIGH
+    category: Runtime
+    description: App does not detect attached debuggers
+    detection_pattern: (ptrace|isDebuggerPresent|PTRACE_TRACEME)(?!.*check)
+    fix_pattern: Implement anti-debugging with ptrace timing checks
+    languages:
+      - c
+      - cpp
+      - swift
+      - kotlin
+    tools_defeated: lldb gdb IDA
+    example_code: // iOS anti-debug\nBOOL isDebugged() {\n  int name[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()};\n  struct kinfo_proc info;\n  return (info.kp_proc.p_flag & P_TRACED) != 0;\n}
+  - id: RE-09
+    name: Emulator Detection Missing
+    severity: HIGH
+    category: Mobile
+    description: App runs in emulators without restrictions
+    detection_pattern: (android_id|Build\\.MODEL|Build\\.FINGERPRINT)(?!.*emulator)
+    fix_pattern: Detect emulators via Build properties sensors performance
+    languages:
+      - java
+      - kotlin
+    tools_defeated: Genymotion Nox BlueStacks
+    example_code: 'fun isEmulator(): Boolean = Build.FINGERPRINT.startsWith(''generic'') ||\n  Build.MODEL.contains(''Emulator'') || Build.MANUFACTURER.contains(''Genymotion'')'
+  - id: RE-10
+    name: String Encryption Missing
+    severity: MEDIUM
+    category: Static
+    description: Sensitive strings in plaintext including API keys
+    detection_pattern: (api.*key.*=.*['\]|password.*=.*['\"]|secret.*=.*['\"])"
+    fix_pattern: Encrypt strings at build time decrypt at runtime
+    languages: all
+    tools_defeated: strings grep
+    example_code: // BEFORE\nconst API_KEY = 'sk-1234'\n// AFTER\nconst API_KEY = decrypt(ENCRYPTED_KEY, getDeviceKey())
+  - id: RE-11
+    name: SSL Pinning Bypass Vulnerable
+    severity: CRITICAL
+    category: Network
+    description: Certificate pinning can be bypassed via hooking
+    detection_pattern: (TrustManager|HostnameVerifier|X509TrustManager)
+    fix_pattern: Move pinning logic to native code use multiple pins
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: SSLKillSwitch Frida
+    example_code: // Move to JNI/C++\nextern 'C' JNIEXPORT jboolean JNICALL\nJava_com_app_Security_verifyPin(JNIEnv*, jobject, jstring)
+  - id: RE-12
+    name: No Binary Integrity Check
+    severity: CRITICAL
+    category: Runtime
+    description: App does not verify its own binary integrity
+    detection_pattern: (checksum|hash|signature)(?!.*verify|integrity)
+    fix_pattern: Calculate and verify binary hash at runtime
+    languages: all
+    tools_defeated: Binary patching
+    example_code: // Verify APK signature at runtime\nval sig = packageManager.getPackageInfo(packageName, GET_SIGNATURES)\nif (!verifySignature(sig.signatures[0])) exitApp()
+  - id: RE-13
+    name: Weak Control Flow
+    severity: MEDIUM
+    category: Static
+    description: Linear control flow easy to follow in disassembler
+    detection_pattern: (if\\s*\\(|switch\\s*\\()(?!.*flatten)
+    fix_pattern: Use control flow flattening and opaque predicates
+    languages:
+      - c
+      - cpp
+      - rust
+    tools_defeated: IDA Ghidra
+    example_code: '// Flattened control flow\nint state = 0;\nwhile (true) {\n  switch (state) {\n    case 0: state = check() ? 1 : 2; break;\n  }\n}'
+  - id: RE-14
+    name: Native Library Unprotected
+    severity: HIGH
+    category: Static
+    description: Native libraries without obfuscation or packing
+    detection_pattern: (\\.so|\\.dylib)(?!.*packed|protected)
+    fix_pattern: Apply native code protection OLLVM or commercial packers
+    languages:
+      - c
+      - cpp
+    tools_defeated: IDA Ghidra
+    example_code: // Use OLLVM obfuscation\n// -mllvm -fla -mllvm -bcf -mllvm -sub
+  - id: RE-15
+    name: Anti-Tampering Missing
+    severity: HIGH
+    category: Runtime
+    description: No runtime tampering detection for code or resources
+    detection_pattern: (?<!integrity|tamper).*check
+    fix_pattern: Implement runtime integrity checks for critical code
+    languages: all
+    tools_defeated: Hex editors
+    example_code: // Check code hash periodically\nif (computeHash(criticalFunction) !== EXPECTED_HASH) exitApp()
+  - id: RE-16
+    name: Screenshot Detection Missing
+    severity: MEDIUM
+    category: Mobile
+    description: App does not detect or prevent screenshots
+    detection_pattern: (FLAG_SECURE|userDidTakeScreenshot)(?!.*set)
+    fix_pattern: Set FLAG_SECURE or detect screenshot notifications
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: Screen capture
+    example_code: '// Android\nwindow.setFlags(FLAG_SECURE, FLAG_SECURE)\n// iOS: Observe UIApplicationUserDidTakeScreenshotNotification'
+  - id: RE-17
+    name: Screen Recording Detection Missing
+    severity: MEDIUM
+    category: Mobile
+    description: App does not detect screen recording
+    detection_pattern: (isCaptured|mediaProjection)(?!.*detect)
+    fix_pattern: Detect screen recording and blur sensitive content
+    languages:
+      - swift
+      - kotlin
+    tools_defeated: Screen recorder
+    example_code: // iOS\nif UIScreen.main.isCaptured { blurSensitiveContent() }
+  - id: RE-18
+    name: Memory Dump Protection Missing
+    severity: HIGH
+    category: Runtime
+    description: Sensitive data can be dumped from memory
+    detection_pattern: (malloc|new|alloc).*password|secret
+    fix_pattern: Zero sensitive data after use use secure memory
+    languages: all
+    tools_defeated: Frida memory dump
+    example_code: // Zero password after use\nmemset_s(password, sizeof(password), 0, sizeof(password));\nfree(password);
+  - id: RE-19
+    name: Hook Detection Missing
+    severity: HIGH
+    category: Runtime
+    description: App does not detect function hooking
+    detection_pattern: (hook|swizzle|replace)(?!.*detect)
+    fix_pattern: Detect hooks via code hash comparison inline checks
+    languages: all
+    tools_defeated: Frida Substrate
+    example_code: // Check PLT/GOT integrity\nif (checkFunctionIntegrity(criticalFunc) === false) exitApp()
+  - id: RE-20
+    name: Substrate Detection Missing
+    severity: HIGH
+    category: iOS
+    description: iOS app does not detect Substrate framework
+    detection_pattern: (substrate|MobileSubstrate|MSHookFunction)(?!.*detect)
+    fix_pattern: Detect Substrate presence and hooks
+    languages:
+      - swift
+      - objective-c
+    tools_defeated: Substrate Substitute
+    example_code: // Check for Substrate\nif (dlopen('/Library/MobileSubstrate', 0) != NULL) exitApp()
+  - id: RE-21
+    name: Clipboard Monitoring Missing
+    severity: MEDIUM
+    category: Mobile
+    description: App does not monitor clipboard for sensitive data theft
+    detection_pattern: (UIPasteboard|ClipboardManager)(?!.*monitor)
+    fix_pattern: Monitor clipboard changes clear sensitive data promptly
+    languages:
+      - swift
+      - kotlin
+    tools_defeated: Clipboard hijack
+    example_code: '// Clear sensitive clipboard after 30 seconds\nDispatchQueue.main.asyncAfter(deadline: .now() + 30) {\n  UIPasteboard.general.string = ''''\n}'
+  - id: RE-22
+    name: Device Binding Missing
+    severity: MEDIUM
+    category: Mobile
+    description: App license not bound to device identifiers
+    detection_pattern: (device.*id|android_id|identifierForVendor)(?!.*license)
+    fix_pattern: Bind license to multiple device identifiers
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: License sharing
+    example_code: // Bind to hardware\nval deviceId = Settings.Secure.ANDROID_ID\nval license = generateLicense(userId, deviceId)
+  - id: RE-23
+    name: Time Bomb Detection
+    severity: MEDIUM
+    category: Static
+    description: App contains time-based license checks that can be bypassed
+    detection_pattern: (System\\.currentTimeMillis|Date\\.now|time\\(\\))(?!.*server)
+    fix_pattern: Use server-side time validation not device time
+    languages: all
+    tools_defeated: Time manipulation
+    example_code: // Use NTP server time\nval serverTime = fetchServerTime()\nif (serverTime > LICENSE_EXPIRY) exitApp()
+  - id: RE-24
+    name: Debug Build Detection
+    severity: LOW
+    category: Static
+    description: App does not detect if running as debug build
+    detection_pattern: (BuildConfig\\.DEBUG|DEBUG|NDEBUG)(?!.*check)
+    fix_pattern: Exit or limit functionality in debug builds
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: Debug mode
+    example_code: if (BuildConfig.DEBUG) {\n  // Disable sensitive features in debug\n  Log.w('Security', 'Debug build detected')\n}
+  - id: RE-25
+    name: ADB Detection Missing
+    severity: MEDIUM
+    category: Android
+    description: App does not detect ADB connection
+    detection_pattern: (adb|android_debug_bridge)(?!.*detect)
+    fix_pattern: Detect ADB connection and warn user
+    languages:
+      - java
+      - kotlin
+    tools_defeated: ADB shell
+    example_code: // Check ADB status\nval adb = Settings.Global.getString(contentResolver, 'adb_enabled')\nif (adb == '1') showWarning()
+  - id: RE-26
+    name: Developer Options Detection
+    severity: LOW
+    category: Android
+    description: App does not check for enabled developer options
+    detection_pattern: (development_settings_enabled)(?!.*check)
+    fix_pattern: Detect developer options and adjust security level
+    languages:
+      - java
+      - kotlin
+    tools_defeated: Developer menu
+    example_code: val devOpts = Settings.Secure.getInt(resolver, DEVELOPMENT_SETTINGS_ENABLED, 0)\nif (devOpts == 1) reduceSecurityLevel()
+  - id: RE-27
+    name: USB Debugging Detection
+    severity: MEDIUM
+    category: Android
+    description: App does not detect USB debugging enabled
+    detection_pattern: (usb_debug|adb_enabled)(?!.*detect)
+    fix_pattern: Detect USB debugging and warn for sensitive operations
+    languages:
+      - java
+      - kotlin
+    tools_defeated: USB debugging
+    example_code: val usbDebug = Settings.Global.getInt(resolver, ADB_ENABLED, 0)\nif (usbDebug == 1) showSecurityWarning()
+  - id: RE-28
+    name: Proxy Detection Missing
+    severity: HIGH
+    category: Network
+    description: App does not detect proxy interception
+    detection_pattern: (proxy|System\\.getProperty.*http)(?!.*detect)
+    fix_pattern: Detect proxy and certificate changes
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: Charles Burp
+    example_code: // Detect proxy\nval proxy = System.getProperty('http.proxyHost')\nif (proxy != null && !TRUSTED_PROXIES.contains(proxy)) warn()
+  - id: RE-29
+    name: VPN Detection Missing
+    severity: MEDIUM
+    category: Network
+    description: App does not detect VPN connections
+    detection_pattern: (VpnService|NetworkCapabilities\\.TRANSPORT_VPN)(?!.*detect)
+    fix_pattern: Detect VPN and adjust behavior if needed
+    languages:
+      - java
+      - kotlin
+    tools_defeated: VPN tunneling
+    example_code: // Check for VPN\nval cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager\nval vpn = cm.allNetworks.any { it.hasTransport(TRANSPORT_VPN) }
+  - id: RE-30
+    name: SafetyNet Deprecated
+    severity: HIGH
+    category: Android
+    description: App still uses deprecated SafetyNet instead of Play Integrity
+    detection_pattern: SafetyNet(?!.*deprecated)|safetynetapi
+    fix_pattern: Migrate to Play Integrity API - SafetyNet sunset 2024
+    languages:
+      - java
+      - kotlin
+    tools_defeated: SafetyNet bypass
+    example_code: '// DEPRECATED: SafetyNet\n// MIGRATE TO:\nimport com.google.android.play.core.integrity.*'
+  - id: RE-31
+    name: r2frida Memory Analysis
+    severity: CRITICAL
+    category: Runtime
+    description: r2frida allows radare2 to analyze live process memory
+    detection_pattern: (r2frida|frida:\/\/|radare2.*attach)(?!.*detect)
+    fix_pattern: Detect radare2 process names and r2frida ports
+    languages: all
+    tools_defeated: r2frida
+    example_code: // Detect r2frida\nif (isPortOpen(27042) || isPortOpen(27045)) exitApp();\n// Check for r2 process
+  - id: RE-32
+    name: Objection Automation
+    severity: CRITICAL
+    category: Mobile
+    description: Objection automates Frida bypass of common protections
+    detection_pattern: (objection|explore.*frida)(?!.*multi.*check)
+    fix_pattern: Use layered detection not single check points
+    languages:
+      - java
+      - kotlin
+      - swift
+    tools_defeated: Objection
+    example_code: // Objection automates:\n// - SSL pinning bypass\n// - Root detection bypass\n// Use multiple detection methods
+  - id: RE-33
+    name: Source Map Exposure
+    severity: HIGH
+    category: Web
+    description: JavaScript source maps expose original code
+    detection_pattern: (\\.map|sourceMappingURL)(?!.*production.*false)
+    fix_pattern: Remove source maps in production builds
+    languages:
+      - javascript
+      - typescript
+    tools_defeated: Chrome DevTools
+    example_code: '// BAD: Deployed with .map\n// GOOD: Remove in production build'
+  - id: RE-34
+    name: DevTools Detection Bypass
+    severity: MEDIUM
+    category: Web
+    description: DevTools detection easily bypassed
+    detection_pattern: devtools.*detect(?!.*multiple)
+    fix_pattern: Use multiple detection methods including performance timing
+    languages:
+      - javascript
+      - typescript
+    tools_defeated: Chrome DevTools
+    example_code: '// Weak detection\nif (window.outerHeight - window.innerHeight > 200)\n// Better: timing attacks firebug detection'
+  - id: RE-35
+    name: APK Smali Patching
+    severity: HIGH
+    category: Android
+    description: APK can be decompiled modified and rebuilt
+    detection_pattern: classes\\.dex(?!.*signature.*check)
+    fix_pattern: Verify APK signature at runtime detect tampering
+    languages:
+      - java
+      - kotlin
+    tools_defeated: apktool smali
+    example_code: // Check APK signature hash at runtime\nif (getApkHash() != EXPECTED_HASH) exitApp();
+  - id: RE-36
+    name: IDA Analysis Protection
+    severity: MEDIUM
+    category: Static
+    description: Binary contains helpful debug info for IDA analysis
+    detection_pattern: (DWARF|.debug_info|symbol.*table)(?!.*strip)
+    fix_pattern: Strip debug symbols use anti-disassembly tricks
+    languages:
+      - c
+      - cpp
+      - rust
+    tools_defeated: IDA Pro Ghidra
+    example_code: '// Strip symbols: gcc -s binary\n// Use anti-disassembly: junk bytes overlapping code'
+  - id: RE-37
+    name: Binary Ninja HLIL
+    severity: MEDIUM
+    category: Static
+    description: Clean decompilation shows high-level logic
+    detection_pattern: (function|class).*logic(?!.*obfuscate)
+    fix_pattern: Use control flow flattening and MBA obfuscation
+    languages:
+      - c
+      - cpp
+      - rust
+    tools_defeated: Binary Ninja
+    example_code: '// Apply MBA: a = a + b - b + 0 * random\n// Use switch dispatch for control flow'
+  - id: RE-38
+    name: Ghidra Decompiler
+    severity: MEDIUM
+    category: Static
+    description: Ghidra provides free decompilation quality
+    detection_pattern: (ELF|PE|Mach-O)(?!.*obfuscated|packed)
+    fix_pattern: Apply commercial-grade obfuscation or packing
+    languages:
+      - c
+      - cpp
+      - rust
+      - go
+    tools_defeated: Ghidra 11.x
+    example_code: // Pack with Themida/VMProtect\n// Or use Obfuscator-LLVM
+  - id: RE-39
+    name: Dynamic Instrumentation
+    severity: HIGH
+    category: Runtime
+    description: Process can be instrumented with DynamoRIO/Pin
+    detection_pattern: (DynamoRIO|Pin|Valgrind)(?!.*detect)
+    fix_pattern: Detect instrumentation frameworks via timing checks
+    languages: all
+    tools_defeated: DynamoRIO Intel Pin
+    example_code: // Check execution timing\n// Instrumented code runs 100x slower
+  - id: RE-40
+    name: Network Traffic Analysis
+    severity: HIGH
+    category: Network
+    description: Network traffic reveals API structure and logic
+    detection_pattern: (REST|GraphQL|WebSocket)(?!.*encrypt.*payload)
+    fix_pattern: Use certificate pinning and encrypt sensitive payloads
+    languages: all
+    tools_defeated: Wireshark mitmproxy
+    example_code: // Pin certificates\n// Encrypt request/response payloads

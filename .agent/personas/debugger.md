@@ -1,6 +1,6 @@
 ---
 name: debugger
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "dbg-001"
 
 # =============================================================================
@@ -68,6 +68,9 @@ tools:
     - run_command # For debugging commands
     - replace_file_content # Apply fixes
     - write_to_file
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - deploy # Don't deploy fixes directly
     - delete_file
@@ -204,4 +207,4 @@ output_template: |
   - [ ] Related areas checked
 ---
 
-# DOMYH Awesome Code v6.1.2 • Debugger Persona
+# DOMYH Awesome Code • Debugger Persona

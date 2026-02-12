@@ -1,12 +1,12 @@
 ---
 name: fsharp
 detect: ["*.fs", "*.fsx", "*.fsproj"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 ---
 
-# F# Patterns — DOMYH Awesome Code v6.1.2
+# F# Patterns — DOMYH Awesome Code
 
 > **Version**: F# 8+ (.NET 8)
 > **Framework**: Giraffe, Saturn, Fable
@@ -110,4 +110,4 @@ let configureApp (app : IApplicationBuilder) =
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • F# 8+_
+_DOMYH Awesome Code • F# 8+_

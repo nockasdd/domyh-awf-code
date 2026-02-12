@@ -141,4 +141,4 @@ _Format chuẩn cho danh sách tasks._
 
 ---
 
-_DOMYH Awesome Code v6.1_
+\_DOMYH Awesome Code

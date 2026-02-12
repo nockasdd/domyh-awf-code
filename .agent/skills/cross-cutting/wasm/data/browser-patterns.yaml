@@ -1,0 +1,106 @@
+# Browser WASM Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: WASM-BR-001
+    name: wasm-bindgen Setup
+    category: setup
+    description: |
+      Rust → Browser WASM with wasm-bindgen.
+    example: |
+      // Cargo.toml
+      [lib]
+      crate-type = ["cdylib"]
+
+      [dependencies]
+      wasm-bindgen = "0.2"
+      web-sys = { version = "0.3", features = ["console", "Document", "Element"] }
+      js-sys = "0.3"
+
+      // lib.rs
+      use wasm_bindgen::prelude::*;
+
+      #[wasm_bindgen]
+      pub fn greet(name: &str) -> String {
+        format!("Hello, {}!", name)
+      }
+
+      #[wasm_bindgen]
+      pub fn fibonacci(n: u32) -> u32 {
+        match n { 0 => 0, 1 => 1, _ => fibonacci(n-1) + fibonacci(n-2) }
+      }
+
+  - id: WASM-BR-002
+    name: wasm-pack Build
+    category: build
+    description: |
+      Build, test, and publish WASM packages.
+    text: |
+      wasm-pack build --target web      → ES modules (recommended)
+      wasm-pack build --target bundler  → For webpack/vite
+      wasm-pack build --target nodejs   → For Node.js
+      wasm-pack test --chrome           → Browser tests
+
+  - id: WASM-BR-003
+    name: JavaScript Interop
+    category: interop
+    description: |
+      Call JS from Rust and Rust from JS.
+    example: |
+      // Rust: Call JS functions
+      #[wasm_bindgen]
+      extern "C" {
+        #[wasm_bindgen(js_namespace = console)]
+        fn log(s: &str);
+        
+        fn alert(s: &str);
+      }
+
+      // Rust: Export to JS
+      #[wasm_bindgen]
+      pub struct ImageProcessor { /* ... */ }
+
+      #[wasm_bindgen]
+      impl ImageProcessor {
+        #[wasm_bindgen(constructor)]
+        pub fn new(width: u32, height: u32) -> Self { /* ... */ }
+        pub fn apply_blur(&mut self, radius: f32) { /* ... */ }
+        pub fn get_result(&self) -> Vec<u8> { /* ... */ }
+      }
+
+      // JavaScript usage
+      import init, { ImageProcessor } from './pkg/my_wasm.js';
+      await init();
+      const proc = new ImageProcessor(800, 600);
+      proc.apply_blur(2.0);
+      const result = proc.get_result();
+
+  - id: WASM-BR-004
+    name: Web Workers + WASM
+    category: threading
+    description: |
+      Run WASM in Web Workers for off-main-thread compute.
+    example: |
+      // worker.js
+      import init, { heavyComputation } from './pkg/my_wasm.js';
+
+      self.onmessage = async (e) => {
+        await init();
+        const result = heavyComputation(e.data);
+        self.postMessage(result);
+      };
+
+      // main.js
+      const worker = new Worker("worker.js", { type: "module" });
+      worker.postMessage(inputData);
+      worker.onmessage = (e) => updateUI(e.data);
+
+  - id: WASM-BR-005
+    name: Memory Management
+    category: performance
+    description: |
+      Efficient memory sharing between JS and WASM.
+    text: |
+      WASM uses linear memory (ArrayBuffer).
+      Pass large data via shared memory views, not copying.
+      Use wasm-bindgen's Uint8Array conversions for binary data.

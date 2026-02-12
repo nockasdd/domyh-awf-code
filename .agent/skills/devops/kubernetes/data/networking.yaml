@@ -1,0 +1,270 @@
+# =============================================================================
+# Kubernetes Networking Patterns (Feb 2026)
+# =============================================================================
+# Gateway API v1.4+, Service Mesh, Network Policies
+
+metadata:
+  skill: kubernetes
+  domain: networking
+  version: "1.33.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: k8s001
+    name: Gateway API v1.4
+    category: networking
+    version: "1.30+"
+    description: Next-generation Ingress replacement with dynamic backends
+    text: gateway api httproute grpcroute ingress replacement
+    example: |
+      # Gateway API v1.4 - Dynamic backends, x-envoy-* headers
+
+      # 1. Create Gateway
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: Gateway
+      metadata:
+        name: prod-gateway
+      spec:
+        gatewayClassName: istio  # Or: nginx, envoy, cilium
+        listeners:
+          - name: http
+            port: 80
+            protocol: HTTP
+          - name: https
+            port: 443
+            protocol: HTTPS
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: prod-tls-cert
+
+      # 2. Create HTTPRoute
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      metadata:
+        name: api-route
+      spec:
+        parentRefs:
+          - name: prod-gateway
+        hostnames:
+          - "api.example.com"
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /v1
+            backendRefs:
+              - name: api-v1
+                port: 80
+                weight: 90
+              - name: api-v2
+                port: 80
+                weight: 10  # Canary
+
+      # Benefits over Ingress:
+      # - Role-oriented (infra vs app teams)
+      # - Native traffic splitting
+      # - Cross-namespace routing
+      # - Protocol-agnostic (HTTP, gRPC, TCP)
+    severity: CRITICAL
+    docs_url: https://gateway-api.sigs.k8s.io/
+
+  - id: k8s002
+    name: GRPCRoute
+    category: networking
+    version: "1.30+"
+    description: Native gRPC routing in Gateway API
+    text: grpcroute grpc routing gateway api service
+    example: |
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: GRPCRoute
+      metadata:
+        name: grpc-api
+      spec:
+        parentRefs:
+          - name: prod-gateway
+        hostnames:
+          - "grpc.example.com"
+        rules:
+          - matches:
+              - method:
+                  service: myapp.v1.UserService
+                  method: GetUser
+            backendRefs:
+              - name: user-service
+                port: 50051
+
+          - matches:
+              - method:
+                  service: myapp.v1.OrderService
+            backendRefs:
+              - name: order-service
+                port: 50051
+            filters:
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  add:
+                    - name: x-request-id
+                      value: grpc-route
+
+      # Enables:
+      # - Method-level routing
+      # - Header manipulation
+      # - Load balancing per-method
+    severity: HIGH
+    docs_url: https://gateway-api.sigs.k8s.io/guides/grpc-routing/
+
+  - id: k8s003
+    name: Network Policies
+    category: networking
+    version: "1.0+"
+    description: Micro-segmentation with pod-level firewall rules
+    text: network policy firewall security isolation namespace
+    example: |
+      # Default deny all ingress
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: default-deny-ingress
+        namespace: production
+      spec:
+        podSelector: {}
+        policyTypes:
+          - Ingress
+
+      # Allow specific traffic
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: api-policy
+        namespace: production
+      spec:
+        podSelector:
+          matchLabels:
+            app: api
+        policyTypes:
+          - Ingress
+          - Egress
+        ingress:
+          - from:
+              - namespaceSelector:
+                  matchLabels:
+                    name: frontend
+              - podSelector:
+                  matchLabels:
+                    app: nginx
+            ports:
+              - protocol: TCP
+                port: 8080
+        egress:
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: database
+            ports:
+              - protocol: TCP
+                port: 5432
+
+      # Requires CNI with NetworkPolicy support:
+      # Calico, Cilium, Weave, etc.
+    severity: CRITICAL
+    docs_url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+
+  - id: k8s004
+    name: Service Mesh (Istio/Linkerd)
+    category: networking
+    version: "all"
+    description: mTLS, observability, and traffic management
+    text: service mesh istio linkerd mtls observability sidecar
+    example: |
+      # Istio: Enable sidecar injection
+      kubectl label namespace production istio-injection=enabled
+
+      # Virtual Service for traffic splitting
+      apiVersion: networking.istio.io/v1beta1
+      kind: VirtualService
+      metadata:
+        name: reviews
+      spec:
+        hosts:
+          - reviews
+        http:
+          - match:
+              - headers:
+                  end-user:
+                    exact: canary-tester
+            route:
+              - destination:
+                  host: reviews
+                  subset: v2
+          - route:
+              - destination:
+                  host: reviews
+                  subset: v1
+                weight: 90
+              - destination:
+                  host: reviews
+                  subset: v2
+                weight: 10
+
+      # mTLS enforcement
+      apiVersion: security.istio.io/v1beta1
+      kind: PeerAuthentication
+      metadata:
+        name: default
+        namespace: production
+      spec:
+        mtls:
+          mode: STRICT
+    severity: HIGH
+    docs_url: https://istio.io/latest/docs/
+
+  - id: k8s005
+    name: Headless Services
+    category: networking
+    version: "1.0+"
+    description: Direct pod DNS for StatefulSets and database clusters
+    text: headless service statefulset dns pod discovery
+    example: |
+      # Headless service (no clusterIP)
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: database
+      spec:
+        clusterIP: None  # Headless!
+        selector:
+          app: postgres
+        ports:
+          - port: 5432
+
+      # StatefulSet with headless service
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: postgres
+      spec:
+        serviceName: database  # Links to headless service
+        replicas: 3
+        selector:
+          matchLabels:
+            app: postgres
+        template:
+          metadata:
+            labels:
+              app: postgres
+          spec:
+            containers:
+              - name: postgres
+                image: postgres:16
+
+      # DNS records created:
+      # postgres-0.database.namespace.svc.cluster.local
+      # postgres-1.database.namespace.svc.cluster.local
+      # postgres-2.database.namespace.svc.cluster.local
+
+      # Connect to specific pod:
+      # psql -h postgres-0.database -U admin
+    severity: MEDIUM
+    docs_url: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services

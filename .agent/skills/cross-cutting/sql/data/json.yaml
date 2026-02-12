@@ -1,0 +1,156 @@
+# =============================================================================
+# PostgreSQL 17/18 JSON & Data Patterns (Feb 2026)
+# =============================================================================
+# JSON_TABLE, JSONB operations, and modern data types
+
+metadata:
+  skill: sql
+  domain: json
+  version: "17.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: sql020
+    name: JSONB Operators
+    category: datatype
+    version: "9.4+"
+    description: Binary JSON with efficient querying via operators
+    text: jsonb json binary operators query @ contains exists index
+    example: |
+      -- Access values
+      SELECT data->'name' AS name,       -- Returns JSONB
+             data->>'email' AS email     -- Returns text
+        FROM users;
+
+      -- Nested access
+      SELECT data->'address'->>'city' FROM users;
+
+      -- Check key exists
+      SELECT * FROM users WHERE data ? 'premium';
+
+      -- Contains operator (uses GIN index)
+      SELECT * FROM users 
+        WHERE data @> '{"role": "admin"}';
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/current/functions-json.html
+
+  - id: sql021
+    name: JSON_TABLE (PG17)
+    category: function
+    version: "17+"
+    description: Convert JSON to table format for SQL analysis
+    text: json_table jsonb to table convert sql query standard
+    example: |
+      -- PG17: Convert JSON array to table
+      SELECT jt.*
+        FROM products,
+        JSON_TABLE(
+          products.data,
+          '$.items[*]'
+          COLUMNS (
+            id INTEGER PATH '$.id',
+            name TEXT PATH '$.name',
+            price DECIMAL(10,2) PATH '$.price'
+          )
+        ) AS jt;
+
+      -- Great for analytics on JSON data
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/17/functions-json.html#FUNCTIONS-SQLJSON-TABLE
+
+  - id: sql022
+    name: JSON_EXISTS/QUERY/VALUE (PG17)
+    category: function
+    version: "17+"
+    description: SQL/JSON path functions for efficient querying
+    text: json_exists json_query json_value path standard sql json
+    example: |
+      -- Check if path exists
+      SELECT * FROM orders
+        WHERE JSON_EXISTS(data, '$.items[*] ? (@.qty > 10)');
+
+      -- Extract value
+      SELECT JSON_VALUE(data, '$.customer.name') FROM orders;
+
+      -- Extract JSON object
+      SELECT JSON_QUERY(data, '$.items[0]') FROM orders;
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/17/functions-json.html#FUNCTIONS-SQLJSON-PATH
+
+  - id: sql023
+    name: UUIDv7 (PG18)
+    category: datatype
+    version: "18+"
+    description: Time-ordered UUIDs for better B-tree performance
+    text: uuidv7 uuid v7 timestamp ordered unique identifier pg18
+    example: |
+      -- PG18: Native UUIDv7 support
+      SELECT uuidv7();
+      -- Returns: 01902d1c-45e0-7000-8000-000000000001
+
+      -- Better than UUIDv4 for primary keys:
+      -- - Time-ordered = less B-tree fragmentation
+      -- - Better insert performance
+      -- - Contains timestamp for debugging
+
+      CREATE TABLE orders (
+        id uuid PRIMARY KEY DEFAULT uuidv7(),
+        created_at timestamp GENERATED ALWAYS AS (
+          uuid_extract_timestamp(id)
+        ) STORED
+      );
+    severity: HIGH
+    docs_url: https://www.postgresql.org/docs/18/functions-uuid.html
+
+  - id: sql024
+    name: JSONB Path Updates
+    category: function
+    version: "14+"
+    description: Update nested JSONB values efficiently
+    text: jsonb set path update nested modify
+    example: |
+      -- Update nested value
+      UPDATE users 
+        SET data = jsonb_set(
+          data, 
+          '{address,city}', 
+          '"San Francisco"'
+        )
+        WHERE id = 1;
+
+      -- Remove key
+      UPDATE users 
+        SET data = data - 'temporary_field';
+
+      -- Merge JSONB
+      UPDATE users 
+        SET data = data || '{"verified": true}';
+    severity: MEDIUM
+    docs_url: https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING
+
+  - id: sql025
+    name: Generated Columns
+    category: ddl
+    version: "12+"
+    description: Computed columns that update automatically
+    text: generated column computed stored virtual
+    example: |
+      -- Stored generated column (persisted)
+      CREATE TABLE products (
+        price_cents integer,
+        price_dollars numeric 
+          GENERATED ALWAYS AS (price_cents / 100.0) STORED
+      );
+
+      -- Extract from JSONB
+      CREATE TABLE users (
+        data jsonb,
+        email text 
+          GENERATED ALWAYS AS (data->>'email') STORED
+      );
+
+      -- Can be indexed!
+      CREATE INDEX idx_users_email ON users (email);
+    severity: MEDIUM
+    docs_url: https://www.postgresql.org/docs/current/ddl-generated-columns.html

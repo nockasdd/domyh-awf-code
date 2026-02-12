@@ -1,0 +1,170 @@
+# =============================================================================
+# Performance Audit & Measurement Tools (Feb 2026)
+# =============================================================================
+# Tools and measurement strategies
+
+metadata:
+  skill: web-perf
+  domain: measurement
+  version: "2025.1"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: meas001
+    name: Real User Monitoring (RUM)
+    category: measurement
+    impact: CRITICAL
+    description: Measure actual user experience with web-vitals library
+    text: rum real user monitoring web vitals library field data
+    example: |
+      // Install: npm install web-vitals
+      import { onLCP, onINP, onCLS } from 'web-vitals';
+
+      function sendToAnalytics(metric) {
+        const body = JSON.stringify({
+          name: metric.name,
+          value: metric.value,
+          id: metric.id,
+          rating: metric.rating, // 'good', 'needs-improvement', 'poor'
+        });
+        
+        // Use sendBeacon for reliability
+        navigator.sendBeacon('/analytics', body);
+      }
+
+      onLCP(sendToAnalytics);
+      onINP(sendToAnalytics);
+      onCLS(sendToAnalytics);
+    severity: CRITICAL
+    docs_url: https://github.com/GoogleChrome/web-vitals
+
+  - id: meas002
+    name: Lighthouse
+    category: tool
+    impact: HIGH
+    description: Comprehensive performance audits with actionable recommendations
+    text: lighthouse audit score performance accessibility seo pwa
+    example: |
+      # CLI usage
+      npx lighthouse https://example.com \
+        --output html \
+        --output-path ./report.html
+
+      # CI integration (GitHub Actions)
+      - uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            https://example.com
+            https://example.com/page
+          budgetPath: ./budget.json
+
+      # budget.json
+      [{ 
+        "path": "/*",
+        "resourceSizes": [
+          { "resourceType": "script", "budget": 200 }
+        ]
+      }]
+    severity: HIGH
+    docs_url: https://developer.chrome.com/docs/lighthouse/
+
+  - id: meas003
+    name: PageSpeed Insights
+    category: tool
+    impact: HIGH
+    description: Combined lab + field data from Google's testing infrastructure
+    text: pagespeed insights google crux field data lab mobile desktop
+    example: |
+      # API usage
+      const API = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
+      const url = 'https://example.com';
+      const key = 'YOUR_API_KEY';
+
+      const response = await fetch(
+        `${API}?url=${url}&key=${key}&strategy=mobile`
+      );
+      const data = await response.json();
+
+      // Field data (CrUX)
+      console.log(data.loadingExperience.metrics);
+
+      // Lab data (Lighthouse)
+      console.log(data.lighthouseResult.audits);
+    severity: HIGH
+    docs_url: https://pagespeed.web.dev/
+
+  - id: meas004
+    name: Chrome DevTools Performance
+    category: tool
+    impact: HIGH
+    description: Analyze runtime performance and identify bottlenecks
+    text: devtools performance panel timeline flame chart profiler
+    example: |
+      # Performance Panel workflow:
+
+      1. Open DevTools (F12)
+      2. Performance tab → Record
+      3. Interact with page
+      4. Stop recording
+
+      # What to look for:
+      - Long Tasks (>50ms bars)
+      - Layout thrashing (purple bars)
+      - Scripting time vs Rendering
+      - Main thread blocking
+
+      # CPU throttling for testing:
+      - 4x slowdown (mid-range mobile)
+      - 6x slowdown (low-end mobile)
+    severity: HIGH
+    docs_url: https://developer.chrome.com/docs/devtools/performance/
+
+  - id: meas005
+    name: CrUX (Chrome UX Report)
+    category: tool
+    impact: MEDIUM
+    description: BigQuery dataset of real Chrome user experiences
+    text: crux chrome user experience report bigquery field data origin
+    example: |
+      -- BigQuery: Get CWV for a domain
+      SELECT
+        origin,
+        p75_lcp,
+        p75_inp,
+        p75_cls
+      FROM
+        `chrome-ux-report.materialized.metrics_summary`
+      WHERE
+        origin = 'https://example.com'
+        AND yyyymm = 202601
+
+      # Also available via API:
+      # https://developer.chrome.com/docs/crux/api/
+    severity: MEDIUM
+    docs_url: https://developer.chrome.com/docs/crux/
+
+  - id: meas006
+    name: Performance Budget
+    category: strategy
+    impact: HIGH
+    description: Set and enforce limits on page weight and load time
+    text: performance budget size time limit threshold regression
+    example: |
+      // lighthouserc.js
+      module.exports = {
+        ci: {
+          assert: {
+            assertions: {
+              'first-contentful-paint': ['warn', { maxNumericValue: 1800 }],
+              'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+              'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+              'total-byte-weight': ['warn', { maxNumericValue: 500000 }],
+            },
+          },
+        },
+      };
+
+      // CI fails if LCP > 2.5s or CLS > 0.1
+    severity: HIGH
+    docs_url: https://web.dev/performance-budgets-101/

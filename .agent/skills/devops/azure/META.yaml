@@ -1,0 +1,44 @@
+name: azure
+version: "1.0.0"
+display: Microsoft Azure
+category: devops
+tier: 1
+priority: 7
+
+desc: "Microsoft Azure services: Azure Functions, Azure DevOps, Cosmos DB, AKS, Entra ID, and Azure CLI patterns."
+
+triggers:
+  file_patterns:
+    - "azure-pipelines.yml"
+    - "host.json"
+    - "local.settings.json"
+    - ".azure/**"
+  keywords:
+    - Azure
+    - Azure Functions
+    - Azure DevOps
+    - Cosmos DB
+    - Azure SQL
+    - AKS
+    - Entra ID
+    - Azure Active Directory
+    - az cli
+    - Azure Blob Storage
+
+caps:
+  - Azure Functions (serverless)
+  - Azure DevOps pipelines
+  - Cosmos DB, Azure SQL
+  - AKS (Azure Kubernetes Service)
+  - Entra ID (IAM/security)
+  - Azure CLI patterns
+
+related_skills:
+  - docker
+  - kubernetes
+  - terraform
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/devops/azure/data"
+  preload_data: false

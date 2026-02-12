@@ -1,0 +1,60 @@
+# Accessibility Testing Tools
+
+tools:
+  - name: axe-core
+    type: automated
+    install: "npm install -D @axe-core/cli"
+    usage:
+      cli: "npx axe https://localhost:3000"
+      playwright: |
+        import AxeBuilder from '@axe-core/playwright';
+        const results = await new AxeBuilder({ page }).analyze();
+        expect(results.violations).toHaveLength(0);
+      jest: |
+        import { axe, toHaveNoViolations } from 'jest-axe';
+        expect.extend(toHaveNoViolations);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+    coverage: "~57% of WCAG issues"
+
+  - name: lighthouse
+    type: automated
+    usage:
+      chrome: "DevTools → Lighthouse → Accessibility"
+      cli: "npx lighthouse https://example.com --only-categories=accessibility"
+      ci: |
+        - name: Lighthouse CI
+          uses: treosh/lighthouse-ci-action@v10
+          with:
+            urls: https://example.com
+    scoring: "0-100 accessibility score"
+
+  - name: pa11y
+    type: ci-cd
+    install: "npm install -g pa11y"
+    usage: "pa11y https://example.com --standard WCAG2AA"
+    ci_integration: |
+      pa11y-ci --config .pa11yci.json
+
+  - name: eslint-plugin-jsx-a11y
+    type: linter
+    install: "npm install -D eslint-plugin-jsx-a11y"
+    catches:
+      - "Missing alt text"
+      - "Invalid ARIA attributes"
+      - "Non-interactive elements with handlers"
+      - "Missing form labels"
+
+  - name: manual-testing
+    type: manual
+    checklist:
+      - tool: "Keyboard only"
+        test: "Navigate entire page without mouse"
+      - tool: "Screen reader (NVDA/VoiceOver)"
+        test: "Read page content, interact with controls"
+      - tool: "Zoom to 200%"
+        test: "Content reflows, no horizontal scroll"
+      - tool: "High contrast mode"
+        test: "All content visible and usable"
+      - tool: "Reduced motion"
+        test: "No animations with prefers-reduced-motion"

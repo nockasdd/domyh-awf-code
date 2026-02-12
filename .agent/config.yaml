@@ -1,5 +1,5 @@
 # Skills Customization Configuration
-# DOMYH Awesome Code v6.1.2 - Deep Interview + Auto Test Loop
+# DOMYH Awesome Code  - Deep Interview + Auto Test Loop
 # NOTE: Sync version from core/VERSION.yaml
 
 # =============================================================================
@@ -9,9 +9,10 @@
 # Override default skill behavior for this project
 project:
   name: auto
+  install_mode: project # global | project — required by SACRED_RULES ENV_001
 
 # =============================================================================
-# INTERNATIONALIZATION (v6.1.2)
+# INTERNATIONALIZATION (v6.2.1)
 # =============================================================================
 
 i18n:
@@ -44,25 +45,28 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v6.1.2: Auto-suggest configuration
+  # v6.2.1: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3
     show_on_session_start: true
 
 # =============================================================================
-# CUSTOM SKILLS
+# PRIVATE SKILLS
 # =============================================================================
 
-custom:
-  # Path to custom skills (relative to .agent/)
-  path: ./custom-skills/
+private:
+  # Path to private skills (relative to .agent/)
+  path: ./private/
 
-  # Auto-load custom skills
+  # Auto-discover and load private skill META.yaml
   auto_load: true
 
-  # Generate embeddings on startup
-  auto_embed: false
+  # Private skills override public skills with same ID
+  override_public: true
+
+  # Private skill registry file
+  registry: ./private/_index.yaml
 
 # =============================================================================
 # DETECTION RULES
@@ -86,150 +90,21 @@ detection:
 # =============================================================================
 
 context:
-  # Maximum tokens for T1 baseline
-  t1_budget: 1773
+  # Maximum tokens for T1 baseline (57 skills × ~100 tokens)
+  t1_budget: 5700
 
   # Maximum tokens per T2 skill
   t2_budget: 1500
 
-  # Maximum total context
-  max_context: 6273
+  # Maximum total context (T1 + 3 active skills)
+  max_context: 10600
 
   # Include project README in context
   include_readme: false
 
 # =============================================================================
-# TOKEN MANAGEMENT (v6.1.2)
-# Dynamic unloading to keep context lean
+# NOTE: Engine-specific configs (token_management, context_cleanup,
+# project_tracking, rules_engine) moved to core/archive/.
+# These were aspirational specs with no backing runtime.
+# See core/AGENT_BEHAVIOR.md for behavioral guidelines.
 # =============================================================================
-
-token_management:
-  # Enable dynamic skill unloading
-  dynamic_unload: true
-
-  # Unload inactive skills after N seconds
-  unload_after_idle: 300 # 5 minutes
-
-  # Unload skill when switching to different workflow
-  unload_on_switch: true
-
-  # Skills to never unload
-  keep_core:
-    - security
-
-  # Warning threshold (% of max_context)
-  warning_threshold: 0.80
-
-  # Critical threshold - force unload
-  critical_threshold: 0.95
-
-# =============================================================================
-# CONTEXT CLEANUP (v6.1.2)
-# Automatic context hygiene
-# =============================================================================
-
-context_cleanup:
-  # Enable cleanup
-  enabled: true
-
-  # Maximum interactions to keep in history
-  max_history: 10
-
-  # Summarize older interactions instead of keeping full
-  summarize_old: true
-
-  # Auto-cleanup on workflow switch
-  cleanup_on_switch: true
-
-  # Patterns to auto-remove from context
-  auto_remove:
-    - large_file_contents # Remove full file views after processing
-    - stack_traces # Remove after debugging
-    - build_logs # Remove successful build logs
-
-# =============================================================================
-# PROJECT TRACKING (v6.1.2)
-# =============================================================================
-
-project_tracking:
-  # Enable .domyh/project.json tracking
-  enabled: true
-
-  # Auto-save state after each phase
-  auto_save: true
-
-  # State file location
-  state_file: .domyh/project.json
-
-  # Schema validation
-  schema: project.schema.json
-
-# =============================================================================
-# RULES ENGINE () - Based on AI Agent Error Research
-# Prevents 62+ documented agent failures
-# =============================================================================
-
-rules_engine:
-  # Enable rules system
-  enabled: true
-
-  # Core rules (always applied)
-  core_rules:
-    - prompt-injection-guard # Priority 0 - Security
-    - context-management # Priority 1 - Token optimization
-    - terminal-safety # Priority 2 - Command execution
-    - edit-verification # Priority 2 - Code changes
-    - safety # Priority 1 - Dangerous actions
-    - stop-conditions # Priority 2 - When to pause
-    - quality # Priority 3 - Code standards
-    - evidence # Priority 3 - Citations
-
-  # Rules by category
-  categories:
-    security:
-      - prompt-injection-guard
-      - safety
-    execution:
-      - terminal-safety
-      - edit-verification
-    optimization:
-      - context-management
-    workflow:
-      - stop-conditions
-      - evidence
-      - quality
-
-  # Terminal safety thresholds
-  terminal:
-    command_timeout_seconds: 60
-    max_output_wait_seconds: 180
-    failed_command_retry_limit: 2
-    dangerous_commands_require_confirm: true
-
-  # Context management thresholds
-  context:
-    warning_tokens: 15000
-    critical_tokens: 20000
-    max_tokens: 25000
-    auto_summarize_after_interactions: 10
-    cleanup_on_workflow_switch: true
-
-  # Edit verification requirements
-  editing:
-    require_diff_evidence: true
-    require_syntax_check: true
-    scope_limit_enabled: true
-    protected_file_patterns:
-      - ".env*"
-      - "*.key"
-      - "*.pem"
-      - "id_rsa*"
-      - "credentials.*"
-      - "secrets.*"
-
-  # Prompt injection protection
-  security:
-    block_external_commands: true
-    sanitize_user_content: true
-    mask_secrets_in_output: true
-    block_yolo_mode: true

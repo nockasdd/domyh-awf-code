@@ -1,0 +1,108 @@
+metadata:
+  skill: coding-rules
+  domain: memory_management
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: memory-management.yaml
+  patterns_count: 9
+  columns:
+    - language
+    - stack_alloc_ns
+    - heap_alloc_ns
+    - heap_free_ns
+    - safety_mechanism
+    - gc_type
+    - ownership_model
+    - best_practice
+    - performance_tier
+patterns:
+  - id: item_001
+    language: C
+    stack_alloc_ns: "0.15"
+    heap_alloc_ns: 50-200
+    heap_free_ns: 250-1000
+    safety_mechanism: None (manual)
+    gc_type: None
+    ownership_model: Manual malloc/free
+    best_practice: Avoid malloc in hot paths
+    performance_tier: S-tier
+  - id: item_002
+    language: C++
+    stack_alloc_ns: "0.15"
+    heap_alloc_ns: 50-200
+    heap_free_ns: 250-1000
+    safety_mechanism: RAII + smart_ptr
+    gc_type: None
+    ownership_model: unique_ptr/shared_ptr
+    best_practice: Prefer stack; use make_unique
+    performance_tier: S-tier
+  - id: item_003
+    language: Rust
+    stack_alloc_ns: "0.15"
+    heap_alloc_ns: 50-200
+    heap_free_ns: 0 (RAII)
+    safety_mechanism: Borrow checker
+    gc_type: None
+    ownership_model: Ownership + borrowing
+    best_practice: Default to stack; Box for heap
+    performance_tier: S-tier
+  - id: item_004
+    language: Go
+    stack_alloc_ns: 0.5-2
+    heap_alloc_ns: 20-100
+    heap_free_ns: GC (sub-ms)
+    safety_mechanism: Escape analysis
+    gc_type: Concurrent mark-sweep
+    ownership_model: GC managed
+    best_practice: Let compiler decide allocation
+    performance_tier: A-tier
+  - id: item_005
+    language: Java
+    stack_alloc_ns: 1-5
+    heap_alloc_ns: 10-50
+    heap_free_ns: GC (varies)
+    safety_mechanism: Type safety
+    gc_type: G1/ZGC
+    ownership_model: GC managed
+    best_practice: Object pooling for hot paths
+    performance_tier: A-tier
+  - id: item_006
+    language: C#
+    stack_alloc_ns: 1-5
+    heap_alloc_ns: 10-50
+    heap_free_ns: GC (varies)
+    safety_mechanism: Type safety
+    gc_type: Concurrent GC
+    ownership_model: GC managed + struct
+    best_practice: Use struct for small immutable data
+    performance_tier: A-tier
+  - id: item_007
+    language: Python
+    stack_alloc_ns: N/A
+    heap_alloc_ns: 100-500
+    heap_free_ns: GC + refcount
+    safety_mechanism: GIL
+    gc_type: Ref counting + GC
+    ownership_model: GC managed
+    best_practice: Avoid large temp objects
+    performance_tier: B-tier
+  - id: item_008
+    language: JavaScript
+    stack_alloc_ns: N/A
+    heap_alloc_ns: 100-500
+    heap_free_ns: GC (varies)
+    safety_mechanism: Type coercion
+    gc_type: Mark-sweep
+    ownership_model: GC managed
+    best_practice: Minimize allocations in loops
+    performance_tier: B-tier
+  - id: item_009
+    language: TypeScript
+    stack_alloc_ns: N/A
+    heap_alloc_ns: 100-500
+    heap_free_ns: GC (varies)
+    safety_mechanism: Type safety
+    gc_type: Mark-sweep (V8)
+    ownership_model: GC managed
+    best_practice: Same as JS + type guards
+    performance_tier: B-tier

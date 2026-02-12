@@ -1,0 +1,171 @@
+metadata:
+  skill: security
+  domain: owasp_top10
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: owasp-top10.yaml
+  patterns_count: 10
+  columns:
+    - id
+    - name
+    - severity
+    - version
+    - description
+    - detection_pattern
+    - fix_pattern
+    - languages
+    - example_vuln
+    - example_fix
+patterns:
+  - id: A01
+    name: Broken Access Control
+    severity: CRITICAL
+    version: "2025"
+    description: "Missing authorization checks. #1 in both 2021 and 2025. 100% of apps have some form."
+    detection_pattern: (!authz|!permission|!role|admin|delete|update).*endpoint
+    fix_pattern: Implement RBAC/ABAC, check permissions on every request, deny by default
+    languages: all
+    example_vuln: "// BAD: No auth check
+
+      app.delete('/users/:id', (req, res) => db.deleteUser(req.params.id))"
+    example_fix: "// GOOD: Auth middleware + role check
+
+      app.delete('/users/:id', auth, requireRole('admin'), (req, res) => ...)"
+  - id: A02
+    name: Security Misconfiguration
+    severity: CRITICAL
+    version: "2025"
+    description: "Moved UP to #2 in 2025 (was #5 in 2021). Default configs, verbose errors, unused features."
+    detection_pattern: (debug.*true|verbose|stack.*trace|default.*password)
+    fix_pattern: Hardened configs, disable unused features, custom error pages, security headers
+    languages: all
+    example_vuln: "// BAD: Debug mode in production
+
+      DEBUG=true
+
+      SHOW_STACK_TRACE=true"
+    example_fix: "// GOOD: Production config
+
+      DEBUG=false
+
+      SHOW_STACK_TRACE=false
+
+      ERROR_PAGE=/errors/500.html"
+  - id: A03
+    name: Software Supply Chain Failures
+    severity: CRITICAL
+    version: "2025"
+    description: NEW in 2025! Replaces 'Vulnerable Components'. Covers CI/CD, dependencies, build pipelines.
+    detection_pattern: (npm install|pip install|unsigned|http://|package-lock|yarn.lock)
+    fix_pattern: Signed releases, verified checksums, lock files, SBOM, private registries, dependency scanning
+    languages: all
+    example_vuln: "// BAD: Trusting external scripts, no SRI
+
+      <script src='http://cdn.example.com/lib.js'>
+
+      // BAD: No lockfile verification"
+    example_fix: "// GOOD: SRI hash + HTTPS
+
+      <script src='https://...' integrity='sha384-...'>
+
+      // GOOD: npm ci --ignore-scripts + audit"
+  - id: A04
+    name: Insecure Design
+    severity: HIGH
+    version: "2025"
+    description: Architectural flaws that can't be fixed by implementation. Missing threat modeling.
+    detection_pattern: (todo|fixme|hack|workaround).*security
+    fix_pattern: Threat modeling, secure design patterns, defense in depth, security requirements
+    languages: all
+    example_vuln: "// BAD: Password in URL
+
+      GET /reset-password?token=abc&newPassword=secret"
+    example_fix: "// GOOD: POST with body, rate limited
+
+      POST /reset-password { token, newPassword }"
+  - id: A05
+    name: Cryptographic Failures
+    severity: CRITICAL
+    version: "2025"
+    description: "Moved DOWN to #5 in 2025 (was #2 in 2021). Weak encryption, plaintext passwords."
+    detection_pattern: (md5|sha1|plaintext|http://)
+    fix_pattern: Use bcrypt/argon2 for passwords, TLS 1.3, AES-256-GCM for data at rest
+    languages: all
+    example_vuln: "// BAD: MD5 password hash
+
+      const hash = crypto.createHash('md5').update(password).digest('hex')"
+    example_fix: "// GOOD: bcrypt with cost factor 12
+
+      const hash = await bcrypt.hash(password, 12)"
+  - id: A06
+    name: Injection
+    severity: CRITICAL
+    version: "2025"
+    description: "Moved DOWN to #6 in 2025 (was #3 in 2021). SQL/NoSQL/OS command injection."
+    detection_pattern: (query\\s*\\+|exec\\s*\\(|eval\\s*\\(|system\\s*\\()
+    fix_pattern: Parameterized queries, input validation, ORM with safe methods
+    languages: all
+    example_vuln: "// BAD: SQL injection
+
+      db.query('SELECT * FROM users WHERE id = ' + req.params.id)"
+    example_fix: "// GOOD: Parameterized query
+
+      db.query('SELECT * FROM users WHERE id = $1', [req.params.id])"
+  - id: A07
+    name: Identification and Authentication Failures
+    severity: CRITICAL
+    version: "2025"
+    description: Weak passwords, no MFA, session fixation, credential stuffing.
+    detection_pattern: (password.*=|session.*id|token.*storage)
+    fix_pattern: MFA, password policies (NIST 800-63B), secure session management, rate limiting
+    languages: all
+    example_vuln: "// BAD: Session ID in URL
+
+      GET /dashboard?sessionId=abc123"
+    example_fix: "// GOOD: HttpOnly cookie
+
+      Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict"
+  - id: A08
+    name: Software and Data Integrity Failures
+    severity: HIGH
+    version: "2025"
+    description: Unsigned updates, compromised CI/CD, insecure deserialization.
+    detection_pattern: (pickle\\.load|unserialize|ObjectInputStream|auto-update)
+    fix_pattern: Signed releases, verified checksums, secure deserialization, code signing
+    languages: all
+    example_vuln: "// BAD: Insecure deserialization (Python)
+
+      pickle.loads(user_data)"
+    example_fix: "// GOOD: Safe JSON with schema validation
+
+      data = json.loads(user_data); validate(data, schema)"
+  - id: A09
+    name: Security Logging and Monitoring Failures
+    severity: MEDIUM
+    version: "2025"
+    description: Missing security logs, sensitive data in logs, no alerting.
+    detection_pattern: (console\\.log|print\\(|logger.*password|log.*token)
+    fix_pattern: Structured logging, exclude PII, security event monitoring, SIEM integration
+    languages: all
+    example_vuln: "// BAD: Logging secrets
+
+      console.log('User login:', { email, password })"
+    example_fix: "// GOOD: Sanitized logging
+
+      logger.info('User login', { email, timestamp, source_ip })"
+  - id: A10
+    name: Server-Side Request Forgery (SSRF)
+    severity: HIGH
+    version: "2025"
+    description: Server-side request forgery - fetching attacker-controlled URLs.
+    detection_pattern: (fetch\\(|request\\(|http.*get\\().*user
+    fix_pattern: URL allowlisting, disable redirects, network segmentation, metadata protection
+    languages: all
+    example_vuln: "// BAD: Fetching user-provided URL
+
+      const data = await fetch(req.query.url)"
+    example_fix: "// GOOD: Allowlist validation
+
+      if (!ALLOWED_HOSTS.includes(new URL(url).host)) throw new Error('Blocked')
+
+      // Also block: 169.254.169.254, localhost, internal IPs"

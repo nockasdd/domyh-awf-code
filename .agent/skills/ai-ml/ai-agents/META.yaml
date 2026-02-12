@@ -1,0 +1,127 @@
+name: ai-agents
+version: "1.1.0"
+display: AI Agent Orchestration
+category: ai-ml
+tier: 1
+priority: 1
+
+desc: "AI agent development & orchestration. LangChain/LangGraph, CrewAI, AutoGen, Google ADK. Covers multi-agent patterns, LLM API integration (OpenAI/Anthropic/Gemini), MCP built-in support, Gemini Live agents, tool use, memory, and production deployment."
+
+  ### Data Files (4 domains, ~32 patterns)
+  - orchestration-patterns.yaml: supervisor/swarm/sequential/hierarchical (8)
+  - llm-integration.yaml: OpenAI/Anthropic/Gemini API patterns, streaming (8)
+  - agent-rules.yaml: Cursor/Cline/Codex/DOMYH rule system comparison (8)
+  - memory-patterns.yaml: short-term, long-term, vector memory (8)
+
+triggers:
+  file_patterns:
+    # LangChain/LangGraph
+    - "**/agents/**"
+    - "**/chains/**"
+    - "langgraph.json"
+    # Config
+    - "AGENTS.md"
+    - ".clinerules"
+    - ".cursor/rules/**"
+  keywords:
+    # Frameworks
+    - ai agent
+    - langchain
+    - langgraph
+    - crewai
+    - autogen
+    - microsoft autogen
+    - agent framework
+    # Patterns
+    - multi-agent
+    - agent orchestration
+    - supervisor pattern
+    - swarm pattern
+    - sequential chain
+    - hierarchical agents
+    # LLM Integration
+    - tool use
+    - function calling
+    - structured output
+    - LLM integration
+    - OpenAI API
+    - Anthropic API
+    - Gemini API
+    - Claude API
+    - streaming response
+    - token optimization
+    - prompt engineering
+    # Memory
+    - agent memory
+    - conversation memory
+    - vector memory
+    - long-term memory
+    # Agent rules
+    - AGENTS.md
+    - cursor rules
+    - cline rules
+    - agent skills
+    # Observability
+    - langsmith
+    - langfuse
+    - agent traces
+    # Production
+    - human-in-the-loop
+    - HITL
+    # v1.1 — Gemini ecosystem
+    - google adk
+    - agent development kit
+    - gemini live agent
+    - MCP built-in
+    - a2a protocol
+
+caps:
+  # Frameworks
+  - LangChain Expression Language (LCEL) chains
+  - LangGraph stateful workflows (nodes/edges/state)
+  - CrewAI role-based multi-agent collaboration
+  - AutoGen conversational agents
+  # Orchestration
+  - Supervisor pattern (single orchestrator)
+  - Swarm pattern (peer-to-peer agents)
+  - Sequential pipeline (chain of agents)
+  - Hierarchical delegation (manager → workers)
+  # LLM Integration
+  - Multi-provider LLM integration (OpenAI, Anthropic, Gemini, local)
+  - Function calling / Tool use across providers
+  - Structured output (JSON mode, Pydantic models)
+  - Streaming responses (SSE, async generators)
+  - Token optimization & context window management
+  # Memory
+  - Short-term memory (conversation buffer)
+  - Long-term memory (vector store backed)
+  - Episodic memory (event-based recall)
+  # Agent Configuration
+  - Cursor Rules system (global → project → dynamic .mdc)
+  - Cline Rules (.clinerules/ folder)
+  - Codex AGENTS.md configuration
+  - DOMYH skill system (META.yaml → SKILL.md → data/)
+  # Production
+  - Human-in-the-loop (HITL) approval patterns
+  - Observability (LangSmith, Langfuse, traces/spans)
+  - Async queue architecture for long-running agents
+  - Rate limiting & cost optimization
+  - Error recovery & retry strategies
+  # v1.1
+  - Google ADK (Agent Development Kit)
+  - Gemini Live real-time agents (Pipecat, LiveKit, ADK)
+  - MCP built-in tool integration
+  - A2A (Agent-to-Agent) protocol
+
+related_skills:
+  - mcp
+  - prompt-engineering
+  - rag-patterns
+  - vector-search
+  - gemini-live
+  - gemini-media-gen
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/ai-ml/ai-agents/data"
+  preload_data: true

@@ -1,0 +1,55 @@
+name: cli-dev
+version: "1.0.0"
+display: CLI Tool Development
+category: tooling
+tier: 1
+priority: 3
+
+desc: "Production CLI tools with progressive discovery, subcommands, structured output, interactive prompts, and cross-platform support. Covers commander.js, clap (Rust), cobra (Go), Click (Python)."
+
+triggers:
+  file_patterns:
+    - "cli.ts"
+    - "cli.js"
+    - "cli/**"
+    - "bin/**"
+  keywords:
+    - CLI tool
+    - command line tool
+    - commander
+    - commander.js
+    - clap
+    - clap crate
+    - cobra
+    - cobra command
+    - argparse
+    - Click python
+    - interactive CLI
+    - terminal UI
+    - TUI
+    - Inquirer.js
+    - clack
+    - chalk
+    - ora
+    - ink react
+
+caps:
+  - Progressive discovery UX (help → suggest → auto)
+  - Subcommand architecture
+  - Structured output (JSON/YAML/table)
+  - Interactive prompts (Inquirer.js, clack, dialoguer)
+  - Cross-platform compatibility
+  - Error handling & exit codes
+  - Configuration (env + config files + defaults)
+  - AI-augmented CLI patterns
+
+related_skills:
+  - typescript
+  - go
+  - rust
+  - python
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/tooling/cli-dev/data"
+  preload_data: false

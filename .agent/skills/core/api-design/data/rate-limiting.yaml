@@ -1,0 +1,135 @@
+metadata:
+  skill: api-design
+  domain: rate_limiting
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: rate-limiting.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - algorithm
+    - use_case
+patterns:
+  - id: RL-01
+    pattern: Token Bucket
+    description: Tokens added at fixed rate
+    example: 10 tokens/sec 100 burst
+    algorithm: Bucket fills refills on use
+    use_case: Handles bursts
+  - id: RL-02
+    pattern: Leaky Bucket
+    description: Fixed rate output queue
+    example: Process 10 req/sec always
+    algorithm: Queue drains at constant rate
+    use_case: Smooth traffic
+  - id: RL-03
+    pattern: Fixed Window
+    description: Count per time window
+    example: 100 req per minute window
+    algorithm: Reset count each window
+    use_case: Simple implementation
+  - id: RL-04
+    pattern: Sliding Window Log
+    description: Track each request timestamp
+    example: Log all requests compute rate
+    algorithm: Precise but memory heavy
+    use_case: Accuracy needed
+  - id: RL-05
+    pattern: Sliding Window Counter
+    description: Weighted window estimate
+    example: Weight previous + current
+    algorithm: Balance accuracy memory
+    use_case: Most APIs
+  - id: RL-06
+    pattern: 429 Status
+    description: Return Too Many Requests
+    example: HTTP 429 Too Many Requests
+    algorithm: Standard HTTP
+    use_case: All rate limits
+  - id: RL-07
+    pattern: Retry-After Header
+    description: Indicate wait time
+    example: "Retry-After: 60"
+    algorithm: Seconds or HTTP-date
+    use_case: After 429
+  - id: RL-08
+    pattern: X-RateLimit-Limit
+    description: Show limit value
+    example: "X-RateLimit-Limit: 100"
+    algorithm: Custom header
+    use_case: Rate info
+  - id: RL-09
+    pattern: X-RateLimit-Remaining
+    description: Show remaining requests
+    example: "X-RateLimit-Remaining: 45"
+    algorithm: Custom header
+    use_case: Rate info
+  - id: RL-10
+    pattern: X-RateLimit-Reset
+    description: Show reset timestamp
+    example: "X-RateLimit-Reset: 1640000000"
+    algorithm: Unix timestamp
+    use_case: Rate info
+  - id: RL-11
+    pattern: Per-User Limits
+    description: Rate limit by user ID
+    example: 100 req/min per user
+    algorithm: User identification
+    use_case: Authenticated APIs
+  - id: RL-12
+    pattern: Per-IP Limits
+    description: Rate limit by IP address
+    example: 50 req/min per IP
+    algorithm: IP extraction
+    use_case: Public APIs
+  - id: RL-13
+    pattern: Per-Endpoint Limits
+    description: Different limits per route
+    example: "/search: 10/min /users: 100/min"
+    algorithm: Endpoint config
+    use_case: Expensive endpoints
+  - id: RL-14
+    pattern: Tiered Limits
+    description: Limits by subscription
+    example: "Free: 100 Pro: 10000"
+    algorithm: Tier lookup
+    use_case: SaaS APIs
+  - id: RL-15
+    pattern: Exponential Backoff
+    description: Client retry strategy
+    example: Wait 1s 2s 4s 8s...
+    algorithm: Client-side
+    use_case: When 429 received
+  - id: RL-16
+    pattern: Jitter
+    description: Add randomness to retry
+    example: backoff + random(0 100ms)
+    algorithm: Prevents thundering herd
+    use_case: Distributed clients
+  - id: RL-17
+    pattern: Circuit Breaker
+    description: Stop requests when failing
+    example: Open after 5 failures
+    algorithm: Client-side protection
+    use_case: Unreliable backends
+  - id: RL-18
+    pattern: Quota Management
+    description: Track usage over period
+    example: 1000 calls/day quota
+    algorithm: Daily/monthly tracking
+    use_case: Metered APIs
+  - id: RL-19
+    pattern: Rate Limit Bypass
+    description: Whitelist trusted clients
+    example: Skip limits for internal
+    algorithm: Secret header/IP
+    use_case: Internal services
+  - id: RL-20
+    pattern: Distributed Rate Limit
+    description: Shared state across nodes
+    example: Redis counter cluster
+    algorithm: Centralized counter
+    use_case: Scaled APIs

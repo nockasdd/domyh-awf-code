@@ -1,0 +1,92 @@
+# GCP Compute Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: GCP-CMP-001
+    name: Cloud Run Service
+    category: serverless
+    description: |
+      Deploy containerized apps on Cloud Run.
+    example: |
+      # Deploy from container image
+      gcloud run deploy api-service \
+        --image gcr.io/PROJECT/api:latest \
+        --region us-central1 \
+        --allow-unauthenticated \
+        --set-env-vars "DB_HOST=...,NODE_ENV=production" \
+        --memory 512Mi \
+        --cpu 1 \
+        --max-instances 10 \
+        --min-instances 1
+
+  - id: GCP-CMP-002
+    name: Cloud Functions v2
+    category: serverless
+    description: |
+      Event-driven serverless functions.
+    example: |
+      # functions/index.ts (HTTP trigger)
+      import { onRequest } from "firebase-functions/v2/https";
+
+      export const helloWorld = onRequest(
+        { region: "us-central1", memory: "256MiB" },
+        (req, res) => {
+          res.json({ message: "Hello from Cloud Functions!" });
+        }
+      );
+
+      # Pub/Sub trigger
+      import { onMessagePublished } from "firebase-functions/v2/pubsub";
+
+      export const processOrder = onMessagePublished(
+        { topic: "orders", region: "us-central1" },
+        (event) => {
+          const order = event.data.message.json;
+          // Process order
+        }
+      );
+
+  - id: GCP-CMP-003
+    name: GKE Autopilot
+    category: kubernetes
+    description: |
+      Managed Kubernetes with Autopilot.
+    text: |
+      Autopilot: Google manages nodes, pay per pod
+      Standard: You manage nodes, more control
+
+      gcloud container clusters create-auto my-cluster \
+        --region us-central1
+
+  - id: GCP-CMP-004
+    name: Service Selection
+    category: comparison
+    description: |
+      Which GCP compute service to use.
+    text: |
+      | Service | Best For | Scale | Cost Model |
+      |---------|----------|-------|-----------|
+      | Cloud Run | Containers, APIs | Auto | Per request |
+      | Cloud Functions | Events, webhooks | Auto | Per invocation |
+      | GKE Autopilot | Complex apps | Manual+Auto | Per pod |
+      | Compute Engine | VMs, custom | Manual | Per hour |
+      | App Engine | Web apps | Auto | Per instance-hour |
+
+  - id: GCP-CMP-005
+    name: Cloud Build CI/CD
+    category: ci-cd
+    description: |
+      GCP-native CI/CD pipeline.
+    example: |
+      # cloudbuild.yaml
+      steps:
+        - name: 'node:20'
+          args: ['npm', 'ci']
+        - name: 'node:20'
+          args: ['npm', 'test']
+        - name: 'gcr.io/cloud-builders/docker'
+          args: ['build', '-t', 'gcr.io/$PROJECT_ID/api:$COMMIT_SHA', '.']
+        - name: 'gcr.io/cloud-builders/docker'
+          args: ['push', 'gcr.io/$PROJECT_ID/api:$COMMIT_SHA']
+        - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+          args: ['gcloud', 'run', 'deploy', 'api', '--image', 'gcr.io/$PROJECT_ID/api:$COMMIT_SHA', '--region', 'us-central1']

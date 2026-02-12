@@ -1,12 +1,12 @@
 ---
 name: c
 detect: ["*.c", "*.h", "Makefile", "CMakeLists.txt"]
-version: "6.1.2"
+version: "6.2.1"
 category: language
 tier: 1
 ---
 
-# C Language Patterns — DOMYH Awesome Code v6.1.2
+# C Language Patterns — DOMYH Awesome Code
 
 > Pure C (ISO C23) development patterns — NOT C++
 
@@ -745,4 +745,4 @@ static inline void sleep_ms(unsigned int ms) {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • C Language (ISO C23) • 2025-2026_
+_DOMYH Awesome Code • C Language (ISO C23) • 2025-2026_

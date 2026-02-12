@@ -1,0 +1,179 @@
+# =============================================================================
+# service-mesh.yaml — Service Mesh Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# OVERVIEW
+# =============================================================================
+
+overview:
+  description: |
+    Infrastructure layer that handles service-to-service communication.
+    Provides mTLS, load balancing, observability, and traffic management.
+
+  architecture: |
+    ┌─────────────────────────────────────┐
+    │  Service A    ←→  Sidecar Proxy     │
+    │                      ↕              │
+    │              Control Plane          │
+    │                      ↕              │
+    │  Service B    ←→  Sidecar Proxy     │
+    └─────────────────────────────────────┘
+
+# =============================================================================
+# COMPARISON
+# =============================================================================
+
+comparison:
+  features:
+    - feature: mTLS
+      istio: "Auto (PeerAuthentication)"
+      linkerd: "Auto (on by default)"
+      consul: "Auto (Connect)"
+
+    - feature: Traffic Management
+      istio: "VirtualService, DestinationRule"
+      linkerd: "TrafficSplit, ServiceProfile"
+      consul: "Service Router, Splitter"
+
+    - feature: Observability
+      istio: "Prometheus, Grafana, Jaeger, Kiali"
+      linkerd: "Built-in dashboard, Prometheus"
+      consul: "Envoy metrics, Consul UI"
+
+    - feature: Resource Overhead
+      istio: "~100MB per sidecar"
+      linkerd: "~20MB per sidecar"
+      consul: "~50MB per sidecar"
+
+    - feature: Complexity
+      istio: "High"
+      linkerd: "Low"
+      consul: "Medium"
+
+    - feature: Best For
+      istio: "Large enterprises, complex routing"
+      linkerd: "Simplicity-focused teams"
+      consul: "Multi-cloud, HashiCorp stack"
+
+# =============================================================================
+# ISTIO PATTERNS
+# =============================================================================
+
+istio:
+  traffic_management:
+    virtual_service: |
+      apiVersion: networking.istio.io/v1
+      kind: VirtualService
+      metadata:
+        name: reviews
+      spec:
+        hosts:
+          - reviews
+        http:
+          - match:
+              - headers:
+                  end-user:
+                    exact: jason
+            route:
+              - destination:
+                  host: reviews
+                  subset: v2
+          - route:
+              - destination:
+                  host: reviews
+                  subset: v1
+
+    canary_release: |
+      apiVersion: networking.istio.io/v1
+      kind: VirtualService
+      metadata:
+        name: my-service
+      spec:
+        hosts:
+          - my-service
+        http:
+          - route:
+              - destination:
+                  host: my-service
+                  subset: v1
+                weight: 90
+              - destination:
+                  host: my-service
+                  subset: v2
+                weight: 10
+
+  security:
+    mtls: |
+      apiVersion: security.istio.io/v1
+      kind: PeerAuthentication
+      metadata:
+        name: default
+        namespace: istio-system
+      spec:
+        mtls:
+          mode: STRICT
+
+    authorization: |
+      apiVersion: security.istio.io/v1
+      kind: AuthorizationPolicy
+      metadata:
+        name: allow-frontend
+      spec:
+        selector:
+          matchLabels:
+            app: backend
+        rules:
+          - from:
+              - source:
+                  principals: ["cluster.local/ns/default/sa/frontend"]
+
+# =============================================================================
+# LINKERD PATTERNS
+# =============================================================================
+
+linkerd:
+  installation: |
+    # Install CLI
+    curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
+
+    # Install control plane
+    linkerd install --crds | kubectl apply -f -
+    linkerd install | kubectl apply -f -
+
+    # Inject sidecar
+    kubectl get deploy -o yaml | linkerd inject - | kubectl apply -f -
+
+  traffic_split: |
+    apiVersion: split.smi-spec.io/v1alpha1
+    kind: TrafficSplit
+    metadata:
+      name: my-service
+    spec:
+      service: my-service
+      backends:
+        - service: my-service-v1
+          weight: 900m     # 90%
+        - service: my-service-v2
+          weight: 100m     # 10%
+
+# =============================================================================
+# DECISION GUIDE
+# =============================================================================
+
+decision_guide:
+  need_service_mesh:
+    - "50+ microservices"
+    - "Need mTLS between all services"
+    - "Need fine-grained traffic control"
+    - "Compliance requires service-level auth"
+
+  dont_need_service_mesh:
+    - "< 10 services"
+    - "Monolith or simple architecture"
+    - "Team lacks Kubernetes experience"
+    - "Can achieve goals with simpler tools"
+
+# _DOMYH Awesome Code • Service Mesh Patterns_

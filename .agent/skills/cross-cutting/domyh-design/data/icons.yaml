@@ -1,0 +1,918 @@
+metadata:
+  skill: domyh-design
+  domain: icons
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: icons.yaml
+  patterns_count: 100
+  columns:
+    - STT
+    - Category
+    - Icon Name
+    - Keywords
+    - Library
+    - Import Code
+    - Usage
+    - Best For
+    - Style
+patterns:
+  - id: "1"
+    category: Navigation
+    icon_name: menu
+    keywords: hamburger menu navigation toggle bars
+    library: Lucide
+    import_code: import { Menu } from 'lucide-react'
+    usage: <Menu />
+    best_for: Mobile navigation drawer toggle sidebar
+    style: Outline
+  - id: "2"
+    category: Navigation
+    icon_name: arrow-left
+    keywords: back previous return navigate
+    library: Lucide
+    import_code: import { ArrowLeft } from 'lucide-react'
+    usage: <ArrowLeft />
+    best_for: Back button breadcrumb navigation
+    style: Outline
+  - id: "3"
+    category: Navigation
+    icon_name: arrow-right
+    keywords: next forward continue navigate
+    library: Lucide
+    import_code: import { ArrowRight } from 'lucide-react'
+    usage: <ArrowRight />
+    best_for: Forward button next step CTA
+    style: Outline
+  - id: "4"
+    category: Navigation
+    icon_name: chevron-down
+    keywords: dropdown expand accordion select
+    library: Lucide
+    import_code: import { ChevronDown } from 'lucide-react'
+    usage: <ChevronDown />
+    best_for: Dropdown toggle accordion header
+    style: Outline
+  - id: "5"
+    category: Navigation
+    icon_name: chevron-up
+    keywords: collapse close accordion minimize
+    library: Lucide
+    import_code: import { ChevronUp } from 'lucide-react'
+    usage: <ChevronUp />
+    best_for: Accordion collapse minimize
+    style: Outline
+  - id: "6"
+    category: Navigation
+    icon_name: home
+    keywords: homepage main dashboard start
+    library: Lucide
+    import_code: import { Home } from 'lucide-react'
+    usage: <Home />
+    best_for: Home navigation main page
+    style: Outline
+  - id: "7"
+    category: Navigation
+    icon_name: x
+    keywords: close cancel dismiss remove exit
+    library: Lucide
+    import_code: import { X } from 'lucide-react'
+    usage: <X />
+    best_for: Modal close dismiss button
+    style: Outline
+  - id: "8"
+    category: Navigation
+    icon_name: external-link
+    keywords: open new tab external link
+    library: Lucide
+    import_code: import { ExternalLink } from 'lucide-react'
+    usage: <ExternalLink />
+    best_for: External link indicator
+    style: Outline
+  - id: "9"
+    category: Action
+    icon_name: plus
+    keywords: add create new insert
+    library: Lucide
+    import_code: import { Plus } from 'lucide-react'
+    usage: <Plus />
+    best_for: Add button create new item
+    style: Outline
+  - id: "10"
+    category: Action
+    icon_name: minus
+    keywords: remove subtract decrease delete
+    library: Lucide
+    import_code: import { Minus } from 'lucide-react'
+    usage: <Minus />
+    best_for: Remove item quantity decrease
+    style: Outline
+  - id: "11"
+    category: Action
+    icon_name: trash-2
+    keywords: delete remove discard bin
+    library: Lucide
+    import_code: import { Trash2 } from 'lucide-react'
+    usage: <Trash2 />
+    best_for: Delete action destructive
+    style: Outline
+  - id: "12"
+    category: Action
+    icon_name: edit
+    keywords: pencil modify change update
+    library: Lucide
+    import_code: import { Edit } from 'lucide-react'
+    usage: <Edit />
+    best_for: Edit button modify content
+    style: Outline
+  - id: "13"
+    category: Action
+    icon_name: save
+    keywords: disk store persist save
+    library: Lucide
+    import_code: import { Save } from 'lucide-react'
+    usage: <Save />
+    best_for: Save button persist changes
+    style: Outline
+  - id: "14"
+    category: Action
+    icon_name: download
+    keywords: export save file download
+    library: Lucide
+    import_code: import { Download } from 'lucide-react'
+    usage: <Download />
+    best_for: Download file export
+    style: Outline
+  - id: "15"
+    category: Action
+    icon_name: upload
+    keywords: import file attach upload
+    library: Lucide
+    import_code: import { Upload } from 'lucide-react'
+    usage: <Upload />
+    best_for: Upload file import
+    style: Outline
+  - id: "16"
+    category: Action
+    icon_name: copy
+    keywords: duplicate clipboard paste
+    library: Lucide
+    import_code: import { Copy } from 'lucide-react'
+    usage: <Copy />
+    best_for: Copy to clipboard
+    style: Outline
+  - id: "17"
+    category: Action
+    icon_name: share
+    keywords: social distribute send
+    library: Lucide
+    import_code: import { Share } from 'lucide-react'
+    usage: <Share />
+    best_for: Share button social
+    style: Outline
+  - id: "18"
+    category: Action
+    icon_name: search
+    keywords: find lookup filter query
+    library: Lucide
+    import_code: import { Search } from 'lucide-react'
+    usage: <Search />
+    best_for: Search input bar
+    style: Outline
+  - id: "19"
+    category: Action
+    icon_name: filter
+    keywords: sort refine narrow options
+    library: Lucide
+    import_code: import { Filter } from 'lucide-react'
+    usage: <Filter />
+    best_for: Filter dropdown sort
+    style: Outline
+  - id: "20"
+    category: Action
+    icon_name: settings
+    keywords: gear cog preferences config
+    library: Lucide
+    import_code: import { Settings } from 'lucide-react'
+    usage: <Settings />
+    best_for: Settings page configuration
+    style: Outline
+  - id: "21"
+    category: Status
+    icon_name: check
+    keywords: success done complete verified
+    library: Lucide
+    import_code: import { Check } from 'lucide-react'
+    usage: <Check />
+    best_for: Success state checkmark
+    style: Outline
+  - id: "22"
+    category: Status
+    icon_name: check-circle
+    keywords: success verified approved complete
+    library: Lucide
+    import_code: import { CheckCircle } from 'lucide-react'
+    usage: <CheckCircle />
+    best_for: Success badge verified
+    style: Outline
+  - id: "23"
+    category: Status
+    icon_name: x-circle
+    keywords: error failed cancel rejected
+    library: Lucide
+    import_code: import { XCircle } from 'lucide-react'
+    usage: <XCircle />
+    best_for: Error state failed
+    style: Outline
+  - id: "24"
+    category: Status
+    icon_name: alert-triangle
+    keywords: warning caution attention danger
+    library: Lucide
+    import_code: import { AlertTriangle } from 'lucide-react'
+    usage: <AlertTriangle />
+    best_for: Warning message caution
+    style: Outline
+  - id: "25"
+    category: Status
+    icon_name: alert-circle
+    keywords: info notice information help
+    library: Lucide
+    import_code: import { AlertCircle } from 'lucide-react'
+    usage: <AlertCircle />
+    best_for: Info notice alert
+    style: Outline
+  - id: "26"
+    category: Status
+    icon_name: info
+    keywords: information help tooltip details
+    library: Lucide
+    import_code: import { Info } from 'lucide-react'
+    usage: <Info />
+    best_for: Information tooltip help
+    style: Outline
+  - id: "27"
+    category: Status
+    icon_name: loader
+    keywords: loading spinner processing wait
+    library: Lucide
+    import_code: import { Loader } from 'lucide-react'
+    usage: <Loader className="animate-spin" />
+    best_for: Loading state spinner
+    style: Outline
+  - id: "28"
+    category: Status
+    icon_name: clock
+    keywords: time schedule pending wait
+    library: Lucide
+    import_code: import { Clock } from 'lucide-react'
+    usage: <Clock />
+    best_for: Pending time schedule
+    style: Outline
+  - id: "29"
+    category: Communication
+    icon_name: mail
+    keywords: email message inbox letter
+    library: Lucide
+    import_code: import { Mail } from 'lucide-react'
+    usage: <Mail />
+    best_for: Email contact inbox
+    style: Outline
+  - id: "30"
+    category: Communication
+    icon_name: message-circle
+    keywords: chat comment bubble conversation
+    library: Lucide
+    import_code: import { MessageCircle } from 'lucide-react'
+    usage: <MessageCircle />
+    best_for: Chat comment message
+    style: Outline
+  - id: "31"
+    category: Communication
+    icon_name: phone
+    keywords: call mobile telephone contact
+    library: Lucide
+    import_code: import { Phone } from 'lucide-react'
+    usage: <Phone />
+    best_for: Phone contact call
+    style: Outline
+  - id: "32"
+    category: Communication
+    icon_name: send
+    keywords: submit dispatch message airplane
+    library: Lucide
+    import_code: import { Send } from 'lucide-react'
+    usage: <Send />
+    best_for: Send message submit
+    style: Outline
+  - id: "33"
+    category: Communication
+    icon_name: bell
+    keywords: notification alert ring reminder
+    library: Lucide
+    import_code: import { Bell } from 'lucide-react'
+    usage: <Bell />
+    best_for: Notification bell alert
+    style: Outline
+  - id: "34"
+    category: User
+    icon_name: user
+    keywords: profile account person avatar
+    library: Lucide
+    import_code: import { User } from 'lucide-react'
+    usage: <User />
+    best_for: User profile account
+    style: Outline
+  - id: "35"
+    category: User
+    icon_name: users
+    keywords: team group people members
+    library: Lucide
+    import_code: import { Users } from 'lucide-react'
+    usage: <Users />
+    best_for: Team group members
+    style: Outline
+  - id: "36"
+    category: User
+    icon_name: user-plus
+    keywords: add invite new member
+    library: Lucide
+    import_code: import { UserPlus } from 'lucide-react'
+    usage: <UserPlus />
+    best_for: Add user invite
+    style: Outline
+  - id: "37"
+    category: User
+    icon_name: log-in
+    keywords: signin authenticate enter
+    library: Lucide
+    import_code: import { LogIn } from 'lucide-react'
+    usage: <LogIn />
+    best_for: Login signin
+    style: Outline
+  - id: "38"
+    category: User
+    icon_name: log-out
+    keywords: signout exit leave logout
+    library: Lucide
+    import_code: import { LogOut } from 'lucide-react'
+    usage: <LogOut />
+    best_for: Logout signout
+    style: Outline
+  - id: "39"
+    category: Media
+    icon_name: image
+    keywords: photo picture gallery thumbnail
+    library: Lucide
+    import_code: import { Image } from 'lucide-react'
+    usage: <Image />
+    best_for: Image photo gallery
+    style: Outline
+  - id: "40"
+    category: Media
+    icon_name: video
+    keywords: movie film play record
+    library: Lucide
+    import_code: import { Video } from 'lucide-react'
+    usage: <Video />
+    best_for: Video player media
+    style: Outline
+  - id: "41"
+    category: Media
+    icon_name: play
+    keywords: start video audio media
+    library: Lucide
+    import_code: import { Play } from 'lucide-react'
+    usage: <Play />
+    best_for: Play button video audio
+    style: Outline
+  - id: "42"
+    category: Media
+    icon_name: pause
+    keywords: stop halt video audio
+    library: Lucide
+    import_code: import { Pause } from 'lucide-react'
+    usage: <Pause />
+    best_for: Pause button media
+    style: Outline
+  - id: "43"
+    category: Media
+    icon_name: volume-2
+    keywords: sound audio speaker music
+    library: Lucide
+    import_code: import { Volume2 } from 'lucide-react'
+    usage: <Volume2 />
+    best_for: Volume audio sound
+    style: Outline
+  - id: "44"
+    category: Media
+    icon_name: mic
+    keywords: microphone record voice audio
+    library: Lucide
+    import_code: import { Mic } from 'lucide-react'
+    usage: <Mic />
+    best_for: Microphone voice record
+    style: Outline
+  - id: "45"
+    category: Media
+    icon_name: camera
+    keywords: photo capture snapshot picture
+    library: Lucide
+    import_code: import { Camera } from 'lucide-react'
+    usage: <Camera />
+    best_for: Camera photo capture
+    style: Outline
+  - id: "46"
+    category: Commerce
+    icon_name: shopping-cart
+    keywords: cart checkout basket buy
+    library: Lucide
+    import_code: import { ShoppingCart } from 'lucide-react'
+    usage: <ShoppingCart />
+    best_for: Shopping cart e-commerce
+    style: Outline
+  - id: "47"
+    category: Commerce
+    icon_name: shopping-bag
+    keywords: purchase buy store bag
+    library: Lucide
+    import_code: import { ShoppingBag } from 'lucide-react'
+    usage: <ShoppingBag />
+    best_for: Shopping bag purchase
+    style: Outline
+  - id: "48"
+    category: Commerce
+    icon_name: credit-card
+    keywords: payment card checkout stripe
+    library: Lucide
+    import_code: import { CreditCard } from 'lucide-react'
+    usage: <CreditCard />
+    best_for: Payment credit card
+    style: Outline
+  - id: "49"
+    category: Commerce
+    icon_name: dollar-sign
+    keywords: money price currency cost
+    library: Lucide
+    import_code: import { DollarSign } from 'lucide-react'
+    usage: <DollarSign />
+    best_for: Price money currency
+    style: Outline
+  - id: "50"
+    category: Commerce
+    icon_name: tag
+    keywords: label price discount sale
+    library: Lucide
+    import_code: import { Tag } from 'lucide-react'
+    usage: <Tag />
+    best_for: Price tag label
+    style: Outline
+  - id: "51"
+    category: Commerce
+    icon_name: gift
+    keywords: present reward bonus offer
+    library: Lucide
+    import_code: import { Gift } from 'lucide-react'
+    usage: <Gift />
+    best_for: Gift reward offer
+    style: Outline
+  - id: "52"
+    category: Commerce
+    icon_name: percent
+    keywords: discount sale offer promo
+    library: Lucide
+    import_code: import { Percent } from 'lucide-react'
+    usage: <Percent />
+    best_for: Discount percentage sale
+    style: Outline
+  - id: "53"
+    category: Data
+    icon_name: bar-chart
+    keywords: analytics statistics graph metrics
+    library: Lucide
+    import_code: import { BarChart } from 'lucide-react'
+    usage: <BarChart />
+    best_for: Bar chart analytics
+    style: Outline
+  - id: "54"
+    category: Data
+    icon_name: pie-chart
+    keywords: statistics distribution breakdown
+    library: Lucide
+    import_code: import { PieChart } from 'lucide-react'
+    usage: <PieChart />
+    best_for: Pie chart distribution
+    style: Outline
+  - id: "55"
+    category: Data
+    icon_name: trending-up
+    keywords: growth increase positive trend
+    library: Lucide
+    import_code: import { TrendingUp } from 'lucide-react'
+    usage: <TrendingUp />
+    best_for: Growth trend positive
+    style: Outline
+  - id: "56"
+    category: Data
+    icon_name: trending-down
+    keywords: decline decrease negative trend
+    library: Lucide
+    import_code: import { TrendingDown } from 'lucide-react'
+    usage: <TrendingDown />
+    best_for: Decline trend negative
+    style: Outline
+  - id: "57"
+    category: Data
+    icon_name: activity
+    keywords: pulse heartbeat monitor live
+    library: Lucide
+    import_code: import { Activity } from 'lucide-react'
+    usage: <Activity />
+    best_for: Activity monitor pulse
+    style: Outline
+  - id: "58"
+    category: Data
+    icon_name: database
+    keywords: storage server data backend
+    library: Lucide
+    import_code: import { Database } from 'lucide-react'
+    usage: <Database />
+    best_for: Database storage
+    style: Outline
+  - id: "59"
+    category: Files
+    icon_name: file
+    keywords: document page paper doc
+    library: Lucide
+    import_code: import { File } from 'lucide-react'
+    usage: <File />
+    best_for: File document
+    style: Outline
+  - id: "60"
+    category: Files
+    icon_name: file-text
+    keywords: document text page article
+    library: Lucide
+    import_code: import { FileText } from 'lucide-react'
+    usage: <FileText />
+    best_for: Text document article
+    style: Outline
+  - id: "61"
+    category: Files
+    icon_name: folder
+    keywords: directory organize group files
+    library: Lucide
+    import_code: import { Folder } from 'lucide-react'
+    usage: <Folder />
+    best_for: Folder directory
+    style: Outline
+  - id: "62"
+    category: Files
+    icon_name: folder-open
+    keywords: expanded browse files view
+    library: Lucide
+    import_code: import { FolderOpen } from 'lucide-react'
+    usage: <FolderOpen />
+    best_for: Open folder browse
+    style: Outline
+  - id: "63"
+    category: Files
+    icon_name: paperclip
+    keywords: attachment attach file link
+    library: Lucide
+    import_code: import { Paperclip } from 'lucide-react'
+    usage: <Paperclip />
+    best_for: Attachment paperclip
+    style: Outline
+  - id: "64"
+    category: Files
+    icon_name: link
+    keywords: url hyperlink chain connect
+    library: Lucide
+    import_code: import { Link } from 'lucide-react'
+    usage: <Link />
+    best_for: Link URL hyperlink
+    style: Outline
+  - id: "65"
+    category: Files
+    icon_name: clipboard
+    keywords: paste copy buffer notes
+    library: Lucide
+    import_code: import { Clipboard } from 'lucide-react'
+    usage: <Clipboard />
+    best_for: Clipboard paste
+    style: Outline
+  - id: "66"
+    category: Layout
+    icon_name: grid
+    keywords: tiles gallery layout dashboard
+    library: Lucide
+    import_code: import { Grid } from 'lucide-react'
+    usage: <Grid />
+    best_for: Grid layout gallery
+    style: Outline
+  - id: "67"
+    category: Layout
+    icon_name: list
+    keywords: rows table lines items
+    library: Lucide
+    import_code: import { List } from 'lucide-react'
+    usage: <List />
+    best_for: List view rows
+    style: Outline
+  - id: "68"
+    category: Layout
+    icon_name: columns
+    keywords: layout split dual sidebar
+    library: Lucide
+    import_code: import { Columns } from 'lucide-react'
+    usage: <Columns />
+    best_for: Column layout split
+    style: Outline
+  - id: "69"
+    category: Layout
+    icon_name: maximize
+    keywords: fullscreen expand enlarge zoom
+    library: Lucide
+    import_code: import { Maximize } from 'lucide-react'
+    usage: <Maximize />
+    best_for: Fullscreen maximize
+    style: Outline
+  - id: "70"
+    category: Layout
+    icon_name: minimize
+    keywords: reduce shrink collapse exit
+    library: Lucide
+    import_code: import { Minimize } from 'lucide-react'
+    usage: <Minimize />
+    best_for: Minimize reduce
+    style: Outline
+  - id: "71"
+    category: Layout
+    icon_name: sidebar
+    keywords: panel drawer navigation menu
+    library: Lucide
+    import_code: import { Sidebar } from 'lucide-react'
+    usage: <Sidebar />
+    best_for: Sidebar panel
+    style: Outline
+  - id: "72"
+    category: Social
+    icon_name: heart
+    keywords: like love favorite wishlist
+    library: Lucide
+    import_code: import { Heart } from 'lucide-react'
+    usage: <Heart />
+    best_for: Like favorite love
+    style: Outline
+  - id: "73"
+    category: Social
+    icon_name: star
+    keywords: rating review favorite bookmark
+    library: Lucide
+    import_code: import { Star } from 'lucide-react'
+    usage: <Star />
+    best_for: Star rating favorite
+    style: Outline
+  - id: "74"
+    category: Social
+    icon_name: thumbs-up
+    keywords: like approve agree positive
+    library: Lucide
+    import_code: import { ThumbsUp } from 'lucide-react'
+    usage: <ThumbsUp />
+    best_for: Like approve thumb
+    style: Outline
+  - id: "75"
+    category: Social
+    icon_name: thumbs-down
+    keywords: dislike disapprove disagree negative
+    library: Lucide
+    import_code: import { ThumbsDown } from 'lucide-react'
+    usage: <ThumbsDown />
+    best_for: Dislike disapprove
+    style: Outline
+  - id: "76"
+    category: Social
+    icon_name: bookmark
+    keywords: save later favorite mark
+    library: Lucide
+    import_code: import { Bookmark } from 'lucide-react'
+    usage: <Bookmark />
+    best_for: Bookmark save
+    style: Outline
+  - id: "77"
+    category: Social
+    icon_name: flag
+    keywords: report mark important highlight
+    library: Lucide
+    import_code: import { Flag } from 'lucide-react'
+    usage: <Flag />
+    best_for: Flag report
+    style: Outline
+  - id: "78"
+    category: Device
+    icon_name: smartphone
+    keywords: mobile phone device touch
+    library: Lucide
+    import_code: import { Smartphone } from 'lucide-react'
+    usage: <Smartphone />
+    best_for: Mobile smartphone
+    style: Outline
+  - id: "79"
+    category: Device
+    icon_name: tablet
+    keywords: ipad device touch screen
+    library: Lucide
+    import_code: import { Tablet } from 'lucide-react'
+    usage: <Tablet />
+    best_for: Tablet device
+    style: Outline
+  - id: "80"
+    category: Device
+    icon_name: monitor
+    keywords: desktop screen computer display
+    library: Lucide
+    import_code: import { Monitor } from 'lucide-react'
+    usage: <Monitor />
+    best_for: Desktop monitor
+    style: Outline
+  - id: "81"
+    category: Device
+    icon_name: laptop
+    keywords: notebook computer portable device
+    library: Lucide
+    import_code: import { Laptop } from 'lucide-react'
+    usage: <Laptop />
+    best_for: Laptop computer
+    style: Outline
+  - id: "82"
+    category: Device
+    icon_name: printer
+    keywords: print document output paper
+    library: Lucide
+    import_code: import { Printer } from 'lucide-react'
+    usage: <Printer />
+    best_for: Printer print
+    style: Outline
+  - id: "83"
+    category: Security
+    icon_name: lock
+    keywords: secure password protected private
+    library: Lucide
+    import_code: import { Lock } from 'lucide-react'
+    usage: <Lock />
+    best_for: Lock secure
+    style: Outline
+  - id: "84"
+    category: Security
+    icon_name: unlock
+    keywords: open access unsecure public
+    library: Lucide
+    import_code: import { Unlock } from 'lucide-react'
+    usage: <Unlock />
+    best_for: Unlock open
+    style: Outline
+  - id: "85"
+    category: Security
+    icon_name: shield
+    keywords: protection security safe guard
+    library: Lucide
+    import_code: import { Shield } from 'lucide-react'
+    usage: <Shield />
+    best_for: Shield protection
+    style: Outline
+  - id: "86"
+    category: Security
+    icon_name: key
+    keywords: password access unlock login
+    library: Lucide
+    import_code: import { Key } from 'lucide-react'
+    usage: <Key />
+    best_for: Key password
+    style: Outline
+  - id: "87"
+    category: Security
+    icon_name: eye
+    keywords: view show visible password
+    library: Lucide
+    import_code: import { Eye } from 'lucide-react'
+    usage: <Eye />
+    best_for: Show password view
+    style: Outline
+  - id: "88"
+    category: Security
+    icon_name: eye-off
+    keywords: hide invisible password hidden
+    library: Lucide
+    import_code: import { EyeOff } from 'lucide-react'
+    usage: <EyeOff />
+    best_for: Hide password
+    style: Outline
+  - id: "89"
+    category: Location
+    icon_name: map-pin
+    keywords: location marker place address
+    library: Lucide
+    import_code: import { MapPin } from 'lucide-react'
+    usage: <MapPin />
+    best_for: Location pin marker
+    style: Outline
+  - id: "90"
+    category: Location
+    icon_name: map
+    keywords: directions navigate geography location
+    library: Lucide
+    import_code: import { Map } from 'lucide-react'
+    usage: <Map />
+    best_for: Map directions
+    style: Outline
+  - id: "91"
+    category: Location
+    icon_name: navigation
+    keywords: compass direction pointer arrow
+    library: Lucide
+    import_code: import { Navigation } from 'lucide-react'
+    usage: <Navigation />
+    best_for: Navigation compass
+    style: Outline
+  - id: "92"
+    category: Location
+    icon_name: globe
+    keywords: world international global web
+    library: Lucide
+    import_code: import { Globe } from 'lucide-react'
+    usage: <Globe />
+    best_for: Globe world
+    style: Outline
+  - id: "93"
+    category: Time
+    icon_name: calendar
+    keywords: date schedule event appointment
+    library: Lucide
+    import_code: import { Calendar } from 'lucide-react'
+    usage: <Calendar />
+    best_for: Calendar date
+    style: Outline
+  - id: "94"
+    category: Time
+    icon_name: refresh-cw
+    keywords: reload sync update refresh
+    library: Lucide
+    import_code: import { RefreshCw } from 'lucide-react'
+    usage: <RefreshCw />
+    best_for: Refresh reload
+    style: Outline
+  - id: "95"
+    category: Time
+    icon_name: rotate-ccw
+    keywords: undo back revert history
+    library: Lucide
+    import_code: import { RotateCcw } from 'lucide-react'
+    usage: <RotateCcw />
+    best_for: Undo revert
+    style: Outline
+  - id: "96"
+    category: Time
+    icon_name: rotate-cw
+    keywords: redo forward repeat history
+    library: Lucide
+    import_code: import { RotateCw } from 'lucide-react'
+    usage: <RotateCw />
+    best_for: Redo forward
+    style: Outline
+  - id: "97"
+    category: Development
+    icon_name: code
+    keywords: develop programming syntax html
+    library: Lucide
+    import_code: import { Code } from 'lucide-react'
+    usage: <Code />
+    best_for: Code development
+    style: Outline
+  - id: "98"
+    category: Development
+    icon_name: terminal
+    keywords: console cli command shell
+    library: Lucide
+    import_code: import { Terminal } from 'lucide-react'
+    usage: <Terminal />
+    best_for: Terminal console
+    style: Outline
+  - id: "99"
+    category: Development
+    icon_name: git-branch
+    keywords: version control branch merge
+    library: Lucide
+    import_code: import { GitBranch } from 'lucide-react'
+    usage: <GitBranch />
+    best_for: Git branch
+    style: Outline
+  - id: "100"
+    category: Development
+    icon_name: github
+    keywords: repository code open source
+    library: Lucide
+    import_code: import { Github } from 'lucide-react'
+    usage: <Github />
+    best_for: GitHub repository
+    style: Outline

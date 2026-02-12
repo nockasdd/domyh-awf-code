@@ -1,0 +1,287 @@
+# =============================================================================
+# React Native Platform Patterns (Feb 2026)
+# =============================================================================
+# Platform-specific code, Native Modules, Performance
+
+metadata:
+  skill: react-native
+  domain: platform
+  version: "0.77"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: rn006
+    name: Platform-Specific Code
+    category: platform
+    version: "0.60+"
+    description: Handle iOS and Android differences
+    text: platform ios android specific select stylesheet
+    example: |
+      import { Platform, StyleSheet, View, Text } from 'react-native';
+
+      // ✅ Platform.select() for simple values
+      const buttonColor = Platform.select({
+        ios: '#007AFF',
+        android: '#2196F3',
+        default: '#3b82f6',
+      });
+
+      // ✅ Platform.OS for conditionals
+      function HeaderComponent() {
+        if (Platform.OS === 'ios') {
+          return <IOSHeader />;
+        }
+        return <AndroidHeader />;
+      }
+
+      // ✅ Platform-specific styles
+      const styles = StyleSheet.create({
+        container: {
+          paddingTop: Platform.OS === 'ios' ? 44 : 0,
+        },
+        shadow: {
+          ...Platform.select({
+            ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+            },
+            android: {
+              elevation: 4,
+            },
+          }),
+        },
+      });
+
+      // ✅ Platform-specific files
+      // Button.ios.tsx - iOS version
+      // Button.android.tsx - Android version
+      // Import as: import { Button } from './Button';
+    severity: HIGH
+    docs_url: https://reactnative.dev/docs/platform-specific-code
+
+  - id: rn007
+    name: Turbo Modules
+    category: native
+    version: "0.76+"
+    description: |
+      Lazy-loaded native modules with direct JSI access.
+      Replaces legacy Native Modules.
+    text: turbo module native jsi lazy loading c++
+    example: |
+      // ✅ Turbo Modules: Modern native module architecture
+
+      // 1. Define spec in TypeScript
+      // NativeDeviceInfo.ts
+      import { TurboModuleRegistry, TurboModule } from 'react-native';
+
+      export interface Spec extends TurboModule {
+        readonly getDeviceId: () => string;
+        readonly getBatteryLevel: () => Promise<number>;
+        readonly multiply: (a: number, b: number) => number;
+      }
+
+      export default TurboModuleRegistry.getEnforcing<Spec>('DeviceInfo');
+
+      // 2. Use in JavaScript
+      import DeviceInfo from './NativeDeviceInfo';
+
+      const deviceId = DeviceInfo.getDeviceId();  // Synchronous!
+      const battery = await DeviceInfo.getBatteryLevel();
+      const result = DeviceInfo.multiply(5, 3);
+
+      // ✅ Benefits over legacy Native Modules:
+      // - Lazy loading (faster startup)
+      // - Synchronous calls via JSI
+      // - Type-safe with codegen
+      // - Better memory efficiency
+
+      // ⚠️ Legacy NativeModules deprecated
+      // Use TurboModuleRegistry instead
+    severity: MEDIUM
+    docs_url: https://reactnative.dev/docs/turbo-modules
+
+  - id: rn008
+    name: Navigation (React Navigation)
+    category: navigation
+    version: "6+"
+    description: Standard navigation library for React Native
+    text: navigation stack tab drawer screen react-navigation
+    example: |
+      import { NavigationContainer } from '@react-navigation/native';
+      import { createNativeStackNavigator } from '@react-navigation/native-stack';
+      import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+      // ✅ Define type-safe navigation
+      type RootStackParamList = {
+        Home: undefined;
+        Profile: { userId: string };
+        Settings: undefined;
+      };
+
+      const Stack = createNativeStackNavigator<RootStackParamList>();
+      const Tab = createBottomTabNavigator();
+
+      // ✅ Tab Navigator
+      function MainTabs() {
+        return (
+          <Tab.Navigator>
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+          </Tab.Navigator>
+        );
+      }
+
+      // ✅ Stack Navigator
+      export default function App() {
+        return (
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" component={MainTabs} />
+              <Stack.Screen 
+                name="Profile" 
+                component={ProfileScreen}
+                options={({ route }) => ({ title: route.params.userId })}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        );
+      }
+
+      // ✅ Navigate with type safety
+      import { useNavigation, NavigationProp } from '@react-navigation/native';
+
+      type Navigation = NavigationProp<RootStackParamList>;
+
+      function HomeScreen() {
+        const navigation = useNavigation<Navigation>();
+
+        return (
+          <Button
+            title="View Profile"
+            onPress={() => navigation.navigate('Profile', { userId: '123' })}
+          />
+        );
+      }
+    severity: HIGH
+    docs_url: https://reactnavigation.org/
+
+  - id: rn009
+    name: Performance Optimization
+    category: performance
+    version: "0.70+"
+    description: Key techniques for smooth 60fps apps
+    text: performance fps memo callback flatlist hermes
+    example: |
+      import React, { memo, useCallback, useMemo } from 'react';
+      import { FlatList, View, Text } from 'react-native';
+
+      // ✅ memo() for pure components
+      const UserItem = memo(function UserItem({ user, onPress }) {
+        return (
+          <TouchableOpacity onPress={() => onPress(user.id)}>
+            <Text>{user.name}</Text>
+          </TouchableOpacity>
+        );
+      });
+
+      // ✅ FlatList optimization
+      function UserList({ users }) {
+        // Memoize callbacks
+        const handlePress = useCallback((id: string) => {
+          navigation.navigate('Profile', { id });
+        }, []);
+
+        // Memoize expensive computations
+        const sortedUsers = useMemo(
+          () => users.sort((a, b) => a.name.localeCompare(b.name)),
+          [users]
+        );
+
+        return (
+          <FlatList
+            data={sortedUsers}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <UserItem user={item} onPress={handlePress} />
+            )}
+            // ✅ Performance props
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            initialNumToRender={10}
+            getItemLayout={(data, index) => ({
+              length: 60,
+              offset: 60 * index,
+              index,
+            })}
+          />
+        );
+      }
+
+      // ✅ Hermes engine (default in 0.70+)
+      // Faster startup, smaller bundle, better memory
+
+      // ✅ Avoid in render:
+      // - Inline arrow functions
+      // - Object/array literals
+      // - Heavy computations without useMemo
+    severity: HIGH
+    docs_url: https://reactnative.dev/docs/performance
+
+  - id: rn010
+    name: Native Blur & Shadows (0.76)
+    category: styling
+    version: "0.76+"
+    description: Built-in blur and shadow support
+    text: blur shadow android ios boxshadow filter
+    example: |
+      import { View, StyleSheet, Image } from 'react-native';
+
+      // ✅ React Native 0.76+: Native blur and shadows
+
+      const styles = StyleSheet.create({
+        // ✅ Box shadows for Android (previously iOS only)
+        card: {
+          backgroundColor: '#fff',
+          borderRadius: 12,
+          padding: 16,
+          // Works on BOTH platforms now!
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 8,  // Still needed for Android
+        },
+
+        // ✅ Native blur effects
+        blurredBackground: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          // Use blur view component for native blur
+        },
+      });
+
+      // ✅ For blur, use @react-native-community/blur
+      import { BlurView } from '@react-native-community/blur';
+
+      function GlassmorphicCard({ children }) {
+        return (
+          <View style={styles.card}>
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurType="light"
+              blurAmount={10}
+            />
+            {children}
+          </View>
+        );
+      }
+    severity: MEDIUM
+    docs_url: https://reactnative.dev/blog/2024/10/23/release-0.76

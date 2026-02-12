@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "arch-001"
 
 # =============================================================================
@@ -63,6 +63,9 @@ tools:
     - list_dir
     - search_web
     - generate_image # For diagrams
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - replace_file_content # Architects don't code
     - run_command
@@ -180,4 +183,4 @@ output_template: |
   - Consequences: [impact]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Architect Persona
+# DOMYH Awesome Code • Architect Persona

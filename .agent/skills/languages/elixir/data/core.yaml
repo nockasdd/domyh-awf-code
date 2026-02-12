@@ -1,0 +1,392 @@
+# =============================================================================
+# Elixir Core Patterns (Feb 2026)
+# Version: Elixir 1.17/1.18
+# =============================================================================
+
+metadata:
+  skill: elixir
+  domain: core
+  version: "1.18"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: ex001
+    name: Pattern Matching
+    category: language
+    version: "Elixir"
+    description: |
+      Fundamental pattern matching.
+      Function clauses, guards, destructuring.
+    text: pattern match guard clause destructure pin
+    example: |
+      # ✅ Basic pattern matching
+      {status, message} = {:ok, "Success"}
+      [head | tail] = [1, 2, 3, 4]
+      %{name: name, age: age} = %{name: "John", age: 30}
+
+      # ✅ Pin operator (match against value)
+      expected = :ok
+      ^expected = status  # Matches if status == :ok
+
+      # ✅ Function clauses
+      defmodule Greeting do
+        def hello(:morning), do: "Good morning!"
+        def hello(:afternoon), do: "Good afternoon!"
+        def hello(:evening), do: "Good evening!"
+        def hello(_), do: "Hello!"
+      end
+
+      # ✅ Guards
+      defmodule Math do
+        def abs(n) when n < 0, do: -n
+        def abs(n), do: n
+        
+        def factorial(0), do: 1
+        def factorial(n) when n > 0 do
+          n * factorial(n - 1)
+        end
+      end
+
+      # ✅ Case expressions
+      def process(response) do
+        case response do
+          {:ok, %{status: 200, body: body}} ->
+            {:ok, parse(body)}
+          
+          {:ok, %{status: status}} when status in 400..499 ->
+            {:error, :client_error}
+          
+          {:ok, %{status: status}} when status >= 500 ->
+            {:error, :server_error}
+          
+          {:error, reason} ->
+            {:error, reason}
+        end
+      end
+
+      # ✅ With expressions (happy path)
+      def create_order(user_id, items) do
+        with {:ok, user} <- fetch_user(user_id),
+             {:ok, cart} <- validate_items(items),
+             {:ok, total} <- calculate_total(cart),
+             {:ok, order} <- create_order_record(user, cart, total) do
+          {:ok, order}
+        else
+          {:error, :user_not_found} -> {:error, "User not found"}
+          {:error, :invalid_items} -> {:error, "Invalid items"}
+          {:error, reason} -> {:error, reason}
+        end
+      end
+    severity: HIGH
+    docs_url: https://hexdocs.pm/elixir/pattern-matching.html
+
+  - id: ex002
+    name: GenServer
+    category: otp
+    version: "Elixir"
+    description: |
+      Generic server behavior.
+      State management, callbacks.
+    text: genserver state handle_call handle_cast init
+    example: |
+      defmodule Counter do
+        use GenServer
+        
+        # Client API
+        def start_link(initial_value \\ 0) do
+          GenServer.start_link(__MODULE__, initial_value, name: __MODULE__)
+        end
+        
+        def increment do
+          GenServer.call(__MODULE__, :increment)
+        end
+        
+        def get_value do
+          GenServer.call(__MODULE__, :get)
+        end
+        
+        def async_reset do
+          GenServer.cast(__MODULE__, :reset)
+        end
+        
+        # Server callbacks
+        @impl true
+        def init(initial_value) do
+          {:ok, initial_value}
+        end
+        
+        @impl true
+        def handle_call(:increment, _from, state) do
+          new_state = state + 1
+          {:reply, new_state, new_state}
+        end
+        
+        @impl true
+        def handle_call(:get, _from, state) do
+          {:reply, state, state}
+        end
+        
+        @impl true
+        def handle_cast(:reset, _state) do
+          {:noreply, 0}
+        end
+        
+        # Handle unexpected messages
+        @impl true
+        def handle_info(msg, state) do
+          Logger.warn("Unexpected message: #{inspect(msg)}")
+          {:noreply, state}
+        end
+      end
+
+      # ✅ State with struct
+      defmodule OrderProcessor do
+        use GenServer
+        
+        defstruct orders: [], processing: false
+        
+        def init(_) do
+          {:ok, %__MODULE__{}}
+        end
+        
+        def handle_call({:add, order}, _from, state) do
+          new_state = %{state | orders: [order | state.orders]}
+          {:reply, :ok, new_state}
+        end
+      end
+    severity: HIGH
+    docs_url: https://hexdocs.pm/elixir/GenServer.html
+
+  - id: ex003
+    name: Phoenix LiveView
+    category: web
+    version: "Phoenix1.7"
+    description: |
+      Real-time server-rendered UI.
+      Events, assigns, lifecycle.
+    text: liveview mount handle_event render assign
+    example: |
+      defmodule MyAppWeb.CounterLive do
+        use MyAppWeb, :live_view
+        
+        @impl true
+        def mount(_params, _session, socket) do
+          {:ok, assign(socket, count: 0)}
+        end
+        
+        @impl true
+        def render(assigns) do
+          ~H"""
+          <div class="counter">
+            <h1>Count: <%= @count %></h1>
+            <button phx-click="increment">+</button>
+            <button phx-click="decrement">-</button>
+          </div>
+          """
+        end
+        
+        @impl true
+        def handle_event("increment", _params, socket) do
+          {:noreply, update(socket, :count, &(&1 + 1))}
+        end
+        
+        @impl true
+        def handle_event("decrement", _params, socket) do
+          {:noreply, update(socket, :count, &(&1 - 1))}
+        end
+      end
+
+      # ✅ LiveView with form
+      defmodule MyAppWeb.UserFormLive do
+        use MyAppWeb, :live_view
+        
+        @impl true
+        def mount(_params, _session, socket) do
+          changeset = Accounts.change_user(%User{})
+          {:ok, assign(socket, form: to_form(changeset))}
+        end
+        
+        @impl true
+        def handle_event("validate", %{"user" => params}, socket) do
+          changeset = 
+            %User{}
+            |> Accounts.change_user(params)
+            |> Map.put(:action, :validate)
+          
+          {:noreply, assign(socket, form: to_form(changeset))}
+        end
+        
+        @impl true
+        def handle_event("save", %{"user" => params}, socket) do
+          case Accounts.create_user(params) do
+            {:ok, user} ->
+              {:noreply,
+               socket
+               |> put_flash(:info, "User created!")
+               |> redirect(to: ~p"/users/#{user}")}
+            
+            {:error, changeset} ->
+              {:noreply, assign(socket, form: to_form(changeset))}
+          end
+        end
+      end
+    severity: HIGH
+    docs_url: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
+
+  - id: ex004
+    name: Ecto Queries
+    category: data
+    version: "Ecto3"
+    description: |
+      Database queries with Ecto.
+      Schemas, changesets, queries.
+    text: ecto schema changeset query repo
+    example: |
+      # ✅ Schema definition
+      defmodule MyApp.Accounts.User do
+        use Ecto.Schema
+        import Ecto.Changeset
+        
+        schema "users" do
+          field :name, :string
+          field :email, :string
+          field :password, :string, virtual: true
+          field :password_hash, :string
+          field :role, Ecto.Enum, values: [:user, :admin], default: :user
+          
+          has_many :orders, MyApp.Orders.Order
+          belongs_to :team, MyApp.Teams.Team
+          
+          timestamps()
+        end
+        
+        def changeset(user, attrs) do
+          user
+          |> cast(attrs, [:name, :email, :password, :role])
+          |> validate_required([:name, :email])
+          |> validate_format(:email, ~r/@/)
+          |> validate_length(:password, min: 8)
+          |> unique_constraint(:email)
+          |> hash_password()
+        end
+        
+        defp hash_password(changeset) do
+          case get_change(changeset, :password) do
+            nil -> changeset
+            password -> put_change(changeset, :password_hash, Bcrypt.hash_pwd_salt(password))
+          end
+        end
+      end
+
+      # ✅ Queries
+      defmodule MyApp.Accounts do
+        import Ecto.Query
+        alias MyApp.Repo
+        alias MyApp.Accounts.User
+        
+        def list_users do
+          Repo.all(User)
+        end
+        
+        def get_user!(id) do
+          Repo.get!(User, id)
+        end
+        
+        def get_user_by_email(email) do
+          Repo.get_by(User, email: email)
+        end
+        
+        def list_active_admins do
+          User
+          |> where([u], u.role == :admin)
+          |> where([u], u.active == true)
+          |> order_by([u], desc: u.inserted_at)
+          |> preload(:orders)
+          |> Repo.all()
+        end
+        
+        def search_users(term) do
+          like_term = "%#{term}%"
+          
+          User
+          |> where([u], ilike(u.name, ^like_term) or ilike(u.email, ^like_term))
+          |> Repo.all()
+        end
+        
+        def create_user(attrs) do
+          %User{}
+          |> User.changeset(attrs)
+          |> Repo.insert()
+        end
+      end
+    severity: HIGH
+    docs_url: https://hexdocs.pm/ecto/Ecto.html
+
+  - id: ex005
+    name: Concurrency Patterns
+    category: concurrency
+    version: "Elixir"
+    description: |
+      BEAM concurrency primitives.
+      Tasks, Agents, processes.
+    text: task spawn agent process concurrent parallel
+    example: |
+      # ✅ Task for async operations
+      task = Task.async(fn -> expensive_operation() end)
+      result = Task.await(task)
+
+      # ✅ Multiple concurrent tasks
+      tasks = Enum.map(urls, fn url ->
+        Task.async(fn -> fetch_url(url) end)
+      end)
+
+      results = Task.await_many(tasks, timeout: 10_000)
+
+      # ✅ Task.async_stream for controlled concurrency
+      urls
+      |> Task.async_stream(&fetch_url/1, max_concurrency: 10, timeout: 5_000)
+      |> Enum.map(fn {:ok, result} -> result end)
+
+      # ✅ Agent for simple state
+      {:ok, agent} = Agent.start_link(fn -> [] end)
+
+      Agent.update(agent, fn list -> ["item" | list] end)
+      items = Agent.get(agent, & &1)
+
+      # ✅ Supervised task
+      defmodule MyApp.Application do
+        use Application
+        
+        def start(_type, _args) do
+          children = [
+            {Task.Supervisor, name: MyApp.TaskSupervisor},
+            MyApp.Repo,
+            MyAppWeb.Endpoint
+          ]
+          
+          opts = [strategy: :one_for_one, name: MyApp.Supervisor]
+          Supervisor.start_link(children, opts)
+        end
+      end
+
+      # Start supervised task
+      Task.Supervisor.start_child(MyApp.TaskSupervisor, fn ->
+        send_email(user)
+      end)
+
+      # ✅ Process messaging
+      parent = self()
+
+      spawn(fn ->
+        result = do_work()
+        send(parent, {:result, result})
+      end)
+
+      receive do
+        {:result, result} -> IO.puts("Got: #{result}")
+      after
+        5_000 -> IO.puts("Timeout!")
+      end
+    severity: MEDIUM
+    docs_url: https://hexdocs.pm/elixir/Task.html

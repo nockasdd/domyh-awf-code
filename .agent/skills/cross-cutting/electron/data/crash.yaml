@@ -1,0 +1,103 @@
+# Electron Crash Reporting & Logging Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: crash
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: crash001
+    name: crashReporter
+    category: crash
+    version: all
+    description: Built-in crash reporter that submits minidumps
+    text: crash reporter minidump submit diagnostics report error native
+    example: |
+      import { crashReporter, app } from 'electron';
+
+      crashReporter.start({
+        productName: 'MyApp',
+        submitURL: 'https://your-crash-server.com/submit',
+        uploadToServer: true,
+        extra: {
+          app_version: app.getVersion(),
+          environment: process.env.NODE_ENV
+        }
+      });
+    severity: HIGH
+    docs_url: https://www.electronjs.org/docs/latest/api/crash-reporter
+
+  - id: crash002
+    name: Sentry Electron
+    category: crash
+    version: all
+    description: Full-featured error tracking with Sentry SDK
+    text: sentry electron error tracking crash reporting apm performance
+    example: |
+      // main.ts
+      import * as Sentry from '@sentry/electron/main';
+
+      Sentry.init({
+        dsn: 'https://your-dsn@sentry.io/project',
+        release: app.getVersion()
+      });
+
+      // preload.ts
+      import * as Sentry from '@sentry/electron/renderer';
+      Sentry.init({ dsn: 'https://...' });
+    severity: HIGH
+    recommended: true
+    docs_url: https://docs.sentry.io/platforms/electron
+
+  - id: crash003
+    name: electron-log
+    category: logging
+    version: all
+    description: Simple logging with file rotation and transports
+    text: electron log file transport console winston logging rotate
+    example: |
+      import log from 'electron-log';
+
+      // Configure
+      log.transports.file.level = 'info';
+      log.transports.file.maxSize = 5 * 1024 * 1024; // 5MB
+
+      // Use
+      log.info('App started');
+      log.error('Something failed', error);
+
+      // Path: ~/Library/Logs/MyApp/main.log (macOS)
+    severity: MEDIUM
+    docs_url: https://github.com/megahertz/electron-log
+
+  - id: crash004
+    name: process crash handling
+    category: crash
+    version: all
+    description: Handle renderer and GPU process crashes gracefully
+    text: process crash handling renderer gpu unresponsive recover
+    example: |
+      mainWindow.webContents.on('render-process-gone', (event, details) => {
+        log.error('Renderer crashed:', details.reason);
+        
+        if (details.reason === 'crashed') {
+          // Attempt recovery
+          mainWindow.reload();
+        }
+      });
+
+      mainWindow.webContents.on('unresponsive', () => {
+        log.warn('Window unresponsive');
+        dialog.showMessageBox({
+          type: 'warning',
+          message: 'App is not responding',
+          buttons: ['Wait', 'Reload']
+        }).then(({ response }) => {
+          if (response === 1) mainWindow.reload();
+        });
+      });
+    severity: MEDIUM

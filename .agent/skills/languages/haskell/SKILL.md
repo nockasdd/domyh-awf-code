@@ -1,12 +1,12 @@
 ---
 name: haskell
 detect: ["*.hs", "*.cabal", "stack.yaml", "cabal.project", "package.yaml"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 2
 ---
 
-# Haskell Patterns — DOMYH Awesome Code v6.1.2
+# Haskell Patterns — DOMYH Awesome Code
 
 > **Version**: GHC 9.8+ (2025-2026)
 > **Framework**: Servant, Yesod
@@ -302,4 +302,4 @@ spec = do
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Haskell GHC 9.8+_
+_DOMYH Awesome Code • Haskell GHC 9.8+_

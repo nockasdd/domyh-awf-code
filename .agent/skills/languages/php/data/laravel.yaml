@@ -1,0 +1,525 @@
+# =============================================================================
+# PHP Laravel Patterns (Feb 2026)
+# Version: Laravel 12
+# =============================================================================
+
+metadata:
+  skill: php
+  domain: laravel
+  version: "12"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: php101
+    name: Eloquent Models
+    category: data
+    version: "Laravel"
+    description: |
+      Active Record ORM patterns.
+      Relationships, scopes, accessors.
+    text: eloquent model relationship scope accessor mutator
+    example: |
+      <?php
+
+      namespace App\Models;
+
+      use Illuminate\Database\Eloquent\Model;
+      use Illuminate\Database\Eloquent\Relations\{HasMany, BelongsTo};
+      use Illuminate\Database\Eloquent\Casts\Attribute;
+
+      class User extends Model
+      {
+          protected $fillable = ['name', 'email', 'password'];
+          
+          protected $hidden = ['password', 'remember_token'];
+          
+          protected function casts(): array
+          {
+              return [
+                  'email_verified_at' => 'datetime',
+                  'password' => 'hashed',
+                  'settings' => 'array',
+              ];
+          }
+          
+          // ✅ Relationships
+          public function orders(): HasMany
+          {
+              return $this->hasMany(Order::class);
+          }
+          
+          public function team(): BelongsTo
+          {
+              return $this->belongsTo(Team::class);
+          }
+          
+          // ✅ Accessor (Laravel 9+ syntax)
+          protected function fullName(): Attribute
+          {
+              return Attribute::make(
+                  get: fn () => "{$this->first_name} {$this->last_name}",
+              );
+          }
+          
+          // ✅ Accessor + Mutator
+          protected function email(): Attribute
+          {
+              return Attribute::make(
+                  get: fn (string $value) => strtolower($value),
+                  set: fn (string $value) => strtolower($value),
+              );
+          }
+          
+          // ✅ Query scopes
+          public function scopeActive(Builder $query): void
+          {
+              $query->where('active', true);
+          }
+          
+          public function scopeCreatedAfter(Builder $query, Carbon $date): void
+          {
+              $query->where('created_at', '>', $date);
+          }
+      }
+
+      // ✅ Usage
+      $users = User::active()
+          ->createdAfter(now()->subDays(30))
+          ->with('orders')
+          ->paginate(20);
+
+      // ✅ Eager loading with constraints
+      $users = User::with(['orders' => function ($query) {
+          $query->where('status', 'completed')->latest();
+      }])->get();
+    severity: HIGH
+    docs_url: https://laravel.com/docs/eloquent
+
+  - id: php102
+    name: Laravel Controllers
+    category: web
+    version: "Laravel"
+    description: |
+      Request handling patterns.
+      Form requests, resources, middleware.
+    text: controller request resource middleware route
+    example: |
+      <?php
+
+      namespace App\Http\Controllers;
+
+      use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
+      use App\Http\Resources\UserResource;
+      use App\Models\User;
+      use Illuminate\Http\{JsonResponse, Response};
+
+      class UserController extends Controller
+      {
+          public function __construct()
+          {
+              $this->middleware('auth:api');
+              $this->middleware('throttle:60,1')->only(['store', 'update']);
+          }
+          
+          // ✅ List with pagination
+          public function index(): JsonResponse
+          {
+              $users = User::query()
+                  ->when(request('search'), fn ($q, $s) => $q->where('name', 'like', "%$s%"))
+                  ->when(request('active'), fn ($q) => $q->active())
+                  ->latest()
+                  ->paginate(20);
+              
+              return UserResource::collection($users)->response();
+          }
+          
+          // ✅ Show single resource
+          public function show(User $user): UserResource
+          {
+              $user->load('orders', 'team');
+              return new UserResource($user);
+          }
+          
+          // ✅ Create with Form Request validation
+          public function store(CreateUserRequest $request): JsonResponse
+          {
+              $user = User::create($request->validated());
+              
+              return (new UserResource($user))
+                  ->response()
+                  ->setStatusCode(Response::HTTP_CREATED);
+          }
+          
+          // ✅ Update
+          public function update(UpdateUserRequest $request, User $user): UserResource
+          {
+              $user->update($request->validated());
+              
+              return new UserResource($user->fresh());
+          }
+          
+          // ✅ Delete
+          public function destroy(User $user): Response
+          {
+              $user->delete();
+              
+              return response()->noContent();
+          }
+      }
+
+      // ✅ Form Request
+      class CreateUserRequest extends FormRequest
+      {
+          public function authorize(): bool
+          {
+              return $this->user()->can('create', User::class);
+          }
+          
+          public function rules(): array
+          {
+              return [
+                  'name' => ['required', 'string', 'min:2', 'max:255'],
+                  'email' => ['required', 'email', 'unique:users'],
+                  'password' => ['required', 'min:8', 'confirmed'],
+              ];
+          }
+      }
+
+      // ✅ API Resource
+      class UserResource extends JsonResource
+      {
+          public function toArray(Request $request): array
+          {
+              return [
+                  'id' => $this->id,
+                  'name' => $this->name,
+                  'email' => $this->email,
+                  'created_at' => $this->created_at->toISOString(),
+                  'orders' => OrderResource::collection($this->whenLoaded('orders')),
+                  'team' => new TeamResource($this->whenLoaded('team')),
+              ];
+          }
+      }
+    severity: HIGH
+    docs_url: https://laravel.com/docs/controllers
+
+  - id: php103
+    name: Laravel Services
+    category: architecture
+    version: "Laravel"
+    description: |
+      Service layer and DI patterns.
+      Actions, service classes, repositories.
+    text: service action repository dependency injection
+    example: |
+      <?php
+
+      namespace App\Services;
+
+      use App\Models\{User, Order};
+      use App\Events\OrderCreated;
+      use App\Notifications\OrderConfirmation;
+      use Illuminate\Support\Facades\{DB, Cache};
+
+      // ✅ Service class
+      class OrderService
+      {
+          public function __construct(
+              private PaymentGateway $payments,
+              private InventoryService $inventory,
+          ) {}
+          
+          public function createOrder(User $user, array $items, ?string $coupon = null): Order
+          {
+              return DB::transaction(function () use ($user, $items, $coupon) {
+                  // Validate stock
+                  $this->inventory->validateStock($items);
+                  
+                  // Calculate totals
+                  $subtotal = collect($items)->sum(fn ($i) => $i['price'] * $i['quantity']);
+                  $discount = $coupon ? $this->applyDiscount($subtotal, $coupon) : 0;
+                  
+                  // Create order
+                  $order = $user->orders()->create([
+                      'subtotal' => $subtotal,
+                      'discount' => $discount,
+                      'total' => $subtotal - $discount,
+                      'status' => 'pending',
+                  ]);
+                  
+                  // Create order items
+                  $order->items()->createMany($items);
+                  
+                  // Reserve inventory
+                  $this->inventory->reserve($items);
+                  
+                  // Fire event
+                  event(new OrderCreated($order));
+                  
+                  return $order;
+              });
+          }
+          
+          public function processPayment(Order $order, array $paymentDetails): bool
+          {
+              $result = $this->payments->charge(
+                  amount: $order->total,
+                  currency: 'USD',
+                  source: $paymentDetails['token'],
+              );
+              
+              if ($result->successful()) {
+                  $order->update([
+                      'status' => 'paid',
+                      'payment_id' => $result->id,
+                  ]);
+                  
+                  $order->user->notify(new OrderConfirmation($order));
+                  
+                  return true;
+              }
+              
+              return false;
+          }
+      }
+
+      // ✅ Action class (single responsibility)
+      namespace App\Actions;
+
+      class CreateUser
+      {
+          public function execute(array $data): User
+          {
+              $user = User::create([
+                  'name' => $data['name'],
+                  'email' => $data['email'],
+                  'password' => Hash::make($data['password']),
+              ]);
+              
+              $user->assignRole($data['role'] ?? 'user');
+              
+              Cache::forget('users.count');
+              
+              return $user;
+          }
+      }
+
+      // Controller usage
+      public function store(Request $request, CreateUser $action): JsonResponse
+      {
+          $user = $action->execute($request->validated());
+          return response()->json($user, 201);
+      }
+    severity: MEDIUM
+    docs_url: https://laravel.com/docs/providers
+
+  - id: php104
+    name: Laravel Queues
+    category: async
+    version: "Laravel"
+    description: |
+      Background job processing.
+      Jobs, listeners, batching.
+    text: queue job dispatch listener batch
+    example: |
+      <?php
+
+      namespace App\Jobs;
+
+      use Illuminate\Bus\{Queueable, Batchable};
+      use Illuminate\Contracts\Queue\ShouldQueue;
+      use Illuminate\Foundation\Bus\Dispatchable;
+      use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
+
+      // ✅ Job class
+      class ProcessOrder implements ShouldQueue
+      {
+          use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+          
+          public int $tries = 3;
+          public int $backoff = 60;  // seconds
+          public int $timeout = 120;
+          
+          public function __construct(
+              public Order $order,
+          ) {}
+          
+          public function handle(OrderService $orderService): void
+          {
+              $orderService->process($this->order);
+          }
+          
+          public function failed(Throwable $exception): void
+          {
+              // Handle failure - notify admin, etc.
+              Log::error('Order processing failed', [
+                  'order_id' => $this->order->id,
+                  'error' => $exception->getMessage(),
+              ]);
+          }
+          
+          public function retryUntil(): DateTime
+          {
+              return now()->addHours(12);
+          }
+      }
+
+      // ✅ Dispatch job
+      ProcessOrder::dispatch($order)
+          ->onQueue('orders')
+          ->delay(now()->addMinutes(5));
+
+      // ✅ Job batching
+      use Illuminate\Support\Facades\Bus;
+
+      $batch = Bus::batch([
+          new ProcessOrder($order1),
+          new ProcessOrder($order2),
+          new ProcessOrder($order3),
+      ])
+      ->then(function (Batch $batch) {
+          // All jobs completed successfully
+          Log::info('Batch completed', ['id' => $batch->id]);
+      })
+      ->catch(function (Batch $batch, Throwable $e) {
+          // First batch job failure
+          Log::error('Batch failed', ['error' => $e->getMessage()]);
+      })
+      ->finally(function (Batch $batch) {
+          // Batch finished (success or failure)
+      })
+      ->name('Process Daily Orders')
+      ->allowFailures()
+      ->dispatch();
+
+      // ✅ Job chaining
+      Bus::chain([
+          new ValidateOrder($order),
+          new ProcessPayment($order),
+          new SendConfirmation($order),
+          new UpdateInventory($order),
+      ])->dispatch();
+
+      // ✅ Rate limiting
+      public function middleware(): array
+      {
+          return [
+              new RateLimited('orders'),
+          ];
+      }
+    severity: MEDIUM
+    docs_url: https://laravel.com/docs/queues
+
+  - id: php105
+    name: Laravel Testing
+    category: testing
+    version: "Laravel"
+    description: |
+      Testing with Pest and PHPUnit.
+      Feature tests, mocking, factories.
+    text: test pest phpunit factory mock feature
+    example: |
+      <?php
+
+      // ✅ Feature test (Pest syntax)
+      use App\Models\{User, Order};
+
+      it('can list user orders', function () {
+          $user = User::factory()
+              ->has(Order::factory()->count(3))
+              ->create();
+          
+          $response = $this->actingAs($user)
+              ->getJson('/api/orders');
+          
+          $response
+              ->assertOk()
+              ->assertJsonCount(3, 'data')
+              ->assertJsonStructure([
+                  'data' => [
+                      '*' => ['id', 'total', 'status', 'created_at'],
+                  ],
+                  'meta' => ['current_page', 'total'],
+              ]);
+      });
+
+      it('validates order creation', function () {
+          $user = User::factory()->create();
+          
+          $response = $this->actingAs($user)
+              ->postJson('/api/orders', [
+                  'items' => [],  // Empty items
+              ]);
+          
+          $response
+              ->assertStatus(422)
+              ->assertJsonValidationErrors(['items']);
+      });
+
+      // ✅ Mocking external services
+      it('processes payment successfully', function () {
+          $user = User::factory()->create();
+          $order = Order::factory()->for($user)->create();
+          
+          // Mock payment gateway
+          $this->mock(PaymentGateway::class)
+              ->shouldReceive('charge')
+              ->once()
+              ->andReturn(new PaymentResult(
+                  successful: true,
+                  id: 'pay_123',
+              ));
+          
+          $response = $this->actingAs($user)
+              ->postJson("/api/orders/{$order->id}/pay", [
+                  'token' => 'tok_visa',
+              ]);
+          
+          $response->assertOk();
+          
+          expect($order->fresh())
+              ->status->toBe('paid')
+              ->payment_id->toBe('pay_123');
+      });
+
+      // ✅ Database assertions
+      it('creates order with items', function () {
+          $user = User::factory()->create();
+          $product = Product::factory()->create(['price' => 100]);
+          
+          $response = $this->actingAs($user)
+              ->postJson('/api/orders', [
+                  'items' => [
+                      ['product_id' => $product->id, 'quantity' => 2],
+                  ],
+              ]);
+          
+          $response->assertCreated();
+          
+          $this->assertDatabaseHas('orders', [
+              'user_id' => $user->id,
+              'total' => 200,
+          ]);
+          
+          $this->assertDatabaseHas('order_items', [
+              'product_id' => $product->id,
+              'quantity' => 2,
+          ]);
+      });
+
+      // ✅ Factory states
+      class OrderFactory extends Factory
+      {
+          public function pending(): static
+          {
+              return $this->state(['status' => 'pending']);
+          }
+          
+          public function paid(): static
+          {
+              return $this->state(['status' => 'paid', 'paid_at' => now()]);
+          }
+      }
+    severity: MEDIUM
+    docs_url: https://laravel.com/docs/testing

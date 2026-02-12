@@ -3,7 +3,7 @@
 
 ---
 name: yagni-enforcement
-version: "6.1.2"
+version: "6.2.1"
 rule_id: "MOD-YAG-001"
 
 # =============================================================================
@@ -164,4 +164,4 @@ integration:
     question: "Am I adding more than what's needed?"
 
 ---
-_DOMYH Awesome Code v6.1.2 • YAGNI Enforcement Rule_
+_DOMYH Awesome Code • YAGNI Enforcement Rule_

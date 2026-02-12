@@ -1,0 +1,255 @@
+metadata:
+  skill: observability
+  domain: language_others
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-others.yaml
+  patterns_count: 40
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: SW-001
+    name: MetricKit
+    category: Swift
+    description: iOS system metrics
+    example: MXMetricManager.shared.add(self)
+    library: MetricKit
+  - id: SW-002
+    name: MetricKit Payload
+    category: Swift
+    description: Process metric reports
+    example: "func didReceive(_ payloads: [MXMetricPayload])"
+    library: MetricKit
+  - id: SW-003
+    name: os_signpost
+    category: Swift
+    description: Performance signposts
+    example: "os_signpost(.begin, log: log, name: 'region')"
+    library: os
+  - id: SW-004
+    name: OSLog
+    category: Swift
+    description: Structured logging
+    example: Logger().info('Processing request')
+    library: os
+  - id: SW-005
+    name: otel-swift
+    category: Swift
+    description: OpenTelemetry for Swift
+    example: OpenTelemetry.instance.tracerProvider
+    library: otel-swift
+  - id: SW-006
+    name: Instruments
+    category: Swift
+    description: Xcode profiler
+    example: Time Profiler, Allocations, Leaks
+    library: xcode
+  - id: SW-007
+    name: swift-metrics
+    category: Swift
+    description: Metrics API
+    example: "Counter(label: 'requests').increment()"
+    library: swift-metrics
+  - id: SW-008
+    name: XCTest Performance
+    category: Swift
+    description: Measure performance
+    example: measure { ... }
+    library: XCTest
+  - id: SW-009
+    name: Firebase iOS
+    category: Swift
+    description: Firebase Performance
+    example: Performance.sharedInstance()
+    library: firebase
+  - id: SW-010
+    name: os_log Performance
+    category: Swift
+    description: Measure intervals
+    example: os_signpost intervals
+    library: os
+  - id: SW-011
+    name: Memory Graph
+    category: Swift
+    description: Memory debugging
+    example: Xcode Memory Graph Debugger
+    library: xcode
+  - id: SW-012
+    name: Energy Logs
+    category: Swift
+    description: Battery impact
+    example: Xcode Energy Impact gauge
+    library: xcode
+  - id: SW-013
+    name: Network Debugging
+    category: Swift
+    description: Network profiler
+    example: Instruments Network template
+    library: xcode
+  - id: SW-014
+    name: App Hang Detection
+    category: Swift
+    description: Detect UI hangs
+    example: MXHangDiagnostic in MetricKit
+    library: MetricKit
+  - id: SW-015
+    name: Crash Reporting
+    category: Swift
+    description: Crash analytics
+    example: MXCrashDiagnostic or Firebase Crashlytics
+    library: MetricKit
+  - id: KT-001
+    name: Firebase Android
+    category: Kotlin
+    description: Firebase Performance
+    example: FirebasePerformance.getInstance()
+    library: firebase
+  - id: KT-002
+    name: Custom Trace
+    category: Kotlin
+    description: Custom code trace
+    example: val trace = Firebase.performance.newTrace('name')
+    library: firebase
+  - id: KT-003
+    name: HTTP Metrics
+    category: Kotlin
+    description: Network monitoring
+    example: FirebasePerformance auto-instruments OkHttp
+    library: firebase
+  - id: KT-004
+    name: Screen Rendering
+    category: Kotlin
+    description: UI performance
+    example: Firebase screen traces
+    library: firebase
+  - id: KT-005
+    name: otel-kotlin
+    category: Kotlin
+    description: OpenTelemetry for Kotlin
+    example: OpenTelemetry.getTracer('app')
+    library: otel-kotlin
+  - id: KT-006
+    name: Micrometer Kotlin
+    category: Kotlin
+    description: Metrics with Kotlin
+    example: meterRegistry.counter('requests')
+    library: micrometer
+  - id: KT-007
+    name: kotlin-logging
+    category: Kotlin
+    description: Structured logging
+    example: logger.info { 'message' }
+    library: kotlin-logging
+  - id: KT-008
+    name: Android Profiler
+    category: Kotlin
+    description: Studio profiling
+    example: CPU, Memory, Network, Energy profilers
+    library: android-studio
+  - id: KT-009
+    name: Benchmark Library
+    category: Kotlin
+    description: Microbenchmarks
+    example: "@Benchmark annotation"
+    library: jmh
+  - id: KT-010
+    name: LeakCanary
+    category: Kotlin
+    description: Memory leak detection
+    example: LeakCanary.install(application)
+    library: leakcanary
+  - id: PHP-001
+    name: otel-php
+    category: PHP
+    description: OpenTelemetry for PHP
+    example: $tracer->spanBuilder('op')->startSpan()
+    library: otel-php
+  - id: PHP-002
+    name: prometheus-php
+    category: PHP
+    description: Prometheus client
+    example: $counter->incBy(1, ['method' => 'GET'])
+    library: prometheus-php
+  - id: PHP-003
+    name: Blackfire
+    category: PHP
+    description: PHP profiler
+    example: blackfire run php script.php
+    library: blackfire
+  - id: PHP-004
+    name: Xdebug Profiler
+    category: PHP
+    description: Xdebug profiling
+    example: xdebug.mode=profile
+    library: xdebug
+  - id: PHP-005
+    name: Tideways
+    category: PHP
+    description: PHP APM
+    example: Tideways analysis and monitoring
+    library: tideways
+  - id: RB-001
+    name: otel-ruby
+    category: Ruby
+    description: OpenTelemetry for Ruby
+    example: OpenTelemetry::SDK.configure
+    library: otel-ruby
+  - id: RB-002
+    name: prometheus-client
+    category: Ruby
+    description: Prometheus metrics
+    example: Prometheus::Counter.new(:requests_total)
+    library: prometheus-client
+  - id: RB-003
+    name: Skylight
+    category: Ruby
+    description: Rails APM
+    example: "Skylight.instrument(category: 'app.custom')"
+    library: skylight
+  - id: RB-004
+    name: Scout APM
+    category: Ruby
+    description: Ruby APM
+    example: Scout instrumentation
+    library: scout
+  - id: RB-005
+    name: rack-mini-profiler
+    category: Ruby
+    description: Request profiling
+    example: Rack::MiniProfiler.step('region')
+    library: rack-mini-profiler
+  - id: EX-001
+    name: telemetry
+    category: Elixir
+    description: Telemetry library
+    example: :telemetry.execute([:my, :event], measurements)
+    library: telemetry
+  - id: EX-002
+    name: otel-elixir
+    category: Elixir
+    description: OpenTelemetry for Elixir
+    example: OpenTelemetry.Tracer.with_span 'op' do ... end
+    library: otel-elixir
+  - id: EX-003
+    name: prometheus.ex
+    category: Elixir
+    description: Prometheus client
+    example: "Counter.new(name: :requests, help: 'Total')"
+    library: prometheus.ex
+  - id: EX-004
+    name: recon
+    category: Elixir
+    description: Production debugging
+    example: :recon.proc_count(:memory, 10)
+    library: recon
+  - id: EX-005
+    name: observer
+    category: Elixir
+    description: System observation
+    example: :observer.start()
+    library: stdlib

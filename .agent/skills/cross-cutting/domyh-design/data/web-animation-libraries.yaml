@@ -1,0 +1,541 @@
+metadata:
+  skill: domyh-design
+  domain: web_animation_libraries
+  version: 6.2.1
+  updated: "2026-02-12"
+  description: "Web animation library decision matrix — when to use which library"
+  patterns_count: 42
+  columns:
+    - name
+    - category
+    - size_kb
+    - frameworks
+    - best_for
+    - npm_package
+    - license
+    - decision_trigger
+    - performance_rating
+    - avoid_when
+
+libraries:
+  # ── Core Animation Libraries ─────────────────────────────────
+
+  - id: lib_001
+    name: GSAP
+    category: core
+    size_kb: 30
+    frameworks: [any, react, vue, svelte, angular]
+    best_for: Complex timelines, scroll-driven, SVG morph, text animation
+    npm_package: gsap
+    license: Free (Webflow acquired 2025)
+    decision_trigger: Need timeline sequencing, scroll-linked, or SVG morph
+    performance_rating: "5"
+    avoid_when: Simple CSS transitions suffice
+
+  - id: lib_002
+    name: anime.js v4
+    category: core
+    size_kb: 17
+    frameworks: [any]
+    best_for: Lightweight multi-target animation, staggering
+    npm_package: animejs
+    license: MIT
+    decision_trigger: Need lightweight JS animation without framework lock-in
+    performance_rating: "4"
+    avoid_when: Need timeline or scroll-driven (use GSAP)
+
+  - id: lib_003
+    name: Framer Motion
+    category: core
+    size_kb: 30
+    frameworks: [react]
+    best_for: Declarative UI animation, gestures, layout, shared layout
+    npm_package: framer-motion
+    license: MIT
+    decision_trigger: React project needing declarative animation + gestures
+    performance_rating: "5"
+    avoid_when: Not using React
+
+  - id: lib_004
+    name: Motion (Vue)
+    category: core
+    size_kb: 5
+    frameworks: [vue, nuxt]
+    best_for: Hardware-accelerated Vue 3 animation, Nuxt 3 SSR
+    npm_package: motion-v
+    license: MIT
+    decision_trigger: Vue 3/Nuxt 3 project needing declarative animation
+    performance_rating: "5"
+    avoid_when: Not using Vue
+
+  - id: lib_005
+    name: "@vueuse/motion"
+    category: core
+    size_kb: 8
+    frameworks: [vue, nuxt]
+    best_for: Composable animation, 20+ presets, SSR-ready
+    npm_package: "@vueuse/motion"
+    license: MIT
+    decision_trigger: Vue project needing quick preset animations
+    performance_rating: "4"
+    avoid_when: Need complex timelines (use GSAP)
+
+  - id: lib_006
+    name: React Spring
+    category: core
+    size_kb: 20
+    frameworks: [react, react-native]
+    best_for: Physics-based spring animations, fluid motion
+    npm_package: "@react-spring/web"
+    license: MIT
+    decision_trigger: React project needing natural physics-based motion
+    performance_rating: "4"
+    avoid_when: Need timeline or scroll (use GSAP/Framer Motion)
+
+  - id: lib_007
+    name: Motion One
+    category: core
+    size_kb: 3.8
+    frameworks: [any]
+    best_for: Minimal WAAPI-based animation, tree-shakeable
+    npm_package: motion
+    license: MIT
+    decision_trigger: Need smallest possible JS animation lib
+    performance_rating: "5"
+    avoid_when: Need complex orchestration
+
+  - id: lib_008
+    name: AutoAnimate
+    category: core
+    size_kb: 2
+    frameworks: [any, react, vue, svelte, angular]
+    best_for: Zero-config enter/leave/move transitions
+    npm_package: "@formkit/auto-animate"
+    license: MIT
+    decision_trigger: Need instant list/item animation without config
+    performance_rating: "4"
+    avoid_when: Need custom animation control
+
+  - id: lib_009
+    name: AnimXYZ
+    category: core
+    size_kb: 0
+    frameworks: [any, vue, react]
+    best_for: Composable CSS-only animation via utility classes
+    npm_package: "@animxyz/vue3"
+    license: MIT
+    decision_trigger: Want CSS-only composable animation system
+    performance_rating: "5"
+    avoid_when: Need JS-controlled timelines
+
+  - id: lib_010
+    name: Animate.css
+    category: core
+    size_kb: 80
+    frameworks: [any]
+    best_for: Quick predefined CSS effects (fade, bounce, shake)
+    npm_package: animate.css
+    license: MIT
+    decision_trigger: Need quick attention-grabbing effects
+    performance_rating: "4"
+    avoid_when: Bundle size critical (80KB unpurged)
+
+  # ── 3D & WebGL Libraries ─────────────────────────────────────
+
+  - id: lib_011
+    name: Three.js
+    category: 3d
+    size_kb: 600
+    frameworks: [any, react]
+    best_for: Full 3D scenes, games, VR/AR, data visualization
+    npm_package: three
+    license: MIT
+    decision_trigger: Need 3D rendering, WebGL scenes, or R3F
+    performance_rating: "5"
+    avoid_when: Simple 2D animation (overkill)
+
+  - id: lib_012
+    name: React Three Fiber
+    category: 3d
+    size_kb: 50
+    frameworks: [react]
+    best_for: Declarative Three.js in React, 3D components
+    npm_package: "@react-three/fiber"
+    license: MIT
+    decision_trigger: React project with 3D elements
+    performance_rating: "5"
+    avoid_when: Not using React
+
+  - id: lib_013
+    name: Spline
+    category: 3d
+    size_kb: varies
+    frameworks: [any, react, vue]
+    best_for: No-code 3D design, rapid prototyping, timeline editor
+    npm_package: "@splinetool/react-spline"
+    license: Freemium
+    decision_trigger: Designer-friendly 3D without coding
+    performance_rating: "4"
+    avoid_when: Need full programmatic 3D control
+
+  - id: lib_014
+    name: Babylon.js
+    category: 3d
+    size_kb: 800
+    frameworks: [any]
+    best_for: Enterprise 3D, PBR rendering, physics
+    npm_package: "@babylonjs/core"
+    license: Apache-2.0
+    decision_trigger: Enterprise 3D with physics engine needed
+    performance_rating: "5"
+    avoid_when: Simple 3D scene (use Three.js)
+
+  # ── Scroll Animation Libraries ───────────────────────────────
+
+  - id: lib_015
+    name: GSAP ScrollTrigger
+    category: scroll
+    size_kb: 15
+    frameworks: [any]
+    best_for: Complex scroll-linked animation, pin, scrub, parallax
+    npm_package: gsap (plugin)
+    license: Free (included with GSAP)
+    decision_trigger: Need scroll-driven timeline, pinning, or scrubbing
+    performance_rating: "5"
+    avoid_when: Simple reveal (use CSS or intersection observer)
+
+  - id: lib_016
+    name: Lenis
+    category: scroll
+    size_kb: 10
+    frameworks: [any]
+    best_for: Smooth scrolling, momentum, works with GSAP
+    npm_package: lenis
+    license: MIT
+    decision_trigger: Need smooth scroll behavior + GSAP integration
+    performance_rating: "5"
+    avoid_when: Native scroll behavior preferred
+
+  - id: lib_017
+    name: CSS scroll-driven
+    category: scroll
+    size_kb: 0
+    frameworks: [any]
+    best_for: Native scroll-linked animation, zero JS
+    npm_package: none
+    license: Native
+    decision_trigger: Chrome 115+, performance-critical, no JS needed
+    performance_rating: "5"
+    avoid_when: Need Safari/Firefox support (partial 2025)
+
+  - id: lib_018
+    name: Rellax.js
+    category: scroll
+    size_kb: 1
+    frameworks: [any]
+    best_for: Simple parallax scrolling
+    npm_package: rellax
+    license: MIT
+    decision_trigger: Just need basic parallax effect
+    performance_rating: "4"
+    avoid_when: Need complex scroll orchestration
+
+  # ── Particle & Canvas Effects ─────────────────────────────────
+
+  - id: lib_019
+    name: tsParticles
+    category: particle
+    size_kb: 40
+    frameworks: [any, react, vue, angular, svelte]
+    best_for: Particles, confetti, fireworks, snow, shapes
+    npm_package: tsparticles
+    license: MIT
+    decision_trigger: Need particle effects, confetti, backgrounds
+    performance_rating: "4"
+    avoid_when: Simple CSS animation sufficient
+
+  - id: lib_020
+    name: canvas-confetti
+    category: particle
+    size_kb: 6
+    frameworks: [any]
+    best_for: Celebration confetti only
+    npm_package: canvas-confetti
+    license: ISC
+    decision_trigger: Just need confetti on success/celebration
+    performance_rating: "5"
+    avoid_when: Need more particle types
+
+  # ── SVG Animation Libraries ──────────────────────────────────
+
+  - id: lib_021
+    name: Lottie (lottie-web)
+    category: svg
+    size_kb: 250
+    frameworks: [any, react, vue]
+    best_for: After Effects → web, complex vector animation
+    npm_package: lottie-web
+    license: MIT
+    decision_trigger: Have After Effects animations, need cross-platform
+    performance_rating: "4"
+    avoid_when: No AE assets, or bundle size critical
+
+  - id: lib_022
+    name: GSAP MorphSVGPlugin
+    category: svg
+    size_kb: 10
+    frameworks: [any]
+    best_for: SVG path morphing, shape transitions
+    npm_package: gsap (plugin)
+    license: Free (included with GSAP)
+    decision_trigger: Need SVG shape morphing
+    performance_rating: "5"
+    avoid_when: Simple SVG (no morphing needed)
+
+  - id: lib_023
+    name: GSAP DrawSVGPlugin
+    category: svg
+    size_kb: 5
+    frameworks: [any]
+    best_for: SVG line drawing / stroke animation
+    npm_package: gsap (plugin)
+    license: Free (included with GSAP)
+    decision_trigger: Draw/reveal SVG paths progressively
+    performance_rating: "5"
+    avoid_when: No SVG stroke animation needed
+
+  - id: lib_024
+    name: Vivus.js
+    category: svg
+    size_kb: 8
+    frameworks: [any]
+    best_for: SVG line drawing without dependencies
+    npm_package: vivus
+    license: MIT
+    decision_trigger: Simple SVG line animation, no deps wanted
+    performance_rating: "4"
+    avoid_when: Need full SVG morph (use GSAP)
+
+  - id: lib_025
+    name: Snap.svg
+    category: svg
+    size_kb: 80
+    frameworks: [any]
+    best_for: SVG manipulation, masking, clipping, patterns
+    npm_package: snapsvg
+    license: Apache-2.0
+    decision_trigger: Complex SVG DOM manipulation
+    performance_rating: "3"
+    avoid_when: Just need animation (use GSAP/Vivus)
+
+  # ── Text Animation Libraries ─────────────────────────────────
+
+  - id: lib_026
+    name: Splitting.js
+    category: text
+    size_kb: 3
+    frameworks: [any]
+    best_for: Character/word splitting for CSS animation
+    npm_package: splitting
+    license: MIT
+    decision_trigger: Need per-character CSS animation
+    performance_rating: "5"
+    avoid_when: Simple text fade (use CSS)
+
+  - id: lib_027
+    name: SplitType
+    category: text
+    size_kb: 5
+    frameworks: [any]
+    best_for: Text splitting for any animation library
+    npm_package: split-type
+    license: MIT
+    decision_trigger: Need text splitting + GSAP/anime.js integration
+    performance_rating: "5"
+    avoid_when: Only need CSS-driven text animation
+
+  - id: lib_028
+    name: typed.js
+    category: text
+    size_kb: 5
+    frameworks: [any]
+    best_for: Typewriter effect
+    npm_package: typed.js
+    license: MIT
+    decision_trigger: Need typing/typewriter animation
+    performance_rating: "4"
+    avoid_when: Need complex text effects
+
+  - id: lib_029
+    name: Textify.js
+    category: text
+    size_kb: 10
+    frameworks: [any]
+    best_for: Kinetic typography, GSAP-based
+    npm_package: textify.js
+    license: MIT
+    decision_trigger: Need kinetic typography effects
+    performance_rating: "4"
+    avoid_when: Simple text animation
+
+  # ── Tailwind Animation Plugins ────────────────────────────────
+
+  - id: lib_030
+    name: tailwindcss-animated
+    category: tailwind-plugin
+    size_kb: 5
+    frameworks: [tailwind]
+    best_for: Predefined animation utilities (wiggle, shake, spin)
+    npm_package: tailwindcss-animated
+    license: MIT
+    decision_trigger: Tailwind project needing quick animation classes
+    performance_rating: "5"
+    avoid_when: Need custom complex animations
+
+  - id: lib_031
+    name: tailwindcss-motion (Rombo)
+    category: tailwind-plugin
+    size_kb: 8
+    frameworks: [tailwind]
+    best_for: Motion utilities (fade, slide, blur, bounce)
+    npm_package: tailwindcss-motion
+    license: MIT
+    decision_trigger: Tailwind project needing accessible motion
+    performance_rating: "5"
+    avoid_when: Not using Tailwind
+
+  - id: lib_032
+    name: tailwindcss-neumorphism
+    category: tailwind-plugin
+    size_kb: 3
+    frameworks: [tailwind]
+    best_for: Soft UI / neumorphic shadow utilities
+    npm_package: tailwindcss-neumorphism
+    license: MIT
+    decision_trigger: Implementing neumorphism design style
+    performance_rating: "4"
+    avoid_when: Not doing soft UI
+
+  # ── UI Component Animation Kits ───────────────────────────────
+
+  - id: lib_033
+    name: Magic UI
+    category: ui-kit
+    size_kb: varies
+    frameworks: [react, tailwind]
+    best_for: 150+ animated components for landing/SaaS
+    npm_package: copy-paste (shadcn style)
+    license: MIT
+    decision_trigger: React landing page with wow-factor components
+    performance_rating: "4"
+    avoid_when: Not using React/Tailwind
+
+  - id: lib_034
+    name: Aceternity UI
+    category: ui-kit
+    size_kb: varies
+    frameworks: [react, nextjs, tailwind]
+    best_for: 200+ trendy animated components, hero sections
+    npm_package: copy-paste
+    license: MIT
+    decision_trigger: Next.js project needing premium animated sections
+    performance_rating: "4"
+    avoid_when: Not using React/Next.js
+
+  - id: lib_035
+    name: Motion Primitives
+    category: ui-kit
+    size_kb: varies
+    frameworks: [react, nextjs, tailwind]
+    best_for: 50+ composable animation primitives
+    npm_package: copy-paste
+    license: MIT
+    decision_trigger: Need composable motion building blocks
+    performance_rating: "5"
+    avoid_when: Need full components (use Magic UI)
+
+  - id: lib_036
+    name: Inspira UI
+    category: ui-kit
+    size_kb: varies
+    frameworks: [vue, nuxt, tailwind]
+    best_for: 60+ curated animated Vue components
+    npm_package: copy-paste
+    license: MIT
+    decision_trigger: Vue/Nuxt project needing animated components
+    performance_rating: "4"
+    avoid_when: Not using Vue
+
+  - id: lib_037
+    name: Animate UI
+    category: ui-kit
+    size_kb: varies
+    frameworks: [react, shadcn]
+    best_for: shadcn + Framer Motion animated components
+    npm_package: copy-paste
+    license: MIT
+    decision_trigger: shadcn/ui project needing animated variants
+    performance_rating: "4"
+    avoid_when: Not using shadcn
+
+  # ── CSS-Only Patterns (No Library) ────────────────────────────
+
+  - id: lib_038
+    name: CSS Transitions
+    category: css-native
+    size_kb: 0
+    frameworks: [any]
+    best_for: Simple state transitions (hover, focus, active)
+    npm_package: none
+    license: Native
+    decision_trigger: Simple property changes between states
+    performance_rating: "5"
+    avoid_when: Need complex sequencing
+
+  - id: lib_039
+    name: CSS @keyframes
+    category: css-native
+    size_kb: 0
+    frameworks: [any]
+    best_for: Looping, multi-step CSS animation
+    npm_package: none
+    license: Native
+    decision_trigger: Need multi-step or infinite loop animation
+    performance_rating: "5"
+    avoid_when: Need JS-controlled timing
+
+  - id: lib_040
+    name: View Transitions API
+    category: css-native
+    size_kb: 0
+    frameworks: [any]
+    best_for: Page/view transitions without framework
+    npm_package: none
+    license: Native
+    decision_trigger: SPA page transitions, Chrome 111+
+    performance_rating: "5"
+    avoid_when: Need cross-browser (Safari partial 2025)
+
+  - id: lib_041
+    name: CSS scroll-timeline
+    category: css-native
+    size_kb: 0
+    frameworks: [any]
+    best_for: Scroll-driven animation, zero JS
+    npm_package: none
+    license: Native
+    decision_trigger: Performance-critical scroll animation, Chrome 115+
+    performance_rating: "5"
+    avoid_when: Need cross-browser or complex scroll logic
+
+  - id: lib_042
+    name: Web Animations API (WAAPI)
+    category: css-native
+    size_kb: 0
+    frameworks: [any]
+    best_for: Native JS animation API, no library needed
+    npm_package: none
+    license: Native
+    decision_trigger: Need JS control with native performance
+    performance_rating: "5"
+    avoid_when: Need timeline orchestration (use GSAP)

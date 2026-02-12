@@ -1,12 +1,12 @@
 # =============================================================================
-# DOMYH Awesome Code v6.1.2 — Optimized Manifest
+# DOMYH Awesome Code  — Optimized Manifest
 # =============================================================================
 # Token-efficient architecture with Progressive Disclosure
 # Developer: NockDev
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: "v6.1.2"
+version: "v6.2.1"
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -28,34 +28,26 @@ defaults:
 # =============================================================================
 
 core:
-  # Rules System ( - refactored to modular files)
-  rules_dir: rules/ # 15 specialized rule files
+  # Rules System (modular files)
+  rules_dir: rules/ # 8 active rule modules
   rules_index: rules/README.md # Rules registry
-  # Core engines
-  router: core/ROUTER.yaml # Semantic routing config
-  flow_engine: core/FLOW_ENGINE.yaml # v6.1.2: Workflow chaining
-  memory_engine: core/MEMORY_ENGINE.yaml # : 4-layer memory
-  semantic_engine: core/SEMANTIC_ENGINE.yaml # : Optional vector DB
-  token_loading: core/TOKEN_LOADING.yaml # Token optimization
-  # SSoT Files (v6.1.2 additions)
-  token_budgets: core/TOKEN_BUDGETS.yaml # Unified token thresholds
+  # SSoT Files
   memory_paths: core/MEMORY_PATHS.yaml # Memory file locations
-  scoring_formula: core/SCORING_FORMULA.yaml # Priority scoring algorithm
-  context_priority: core/CONTEXT_PRIORITY.yaml # Context injection scoring
-  memory_consolidation: core/MEMORY_CONSOLIDATION.yaml # Memory merge strategies
-  patterns: core/PATTERNS.yaml # Shared workflow patterns
+  # Reference data (read-only)
+  reference_dir: core/reference/ # PATTERNS, TEMPLATES, HSA, etc.
 
 # =============================================================================
 # PROGRESSIVE DISCLOSURE SKILLS
-# Tier 1: META.yaml (~100 tokens) - Always loaded
-# Tier 2: SKILL.md (~2000 tokens) - On-demand
-# Tier 3: ADVANCED.md (~5000 tokens) - Referenced only
+# Tier 1: META.yaml (~100-400 tokens) - Always loaded
+# Tier 2: SKILL.md (~1,500 tokens) - On-demand
+# Tier 3: ADVANCED.md (~4,000 tokens) - Referenced only
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 22 skills × 100 tokens = 2,200 tokens
-  # Activated: +2,000 tokens per skill
-  # Max active: 3 skills = 2,200 + 6,000 = 8,200 tokens
+  # Baseline: Only META.yaml loaded = 79 skills × ~100-400 tokens
+  # Activated: +1,500 tokens per skill (SKILL.md)
+  # Max active: 3 skills with T2 loaded
+  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 20 cross-cutting + 4 tooling + 4 ai-ml
 
   loading:
     strategy: progressive # progressive | eager | lazy
@@ -67,7 +59,15 @@ skills:
     core:
       priority: 0
       always_metadata: true # Always load META.yaml
-      skills: [security] # Security always active (metadata)
+      skills:
+        [
+          security,
+          api-design,
+          authentication,
+          error-handling,
+          logging,
+          observability,
+        ]
 
     language:
       priority: 1
@@ -76,27 +76,64 @@ skills:
           go,
           python,
           typescript,
+          javascript,
           rust,
           cpp,
+          c,
           csharp,
           java,
           php,
           kotlin,
           swift,
           lua,
+          ruby,
+          asm,
+          elixir,
+          haskell,
+          clojure,
+          crystal,
+          fsharp,
+          julia,
+          nim,
+          ocaml,
+          perl,
+          r,
+          scala,
+          solidity,
+          zig,
         ]
 
     framework:
       priority: 2
-      skills: [react, vue, nextjs]
+      skills: [react, vue, nextjs, angular, nuxt, svelte, flutter, react-native]
 
     devops:
       priority: 3
       skills: [docker, kubernetes, aws, ci-cd]
 
-    support:
-      priority: 2
-      skills: [database, testing]
+    cross-cutting:
+      priority: 4
+      skills:
+        [
+          database,
+          testing,
+          coding-rules,
+          tailwind,
+          domyh-design,
+          electron,
+          bun,
+          deno,
+          sql,
+          web-perf,
+          audit-pro,
+          tdd-workflow,
+          prompt-engineering,
+          accessibility,
+          seo,
+          microservices,
+          monorepo,
+          rag-patterns,
+        ]
 
 # =============================================================================
 # SEMANTIC TOOL SELECTION
@@ -117,7 +154,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (28 workflows) — : Complete Command Set
+# COMMANDS (33 workflows) — : Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
@@ -133,6 +170,7 @@ commands:
     persona: developer
     cache: true
     triggers: [code, write, implement, viết code]
+    skills: { required: [], contextual: [auto, domyh-design, tailwind] }
 
   - id: dev
     file: workflows/dev.md
@@ -141,6 +179,7 @@ commands:
     persona: developer
     cache: false
     triggers: [dev, start, run, chạy]
+    skills: { required: [], contextual: [auto] }
 
   - id: debug
     file: workflows/debug.md
@@ -149,6 +188,7 @@ commands:
     persona: debugger
     cache: true
     triggers: [debug, fix, error, lỗi]
+    skills: { required: [], contextual: [auto] }
 
   - id: test
     file: workflows/test.md
@@ -157,6 +197,7 @@ commands:
     persona: developer
     cache: true
     triggers: [test, kiểm thử]
+    skills: { required: [testing], contextual: [auto] }
 
   - id: refactor
     file: workflows/refactor.md
@@ -164,6 +205,7 @@ commands:
     category: development
     cache: true
     triggers: [refactor, cleanup, tái cấu trúc]
+    skills: { required: [], contextual: [auto] }
 
   - id: generate
     file: workflows/generate.md
@@ -171,6 +213,7 @@ commands:
     category: development
     cache: true
     triggers: [generate, scaffold, tạo code]
+    skills: { required: [], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # PLANNING & DESIGN (5 commands)
@@ -183,6 +226,7 @@ commands:
     persona: architect
     cache: true
     triggers: [plan, design, lên kế hoạch]
+    skills: { required: [], contextual: [] }
 
   - id: think
     file: workflows/think.md
@@ -191,14 +235,25 @@ commands:
     persona: architect
     cache: true
     triggers: [think, brainstorm, idea, ý tưởng]
+    skills: { required: [], contextual: [] }
+
+  - id: prompt
+    file: workflows/prompt.md
+    icon: "✍️"
+    category: planning
+    persona: architect
+    cache: true
+    triggers: [prompt, tạo prompt, generate prompt, viết prompt]
+    skills: { required: [prompt-engineering], contextual: [domyh-design] }
 
   - id: visualize
     file: workflows/visualize.md
     icon: "🖼️"
     category: planning
-    persona: designer
+    persona: developer
     cache: true
     triggers: [visualize, ui, mockup, thiết kế]
+    skills: { required: [domyh-design], contextual: [] }
 
   - id: doc
     file: workflows/doc.md
@@ -206,6 +261,7 @@ commands:
     category: planning
     cache: true
     triggers: [doc, document, tài liệu]
+    skills: { required: [], contextual: [auto] }
 
   - id: init
     file: workflows/init.md
@@ -213,6 +269,7 @@ commands:
     category: planning
     cache: false
     triggers: [init, create, new, tạo mới]
+    skills: { required: [], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # DEPLOYMENT & OPS (6 commands)
@@ -224,6 +281,7 @@ commands:
     category: deployment
     cache: false
     triggers: [deploy, release, triển khai]
+    skills: { required: [ci-cd], contextual: [docker, kubernetes, aws] }
 
   - id: env
     file: workflows/env.md
@@ -231,6 +289,7 @@ commands:
     category: deployment
     cache: true
     triggers: [env, environment, môi trường]
+    skills: { required: [], contextual: [] }
 
   - id: monitor
     file: workflows/monitor.md
@@ -238,6 +297,7 @@ commands:
     category: deployment
     cache: true
     triggers: [monitor, observability, giám sát]
+    skills: { required: [], contextual: [] }
 
   - id: perf
     file: workflows/perf.md
@@ -245,6 +305,7 @@ commands:
     category: deployment
     cache: true
     triggers: [perf, performance, hiệu năng]
+    skills: { required: [], contextual: [auto] }
 
   - id: revert
     file: workflows/revert.md
@@ -252,6 +313,7 @@ commands:
     category: deployment
     cache: false
     triggers: [revert, rollback, undo, hoàn tác]
+    skills: { required: [], contextual: [ci-cd] }
 
   - id: migrate
     file: workflows/migrate.md
@@ -259,6 +321,7 @@ commands:
     category: deployment
     cache: true
     triggers: [migrate, migration, di chuyển]
+    skills: { required: [database], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # QUALITY & REVIEW (5 commands)
@@ -271,6 +334,7 @@ commands:
     persona: auditor
     cache: true
     triggers: [ap, audit, kiểm tra]
+    skills: { required: [security, testing], contextual: [auto] }
 
   - id: review
     file: workflows/review.md
@@ -278,21 +342,7 @@ commands:
     category: quality
     cache: true
     triggers: [review, pr, xem xét]
-
-  - id: modify
-    file: workflows/modify.md
-    icon: "🔧"
-    category: quality
-    persona: developer
-    cache: true
-    triggers: [modify, fix-project, sửa project]
-
-  - id: clean
-    file: workflows/clean.md
-    icon: "🧹"
-    category: quality
-    cache: true
-    triggers: [clean, dọn dẹp]
+    skills: { required: [security], contextual: [auto] }
 
   - id: upgrade
     file: workflows/upgrade.md
@@ -300,6 +350,43 @@ commands:
     category: quality
     cache: true
     triggers: [upgrade, update, cập nhật]
+    skills: { required: [], contextual: [auto] }
+
+  - id: git
+    file: workflows/git.md
+    icon: "🔀"
+    category: core
+    persona: developer
+    cache: true
+    triggers: [git, commit, branch, stash]
+    skills: { required: [], contextual: [] }
+
+  - id: fix
+    file: workflows/fix.md
+    icon: "⚡"
+    category: core
+    persona: developer
+    cache: true
+    triggers: [fix, quick fix, sửa nhanh]
+    skills: { required: [], contextual: [auto] }
+
+  - id: scaffold
+    file: workflows/scaffold.md
+    icon: "🏗️"
+    category: generation
+    persona: developer
+    cache: true
+    triggers: [scaffold, generate component, tạo component]
+    skills: { required: [], contextual: [auto] }
+
+  - id: workflow
+    file: workflows/workflow.md
+    icon: "🔄"
+    category: utility
+    persona: orchestrator
+    cache: false
+    triggers: [workflow, commands]
+    skills: { required: [], contextual: [] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # UTILITY (6 commands)
@@ -311,6 +398,7 @@ commands:
     category: utility
     cache: false
     triggers: [status, health, sức khỏe]
+    skills: { required: [], contextual: [] }
 
   - id: recap
     file: workflows/recap.md
@@ -318,13 +406,7 @@ commands:
     category: utility
     cache: false
     triggers: [recap, summary, tóm tắt]
-
-  - id: suggest
-    file: workflows/suggest.md
-    icon: "➡️"
-    category: utility
-    cache: false
-    triggers: [suggest, next, tiếp theo]
+    skills: { required: [], contextual: [] }
 
   - id: orchestrate
     file: workflows/orchestrate.md
@@ -333,6 +415,24 @@ commands:
     persona: architect
     cache: true
     triggers: [orchestrate, multi-agent, đa tác tử]
+    skills: { required: [], contextual: [] }
+
+  - id: onboard
+    file: workflows/onboard.md
+    icon: "📦"
+    category: utility
+    cache: false
+    triggers: [onboard, discover, khám phá]
+    skills: { required: [], contextual: [auto] }
+
+  - id: security
+    file: workflows/security.md
+    icon: "🔒"
+    category: quality
+    persona: security
+    cache: true
+    triggers: [security, scan, bảo mật]
+    skills: { required: [security], contextual: [auto] }
 
   - id: help
     file: workflows/help.md
@@ -340,6 +440,38 @@ commands:
     category: utility
     cache: true
     triggers: [help, trợ giúp]
+    skills: { required: [], contextual: [] }
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TESTING & VERIFICATION (3 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: tdd
+    file: workflows/tdd.md
+    icon: "🧪"
+    category: development
+    persona: tester
+    cache: true
+    triggers: [tdd, red-green, test-driven]
+    skills: { required: [testing], contextual: [auto] }
+
+  - id: e2e
+    file: workflows/e2e.md
+    icon: "🌐"
+    category: development
+    persona: tester
+    cache: true
+    triggers: [e2e, end-to-end, playwright, cypress]
+    skills: { required: [testing], contextual: [auto] }
+
+  - id: verify
+    file: workflows/verify.md
+    icon: "🔄"
+    category: quality
+    persona: developer
+    cache: false
+    triggers: [verify, validate, kiểm tra]
+    skills: { required: [], contextual: [auto] }
 
 # =============================================================================
 # PERSONAS (On-demand load)
@@ -357,6 +489,20 @@ personas:
       file: personas/architect.md
     - id: debugger
       file: personas/debugger.md
+    - id: tester
+      file: personas/tester.md
+    - id: devops
+      file: personas/devops.md
+    - id: documenter
+      file: personas/documenter.md
+    - id: planner
+      file: personas/planner.md
+    - id: researcher
+      file: personas/researcher.md
+    - id: orchestrator
+      file: personas/orchestrator.md
+    - id: security
+      file: personas/security.md
 
 # =============================================================================
 # I18N
@@ -373,6 +519,6 @@ i18n:
 # =============================================================================
 
 token_budget:
-  idle: 2500 # Target: ~2,500 tokens at rest
-  single_skill: 5000 # Target: ~5,000 with 1 skill active
-  peak: 10000 # Target: ~10,000 max
+  idle: 6400 # ~6,400 tokens at rest (64 × META.yaml)
+  single_skill: 7900 # ~7,900 with 1 skill active (+1,500 T2)
+  peak: 10900 # ~10,900 max (3 skills concurrent)

@@ -1,0 +1,174 @@
+# =============================================================================
+# AWS S3 Storage Patterns (Feb 2026)
+# =============================================================================
+# S3 Vectors, S3 Tables, S3 Metadata from re:Invent 2025+
+
+metadata:
+  skill: aws
+  domain: storage
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: aws010
+    name: S3 Vectors
+    category: storage
+    version: "2026+"
+    description: Native vector storage and querying at scale (2B vectors per index)
+    text: s3 vectors embeddings ai ml search similarity index
+    example: |
+      import boto3
+
+      s3_vectors = boto3.client('s3vectors')
+
+      # Create vector index
+      response = s3_vectors.create_index(
+          IndexName='product-embeddings',
+          Dimension=1536,  # OpenAI embedding size
+          Metric='cosine',
+          # Supports up to 2 billion vectors!
+      )
+
+      # Insert vectors
+      s3_vectors.upsert_vectors(
+          IndexName='product-embeddings',
+          Vectors=[
+              {'id': 'prod-1', 'values': [...], 'metadata': {'name': 'Widget'}},
+          ]
+      )
+
+      # Query with sub-100ms latency
+      results = s3_vectors.query(
+          IndexName='product-embeddings',
+          Vector=[...],
+          TopK=10
+      )
+
+      # Cost: Significant reduction vs standalone vector DBs
+    severity: CRITICAL
+    docs_url: https://aws.amazon.com/s3/vectors/
+
+  - id: aws011
+    name: S3 Tables (Apache Iceberg)
+    category: storage
+    version: "2026+"
+    description: Fully managed Apache Iceberg tables with 90% cheaper compaction
+    text: s3 tables iceberg analytics data lake parquet compaction
+    example: |
+      import boto3
+
+      s3_tables = boto3.client('s3tables')
+
+      # Create Iceberg table
+      response = s3_tables.create_table(
+          TableBucketArn='arn:aws:s3tables:us-east-1:123456789:bucket/analytics',
+          Name='customer_events',
+          Schema={
+              'columns': [
+                  {'name': 'id', 'type': 'string'},
+                  {'name': 'event_time', 'type': 'timestamp'},
+                  {'name': 'data', 'type': 'string'}
+              ]
+          },
+          # New: Sort compaction for faster queries
+          SortCompaction={'sortColumns': ['event_time']},
+          # New: Intelligent-Tiering storage class
+          StorageClass='INTELLIGENT_TIERING'
+      )
+
+      # Query with Athena, Spark, or any Iceberg-compatible tool
+      # 90% price cut on compaction in 2026!
+    severity: HIGH
+    docs_url: https://aws.amazon.com/s3/tables/
+
+  - id: aws012
+    name: S3 Metadata
+    category: storage
+    version: "2026+"
+    description: Instant data discovery with built-in metadata management
+    text: s3 metadata discovery catalog index search management
+    example: |
+      import boto3
+
+      s3 = boto3.client('s3')
+
+      # Enable S3 Metadata on bucket
+      s3.put_bucket_metadata_configuration(
+          Bucket='my-data-lake',
+          MetadataConfiguration={
+              'MetadataPolicy': 'ENABLED'
+          }
+      )
+
+      # Search objects by metadata
+      results = s3.search_objects(
+          Bucket='my-data-lake',
+          Query={
+              'filters': [
+                  {'key': 'Content-Type', 'value': 'application/json'},
+                  {'key': 'x-amz-meta-department', 'value': 'marketing'}
+              ]
+          }
+      )
+
+      # Instant discovery without scanning all objects
+    severity: MEDIUM
+    docs_url: https://aws.amazon.com/s3/features/metadata/
+
+  - id: aws013
+    name: S3 Cross-Region Replication
+    category: storage
+    version: "2026+"
+    description: S3 Tables replication for disaster recovery and read replicas
+    text: s3 tables replication cross region disaster recovery crr
+    example: |
+      Resources:
+        SourceBucket:
+          Type: AWS::S3Tables::TableBucket
+          Properties:
+            TableBucketName: analytics-primary
+            # Enable replication
+            ReplicationConfiguration:
+              Role: !GetAtt ReplicationRole.Arn
+              Rules:
+                - Id: ReplicateToBackup
+                  Status: Enabled
+                  Destination:
+                    Bucket: !GetAtt BackupBucket.Arn
+                    # Cross-region for DR
+                    Region: eu-west-1
+                    # Or same-region for read replicas
+                    # Account: "987654321"  # Cross-account
+
+        # Read replicas in multiple regions
+        # Consistent reads across all replicas
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/s3/
+
+  - id: aws014
+    name: S3 5+4 Erasure Coding
+    category: storage
+    version: "2026+"
+    description: Enhanced durability with 5+4 erasure coding (99.999999999% durability)
+    text: s3 erasure coding durability storage eleven nines
+    example: |
+      # S3 now uses 5+4 erasure coding:
+      # - 5 data shards + 4 parity shards
+      # - Can lose any 4 shards and still recover
+      # - 11 nines of durability (99.999999999%)
+
+      # Strong read-after-write consistency for ALL operations:
+      # - PutObject returns → immediately readable
+      # - DeleteObject returns → immediately gone
+      # - No eventual consistency quirks
+
+      # Default for all new S3 buckets
+      # No configuration needed - automatic!
+
+      # Best practices:
+      # 1. Enable versioning for critical data
+      # 2. Use Object Lock for compliance
+      # 3. Cross-region replication for DR
+    severity: MEDIUM
+    docs_url: https://aws.amazon.com/s3/features/

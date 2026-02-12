@@ -1,0 +1,215 @@
+metadata:
+  skill: authentication
+  domain: session_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: session-patterns.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern_name
+    - description
+    - category
+    - security_level
+    - keywords
+patterns:
+  - id: SESS-001
+    pattern_name: Server-Side Sessions
+    description: Store session data on server with session ID
+    category: architecture
+    security_level: high
+    keywords:
+      - server
+      - stateful
+  - id: SESS-002
+    pattern_name: Session ID Generation
+    description: Cryptographically random session identifiers
+    category: security
+    security_level: critical
+    keywords:
+      - random
+      - id
+  - id: SESS-003
+    pattern_name: Session Storage Options
+    description: Redis Memcached database file
+    category: infrastructure
+    security_level: medium
+    keywords:
+      - redis
+      - storage
+  - id: SESS-004
+    pattern_name: Session Cookie
+    description: HttpOnly Secure SameSite cookie for ID
+    category: security
+    security_level: critical
+    keywords:
+      - cookie
+      - httponly
+  - id: SESS-005
+    pattern_name: Session Lifetime
+    description: Balance security vs usability with expiry
+    category: security
+    security_level: high
+    keywords:
+      - lifetime
+      - expiry
+  - id: SESS-006
+    pattern_name: Sliding Expiration
+    description: Extend session on activity
+    category: usability
+    security_level: medium
+    keywords:
+      - sliding
+      - extend
+  - id: SESS-007
+    pattern_name: Absolute Expiration
+    description: Maximum session duration regardless of activity
+    category: security
+    security_level: high
+    keywords:
+      - absolute
+      - maximum
+  - id: SESS-008
+    pattern_name: Session Regeneration
+    description: New ID after privilege change
+    category: security
+    security_level: critical
+    keywords:
+      - regenerate
+      - login
+  - id: SESS-009
+    pattern_name: Session Invalidation
+    description: Destroy session on logout
+    category: security
+    security_level: high
+    keywords:
+      - invalidate
+      - logout
+  - id: SESS-010
+    pattern_name: Concurrent Sessions
+    description: Allow or limit multiple logins
+    category: policy
+    security_level: medium
+    keywords:
+      - concurrent
+      - limit
+  - id: SESS-011
+    pattern_name: Session Binding
+    description: Tie session to IP or fingerprint
+    category: security
+    security_level: high
+    keywords:
+      - binding
+      - fingerprint
+  - id: SESS-012
+    pattern_name: Session Fixation Prevention
+    description: Regenerate after login
+    category: security
+    security_level: critical
+    keywords:
+      - fixation
+      - regenerate
+  - id: SESS-013
+    pattern_name: Session Hijacking Prevention
+    description: Validate session on each request
+    category: security
+    security_level: high
+    keywords:
+      - hijacking
+      - validate
+  - id: SESS-014
+    pattern_name: Idle Timeout
+    description: Expire inactive sessions
+    category: security
+    security_level: high
+    keywords:
+      - idle
+      - timeout
+  - id: SESS-015
+    pattern_name: Session Data Encryption
+    description: Encrypt sensitive session contents
+    category: security
+    security_level: high
+    keywords:
+      - encrypt
+      - data
+  - id: SESS-016
+    pattern_name: Session Store Isolation
+    description: Per-tenant or per-app session stores
+    category: architecture
+    security_level: medium
+    keywords:
+      - isolation
+      - tenant
+  - id: SESS-017
+    pattern_name: Session Clustering
+    description: Distributed sessions across servers
+    category: infrastructure
+    security_level: medium
+    keywords:
+      - cluster
+      - distributed
+  - id: SESS-018
+    pattern_name: Session Serialization
+    description: Consistent format for session data
+    category: implementation
+    security_level: medium
+    keywords:
+      - serialize
+      - format
+  - id: SESS-019
+    pattern_name: Session Pruning
+    description: Cleanup expired sessions periodically
+    category: maintenance
+    security_level: medium
+    keywords:
+      - prune
+      - cleanup
+  - id: SESS-020
+    pattern_name: Force Logout All Sessions
+    description: Admin ability to end all user sessions
+    category: administration
+    security_level: high
+    keywords:
+      - force
+      - all
+  - id: SESS-021
+    pattern_name: Remember Me Implementation
+    description: Persistent token separate from session
+    category: usability
+    security_level: high
+    keywords:
+      - remember
+      - persistent
+  - id: SESS-022
+    pattern_name: Session-less APIs
+    description: Use tokens instead of sessions for APIs
+    category: architecture
+    security_level: high
+    keywords:
+      - stateless
+      - api
+  - id: SESS-023
+    pattern_name: CSRF Token Generation
+    description: Per-session CSRF tokens
+    category: security
+    security_level: critical
+    keywords:
+      - csrf
+      - token
+  - id: SESS-024
+    pattern_name: Session Audit Trail
+    description: Log session creation and destruction
+    category: audit
+    security_level: medium
+    keywords:
+      - audit
+      - log
+  - id: SESS-025
+    pattern_name: Graceful Session Migration
+    description: Handle format changes without logout
+    category: maintenance
+    security_level: medium
+    keywords:
+      - migration
+      - graceful

@@ -1,0 +1,100 @@
+# Electron Storage Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: storage
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: stor001
+    name: better-sqlite3
+    category: storage
+    version: all
+    description: Fast, synchronous SQLite3 bindings for Electron
+    text: better sqlite3 database sql local embedded wal sync fast
+    example: |
+      import Database from 'better-sqlite3';
+      import { app } from 'electron';
+      import path from 'path';
+
+      const dbPath = path.join(app.getPath('userData'), 'app.db');
+      const db = new Database(dbPath);
+      db.pragma('journal_mode = WAL');
+
+      const stmt = db.prepare('SELECT * FROM users WHERE id = ?');
+      const user = stmt.get(userId);
+    severity: HIGH
+    recommended: true
+    docs_url: https://github.com/WiseLibs/better-sqlite3
+
+  - id: stor002
+    name: electron-store
+    category: storage
+    version: all
+    description: Simple key-value storage with JSON persistence
+    text: electron store settings config json persist preferences key value
+    example: |
+      import Store from 'electron-store';
+
+      const store = new Store({
+        defaults: {
+          theme: 'system',
+          recentFiles: []
+        }
+      });
+
+      store.set('theme', 'dark');
+      const theme = store.get('theme');
+    severity: MEDIUM
+    docs_url: https://github.com/sindresorhus/electron-store
+
+  - id: stor003
+    name: safeStorage
+    category: storage
+    version: "15+"
+    description: Encrypt sensitive data using OS keychain/credential manager
+    text: safe storage encrypt decrypt sensitive credential keychain secure
+    example: |
+      import { safeStorage } from 'electron';
+
+      if (safeStorage.isEncryptionAvailable()) {
+        const encrypted = safeStorage.encryptString('my-secret');
+        // Store encrypted buffer
+        
+        const decrypted = safeStorage.decryptString(encrypted);
+      }
+    severity: HIGH
+    docs_url: https://www.electronjs.org/docs/latest/api/safe-storage
+
+  - id: stor004
+    name: userData path
+    category: storage
+    version: all
+    description: Platform-specific user data directory for app storage
+    text: user data path persistent storage app directory platform config
+    example: |
+      import { app } from 'electron';
+
+      // Windows: %APPDATA%/YourApp
+      // macOS: ~/Library/Application Support/YourApp
+      // Linux: ~/.config/YourApp
+      const userDataPath = app.getPath('userData');
+    severity: MEDIUM
+
+  - id: stor005
+    name: SQLCipher
+    category: storage
+    version: all
+    description: Encrypted SQLite for sensitive local data
+    text: sqlcipher encrypted database sqlite security sensitive data
+    example: |
+      // Use @journeyapps/sqlcipher or sql.js with encryption
+      import Database from '@journeyapps/sqlcipher';
+
+      const db = new Database(dbPath);
+      db.key(encryptionKey);
+    severity: HIGH

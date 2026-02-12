@@ -1,0 +1,93 @@
+# Test Doubles Patterns
+# Mock, Stub, Spy, Fake, Dummy patterns across languages
+
+patterns:
+  - name: dummy-object
+    type: dummy
+    description: "Object passed to fill required parameters but never used"
+    when: "Method signature requires parameter you don't care about"
+    example:
+      language: typescript
+      code: |
+        const dummyLogger = {} as Logger;
+        const service = new UserService(dummyLogger);
+
+  - name: stub-canned-response
+    type: stub
+    description: "Returns pre-configured answers to calls"
+    when: "Isolate SUT from external dependency"
+    examples:
+      typescript: |
+        const stubRepo = { findById: jest.fn().mockResolvedValue({ id: 1, name: 'John' }) };
+      python: |
+        stub_repo = Mock()
+        stub_repo.find_by_id.return_value = User(id=1, name="John")
+      go: |
+        type stubRepo struct{}
+        func (s *stubRepo) FindByID(id int) (*User, error) {
+            return &User{ID: 1, Name: "John"}, nil
+        }
+
+  - name: spy-record-calls
+    type: spy
+    description: "Records interactions for later verification"
+    when: "Verify side-effects (was method called? with what args?)"
+    examples:
+      typescript: |
+        const sendEmail = jest.fn();
+        service.register(user);
+        expect(sendEmail).toHaveBeenCalledWith(user.email, expect.any(String));
+      python: |
+        mock_email = Mock()
+        service.register(user)
+        mock_email.send.assert_called_once_with(user.email, ANY)
+
+  - name: mock-expectations
+    type: mock
+    description: "Pre-programmed with expectations, fail if unexpected calls"
+    when: "Strict behavior verification"
+    examples:
+      typescript: |
+        // Vitest strict mock
+        const mockPayment = vi.fn()
+          .mockResolvedValueOnce({ success: true })
+          .mockRejectedValueOnce(new Error('declined'));
+      java: |
+        // Mockito
+        when(paymentGateway.charge(any())).thenReturn(Result.success());
+        verify(paymentGateway, times(1)).charge(argThat(a -> a.amount() > 0));
+
+  - name: fake-implementation
+    type: fake
+    description: "Working implementation with shortcuts (in-memory DB, fake API)"
+    when: "Need real behavior without infrastructure"
+    examples:
+      typescript: |
+        class FakeUserRepository implements UserRepository {
+          private users: Map<string, User> = new Map();
+          async save(user: User) { this.users.set(user.id, user); }
+          async findById(id: string) { return this.users.get(id) ?? null; }
+        }
+      go: |
+        type FakeStore struct {
+            data map[string][]byte
+        }
+        func (f *FakeStore) Get(key string) ([]byte, error) {
+            v, ok := f.data[key]
+            if !ok { return nil, ErrNotFound }
+            return v, nil
+        }
+
+  - name: test-double-selection
+    type: guide
+    description: "Decision tree for choosing the right test double"
+    decision:
+      - question: "Do you need to verify interactions?"
+        yes: "Use Mock or Spy"
+        no: "Use Stub or Fake"
+      - question: "Do you need real behavior?"
+        yes: "Use Fake"
+        no: "Use Stub"
+      - question: "Do you need strict call verification?"
+        yes: "Use Mock"
+        no: "Use Spy"

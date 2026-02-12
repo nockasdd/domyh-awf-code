@@ -1,0 +1,198 @@
+metadata:
+  skill: security
+  domain: kotlin_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: kotlin-security.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - example_code
+patterns:
+  - id: KT-01
+    name: Coroutine Exception Leak
+    severity: HIGH
+    category: Concurrency
+    description: Uncaught exception in coroutine crashes app
+    detection_pattern: launch\\s*\\{(?!.*try|supervisorScope)
+    fix_pattern: Use supervisorScope or CoroutineExceptionHandler
+    cwe: CWE-755
+    example_code: // Crash on exception\nlaunch { throw Exception() }\n// SAFE\nsupervisorScope { launch { ... } }
+  - id: KT-02
+    name: SharedFlow Backpressure
+    severity: MEDIUM
+    category: Concurrency
+    description: SharedFlow without buffer can drop events
+    detection_pattern: MutableSharedFlow\\((?!.*replay|buffer)
+    fix_pattern: Set appropriate replay and buffer values
+    cwe: CWE-400
+    example_code: // Lost events\nMutableSharedFlow<Event>()\n// SAFE\nMutableSharedFlow<Event>(replay = 1, onBufferOverflow = DROP_OLDEST)
+  - id: KT-03
+    name: Null Safety Bypass
+    severity: HIGH
+    category: Memory
+    description: Force unwrap !! on nullable can crash
+    detection_pattern: '!!(?!.*\\?\\?|requireNotNull)'
+    fix_pattern: Use safe call ?. or require with message
+    cwe: CWE-476
+    example_code: '// Crash\nval name = user!!.name\n// SAFE\nval name = user?.name ?: \default\""'
+  - id: KT-04
+    name: Android Keystore Weak
+    severity: HIGH
+    category: Crypto
+    description: Keystore without hardware backing
+    detection_pattern: KeyGenParameterSpec(?!.*setIsStrongBoxBacked)
+    fix_pattern: Use setIsStrongBoxBacked when available
+    cwe: CWE-326
+    example_code: // Software-only\nKeyGenParameterSpec.Builder(...)\n// SAFE\n.setIsStrongBoxBacked(true)
+  - id: KT-05
+    name: Parcelable Deserialization
+    severity: HIGH
+    category: Android
+    description: Custom Parcelable without validation
+    detection_pattern: createFromParcel(?!.*validate|require)
+    fix_pattern: Validate all fields from Parcel
+    cwe: CWE-502
+    example_code: '// Unsafe\noverride fun createFromParcel(parcel: Parcel) = MyClass(parcel.readString()!!)\n// SAFE: Validate'
+  - id: KT-06
+    name: WebView JavaScript
+    severity: CRITICAL
+    category: Android
+    description: WebView with JavaScript and loadUrl user input
+    detection_pattern: setJavaScriptEnabled\\(true\\).*loadUrl.*\\+
+    fix_pattern: Disable JS or validate URLs strictly
+    cwe: CWE-79
+    example_code: '// XSS\nwebView.settings.javaScriptEnabled = true\nwebView.loadUrl(userUrl)\n// SAFE: Whitelist URLs'
+  - id: KT-07
+    name: Broadcast Unprotected
+    severity: HIGH
+    category: Android
+    description: Broadcast without permission check
+    detection_pattern: registerReceiver(?!.*permission|RECEIVER_EXPORTED)
+    fix_pattern: Use explicit receivers or permission
+    cwe: CWE-926
+    example_code: // Unprotected\nregisterReceiver(receiver, filter)\n// SAFE\nregisterReceiver(receiver, filter, permission, null)
+  - id: KT-08
+    name: Intent Redirect
+    severity: HIGH
+    category: Android
+    description: User-controlled intent can access other apps
+    detection_pattern: startActivity\\(.*getIntent|extras(?!.*validate))
+    fix_pattern: Validate intent extras and component
+    cwe: CWE-940
+    example_code: '// Redirect\nstartActivity(intent.getParcelableExtra(\target\"))\n// SAFE: Validate package"'
+  - id: KT-09
+    name: Path Traversal Files
+    severity: HIGH
+    category: Android
+    description: File operations with user path
+    detection_pattern: File\\(.*\\+|openFileInput.*params
+    fix_pattern: Use canonical path validation
+    cwe: CWE-22
+    example_code: // Path traversal\nFile(baseDir, userPath)\n// SAFE\nFile(baseDir, userPath).canonicalPath.startsWith(baseDir)
+  - id: KT-10
+    name: SQL Injection Room
+    severity: HIGH
+    category: Android
+    description: Raw query without parameters in Room
+    detection_pattern: '@RawQuery|query\\(.*\\+.*\\+'
+    fix_pattern: Use @Query with parameters
+    cwe: CWE-89
+    example_code: '// SQLi\n@RawQuery fun search(query: String)\n// SAFE\n@Query(\SELECT * FROM users WHERE name = :name\")"'
+  - id: KT-11
+    name: Logging Sensitive Data
+    severity: MEDIUM
+    category: Privacy
+    description: Password/token in logs
+    detection_pattern: Log\\.(d|i|v).*password|token|secret
+    fix_pattern: Never log sensitive data
+    cwe: CWE-532
+    example_code: '// Leaking\nLog.d(TAG, \Token: $token\")\n// SAFE: Log only IDs"'
+  - id: KT-12
+    name: Reflection Abuse
+    severity: HIGH
+    category: Injection
+    description: Reflection on user-controlled class name
+    detection_pattern: Class\\.forName\\(.*\\+|::class.*params
+    fix_pattern: Whitelist allowed classes
+    cwe: CWE-470
+    example_code: '// Dangerous\nClass.forName(params[\class\"]).newInstance()\n// SAFE: Whitelist classes"'
+  - id: KT-13
+    name: lateinit Crash
+    severity: MEDIUM
+    category: Memory
+    description: lateinit access before initialization
+    detection_pattern: lateinit.*(?!.*isInitialized)
+    fix_pattern: Check isInitialized before access
+    cwe: CWE-824
+    example_code: // Crash\nprintln(lateinitVar)\n// SAFE\nif (::lateinitVar.isInitialized) println(lateinitVar)
+  - id: KT-14
+    name: Ktor Client Insecure
+    severity: HIGH
+    category: Network
+    description: Ktor client without certificate validation
+    detection_pattern: HttpClient(?!.*expectSuccess|certificate)
+    fix_pattern: Enable certificate pinning
+    cwe: CWE-295
+    example_code: '// No validation\nHttpClient()\n// SAFE: Configure certificate pinning'
+  - id: KT-15
+    name: Mutex Deadlock
+    severity: HIGH
+    category: Concurrency
+    description: Mutex without withLock or timeout
+    detection_pattern: mutex\\.lock\\(\\)(?!.*finally.*unlock)
+    fix_pattern: Use withLock or withTimeout
+    cwe: CWE-833
+    example_code: // Deadlock risk\nmutex.lock(); doWork(); mutex.unlock()\n// SAFE\nmutex.withLock { doWork() }
+  - id: KT-16
+    name: StateFlow Thread
+    severity: MEDIUM
+    category: Concurrency
+    description: StateFlow value read without collect on main
+    detection_pattern: stateFlow\\.value(?!.*Dispatchers\\.Main)
+    fix_pattern: Use collectAsState or observe on correct dispatcher
+    cwe: CWE-362
+    example_code: // Wrong thread\nval value = stateFlow.value\n// SAFE\nstateFlow.collectLatest { ... }
+  - id: KT-17
+    name: Jetpack Navigation Args
+    severity: MEDIUM
+    category: Android
+    description: Navigation arguments without null check
+    detection_pattern: arguments\\?\\.(get|getString)(?!.*\\?:|default)
+    fix_pattern: Provide default values or check null
+    cwe: CWE-476
+    example_code: '// Crash\nval id = arguments?.getString(\id\")!!\n// SAFE\nval id = arguments?.getString(\"id\") ?: return"'
+  - id: KT-18
+    name: Compose Remember Key
+    severity: MEDIUM
+    category: Android
+    description: remember without key loses state on recomposition
+    detection_pattern: remember\\s*\\{(?!.*key)
+    fix_pattern: Use remember(key) for dependent values
+    cwe: CWE-1188
+    example_code: // Wrong state\nremember { expensiveCalc() }\n// SAFE\nremember(dependency) { expensiveCalc(dependency) }
+  - id: KT-19
+    name: Channel Close Leak
+    severity: MEDIUM
+    category: Concurrency
+    description: Channel not closed leaks resources
+    detection_pattern: Channel<(?!.*close|consumeEach)
+    fix_pattern: Close channel or use consumeEach
+    cwe: CWE-772
+    example_code: // Leak\nval channel = Channel<Int>()\n// SAFE\nchannel.close() or channel.consumeEach { ... }
+  - id: KT-20
+    name: runBlocking Main
+    severity: HIGH
+    category: Android
+    description: runBlocking on main thread causes ANR
+    detection_pattern: runBlocking(?!.*Dispatchers\\.IO|withContext)
+    fix_pattern: Use launch or withContext(Dispatchers.IO)
+    cwe: CWE-400
+    example_code: // ANR\nrunBlocking { networkCall() }\n// SAFE\nlifecycleScope.launch { withContext(IO) { networkCall() } }

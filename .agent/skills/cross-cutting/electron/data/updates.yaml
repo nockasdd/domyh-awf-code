@@ -1,0 +1,99 @@
+# Electron Auto Update Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: updates
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: upd001
+    name: electron-updater
+    category: updates
+    version: all
+    description: Auto-update library with GitHub, S3, and generic server support
+    text: electron updater auto update check install download notify
+    example: |
+      import { autoUpdater } from 'electron-updater';
+
+      autoUpdater.checkForUpdatesAndNotify();
+      autoUpdater.on('update-downloaded', () => {
+        autoUpdater.quitAndInstall();
+      });
+    severity: HIGH
+    recommended: true
+    docs_url: https://www.electron.build/auto-update
+
+  - id: upd002
+    name: differential update
+    category: updates
+    version: all
+    description: Download only changed chunks to reduce bandwidth
+    text: differential update delta patch bandwidth efficient blockmap
+    example: |
+      // electron-builder.json
+      {
+        "publish": { "provider": "github" },
+        "differentialDownload": true
+      }
+    severity: MEDIUM
+
+  - id: upd003
+    name: code signing
+    category: updates
+    version: all
+    description: Sign app for distribution and auto-update verification
+    text: code signing certificate mac windows notarize codesign verify
+    example: |
+      # Environment variables for CI
+      CSC_LINK=path/to/certificate.p12
+      CSC_KEY_PASSWORD=your-password
+
+      # electron-builder.json
+      {
+        "win": {
+          "signingHashAlgorithms": ["sha256"],
+          "sign": "./scripts/sign.js"
+        }
+      }
+    severity: CRITICAL
+    platform: all
+
+  - id: upd004
+    name: notarization
+    category: updates
+    version: all
+    description: Apple notarization for macOS distribution
+    text: notarization macos apple notarize hardened runtime gatekeeper
+    example: |
+      // electron-builder.json
+      {
+        "mac": {
+          "hardenedRuntime": true,
+          "gatekeeperAssess": false,
+          "notarize": {
+            "teamId": "YOUR_TEAM_ID"
+          }
+        }
+      }
+    severity: CRITICAL
+    platform: macos
+
+  - id: upd005
+    name: update progress
+    category: updates
+    version: all
+    description: Track and display update download progress
+    text: update progress download percentage notify ui display
+    example: |
+      autoUpdater.on('download-progress', (progress) => {
+        mainWindow.webContents.send('update:progress', {
+          percent: progress.percent,
+          transferred: progress.transferred,
+          total: progress.total
+        });
+      });
+    severity: LOW

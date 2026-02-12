@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: alerting_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: alerting-patterns.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: ALT-001
+    name: SLO-Based Alerts
+    category: Alerting
+    description: Alert on SLO violations
+    example: Error budget burn rate
+    level: intermediate
+  - id: ALT-002
+    name: Multi-Window Burn Rate
+    category: Alerting
+    description: Short + long window alerts
+    example: 1h=14x OR 6h=6x burn rate
+    level: advanced
+  - id: ALT-003
+    name: Error Budget Alerts
+    category: Alerting
+    description: Alert when budget consumed
+    example: 50% budget used = warning
+    level: intermediate
+  - id: ALT-004
+    name: Symptom-Based Alerts
+    category: Alerting
+    description: Alert on user impact
+    example: Latency > SLO target
+    level: intermediate
+  - id: ALT-005
+    name: Cause-Based Alerts
+    category: Alerting
+    description: Alert on underlying issues
+    example: CPU > 90% (less recommended)
+    level: intermediate
+  - id: ALT-006
+    name: Alert Severity Levels
+    category: Alerting
+    description: P1/P2/P3/P4 classification
+    example: P1 = page, P4 = ticket
+    level: beginner
+  - id: ALT-007
+    name: Alert Routing
+    category: Alerting
+    description: Send to right channel
+    example: Slack for low, PagerDuty for high
+    level: intermediate
+  - id: ALT-008
+    name: Alert Grouping
+    category: Alerting
+    description: Combine related alerts
+    example: Group by service + severity
+    level: intermediate
+  - id: ALT-009
+    name: Alert Silencing
+    category: Alerting
+    description: Suppress during maintenance
+    example: Silence for 1h during deploy
+    level: beginner
+  - id: ALT-010
+    name: Alert Inhibition
+    category: Alerting
+    description: Suppress child alerts
+    example: If cluster down, suppress pod alerts
+    level: advanced
+  - id: ALT-011
+    name: Alert Fatigue
+    category: Alerting
+    description: Too many alerts desensitize
+    example: Reduce noise, focus on actionable
+    level: intermediate
+  - id: ALT-012
+    name: Runbook Links
+    category: Alerting
+    description: Include remediation steps
+    example: Each alert links to runbook
+    level: beginner
+  - id: ALT-013
+    name: Alert Testing
+    category: Alerting
+    description: Verify alerts fire correctly
+    example: Synthetic failures, chaos testing
+    level: intermediate
+  - id: ALT-014
+    name: On-Call Practices
+    category: Alerting
+    description: Rotation, escalation, handoff
+    example: Clear rotation schedule
+    level: intermediate
+  - id: ALT-015
+    name: Incident Levels
+    category: Alerting
+    description: SEV1/SEV2/SEV3 classification
+    example: SEV1 = customer impact
+    level: intermediate
+  - id: ALT-016
+    name: Post-Incident Review
+    category: Alerting
+    description: Blameless retrospectives
+    example: Focus on systems not people
+    level: intermediate
+  - id: ALT-017
+    name: Alert-to-Incident
+    category: Alerting
+    description: When to create incidents
+    example: Multiple alerts = incident
+    level: beginner
+  - id: ALT-018
+    name: Dashboard Alerts
+    category: Alerting
+    description: Visual alert status
+    example: Red/yellow/green indicators
+    level: beginner
+  - id: ALT-019
+    name: Threshold Tuning
+    category: Alerting
+    description: Adjust alert thresholds
+    example: Analyze historical data
+    level: intermediate
+  - id: ALT-020
+    name: Alert as Code
+    category: Alerting
+    description: Version control alert rules
+    example: Terraform, Jsonnet, YAML
+    level: intermediate
+  - id: ALT-021
+    name: Dead Man's Switch
+    category: Alerting
+    description: Alert if no data received
+    example: Heartbeat monitoring
+    level: intermediate
+  - id: ALT-022
+    name: Anomaly Alerts
+    category: Alerting
+    description: ML-based threshold detection
+    example: Dynamic baseline comparison
+    level: advanced
+  - id: ALT-023
+    name: Composite Alerts
+    category: Alerting
+    description: Multiple conditions combined
+    example: A AND B OR C
+    level: advanced
+  - id: ALT-024
+    name: Alert Deduplication
+    category: Alerting
+    description: Prevent duplicate pages
+    example: Dedupe by fingerprint
+    level: intermediate
+  - id: ALT-025
+    name: Alert History
+    category: Alerting
+    description: Track alert trends
+    example: Reduce repeat offenders
+    level: intermediate

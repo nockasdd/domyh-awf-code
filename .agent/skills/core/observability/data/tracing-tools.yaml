@@ -1,0 +1,135 @@
+metadata:
+  skill: observability
+  domain: tracing_tools
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: tracing-tools.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: TOOL-001
+    name: Jaeger
+    category: TraceTools
+    description: Distributed tracing platform by Uber
+    example: Open source, CNCF graduated
+    level: beginner
+  - id: TOOL-002
+    name: Jaeger Query
+    category: TraceTools
+    description: Search traces by service/tags
+    example: Find traces with http.status=500
+    level: beginner
+  - id: TOOL-003
+    name: Jaeger Agent
+    category: TraceTools
+    description: Sidecar for receiving spans
+    example: UDP port 6831 from client SDKs
+    level: intermediate
+  - id: TOOL-004
+    name: Jaeger Collector
+    category: TraceTools
+    description: Central span processing
+    example: Write to storage backend
+    level: intermediate
+  - id: TOOL-005
+    name: Zipkin
+    category: TraceTools
+    description: Distributed tracing by Twitter
+    example: Alternative to Jaeger
+    level: intermediate
+  - id: TOOL-006
+    name: Tempo
+    category: TraceTools
+    description: Grafana's trace backend
+    example: Object storage, cost-effective
+    level: intermediate
+  - id: TOOL-007
+    name: Tempo + Grafana
+    category: TraceTools
+    description: Trace visualization in Grafana
+    example: TraceQL queries, exemplars
+    level: intermediate
+  - id: TOOL-008
+    name: X-Ray
+    category: TraceTools
+    description: AWS distributed tracing
+    example: Native AWS service integration
+    level: intermediate
+  - id: TOOL-009
+    name: Cloud Trace
+    category: TraceTools
+    description: Google Cloud tracing
+    example: Stackdriver integration
+    level: intermediate
+  - id: TOOL-010
+    name: Azure Monitor
+    category: TraceTools
+    description: Microsoft distributed tracing
+    example: Application Insights integration
+    level: intermediate
+  - id: TOOL-011
+    name: Datadog APM
+    category: TraceTools
+    description: Commercial tracing solution
+    example: dd-trace library, auto-instrumentation
+    level: intermediate
+  - id: TOOL-012
+    name: New Relic APM
+    category: TraceTools
+    description: Commercial tracing solution
+    example: Full-stack observability platform
+    level: intermediate
+  - id: TOOL-013
+    name: Lightstep
+    category: TraceTools
+    description: Enterprise tracing platform
+    example: ServiceNow acquired
+    level: advanced
+  - id: TOOL-014
+    name: Honeycomb
+    category: TraceTools
+    description: Query-first observability
+    example: High-cardinality exploration
+    level: advanced
+  - id: TOOL-015
+    name: SigNoz
+    category: TraceTools
+    description: Open source APM
+    example: Traces, metrics, logs in one
+    level: intermediate
+  - id: TOOL-016
+    name: Aspecto
+    category: TraceTools
+    description: OpenTelemetry-native tracing
+    example: Visual trace debugging
+    level: intermediate
+  - id: TOOL-017
+    name: Trace Storage
+    category: TraceTools
+    description: Backend options
+    example: Cassandra, Elasticsearch, Object Storage
+    level: intermediate
+  - id: TOOL-018
+    name: Trace Retention
+    category: TraceTools
+    description: How long to keep traces
+    example: Balance cost vs debugging needs
+    level: intermediate
+  - id: TOOL-019
+    name: Trace Indexing
+    category: TraceTools
+    description: Searchable attributes
+    example: Index service, operation, error
+    level: advanced
+  - id: TOOL-020
+    name: TraceQL
+    category: TraceTools
+    description: Tempo query language
+    example: "{ span.http.status_code >= 400 }"
+    level: advanced

@@ -4,8 +4,8 @@
   Research-backed: Found in the Middle (2024), Instruction Hierarchy (OpenAI 2024)
   
   SINGLE SOURCE OF TRUTH for all IDE/Agents
-  - Loaded by CONTEXT_LOADER.yaml into HEAD zone
-  - GEMINI.md, CLAUDE.md reference this file
+  - Loaded via IDE root configs (GEMINI.md, CLAUDE.md, etc.)
+  - Referenced by all agent configurations
   
   USAGE:
   - severity="block" → Response INVALID if violated
@@ -38,24 +38,34 @@
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   
   <requirement id="LANG_001" tier="1" severity="block">
-    <text>Always respond in Vietnamese (vi-VN) unless explicitly requested otherwise</text>
+    <text>Respond in the language configured in .agent/memory/state.json → preferences.language. Default: vi-VN. Load .agent/i18n/{lang}.yaml for response rules and tone.</text>
     <anchor>MUST • REQUIRED • CLASS:HARD_CONSTRAINT • LABEL:LANGUAGE_POLICY</anchor>
-    <check type="regex" pattern="[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]"/>
+    <config>
+      <source>.agent/memory/state.json</source>
+      <key>preferences.language</key>
+      <default>vi</default>
+      <i18n_file>.agent/i18n/{lang}.yaml</i18n_file>
+    </config>
+  </requirement>
+  
+  <requirement id="ENV_001" tier="1" severity="warn">
+    <text>Detect install mode from .agent/config.yaml → install_mode. Global: .agent/ is in user home (~/.gemini/, ~/.config/claude/, etc.). Project: .agent/ is in project root. Adjust file paths accordingly.</text>
+    <anchor>SHOULD • CLASS:ENVIRONMENT • LABEL:INSTALL_MODE</anchor>
+    <config>
+      <source>.agent/config.yaml</source>
+      <key>install_mode</key>
+      <values>global, project</values>
+    </config>
   </requirement>
   
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   <!-- TIER 2: TOOL PREFERENCES -->
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   
-  <requirement id="MCP_001" tier="2" severity="block">
-    <text>Use MCP tools (Playwright, FS, Git) instead of browser tools</text>
-    <anchor>MUST • SECURITY_CONSTRAINT • NEVER use browser tool • CLASS:TOOL_POLICY</anchor>
+  <requirement id="MCP_001" tier="2" severity="warn">
+    <text>Prefer MCP tools over browser/shell tools when available. Check available MCP servers at task start. Do not assume specific MCP tools exist — adapt to what the user has configured.</text>
+    <anchor>SHOULD • CLASS:TOOL_POLICY • LABEL:MCP_PREFERENCE</anchor>
     <rationale>MCP tools provide better control, logging, and security</rationale>
-  </requirement>
-  
-  <requirement id="MCP_002" tier="2" severity="warn">
-    <text>Prefer MCP NotebookLM for research when available</text>
-    <anchor>PREFER • CLASS:TOOL_PREFERENCE</anchor>
   </requirement>
   
   <!-- ═══════════════════════════════════════════════════════════════════ -->
@@ -70,31 +80,8 @@
   </requirement>
   
   <requirement id="SESSION_002" tier="3" severity="warn">
-    <text>Auto-detect user preferences when trigger phrases detected in message</text>
+    <text>Auto-detect user preferences when trigger phrases indicate persistent rules (e.g., "from now on", "always", "never", "remember", "từ giờ", "luôn luôn"). If detected, check SESSION_003 for sensitive content, then save to .agent/memory/session_rules.json.</text>
     <anchor>SHOULD • CLASS:PREFERENCE_LEARNING • LABEL:AUTO_SAVE</anchor>
-    <triggers lang="vi">
-      <future>từ giờ, từ nay, bắt đầu từ bây giờ, kể từ đây</future>
-      <always>luôn luôn, luôn, lúc nào cũng, mọi lúc</always>
-      <never>không bao giờ, đừng bao giờ, tuyệt đối không</never>
-      <prefer>mặc định, thích hơn, ưu tiên, dùng... thay vì</prefer>
-      <remember>nhớ, đừng quên, ghi nhớ</remember>
-      <stop>đừng... nữa, ngừng, thôi</stop>
-    </triggers>
-    <triggers lang="en">
-      <future>from now on, going forward, henceforth</future>
-      <always>always, every time, at all times</always>
-      <never>never, don't ever, absolutely not</never>
-      <prefer>prefer, by default, instead of, switch to</prefer>
-      <remember>remember to, don't forget, make sure to</remember>
-      <stop>stop doing, no more, don't... anymore</stop>
-    </triggers>
-    <action>
-      1. Detect trigger phrase in user message
-      2. Extract the rule/preference content
-      3. Check SESSION_003 for sensitive content
-      4. If safe, save to .agent/memory/session_rules.json
-      5. Confirm: "✅ Đã lưu: [rule summary]"
-    </action>
   </requirement>
   
   <requirement id="SESSION_003" tier="3" severity="block">
@@ -137,6 +124,25 @@
   <requirement id="EXEC_003" tier="4" severity="warn">
     <text>Stop and ask when information is missing or ambiguous</text>
     <anchor>SHOULD • CLASS:CLARIFICATION</anchor>
+  </requirement>
+  
+  <requirement id="EXEC_004" tier="4" severity="warn">
+    <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect_stack MCP tool when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln/CMakeLists.txt/pyproject.toml, match against _router.yaml. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive).</text>
+    <anchor>SHOULD • CLASS:SKILL_SELECTION • LABEL:AUTO_DETECT</anchor>
+    <config>
+      <router>.agent/skills/_router.yaml</router>
+      <categories>.agent/skills/_categories.yaml</categories>
+    </config>
+  </requirement>
+  
+  <requirement id="EXEC_005" tier="4" severity="warn">
+    <text>DRY: Before creating new functions, search existing utils/helpers/shared code. Before reporting "missing", check _deprecated/, manifest.yaml, and related directories for refactored logic.</text>
+    <anchor>SHOULD • CLASS:QUALITY • LABEL:DRY_ENFORCEMENT</anchor>
+  </requirement>
+  
+  <requirement id="EXEC_006" tier="4" severity="warn">
+    <text>Incremental Changes: Make small batches (1-3 files), verify after each step, commit atomically. Break large features into sequential steps.</text>
+    <anchor>SHOULD • CLASS:QUALITY • LABEL:INCREMENTAL</anchor>
   </requirement>
   
 </rules>

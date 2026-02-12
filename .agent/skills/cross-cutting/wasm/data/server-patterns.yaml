@@ -1,0 +1,89 @@
+# Server-side WASM Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: WASM-SRV-001
+    name: Spin Framework
+    category: serverless
+    description: |
+      Fermyon Spin: serverless WASM microservices.
+    example: |
+      // Rust with Spin SDK
+      use spin_sdk::http::{IntoResponse, Request, Response};
+      use spin_sdk::http_component;
+
+      #[http_component]
+      fn handle_request(req: Request) -> anyhow::Result<impl IntoResponse> {
+        Ok(Response::builder()
+          .status(200)
+          .header("content-type", "application/json")
+          .body(r#"{"message": "Hello from WASM!"}"#)
+          .build())
+      }
+
+      // spin.toml
+      // [[trigger.http]]
+      // route = "/api/hello"
+      // component = "hello"
+
+      // Run: spin build && spin up
+
+  - id: WASM-SRV-002
+    name: wasmCloud
+    category: distributed
+    description: |
+      Distributed WASM platform with capability-based security.
+    text: |
+      Architecture:
+      - Actors: WASM components (business logic)
+      - Capability Providers: Infrastructure (HTTP, KV, messaging)
+      - Lattice: Distributed mesh of wasmCloud hosts
+
+      Benefits: Portable, deny-by-default security, hot-swappable
+
+  - id: WASM-SRV-003
+    name: wasmtime Runtime
+    category: runtime
+    description: |
+      Standalone WASM runtime by Bytecode Alliance.
+    example: |
+      // Embed WASM in Rust application
+      use wasmtime::*;
+
+      let engine = Engine::default();
+      let module = Module::from_file(&engine, "component.wasm")?;
+      let mut store = Store::new(&engine, ());
+      let instance = Instance::new(&mut store, &module, &[])?;
+
+      let add = instance.get_typed_func::<(i32, i32), i32>(&mut store, "add")?;
+      let result = add.call(&mut store, (2, 3))?;
+      assert_eq!(result, 5);
+
+  - id: WASM-SRV-004
+    name: WASM vs Containers
+    category: comparison
+    description: |
+      When to use WASM vs Docker containers.
+    text: |
+      | Feature | WASM | Containers |
+      |---------|------|-----------|
+      | Startup | ~1ms | ~100ms+ |
+      | Size | ~1-10MB | ~50-500MB |
+      | Isolation | Sandbox | Namespace |
+      | Portability | Any arch | Same arch |
+      | Ecosystem | Growing | Mature |
+      | Use case | Edge, plugins | Services |
+
+  - id: WASM-SRV-005
+    name: Plugin System with WASM
+    category: architecture
+    description: |
+      Use WASM for safe, sandboxed plugin execution.
+    text: |
+      Benefits:
+      - Language-agnostic plugins (Rust, Go, Python, JS)
+      - Sandboxed execution (no file/network access by default)
+      - Deterministic (same input → same output)
+      - Fast startup (~1ms)
+
+      Examples: Envoy filters, Shopify Functions, Grafana plugins

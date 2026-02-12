@@ -1,0 +1,346 @@
+metadata:
+  skill: coding-rules
+  domain: build_systems
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: build-systems.yaml
+  patterns_count: 37
+  columns:
+    - language
+    - build_system
+    - primary_file
+    - secondary_files
+    - version_indicator
+    - build_command
+    - clean_command
+    - test_command
+patterns:
+  - id: item_001
+    language: C++
+    build_system: Visual Studio 2026
+    primary_file: "*.slnx"
+    secondary_files: "*.vcxproj;*.vcxproj.filters"
+    version_indicator: PlatformToolset=v145 (VS2026)
+    build_command: msbuild {sln} /p:Configuration=Release /p:Platform=x64
+    clean_command: msbuild {sln} /t:Clean
+  - id: item_002
+    language: C++
+    build_system: Visual Studio 2022
+    primary_file: "*.sln"
+    secondary_files: "*.vcxproj;*.vcxproj.filters"
+    version_indicator: PlatformToolset=v143 (VS2022)
+    build_command: msbuild {sln} /p:Configuration=Release /p:Platform=x64
+    clean_command: msbuild {sln} /t:Clean
+  - id: item_003
+    language: C++
+    build_system: CMake 4.0
+    primary_file: CMakeLists.txt
+    secondary_files: CMakeCache.txt;CMakePresets.json
+    version_indicator: cmake_minimum_required(VERSION 4.0)
+    build_command: cmake --build build --config Release -j8
+    clean_command: cmake --build build --target clean
+    test_command: ctest --test-dir build --output-on-failure
+  - id: item_004
+    language: C++
+    build_system: CMake 3.x
+    primary_file: CMakeLists.txt
+    secondary_files: CMakeCache.txt;CMakePresets.json
+    version_indicator: cmake_minimum_required(VERSION 3.x)
+    build_command: cmake --build build --config Release
+    clean_command: cmake --build build --target clean
+    test_command: ctest --test-dir build --output-on-failure
+  - id: item_005
+    language: C++
+    build_system: Make
+    primary_file: Makefile
+    secondary_files: GNUmakefile
+    version_indicator: N/A
+    build_command: make
+    clean_command: make clean
+    test_command: make test
+  - id: item_006
+    language: C++
+    build_system: Ninja
+    primary_file: build.ninja
+    secondary_files: CMakeLists.txt
+    version_indicator: ninja version
+    build_command: ninja -C build
+    clean_command: ninja -C build clean
+    test_command: ninja -C build test
+  - id: item_007
+    language: C#
+    build_system: MSBuild .NET 10
+    primary_file: "*.csproj"
+    secondary_files: "*.slnx"
+    version_indicator: <TargetFramework>net10.0</TargetFramework>
+    build_command: dotnet build -c Release
+    clean_command: dotnet clean
+    test_command: dotnet test
+  - id: item_008
+    language: C#
+    build_system: MSBuild .NET 9
+    primary_file: "*.csproj"
+    secondary_files: "*.sln"
+    version_indicator: <TargetFramework>net9.0</TargetFramework>
+    build_command: dotnet build -c Release
+    clean_command: dotnet clean
+    test_command: dotnet test
+  - id: item_009
+    language: C#
+    build_system: MSBuild (SDK-style)
+    primary_file: "*.csproj"
+    secondary_files: "*.sln"
+    version_indicator: Sdk="Microsoft.NET.Sdk"
+    build_command: dotnet build -c Release
+    clean_command: dotnet clean
+    test_command: dotnet test
+  - id: item_010
+    language: C#
+    build_system: MSBuild (Legacy)
+    primary_file: "*.csproj"
+    secondary_files: "*.sln;packages.config"
+    version_indicator: ToolsVersion="4.0"
+    build_command: msbuild {csproj} /p:Configuration=Release
+    clean_command: msbuild {csproj} /t:Clean
+  - id: item_011
+    language: Java
+    build_system: Maven
+    primary_file: pom.xml
+    secondary_files: pom.xml (parent)
+    version_indicator: <modelVersion>4.0.0</modelVersion>
+    build_command: mvn package -DskipTests
+    clean_command: mvn clean
+    test_command: mvn test
+  - id: item_012
+    language: Java
+    build_system: Gradle
+    primary_file: build.gradle
+    secondary_files: settings.gradle;gradle.properties
+    version_indicator: id 'java'
+    build_command: ./gradlew build
+    clean_command: ./gradlew clean
+    test_command: ./gradlew test
+  - id: item_013
+    language: Kotlin
+    build_system: Gradle
+    primary_file: build.gradle.kts
+    secondary_files: settings.gradle.kts
+    version_indicator: id 'kotlin'
+    build_command: ./gradlew build
+    clean_command: ./gradlew clean
+    test_command: ./gradlew test
+  - id: item_014
+    language: JavaScript
+    build_system: npm
+    primary_file: package.json
+    secondary_files: package-lock.json
+    version_indicator: N/A
+    build_command: npm run build
+    clean_command: rm -rf node_modules dist
+    test_command: npm test
+  - id: item_015
+    language: JavaScript
+    build_system: Yarn
+    primary_file: package.json
+    secondary_files: yarn.lock
+    version_indicator: N/A
+    build_command: yarn build
+    clean_command: rm -rf node_modules dist
+    test_command: yarn test
+  - id: item_016
+    language: JavaScript
+    build_system: pnpm
+    primary_file: package.json
+    secondary_files: pnpm-lock.yaml
+    version_indicator: N/A
+    build_command: pnpm build
+    clean_command: rm -rf node_modules dist
+    test_command: pnpm test
+  - id: item_017
+    language: JavaScript
+    build_system: Bun
+    primary_file: package.json
+    secondary_files: bun.lockb
+    version_indicator: N/A
+    build_command: bun run build
+    clean_command: rm -rf node_modules dist
+    test_command: bun test
+  - id: item_018
+    language: JavaScript
+    build_system: Deno
+    primary_file: deno.json
+    secondary_files: deno.lock
+    version_indicator: N/A
+    build_command: deno task build
+    clean_command: rm -rf .deno
+    test_command: deno test
+  - id: item_019
+    language: TypeScript
+    build_system: npm
+    primary_file: package.json
+    secondary_files: tsconfig.json
+    version_indicator: typescript in devDependencies
+    build_command: npm run build
+    clean_command: rm -rf node_modules dist
+    test_command: npm test
+  - id: item_020
+    language: TypeScript
+    build_system: Bun
+    primary_file: package.json
+    secondary_files: bun.lockb;tsconfig.json
+    version_indicator: typescript in devDependencies
+    build_command: bun run build
+    clean_command: rm -rf node_modules dist
+    test_command: bun test
+  - id: item_021
+    language: TypeScript
+    build_system: Deno
+    primary_file: deno.json
+    secondary_files: deno.lock
+    version_indicator: N/A
+    build_command: deno task build
+    clean_command: rm -rf .deno
+    test_command: deno test
+  - id: item_022
+    language: Python
+    build_system: pip
+    primary_file: requirements.txt
+    secondary_files: setup.py;pyproject.toml
+    version_indicator: N/A
+    build_command: pip install -r requirements.txt
+    clean_command: rm -rf __pycache__
+    test_command: pytest
+  - id: item_023
+    language: Python
+    build_system: Poetry
+    primary_file: pyproject.toml
+    secondary_files: poetry.lock
+    version_indicator: "[tool.poetry]"
+    build_command: poetry install && poetry build
+    clean_command: rm -rf dist
+    test_command: poetry run pytest
+  - id: item_024
+    language: Python
+    build_system: uv
+    primary_file: pyproject.toml
+    secondary_files: uv.lock
+    version_indicator: "[tool.uv]"
+    build_command: uv sync && uv build
+    clean_command: rm -rf dist
+    test_command: uv run pytest
+  - id: item_025
+    language: Rust
+    build_system: Cargo
+    primary_file: Cargo.toml
+    secondary_files: Cargo.lock
+    version_indicator: "[package]"
+    build_command: cargo build --release
+    clean_command: cargo clean
+    test_command: cargo test
+  - id: item_026
+    language: Go
+    build_system: go mod
+    primary_file: go.mod
+    secondary_files: go.sum
+    version_indicator: module path
+    build_command: go build ./...
+    clean_command: go clean
+    test_command: go test ./...
+  - id: item_027
+    language: Dart
+    build_system: pub
+    primary_file: pubspec.yaml
+    secondary_files: pubspec.lock
+    version_indicator: "sdk: flutter"
+    build_command: flutter build
+    clean_command: flutter clean
+    test_command: flutter test
+  - id: item_028
+    language: Swift
+    build_system: SwiftPM
+    primary_file: Package.swift
+    secondary_files: Package.resolved
+    version_indicator: // swift-tools-version:5.9
+    build_command: swift build -c release
+    clean_command: swift package clean
+    test_command: swift test
+  - id: item_029
+    language: Swift
+    build_system: Xcode
+    primary_file: "*.xcodeproj"
+    secondary_files: "*.xcworkspace"
+    version_indicator: N/A
+    build_command: xcodebuild -scheme {scheme} -configuration Release
+    clean_command: xcodebuild clean
+    test_command: xcodebuild test
+  - id: item_030
+    language: Ruby
+    build_system: Bundler
+    primary_file: Gemfile
+    secondary_files: Gemfile.lock
+    version_indicator: source 'https://rubygems.org'
+    build_command: bundle install
+    clean_command: rm -rf vendor/bundle
+    test_command: bundle exec rspec
+  - id: item_031
+    language: PHP
+    build_system: Composer
+    primary_file: composer.json
+    secondary_files: composer.lock
+    version_indicator: N/A
+    build_command: composer install
+    clean_command: rm -rf vendor
+    test_command: ./vendor/bin/phpunit
+  - id: item_032
+    language: Elixir
+    build_system: Mix
+    primary_file: mix.exs
+    secondary_files: mix.lock
+    version_indicator: def project do
+    build_command: mix compile
+    clean_command: mix clean
+    test_command: mix test
+  - id: item_033
+    language: Scala
+    build_system: sbt
+    primary_file: build.sbt
+    secondary_files: project/build.properties
+    version_indicator: scalaVersion :=
+    build_command: sbt compile
+    clean_command: sbt clean
+    test_command: sbt test
+  - id: item_034
+    language: Lua
+    build_system: LuaRocks
+    primary_file: "*.rockspec"
+    secondary_files: N/A
+    version_indicator: rockspec_format
+    build_command: luarocks build
+    clean_command: luarocks remove
+    test_command: busted
+  - id: item_035
+    language: Assembly
+    build_system: Make
+    primary_file: Makefile
+    secondary_files: N/A
+    version_indicator: N/A
+    build_command: make
+    clean_command: make clean
+  - id: item_036
+    language: C
+    build_system: Make
+    primary_file: Makefile
+    secondary_files: N/A
+    version_indicator: N/A
+    build_command: make
+    clean_command: make clean
+    test_command: make test
+  - id: item_037
+    language: C
+    build_system: CMake
+    primary_file: CMakeLists.txt
+    secondary_files: CMakeCache.txt
+    version_indicator: project(... LANGUAGES C)
+    build_command: cmake --build build
+    clean_command: cmake --build build --target clean
+    test_command: ctest

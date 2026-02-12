@@ -1,6 +1,6 @@
 ---
 name: developer
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "dev-001"
 
 # =============================================================================
@@ -66,6 +66,9 @@ tools:
     - multi_replace_file_content
     - write_to_file
     - run_command
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - deploy
     - database_modify
@@ -177,4 +180,4 @@ output_template: |
   - [ ] Documentation updated
 ---
 
-# DOMYH Awesome Code v6.1.2 • Developer Persona
+# DOMYH Awesome Code • Developer Persona

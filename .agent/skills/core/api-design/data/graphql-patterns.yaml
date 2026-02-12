@@ -1,0 +1,165 @@
+metadata:
+  skill: api-design
+  domain: graphql_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: graphql-patterns.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - level
+    - category
+patterns:
+  - id: GQL-01
+    pattern: PascalCase Types
+    description: Use PascalCase for type names
+    example: type User type OrderItem
+    level: BASIC
+    category: naming
+  - id: GQL-02
+    pattern: camelCase Fields
+    description: Use camelCase for field names
+    example: firstName lastName createdAt
+    level: BASIC
+    category: naming
+  - id: GQL-03
+    pattern: Domain-Driven Schema
+    description: Model schema around business domains
+    example: type Product type Inventory
+    level: BASIC
+    category: design
+  - id: GQL-04
+    pattern: Strong Typing
+    description: Leverage type system fully
+    example: scalar DateTime enum Status
+    level: BASIC
+    category: design
+  - id: GQL-05
+    pattern: Enum Finite Values
+    description: Use enums for fixed value sets
+    example: enum OrderStatus {PENDING SHIPPED}
+    level: BASIC
+    category: design
+  - id: GQL-06
+    pattern: Interface Shared Fields
+    description: Use interfaces for common fields
+    example: "interface Node { id: ID! }"
+    level: INTERMEDIATE
+    category: design
+  - id: GQL-07
+    pattern: Union Polymorphism
+    description: Use unions for different types
+    example: union SearchResult = User | Product
+    level: INTERMEDIATE
+    category: design
+  - id: GQL-08
+    pattern: Input Types Mutations
+    description: Use input types for mutations
+    example: input CreateUserInput { name email }
+    level: BASIC
+    category: mutations
+  - id: GQL-09
+    pattern: Nullable by Default
+    description: Only use Non-Null when guaranteed
+    example: "field: String vs field: String!"
+    level: INTERMEDIATE
+    category: design
+  - id: GQL-10
+    pattern: Cursor Pagination
+    description: Use connection pattern for lists
+    example: first after last before edges
+    level: ADVANCED
+    category: pagination
+  - id: GQL-11
+    pattern: Connection Pattern
+    description: Relay-style pagination
+    example: type UserConnection { edges pageInfo }
+    level: ADVANCED
+    category: pagination
+  - id: GQL-12
+    pattern: Query Depth Limit
+    description: Prevent deeply nested queries
+    example: "maxDepth: 7 in validation"
+    level: BASIC
+    category: security
+  - id: GQL-13
+    pattern: Query Complexity
+    description: Limit query complexity score
+    example: "complexityLimit: 1000"
+    level: INTERMEDIATE
+    category: security
+  - id: GQL-14
+    pattern: Rate Limiting
+    description: Limit queries per time window
+    example: 100 queries per minute per user
+    level: BASIC
+    category: security
+  - id: GQL-15
+    pattern: DataLoader Batching
+    description: Batch N+1 queries with DataLoader
+    example: userLoader.load(userId)
+    level: ADVANCED
+    category: performance
+  - id: GQL-16
+    pattern: DataLoader Caching
+    description: Cache within single request
+    example: loader caches per request context
+    level: ADVANCED
+    category: performance
+  - id: GQL-17
+    pattern: N+1 Detection
+    description: Detect N+1 query patterns
+    example: Monitoring resolver execution count
+    level: ADVANCED
+    category: performance
+  - id: GQL-18
+    pattern: Context Object
+    description: Pass shared data via context
+    example: context.user context.db
+    level: BASIC
+    category: resolvers
+  - id: GQL-19
+    pattern: Resolver Focus
+    description: Keep resolvers thin data-fetching
+    example: Extract logic to service layer
+    level: INTERMEDIATE
+    category: resolvers
+  - id: GQL-20
+    pattern: Error Extensions
+    description: Add structured error data
+    example: "extensions: { code field }"
+    level: INTERMEDIATE
+    category: errors
+  - id: GQL-21
+    pattern: Partial Success
+    description: Return partial data with errors
+    example: "data: {} errors: [{path}]"
+    level: INTERMEDIATE
+    category: errors
+  - id: GQL-22
+    pattern: Deprecation
+    description: Use @deprecated directive
+    example: '@deprecated(reason: \"Use newField\")'
+    level: BASIC
+    category: evolution
+  - id: GQL-23
+    pattern: Schema Documentation
+    description: Document types and fields
+    example: \"\"\"User account\"\"\" type User
+    level: BASIC
+    category: documentation
+  - id: GQL-24
+    pattern: Persisted Queries
+    description: Cache query strings server-side
+    example: queryId hash instead of full query
+    level: ADVANCED
+    category: performance
+  - id: GQL-25
+    pattern: HTTP Caching
+    description: Support GET with persisted queries
+    example: Cache-Control for read queries
+    level: ADVANCED
+    category: caching

@@ -1,0 +1,83 @@
+# Electron Window Management Patterns - HSA Electron Skill
+# Version: Electron 35-40 (2025-2026)
+# Updated: 2026-02-05
+
+metadata:
+  skill: electron
+  domain: window
+  version: "1.0.0"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: win001
+    name: BrowserWindow
+    category: window
+    version: all
+    description: Create and manage application windows
+    text: browser window create main process options config width height
+    example: |
+      const mainWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        webPreferences: { preload, contextIsolation: true }
+      });
+    severity: HIGH
+
+  - id: win002
+    name: roundedCorners
+    category: window
+    version: "35+"
+    description: Windows 11 rounded corners UI customization
+    text: rounded corners windows 11 ui customization style modern
+    example: "new BrowserWindow({ roundedCorners: true })"
+    severity: LOW
+    platform: windows
+
+  - id: win003
+    name: BrowserView
+    category: window
+    version: "5+"
+    description: Embed web content like tabs or panels within a window
+    text: browser view embed webview tab multi view panel content
+    example: |
+      const view = new BrowserView();
+      mainWindow.addBrowserView(view);
+      view.setBounds({ x: 0, y: 0, width: 800, height: 600 });
+    severity: MEDIUM
+
+  - id: win004
+    name: frameless
+    category: window
+    version: all
+    description: Custom titlebar with frameless window
+    text: frameless window custom titlebar draggable transparent border
+    example: |
+      new BrowserWindow({
+        frame: false,
+        transparent: true,
+        titleBarStyle: 'hidden'
+      });
+    severity: MEDIUM
+
+  - id: win005
+    name: alwaysOnTop
+    category: window
+    version: all
+    description: Keep window floating above other applications
+    text: always on top floating window level screen overlay
+    example: "mainWindow.setAlwaysOnTop(true, 'floating');"
+    severity: LOW
+
+  - id: win006
+    name: window state
+    category: window
+    version: all
+    description: Persist and restore window bounds across sessions
+    text: window state persist restore bounds position size session
+    example: |
+      // Use electron-store to persist window bounds
+      const bounds = store.get('windowBounds', { width: 800, height: 600 });
+      mainWindow = new BrowserWindow(bounds);
+      mainWindow.on('close', () => store.set('windowBounds', mainWindow.getBounds()));
+    severity: MEDIUM

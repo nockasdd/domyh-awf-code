@@ -1,0 +1,102 @@
+name: api-protocols
+version: "1.0.0"
+display: Modern API Protocols
+category: tooling
+tier: 1
+priority: 4
+
+desc: "Modern API protocols: GraphQL (federation, schema design, security), tRPC (end-to-end TypeScript), gRPC (high-performance polyglot). Complements core/api-design."
+
+  ### Data Files (3 domains, ~24 patterns)
+  - graphql-patterns.yaml: schema design, federation, security, performance (10)
+  - trpc-patterns.yaml: router, monorepo, Next.js integration (7)
+  - grpc-patterns.yaml: proto design, streaming, channel management (7)
+
+triggers:
+  file_patterns:
+    # GraphQL
+    - "*.graphql"
+    - "*.gql"
+    - "schema.graphql"
+    - "codegen.ts"
+    - "codegen.yml"
+    - "apollo.config.js"
+    - "apollo.config.ts"
+    # gRPC
+    - "*.proto"
+    - "buf.yaml"
+    - "buf.gen.yaml"
+    # tRPC
+    - "**/trpc/**"
+    - "**/trpc.ts"
+  keywords:
+    # GraphQL
+    - graphql
+    - GraphQL
+    - apollo server
+    - apollo client
+    - federation
+    - subgraph
+    - supergraph
+    - schema design
+    - resolver
+    - mutation
+    - subscription
+    - relay
+    - urql
+    - yoga
+    - DataLoader
+    - graphql codegen
+    - persisted queries
+    # tRPC
+    - tRPC
+    - trpc
+    - trpc router
+    - end-to-end type safety
+    - trpc procedure
+    - trpc middleware
+    # gRPC
+    - gRPC
+    - grpc
+    - protocol buffers
+    - protobuf
+    - proto file
+    - grpc streaming
+    - grpc-web
+    - grpc channel
+    - protoc
+
+caps:
+  # GraphQL
+  - Schema design patterns (client-centric, demand-driven)
+  - Federation (subgraphs, gateway, @key/@external/@requires directives)
+  - Security: depth limiting, persisted queries, cost analysis, auth directives
+  - Performance: DataLoader for N+1 prevention, cursor-based pagination
+  - Code generation (GraphQL Codegen, typed resolvers)
+  - Subscriptions (WebSocket transport)
+  # tRPC
+  - End-to-end TypeScript type safety (no codegen needed)
+  - Router/procedure/middleware architecture
+  - Monorepo integration patterns
+  - Next.js App Router integration
+  - React Query integration (automatic cache)
+  # gRPC
+  - Protocol Buffers (schema-first design)
+  - HTTP/2 multiplexed transport
+  - Streaming: client/server/bidirectional
+  - Channel reuse & connection pooling
+  - gRPC-Web for browser clients
+  - Load balancing strategies
+  # Cross-protocol
+  - Hybrid REST + GraphQL + gRPC architecture
+  - API Gateway protocol translation
+
+related_skills:
+  - api-design
+  - typescript
+  - microservices
+
+hsa_adapter:
+  enabled: true
+  data_dir: "skills/tooling/api-protocols/data"
+  preload_data: true

@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: tracing_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: tracing-patterns.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: TRC-001
+    name: Span Basics
+    category: Tracing
+    description: Unit of work with start/end time
+    example: span = tracer.startSpan('operation')
+    level: beginner
+  - id: TRC-002
+    name: Trace ID
+    category: Tracing
+    description: Unique identifier for entire trace
+    example: "128-bit hex: 4bf92f3577b34da6a3ce929d0e0e4736"
+    level: beginner
+  - id: TRC-003
+    name: Span ID
+    category: Tracing
+    description: Unique identifier for single span
+    example: "64-bit hex: 00f067aa0ba902b7"
+    level: beginner
+  - id: TRC-004
+    name: Parent-Child Spans
+    category: Tracing
+    description: Hierarchical relationship
+    example: Root span -> child spans
+    level: beginner
+  - id: TRC-005
+    name: Context Propagation
+    category: Tracing
+    description: Pass trace context across boundaries
+    example: Inject/Extract for HTTP headers
+    level: intermediate
+  - id: TRC-006
+    name: W3C TraceContext
+    category: Tracing
+    description: Standard propagation format
+    example: "traceparent: 00-{traceid}-{spanid}-{flags}"
+    level: intermediate
+  - id: TRC-007
+    name: B3 Propagation
+    category: Tracing
+    description: Zipkin propagation format
+    example: X-B3-TraceId, X-B3-SpanId headers
+    level: intermediate
+  - id: TRC-008
+    name: Span Attributes
+    category: Tracing
+    description: Key-value metadata on spans
+    example: http.method=GET, http.status_code=200
+    level: beginner
+  - id: TRC-009
+    name: Span Events
+    category: Tracing
+    description: Timestamped logs within span
+    example: span.addEvent('cache_miss', timestamp)
+    level: intermediate
+  - id: TRC-010
+    name: Span Status
+    category: Tracing
+    description: Mark success/error/unset
+    example: span.setStatus(StatusCode.ERROR, message)
+    level: beginner
+  - id: TRC-011
+    name: Recording Exceptions
+    category: Tracing
+    description: Attach exception to span
+    example: span.recordException(error)
+    level: beginner
+  - id: TRC-012
+    name: Span Links
+    category: Tracing
+    description: Connect non-parent/child traces
+    example: Batch job links to triggering request
+    level: advanced
+  - id: TRC-013
+    name: Sampling Decisions
+    category: Tracing
+    description: Which traces to record
+    example: Head-based vs tail-based sampling
+    level: intermediate
+  - id: TRC-014
+    name: ParentBased Sampling
+    category: Tracing
+    description: Follow parent's sampling decision
+    example: Consistent across entire trace
+    level: intermediate
+  - id: TRC-015
+    name: TraceIdRatio Sampling
+    category: Tracing
+    description: Sample percentage of traces
+    example: 0.1 = sample 10% of traces
+    level: intermediate
+  - id: TRC-016
+    name: Tail-Based Sampling
+    category: Tracing
+    description: Decide after trace completes
+    example: Keep errors and slow traces
+    level: advanced
+  - id: TRC-017
+    name: Span Kind
+    category: Tracing
+    description: Type of operation
+    example: CLIENT, SERVER, PRODUCER, CONSUMER, INTERNAL
+    level: intermediate
+  - id: TRC-018
+    name: Semantic Attributes
+    category: Tracing
+    description: Standardized attribute names
+    example: http.method, db.system, rpc.service
+    level: intermediate
+  - id: TRC-019
+    name: Baggage
+    category: Tracing
+    description: User-defined key-value propagation
+    example: tenant_id, user_id across services
+    level: intermediate
+  - id: TRC-020
+    name: Trace Visualization
+    category: Tracing
+    description: Waterfall/flame graph views
+    example: Jaeger, Tempo, Zipkin UIs
+    level: beginner
+  - id: TRC-021
+    name: Distributed Latency
+    category: Tracing
+    description: Find slow services in trace
+    example: Sort spans by duration
+    level: intermediate
+  - id: TRC-022
+    name: Error Analysis
+    category: Tracing
+    description: Find failing spans
+    example: Filter by status = ERROR
+    level: beginner
+  - id: TRC-023
+    name: Critical Path
+    category: Tracing
+    description: Identify longest span chain
+    example: Optimize to reduce latency
+    level: advanced
+  - id: TRC-024
+    name: Span Compression
+    category: Tracing
+    description: Reduce span volume
+    example: Compress consecutive same-type spans
+    level: advanced
+  - id: TRC-025
+    name: Trace Correlation
+    category: Tracing
+    description: Link traces to logs/metrics
+    example: Include trace_id in logs
+    level: intermediate

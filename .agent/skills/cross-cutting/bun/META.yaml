@@ -1,14 +1,17 @@
 name: bun
-version: "6.1.2"
+version: "6.2.1"
 category: runtime
-tier: 2
+tier: 3
 
-description: |
-  Bun runtime development patterns.
-  Covers all-in-one JS runtime, bundler, test runner, package manager.
+desc: "Bun 1.3+ runtime development patterns. Covers all-in-one JS runtime, bundler, test runner, package manager."
 
-triggers:
-  file_patterns:
+patterns:
+  total: 24
+  domains:
+    runtime: 10
+    database: 5
+    tooling: 9
+
     - "bun.lockb"
     - "bunfig.toml"
   keywords:
@@ -21,6 +24,14 @@ triggers:
     - bun run
     - bun build
     - bun test
+    - Bun.serve
+    - Bun.file
+    - Bun.sql
+    # Database
+    - bun postgresql
+    - bun mysql
+    - bun sqlite
+    - bun redis
     # Ecosystem
     - elysia
     - hono bun
@@ -29,10 +40,12 @@ triggers:
     - bun api
     - bun server
     - migrate to bun
+    - bun database
 
 related_skills:
   - typescript
   - nodejs
+  - sql
 
 prevent_confusion_with:
   - nodejs: "Bun is faster, uses bun.lockb"

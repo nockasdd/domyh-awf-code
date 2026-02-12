@@ -1,0 +1,295 @@
+metadata:
+  skill: security
+  domain: typescript_security
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: typescript-security.yaml
+  patterns_count: 25
+  columns:
+    - id
+    - name
+    - severity
+    - category
+    - description
+    - detection_pattern
+    - fix_pattern
+    - cwe
+    - cve_reference
+    - example_vuln
+    - example_fix
+patterns:
+  - id: TS-01
+    name: Prototype Pollution
+    severity: CRITICAL
+    category: Injection
+    description: Object.assign or merge with user input pollutes Object.prototype
+    detection_pattern: (Object\\.assign|\\.\\.\\.|merge|extend).*input(?!.*sanitize)
+    fix_pattern: Use Object.create(null) or validate keys against __proto__
+    cwe: CWE-1321
+    cve_reference: CVE-2024-29650,CVE-2024-21529
+    example_vuln: Object.assign(target, userInput)
+    example_fix: const safe = Object.create(null);\nfor (const k of Object.keys(userInput)) {\n  if (!['__proto__', 'constructor', 'prototype'].includes(k)) safe[k] = userInput[k];\n}
+  - id: TS-02
+    name: ReDoS Regex
+    severity: HIGH
+    category: DoS
+    description: User input in RegExp causes catastrophic backtracking
+    detection_pattern: new\\s+RegExp.*input(?!.*timeout|safe-regex)
+    fix_pattern: Use safe-regex library or re2 with timeout
+    cwe: CWE-1333
+    cve_reference: n/a
+    example_vuln: new RegExp(userPattern).test(data)
+    example_fix: import * as re2 from 're2';\nnew re2.RE2(userPattern).test(data);
+  - id: TS-03
+    name: eval/Function RCE
+    severity: CRITICAL
+    category: Injection
+    description: eval or new Function with user input leads to RCE
+    detection_pattern: (eval|new\\s+Function)\\s*\\(.*input
+    fix_pattern: Never use eval with user input use JSON.parse for data
+    cwe: CWE-94
+    cve_reference: n/a
+    example_vuln: eval(userCode)
+    example_fix: JSON.parse(userData) // For data only
+  - id: TS-04
+    name: vm Module Sandbox Escape
+    severity: CRITICAL
+    category: Sandbox
+    description: vm.runInContext can be escaped via constructor
+    detection_pattern: vm\\.(runIn|createContext).*input(?!.*vm2|isolated)
+    fix_pattern: Use vm2 or isolated-vm with proper limits
+    cwe: CWE-94
+    cve_reference: CVE-2024-21534
+    example_vuln: vm.runInNewContext(userCode)
+    example_fix: 'import ivm from ''isolated-vm'';\nconst isolate = new ivm.Isolate({ memoryLimit: 128 });'
+  - id: TS-05
+    name: jsonpath-plus RCE
+    severity: CRITICAL
+    category: Injection
+    description: jsonpath-plus before 10.0.0 allows RCE via expressions
+    detection_pattern: jsonpath-plus(?!.*10\\.|[1-9][0-9]+\\.)
+    fix_pattern: Upgrade jsonpath-plus to 10.0.0+ or use safe alternatives
+    cwe: CWE-94
+    cve_reference: CVE-2024-21534
+    example_vuln: const { JSONPath } = require('jsonpath-plus'); // < 10.0.0
+    example_fix: npm install jsonpath-plus@^10.0.0
+  - id: TS-06
+    name: Source Map Exposure
+    severity: MEDIUM
+    category: Information
+    description: Source maps exposed in production reveal original code
+    detection_pattern: sourceMappingURL(?=.*production)|\\*.map.*public
+    fix_pattern: Remove source maps from production builds
+    cwe: CWE-540
+    cve_reference: n/a
+    example_vuln: // bundle.js.map accessible in production
+    example_fix: '// webpack.prod.js\ndevtool: false'
+  - id: TS-07
+    name: postMessage Origin
+    severity: HIGH
+    category: XSS
+    description: postMessage without origin validation allows XSS
+    detection_pattern: postMessage\\((?!.*targetOrigin)|onmessage(?!.*origin)
+    fix_pattern: Always check event.origin and use specific targetOrigin
+    cwe: CWE-346
+    cve_reference: n/a
+    example_vuln: window.postMessage(data, '*')
+    example_fix: 'window.postMessage(data, ''https://trusted.com'');\n// receiver: if (event.origin !== ''https://trusted.com'') return;'
+  - id: TS-08
+    name: DOM Clobbering
+    severity: MEDIUM
+    category: XSS
+    description: HTML elements can clobber global document properties
+    detection_pattern: document\\.[a-zA-Z]+\\s*=(?!.*sanitize)
+    fix_pattern: Validate element IDs and names sanitize HTML
+    cwe: CWE-79
+    cve_reference: n/a
+    example_vuln: <form name=location href=javascript:alert(1)>
+    example_fix: "DOMPurify.sanitize(html, { SANITIZE_DOM: true })"
+  - id: TS-09
+    name: TypeScript any Bypass
+    severity: MEDIUM
+    category: Types
+    description: any type bypasses TypeScript's type system
+    detection_pattern: :\\s*any(?!.*\\/\\/\\s*(allowed|TODO))
+    fix_pattern: Use strict types unknown with type guards or generics
+    cwe: CWE-1287
+    cve_reference: n/a
+    example_vuln: "function process(data: any) { data.anything() }"
+    example_fix: "function process(data: unknown) { if (isValidData(data)) process(data); }"
+  - id: TS-10
+    name: Template Literal Injection
+    severity: HIGH
+    category: Injection
+    description: Template literals with user input allow injection
+    detection_pattern: \\`[^\\`]*\\$\\{.*input[^\\`]*\\`(?!.*sanitize)
+    fix_pattern: Sanitize user input before template interpolation
+    cwe: CWE-94
+    cve_reference: n/a
+    example_vuln: "`SELECT * WHERE id=${userId}`"
+    example_fix: sql`SELECT * WHERE id=${userId}` // Use tagged template
+  - id: TS-11
+    name: localStorage Secrets
+    severity: HIGH
+    category: Secrets
+    description: Sensitive data stored in localStorage accessible via XSS
+    detection_pattern: localStorage\\.(setItem|getItem).*token|secret|password
+    fix_pattern: Use httpOnly cookies for sensitive tokens
+    cwe: CWE-922
+    cve_reference: n/a
+    example_vuln: localStorage.setItem('authToken', token)
+    example_fix: // Use httpOnly cookie set by server instead
+  - id: TS-12
+    name: Buffer Overread
+    severity: HIGH
+    category: Memory
+    description: Buffer.from with invalid length causes memory leaks
+    detection_pattern: Buffer\\.(from|alloc).*length(?!.*validate)
+    fix_pattern: Validate buffer sizes and use Buffer.allocSafe
+    cwe: CWE-125
+    cve_reference: n/a
+    example_vuln: Buffer.from(userInput, 0, userLength)
+    example_fix: const len = Math.min(userLength, MAX_SIZE);\nBuffer.allocSafe(len).fill(userInput);
+  - id: TS-13
+    name: Path Traversal
+    severity: HIGH
+    category: File
+    description: User input in path.join without validation
+    detection_pattern: path\\.join.*input(?!.*normalize)
+    fix_pattern: Use path.normalize and validate against base directory
+    cwe: CWE-22
+    cve_reference: n/a
+    example_vuln: path.join(base, userInput)
+    example_fix: const full = path.normalize(path.join(base, userInput));\nif (!full.startsWith(base)) throw new Error();
+  - id: TS-14
+    name: Command Injection
+    severity: CRITICAL
+    category: Injection
+    description: child_process.exec with user input allows command injection
+    detection_pattern: exec\\(.*input|execSync.*input
+    fix_pattern: Use execFile with array arguments
+    cwe: CWE-78
+    cve_reference: n/a
+    example_vuln: exec('ls ' + userInput)
+    example_fix: execFile('ls', [userInput])
+  - id: TS-15
+    name: SSRF fetch
+    severity: HIGH
+    category: Network
+    description: fetch with user URL allows SSRF
+    detection_pattern: fetch\\(.*input(?!.*allowlist|validate)
+    fix_pattern: Validate URLs against allowlist block internal IPs
+    cwe: CWE-918
+    cve_reference: n/a
+    example_vuln: fetch(userUrl)
+    example_fix: if (isExternalUrl(userUrl)) fetch(userUrl)
+  - id: TS-16
+    name: Insecure Random
+    severity: HIGH
+    category: Cryptography
+    description: Math.random used for security-sensitive values
+    detection_pattern: Math\\.random\\(\\).*token|session|secret
+    fix_pattern: Use crypto.randomBytes or crypto.randomUUID
+    cwe: CWE-330
+    cve_reference: n/a
+    example_vuln: const token = Math.random().toString(36)
+    example_fix: import { randomUUID } from 'crypto';\nconst token = randomUUID();
+  - id: TS-17
+    name: SQL Injection Knex
+    severity: HIGH
+    category: Injection
+    description: Knex raw query with string interpolation
+    detection_pattern: knex\\.raw\\(.*\\+.*input|knex\\.raw\\(.*\\$\\{
+    fix_pattern: Use parameterized queries with knex.raw
+    cwe: CWE-89
+    cve_reference: n/a
+    example_vuln: knex.raw(`SELECT * WHERE id = ${id}`)
+    example_fix: knex.raw('SELECT * WHERE id = ?', [id])
+  - id: TS-18
+    name: XSS dangerouslySetInnerHTML
+    severity: HIGH
+    category: XSS
+    description: React dangerouslySetInnerHTML with unsanitized input
+    detection_pattern: dangerouslySetInnerHTML.*input(?!.*DOMPurify)
+    fix_pattern: Use DOMPurify.sanitize before dangerouslySetInnerHTML
+    cwe: CWE-79
+    cve_reference: n/a
+    example_vuln: "<div dangerouslySetInnerHTML={{__html: userHtml}} />"
+    example_fix: 'import DOMPurify from ''dompurify'';\n<div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(userHtml)}} />'
+  - id: TS-19
+    name: JWT Algorithm None
+    severity: CRITICAL
+    category: Authentication
+    description: JWT verification allows algorithm none or symmetric/asymmetric confusion
+    detection_pattern: jwt\\.verify(?!.*algorithms)
+    fix_pattern: Explicitly specify allowed algorithms in JWT verification
+    cwe: CWE-347
+    cve_reference: n/a
+    example_vuln: jwt.verify(token, key)
+    example_fix: "jwt.verify(token, key, { algorithms: ['RS256'] })"
+  - id: TS-20
+    name: Express Trust Proxy
+    severity: MEDIUM
+    category: Configuration
+    description: Express trust proxy misconfigured allows IP spoofing
+    detection_pattern: app\\.set.*trust\\s+proxy.*true
+    fix_pattern: Set trust proxy to specific count or proxy addresses
+    cwe: CWE-290
+    cve_reference: n/a
+    example_vuln: app.set('trust proxy', true)
+    example_fix: app.set('trust proxy', 1) // Trust only first proxy
+  - id: TS-21
+    name: NoSQL Injection
+    severity: HIGH
+    category: Injection
+    description: MongoDB query with user object allows operator injection
+    detection_pattern: (find|findOne|updateOne).*input(?!.*sanitize)
+    fix_pattern: Sanitize input or use mongo-sanitize library
+    cwe: CWE-943
+    cve_reference: n/a
+    example_vuln: "db.users.findOne({ user: userInput }) // userInput = {$gt: ''}"
+    example_fix: 'import mongoSanitize from ''mongo-sanitize'';\ndb.users.findOne({ user: mongoSanitize(userInput) })'
+  - id: TS-22
+    name: Type Juggling eqeq
+    severity: MEDIUM
+    category: Logic
+    description: == comparison allows type coercion bypass
+    detection_pattern: "[^!=]={1}[^=](?!.*===)"
+    fix_pattern: Always use === for equality comparison
+    cwe: CWE-1287
+    cve_reference: n/a
+    example_vuln: if (input == 'admin') // '0' == false is true
+    example_fix: if (input === 'admin')
+  - id: TS-23
+    name: Insecure Deserialization
+    severity: HIGH
+    category: Deserialization
+    description: serialize-javascript or similar with user input
+    detection_pattern: (serialize|deserialize|unserialize).*input
+    fix_pattern: Use JSON.parse for data never execute serialized code
+    cwe: CWE-502
+    cve_reference: n/a
+    example_vuln: eval(deserialize(userInput))
+    example_fix: JSON.parse(userInput)
+  - id: TS-24
+    name: CORS Misconfiguration
+    severity: HIGH
+    category: Configuration
+    description: CORS allows any origin or reflects origin header
+    detection_pattern: Access-Control-Allow-Origin.*\\*|origin.*req\\.headers
+    fix_pattern: Specify allowed origins explicitly never use wildcard with credentials
+    cwe: CWE-346
+    cve_reference: n/a
+    example_vuln: res.setHeader('Access-Control-Allow-Origin', '*')
+    example_fix: res.setHeader('Access-Control-Allow-Origin', 'https://trusted.com')
+  - id: TS-25
+    name: DevTools Detection Bypass
+    severity: MEDIUM
+    category: Client
+    description: Client-side DevTools detection can be bypassed
+    detection_pattern: devtools.*detect|isDebuggerPresent(?!.*server)
+    fix_pattern: Don't rely on client-side detection for security
+    cwe: CWE-693
+    cve_reference: n/a
+    example_vuln: if (devtools.isOpen) redirect()
+    example_fix: // Move sensitive logic to server-side

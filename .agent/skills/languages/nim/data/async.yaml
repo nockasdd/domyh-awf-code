@@ -1,0 +1,257 @@
+# =============================================================================
+# Nim Async Patterns (Feb 2026)
+# Version: Nim 2.2+
+# =============================================================================
+
+metadata:
+  skill: nim
+  domain: async
+  version: "2.2"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: nim101
+    name: Async/Await
+    category: async
+    version: "Nim"
+    description: |
+      Asynchronous programming with asyncdispatch.
+      Futures, async/await syntax.
+    text: async await future asyncdispatch chronos
+    example: |
+      import asyncdispatch
+
+      # ✅ Async procedure
+      proc fetchData(url: string): Future[string] {.async.} =
+        # Simulated async operation
+        await sleepAsync(100)
+        return "Data from " & url
+
+      # ✅ Await in async context
+      proc processUrls(): Future[seq[string]] {.async.} =
+        var results: seq[string]
+        let urls = @["url1", "url2", "url3"]
+        
+        for url in urls:
+          let data = await fetchData(url)
+          results.add(data)
+        
+        return results
+
+      # ✅ Run async code
+      let results = waitFor processUrls()
+      echo results
+
+      # ✅ Parallel futures
+      proc fetchAll(): Future[seq[string]] {.async.} =
+        let futures = @[
+          fetchData("url1"),
+          fetchData("url2"),
+          fetchData("url3")
+        ]
+        
+        # Wait for all
+        return await all(futures)
+
+      # ✅ Error handling in async
+      proc mightFail(): Future[string] {.async.} =
+        if true:
+          raise newException(IOError, "Network error")
+        return "ok"
+
+      proc handleError(): Future[void] {.async.} =
+        try:
+          let result = await mightFail()
+        except IOError as e:
+          echo "Error: ", e.msg
+
+      # ✅ Chronos (alternative async library)
+      # import chronos
+      # More performance-focused, used in Status projects
+    severity: HIGH
+    docs_url: https://nim-lang.org/docs/asyncdispatch.html
+
+  - id: nim102
+    name: Memory Management
+    category: memory
+    version: "Nim"
+    description: |
+      GC options and manual memory control.
+      ARC, ORC, manual memory.
+    text: gc arc orc memory alloc dealloc
+    example: |
+      # ✅ Compile with different GC
+      # nim c --gc:orc myapp.nim   # Default in Nim 2.0
+      # nim c --gc:arc myapp.nim   # Reference counting
+      # nim c --gc:none myapp.nim  # No GC (manual memory)
+
+      # ✅ Manual memory management
+      type MyObject = object
+        data: ptr UncheckedArray[int]
+        len: int
+
+      proc createObject(size: int): MyObject =
+        result.len = size
+        result.data = cast[ptr UncheckedArray[int]](
+          alloc(size * sizeof(int))
+        )
+
+      proc destroyObject(obj: var MyObject) =
+        if obj.data != nil:
+          dealloc(obj.data)
+          obj.data = nil
+
+      # ✅ Destructor (with ARC/ORC)
+      type Resource = object
+        handle: pointer
+
+      proc `=destroy`(r: Resource) =
+        if r.handle != nil:
+          echo "Cleaning up resource"
+          # cleanup(r.handle)
+
+      proc `=copy`(dest: var Resource, src: Resource) =
+        `=destroy`(dest)
+        dest.handle = src.handle  # Or deep copy
+
+      # ✅ Move semantics
+      proc `=sink`(dest: var Resource, src: Resource) =
+        `=destroy`(dest)
+        dest.handle = src.handle
+
+      # ✅ Disable copy
+      type NoCopy = object
+        data: int
+
+      proc `=copy`(dest: var NoCopy, src: NoCopy) {.error: "NoCopy cannot be copied".}
+
+      # ✅ Weak references (with ORC)
+      # Use {.weak.} pragma for weak references
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/gc.html
+
+  - id: nim103
+    name: C FFI
+    category: ffi
+    version: "Nim"
+    description: |
+      Call C libraries from Nim.
+      Pragmas, wrappers, nimgen.
+    text: ffi c importc dynlib header wrapper
+    example: |
+      # ✅ Import C function
+      proc printf(format: cstring): cint {.importc, varargs, header: "<stdio.h>".}
+
+      discard printf("Hello %s\n", "World")
+
+      # ✅ Import from dynamic library
+      proc SDL_Init(flags: uint32): cint {.importc, dynlib: "libSDL2.so".}
+
+      # ✅ C types mapping
+      type
+        CFile = ptr object  # FILE*
+        size_t = uint       # size_t
+
+      proc fopen(filename, mode: cstring): CFile {.importc, header: "<stdio.h>".}
+      proc fclose(f: CFile): cint {.importc, header: "<stdio.h>".}
+
+      # ✅ C struct
+      type
+        TimeVal {.importc: "struct timeval", header: "<sys/time.h>".} = object
+          tv_sec: clong
+          tv_usec: clong
+
+      # ✅ Callbacks
+      type CCallback = proc(data: pointer, value: cint): cint {.cdecl.}
+
+      proc registerCallback(cb: CCallback, data: pointer) {.importc.}
+
+      proc myCallback(data: pointer, value: cint): cint {.cdecl.} =
+        echo "Callback: ", value
+        return 0
+
+      registerCallback(myCallback, nil)
+
+      # ✅ Export Nim to C
+      proc nimFunction(x: cint): cint {.exportc, cdecl, dynlib.} =
+        return x * 2
+
+      # Compile: nim c --app:lib --noMain mylib.nim
+
+      # ✅ c2nim for automatic wrapping
+      # c2nim header.h > wrapper.nim
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/manual.html#foreign-function-interface
+
+  - id: nim104
+    name: Concurrency
+    category: concurrency
+    version: "Nim"
+    description: |
+      Threads and channels in Nim.
+      Spawn, parallel, shared memory.
+    text: threads spawn parallel channel shared
+    example: |
+      import std/[threadpool, os]
+
+      # ✅ Spawn tasks
+      proc heavyComputation(x: int): int =
+        sleep(100)
+        x * x
+
+      let fut1 = spawn heavyComputation(10)
+      let fut2 = spawn heavyComputation(20)
+
+      sync()  # Wait for all spawned tasks
+
+      echo ^fut1  # Get result: 100
+      echo ^fut2  # Get result: 400
+
+      # ✅ Parallel for
+      import std/threadpool
+
+      var results: array[100, int]
+
+      parallel:
+        for i in 0..99:
+          spawn results[i] = heavyComputation(i)
+
+      # ✅ Channels for communication
+      import std/[channels, threads]
+
+      var chan: Channel[int]
+      chan.open()
+
+      proc producer() {.thread.} =
+        for i in 1..10:
+          chan.send(i)
+          sleep(50)
+
+      proc consumer() {.thread.} =
+        for _ in 1..10:
+          let msg = chan.recv()
+          echo "Received: ", msg
+
+      var t1, t2: Thread[void]
+      createThread(t1, producer)
+      createThread(t2, consumer)
+
+      joinThread(t1)
+      joinThread(t2)
+      chan.close()
+
+      # ✅ Lock for shared data
+      import std/locks
+
+      var lock: Lock
+      var sharedCounter = 0
+
+      lock.initLock()
+
+      proc increment() {.thread.} =
+        for _ in 1..1000:
+          withLock(lock):
+            inc sharedCounter
+    severity: MEDIUM
+    docs_url: https://nim-lang.org/docs/threads.html

@@ -1,0 +1,69 @@
+name: logging
+version: "6.2.1"
+display: Logging Best Practices
+category: core
+tier: 1
+priority: 1
+
+desc: "Comprehensive logging patterns covering structured logging, log levels, 12+ programming languages, log aggregation (ELK/Loki/Splunk), and OpenTelemetry integration."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - logging
+    - structured logging
+    - log levels
+    - JSON logging
+    - slog
+    - zap
+    - zerolog
+    - Winston
+    - Pino
+    - structlog
+    - loguru
+    - SLF4J
+    - Log4j2
+    - Serilog
+    - NLog
+    - Monolog
+    - ELK
+    - Loki
+    - Splunk
+    - OpenTelemetry
+  intents:
+    - setup logging
+    - structured logs
+    - log aggregation
+    - opentelemetry logging
+
+caps:
+  - Structured logging patterns (JSON, key-value)
+  - Log levels semantics (TRACE/DEBUG/INFO/WARN/ERROR/FATAL)
+  - Language-specific libraries and best practices
+  - Log aggregation and shipping patterns
+  - OpenTelemetry logging integration
+  - Correlation IDs and distributed tracing
+  - Anti-patterns to avoid
+
+    - search_logging_patterns
+    - get_language_patterns
+    - get_aggregation_patterns
+    - get_otel_logging
+
+data_files:
+  - data/core-patterns.yaml
+  - data/language-go.yaml
+  - data/language-python.yaml
+  - data/language-typescript.yaml
+  - data/language-rust.yaml
+  - data/language-java.yaml
+  - data/language-csharp.yaml
+  - data/language-swift.yaml
+  - data/language-kotlin.yaml
+  - data/language-others.yaml
+  - data/aggregation-patterns.yaml
+  - data/otel-logging.yaml
+  - data/anti-patterns.yaml
+
+related_skills:
+  - observability

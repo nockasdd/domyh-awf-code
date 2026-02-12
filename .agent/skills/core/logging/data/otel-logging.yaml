@@ -1,0 +1,156 @@
+metadata:
+  skill: logging
+  domain: otel_logging
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: otel-logging.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - category
+    - concept
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: OTEL-001
+    category: model
+    concept: OTel
+    name: Log Data Model
+    description: OTel log record structure
+    example: "{ timestamp, severity, body, attributes, resource }"
+    when_to_use: Understanding OTel logs
+  - id: OTEL-002
+    category: model
+    concept: OTel
+    name: Severity Number
+    description: Standard severity levels
+    example: "1-24 mapping: 9=INFO, 13=WARN, 17=ERROR"
+    when_to_use: Cross-language consistency
+  - id: OTEL-003
+    category: model
+    concept: OTel
+    name: Log Body
+    description: Primary log content
+    example: 'body: "User login successful"'
+    when_to_use: Message content
+  - id: OTEL-004
+    category: model
+    concept: OTel
+    name: Log Attributes
+    description: Structured context
+    example: 'attributes: { "user.id": "123", "http.method": "POST" }'
+    when_to_use: Event metadata
+  - id: OTEL-005
+    category: model
+    concept: OTel
+    name: Resource
+    description: Log source identification
+    example: 'resource: { "service.name": "api", "service.version": "1.0" }'
+    when_to_use: Service identification
+  - id: OTEL-006
+    category: correlation
+    concept: OTel
+    name: Trace ID
+    description: Link logs to traces
+    example: "traceId: abc123..."
+    when_to_use: Distributed tracing
+  - id: OTEL-007
+    category: correlation
+    concept: OTel
+    name: Span ID
+    description: Link logs to spans
+    example: "spanId: def456..."
+    when_to_use: Operation tracking
+  - id: OTEL-008
+    category: correlation
+    concept: OTel
+    name: Trace Flags
+    description: Sampling decision
+    example: "traceFlags: 01 (sampled)"
+    when_to_use: Sampling control
+  - id: OTEL-009
+    category: conventions
+    concept: OTel
+    name: Semantic Conventions
+    description: Standard attribute names
+    example: exception.type, exception.message, exception.stacktrace
+    when_to_use: Interoperability
+  - id: OTEL-010
+    category: conventions
+    concept: OTel
+    name: HTTP Attributes
+    description: HTTP log attributes
+    example: http.request.method, http.response.status_code
+    when_to_use: API logging
+  - id: OTEL-011
+    category: conventions
+    concept: OTel
+    name: DB Attributes
+    description: Database log attributes
+    example: db.system, db.statement, db.operation
+    when_to_use: Database logging
+  - id: OTEL-012
+    category: exporter
+    concept: OTel
+    name: OTLP Exporter
+    description: Export via OTLP
+    example: "OTLPLogExporter({ url: 'http://collector:4318/v1/logs' })"
+    when_to_use: Standard export
+  - id: OTEL-013
+    category: exporter
+    concept: OTel
+    name: Console Exporter
+    description: Debug output
+    example: SimpleLogRecordProcessor(ConsoleLogRecordExporter())
+    when_to_use: Development
+  - id: OTEL-014
+    category: exporter
+    concept: OTel
+    name: Batch Processor
+    description: Efficient batching
+    example: "BatchLogRecordProcessor(exporter, { maxQueueSize: 2048 })"
+    when_to_use: Production
+  - id: OTEL-015
+    category: sdk
+    concept: OTel
+    name: Python SDK
+    description: Python OTel logging
+    example: from opentelemetry._logs import set_logger_provider
+    when_to_use: Python integration
+  - id: OTEL-016
+    category: sdk
+    concept: OTel
+    name: Java SDK
+    description: Java OTel logging
+    example: GlobalLoggerProvider.set(sdkLoggerProvider)
+    when_to_use: Java integration
+  - id: OTEL-017
+    category: sdk
+    concept: OTel
+    name: Go SDK
+    description: Go OTel logging
+    example: otel.SetLoggerProvider(provider)
+    when_to_use: Go integration
+  - id: OTEL-018
+    category: bridge
+    concept: OTel
+    name: Log Bridge
+    description: Connect existing loggers
+    example: LoggingHandler from opentelemetry.sdk._logs
+    when_to_use: Migration
+  - id: OTEL-019
+    category: collector
+    concept: OTel
+    name: Collector Receiver
+    description: Receive logs
+    example: "receivers: { otlp: { protocols: { grpc: {} } } }"
+    when_to_use: Central collection
+  - id: OTEL-020
+    category: collector
+    concept: OTel
+    name: Collector Processor
+    description: Transform logs
+    example: "processors: { batch: {}, filter: {} }"
+    when_to_use: Log processing

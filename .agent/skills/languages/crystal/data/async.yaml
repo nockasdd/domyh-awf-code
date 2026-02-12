@@ -1,0 +1,264 @@
+# =============================================================================
+# Crystal Async Patterns (Feb 2026)
+# Version: Crystal 1.14+
+# =============================================================================
+
+metadata:
+  skill: crystal
+  domain: async
+  version: "1.14"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: crystal101
+    name: Fibers
+    category: concurrency
+    version: "Crystal"
+    description: |
+      Lightweight green threads.
+      Cooperative multitasking, spawn.
+    text: fiber spawn concurrent green thread lightweight
+    example: |
+      # ✅ Spawn a fiber
+      spawn do
+        puts "Hello from fiber"
+        sleep 1.second
+        puts "Fiber done"
+      end
+
+      puts "Main continues"
+      Fiber.yield  # Let other fibers run
+
+      # ✅ Wait for fibers
+      channel = Channel(Nil).new
+
+      3.times do |i|
+        spawn do
+          sleep (rand * 0.5).seconds
+          puts "Fiber #{i} done"
+          channel.send(nil)
+        end
+      end
+
+      3.times { channel.receive }
+      puts "All fibers complete"
+
+      # ✅ Fiber.yield for cooperative scheduling
+      spawn do
+        10.times do |i|
+          puts "A: #{i}"
+          Fiber.yield
+        end
+      end
+
+      10.times do |i|
+        puts "B: #{i}"
+        Fiber.yield
+      end
+
+      # ✅ Current fiber info
+      puts Fiber.current.name
+
+      # ✅ Named fibers for debugging
+      spawn(name: "worker-1") do
+        # Work
+      end
+    severity: HIGH
+    docs_url: https://crystal-lang.org/reference/guides/concurrency.html
+
+  - id: crystal102
+    name: Channels
+    category: concurrency
+    version: "Crystal"
+    description: |
+      CSP-style communication between fibers.
+      Buffered and unbuffered channels.
+    text: channel send receive csp buffered select
+    example: |
+      # ✅ Unbuffered channel (synchronous)
+      channel = Channel(Int32).new
+
+      spawn do
+        channel.send(42)  # Blocks until received
+        puts "Sent"
+      end
+
+      value = channel.receive  # Blocks until sent
+      puts "Received: #{value}"
+
+      # ✅ Buffered channel
+      buffered = Channel(String).new(capacity: 10)
+
+      10.times do |i|
+        buffered.send("msg-#{i}")  # Non-blocking until full
+      end
+
+      # ✅ Select for multiple channels
+      ch1 = Channel(Int32).new
+      ch2 = Channel(String).new
+
+      spawn { ch1.send(1) }
+      spawn { ch2.send("hello") }
+
+      select
+      when value = ch1.receive
+        puts "Got int: #{value}"
+      when value = ch2.receive
+        puts "Got string: #{value}"
+      end
+
+      # ✅ Non-blocking receive
+      result = channel.receive?
+      if result
+        puts "Got: #{result}"
+      else
+        puts "Channel empty or closed"
+      end
+
+      # ✅ Close channel
+      channel.close
+
+      # ✅ Iterate channel
+      producer = Channel(Int32).new
+
+      spawn do
+        5.times { |i| producer.send(i) }
+        producer.close
+      end
+
+      producer.each { |value| puts value }
+    severity: HIGH
+    docs_url: https://crystal-lang.org/api/Channel.html
+
+  - id: crystal103
+    name: HTTP Server
+    category: web
+    version: "Crystal"
+    description: |
+      High-performance HTTP with Kemal.
+      Routes, middleware, websockets.
+    text: http server kemal web routes middleware
+    example: |
+      require "kemal"
+
+      # ✅ Basic routes
+      get "/" do
+        "Hello World"
+      end
+
+      get "/users/:id" do |env|
+        id = env.params.url["id"]
+        "User: #{id}"
+      end
+
+      post "/users" do |env|
+        body = env.params.json
+        # Process JSON body
+        env.response.status_code = 201
+        {id: 1, created: true}.to_json
+      end
+
+      # ✅ JSON response
+      get "/api/data" do |env|
+        env.response.content_type = "application/json"
+        {status: "ok", data: [1, 2, 3]}.to_json
+      end
+
+      # ✅ Query parameters
+      get "/search" do |env|
+        query = env.params.query["q"]?
+        "Search: #{query}"
+      end
+
+      # ✅ Middleware
+      before_all do |env|
+        env.response.headers["X-Custom"] = "Value"
+      end
+
+      # ✅ WebSocket
+      ws "/chat" do |socket|
+        socket.on_message do |message|
+          socket.send "Echo: #{message}"
+        end
+        
+        socket.on_close do
+          puts "Client disconnected"
+        end
+      end
+
+      # ✅ Static files
+      # public_folder "public"
+
+      # ✅ Start server
+      Kemal.run
+
+      # ✅ Lucky Framework (alternative)
+      # More structured, Rails-like
+      # https://luckyframework.org/
+    severity: MEDIUM
+    docs_url: https://kemalcr.com/
+
+  - id: crystal104
+    name: Shards (Package Manager)
+    category: build
+    version: "Crystal"
+    description: |
+      Dependency management with Shards.
+      shard.yml, versioning, local deps.
+    text: shards package dependency manager shard.yml
+    example: |
+      # ✅ shard.yml
+      # name: myapp
+      # version: 0.1.0
+      # 
+      # dependencies:
+      #   kemal:
+      #     github: kemalcr/kemal
+      #     version: ~> 1.3
+      #   
+      #   pg:
+      #     github: will/crystal-pg
+      #     version: ~> 0.28
+      # 
+      # development_dependencies:
+      #   spec:
+      #     github: crystal-lang/crystal
+      #
+      # crystal: ">= 1.10.0"
+      # 
+      # targets:
+      #   myapp:
+      #     main: src/myapp.cr
+
+      # ✅ Commands
+      # shards install    - Install dependencies
+      # shards update     - Update to latest
+      # shards build      - Build targets
+      # shards check      - Verify dependencies
+
+      # ✅ Using dependencies in code
+      require "kemal"
+      require "pg"
+
+      # ✅ Local development dependency
+      # dependencies:
+      #   mylib:
+      #     path: ../mylib
+
+      # ✅ Git branch/commit
+      # dependencies:
+      #   mylib:
+      #     github: user/mylib
+      #     branch: develop
+      #     # or: commit: abc123
+
+      # ✅ Lock file
+      # shard.lock is auto-generated
+      # Commit to version control for reproducible builds
+
+      # ✅ Production build
+      # shards build --release --production
+      # Crystal compiles to native binary
+    severity: MEDIUM
+    docs_url: https://crystal-lang.org/reference/man/shards/

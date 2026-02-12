@@ -1,0 +1,170 @@
+# PostgreSQL Patterns - HSA Database Skill
+# Version: PG 18 (Sep 2025)
+# Updated: 2026-02-05
+
+patterns:
+  # Performance
+  - id: pg001
+    pattern: Connection Pooling
+    category: performance
+    version: all
+    description: Use PgBouncer or built-in pooling for connection reuse
+    example: "max_connections = 100, pgbouncer pool_size = 20"
+    severity: HIGH
+
+  - id: pg002
+    pattern: Async I/O
+    category: performance
+    version: "18"
+    description: PostgreSQL 18 async I/O for 2-3x sequential scan speedup
+    example: "CREATE TABLE ... WITH (parallel_workers = 4)"
+    severity: MEDIUM
+
+  - id: pg003
+    pattern: Index Skip Scan
+    category: performance
+    version: "18"
+    description: 40% faster queries by skipping irrelevant index entries
+    example: "SELECT DISTINCT category FROM products"
+    severity: MEDIUM
+
+  - id: pg004
+    pattern: UUIDv7
+    category: data
+    version: "18"
+    description: Time-ordered UUIDs for better index performance
+    example: "id UUID DEFAULT uuidv7()"
+    severity: MEDIUM
+
+  - id: pg005
+    pattern: Virtual Generated Columns
+    category: data
+    version: "18"
+    description: Compute on demand, reduce storage
+    example: "full_name TEXT GENERATED ALWAYS AS (first || ' ' || last) VIRTUAL"
+    severity: LOW
+
+  - id: pg006
+    pattern: RETURNING OLD/NEW
+    category: query
+    version: "18"
+    description: Get old and new values in UPDATE/DELETE
+    example: "UPDATE t SET x=1 RETURNING OLD.x, NEW.x"
+    severity: MEDIUM
+
+  - id: pg007
+    pattern: UNIQUE NULLS DISTINCT
+    category: constraint
+    version: "18"
+    description: Treat NULLs as distinct in unique constraints
+    example: "CREATE UNIQUE INDEX idx ON t(col) NULLS DISTINCT"
+    severity: LOW
+
+  # Optimization
+  - id: pg008
+    pattern: Partial Index
+    category: optimization
+    version: all
+    description: Index only relevant subset of data
+    example: "CREATE INDEX idx ON orders (created_at) WHERE status = 'pending'"
+    severity: HIGH
+
+  - id: pg009
+    pattern: Covering Index
+    category: optimization
+    version: "11+"
+    description: Include columns to avoid table lookup
+    example: "CREATE INDEX idx ON orders(user_id) INCLUDE (status, total)"
+    severity: HIGH
+
+  - id: pg010
+    pattern: BRIN Index
+    category: optimization
+    version: all
+    description: Block Range Index for large time-series tables
+    example: "CREATE INDEX idx ON events USING BRIN(created_at)"
+    severity: MEDIUM
+
+  - id: pg011
+    pattern: GIN Index
+    category: optimization
+    version: all
+    description: Generalized Inverted Index for JSONB/arrays
+    example: "CREATE INDEX idx ON events USING GIN(data)"
+    severity: HIGH
+
+  # Data
+  - id: pg012
+    pattern: JSONB Operations
+    category: data
+    version: "14+"
+    description: Use JSONB for flexible schema with indexing
+    example: 'data @> ''{"type": "purchase"}'''
+    severity: MEDIUM
+
+  - id: pg013
+    pattern: JSON_TABLE
+    category: data
+    version: "17+"
+    description: Transform JSON to relational rows
+    example: "SELECT * FROM JSON_TABLE(data, '$.items[*]' COLUMNS(...))"
+    severity: MEDIUM
+
+  # Debug & Maintenance
+  - id: pg014
+    pattern: EXPLAIN ANALYZE
+    category: debug
+    version: all
+    description: Always analyze query plans before optimization
+    example: "EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT) SELECT ..."
+    severity: CRITICAL
+
+  - id: pg015
+    pattern: Vacuum Strategy
+    category: maintenance
+    version: all
+    description: Configure autovacuum for high-write tables
+    example: "ALTER TABLE SET (autovacuum_vacuum_scale_factor = 0.05)"
+    severity: HIGH
+
+  # Security
+  - id: pg016
+    pattern: Row-Level Security
+    category: security
+    version: all
+    description: Implement RLS for multi-tenant isolation
+    example: "CREATE POLICY tenant_policy ON table USING (tenant_id = current_setting('app.tenant_id'))"
+    severity: CRITICAL
+
+  - id: pg017
+    pattern: Parameterized Queries
+    category: security
+    version: all
+    description: Use $1, $2 placeholders to prevent SQL injection
+    example: "SELECT * FROM users WHERE id = $1"
+    severity: CRITICAL
+
+  # Transaction
+  - id: pg018
+    pattern: Advisory Locks
+    category: transaction
+    version: all
+    description: Application-level locking
+    example: "SELECT pg_advisory_lock(12345)"
+    severity: MEDIUM
+
+  - id: pg019
+    pattern: Serializable Isolation
+    category: transaction
+    version: all
+    description: Strictest isolation for financial operations
+    example: "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE"
+    severity: HIGH
+
+  - id: pg020
+    pattern: NOT NULL NOT VALID
+    category: maintenance
+    version: "18"
+    description: Add NOT NULL constraint without full scan
+    example: "ALTER TABLE ADD CONSTRAINT col_not_null CHECK (col IS NOT NULL) NOT VALID"
+    severity: MEDIUM

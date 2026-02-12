@@ -1,0 +1,209 @@
+# =============================================================================
+# Angular Core Patterns (Feb 2026)
+# =============================================================================
+# Signals, Components, Control Flow, DI
+
+metadata:
+  skill: angular
+  domain: core
+  version: "20.2"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: ang001
+    name: Signals
+    category: state
+    version: "16+"
+    description: Reactive primitives for fine-grained change detection
+    text: signal computed effect reactive state angular change detection
+    example: |
+      import { signal, computed, effect } from "@angular/core";
+
+      @Component({
+        selector: "app-counter",
+        standalone: true,
+        template: `
+          <button (click)="increment()">Count: {{ count() }}</button>
+          <p>Double: {{ double() }}</p>
+        `,
+      })
+      export class CounterComponent {
+        // ✅ Signal for reactive state
+        count = signal(0);
+
+        // ✅ Computed for derived values
+        double = computed(() => this.count() * 2);
+
+        constructor() {
+          // ✅ Effect for side effects
+          effect(() => console.log("Count:", this.count()));
+        }
+
+        increment() {
+          this.count.update(c => c + 1);
+        }
+      }
+    severity: CRITICAL
+    docs_url: https://angular.dev/guide/signals
+
+  - id: ang002
+    name: Standalone Components
+    category: component
+    version: "14+"
+    description: Self-contained components without NgModule (default in v19+)
+    text: standalone component module import angular self-contained
+    example: |
+      // ✅ Angular 19+: Standalone is default
+      @Component({
+        selector: "app-user-card",
+        standalone: true,
+        imports: [CommonModule, RouterLink],
+        template: `
+          <div class="card">
+            <h2>{{ user().name }}</h2>
+            <a [routerLink]="['/users', user().id]">View</a>
+          </div>
+        `,
+      })
+      export class UserCardComponent {
+        user = input.required<User>();
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/standalone-components
+
+  - id: ang003
+    name: Signal-based Input/Output
+    category: component
+    version: "17+"
+    description: Type-safe inputs and outputs using signals
+    text: input output model signal function two-way binding
+    example: |
+      import { input, output, model } from "@angular/core";
+
+      @Component({
+        selector: "app-form-field",
+        standalone: true,
+        template: `<input [value]="value()" (input)="onInput($event)" />`,
+      })
+      export class FormFieldComponent {
+        // ✅ Signal-based inputs
+        label = input<string>("");
+        value = model<string>(""); // Two-way binding
+
+        // ✅ Signal-based outputs
+        valueChange = output<string>();
+
+        onInput(event: Event) {
+          const val = (event.target as HTMLInputElement).value;
+          this.value.set(val);
+          this.valueChange.emit(val);
+        }
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/signals/inputs
+
+  - id: ang004
+    name: New Control Flow
+    category: template
+    version: "17+"
+    description: Built-in control flow syntax (@if, @for, @switch, @defer)
+    text: if for switch defer control flow template syntax
+    example: |
+      <!-- ✅ Angular 17+: New control flow syntax -->
+      @if (user()) {
+        <h1>{{ user()!.name }}</h1>
+      } @else {
+        <p>No user</p>
+      }
+
+      @for (item of items(); track item.id) {
+        <div>{{ item.name }}</div>
+      } @empty {
+        <p>No items</p>
+      }
+
+      @switch (status()) {
+        @case ('loading') { <spinner /> }
+        @case ('error') { <error-message /> }
+        @default { <content /> }
+      }
+
+      <!-- ✅ Deferred loading -->
+      @defer (on viewport) {
+        <heavy-component />
+      } @loading {
+        <p>Loading...</p>
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/templates/control-flow
+
+  - id: ang005
+    name: Dependency Injection
+    category: architecture
+    version: "2+"
+    description: Hierarchical DI with providedIn and inject function
+    text: inject dependency injection service provider root
+    example: |
+      // ✅ Tree-shakable service
+      @Injectable({ providedIn: "root" })
+      export class UserService {
+        private http = inject(HttpClient);
+        private users = signal<User[]>([]);
+
+        readonly users$ = this.users.asReadonly();
+
+        async loadUsers() {
+          const users = await firstValueFrom(
+            this.http.get<User[]>("/api/users")
+          );
+          this.users.set(users);
+        }
+      }
+
+      // ✅ Component with inject()
+      @Component({...})
+      export class UsersComponent {
+        private userService = inject(UserService);
+        users = this.userService.users$;
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/di
+
+  - id: ang006
+    name: HTTP with Signals
+    category: data
+    version: "16+"
+    description: Modern HTTP fetching pattern with signals
+    text: http client fetch api signal rxjs observable
+    example: |
+      @Component({
+        selector: "app-users",
+        standalone: true,
+        imports: [CommonModule],
+        template: `
+          @if (loading()) {
+            <p>Loading...</p>
+          } @else {
+            <ul>
+              @for (user of users(); track user.id) {
+                <li>{{ user.name }}</li>
+              }
+            </ul>
+          }
+        `,
+      })
+      export class UsersComponent {
+        private http = inject(HttpClient);
+        users = signal<User[]>([]);
+        loading = signal(true);
+
+        constructor() {
+          this.http.get<User[]>("/api/users").subscribe({
+            next: users => this.users.set(users),
+            complete: () => this.loading.set(false),
+          });
+        }
+      }
+    severity: HIGH
+    docs_url: https://angular.dev/guide/http

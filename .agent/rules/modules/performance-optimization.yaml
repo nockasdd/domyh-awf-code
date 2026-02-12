@@ -1,0 +1,141 @@
+# Performance Optimization Rule v6.2.1
+# Model selection, context management, token budget
+
+---
+name: performance-optimization
+version: "6.2.1"
+rule_id: "MOD-PERF-001"
+
+# =============================================================================
+# RULE METADATA
+# =============================================================================
+
+description: |
+  Guidelines for performance optimization of AI agent operations:
+  model selection, context window management, token budget,
+  and efficient tool usage patterns.
+
+category: "engineering"
+
+# =============================================================================
+# CONTEXT APPLICATION
+# =============================================================================
+
+context:
+  always_apply: true
+  personas: ["all"]
+  workflows: ["all"]
+
+# =============================================================================
+# MODEL SELECTION
+# =============================================================================
+
+model_selection:
+  guidelines:
+    - scenario: "Simple code generation, formatting"
+      recommended: "Fast model (flash/mini)"
+      reason: "Low complexity, speed matters"
+
+    - scenario: "Complex architecture, debugging"
+      recommended: "Strong model (opus/pro)"
+      reason: "Requires deep reasoning"
+
+    - scenario: "Code review, refactoring"
+      recommended: "Balanced model (sonnet/standard)"
+      reason: "Good reasoning at reasonable cost"
+
+    - scenario: "Data parsing, extraction"
+      recommended: "Fast model (flash/mini)"
+      reason: "Pattern matching, not reasoning"
+
+# =============================================================================
+# CONTEXT MANAGEMENT
+# =============================================================================
+
+context_management:
+  principles:
+    - name: "Minimal Context"
+      rule: "Include only relevant files/sections"
+      anti_pattern: "Loading entire codebase into context"
+
+    - name: "Progressive Loading"
+      rule: "Start with summary, load detail on demand"
+      technique: "Use file outline first, then view specific functions"
+
+    - name: "Context Freshness"
+      rule: "Re-read files that may have changed"
+      when: "After edits, before verification"
+
+    - name: "Compaction"
+      rule: "Summarize long context when approaching limits"
+      trigger: "Context exceeds 60% of window"
+
+# =============================================================================
+# TOKEN BUDGET
+# =============================================================================
+
+token_budget:
+  allocation:
+    system_prompt: "10%"
+    skill_loading: "15%"
+    code_context: "40%"
+    reasoning: "25%"
+    output: "10%"
+
+  optimization:
+    - "Use view_file_outline before full file read"
+    - "Grep for specific patterns instead of reading entire files"
+    - "Load META.yaml (T1) before SKILL.md (T2)"
+    - "Limit data file reads to relevant sections"
+    - "Avoid loading ADVANCED.md (T3) unless referenced"
+
+# =============================================================================
+# EFFICIENT TOOL USAGE
+# =============================================================================
+
+tool_efficiency:
+  patterns:
+    - name: "Parallel tool calls"
+      rule: "Call independent tools in parallel"
+      example: "Read 3 files simultaneously"
+
+    - name: "Targeted search"
+      rule: "Use grep before listing/reading directories"
+      anti_pattern: "list_dir → view_file for every file"
+
+    - name: "Batch edits"
+      rule: "Use multi_replace for multiple edits in same file"
+      anti_pattern: "Separate edit calls for each change"
+
+    - name: "Early termination"
+      rule: "Stop searching after finding the answer"
+      anti_pattern: "Reading all files when first match suffices"
+
+# =============================================================================
+# CHECKLIST
+# =============================================================================
+
+checklist:
+  - "Am I loading only necessary context?"
+  - "Could I use a lighter/faster model for this?"
+  - "Am I making parallel tool calls where possible?"
+  - "Have I used targeted search instead of browsing?"
+  - "Is my context within budget?"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2
+  related_modules:
+    - yagni
+    - stop-conditions
+
+  reflection:
+    enabled: true
+    check_before: "tool_call"
+    question: "Is this the most efficient way to get the information I need?"
+
+---
+_DOMYH Awesome Code • Performance Optimization Rule_

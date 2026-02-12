@@ -1,0 +1,647 @@
+metadata:
+  skill: domyh-design
+  domain: typography
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: typography.yaml
+  patterns_count: 57
+  columns:
+    - STT
+    - Font Pairing Name
+    - Category
+    - Heading Font
+    - Body Font
+    - Mood/Style Keywords
+    - Best For
+    - Google Fonts URL
+    - CSS Import
+    - Tailwind Config
+    - Notes
+patterns:
+  - id: "1"
+    font_pairing_name: Classic Elegant
+    category: Serif + Sans
+    heading_font: Playfair Display
+    body_font: Inter
+    mood_style_keywords: elegant, luxury, sophisticated, timeless, premium, editorial
+    best_for: Luxury brands, fashion, spa, beauty, editorial, magazines, high-end e-commerce
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700|Playfair+Display:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] }"
+    notes: High contrast between elegant heading and clean body. Perfect for luxury/premium.
+  - id: "2"
+    font_pairing_name: Modern Professional
+    category: Sans + Sans
+    heading_font: Poppins
+    body_font: Open Sans
+    mood_style_keywords: modern, professional, clean, corporate, friendly, approachable
+    best_for: SaaS, corporate sites, business apps, startups, professional services
+    google_fonts_url: https://fonts.google.com/share?selection.family=Open+Sans:wght@300;400;500;600;700|Poppins:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Poppins', 'sans-serif'], body: ['Open Sans', 'sans-serif'] }"
+    notes: Geometric Poppins for headings, humanist Open Sans for readability.
+  - id: "3"
+    font_pairing_name: Tech Startup
+    category: Sans + Sans
+    heading_font: Space Grotesk
+    body_font: DM Sans
+    mood_style_keywords: tech, startup, modern, innovative, bold, futuristic
+    best_for: Tech companies, startups, SaaS, developer tools, AI products
+    google_fonts_url: https://fonts.google.com/share?selection.family=DM+Sans:wght@400;500;700|Space+Grotesk:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Space Grotesk', 'sans-serif'], body: ['DM Sans', 'sans-serif'] }"
+    notes: Space Grotesk has unique character, DM Sans is highly readable.
+  - id: "4"
+    font_pairing_name: Editorial Classic
+    category: Serif + Serif
+    heading_font: Cormorant Garamond
+    body_font: Libre Baskerville
+    mood_style_keywords: editorial, classic, literary, traditional, refined, bookish
+    best_for: Publishing, blogs, news sites, literary magazines, book covers
+    google_fonts_url: https://fonts.google.com/share?selection.family=Cormorant+Garamond:wght@400;500;600;700|Libre+Baskerville:wght@400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Cormorant Garamond', 'serif'], body: ['Libre Baskerville', 'serif'] }"
+    notes: All-serif pairing for traditional editorial feel.
+  - id: "5"
+    font_pairing_name: Minimal Swiss
+    category: Sans + Sans
+    heading_font: Inter
+    body_font: Inter
+    mood_style_keywords: minimal, clean, swiss, functional, neutral, professional
+    best_for: Dashboards, admin panels, documentation, enterprise apps, design systems
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Inter', 'sans-serif'] }"
+    notes: Single font family with weight variations. Ultimate simplicity.
+  - id: "6"
+    font_pairing_name: Playful Creative
+    category: Display + Sans
+    heading_font: Fredoka
+    body_font: Nunito
+    mood_style_keywords: playful, friendly, fun, creative, warm, approachable
+    best_for: Children's apps, educational, gaming, creative tools, entertainment
+    google_fonts_url: https://fonts.google.com/share?selection.family=Fredoka:wght@400;500;600;700|Nunito:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Fredoka', 'sans-serif'], body: ['Nunito', 'sans-serif'] }"
+    notes: Rounded, friendly fonts perfect for playful UIs.
+  - id: "7"
+    font_pairing_name: Bold Statement
+    category: Display + Sans
+    heading_font: Bebas Neue
+    body_font: Source Sans 3
+    mood_style_keywords: bold, impactful, strong, dramatic, modern, headlines
+    best_for: Marketing sites, portfolios, agencies, event pages, sports
+    google_fonts_url: https://fonts.google.com/share?selection.family=Bebas+Neue|Source+Sans+3:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Bebas Neue', 'sans-serif'], body: ['Source Sans 3', 'sans-serif'] }"
+    notes: Bebas Neue for large headlines only. All-caps display font.
+  - id: "8"
+    font_pairing_name: Wellness Calm
+    category: Serif + Sans
+    heading_font: Lora
+    body_font: Raleway
+    mood_style_keywords: calm, wellness, health, relaxing, natural, organic
+    best_for: Health apps, wellness, spa, meditation, yoga, organic brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Lora:wght@400;500;600;700|Raleway:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Lora', 'serif'], sans: ['Raleway', 'sans-serif'] }"
+    notes: Lora's organic curves with Raleway's elegant simplicity.
+  - id: "9"
+    font_pairing_name: Developer Mono
+    category: Mono + Sans
+    heading_font: JetBrains Mono
+    body_font: IBM Plex Sans
+    mood_style_keywords: code, developer, technical, precise, functional, hacker
+    best_for: Developer tools, documentation, code editors, tech blogs, CLI apps
+    google_fonts_url: https://fonts.google.com/share?selection.family=IBM+Plex+Sans:wght@300;400;500;600;700|JetBrains+Mono:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['IBM Plex Sans', 'sans-serif'] }"
+    notes: JetBrains for code, IBM Plex for UI. Developer-focused.
+  - id: "10"
+    font_pairing_name: Retro Vintage
+    category: Display + Serif
+    heading_font: Abril Fatface
+    body_font: Merriweather
+    mood_style_keywords: retro, vintage, nostalgic, dramatic, decorative, bold
+    best_for: Vintage brands, breweries, restaurants, creative portfolios, posters
+    google_fonts_url: https://fonts.google.com/share?selection.family=Abril+Fatface|Merriweather:wght@300;400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Merriweather:wght@300;400;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Abril Fatface', 'serif'], body: ['Merriweather', 'serif'] }"
+    notes: Abril Fatface for hero headlines only. High-impact vintage feel.
+  - id: "11"
+    font_pairing_name: Geometric Modern
+    category: Sans + Sans
+    heading_font: Outfit
+    body_font: Work Sans
+    mood_style_keywords: geometric, modern, clean, balanced, contemporary, versatile
+    best_for: General purpose, portfolios, agencies, modern brands, landing pages
+    google_fonts_url: https://fonts.google.com/share?selection.family=Outfit:wght@300;400;500;600;700|Work+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Outfit', 'sans-serif'], body: ['Work Sans', 'sans-serif'] }"
+    notes: Both geometric but Outfit more distinctive for headings.
+  - id: "12"
+    font_pairing_name: Luxury Serif
+    category: Serif + Sans
+    heading_font: Cormorant
+    body_font: Montserrat
+    mood_style_keywords: luxury, high-end, fashion, elegant, refined, premium
+    best_for: Fashion brands, luxury e-commerce, jewelry, high-end services
+    google_fonts_url: https://fonts.google.com/share?selection.family=Cormorant:wght@400;500;600;700|Montserrat:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Cormorant', 'serif'], sans: ['Montserrat', 'sans-serif'] }"
+    notes: Cormorant's elegance with Montserrat's geometric precision.
+  - id: "13"
+    font_pairing_name: Friendly SaaS
+    category: Sans + Sans
+    heading_font: Plus Jakarta Sans
+    body_font: Plus Jakarta Sans
+    mood_style_keywords: friendly, modern, saas, clean, approachable, professional
+    best_for: SaaS products, web apps, dashboards, B2B, productivity tools
+    google_fonts_url: https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }"
+    notes: Single versatile font. Modern alternative to Inter.
+  - id: "14"
+    font_pairing_name: News Editorial
+    category: Serif + Sans
+    heading_font: Newsreader
+    body_font: Roboto
+    mood_style_keywords: news, editorial, journalism, trustworthy, readable, informative
+    best_for: News sites, blogs, magazines, journalism, content-heavy sites
+    google_fonts_url: https://fonts.google.com/share?selection.family=Newsreader:wght@400;500;600;700|Roboto:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Newsreader', 'serif'], sans: ['Roboto', 'sans-serif'] }"
+    notes: Newsreader designed for long-form reading. Roboto for UI.
+  - id: "15"
+    font_pairing_name: Handwritten Charm
+    category: Script + Sans
+    heading_font: Caveat
+    body_font: Quicksand
+    mood_style_keywords: handwritten, personal, friendly, casual, warm, charming
+    best_for: Personal blogs, invitations, creative portfolios, lifestyle brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Caveat:wght@400;500;600;700|Quicksand:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { script: ['Caveat', 'cursive'], sans: ['Quicksand', 'sans-serif'] }"
+    notes: Use Caveat sparingly for accents. Quicksand for body.
+  - id: "16"
+    font_pairing_name: Corporate Trust
+    category: Sans + Sans
+    heading_font: Lexend
+    body_font: Source Sans 3
+    mood_style_keywords: corporate, trustworthy, accessible, readable, professional, clean
+    best_for: Enterprise, government, healthcare, finance, accessibility-focused
+    google_fonts_url: https://fonts.google.com/share?selection.family=Lexend:wght@300;400;500;600;700|Source+Sans+3:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Lexend', 'sans-serif'], body: ['Source Sans 3', 'sans-serif'] }"
+    notes: Lexend designed for readability. Excellent accessibility.
+  - id: "17"
+    font_pairing_name: Brutalist Raw
+    category: Mono + Mono
+    heading_font: Space Mono
+    body_font: Space Mono
+    mood_style_keywords: brutalist, raw, technical, monospace, minimal, stark
+    best_for: Brutalist designs, developer portfolios, experimental, tech art
+    google_fonts_url: https://fonts.google.com/share?selection.family=Space+Mono:wght@400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');"
+    tailwind_config: "fontFamily: { mono: ['Space Mono', 'monospace'] }"
+    notes: All-mono for raw brutalist aesthetic. Limited weights.
+  - id: "18"
+    font_pairing_name: Fashion Forward
+    category: Sans + Sans
+    heading_font: Syne
+    body_font: Manrope
+    mood_style_keywords: fashion, avant-garde, creative, bold, artistic, edgy
+    best_for: Fashion brands, creative agencies, art galleries, design studios
+    google_fonts_url: https://fonts.google.com/share?selection.family=Manrope:wght@300;400;500;600;700|Syne:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Syne', 'sans-serif'], body: ['Manrope', 'sans-serif'] }"
+    notes: Syne's unique character for headlines. Manrope for readability.
+  - id: "19"
+    font_pairing_name: Soft Rounded
+    category: Sans + Sans
+    heading_font: Varela Round
+    body_font: Nunito Sans
+    mood_style_keywords: soft, rounded, friendly, approachable, warm, gentle
+    best_for: Children's products, pet apps, friendly brands, wellness, soft UI
+    google_fonts_url: https://fonts.google.com/share?selection.family=Nunito+Sans:wght@300;400;500;600;700|Varela+Round
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Varela+Round&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Varela Round', 'sans-serif'], body: ['Nunito Sans', 'sans-serif'] }"
+    notes: Both rounded and friendly. Perfect for soft UI designs.
+  - id: "20"
+    font_pairing_name: Premium Sans
+    category: Sans + Sans
+    heading_font: Satoshi
+    body_font: General Sans
+    mood_style_keywords: premium, modern, clean, sophisticated, versatile, balanced
+    best_for: Premium brands, modern agencies, SaaS, portfolios, startups
+    google_fonts_url: https://fonts.google.com/share?selection.family=DM+Sans:wght@400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['DM Sans', 'sans-serif'] }"
+    notes: "Note: Satoshi/General Sans on Fontshare. DM Sans as Google alternative."
+  - id: "21"
+    font_pairing_name: Vietnamese Friendly
+    category: Sans + Sans
+    heading_font: Be Vietnam Pro
+    body_font: Noto Sans
+    mood_style_keywords: vietnamese, international, readable, clean, multilingual, accessible
+    best_for: Vietnamese sites, multilingual apps, international products
+    google_fonts_url: https://fonts.google.com/share?selection.family=Be+Vietnam+Pro:wght@300;400;500;600;700|Noto+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Be Vietnam Pro', 'Noto Sans', 'sans-serif'] }"
+    notes: Be Vietnam Pro excellent Vietnamese support. Noto as fallback.
+  - id: "22"
+    font_pairing_name: Japanese Elegant
+    category: Serif + Sans
+    heading_font: Noto Serif JP
+    body_font: Noto Sans JP
+    mood_style_keywords: japanese, elegant, traditional, modern, multilingual, readable
+    best_for: Japanese sites, Japanese restaurants, cultural sites, anime/manga
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+JP:wght@300;400;500;700|Noto+Serif+JP:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Noto Serif JP', 'serif'], sans: ['Noto Sans JP', 'sans-serif'] }"
+    notes: Noto fonts excellent Japanese support. Traditional + modern feel.
+  - id: "23"
+    font_pairing_name: Korean Modern
+    category: Sans + Sans
+    heading_font: Noto Sans KR
+    body_font: Noto Sans KR
+    mood_style_keywords: korean, modern, clean, professional, multilingual, readable
+    best_for: Korean sites, K-beauty, K-pop, Korean businesses, multilingual
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+KR:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }"
+    notes: Clean Korean typography. Single font with weight variations.
+  - id: "24"
+    font_pairing_name: Chinese Traditional
+    category: Serif + Sans
+    heading_font: Noto Serif TC
+    body_font: Noto Sans TC
+    mood_style_keywords: chinese, traditional, elegant, cultural, multilingual, readable
+    best_for: Traditional Chinese sites, cultural content, Taiwan/Hong Kong markets
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+TC:wght@300;400;500;700|Noto+Serif+TC:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Noto Serif TC', 'serif'], sans: ['Noto Sans TC', 'sans-serif'] }"
+    notes: Traditional Chinese character support. Elegant pairing.
+  - id: "25"
+    font_pairing_name: Chinese Simplified
+    category: Sans + Sans
+    heading_font: Noto Sans SC
+    body_font: Noto Sans SC
+    mood_style_keywords: chinese, simplified, modern, professional, multilingual, readable
+    best_for: Simplified Chinese sites, mainland China market, business apps
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+SC:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Noto Sans SC', 'sans-serif'] }"
+    notes: Simplified Chinese support. Clean modern look.
+  - id: "26"
+    font_pairing_name: Arabic Elegant
+    category: Serif + Sans
+    heading_font: Noto Naskh Arabic
+    body_font: Noto Sans Arabic
+    mood_style_keywords: arabic, elegant, traditional, cultural, RTL, readable
+    best_for: Arabic sites, Middle East market, Islamic content, bilingual sites
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Naskh+Arabic:wght@400;500;600;700|Noto+Sans+Arabic:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Noto Naskh Arabic', 'serif'], sans: ['Noto Sans Arabic', 'sans-serif'] }"
+    notes: RTL support. Naskh for traditional, Sans for modern Arabic.
+  - id: "27"
+    font_pairing_name: Thai Modern
+    category: Sans + Sans
+    heading_font: Noto Sans Thai
+    body_font: Noto Sans Thai
+    mood_style_keywords: thai, modern, readable, clean, multilingual, accessible
+    best_for: Thai sites, Southeast Asia, tourism, Thai restaurants
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+Thai:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Noto Sans Thai', 'sans-serif'] }"
+    notes: Clean Thai typography. Excellent readability.
+  - id: "28"
+    font_pairing_name: Hebrew Modern
+    category: Sans + Sans
+    heading_font: Noto Sans Hebrew
+    body_font: Noto Sans Hebrew
+    mood_style_keywords: hebrew, modern, RTL, clean, professional, readable
+    best_for: Hebrew sites, Israeli market, Jewish content, bilingual sites
+    google_fonts_url: https://fonts.google.com/share?selection.family=Noto+Sans+Hebrew:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Noto Sans Hebrew', 'sans-serif'] }"
+    notes: RTL support. Clean modern Hebrew typography.
+  - id: "29"
+    font_pairing_name: Legal Professional
+    category: Serif + Sans
+    heading_font: EB Garamond
+    body_font: Lato
+    mood_style_keywords: legal, professional, traditional, trustworthy, formal, authoritative
+    best_for: Law firms, legal services, contracts, formal documents, government
+    google_fonts_url: https://fonts.google.com/share?selection.family=EB+Garamond:wght@400;500;600;700|Lato:wght@300;400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['EB Garamond', 'serif'], sans: ['Lato', 'sans-serif'] }"
+    notes: EB Garamond for authority. Lato for clean body text.
+  - id: "30"
+    font_pairing_name: Medical Clean
+    category: Sans + Sans
+    heading_font: Figtree
+    body_font: Noto Sans
+    mood_style_keywords: medical, clean, accessible, professional, healthcare, trustworthy
+    best_for: Healthcare, medical clinics, pharma, health apps, accessibility
+    google_fonts_url: https://fonts.google.com/share?selection.family=Figtree:wght@300;400;500;600;700|Noto+Sans:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Figtree', 'sans-serif'], body: ['Noto Sans', 'sans-serif'] }"
+    notes: Clean, accessible fonts for medical contexts.
+  - id: "31"
+    font_pairing_name: Financial Trust
+    category: Sans + Sans
+    heading_font: IBM Plex Sans
+    body_font: IBM Plex Sans
+    mood_style_keywords: financial, trustworthy, professional, corporate, banking, serious
+    best_for: Banks, finance, insurance, investment, fintech, enterprise
+    google_fonts_url: https://fonts.google.com/share?selection.family=IBM+Plex+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['IBM Plex Sans', 'sans-serif'] }"
+    notes: IBM Plex conveys trust and professionalism. Excellent for data.
+  - id: "32"
+    font_pairing_name: Real Estate Luxury
+    category: Serif + Sans
+    heading_font: Cinzel
+    body_font: Josefin Sans
+    mood_style_keywords: real estate, luxury, elegant, sophisticated, property, premium
+    best_for: Real estate, luxury properties, architecture, interior design
+    google_fonts_url: https://fonts.google.com/share?selection.family=Cinzel:wght@400;500;600;700|Josefin+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Cinzel', 'serif'], sans: ['Josefin Sans', 'sans-serif'] }"
+    notes: Cinzel's elegance for headlines. Josefin for modern body.
+  - id: "33"
+    font_pairing_name: Restaurant Menu
+    category: Serif + Sans
+    heading_font: Playfair Display SC
+    body_font: Karla
+    mood_style_keywords: restaurant, menu, culinary, elegant, foodie, hospitality
+    best_for: Restaurants, cafes, food blogs, culinary, hospitality
+    google_fonts_url: https://fonts.google.com/share?selection.family=Karla:wght@300;400;500;600;700|Playfair+Display+SC:wght@400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&family=Playfair+Display+SC:wght@400;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Playfair Display SC', 'serif'], sans: ['Karla', 'sans-serif'] }"
+    notes: Small caps Playfair for menu headers. Karla for descriptions.
+  - id: "34"
+    font_pairing_name: Art Deco
+    category: Display + Sans
+    heading_font: Poiret One
+    body_font: Didact Gothic
+    mood_style_keywords: art deco, vintage, 1920s, elegant, decorative, gatsby
+    best_for: Vintage events, art deco themes, luxury hotels, classic cocktails
+    google_fonts_url: https://fonts.google.com/share?selection.family=Didact+Gothic|Poiret+One
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Poiret+One&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Poiret One', 'sans-serif'], sans: ['Didact Gothic', 'sans-serif'] }"
+    notes: Poiret One for art deco headlines only. Didact for body.
+  - id: "35"
+    font_pairing_name: Magazine Style
+    category: Serif + Sans
+    heading_font: Libre Bodoni
+    body_font: Public Sans
+    mood_style_keywords: magazine, editorial, publishing, refined, journalism, print
+    best_for: Magazines, online publications, editorial content, journalism
+    google_fonts_url: https://fonts.google.com/share?selection.family=Libre+Bodoni:wght@400;500;600;700|Public+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@400;500;600;700&family=Public+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Libre Bodoni', 'serif'], sans: ['Public Sans', 'sans-serif'] }"
+    notes: Bodoni's editorial elegance. Public Sans for clean UI.
+  - id: "36"
+    font_pairing_name: Crypto/Web3
+    category: Sans + Sans
+    heading_font: Orbitron
+    body_font: Exo 2
+    mood_style_keywords: crypto, web3, futuristic, tech, blockchain, digital
+    best_for: Crypto platforms, NFT, blockchain, web3, futuristic tech
+    google_fonts_url: https://fonts.google.com/share?selection.family=Exo+2:wght@300;400;500;600;700|Orbitron:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Orbitron', 'sans-serif'], body: ['Exo 2', 'sans-serif'] }"
+    notes: Orbitron for futuristic headers. Exo 2 for readable body.
+  - id: "37"
+    font_pairing_name: Gaming Bold
+    category: Display + Sans
+    heading_font: Russo One
+    body_font: Chakra Petch
+    mood_style_keywords: gaming, bold, action, esports, competitive, energetic
+    best_for: Gaming, esports, action games, competitive sports, entertainment
+    google_fonts_url: https://fonts.google.com/share?selection.family=Chakra+Petch:wght@300;400;500;600;700|Russo+One
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Russo+One&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Russo One', 'sans-serif'], body: ['Chakra Petch', 'sans-serif'] }"
+    notes: Russo One for impact. Chakra Petch for techy body text.
+  - id: "38"
+    font_pairing_name: Indie/Craft
+    category: Display + Sans
+    heading_font: Amatic SC
+    body_font: Cabin
+    mood_style_keywords: indie, craft, handmade, artisan, organic, creative
+    best_for: Craft brands, indie products, artisan, handmade, organic products
+    google_fonts_url: https://fonts.google.com/share?selection.family=Amatic+SC:wght@400;700|Cabin:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Cabin:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Amatic SC', 'sans-serif'], sans: ['Cabin', 'sans-serif'] }"
+    notes: Amatic for handwritten feel. Cabin for readable body.
+  - id: "39"
+    font_pairing_name: Startup Bold
+    category: Sans + Sans
+    heading_font: Clash Display
+    body_font: Satoshi
+    mood_style_keywords: startup, bold, modern, innovative, confident, dynamic
+    best_for: Startups, pitch decks, product launches, bold brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Outfit:wght@400;500;600;700|Rubik:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Outfit', 'sans-serif'], body: ['Rubik', 'sans-serif'] }"
+    notes: "Note: Clash Display on Fontshare. Outfit as Google alternative."
+  - id: "40"
+    font_pairing_name: E-commerce Clean
+    category: Sans + Sans
+    heading_font: Rubik
+    body_font: Nunito Sans
+    mood_style_keywords: ecommerce, clean, shopping, product, retail, conversion
+    best_for: E-commerce, online stores, product pages, retail, shopping
+    google_fonts_url: https://fonts.google.com/share?selection.family=Nunito+Sans:wght@300;400;500;600;700|Rubik:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Rubik', 'sans-serif'], body: ['Nunito Sans', 'sans-serif'] }"
+    notes: Clean readable fonts perfect for product descriptions.
+  - id: "41"
+    font_pairing_name: Academic/Research
+    category: Serif + Sans
+    heading_font: Crimson Pro
+    body_font: Atkinson Hyperlegible
+    mood_style_keywords: academic, research, scholarly, accessible, readable, educational
+    best_for: Universities, research papers, academic journals, educational
+    google_fonts_url: https://fonts.google.com/share?selection.family=Atkinson+Hyperlegible:wght@400;700|Crimson+Pro:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Crimson+Pro:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Crimson Pro', 'serif'], sans: ['Atkinson Hyperlegible', 'sans-serif'] }"
+    notes: Crimson for scholarly headlines. Atkinson for accessibility.
+  - id: "42"
+    font_pairing_name: Dashboard Data
+    category: Mono + Sans
+    heading_font: Fira Code
+    body_font: Fira Sans
+    mood_style_keywords: dashboard, data, analytics, code, technical, precise
+    best_for: Dashboards, analytics, data visualization, admin panels
+    google_fonts_url: https://fonts.google.com/share?selection.family=Fira+Code:wght@400;500;600;700|Fira+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { mono: ['Fira Code', 'monospace'], sans: ['Fira Sans', 'sans-serif'] }"
+    notes: Fira family cohesion. Code for data, Sans for labels.
+  - id: "43"
+    font_pairing_name: Music/Entertainment
+    category: Display + Sans
+    heading_font: Righteous
+    body_font: Poppins
+    mood_style_keywords: music, entertainment, fun, energetic, bold, performance
+    best_for: Music platforms, entertainment, events, festivals, performers
+    google_fonts_url: https://fonts.google.com/share?selection.family=Poppins:wght@300;400;500;600;700|Righteous
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Righteous&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Righteous', 'sans-serif'], sans: ['Poppins', 'sans-serif'] }"
+    notes: Righteous for bold entertainment headers. Poppins for body.
+  - id: "44"
+    font_pairing_name: Minimalist Portfolio
+    category: Sans + Sans
+    heading_font: Archivo
+    body_font: Space Grotesk
+    mood_style_keywords: minimal, portfolio, designer, creative, clean, artistic
+    best_for: Design portfolios, creative professionals, minimalist brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Archivo:wght@300;400;500;600;700|Space+Grotesk:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Space Grotesk', 'sans-serif'], body: ['Archivo', 'sans-serif'] }"
+    notes: Space Grotesk for distinctive headers. Archivo for clean body.
+  - id: "45"
+    font_pairing_name: Kids/Education
+    category: Display + Sans
+    heading_font: Baloo 2
+    body_font: Comic Neue
+    mood_style_keywords: kids, education, playful, friendly, colorful, learning
+    best_for: Children's apps, educational games, kid-friendly content
+    google_fonts_url: https://fonts.google.com/share?selection.family=Baloo+2:wght@400;500;600;700|Comic+Neue:wght@300;400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Comic+Neue:wght@300;400;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Baloo 2', 'sans-serif'], sans: ['Comic Neue', 'sans-serif'] }"
+    notes: Fun, playful fonts for children. Comic Neue is readable comic style.
+  - id: "46"
+    font_pairing_name: Wedding/Romance
+    category: Script + Serif
+    heading_font: Great Vibes
+    body_font: Cormorant Infant
+    mood_style_keywords: wedding, romance, elegant, script, invitation, feminine
+    best_for: Wedding sites, invitations, romantic brands, bridal
+    google_fonts_url: https://fonts.google.com/share?selection.family=Cormorant+Infant:wght@300;400;500;600;700|Great+Vibes
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;500;600;700&family=Great+Vibes&display=swap');"
+    tailwind_config: "fontFamily: { script: ['Great Vibes', 'cursive'], serif: ['Cormorant Infant', 'serif'] }"
+    notes: Great Vibes for elegant accents. Cormorant for readable text.
+  - id: "47"
+    font_pairing_name: Science/Tech
+    category: Sans + Sans
+    heading_font: Exo
+    body_font: Roboto Mono
+    mood_style_keywords: science, technology, research, data, futuristic, precise
+    best_for: Science, research, tech documentation, data-heavy sites
+    google_fonts_url: https://fonts.google.com/share?selection.family=Exo:wght@300;400;500;600;700|Roboto+Mono:wght@300;400;500;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Exo', 'sans-serif'], mono: ['Roboto Mono', 'monospace'] }"
+    notes: Exo for modern tech feel. Roboto Mono for code/data.
+  - id: "48"
+    font_pairing_name: Accessibility First
+    category: Sans + Sans
+    heading_font: Atkinson Hyperlegible
+    body_font: Atkinson Hyperlegible
+    mood_style_keywords: accessible, readable, inclusive, WCAG, dyslexia-friendly, clear
+    best_for: Accessibility-critical sites, government, healthcare, inclusive design
+    google_fonts_url: https://fonts.google.com/share?selection.family=Atkinson+Hyperlegible:wght@400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Atkinson Hyperlegible', 'sans-serif'] }"
+    notes: Designed for maximum legibility. Excellent for accessibility.
+  - id: "49"
+    font_pairing_name: Sports/Fitness
+    category: Sans + Sans
+    heading_font: Barlow Condensed
+    body_font: Barlow
+    mood_style_keywords: sports, fitness, athletic, energetic, condensed, action
+    best_for: Sports, fitness, gyms, athletic brands, competition
+    google_fonts_url: https://fonts.google.com/share?selection.family=Barlow+Condensed:wght@400;500;600;700|Barlow:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Barlow Condensed', 'sans-serif'], body: ['Barlow', 'sans-serif'] }"
+    notes: Condensed for impact headlines. Regular Barlow for body.
+  - id: "50"
+    font_pairing_name: Luxury Minimalist
+    category: Serif + Sans
+    heading_font: Bodoni Moda
+    body_font: Jost
+    mood_style_keywords: luxury, minimalist, high-end, sophisticated, refined, premium
+    best_for: Luxury minimalist brands, high-end fashion, premium products
+    google_fonts_url: https://fonts.google.com/share?selection.family=Bodoni+Moda:wght@400;500;600;700|Jost:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Bodoni Moda', 'serif'], sans: ['Jost', 'sans-serif'] }"
+    notes: Bodoni's high contrast elegance. Jost for geometric body.
+  - id: "51"
+    font_pairing_name: Tech/HUD Mono
+    category: Mono + Mono
+    heading_font: Share Tech Mono
+    body_font: Fira Code
+    mood_style_keywords: tech, futuristic, hud, sci-fi, data, monospaced, precise
+    best_for: Sci-fi interfaces, developer tools, cybersecurity, dashboards
+    google_fonts_url: https://fonts.google.com/share?selection.family=Fira+Code:wght@300;400;500;600;700|Share+Tech+Mono
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');"
+    tailwind_config: "fontFamily: { hud: ['Share Tech Mono', 'monospace'], code: ['Fira Code', 'monospace'] }"
+    notes: Share Tech Mono has that classic sci-fi look.
+  - id: "52"
+    font_pairing_name: Pixel Retro
+    category: Display + Sans
+    heading_font: Press Start 2P
+    body_font: VT323
+    mood_style_keywords: pixel, retro, gaming, 8-bit, nostalgic, arcade
+    best_for: Pixel art games, retro websites, creative portfolios
+    google_fonts_url: https://fonts.google.com/share?selection.family=Press+Start+2P|VT323
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');"
+    tailwind_config: "fontFamily: { pixel: ['Press Start 2P', 'cursive'], terminal: ['VT323', 'monospace'] }"
+    notes: Press Start 2P is very wide/large. VT323 is better for body text.
+  - id: "53"
+    font_pairing_name: Neubrutalist Bold
+    category: Display + Sans
+    heading_font: Lexend Mega
+    body_font: Public Sans
+    mood_style_keywords: bold, neubrutalist, loud, strong, geometric, quirky
+    best_for: Neubrutalist designs, Gen Z brands, bold marketing
+    google_fonts_url: https://fonts.google.com/share?selection.family=Lexend+Mega:wght@100..900|Public+Sans:wght@100..900
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@100..900&family=Public+Sans:wght@100..900&display=swap');"
+    tailwind_config: "fontFamily: { mega: ['Lexend Mega', 'sans-serif'], body: ['Public Sans', 'sans-serif'] }"
+    notes: Lexend Mega has distinct character and variable weight.
+  - id: "54"
+    font_pairing_name: Academic/Archival
+    category: Serif + Serif
+    heading_font: EB Garamond
+    body_font: Crimson Text
+    mood_style_keywords: academic, old-school, university, research, serious, traditional
+    best_for: University sites, archives, research papers, history
+    google_fonts_url: https://fonts.google.com/share?selection.family=Crimson+Text:wght@400;600;700|EB+Garamond:wght@400;500;600;700;800
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=EB+Garamond:wght@400;500;600;700;800&display=swap');"
+    tailwind_config: "fontFamily: { classic: ['EB Garamond', 'serif'], text: ['Crimson Text', 'serif'] }"
+    notes: Classic academic aesthetic. Very legible.
+  - id: "55"
+    font_pairing_name: Spatial Clear
+    category: Sans + Sans
+    heading_font: Inter
+    body_font: Inter
+    mood_style_keywords: spatial, legible, glass, system, clean, neutral
+    best_for: Spatial computing, AR/VR, glassmorphism interfaces
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');"
+    tailwind_config: "fontFamily: { sans: ['Inter', 'sans-serif'] }"
+    notes: Optimized for readability on dynamic backgrounds.
+  - id: "56"
+    font_pairing_name: Kinetic Motion
+    category: Display + Mono
+    heading_font: Syncopate
+    body_font: Space Mono
+    mood_style_keywords: kinetic, motion, futuristic, speed, wide, tech
+    best_for: Music festivals, automotive, high-energy brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Space+Mono:wght@400;700|Syncopate:wght@400;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syncopate:wght@400;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Syncopate', 'sans-serif'], mono: ['Space Mono', 'monospace'] }"
+    notes: Syncopate's wide stance works well with motion effects.
+  - id: "57"
+    font_pairing_name: Gen Z Brutal
+    category: Display + Sans
+    heading_font: Anton
+    body_font: Epilogue
+    mood_style_keywords: brutal, loud, shouty, meme, internet, bold
+    best_for: Gen Z marketing, streetwear, viral campaigns
+    google_fonts_url: https://fonts.google.com/share?selection.family=Anton|Epilogue:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { display: ['Anton', 'sans-serif'], body: ['Epilogue', 'sans-serif'] }"
+    notes: Anton is impactful and condensed. Good for stickers/badges.

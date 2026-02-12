@@ -1,0 +1,120 @@
+# Production Patterns - HSA Event-Driven Skill
+# Updated: 2026-02-12
+
+metadata:
+  skill: event-driven
+  domain: production
+  version: "1.0.0"
+  updated: "2026-02-12"
+  patterns_count: 8
+
+patterns:
+  - id: prod001
+    name: dead_letter_queue
+    category: production
+    description: DLQ for failed messages after max retries
+    text: dead letter queue DLQ failed message poison retry max
+    example: |
+      async function consume(msg) {
+        try {
+          await process(msg);
+          await msg.ack();
+        } catch (err) {
+          if (msg.retryCount >= MAX_RETRIES) {
+            await dlq.publish(msg); // Move to DLQ
+            await msg.ack(); // Remove from main queue
+            logger.error("Message moved to DLQ", { msgId: msg.id, error: err });
+          } else {
+            await msg.nack({ requeue: true, delay: backoff(msg.retryCount) });
+          }
+        }
+      }
+
+  - id: prod002
+    name: idempotent_consumer
+    category: production
+    description: Prevent duplicate message processing
+    text: idempotent consumer deduplication event id unique processing
+    example: |
+      async function handleEvent(event) {
+        // Check if already processed (atomic operation)
+        const isNew = await redis.set(`event:${event.id}`, "1", "NX", "EX", 86400);
+        if (!isNew) return; // Already processed, skip
+        await processEvent(event);
+      }
+    severity: CRITICAL
+
+  - id: prod003
+    name: schema_evolution
+    category: production
+    description: Backward-compatible schema changes
+    text: schema evolution backward compatible forward add field version
+    rules:
+      safe: ["Add optional fields", "Add new event types", "Deprecate fields"]
+      unsafe: ["Remove fields", "Rename fields", "Change field types"]
+    example: |
+      // Schema registry (Confluent)
+      const registry = new SchemaRegistry({ host: "http://localhost:8081" });
+      const schema = await registry.getLatestSchema("order-value");
+
+  - id: prod004
+    name: consumer_lag_monitoring
+    category: monitoring
+    description: Monitor consumer lag to detect processing delays
+    text: consumer lag monitoring delay backlog alert threshold
+    metrics:
+      - "consumer_lag: messages behind (Kafka: per partition)"
+      - "processing_rate: messages/second"
+      - "error_rate: failed messages/second"
+      - "dlq_depth: messages in DLQ"
+    alert_thresholds:
+      warning: "lag > 1000 messages"
+      critical: "lag > 10000 messages or growing"
+
+  - id: prod005
+    name: backpressure
+    category: production
+    description: Handle backpressure when consumers can't keep up
+    text: backpressure slow consumer rate limiting buffer overflow
+    strategies:
+      - "Consumer-side rate limiting (prefetch count)"
+      - "Buffer with bounded queue"
+      - "Auto-scale consumers based on lag"
+      - "Circuit breaker for downstream services"
+
+  - id: prod006
+    name: ordered_processing
+    category: production
+    description: Maintain message ordering guarantees
+    text: ordered processing sequence partition key FIFO guarantee
+    strategies:
+      kafka: "Same partition key → same partition → ordered"
+      rabbitmq: "Single consumer per queue → ordered"
+      nats: "Deliver policy: all, subject-based ordering"
+
+  - id: prod007
+    name: retry_strategy
+    category: production
+    description: Exponential backoff retry with jitter
+    text: retry strategy exponential backoff jitter delay
+    example: |
+      function backoff(attempt) {
+        const base = 1000; // 1 second
+        const max = 60000; // 60 seconds
+        const delay = Math.min(base * Math.pow(2, attempt), max);
+        const jitter = delay * Math.random() * 0.3; // 30% jitter
+        return delay + jitter;
+      }
+
+  - id: prod008
+    name: graceful_shutdown
+    category: production
+    description: Graceful consumer shutdown without message loss
+    text: graceful shutdown drain stop process signal SIGTERM
+    example: |
+      process.on("SIGTERM", async () => {
+        logger.info("Shutting down consumer...");
+        await consumer.stop(); // Stop fetching new messages
+        await consumer.disconnect(); // Wait for in-flight to complete
+        process.exit(0);
+      });

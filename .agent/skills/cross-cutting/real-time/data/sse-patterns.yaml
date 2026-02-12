@@ -1,0 +1,181 @@
+# Server-Sent Events Patterns — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: SSE-001
+    name: Basic SSE Server
+    category: server
+    description: |
+      Server-Sent Events for unidirectional server → client streaming.
+    example: |
+      // Express.js SSE endpoint
+      app.get("/api/events", (req, res) => {
+        res.writeHead(200, {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+          "X-Accel-Buffering": "no"  // NGINX: disable buffering
+        });
+        
+        // Send keepalive comment every 15s
+        const keepAlive = setInterval(() => res.write(": keepalive\n\n"), 15000);
+        
+        // Send events
+        const sendEvent = (event: string, data: unknown) => {
+          res.write(`event: ${event}\n`);
+          res.write(`data: ${JSON.stringify(data)}\n\n`);
+        };
+        
+        sendEvent("connected", { status: "ok" });
+        
+        req.on("close", () => {
+          clearInterval(keepAlive);
+        });
+      });
+
+  - id: SSE-002
+    name: LLM Token Streaming
+    category: ai
+    description: |
+      Stream LLM responses token-by-token via SSE.
+    text: |
+      The de facto standard for AI chat streaming.
+      Used by ChatGPT, Claude, Gemini web interfaces.
+    example: |
+      // Server: Stream LLM response
+      app.post("/api/chat", async (req, res) => {
+        res.writeHead(200, {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive"
+        });
+        
+        const stream = await openai.chat.completions.create({
+          model: "gpt-4",
+          messages: req.body.messages,
+          stream: true
+        });
+        
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content;
+          if (content) {
+            res.write(`data: ${JSON.stringify({ content })}\n\n`);
+          }
+        }
+        res.write("data: [DONE]\n\n");
+        res.end();
+      });
+
+      // Client: Consume stream
+      const response = await fetch("/api/chat", { method: "POST", body, signal });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const text = decoder.decode(value);
+        // Parse SSE format and extract data
+        for (const line of text.split("\n")) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") break;
+            const { content } = JSON.parse(data);
+            appendToUI(content);
+          }
+        }
+      }
+
+  - id: SSE-003
+    name: EventSource Client
+    category: client
+    description: |
+      Native browser EventSource API.
+    text: |
+      Pros: Auto-reconnect, simple API, HTTP/1.1 compatible
+      Cons: GET only, max 6 connections per domain (HTTP/1.1)
+      Workaround: Use HTTP/2 for unlimited connections
+    example: |
+      const source = new EventSource("/api/events");
+
+      source.onopen = () => console.log("Connected");
+      source.onerror = () => console.log("Error, will auto-reconnect");
+
+      // Default event
+      source.onmessage = (e) => console.log("Message:", e.data);
+
+      // Named events
+      source.addEventListener("notification", (e) => {
+        const data = JSON.parse(e.data);
+        showNotification(data.title, data.body);
+      });
+
+      // Custom last event ID for resumption
+      // Server sends: id: <event-id>\n
+      // Browser sends Last-Event-ID header on reconnect
+
+  - id: SSE-004
+    name: Custom Event Types
+    category: protocol
+    description: |
+      SSE event format with custom types.
+    text: |
+      SSE format:
+      event: <type>\n
+      data: <json>\n
+      id: <event-id>\n
+      retry: <ms>\n
+      \n
+    example: |
+      // Server sends
+      res.write("event: user-joined\n");
+      res.write("data: {\"user\":\"alice\"}\n");
+      res.write("id: evt-123\n\n");
+
+      res.write("event: message\n");
+      res.write("data: {\"text\":\"Hello\"}\n");
+      res.write("id: evt-124\n\n");
+
+      // Set retry interval
+      res.write("retry: 5000\n\n");
+
+  - id: SSE-005
+    name: NGINX SSE Configuration
+    category: infrastructure
+    description: |
+      NGINX configuration for SSE proxying.
+    example: |
+      location /api/events {
+        proxy_pass http://backend:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_buffering off;           # Critical for SSE
+        proxy_cache off;
+        proxy_read_timeout 86400;
+        chunked_transfer_encoding off;
+      }
+
+  - id: SSE-006
+    name: SSE vs WebSocket vs Long Polling
+    category: comparison
+    description: |
+      When to use each real-time technology.
+    text: |
+      | Feature | SSE | WebSocket | Long Polling |
+      |---------|-----|-----------|-------------|
+      | Direction | Server→Client | Bidirectional | Server→Client |
+      | Protocol | HTTP/1.1+ | ws:// / wss:// | HTTP |
+      | Auto-reconnect | ✅ Built-in | ❌ Manual | ❌ Manual |
+      | Browser limit | 6 (HTTP/1.1) | Unlimited | Many |
+      | Binary data | ❌ Text only | ✅ Yes | ❌ Text |
+      | Best for | Notifications, LLM | Chat, gaming | Legacy compat |
+
+  - id: SSE-007
+    name: Fetch-based SSE
+    category: client
+    description: |
+      Use fetch + ReadableStream for POST-based SSE (LLM pattern).
+    text: |
+      EventSource only supports GET.
+      For POST (chat messages), use fetch + stream reader.
+      Libraries: eventsource-parser, @microsoft/fetch-event-source

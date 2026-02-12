@@ -1,41 +1,55 @@
-name: tailwind
-version: "6.1.2"
-display: Tailwind CSS
-category: styling
+﻿name: tailwind
+version: "6.2.1"
+display: Tailwind CSS 4.0
+category: cross-cutting
 tier: 1
 priority: 2
 
-description: |
-  Utility-first CSS framework for Tailwind CSS 4.
-  Covers @theme, @utility, design tokens, container queries.
+desc: "Utility-first CSS framework for Tailwind CSS 4.1. CSS-first config, Rust+Lightning CSS engine, new variants, 3D transforms, container queries, P3 colors, migration v3→v4"
 
 triggers:
   file_patterns:
     - "tailwind.config.js"
     - "tailwind.config.ts"
     - "*.css"
+    - "postcss.config.js"
+    - "vite.config.ts"
   keywords:
     # Core
     - tailwind
     - tailwindcss
     - tailwind 4
-    # Features
+    - "@tailwindcss"
+    # v4 Features
+    - "@theme"
+    - "@utility"
+    - "@source"
+    - container query
+    # Variants
     - utility class
     - dark:
     - responsive
+    - not-*
+    - starting:
   intents:
     - tailwind styling
     - utility classes
     - tailwind design
+    - css-first config
+    - tailwind migration
 
 related_skills:
   - react
   - vue
   - nextjs
+  - svelte
 
 caps:
-  - Tailwind CSS 4
-  - CSS-first config
+  - Tailwind CSS 4.0 (Jan 2025)
+  - CSS-first configuration (@theme, @utility, @source)
+  - Oxide engine (5x faster builds)
+  - New variants (not-*, starting, inert, nth-*)
+  - 3D transforms & gradients
   - Container queries
-  - Dark mode
-  - Design tokens
+  - P3 color palette
+  - Migration from v3

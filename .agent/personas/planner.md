@@ -1,6 +1,6 @@
 ---
 name: planner
-version: "6.1.2"
+version: "6.2.1"
 persona_id: "plan-001"
 
 # =============================================================================
@@ -60,6 +60,9 @@ tools:
     - find_by_name
     - list_dir
     - search_web
+    - hsa_detect_stack
+    - hsa_get_context
+    - hsa_search_patterns
   restricted:
     - replace_file_content # Planners don't code
     - run_command
@@ -165,4 +168,4 @@ output_template: |
   - 🚫 [Blocker 1]
 ---
 
-# DOMYH Awesome Code v6.1.2 • Planner Persona
+# DOMYH Awesome Code • Planner Persona

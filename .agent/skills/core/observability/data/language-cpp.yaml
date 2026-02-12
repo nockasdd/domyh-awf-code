@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_cpp
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-cpp.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: CPP-001
+    name: OpenTelemetry SDK
+    category: CPP
+    description: Initialize OTel in C++
+    example: opentelemetry::sdk::trace::TracerProvider
+    library: opentelemetry-cpp
+  - id: CPP-002
+    name: TracerProvider Setup
+    category: CPP
+    description: Configure tracer
+    example: TracerProviderFactory::Create()
+    library: opentelemetry-cpp
+  - id: CPP-003
+    name: MeterProvider Setup
+    category: CPP
+    description: Configure metrics
+    example: MeterProviderFactory::Create()
+    library: opentelemetry-cpp
+  - id: CPP-004
+    name: OTLP Exporter
+    category: CPP
+    description: Export via OTLP
+    example: OtlpGrpcExporterFactory::Create(options)
+    library: opentelemetry-cpp
+  - id: CPP-005
+    name: Manual Spans
+    category: CPP
+    description: Create custom spans
+    example: auto span = tracer->StartSpan('operation');
+    library: opentelemetry-cpp
+  - id: CPP-006
+    name: Span Attributes
+    category: CPP
+    description: Add metadata
+    example: span->SetAttribute('key', 'value');
+    library: opentelemetry-cpp
+  - id: CPP-007
+    name: Context Propagation
+    category: CPP
+    description: Pass context
+    example: opentelemetry::context::RuntimeContext
+    library: opentelemetry-cpp
+  - id: CPP-008
+    name: Scope Guard
+    category: CPP
+    description: Auto-close spans
+    example: auto scope = tracer->WithActiveSpan(span);
+    library: opentelemetry-cpp
+  - id: CPP-009
+    name: prometheus-cpp
+    category: CPP
+    description: Prometheus metrics
+    example: prometheus::Registry registry;
+    library: prometheus-cpp
+  - id: CPP-010
+    name: prometheus-cpp Counter
+    category: CPP
+    description: Create counter
+    example: auto& counter = BuildCounter().Name('requests').Register(registry);
+    library: prometheus-cpp
+  - id: CPP-011
+    name: prometheus-cpp Histogram
+    category: CPP
+    description: Create histogram
+    example: BuildHistogram().Name('latency').Buckets({...})
+    library: prometheus-cpp
+  - id: CPP-012
+    name: prometheus-cpp Exposer
+    category: CPP
+    description: HTTP endpoint
+    example: Exposer exposer{'0.0.0.0:8080'}; exposer.RegisterCollectable(registry);
+    library: prometheus-cpp
+  - id: CPP-013
+    name: perf
+    category: CPP
+    description: Linux profiler
+    example: perf record -g ./myapp; perf report
+    library: perf
+  - id: CPP-014
+    name: gprof
+    category: CPP
+    description: GNU profiler
+    example: -pg flag, gprof ./myapp gmon.out
+    library: gprof
+  - id: CPP-015
+    name: Valgrind Memcheck
+    category: CPP
+    description: Memory debugging
+    example: valgrind --leak-check=full ./myapp
+    library: valgrind
+  - id: CPP-016
+    name: Valgrind Callgrind
+    category: CPP
+    description: Call graph profiling
+    example: valgrind --tool=callgrind ./myapp
+    library: valgrind
+  - id: CPP-017
+    name: Tracy
+    category: CPP
+    description: Real-time profiler
+    example: ZoneScoped; ZoneText('region', 6);
+    library: tracy
+  - id: CPP-018
+    name: Tracy Frame
+    category: CPP
+    description: Frame marking
+    example: FrameMark;
+    library: tracy
+  - id: CPP-019
+    name: Tracy Memory
+    category: CPP
+    description: Track allocations
+    example: TracyAlloc(ptr, size); TracyFree(ptr);
+    library: tracy
+  - id: CPP-020
+    name: Intel VTune
+    category: CPP
+    description: Intel profiler
+    example: vtune -collect hotspots ./myapp
+    library: vtune
+  - id: CPP-021
+    name: gperftools
+    category: CPP
+    description: Google perf tools
+    example: ProfilerStart('profile.prof'); ProfilerStop();
+    library: gperftools
+  - id: CPP-022
+    name: Orbit Profiler
+    category: CPP
+    description: Visual C++ profiler
+    example: Real-time sampling visualization
+    library: orbit
+  - id: CPP-023
+    name: AddressSanitizer
+    category: CPP
+    description: Memory error detector
+    example: -fsanitize=address
+    library: asan
+  - id: CPP-024
+    name: ThreadSanitizer
+    category: CPP
+    description: Data race detector
+    example: -fsanitize=thread
+    library: tsan
+  - id: CPP-025
+    name: Coz Profiler
+    category: CPP
+    description: Causal profiler
+    example: Identify optimization impact
+    library: coz

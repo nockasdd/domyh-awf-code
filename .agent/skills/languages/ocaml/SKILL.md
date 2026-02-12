@@ -1,12 +1,12 @@
 ---
 name: ocaml
 detect: ["*.ml", "*.mli", "dune", "dune-project", "*.opam"]
-version: "6.1.2"
+version: "6.2.1"
 category: functional
 tier: 3
 ---
 
-# OCaml Patterns — DOMYH Awesome Code v6.1.2
+# OCaml Patterns — DOMYH Awesome Code
 
 > **Version**: OCaml 5.1+ (2025-2026)
 > **Build**: Dune, opam
@@ -120,4 +120,4 @@ let () = Lwt_main.run (main ())
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • OCaml 5.1+_
+_DOMYH Awesome Code • OCaml 5.1+_

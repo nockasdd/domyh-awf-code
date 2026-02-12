@@ -1,0 +1,165 @@
+metadata:
+  skill: observability
+  domain: language_rust
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-rust.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - library
+patterns:
+  - id: RS-001
+    name: tracing crate
+    category: Rust
+    description: Structured diagnostics framework
+    example: tracing::info!('processing request')
+    library: tracing
+  - id: RS-002
+    name: tracing Spans
+    category: Rust
+    description: Create spans in Rust
+    example: "#[tracing::instrument]"
+    library: tracing
+  - id: RS-003
+    name: tracing Subscriber
+    category: Rust
+    description: Configure output format
+    example: tracing_subscriber::fmt::init()
+    library: tracing-subscriber
+  - id: RS-004
+    name: tracing Events
+    category: Rust
+    description: Record events
+    example: tracing::debug!(key = value, 'message')
+    library: tracing
+  - id: RS-005
+    name: tracing Attributes
+    category: Rust
+    description: Add span attributes
+    example: "#[instrument(fields(user_id = %id))]"
+    library: tracing
+  - id: RS-006
+    name: opentelemetry-rust
+    category: Rust
+    description: OTel SDK for Rust
+    example: opentelemetry::global::set_tracer_provider()
+    library: opentelemetry
+  - id: RS-007
+    name: OTLP Exporter Rust
+    category: Rust
+    description: Export via OTLP
+    example: opentelemetry_otlp::new_exporter()
+    library: opentelemetry-otlp
+  - id: RS-008
+    name: tracing-opentelemetry
+    category: Rust
+    description: Bridge tracing to OTel
+    example: tracing_opentelemetry::layer()
+    library: tracing-opentelemetry
+  - id: RS-009
+    name: Context Propagation
+    category: Rust
+    description: OTel context in tracing spans
+    example: opentelemetry::global::tracer('app')
+    library: opentelemetry
+  - id: RS-010
+    name: prometheus crate
+    category: Rust
+    description: Prometheus metrics
+    example: prometheus::register_counter!()
+    library: prometheus
+  - id: RS-011
+    name: prometheus HTTP
+    category: Rust
+    description: Expose /metrics
+    example: prometheus::TextEncoder.encode(&metric_families)
+    library: prometheus
+  - id: RS-012
+    name: metrics crate
+    category: Rust
+    description: Abstract metrics facade
+    example: metrics::counter!('requests_total', 1)
+    library: metrics
+  - id: RS-013
+    name: metrics-exporter-prometheus
+    category: Rust
+    description: Prometheus exporter for metrics
+    example: PrometheusBuilder::new().install()
+    library: metrics-exporter-prometheus
+  - id: RS-014
+    name: tokio-console
+    category: Rust
+    description: Runtime debugging
+    example: "#[instrument] + tokio-console subscriber"
+    library: tokio-console
+  - id: RS-015
+    name: tracing-flame
+    category: Rust
+    description: Generate flame graphs
+    example: FlameLayer::with_file(file)
+    library: tracing-flame
+  - id: RS-016
+    name: pprof-rs
+    category: Rust
+    description: CPU profiling
+    example: pprof::ProfilerGuard::new(100)
+    library: pprof
+  - id: RS-017
+    name: Tracy Rust
+    category: Rust
+    description: Real-time profiler
+    example: tracy_client::span!('region')
+    library: tracy-client
+  - id: RS-018
+    name: Actix-web Tracing
+    category: Rust
+    description: Trace Actix-web apps
+    example: tracing_actix_web::TracingLogger
+    library: tracing-actix-web
+  - id: RS-019
+    name: Tower Tracing
+    category: Rust
+    description: Trace tower/axum services
+    example: tower_http::trace::TraceLayer
+    library: tower-http
+  - id: RS-020
+    name: Axum Instrumentation
+    category: Rust
+    description: Auto-trace Axum
+    example: TraceLayer::new_for_http()
+    library: axum
+  - id: RS-021
+    name: Tokio Runtime Metrics
+    category: Rust
+    description: Collect runtime stats
+    example: tokio::runtime::RuntimeMetrics
+    library: tokio
+  - id: RS-022
+    name: Memory Profiling
+    category: Rust
+    description: Track allocations
+    example: "#[global_allocator] with tracking"
+    library: dhat
+  - id: RS-023
+    name: Flamegraph Rust
+    category: Rust
+    description: Generate flame graphs
+    example: cargo flamegraph
+    library: flamegraph
+  - id: RS-024
+    name: Criterion Benchmarks
+    category: Rust
+    description: Performance benchmarks
+    example: criterion::Benchmark::new(...)
+    library: criterion
+  - id: RS-025
+    name: opentelemetry-appender-tracing
+    category: Rust
+    description: OTel logs from tracing
+    example: Logs bridge to OTel
+    library: opentelemetry-appender-tracing

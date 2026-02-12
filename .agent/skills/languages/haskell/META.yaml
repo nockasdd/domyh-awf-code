@@ -1,47 +1,12 @@
 name: haskell
-version: "6.1.2"
+version: "6.2.1"
 category: functional
-tier: 2
+tier: 3
 
-description: |
-  Haskell development patterns for GHC 9.8+.
-  Covers pure FP, type classes, monads, servant, lens.
+domains:
+  core: 5
 
-triggers:
-  file_patterns:
-    - "*.hs"
-    - "*.cabal"
-    - "stack.yaml"
-    - "cabal.project"
-    - "package.yaml"
-  keywords:
-    # Core
-    - haskell
-    - ghc
-    - ghci
-    - cabal
-    - stack
-    # Features
-    - monad
-    - functor
-    - applicative
-    - type class
-    - pure function
-    - algebraic data type
-    # Libraries
-    - servant
-    - yesod
-    - lens
-    - aeson
-    - mtl
-    - transformers
-    - parsec
-    - quickcheck
-  intents:
-    - create haskell project
-    - haskell api
-    - pure functional
-    - type-safe haskell
+desc: "Haskell development patterns for GHC 9.8+. Covers pure FP, type classes, monads, servant, lens."
 
 related_skills:
   - scala

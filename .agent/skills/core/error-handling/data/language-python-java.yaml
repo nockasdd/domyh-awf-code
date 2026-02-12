@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: language_python_java
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-python-java.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - language
+    - category
+    - level
+patterns:
+  - id: EH-PY-001
+    pattern: try-except
+    description: Catch exceptions in block
+    example: "try: risky() except Error as e: handle(e)"
+    language: Python
+    category: Exception
+    level: BASIC
+  - id: EH-PY-002
+    pattern: raise
+    description: Throw exception
+    example: raise ValueError("invalid input")
+    language: Python
+    category: Exception
+    level: BASIC
+  - id: EH-PY-003
+    pattern: Custom Exception
+    description: Define exception class
+    example: "class MyError(Exception): pass"
+    language: Python
+    category: Definition
+    level: BASIC
+  - id: EH-PY-004
+    pattern: except specific
+    description: Catch specific exception type
+    example: "except ValueError as e: handle(e)"
+    language: Python
+    category: Exception
+    level: BASIC
+  - id: EH-PY-005
+    pattern: except multiple
+    description: Catch multiple exception types
+    example: "except (ValueError, TypeError) as e:"
+    language: Python
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-PY-006
+    pattern: else clause
+    description: Code if no exception
+    example: "try: x = f() except: handle() else: use(x)"
+    language: Python
+    category: Control
+    level: INTERMEDIATE
+  - id: EH-PY-007
+    pattern: finally
+    description: Always execute cleanup
+    example: "try: f = open() finally: f.close()"
+    language: Python
+    category: Cleanup
+    level: BASIC
+  - id: EH-PY-008
+    pattern: with statement
+    description: Context manager auto-cleanup
+    example: "with open('file') as f: data = f.read()"
+    language: Python
+    category: Resource
+    level: BASIC
+  - id: EH-PY-009
+    pattern: Exception chaining
+    description: Chain with from keyword
+    example: raise NewError() from original_error
+    language: Python
+    category: Chain
+    level: INTERMEDIATE
+  - id: EH-PY-010
+    pattern: re-raise
+    description: Re-raise current exception
+    example: "except: log(); raise"
+    language: Python
+    category: Propagation
+    level: BASIC
+  - id: EH-PY-011
+    pattern: BaseException
+    description: Catch all including system
+    example: "except BaseException: # not recommended"
+    language: Python
+    category: Danger
+    level: BASIC
+  - id: EH-PY-012
+    pattern: sys.exc_info
+    description: Get exception details
+    example: exc_type, exc_val, exc_tb = sys.exc_info()
+    language: Python
+    category: Debug
+    level: ADVANCED
+  - id: EH-PY-013
+    pattern: traceback
+    description: Format stack trace
+    example: traceback.format_exc()
+    language: Python
+    category: Debug
+    level: INTERMEDIATE
+  - id: EH-PY-014
+    pattern: contextlib.suppress
+    description: Ignore specific exceptions
+    example: "with suppress(FileNotFoundError): remove(f)"
+    language: Python
+    category: Utility
+    level: INTERMEDIATE
+  - id: EH-PY-015
+    pattern: Exception Groups
+    description: Group multiple exceptions (3.11+)
+    example: raise ExceptionGroup('errors', [e1, e2])
+    language: Python
+    category: Modern
+    level: ADVANCED
+  - id: EH-JAVA-001
+    pattern: try-catch
+    description: Catch exceptions
+    example: try { risky(); } catch (Exception e) { handle(e); }
+    language: Java
+    category: Exception
+    level: BASIC
+  - id: EH-JAVA-002
+    pattern: throw
+    description: Throw exception
+    example: throw new IllegalArgumentException("msg");
+    language: Java
+    category: Exception
+    level: BASIC
+  - id: EH-JAVA-003
+    pattern: throws
+    description: Declare method can throw
+    example: void f() throws IOException {}
+    language: Java
+    category: Declaration
+    level: BASIC
+  - id: EH-JAVA-004
+    pattern: finally
+    description: Always execute cleanup
+    example: try {} catch {} finally { cleanup(); }
+    language: Java
+    category: Cleanup
+    level: BASIC
+  - id: EH-JAVA-005
+    pattern: try-with-resources
+    description: Auto-close resources
+    example: try (var r = open()) { use(r); }
+    language: Java
+    category: Resource
+    level: BASIC
+  - id: EH-JAVA-006
+    pattern: Custom Exception
+    description: Extend Exception class
+    example: class MyException extends Exception {}
+    language: Java
+    category: Definition
+    level: INTERMEDIATE
+  - id: EH-JAVA-007
+    pattern: Checked Exception
+    description: Must be caught or declared
+    example: IOException must be handled
+    language: Java
+    category: Type
+    level: BASIC
+  - id: EH-JAVA-008
+    pattern: Unchecked Exception
+    description: RuntimeException subclass
+    example: NullPointerException is unchecked
+    language: Java
+    category: Type
+    level: BASIC
+  - id: EH-JAVA-009
+    pattern: Multi-catch
+    description: Catch multiple types
+    example: catch (IOException | SQLException e) {}
+    language: Java
+    category: Exception
+    level: INTERMEDIATE
+  - id: EH-JAVA-010
+    pattern: Exception chaining
+    description: Create with cause
+    example: throw new MyEx("msg", cause);
+    language: Java
+    category: Chain
+    level: INTERMEDIATE
+  - id: EH-JAVA-011
+    pattern: getCause
+    description: Get root cause
+    example: exception.getCause()
+    language: Java
+    category: Chain
+    level: BASIC
+  - id: EH-JAVA-012
+    pattern: Suppressed Exception
+    description: Exceptions from try-with
+    example: Throwable[] suppressed = e.getSuppressed();
+    language: Java
+    category: Resource
+    level: ADVANCED
+  - id: EH-JAVA-013
+    pattern: CompletableFuture Exception
+    description: Handle async errors
+    example: .exceptionally(ex -> fallback)
+    language: Java
+    category: Async
+    level: INTERMEDIATE
+  - id: EH-JAVA-014
+    pattern: Optional
+    description: Avoid null returns
+    example: Optional.ofNullable(value).orElseThrow()
+    language: Java
+    category: Null Safe
+    level: BASIC
+  - id: EH-JAVA-015
+    pattern: Objects.requireNonNull
+    description: Validate not null
+    example: Objects.requireNonNull(param, "msg");
+    language: Java
+    category: Validation
+    level: BASIC

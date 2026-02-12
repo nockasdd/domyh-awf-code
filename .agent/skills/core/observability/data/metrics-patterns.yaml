@@ -1,0 +1,135 @@
+metadata:
+  skill: observability
+  domain: metrics_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: metrics-patterns.yaml
+  patterns_count: 20
+  columns:
+    - pattern_id
+    - name
+    - category
+    - description
+    - example
+    - level
+patterns:
+  - id: MET-001
+    name: RED Method Rate
+    category: Metrics
+    description: Requests per second
+    example: http_requests_total / interval
+    level: beginner
+  - id: MET-002
+    name: RED Method Errors
+    category: Metrics
+    description: Error rate percentage
+    example: http_errors_total / http_requests_total * 100
+    level: beginner
+  - id: MET-003
+    name: RED Method Duration
+    category: Metrics
+    description: Request latency distribution
+    example: p50, p95, p99 latencies
+    level: beginner
+  - id: MET-004
+    name: USE Method Utilization
+    category: Metrics
+    description: Resource usage percentage
+    example: cpu_usage / cpu_total * 100
+    level: intermediate
+  - id: MET-005
+    name: USE Method Saturation
+    category: Metrics
+    description: Queue depth / waiting
+    example: thread_pool_queue_size
+    level: intermediate
+  - id: MET-006
+    name: USE Method Errors
+    category: Metrics
+    description: Error counts for resources
+    example: disk_errors_total
+    level: intermediate
+  - id: MET-007
+    name: Business Metrics
+    category: Metrics
+    description: Domain-specific KPIs
+    example: orders_placed_total, revenue_dollars
+    level: intermediate
+  - id: MET-008
+    name: SLI Metrics
+    category: Metrics
+    description: Service Level Indicators
+    example: successful_requests / total_requests
+    level: intermediate
+  - id: MET-009
+    name: Latency Histograms
+    category: Metrics
+    description: Distribution buckets for latency
+    example: "[0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]"
+    level: intermediate
+  - id: MET-010
+    name: Percentiles
+    category: Metrics
+    description: p50/p90/p95/p99 calculations
+    example: histogram_quantile() in PromQL
+    level: intermediate
+  - id: MET-011
+    name: Throughput Metrics
+    category: Metrics
+    description: Operations per time unit
+    example: requests_per_second, messages_per_minute
+    level: beginner
+  - id: MET-012
+    name: Error Classification
+    category: Metrics
+    description: Categorize errors by type
+    example: 4xx vs 5xx, timeout vs connection
+    level: intermediate
+  - id: MET-013
+    name: Resource Metrics
+    category: Metrics
+    description: CPU/Memory/Disk/Network
+    example: process_cpu_seconds_total
+    level: beginner
+  - id: MET-014
+    name: Queue Metrics
+    category: Metrics
+    description: Queue depth, processing time
+    example: messages_in_queue, message_age_seconds
+    level: intermediate
+  - id: MET-015
+    name: Connection Pool Metrics
+    category: Metrics
+    description: Pool size, usage, wait time
+    example: db_pool_connections_active
+    level: intermediate
+  - id: MET-016
+    name: Cache Metrics
+    category: Metrics
+    description: Hit rate, miss rate, evictions
+    example: cache_hits_total, cache_misses_total
+    level: intermediate
+  - id: MET-017
+    name: Custom Dimensions
+    category: Metrics
+    description: Add context via labels
+    example: environment, version, region
+    level: beginner
+  - id: MET-018
+    name: Metric Aggregation
+    category: Metrics
+    description: Combine metrics across instances
+    example: sum, avg, max by dimensions
+    level: intermediate
+  - id: MET-019
+    name: Derived Metrics
+    category: Metrics
+    description: Calculate from raw metrics
+    example: error_rate = errors / requests
+    level: intermediate
+  - id: MET-020
+    name: Baseline Metrics
+    category: Metrics
+    description: Normal operating ranges
+    example: Compare current to historical baseline
+    level: advanced

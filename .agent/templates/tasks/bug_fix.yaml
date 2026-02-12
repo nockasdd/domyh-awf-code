@@ -8,7 +8,7 @@
 
 ```yaml
 task_type: bug_fix
-version: "6.1.2"
+version: "6.2.1"
 
 # Required fields
 symptom: string              # What's the visible problem
@@ -118,4 +118,4 @@ This task type triggers:
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Bug Fix Task Template_
+_DOMYH Awesome Code • Bug Fix Task Template_

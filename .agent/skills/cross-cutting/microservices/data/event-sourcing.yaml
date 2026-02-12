@@ -1,0 +1,231 @@
+# =============================================================================
+# event-sourcing.yaml — Event Sourcing Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# CORE CONCEPT
+# =============================================================================
+
+overview:
+  description: |
+    Store state as a sequence of domain events. Current state is derived
+    by replaying events. Provides complete audit trail and temporal queries.
+
+  architecture: |
+    Command → Aggregate → Events → Event Store
+                                       ↓
+                              Projections → Read Models
+
+# =============================================================================
+# EVENT STORE
+# =============================================================================
+
+event_store:
+  schema:
+    fields:
+      - name: event_id
+        type: UUID
+        description: "Unique event identifier"
+      - name: aggregate_id
+        type: UUID
+        description: "ID of the aggregate that produced the event"
+      - name: aggregate_type
+        type: string
+        description: "Type of aggregate (e.g., 'Order', 'Account')"
+      - name: event_type
+        type: string
+        description: "Type of event (e.g., 'OrderCreated')"
+      - name: event_data
+        type: jsonb
+        description: "Serialized event payload"
+      - name: metadata
+        type: jsonb
+        description: "Correlation ID, causation ID, user ID"
+      - name: version
+        type: integer
+        description: "Aggregate version for optimistic concurrency"
+      - name: created_at
+        type: timestamp
+        description: "When the event occurred"
+
+  sql_create: |
+    CREATE TABLE events (
+        event_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        aggregate_id   UUID NOT NULL,
+        aggregate_type VARCHAR(100) NOT NULL,
+        event_type     VARCHAR(100) NOT NULL,
+        event_data     JSONB NOT NULL,
+        metadata       JSONB DEFAULT '{}',
+        version        INTEGER NOT NULL,
+        created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+        UNIQUE(aggregate_id, version)
+    );
+
+    CREATE INDEX idx_events_aggregate ON events(aggregate_id, version);
+    CREATE INDEX idx_events_type ON events(event_type);
+    CREATE INDEX idx_events_created ON events(created_at);
+
+  implementations:
+    - name: EventStoreDB
+      language: "Any"
+      description: "Purpose-built event store database"
+    - name: PostgreSQL + JSONB
+      language: "Any"
+      description: "Relational DB with JSON events"
+    - name: DynamoDB
+      language: "Any"
+      description: "AWS NoSQL with streams"
+    - name: Marten
+      language: "C#"
+      description: ".NET event sourcing on PostgreSQL"
+
+# =============================================================================
+# AGGREGATE PATTERN
+# =============================================================================
+
+aggregate:
+  example_go: |
+    type Order struct {
+        id      string
+        status  OrderStatus
+        items   []OrderItem
+        total   float64
+        version int
+        changes []DomainEvent // Uncommitted events
+    }
+
+    func NewOrderFromHistory(events []DomainEvent) *Order {
+        o := &Order{}
+        for _, e := range events {
+            o.apply(e)
+            o.version++
+        }
+        return o
+    }
+
+    func (o *Order) PlaceOrder(items []OrderItem) error {
+        if len(items) == 0 {
+            return ErrEmptyOrder
+        }
+        total := calculateTotal(items)
+        o.raise(OrderPlaced{
+            OrderID: o.id,
+            Items:   items,
+            Total:   total,
+        })
+        return nil
+    }
+
+    func (o *Order) raise(event DomainEvent) {
+        o.apply(event)
+        o.changes = append(o.changes, event)
+    }
+
+    func (o *Order) apply(event DomainEvent) {
+        switch e := event.(type) {
+        case OrderPlaced:
+            o.status = StatusPending
+            o.items = e.Items
+            o.total = e.Total
+        case OrderPaid:
+            o.status = StatusPaid
+        case OrderCancelled:
+            o.status = StatusCancelled
+        }
+    }
+
+# =============================================================================
+# SNAPSHOTS
+# =============================================================================
+
+snapshots:
+  purpose: |
+    Avoid replaying all events for long-lived aggregates. Periodically save
+    current state as a snapshot. Replay only events after the snapshot.
+
+  strategy:
+    frequency: "Every N events (e.g., every 100)"
+    schema:
+      - aggregate_id: UUID
+      - snapshot_data: JSONB
+      - version: INTEGER
+      - created_at: TIMESTAMP
+
+  loading_flow: |
+    1. Load latest snapshot (if exists)
+    2. Load events AFTER snapshot version
+    3. Apply events to snapshot state
+    4. → Current aggregate state
+
+  example: |
+    func (r *EventStoreRepo) Load(ctx context.Context, id string) (*Order, error) {
+        // 1. Try snapshot first
+        snapshot, err := r.loadSnapshot(ctx, id)
+        fromVersion := 0
+        var order *Order
+
+        if snapshot != nil {
+            order = snapshot.ToOrder()
+            fromVersion = snapshot.Version
+        }
+
+        // 2. Load events after snapshot
+        events, err := r.loadEvents(ctx, id, fromVersion)
+
+        // 3. Apply remaining events
+        for _, e := range events {
+            order.apply(e)
+        }
+        return order, nil
+    }
+
+# =============================================================================
+# EVENT VERSIONING
+# =============================================================================
+
+versioning:
+  strategies:
+    - name: "Upcasting"
+      description: "Transform old event format to new on read"
+      example: |
+        // v1: { amount: 100 }
+        // v2: { amount: 100, currency: "USD" }
+        func upcastV1ToV2(v1 OrderCreatedV1) OrderCreatedV2 {
+            return OrderCreatedV2{
+                Amount:   v1.Amount,
+                Currency: "USD", // Default for old events
+            }
+        }
+
+    - name: "Weak Schema"
+      description: "Use JSONB, ignore unknown fields"
+
+    - name: "New Event Type"
+      description: "Create new event type, keep old"
+      example: "OrderCreatedV2 alongside OrderCreated"
+
+# =============================================================================
+# ANTI-PATTERNS
+# =============================================================================
+
+anti_patterns:
+  - name: "Event as CRUD"
+    problem: "UserUpdated with all fields — not a domain event"
+    fix: "Use specific events: EmailChanged, AddressUpdated"
+
+  - name: "Too many events per aggregate"
+    problem: "Slow replay, memory issues"
+    fix: "Use snapshots every 100 events"
+
+  - name: "Mutable events"
+    problem: "Changing past events breaks audit trail"
+    fix: "Events are IMMUTABLE. Append corrective events instead"
+
+  - name: "Missing correlation IDs"
+    problem: "Cannot trace event chains"
+    fix: "Always include correlationId and causationId in metadata"
+
+# _DOMYH Awesome Code • Event Sourcing Patterns_

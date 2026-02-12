@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - English Strings
-# i18n/en.yaml v6.1.2 — Enhanced i18n System
+# i18n/en.yaml v6.2.1 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version synced from core/VERSION.yaml
 # Usage: Agent reads language from state.json → loads corresponding i18n file
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.1.2" # Sync from VERSION.yaml
-  version_short: "v6.1.2"
+  version: "6.2.1" # Sync from VERSION.yaml
+  version_short: "v6.2.1"
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
   language_name: "English"
@@ -49,10 +49,10 @@ commands:
     desc: "Comprehensive code audit with 5-expert panel"
     help: "Usage: /ap [scope] — scope: full | quick | security"
   code:
-    name: "Write Code"
+    name: "Write & Fix Code"
     short: "Code"
-    desc: "Write production-ready code with Auto Test Loop"
-    help: "Usage: /code [description] — Options: --test, --no-test, --plan"
+    desc: "Write production-ready code, fix/improve existing projects"
+    help: "Usage: /code [task] | /code fix [issue] | /code improve [target] | /code analyze [path]"
   debug:
     name: "Debug"
     short: "Debug"
@@ -68,11 +68,6 @@ commands:
     short: "Test"
     desc: "Run tests and write new test cases"
     help: "Usage: /test [scope] — scope: unit | integration | e2e | all"
-  modify:
-    name: "Modify Project"
-    short: "Modify"
-    desc: "Fix and improve existing project"
-    help: "Usage: /modify [description of issue to fix]"
 
   # Planning (5)
   think:
@@ -140,20 +135,37 @@ commands:
     desc: "Review PRs with security and performance checks"
     help: "Usage: /review [pr_link or file_path]"
   refactor:
-    name: "Refactor"
+    name: "Refactor & Clean"
     short: "Refactor"
-    desc: "Improve code structure without changing behavior"
-    help: "Usage: /refactor [scope] — scope: file | module | pattern"
-  clean:
-    name: "Clean"
-    short: "Clean"
-    desc: "Remove dead code and unused dependencies"
-    help: "Usage: /clean [type] — type: code | deps | all"
+    desc: "Refactor code structure, clean dead code, organize imports"
+    help: "Usage: /refactor [scope] | /refactor clean [type] | /refactor clean dead"
   upgrade:
     name: "Upgrade"
     short: "Upgrade"
     desc: "Update dependencies with compatibility checks"
     help: "Usage: /upgrade [scope] — scope: minor | major | security"
+
+  # New Commands (v6.3)
+  git:
+    name: "Git"
+    short: "Git"
+    desc: "Git operations hub with conventional commits"
+    help: "Usage: /git [command] — commit | branch | stash | log | diff | merge"
+  fix:
+    name: "Quick Fix"
+    short: "Fix"
+    desc: "Quick-fix pipeline for immediate error resolution"
+    help: "Usage: /fix [error] | /fix last | /fix build | /fix lint | /fix types"
+  scaffold:
+    name: "Scaffold"
+    short: "Scaffold"
+    desc: "Generate components, pages, services from project patterns"
+    help: "Usage: /scaffold [type] [name] — component | page | service | module | api"
+  workflow:
+    name: "Workflow"
+    short: "Workflow"
+    desc: "Workflow discovery, chaining, and management"
+    help: "Usage: /workflow list | /workflow chain [a] [b] | /workflow suggest"
 
   # Utility (6)
   status:
@@ -166,21 +178,6 @@ commands:
     short: "Recap"
     desc: "Session summary"
     help: "Usage: /recap"
-  suggest:
-    name: "Suggest"
-    short: "Suggest"
-    desc: "Suggest next steps based on context"
-    help: "Usage: /suggest"
-  save:
-    name: "Save"
-    short: "Save"
-    desc: "Save session to memory files"
-    help: "Usage: /save"
-  lang:
-    name: "Language"
-    short: "Lang"
-    desc: "Switch agent language"
-    help: "Usage: /lang [code] — code: vi | en"
   help:
     name: "Help"
     short: "Help"
@@ -235,7 +232,7 @@ messages:
   progress_complete: "✅ Complete!"
   progress_failed: "❌ Failed"
 
-  # Deep Interview (v6.1.2)
+  # Deep Interview (v6.2.1)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "What exactly does this feature handle/manage?"
   interview_question_who: "Who uses it? □ Solo | □ Team (2-10) | □ Public"
@@ -243,7 +240,7 @@ messages:
   interview_skip: "→ Sufficient context, skipping interview"
   interview_complete: "→ Context gathered, proceeding with planning..."
 
-  # Auto Test Loop (v6.1.2)
+  # Auto Test Loop (v6.2.1)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Trying different approach..."
   test_loop_pass: "✅ Tests passed!"
@@ -256,7 +253,7 @@ messages:
     3️⃣ Run /debug for deep analysis
     4️⃣ Rollback to before the fix
 
-  # Step Confirmation (v6.1.2)
+  # Step Confirmation (v6.2.1)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ DONE: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Continue to next task? (y/adjust/stop)"
 

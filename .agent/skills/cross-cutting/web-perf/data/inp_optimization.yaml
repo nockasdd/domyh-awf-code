@@ -1,0 +1,240 @@
+# =============================================================================
+# INP Optimization Patterns (Feb 2026)
+# =============================================================================
+# Interaction to Next Paint optimization techniques
+
+metadata:
+  skill: web-perf
+  domain: inp-optimization
+  version: "2025.1"
+  updated: "2026-02-05"
+  patterns_count: 8
+
+patterns:
+  - id: inp001
+    name: Break Up Long Tasks
+    category: INP
+    impact: CRITICAL
+    description: Split JavaScript tasks > 50ms into smaller chunks
+    text: long task yield main thread chunk scheduler inp responsiveness
+    example: |
+      // Before: Long blocking task
+      function processAll(items) {
+        items.forEach(item => heavyProcess(item));
+      }
+
+      // After: Chunked with yielding
+      async function processAll(items) {
+        for (const item of items) {
+          heavyProcess(item);
+          
+          // Yield to main thread every 50ms
+          if (performance.now() - lastYield > 50) {
+            await scheduler.yield();
+            lastYield = performance.now();
+          }
+        }
+      }
+
+      // Alternative: requestIdleCallback
+      function processInIdle(items, index = 0) {
+        requestIdleCallback((deadline) => {
+          while (index < items.length && deadline.timeRemaining() > 0) {
+            heavyProcess(items[index++]);
+          }
+          if (index < items.length) {
+            processInIdle(items, index);
+          }
+        });
+      }
+    severity: CRITICAL
+    docs_url: https://web.dev/optimize-long-tasks/
+
+  - id: inp002
+    name: Use Web Workers
+    category: INP
+    impact: HIGH
+    description: Offload heavy computation from main thread
+    text: web worker thread offload main computation background
+    example: |
+      // worker.js
+      self.onmessage = (e) => {
+        const result = heavyComputation(e.data);
+        self.postMessage(result);
+      };
+
+      // main.js
+      const worker = new Worker('worker.js');
+
+      worker.onmessage = (e) => {
+        updateUI(e.result);
+      };
+
+      // Offload heavy work
+      worker.postMessage(largeDataset);
+    severity: HIGH
+    docs_url: https://web.dev/off-main-thread/
+
+  - id: inp003
+    name: Defer Non-Critical JavaScript
+    category: INP
+    impact: HIGH
+    description: Load analytics, widgets after initial interaction
+    text: defer async script third party analytics non critical load
+    example: |
+      <!-- Defer non-critical scripts -->
+      <script defer src="/analytics.js"></script>
+
+      <!-- Load after interaction -->
+      <script>
+        let interacted = false;
+        document.addEventListener('click', () => {
+          if (!interacted) {
+            interacted = true;
+            // Load analytics after first interaction
+            const script = document.createElement('script');
+            script.src = '/analytics.js';
+            document.body.appendChild(script);
+          }
+        }, { once: true });
+      </script>
+    severity: HIGH
+    docs_url: https://web.dev/defer-non-critical-css/
+
+  - id: inp004
+    name: Optimize Event Handlers
+    category: INP
+    impact: HIGH
+    description: Use passive listeners and debounce expensive operations
+    text: event handler passive listener debounce throttle scroll input
+    example: |
+      // Passive event listeners (can't call preventDefault)
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('touchstart', onTouch, { passive: true });
+
+      // Debounce expensive handlers
+      const debouncedSearch = debounce((query) => {
+        search(query);
+      }, 300);
+
+      input.addEventListener('input', (e) => {
+        debouncedSearch(e.target.value);
+      });
+
+      // Throttle scroll updates
+      const throttledScroll = throttle(() => {
+        updateProgress();
+      }, 16); // 60fps
+    severity: HIGH
+    docs_url: https://web.dev/optimize-inp/
+
+  - id: inp005
+    name: Minimize DOM Size
+    category: INP
+    impact: MEDIUM
+    description: Reduce DOM nodes for faster style calculations and layouts
+    text: dom size nodes tree depth virtual scroll lazy render
+    example: |
+      <!-- Avoid deeply nested DOM -->
+      <!-- BAD: 15 levels of nesting -->
+      <div><div><div>...<span>Text</span>...</div></div></div>
+
+      <!-- Use virtual scrolling for long lists -->
+      import { FixedSizeList } from 'react-window';
+
+      <FixedSizeList
+        height={400}
+        itemCount={10000}
+        itemSize={50}
+      >
+        {Row}
+      </FixedSizeList>
+
+      <!-- Target: < 1500 DOM nodes, < 32 depth -->
+    severity: MEDIUM
+    docs_url: https://web.dev/dom-size/
+
+  - id: inp006
+    name: Code Splitting
+    category: INP
+    impact: HIGH
+    description: Load only needed JavaScript for the current route/feature
+    text: code splitting lazy load dynamic import bundle chunk route
+    example: |
+      // React lazy loading
+      const HeavyComponent = React.lazy(() => 
+        import('./HeavyComponent')
+      );
+
+      // Route-based splitting (Next.js)
+      import dynamic from 'next/dynamic';
+      const Chart = dynamic(() => import('./Chart'), {
+        loading: () => <Skeleton />,
+        ssr: false,
+      });
+
+      // Vite/Rollup manual chunks
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              vendor: ['react', 'react-dom'],
+              charts: ['chart.js', 'd3'],
+            },
+          },
+        },
+      }
+    severity: HIGH
+    docs_url: https://web.dev/reduce-javascript-payloads-with-code-splitting/
+
+  - id: inp007
+    name: Use CSS Containment
+    category: INP
+    impact: MEDIUM
+    description: Limit style/layout recalculation scope with CSS containment
+    text: css containment contain layout paint style scope isolation
+    example: |
+      /* Contain layout recalculations */
+      .card {
+        contain: layout style paint;
+      }
+
+      /* Content-visibility for off-screen content */
+      .section {
+        content-visibility: auto;
+        contain-intrinsic-size: 500px;
+      }
+
+      /* Benefits:
+         - Faster layout calculations
+         - Skips off-screen rendering
+         - Improves scroll performance
+      */
+    severity: MEDIUM
+    docs_url: https://web.dev/content-visibility/
+
+  - id: inp008
+    name: Avoid Layout Thrashing
+    category: INP
+    impact: HIGH
+    description: Batch reads and writes to avoid forced synchronous layouts
+    text: layout thrashing forced reflow read write batch performance
+    example: |
+      // BAD: Forces layout between reads/writes
+      elements.forEach(el => {
+        const height = el.offsetHeight; // Read
+        el.style.height = height + 10 + 'px'; // Write - triggers layout!
+      });
+
+      // GOOD: Batch reads, then batch writes
+      const heights = elements.map(el => el.offsetHeight); // All reads
+      elements.forEach((el, i) => {
+        el.style.height = heights[i] + 10 + 'px'; // All writes
+      });
+
+      // BEST: Use requestAnimationFrame
+      requestAnimationFrame(() => {
+        // Write operations
+      });
+    severity: HIGH
+    docs_url: https://web.dev/avoid-large-complex-layouts-and-layout-thrashing/

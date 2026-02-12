@@ -1,0 +1,446 @@
+metadata:
+  skill: coding-rules
+  domain: framework_directories
+  version: 6.2.1
+  updated: "2026-02-12"
+  patterns_count: 15
+  columns:
+    - framework
+    - language
+    - architecture
+    - tree
+    - conventions
+    - reference_skill
+patterns:
+  - id: dir_001
+    framework: "Nuxt 4"
+    language: "Vue/TypeScript"
+    architecture: "File-based routing + Server hybrid"
+    tree: |
+      my-app/
+      ├── app/                    # Main app code
+      │   ├── components/
+      │   ├── composables/
+      │   ├── layouts/
+      │   ├── pages/
+      │   ├── plugins/
+      │   └── app.vue
+      ├── server/                 # Server code
+      │   ├── api/
+      │   ├── middleware/
+      │   └── routes/
+      ├── shared/                 # Shared across client/server
+      ├── public/
+      ├── nuxt.config.ts
+      └── package.json
+    conventions:
+      - "pages/ → auto file-based routing"
+      - "composables/ → auto-import"
+      - "server/api/ → API routes auto-mapped"
+      - "shared/ → cross client/server code"
+    reference_skill: "nuxt"
+
+  - id: dir_002
+    framework: "Next.js 16 (App Router)"
+    language: "TypeScript"
+    architecture: "Server Components + File-based routing"
+    tree: |
+      my-app/
+      ├── app/
+      │   ├── layout.tsx          # Root layout
+      │   ├── page.tsx            # Home page
+      │   ├── loading.tsx         # Loading UI
+      │   ├── error.tsx           # Error boundary
+      │   ├── not-found.tsx       # 404 page
+      │   ├── (auth)/             # Route group
+      │   │   ├── login/page.tsx
+      │   │   └── register/page.tsx
+      │   ├── dashboard/
+      │   │   ├── layout.tsx      # Nested layout
+      │   │   └── page.tsx
+      │   └── api/
+      │       └── users/route.ts  # API route
+      ├── components/
+      │   ├── ui/                 # shadcn components
+      │   └── features/
+      ├── lib/
+      │   ├── db.ts
+      │   └── utils.ts
+      ├── public/
+      └── next.config.ts
+    conventions:
+      - "app/ → file-based routing with layout nesting"
+      - "page.tsx → route page, layout.tsx → shared wrapper"
+      - "loading.tsx/error.tsx → automatic Suspense/ErrorBoundary"
+      - "(group)/ → URL-less route grouping"
+      - "route.ts → API endpoints (GET, POST, etc.)"
+    reference_skill: "nextjs"
+
+  - id: dir_003
+    framework: "React (Vite SPA)"
+    language: "TypeScript"
+    architecture: "Component-based SPA"
+    tree: |
+      my-app/
+      ├── src/
+      │   ├── components/
+      │   │   ├── ui/             # Shared UI
+      │   │   └── features/       # Feature components
+      │   ├── hooks/              # Custom hooks
+      │   ├── pages/              # Route pages
+      │   ├── stores/             # Zustand stores
+      │   ├── lib/                # API client, utils
+      │   ├── types/              # TypeScript types
+      │   ├── App.tsx
+      │   └── main.tsx
+      ├── public/
+      ├── vite.config.ts
+      └── package.json
+    conventions:
+      - "components/ui/ → reusable primitives"
+      - "components/features/ → business-logic components"
+      - "hooks/ → custom React hooks"
+      - "stores/ → state management (Zustand)"
+    reference_skill: "react"
+
+  - id: dir_004
+    framework: "Go (Standard Layout)"
+    language: "Go"
+    architecture: "Package by feature"
+    tree: |
+      myapp/
+      ├── cmd/
+      │   └── server/
+      │       └── main.go         # Entry point
+      ├── internal/               # Private packages
+      │   ├── handlers/           # HTTP handlers
+      │   ├── services/           # Business logic
+      │   ├── repository/         # Data access
+      │   ├── models/             # Domain types
+      │   └── middleware/         # HTTP middleware
+      ├── pkg/                    # Public packages
+      ├── migrations/             # Database migrations
+      ├── go.mod
+      ├── go.sum
+      └── Makefile
+    conventions:
+      - "cmd/ → entry points (one per binary)"
+      - "internal/ → private, cannot be imported externally"
+      - "pkg/ → public, importable by other projects"
+      - "go.mod → module definition"
+    reference_skill: "go"
+
+  - id: dir_005
+    framework: "Rust (Cargo)"
+    language: "Rust"
+    architecture: "Workspace + crate-based"
+    tree: |
+      my-project/
+      ├── src/
+      │   ├── main.rs             # Binary entry
+      │   ├── lib.rs              # Library root
+      │   ├── handlers/
+      │   │   └── mod.rs
+      │   ├── models/
+      │   │   └── mod.rs
+      │   └── services/
+      │       └── mod.rs
+      ├── tests/                  # Integration tests
+      ├── benches/                # Benchmarks
+      ├── Cargo.toml
+      └── Cargo.lock
+    conventions:
+      - "src/main.rs → binary, src/lib.rs → library"
+      - "mod.rs → module declaration"
+      - "tests/ → integration tests (unit tests inline)"
+      - "Cargo.toml → dependencies and config"
+    reference_skill: "rust"
+
+  - id: dir_006
+    framework: "Python (FastAPI)"
+    language: "Python"
+    architecture: "Package-based + API router"
+    tree: |
+      my-api/
+      ├── app/
+      │   ├── __init__.py
+      │   ├── main.py             # FastAPI app
+      │   ├── routers/
+      │   │   ├── users.py
+      │   │   └── products.py
+      │   ├── models/             # Pydantic/SQLAlchemy
+      │   ├── services/
+      │   ├── schemas/            # Pydantic schemas
+      │   └── database.py
+      ├── tests/
+      ├── alembic/                # Migrations
+      ├── requirements.txt
+      └── pyproject.toml
+    conventions:
+      - "routers/ → API route modules"
+      - "models/ → ORM models"
+      - "schemas/ → Pydantic request/response"
+      - "alembic/ → database migrations"
+    reference_skill: "python"
+
+  - id: dir_007
+    framework: "Flutter"
+    language: "Dart"
+    architecture: "Feature-first + Clean"
+    tree: |
+      my_app/
+      ├── lib/
+      │   ├── main.dart
+      │   ├── app/                # App config, routing
+      │   ├── features/
+      │   │   ├── auth/
+      │   │   │   ├── data/       # Repos, DTOs
+      │   │   │   ├── domain/     # Entities, use cases
+      │   │   │   └── presentation/  # Screens, widgets
+      │   │   └── home/
+      │   ├── core/               # Shared utils
+      │   └── l10n/               # Localization
+      ├── test/
+      ├── android/
+      ├── ios/
+      └── pubspec.yaml
+    conventions:
+      - "features/ → feature-first organization"
+      - "data/domain/presentation → clean architecture layers"
+      - "core/ → shared utilities, themes"
+      - "pubspec.yaml → dependencies"
+    reference_skill: "flutter"
+
+  - id: dir_008
+    framework: "Java (Spring Boot)"
+    language: "Java"
+    architecture: "Package by feature / Hexagonal"
+    tree: |
+      my-app/
+      ├── src/main/java/com/example/
+      │   ├── Application.java    # @SpringBootApplication
+      │   ├── user/
+      │   │   ├── UserController.java
+      │   │   ├── UserService.java
+      │   │   ├── UserRepository.java
+      │   │   ├── User.java       # Entity
+      │   │   └── UserDto.java
+      │   ├── order/
+      │   │   └── ...
+      │   └── config/
+      │       └── SecurityConfig.java
+      ├── src/main/resources/
+      │   └── application.yml
+      ├── src/test/java/
+      ├── pom.xml
+      └── build.gradle
+    conventions:
+      - "Package by feature (user/, order/)"
+      - "@Controller/@Service/@Repository stereotypes"
+      - "application.yml → externalized config"
+      - "src/test/ mirrors src/main structure"
+    reference_skill: "java"
+
+  - id: dir_009
+    framework: "Kotlin (Android + Jetpack Compose)"
+    language: "Kotlin"
+    architecture: "Feature-first + MVVM"
+    tree: |
+      my-app/
+      ├── app/src/main/
+      │   ├── java/com/example/
+      │   │   ├── MainActivity.kt
+      │   │   ├── navigation/
+      │   │   │   └── AppNavGraph.kt
+      │   │   ├── features/
+      │   │   │   ├── auth/
+      │   │   │   │   ├── AuthScreen.kt
+      │   │   │   │   └── AuthViewModel.kt
+      │   │   │   └── home/
+      │   │   ├── data/
+      │   │   │   ├── repository/
+      │   │   │   └── remote/
+      │   │   └── di/             # Hilt modules
+      │   └── res/
+      ├── app/src/test/
+      ├── build.gradle.kts
+      └── gradle/
+    conventions:
+      - "features/ → feature-first with Screen + ViewModel"
+      - "data/ → repository pattern"
+      - "di/ → Hilt dependency injection"
+      - "navigation/ → Compose NavGraph"
+    reference_skill: "kotlin"
+
+  - id: dir_010
+    framework: "C# (.NET Web API)"
+    language: "C#"
+    architecture: "Clean Architecture"
+    tree: |
+      MySolution/
+      ├── MySolution.sln
+      ├── src/
+      │   ├── Domain/
+      │   │   ├── Entities/
+      │   │   └── Interfaces/
+      │   ├── Application/
+      │   │   ├── Commands/
+      │   │   ├── Queries/
+      │   │   └── Behaviors/
+      │   ├── Infrastructure/
+      │   │   ├── Persistence/
+      │   │   └── Services/
+      │   └── WebApi/
+      │       ├── Controllers/
+      │       ├── Program.cs
+      │       └── appsettings.json
+      └── tests/
+          ├── UnitTests/
+          └── IntegrationTests/
+    conventions:
+      - "Domain → no external dependencies"
+      - "Application → depends on Domain only"
+      - "Infrastructure → implements Domain interfaces"
+      - "WebApi → thin controllers, delegate to Application"
+    reference_skill: "csharp"
+
+  - id: dir_011
+    framework: "Vue.js 3 (Vite SPA)"
+    language: "TypeScript"
+    architecture: "Composition API + Feature-based"
+    tree: |
+      my-app/
+      ├── src/
+      │   ├── components/
+      │   │   ├── ui/             # Shared UI
+      │   │   └── features/
+      │   ├── composables/        # Composition functions
+      │   ├── views/              # Route pages
+      │   ├── stores/             # Pinia stores
+      │   ├── router/
+      │   │   └── index.ts
+      │   ├── types/
+      │   ├── App.vue
+      │   └── main.ts
+      ├── public/
+      ├── vite.config.ts
+      └── package.json
+    conventions:
+      - "composables/ → reusable composition functions"
+      - "stores/ → Pinia state management"
+      - "views/ → route-level components"
+      - "components/ui/ → shared primitives"
+    reference_skill: "vue"
+
+  - id: dir_012
+    framework: "Electron"
+    language: "TypeScript"
+    architecture: "Multi-process (main + renderer)"
+    tree: |
+      my-app/
+      ├── src/
+      │   ├── main/               # Main process
+      │   │   ├── index.ts
+      │   │   ├── ipc/            # IPC handlers
+      │   │   └── services/
+      │   ├── renderer/           # Renderer process
+      │   │   ├── src/            # React/Vue app
+      │   │   └── index.html
+      │   └── preload/            # Preload scripts
+      │       └── index.ts
+      ├── resources/              # Icons, assets
+      ├── electron-builder.yml
+      └── package.json
+    conventions:
+      - "main/ → Node.js main process"
+      - "renderer/ → Chromium renderer (React/Vue)"
+      - "preload/ → secure bridge contextBridge"
+      - "IPC for cross-process communication"
+    reference_skill: "electron"
+
+  - id: dir_013
+    framework: "Ruby on Rails"
+    language: "Ruby"
+    architecture: "MVC + Convention over Configuration"
+    tree: |
+      my-app/
+      ├── app/
+      │   ├── controllers/
+      │   ├── models/
+      │   ├── views/
+      │   ├── helpers/
+      │   ├── jobs/               # Background jobs
+      │   └── services/           # Service objects
+      ├── config/
+      │   ├── routes.rb
+      │   └── database.yml
+      ├── db/
+      │   └── migrate/
+      ├── spec/                   # RSpec tests
+      └── Gemfile
+    conventions:
+      - "Convention over Configuration"
+      - "app/ → MVC components"
+      - "db/migrate/ → database migrations"
+      - "spec/ → RSpec test files"
+    reference_skill: "ruby"
+
+  - id: dir_014
+    framework: "Svelte/SvelteKit"
+    language: "TypeScript"
+    architecture: "File-based routing + Server"
+    tree: |
+      my-app/
+      ├── src/
+      │   ├── routes/             # File-based routing
+      │   │   ├── +layout.svelte
+      │   │   ├── +page.svelte    # Home page
+      │   │   ├── about/
+      │   │   │   └── +page.svelte
+      │   │   └── api/
+      │   │       └── users/+server.ts
+      │   ├── lib/
+      │   │   ├── components/
+      │   │   ├── stores/
+      │   │   └── utils/
+      │   └── app.html
+      ├── static/
+      ├── svelte.config.js
+      └── package.json
+    conventions:
+      - "routes/ → file-based routing"
+      - "+page.svelte → page component"
+      - "+server.ts → API endpoint"
+      - "$lib/ → alias for src/lib/"
+    reference_skill: "svelte"
+
+  - id: dir_015
+    framework: "PHP (Laravel)"
+    language: "PHP"
+    architecture: "MVC + Service Container"
+    tree: |
+      my-app/
+      ├── app/
+      │   ├── Http/
+      │   │   ├── Controllers/
+      │   │   ├── Middleware/
+      │   │   └── Requests/       # Form validation
+      │   ├── Models/
+      │   ├── Services/
+      │   └── Providers/
+      ├── routes/
+      │   ├── web.php
+      │   └── api.php
+      ├── database/
+      │   ├── migrations/
+      │   └── seeders/
+      ├── resources/views/
+      ├── config/
+      ├── tests/
+      └── composer.json
+    conventions:
+      - "routes/api.php → API route definitions"
+      - "app/Http/Controllers/ → controller classes"
+      - "app/Http/Requests/ → form request validation"
+      - "database/migrations/ → schema changes"
+    reference_skill: "php"

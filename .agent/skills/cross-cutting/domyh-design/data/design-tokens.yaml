@@ -1,0 +1,525 @@
+metadata:
+  skill: domyh-design
+  domain: design_tokens
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: design-tokens.yaml
+  patterns_count: 46
+  columns:
+    - token_category
+    - token_name
+    - web_css
+    - web_tailwind
+    - desktop_wpf
+    - desktop_winui3
+    - desktop_qt
+    - mobile_ios
+    - mobile_android
+    - mobile_flutter
+patterns:
+  - id: item_001
+    token_category: color
+    token_name: color.primary
+    web_css: var(--color-primary)
+    web_tailwind: bg-primary
+    desktop_wpf: "{DynamicResource PrimaryBrush}"
+    desktop_winui3: ThemeResource SystemAccentColor
+    desktop_qt: palette.highlight()
+    mobile_ios: Color.accentColor
+    mobile_android: MaterialTheme.colorScheme.primary
+    mobile_flutter: Theme.of(context).primaryColor
+  - id: item_002
+    token_category: color
+    token_name: color.secondary
+    web_css: var(--color-secondary)
+    web_tailwind: bg-secondary
+    desktop_wpf: "{DynamicResource SecondaryBrush}"
+    desktop_winui3: ThemeResource SystemColorGrayTextColor
+    desktop_qt: palette.mid()
+    mobile_ios: Color.secondary
+    mobile_android: MaterialTheme.colorScheme.secondary
+    mobile_flutter: Theme.of(context).colorScheme.secondary
+  - id: item_003
+    token_category: color
+    token_name: color.background
+    web_css: var(--color-background)
+    web_tailwind: bg-background
+    desktop_wpf: "{DynamicResource BackgroundBrush}"
+    desktop_winui3: ThemeResource ApplicationPageBackgroundThemeBrush
+    desktop_qt: palette.window()
+    mobile_ios: Color(.systemBackground)
+    mobile_android: MaterialTheme.colorScheme.background
+    mobile_flutter: Theme.of(context).scaffoldBackgroundColor
+  - id: item_004
+    token_category: color
+    token_name: color.surface
+    web_css: var(--color-surface)
+    web_tailwind: bg-surface
+    desktop_wpf: "{DynamicResource SurfaceBrush}"
+    desktop_winui3: ThemeResource CardBackgroundFillColorDefaultBrush
+    desktop_qt: palette.base()
+    mobile_ios: Color(.secondarySystemBackground)
+    mobile_android: MaterialTheme.colorScheme.surface
+    mobile_flutter: Theme.of(context).cardColor
+  - id: item_005
+    token_category: color
+    token_name: color.text.primary
+    web_css: var(--color-text)
+    web_tailwind: text-foreground
+    desktop_wpf: "{DynamicResource TextBrush}"
+    desktop_winui3: ThemeResource TextFillColorPrimaryBrush
+    desktop_qt: palette.text()
+    mobile_ios: Color.primary
+    mobile_android: MaterialTheme.colorScheme.onBackground
+    mobile_flutter: Theme.of(context).textTheme.bodyLarge?.color
+  - id: item_006
+    token_category: color
+    token_name: color.text.secondary
+    web_css: var(--color-text-muted)
+    web_tailwind: text-muted-foreground
+    desktop_wpf: "{DynamicResource TextSecondaryBrush}"
+    desktop_winui3: ThemeResource TextFillColorSecondaryBrush
+    desktop_qt: palette.placeholderText()
+    mobile_ios: Color.secondary
+    mobile_android: MaterialTheme.colorScheme.onSurfaceVariant
+    mobile_flutter: Theme.of(context).textTheme.bodySmall?.color
+  - id: item_007
+    token_category: color
+    token_name: color.border
+    web_css: var(--color-border)
+    web_tailwind: border-border
+    desktop_wpf: "{DynamicResource BorderBrush}"
+    desktop_winui3: ThemeResource CardStrokeColorDefaultBrush
+    desktop_qt: palette.shadow()
+    mobile_ios: Color.separator
+    mobile_android: MaterialTheme.colorScheme.outline
+    mobile_flutter: Theme.of(context).dividerColor
+  - id: item_008
+    token_category: color
+    token_name: color.destructive
+    web_css: var(--color-destructive)
+    web_tailwind: bg-destructive
+    desktop_wpf: "{DynamicResource ErrorBrush}"
+    desktop_winui3: ThemeResource SystemFillColorCriticalBrush
+    desktop_qt: palette.critical
+    mobile_ios: Color.red
+    mobile_android: MaterialTheme.colorScheme.error
+    mobile_flutter: Theme.of(context).colorScheme.error
+  - id: item_009
+    token_category: color
+    token_name: color.success
+    web_css: var(--color-success)
+    web_tailwind: bg-success
+    desktop_wpf: "{DynamicResource SuccessBrush}"
+    desktop_winui3: ThemeResource SystemFillColorSuccessBrush
+    desktop_qt: palette.success
+    mobile_ios: Color.green
+    mobile_android: MaterialTheme.colorScheme.tertiary
+    mobile_flutter: Colors.green
+  - id: item_010
+    token_category: color
+    token_name: color.warning
+    web_css: var(--color-warning)
+    web_tailwind: bg-warning
+    desktop_wpf: "{DynamicResource WarningBrush}"
+    desktop_winui3: ThemeResource SystemFillColorCautionBrush
+    desktop_qt: palette.warning
+    mobile_ios: Color.orange
+    mobile_android: Custom color
+    mobile_flutter: Colors.orange
+  - id: item_011
+    token_category: spacing
+    token_name: spacing.xs
+    web_css: 4px
+    web_tailwind: p-1
+    desktop_wpf: "4"
+    desktop_winui3: "4"
+    desktop_qt: "4"
+    mobile_ios: "4"
+    mobile_android: 4.dp
+    mobile_flutter: "4.0"
+  - id: item_012
+    token_category: spacing
+    token_name: spacing.sm
+    web_css: 8px
+    web_tailwind: p-2
+    desktop_wpf: "8"
+    desktop_winui3: "8"
+    desktop_qt: "8"
+    mobile_ios: "8"
+    mobile_android: 8.dp
+    mobile_flutter: "8.0"
+  - id: item_013
+    token_category: spacing
+    token_name: spacing.md
+    web_css: 16px
+    web_tailwind: p-4
+    desktop_wpf: "16"
+    desktop_winui3: "16"
+    desktop_qt: "16"
+    mobile_ios: "16"
+    mobile_android: 16.dp
+    mobile_flutter: "16.0"
+  - id: item_014
+    token_category: spacing
+    token_name: spacing.lg
+    web_css: 24px
+    web_tailwind: p-6
+    desktop_wpf: "24"
+    desktop_winui3: "24"
+    desktop_qt: "24"
+    mobile_ios: "24"
+    mobile_android: 24.dp
+    mobile_flutter: "24.0"
+  - id: item_015
+    token_category: spacing
+    token_name: spacing.xl
+    web_css: 32px
+    web_tailwind: p-8
+    desktop_wpf: "32"
+    desktop_winui3: "32"
+    desktop_qt: "32"
+    mobile_ios: "32"
+    mobile_android: 32.dp
+    mobile_flutter: "32.0"
+  - id: item_016
+    token_category: spacing
+    token_name: spacing.2xl
+    web_css: 48px
+    web_tailwind: p-12
+    desktop_wpf: "48"
+    desktop_winui3: "48"
+    desktop_qt: "48"
+    mobile_ios: "48"
+    mobile_android: 48.dp
+    mobile_flutter: "48.0"
+  - id: item_017
+    token_category: spacing
+    token_name: spacing.3xl
+    web_css: 64px
+    web_tailwind: p-16
+    desktop_wpf: "64"
+    desktop_winui3: "64"
+    desktop_qt: "64"
+    mobile_ios: "64"
+    mobile_android: 64.dp
+    mobile_flutter: "64.0"
+  - id: item_018
+    token_category: radius
+    token_name: radius.none
+    web_css: 0px
+    web_tailwind: rounded-none
+    desktop_wpf: "0"
+    desktop_winui3: "0"
+    desktop_qt: "0"
+    mobile_ios: "0"
+    mobile_android: 0.dp
+    mobile_flutter: "0.0"
+  - id: item_019
+    token_category: radius
+    token_name: radius.sm
+    web_css: 4px
+    web_tailwind: rounded-sm
+    desktop_wpf: "4"
+    desktop_winui3: "4"
+    desktop_qt: "4"
+    mobile_ios: "4"
+    mobile_android: 4.dp
+    mobile_flutter: "4.0"
+  - id: item_020
+    token_category: radius
+    token_name: radius.md
+    web_css: 8px
+    web_tailwind: rounded-md
+    desktop_wpf: "8"
+    desktop_winui3: "8"
+    desktop_qt: "8"
+    mobile_ios: "10"
+    mobile_android: 8.dp
+    mobile_flutter: "8.0"
+  - id: item_021
+    token_category: radius
+    token_name: radius.lg
+    web_css: 12px
+    web_tailwind: rounded-lg
+    desktop_wpf: "12"
+    desktop_winui3: "12"
+    desktop_qt: "12"
+    mobile_ios: "14"
+    mobile_android: 12.dp
+    mobile_flutter: "12.0"
+  - id: item_022
+    token_category: radius
+    token_name: radius.xl
+    web_css: 16px
+    web_tailwind: rounded-xl
+    desktop_wpf: "16"
+    desktop_winui3: "16"
+    desktop_qt: "16"
+    mobile_ios: "16"
+    mobile_android: 16.dp
+    mobile_flutter: "16.0"
+  - id: item_023
+    token_category: radius
+    token_name: radius.full
+    web_css: 9999px
+    web_tailwind: rounded-full
+    desktop_wpf: "999"
+    desktop_winui3: "999"
+    desktop_qt: "999"
+    mobile_ios: CGFloat.infinity
+    mobile_android: 50.dp
+    mobile_flutter: double.infinity
+  - id: item_024
+    token_category: shadow
+    token_name: shadow.sm
+    web_css: 0 1px 2px rgba(0
+    web_tailwind: "0"
+    desktop_wpf: "0"
+    desktop_winui3: 0.05)
+    desktop_qt: shadow-sm
+    mobile_ios: DropShadowEffect{BlurRadius=2}
+    mobile_android: DropShadow{BlurRadius=2}
+    mobile_flutter: Qt.Shadow{blur:2}
+  - id: item_025
+    token_category: shadow
+    token_name: shadow.md
+    web_css: 0 4px 6px rgba(0
+    web_tailwind: "0"
+    desktop_wpf: "0"
+    desktop_winui3: 0.1)
+    desktop_qt: shadow-md
+    mobile_ios: DropShadowEffect{BlurRadius=6}
+    mobile_android: DropShadow{BlurRadius=6}
+    mobile_flutter: Qt.Shadow{blur:6}
+  - id: item_026
+    token_category: shadow
+    token_name: shadow.lg
+    web_css: 0 10px 15px rgba(0
+    web_tailwind: "0"
+    desktop_wpf: "0"
+    desktop_winui3: 0.1)
+    desktop_qt: shadow-lg
+    mobile_ios: DropShadowEffect{BlurRadius=15}
+    mobile_android: DropShadow{BlurRadius=15}
+    mobile_flutter: Qt.Shadow{blur:15}
+  - id: item_027
+    token_category: shadow
+    token_name: shadow.xl
+    web_css: 0 20px 25px rgba(0
+    web_tailwind: "0"
+    desktop_wpf: "0"
+    desktop_winui3: 0.15)
+    desktop_qt: shadow-xl
+    mobile_ios: DropShadowEffect{BlurRadius=25}
+    mobile_android: DropShadow{BlurRadius=25}
+    mobile_flutter: Qt.Shadow{blur:25}
+  - id: item_028
+    token_category: font
+    token_name: font.size.xs
+    web_css: 12px
+    web_tailwind: text-xs
+    desktop_wpf: FontSize=11
+    desktop_winui3: FontSize=11
+    desktop_qt: font.pixelSize:10
+    mobile_ios: Font.caption2
+    mobile_android: 12.sp
+    mobile_flutter: "fontSize: 12"
+  - id: item_029
+    token_category: font
+    token_name: font.size.sm
+    web_css: 14px
+    web_tailwind: text-sm
+    desktop_wpf: FontSize=12
+    desktop_winui3: FontSize=12
+    desktop_qt: font.pixelSize:12
+    mobile_ios: Font.footnote
+    mobile_android: 14.sp
+    mobile_flutter: "fontSize: 14"
+  - id: item_030
+    token_category: font
+    token_name: font.size.base
+    web_css: 16px
+    web_tailwind: text-base
+    desktop_wpf: FontSize=14
+    desktop_winui3: FontSize=14
+    desktop_qt: font.pixelSize:14
+    mobile_ios: Font.body
+    mobile_android: 16.sp
+    mobile_flutter: "fontSize: 16"
+  - id: item_031
+    token_category: font
+    token_name: font.size.lg
+    web_css: 18px
+    web_tailwind: text-lg
+    desktop_wpf: FontSize=16
+    desktop_winui3: FontSize=16
+    desktop_qt: font.pixelSize:16
+    mobile_ios: Font.title3
+    mobile_android: 18.sp
+    mobile_flutter: "fontSize: 18"
+  - id: item_032
+    token_category: font
+    token_name: font.size.xl
+    web_css: 20px
+    web_tailwind: text-xl
+    desktop_wpf: FontSize=18
+    desktop_winui3: FontSize=18
+    desktop_qt: font.pixelSize:18
+    mobile_ios: Font.title2
+    mobile_android: 20.sp
+    mobile_flutter: "fontSize: 20"
+  - id: item_033
+    token_category: font
+    token_name: font.size.2xl
+    web_css: 24px
+    web_tailwind: text-2xl
+    desktop_wpf: FontSize=22
+    desktop_winui3: FontSize=22
+    desktop_qt: font.pixelSize:22
+    mobile_ios: Font.title
+    mobile_android: 24.sp
+    mobile_flutter: "fontSize: 24"
+  - id: item_034
+    token_category: font
+    token_name: font.size.3xl
+    web_css: 30px
+    web_tailwind: text-3xl
+    desktop_wpf: FontSize=28
+    desktop_winui3: FontSize=28
+    desktop_qt: font.pixelSize:28
+    mobile_ios: Font.largeTitle
+    mobile_android: 30.sp
+    mobile_flutter: "fontSize: 30"
+  - id: item_035
+    token_category: font
+    token_name: font.weight.normal
+    web_css: "400"
+    web_tailwind: font-normal
+    desktop_wpf: FontWeight=Normal
+    desktop_winui3: FontWeight=Normal
+    desktop_qt: font.weight:Font.Normal
+    mobile_ios: .regular
+    mobile_android: .Normal
+    mobile_flutter: "fontWeight: FontWeight.w400"
+  - id: item_036
+    token_category: font
+    token_name: font.weight.medium
+    web_css: "500"
+    web_tailwind: font-medium
+    desktop_wpf: FontWeight=Medium
+    desktop_winui3: FontWeight=Medium
+    desktop_qt: font.weight:Font.Medium
+    mobile_ios: .medium
+    mobile_android: .Medium
+    mobile_flutter: "fontWeight: FontWeight.w500"
+  - id: item_037
+    token_category: font
+    token_name: font.weight.semibold
+    web_css: "600"
+    web_tailwind: font-semibold
+    desktop_wpf: FontWeight=SemiBold
+    desktop_winui3: FontWeight=SemiBold
+    desktop_qt: font.weight:Font.DemiBold
+    mobile_ios: .semibold
+    mobile_android: .SemiBold
+    mobile_flutter: "fontWeight: FontWeight.w600"
+  - id: item_038
+    token_category: font
+    token_name: font.weight.bold
+    web_css: "700"
+    web_tailwind: font-bold
+    desktop_wpf: FontWeight=Bold
+    desktop_winui3: FontWeight=Bold
+    desktop_qt: font.weight:Font.Bold
+    mobile_ios: .bold
+    mobile_android: .Bold
+    mobile_flutter: "fontWeight: FontWeight.bold"
+  - id: item_039
+    token_category: animation
+    token_name: duration.fast
+    web_css: 150ms
+    web_tailwind: duration-150
+    desktop_wpf: Duration=00:00:00.150
+    desktop_winui3: Duration=150ms
+    desktop_qt: duration:150
+    mobile_ios: withAnimation(.easeInOut(duration:0.15))
+    mobile_android: 150L (ms)
+    mobile_flutter: "Duration(milliseconds: 150)"
+  - id: item_040
+    token_category: animation
+    token_name: duration.normal
+    web_css: 250ms
+    web_tailwind: duration-200
+    desktop_wpf: Duration=00:00:00.250
+    desktop_winui3: Duration=250ms
+    desktop_qt: duration:250
+    mobile_ios: withAnimation(.easeInOut(duration:0.25))
+    mobile_android: 250L (ms)
+    mobile_flutter: "Duration(milliseconds: 250)"
+  - id: item_041
+    token_category: animation
+    token_name: duration.slow
+    web_css: 350ms
+    web_tailwind: duration-300
+    desktop_wpf: Duration=00:00:00.350
+    desktop_winui3: Duration=350ms
+    desktop_qt: duration:350
+    mobile_ios: withAnimation(.easeInOut(duration:0.35))
+    mobile_android: 350L (ms)
+    mobile_flutter: "Duration(milliseconds: 350)"
+  - id: item_042
+    token_category: animation
+    token_name: easing.ease
+    web_css: ease
+    web_tailwind: ease-in-out
+    desktop_wpf: QuadraticEase
+    desktop_winui3: EasingMode=EaseInOut
+    desktop_qt: Easing.InOutQuad
+    mobile_ios: .easeInOut
+    mobile_android: FastOutSlowInEasing
+    mobile_flutter: Curves.easeInOut
+  - id: item_043
+    token_category: animation
+    token_name: easing.spring
+    web_css: cubic-bezier(0.175
+    web_tailwind: "0.885"
+    desktop_wpf: "0.32"
+    desktop_winui3: 1.275)
+    desktop_qt: N/A
+    mobile_ios: ElasticEase
+    mobile_android: spring animation
+    mobile_flutter: Easing.OutElastic
+  - id: item_044
+    token_category: z-index
+    token_name: z.dropdown
+    web_css: "50"
+    web_tailwind: z-50
+    desktop_wpf: Panel.ZIndex=50
+    desktop_winui3: Canvas.ZIndex=50
+    desktop_qt: z:50
+    mobile_ios: .zIndex(50)
+    mobile_android: "elevation: 8.dp"
+    mobile_flutter: N/A
+  - id: item_045
+    token_category: z-index
+    token_name: z.modal
+    web_css: "100"
+    web_tailwind: z-[100]
+    desktop_wpf: Panel.ZIndex=100
+    desktop_winui3: Canvas.ZIndex=100
+    desktop_qt: z:100
+    mobile_ios: .zIndex(100)
+    mobile_android: "elevation: 24.dp"
+    mobile_flutter: N/A
+  - id: item_046
+    token_category: z-index
+    token_name: z.tooltip
+    web_css: "1000"
+    web_tailwind: z-[1000]
+    desktop_wpf: Panel.ZIndex=1000
+    desktop_winui3: Canvas.ZIndex=1000
+    desktop_qt: z:1000
+    mobile_ios: .zIndex(1000)
+    mobile_android: "elevation: 32.dp"
+    mobile_flutter: N/A

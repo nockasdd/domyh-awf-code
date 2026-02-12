@@ -1,0 +1,74 @@
+# =============================================================================
+# nx-patterns.yaml — Nx Workspace Patterns
+# =============================================================================
+
+version: "1.0.0"
+
+generators:
+  description: "Code scaffolding for consistent structure"
+  examples:
+    - command: "nx g @nx/next:app web"
+      description: "Create Next.js application"
+    - command: "nx g @nx/react:lib ui --directory=packages/ui"
+      description: "Create shared React library"
+    - command: "nx g @nx/js:lib utils --publishable --importPath=@org/utils"
+      description: "Create publishable JS library"
+
+executors:
+  description: "Task runners for build, test, lint"
+  config: |
+    // project.json
+    {
+      "targets": {
+        "build": {
+          "executor": "@nx/next:build",
+          "options": {
+            "outputPath": "dist/apps/web"
+          }
+        },
+        "test": {
+          "executor": "@nx/jest:jest",
+          "options": {
+            "jestConfig": "apps/web/jest.config.ts"
+          }
+        }
+      }
+    }
+
+task_graph:
+  description: "Nx understands project dependencies automatically"
+  commands:
+    - "nx graph"
+    - "nx affected:graph"
+    - "nx run-many --target=build --all"
+    - "nx run-many --target=test --projects=api,web"
+
+caching:
+  local: "Stored in node_modules/.cache/nx"
+  remote: |
+    # nx.json
+    {
+      "tasksRunnerOptions": {
+        "default": {
+          "runner": "nx-cloud",
+          "options": {
+            "accessToken": "YOUR_NX_CLOUD_TOKEN"
+          }
+        }
+      }
+    }
+
+plugins:
+  official:
+    - "@nx/next"
+    - "@nx/react"
+    - "@nx/node"
+    - "@nx/nest"
+    - "@nx/angular"
+    - "@nx/jest"
+    - "@nx/cypress"
+    - "@nx/storybook"
+    - "@nx/esbuild"
+    - "@nx/vite"
+
+# _DOMYH Awesome Code • Nx Patterns_

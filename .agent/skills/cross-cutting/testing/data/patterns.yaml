@@ -1,0 +1,170 @@
+metadata:
+  skill: testing
+  domain: patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: patterns.yaml
+  patterns_count: 15
+  columns:
+    - pattern
+    - category
+    - description
+    - when_to_use
+    - example_structure
+    - anti_pattern
+    - languages
+patterns:
+  - id: item_001
+    pattern: AAA Pattern
+    category: Structure
+    description: "Arrange-Act-Assert: setup, execute, verify"
+    when_to_use: All unit tests
+    example_structure: "// Arrange
+
+      const calculator = new Calculator();
+
+      // Act
+
+      const result = calculator.add(2, 3);
+
+      // Assert
+
+      expect(result).toBe(5);"
+    anti_pattern: Mixing arrange/act/assert throughout test
+    languages: all
+  - id: item_002
+    pattern: Given-When-Then
+    category: BDD
+    description: Given precondition, When action, Then outcome
+    when_to_use: Behavior-driven tests, acceptance tests
+    example_structure:
+      "describe('Calculator', () => {\n  it('should add two numbers', () => {\n    // Given\n    const calc = new Calculator();\n    // When\n    const sum = calc.add(2, 3);\n    // Then\n\
+      \    expect(sum).toBe(5);\n  });\n});"
+    anti_pattern: No clear separation of phases
+    languages: all
+  - id: item_003
+    pattern: Test Double Types
+    category: Mocking
+    description: Dummy, Stub, Spy, Mock, Fake - know the difference
+    when_to_use: When isolating units from dependencies
+    example_structure: "Dummy: placeholder, never called
+
+      Stub: returns canned answers
+
+      Spy: records calls, allows verification
+
+      Mock: verifies expectations
+
+      Fake: working implementation (in-memory DB)"
+    anti_pattern: Over-mocking (testing implementation not behavior)
+    languages: all
+  - id: item_004
+    pattern: Factory Pattern
+    category: Data
+    description: Create test data with sensible defaults
+    when_to_use: Many tests need similar objects
+    example_structure: "const userFactory = (overrides = {}) => ({\n  id: 'user-123',\n  name: 'Test User',\n  email: 'test@example.com',\n  ...overrides,\n});"
+    anti_pattern: Duplicating test data setup in each test
+    languages: all
+  - id: item_005
+    pattern: Builder Pattern
+    category: Data
+    description: Fluent API for complex test objects
+    when_to_use: Complex objects with many optional fields
+    example_structure: "const user = new UserBuilder()\n  .withName('John')\n  .withEmail('john@test.com')\n  .withRole('admin')\n  .build();"
+    anti_pattern: Long constructor calls with many nulls
+    languages: all
+  - id: item_006
+    pattern: Test Isolation
+    category: Principle
+    description: Each test runs independently, no shared state
+    when_to_use: Always
+    example_structure: "beforeEach(() => {\n  db = createFreshDatabase();\n});\nafterEach(() => {\n  db.cleanup();\n});"
+    anti_pattern: Tests depending on order or shared state
+    languages: all
+  - id: item_007
+    pattern: Single Assertion
+    category: Principle
+    description: One logical assertion per test (can be multiple expects)
+    when_to_use: Unit tests
+    example_structure: "it('should return user name', () => {\n  expect(user.getFullName()).toBe('John Doe');\n});"
+    anti_pattern: 10+ assertions in one test making failures unclear
+    languages: all
+  - id: item_008
+    pattern: Parameterized Tests
+    category: Technique
+    description: Same test logic with different inputs
+    when_to_use: Testing edge cases, boundaries
+    example_structure: "test.each([\n  [1, 1, 2],\n  [0, 0, 0],\n  [-1, 1, 0],\n])('add(%i, %i) = %i', (a, b, expected) => {\n  expect(add(a, b)).toBe(expected);\n});"
+    anti_pattern: Copy-paste tests for different inputs
+    languages: all
+  - id: item_009
+    pattern: Snapshot Testing
+    category: Technique
+    description: Compare output against stored snapshot
+    when_to_use: UI components, API responses
+    example_structure: expect(component).toMatchSnapshot();
+    anti_pattern: Snapshots for logic/business rules
+    languages: javascript
+  - id: item_010
+    pattern: Test Pyramid
+    category: Strategy
+    description: Many unit, fewer integration, fewest E2E
+    when_to_use: Overall test strategy
+    example_structure: "Unit: 70%
+
+      Integration: 20%
+
+      E2E: 10%"
+    anti_pattern: Inverted pyramid (too many E2E, few unit)
+    languages: all
+  - id: item_011
+    pattern: Integration Test
+    category: Type
+    description: Test component interactions with real dependencies
+    when_to_use: API routes, DB queries, service orchestration
+    example_structure:
+      "it('creates user in database', async () => {\n  const response = await request(app)\n    .post('/users')\n    .send({ name: 'Test' });\n  expect(response.status).toBe(201);\n  const\
+      \ user = await db.users.findOne({ name: 'Test' });\n  expect(user).toBeDefined();\n});"
+    anti_pattern: Mocking everything in integration tests
+    languages: all
+  - id: item_012
+    pattern: Contract Testing
+    category: Type
+    description: Verify API contracts between services
+    when_to_use: Microservices, API consumers/providers
+    example_structure: Pact, Spring Cloud Contract
+    anti_pattern: Trusting API documentation alone
+    languages: all
+  - id: item_013
+    pattern: Mutation Testing
+    category: Coverage
+    description: Inject bugs to verify tests catch them
+    when_to_use: High-confidence critical paths
+    example_structure: Stryker (JS), PIT (Java), mutmut (Python)
+    anti_pattern: 100% line coverage but weak assertions
+    languages: all
+  - id: item_014
+    pattern: Flaky Test Fix
+    category: Debugging
+    description: Identify and fix non-deterministic tests
+    when_to_use: Tests that fail randomly
+    example_structure: "- Remove time dependencies
+
+      - Don't rely on order
+
+      - Wait for async properly
+
+      - Isolate external services"
+    anti_pattern: Retrying until pass, @Ignore annotation
+    languages: all
+  - id: item_015
+    pattern: Test Naming
+    category: Convention
+    description: Descriptive names that document behavior
+    when_to_use: All tests
+    example_structure: "'should return 404 when user not found'
+
+      'throws ValidationError for empty email'"
+    anti_pattern: "'test1', 'testAdd', cryptic names"
+    languages: all

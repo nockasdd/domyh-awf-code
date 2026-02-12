@@ -1,0 +1,128 @@
+# CLI Frameworks Comparison — HSA Tier 3 Data
+version: "1.0.0"
+
+patterns:
+  - id: CLI-FW-001
+    name: commander.js
+    category: node
+    description: Node.js/TypeScript CLI framework.
+    text: |
+      Strengths: Widely used, mature, npm ecosystem
+      Weaknesses: Manual type inference
+    example: |
+      import { Command } from "commander";
+
+      const program = new Command()
+        .name("mycli")
+        .version("1.0.0")
+        .description("My CLI tool");
+
+      program.command("init <name>")
+        .description("Initialize project")
+        .option("-t, --template <template>", "Template", "default")
+        .option("--no-git", "Skip git init")
+        .action((name, options) => {
+          console.log(`Creating ${name} with template ${options.template}`);
+        });
+
+      program.parse();
+
+  - id: CLI-FW-002
+    name: clap (Rust)
+    category: rust
+    description: Rust CLI framework with derive macros.
+    text: |
+      Strengths: Type-safe, derive macros, fast compile-time validation
+      Weaknesses: Rust-only
+    example: |
+      use clap::{Parser, Subcommand};
+
+      #[derive(Parser)]
+      #[command(name = "mycli", version, about)]
+      struct Cli {
+        #[command(subcommand)]
+        command: Commands,
+        #[arg(short, long)]
+        verbose: bool,
+      }
+
+      #[derive(Subcommand)]
+      enum Commands {
+        Init { name: String, #[arg(short, long, default_value = "default")] template: String },
+        Build { #[arg(long)] release: bool },
+      }
+
+      fn main() {
+        let cli = Cli::parse();
+        match cli.command {
+          Commands::Init { name, template } => println!("Init {name} with {template}"),
+          Commands::Build { release } => println!("Building (release: {release})"),
+        }
+      }
+
+  - id: CLI-FW-003
+    name: cobra (Go)
+    category: go
+    description: Go CLI framework with auto-generated docs.
+    text: |
+      Strengths: Subcommands, auto shell completion, auto docs
+      Weaknesses: Verbose setup
+    example: |
+      var rootCmd = &cobra.Command{
+        Use:   "mycli",
+        Short: "My CLI tool",
+      }
+
+      var initCmd = &cobra.Command{
+        Use:   "init [name]",
+        Short: "Initialize project",
+        Args:  cobra.ExactArgs(1),
+        Run: func(cmd *cobra.Command, args []string) {
+          template, _ := cmd.Flags().GetString("template")
+          fmt.Printf("Creating %s with %s\n", args[0], template)
+        },
+      }
+
+      func init() {
+        initCmd.Flags().StringP("template", "t", "default", "Template to use")
+        rootCmd.AddCommand(initCmd)
+      }
+
+  - id: CLI-FW-004
+    name: Click (Python)
+    category: python
+    description: Python CLI with decorator-based API.
+    example: |
+      import click
+
+      @click.group()
+      @click.version_option("1.0.0")
+      def cli():
+          """My CLI tool"""
+          pass
+
+      @cli.command()
+      @click.argument("name")
+      @click.option("--template", "-t", default="default", help="Template")
+      def init(name, template):
+          """Initialize project"""
+          click.echo(f"Creating {name} with {template}")
+
+      if __name__ == "__main__":
+          cli()
+
+  - id: CLI-FW-005
+    name: Framework Comparison
+    category: comparison
+    description: |
+      Side-by-side framework comparison.
+    text: |
+      | Feature | commander.js | clap | cobra | Click |
+      |---------|-------------|------|-------|-------|
+      | Language | Node.js/TS | Rust | Go | Python |
+      | Type safety | Manual | Compile-time | Runtime | Runtime |
+      | Subcommands | ✅ | ✅ | ✅ | ✅ |
+      | Auto-complete | Plugin | Built-in | Built-in | Plugin |
+      | Auto docs | ❌ | ✅ | ✅ Man pages | ❌ |
+      | Testing | Unit tests | Integration | Test helpers | CliRunner |
+      | Ecosystem | npm | crates.io | Go modules | PyPI |

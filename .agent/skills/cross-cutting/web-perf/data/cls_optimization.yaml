@@ -1,0 +1,189 @@
+# =============================================================================
+# CLS Optimization Patterns (Feb 2026)
+# =============================================================================
+# Cumulative Layout Shift prevention techniques
+
+metadata:
+  skill: web-perf
+  domain: cls-optimization
+  version: "2025.1"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: cls001
+    name: Set Image Dimensions
+    category: CLS
+    impact: CRITICAL
+    description: Always specify width/height on images and video
+    text: image width height dimension aspect ratio cls shift
+    example: |
+      <!-- Always set dimensions -->
+      <img 
+        src="product.webp"
+        width="300"
+        height="200"
+        alt="Product"
+      >
+
+      <!-- Or use aspect-ratio CSS -->
+      <style>
+        .image-container {
+          aspect-ratio: 16 / 9;
+          width: 100%;
+        }
+        .image-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      </style>
+    severity: CRITICAL
+    docs_url: https://web.dev/optimize-cls/
+
+  - id: cls002
+    name: Reserve Space for Ads
+    category: CLS
+    impact: HIGH
+    description: Set min-height for ad containers before loading
+    text: ad slot placeholder reserve space container dynamic content
+    example: |
+      <!-- Reserve space for common ad sizes -->
+      <style>
+        .ad-banner {
+          min-height: 90px; /* Leaderboard */
+          width: 728px;
+          background: #f1f1f1;
+        }
+        .ad-sidebar {
+          min-height: 250px; /* Medium rectangle */
+          width: 300px;
+        }
+      </style>
+
+      <div class="ad-banner">
+        <!-- Ad loads here -->
+      </div>
+    severity: HIGH
+    docs_url: https://web.dev/optimize-cls/#ads-embeds-and-iframes-without-dimensions
+
+  - id: cls003
+    name: Web Font Loading Strategy
+    category: CLS
+    impact: HIGH
+    description: Use font-display:swap and size-adjust for minimal shift
+    text: font display swap size adjust fallback loading foit fout
+    example: |
+      @font-face {
+        font-family: 'Inter';
+        font-display: swap;
+        src: url('/fonts/inter.woff2') format('woff2');
+        /* Size-adjust to match fallback metrics */
+        size-adjust: 106%;
+        ascent-override: 90%;
+        descent-override: 22%;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, sans-serif;
+      }
+
+      <!-- Preload critical fonts -->
+      <link 
+        rel="preload" 
+        href="/fonts/inter.woff2" 
+        as="font" 
+        type="font/woff2" 
+        crossorigin
+      >
+    severity: HIGH
+    docs_url: https://web.dev/optimize-cls/#web-fonts-causing-foutfoit
+
+  - id: cls004
+    name: Avoid Injecting Content Above
+    category: CLS
+    impact: HIGH
+    description: Don't dynamically insert content above existing content
+    text: inject content above insert shift notification banner toast
+    example: |
+      <!-- BAD: Banner pushes content down -->
+      <body>
+        <div id="banner"></div> <!-- Inserted later -->
+        <main>Content</main>
+      </body>
+
+      <!-- GOOD: Fixed position overlay -->
+      <style>
+        .notification {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+        }
+      </style>
+
+      <!-- Or reserve space from start -->
+      <div class="banner-slot" style="min-height: 50px;">
+        <!-- Banner loads here -->
+      </div>
+    severity: HIGH
+    docs_url: https://web.dev/optimize-cls/#dynamically-injected-content
+
+  - id: cls005
+    name: Transform for Animations
+    category: CLS
+    impact: MEDIUM
+    description: Use transform/opacity instead of properties that cause layout
+    text: animation transform opacity layout shift css transition
+    example: |
+      /* BAD: Animating layout properties */
+      .card:hover {
+        width: 110%;    /* Triggers layout */
+        height: 110%;   /* Triggers layout */
+      }
+
+      /* GOOD: Use transform (GPU accelerated) */
+      .card:hover {
+        transform: scale(1.1);
+      }
+
+      /* Smooth transitions without layout shift */
+      .modal-enter {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      .modal-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s ease-out;
+      }
+    severity: MEDIUM
+    docs_url: https://web.dev/animations-guide/
+
+  - id: cls006
+    name: BFCache Eligibility
+    category: CLS
+    impact: MEDIUM
+    description: Ensure pages qualify for back/forward cache
+    text: bfcache back forward cache eligibility navigation restore
+    example: |
+      // Avoid patterns that break BFCache:
+
+      // ❌ Unload event listener
+      window.addEventListener('unload', () => {});
+
+      // ✅ Use pagehide instead  
+      window.addEventListener('pagehide', (e) => {
+        if (e.persisted) {
+          // Page is going to BFCache
+        }
+      });
+
+      // ❌ Cache-Control: no-store
+      // ✅ Cache-Control: max-age=0, must-revalidate
+
+      // Test BFCache eligibility:
+      // Chrome DevTools → Application → Back/forward cache
+    severity: MEDIUM
+    docs_url: https://web.dev/bfcache/

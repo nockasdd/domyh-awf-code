@@ -1,23 +1,51 @@
-name: electron
-version: "6.1.2"
+﻿name: electron
+version: "1.1.0" # Refactored to YAML-based adapter
+display: Electron Desktop Framework
 category: desktop
 tier: 1
+priority: 2
 
-description: |
-  Cross-platform desktop framework for Electron 33+.
-  Covers context isolation, IPC, security best practices.
+desc: "Cross-platform desktop framework for Electron 33-40. Covers context isolation, IPC, security, auto-updates, testing, and native integrations."
+
+  ### Data Files (9 domains, 45 patterns)
+  - security.yaml: contextBridge, CSP, sandbox, fuses (8)
+  - ipc.yaml: invoke/handle, send/on, MessagePort (6)
+  - window.yaml: BrowserWindow, BrowserView, frameless (6)
+  - build.yaml: electron-vite, forge, builder (6)
+  - updates.yaml: autoUpdater, code signing, notarization (5)
+  - storage.yaml: better-sqlite3, electron-store, safeStorage (5)
+  - native.yaml: Tray, globalShortcut, powerMonitor (7)
+  - testing.yaml: Playwright, Vitest, WebDriver (4)
+  - crash.yaml: crashReporter, Sentry, electron-log (4)
 
 triggers:
   file_patterns:
+    # Core
     - "electron-builder.json"
+    - "electron-builder.json5"
     - "electron-builder.yml"
     - "electron.vite.config.ts"
     - "**/main.ts"
     - "**/preload.ts"
+    - "**/renderer.ts"
+    # Build
+    - "forge.config.js"
+    - "forge.config.ts"
+    - ".electron-forge/**"
+    # Testing
+    - "**/*.e2e.ts"
+    - "**/e2e/**"
   keywords:
     # Core
     - electron
     - electron 33
+    - electron 34
+    - electron 35
+    - electron 36
+    - electron 37
+    - electron 38
+    - electron 39
+    - electron 40
     - electronjs
     - electron app
     # Main Process
@@ -49,7 +77,10 @@ triggers:
     # Auto Update
     - autoUpdater
     - electron-updater
-    # Build
+    - differential update
+    - code signing
+    - notarization
+    # Build Tools
     - electron-builder
     - electron-vite
     - electron-forge
@@ -57,27 +88,87 @@ triggers:
     - webContents
     - loadFile
     - loadURL
-    # Native
+    # Native Modules
     - native module
     - node-gyp
     - prebuild
+    - electron-rebuild
+    - node-addon-api
+    # Testing
+    - playwright electron
+    - vitest electron
+    - spectron
+    - webdriver electron
+    - e2e test electron
+    # Storage
+    - better-sqlite3
+    - electron-store
+    - safeStorage
+    - sqlcipher electron
+    # Crash Reporting
+    - crashReporter
+    - sentry electron
+    - bugsnag electron
+    - minidump
+    # Native Integrations
+    - globalShortcut
+    - powerMonitor
+    - system tray
+    - deep link
+    - protocol handler
+    - systemPreferences
+    - desktopCapturer
+    # Performance
+    - electron performance
+    - memory optimization
+    - bundle size electron
+    - v8 heap
+    - worker threads electron
+    # Accessibility
+    - electron accessibility
+    - screen reader electron
+    - wcag electron
+    - a11y electron
     # Platform
     - cross-platform desktop
     - windows app
     - macos app
     - linux app
   intents:
-    - electron app
+    - create electron app
     - desktop app
     - electron security
     - electron ipc
     - electron build
+    - electron test
+    - electron update
+    - electron storage
 
 related_skills:
   - react
   - vue
   - typescript
+  - testing
+  - security
 
 prevent_confusion_with:
   - react-native: "Electron is for desktop, RN is for mobile"
   - nodejs: "Electron embeds Node.js for desktop apps"
+  - tauri: "Electron uses Chromium, Tauri uses system webview"
+  - nw.js: "Electron has separate main/renderer, NW.js merges them"
+
+caps:
+  - Context isolation patterns
+  - IPC communication
+  - Auto-update mechanisms
+  - Native module integration
+  - Testing with Playwright
+  - Crash reporting
+  - Native OS integrations
+
+# HSA Adapter Integration
+hsa:
+    functions:
+    - search_electron_patterns
+    - get_electron_api
+  pattern_count: 40

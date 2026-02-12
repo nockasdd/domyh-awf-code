@@ -1,0 +1,209 @@
+# =============================================================================
+# verification-flow.yaml — 5-Phase Comprehensive Browser Verification Flow
+# =============================================================================
+
+version: "1.0.0"
+
+phases:
+  - phase: 1
+    name: "Page Load Verification"
+    goal: "Ensure page loads correctly without errors"
+    steps:
+      - step: "Navigate to URL"
+        tool: browser_navigate
+        args: { url: "{target_url}" }
+        verify: "Response status 200"
+
+      - step: "Wait for network idle"
+        tool: browser_wait_for
+        args: { time: 3 }
+        verify: "All resources loaded"
+
+      - step: "Check console errors"
+        tool: browser_console_messages
+        args: { level: "error" }
+        verify: "No JavaScript errors"
+        on_error: "Log errors, continue testing"
+
+      - step: "Capture baseline screenshot"
+        tool: browser_take_screenshot
+        args: { type: "png", fullPage: true }
+        verify: "Page renders correctly"
+
+      - step: "Capture accessibility snapshot"
+        tool: browser_snapshot
+        args: {}
+        verify: "Page structure readable"
+    expected_output: "Page loaded, no errors, baseline captured"
+    failure_handling: "If page fails to load, report immediately and stop"
+
+  - phase: 2
+    name: "Interactive Element Discovery"
+    goal: "Find ALL interactive elements from accessibility tree"
+    steps:
+      - step: "Parse accessibility tree from Phase 1 snapshot"
+        action: "Identify all interactive elements"
+        categories:
+          buttons: "role=button — count and list names"
+          links: "role=link — count and list destinations"
+          inputs: "role=textbox, role=searchbox — count and list labels"
+          selects: "role=combobox, role=listbox — count dropdown menus"
+          checkboxes: "role=checkbox, role=switch — count toggles"
+          tabs: "role=tab — count tab panels"
+          custom: "data-role, aria-haspopup — custom interactive elements"
+        verify: "All interactive elements identified"
+
+      - step: "Identify compound components"
+        action: "Look for complex UI patterns"
+        patterns:
+          modals: "Elements with aria-haspopup=dialog or modal trigger buttons"
+          accordions: "Elements with aria-expanded attribute"
+          menus: "Elements with aria-haspopup=menu"
+          tooltips: "Elements with aria-describedby pointing to hidden content"
+          carousels: "Elements with role=region and navigation controls"
+
+      - step: "Generate test plan"
+        action: "Create ordered list of elements to test"
+        priority: "Critical (forms, modals) → High (dropdowns, buttons) → Medium (tooltips, hovers)"
+
+    expected_output: "Complete element inventory with test priority"
+    failure_handling: "If no interactive elements found, verify page loaded correctly"
+
+  - phase: 3
+    name: "Systematic Interaction Testing"
+    goal: "Test EACH discovered element according to its type"
+
+    by_element_type:
+      button:
+        tests:
+          - test: "Click performs expected action"
+            tool: browser_click
+            verify: "browser_snapshot shows state change"
+          - test: "Disabled state not clickable"
+            tool: browser_snapshot
+            verify: "Disabled attribute present"
+          - test: "Loading state on action"
+            tool: browser_click
+            verify: "Loading indicator shown"
+
+      dropdown:
+        tests:
+          - test: "Click opens option list"
+            tool: browser_click
+            verify: "browser_snapshot shows options visible"
+          - test: "Select option updates value"
+            tool: browser_select_option
+            verify: "browser_snapshot shows selected value"
+          - test: "Escape closes dropdown"
+            tool: browser_press_key
+            args: { key: "Escape" }
+            verify: "browser_snapshot shows dropdown closed"
+
+      modal:
+        tests:
+          - test: "Trigger opens modal"
+            tool: browser_click
+            verify: "browser_snapshot shows dialog role"
+          - test: "Escape closes modal"
+            tool: browser_press_key
+            args: { key: "Escape" }
+            verify: "browser_snapshot shows modal gone"
+          - test: "Focus trapped inside"
+            tool: browser_press_key
+            args: { key: "Tab" }
+            verify: "Focus stays within dialog"
+            repeat: 10
+
+      form:
+        tests:
+          - test: "Fill all fields"
+            tool: browser_fill_form
+            verify: "All fields contain values"
+          - test: "Submit form"
+            tool: browser_click
+            verify: "Success state or redirect"
+          - test: "Empty submit shows validation"
+            tool: browser_click
+            verify: "Error messages visible"
+
+      hover:
+        tests:
+          - test: "Hover shows tooltip/menu"
+            tool: browser_hover
+            verify: "browser_snapshot shows hover content"
+          - test: "Keyboard focus shows same state"
+            tool: browser_press_key
+            args: { key: "Tab" }
+            verify: "Same content visible as hover"
+
+    expected_output: "Per-element pass/fail status"
+    failure_handling: "Log failure details, continue to next element"
+
+  - phase: 4
+    name: "Accessibility & Edge Cases"
+    goal: "Verify keyboard navigation, errors, and responsiveness"
+    steps:
+      - step: "Keyboard navigation"
+        tool: browser_press_key
+        action: "Tab through all elements"
+        verify: "All interactive elements reachable via Tab key"
+
+      - step: "Focus visibility"
+        tool: browser_take_screenshot
+        action: "Tab to element and screenshot"
+        verify: "Visible focus indicator on each element"
+
+      - step: "Console error check (post-interaction)"
+        tool: browser_console_messages
+        args: { level: "error" }
+        verify: "No new errors introduced during testing"
+
+      - step: "Network request check"
+        tool: browser_network_requests
+        args: { includeStatic: false }
+        verify: "No 4xx/5xx responses, no CORS errors"
+
+      - step: "Mobile responsive"
+        tool: browser_resize
+        args: { width: 375, height: 812 }
+        verify: "Layout correct, no overflow, elements accessible"
+        then:
+          - tool: browser_snapshot
+            verify: "All elements still discoverable"
+          - tool: browser_take_screenshot
+            verify: "Visual check mobile layout"
+
+    expected_output: "Accessibility and edge case results"
+    failure_handling: "Document issues with evidence"
+
+  - phase: 5
+    name: "Evidence-Based Report"
+    goal: "Compile comprehensive test results"
+    output:
+      summary_table:
+        format: |
+          | Element | Type | Test | Status | Evidence |
+          |---------|------|------|--------|----------|
+          | Submit button | button | click action | ✅ PASS | screenshot_1 |
+          | Country select | dropdown | open/select | ❌ FAIL | screenshot_2 |
+        required_columns: ["element", "type", "test", "status", "evidence"]
+
+      issues_list:
+        format: |
+          ### Issue 1: [Element Name]
+          - **Expected**: Dropdown opens on click
+          - **Actual**: Nothing happens
+          - **Severity**: Critical
+          - **Evidence**: [screenshot]
+
+      metrics:
+        total_elements: "Count of all interactive elements"
+        tests_passed: "Count of passed tests"
+        tests_failed: "Count of failed tests"
+        coverage: "tests_passed / (tests_passed + tests_failed) * 100"
+        console_errors: "Count of JS errors"
+        network_failures: "Count of 4xx/5xx requests"
+
+    expected_output: "Complete test report with evidence"
+
+# _DOMYH Awesome Code • 5-Phase Verification Flow v1.0.0_

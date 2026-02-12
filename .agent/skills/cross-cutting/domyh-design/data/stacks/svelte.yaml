@@ -1,0 +1,520 @@
+metadata:
+  skill: domyh-design
+  domain: svelte
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: svelte.yaml
+  patterns_count: 53
+  columns:
+    - "No"
+    - Category
+    - Guideline
+    - Description
+    - Do
+    - Don't
+    - Code Good
+    - Code Bad
+    - Severity
+    - Docs URL
+patterns:
+  - id: "1"
+    category: Reactivity
+    guideline: "Use $: for reactive statements"
+    description: Automatic dependency tracking
+    do: "$: for derived values"
+    don_t: Manual recalculation
+    code_good: "$: doubled = count * 2"
+    code_bad: let doubled; count && (doubled = count * 2)
+    severity: Medium
+    docs_url: https://svelte.dev/docs/svelte-components#script-3-$-marks-a-statement-as-reactive
+  - id: "2"
+    category: Reactivity
+    guideline: Trigger reactivity with assignment
+    description: Svelte tracks assignments not mutations
+    do: Reassign arrays/objects to trigger update
+    don_t: Mutate without reassignment
+    code_good: items = [...items, newItem]
+    code_bad: items.push(newItem)
+    severity: High
+    docs_url: https://svelte.dev/docs/svelte-components#script-2-assignments-are-reactive
+  - id: "3"
+    category: Reactivity
+    guideline: Use $state in Svelte 5
+    description: Runes for explicit reactivity
+    do: let count = $state(0)
+    don_t: Implicit reactivity in Svelte 5
+    code_good: let count = $state(0)
+    code_bad: let count = 0 (Svelte 5)
+    severity: Medium
+    docs_url: https://svelte.dev/blog/runes
+  - id: "4"
+    category: Reactivity
+    guideline: Use $derived for computed values
+    description: "$derived replaces $: in Svelte 5"
+    do: let doubled = $derived(count * 2)
+    don_t: "$: in Svelte 5"
+    code_good: let doubled = $derived(count * 2)
+    code_bad: "$: doubled = count * 2 (Svelte 5)"
+    severity: Medium
+  - id: "5"
+    category: Reactivity
+    guideline: Use $effect for side effects
+    description: "$effect replaces $: side effects"
+    do: Use $effect for subscriptions
+    don_t: "$: for side effects in Svelte 5"
+    code_good: $effect(() => console.log(count))
+    code_bad: "$: console.log(count) (Svelte 5)"
+    severity: Medium
+  - id: "6"
+    category: Props
+    guideline: Export let for props
+    description: Declare props with export let
+    do: export let propName
+    don_t: Props without export
+    code_good: export let count = 0
+    code_bad: let count = 0
+    severity: High
+    docs_url: https://svelte.dev/docs/svelte-components#script-1-export-creates-a-component-prop
+  - id: "7"
+    category: Props
+    guideline: Use $props in Svelte 5
+    description: $props rune for prop access
+    do: let { name } = $props()
+    don_t: export let in Svelte 5
+    code_good: let { name, age = 0 } = $props()
+    code_bad: export let name; export let age = 0
+    severity: Medium
+  - id: "8"
+    category: Props
+    guideline: Provide default values
+    description: Default props with assignment
+    do: export let count = 0
+    don_t: Required props without defaults
+    code_good: export let count = 0
+    code_bad: export let count
+    severity: Low
+  - id: "9"
+    category: Props
+    guideline: Use spread props
+    description: Pass through unknown props
+    do: "{...$$restProps} on elements"
+    don_t: Manual prop forwarding
+    code_good: <button {...$$restProps}>
+    code_bad: <button class={$$props.class}>
+    severity: Low
+    docs_url: https://svelte.dev/docs/basic-markup#attributes-and-props
+  - id: "10"
+    category: Bindings
+    guideline: "Use bind: for two-way binding"
+    description: Simplified input handling
+    do: bind:value for inputs
+    don_t: on:input with manual update
+    code_good: <input bind:value={name}>
+    code_bad: <input value={name} on:input={e => name = e.target.value}>
+    severity: Low
+    docs_url: https://svelte.dev/docs/element-directives#bind-property
+  - id: "11"
+    category: Bindings
+    guideline: Bind to DOM elements
+    description: Reference DOM nodes
+    do: bind:this for element reference
+    don_t: querySelector in onMount
+    code_good: <div bind:this={el}>
+    code_bad: onMount(() => el = document.querySelector())
+    severity: Medium
+  - id: "12"
+    category: Bindings
+    guideline: Use bind:group for radios/checkboxes
+    description: Simplified group handling
+    do: bind:group for radio/checkbox groups
+    don_t: Manual checked handling
+    code_good: <input type="radio" bind:group={selected}>
+    code_bad: <input type="radio" checked={selected === value}>
+    severity: Low
+  - id: "13"
+    category: Events
+    guideline: "Use on: for event handlers"
+    description: Event directive syntax
+    do: on:click={handler}
+    don_t: addEventListener in onMount
+    code_good: <button on:click={handleClick}>
+    code_bad: onMount(() => btn.addEventListener())
+    severity: Medium
+    docs_url: https://svelte.dev/docs/element-directives#on-eventname
+  - id: "14"
+    category: Events
+    guideline: Forward events with on:event
+    description: Pass events to parent
+    do: on:click without handler
+    don_t: createEventDispatcher for DOM events
+    code_good: <button on:click>
+    code_bad: dispatch('click', event)
+    severity: Low
+  - id: "15"
+    category: Events
+    guideline: Use createEventDispatcher
+    description: Custom component events
+    do: dispatch for custom events
+    don_t: on:event for custom events
+    code_good: dispatch('save', { data })
+    code_bad: on:save without dispatch
+    severity: Medium
+    docs_url: https://svelte.dev/docs/svelte#createeventdispatcher
+  - id: "16"
+    category: Lifecycle
+    guideline: Use onMount for initialization
+    description: Run code after component mounts
+    do: onMount for setup and data fetching
+    don_t: Code in script body for side effects
+    code_good: onMount(() => fetchData())
+    code_bad: fetchData() in script body
+    severity: High
+    docs_url: https://svelte.dev/docs/svelte#onmount
+  - id: "17"
+    category: Lifecycle
+    guideline: Return cleanup from onMount
+    description: Automatic cleanup on destroy
+    do: Return function from onMount
+    don_t: Separate onDestroy for paired cleanup
+    code_good: onMount(() => { sub(); return unsub })
+    code_bad: onMount(sub); onDestroy(unsub)
+    severity: Medium
+  - id: "18"
+    category: Lifecycle
+    guideline: Use onDestroy sparingly
+    description: Only when onMount cleanup not possible
+    do: onDestroy for non-mount cleanup
+    don_t: onDestroy for mount-related cleanup
+    code_good: onDestroy for store unsubscribe
+    code_bad: onDestroy(() => clearInterval(id))
+    severity: Low
+  - id: "19"
+    category: Lifecycle
+    guideline: Avoid beforeUpdate/afterUpdate
+    description: Usually not needed
+    do: Reactive statements instead
+    don_t: beforeUpdate for derived state
+    code_good: "$: if (x) doSomething()"
+    code_bad: beforeUpdate(() => doSomething())
+    severity: Low
+  - id: "20"
+    category: Stores
+    guideline: Use writable for mutable state
+    description: Basic reactive store
+    do: writable for shared mutable state
+    don_t: Local variables for shared state
+    code_good: const count = writable(0)
+    code_bad: let count = 0 in module
+    severity: Medium
+    docs_url: https://svelte.dev/docs/svelte-store#writable
+  - id: "21"
+    category: Stores
+    guideline: Use readable for read-only state
+    description: External data sources
+    do: readable for derived/external data
+    don_t: writable for read-only data
+    code_good: readable(0, set => interval(set))
+    code_bad: writable(0) for timer
+    severity: Low
+    docs_url: https://svelte.dev/docs/svelte-store#readable
+  - id: "22"
+    category: Stores
+    guideline: Use derived for computed stores
+    description: Combine or transform stores
+    do: derived for computed values
+    don_t: Manual subscription for derived
+    code_good: derived(count, $c => $c * 2)
+    code_bad: count.subscribe(c => doubled = c * 2)
+    severity: Medium
+    docs_url: https://svelte.dev/docs/svelte-store#derived
+  - id: "23"
+    category: Stores
+    guideline: Use $ prefix for auto-subscription
+    description: Automatic subscribe/unsubscribe
+    do: $storeName in components
+    don_t: Manual subscription
+    code_good: "{$count}"
+    code_bad: count.subscribe(c => value = c)
+    severity: High
+  - id: "24"
+    category: Stores
+    guideline: Clean up custom subscriptions
+    description: Unsubscribe when component destroys
+    do: Return unsubscribe from onMount
+    don_t: Leave subscriptions open
+    code_good: onMount(() => store.subscribe(fn))
+    code_bad: store.subscribe(fn) in script
+    severity: High
+  - id: "25"
+    category: Slots
+    guideline: Use slots for composition
+    description: Content projection
+    do: <slot> for flexible content
+    don_t: Props for all content
+    code_good: <slot>Default</slot>
+    code_bad: <Component content="text"/>
+    severity: Medium
+    docs_url: https://svelte.dev/docs/special-elements#slot
+  - id: "26"
+    category: Slots
+    guideline: Name slots for multiple areas
+    description: Multiple content areas
+    do: <slot name="header">
+    don_t: Single slot for complex layouts
+    code_good: <slot name="header"><slot name="footer">
+    code_bad: <slot> with complex conditionals
+    severity: Low
+  - id: "27"
+    category: Slots
+    guideline: Check slot content with $$slots
+    description: Conditional slot rendering
+    do: $$slots.name for conditional rendering
+    don_t: Always render slot wrapper
+    code_good: '{#if $$slots.footer}<slot name="footer"/>{/if}'
+    code_bad: <div><slot name="footer"/></div>
+    severity: Low
+  - id: "28"
+    category: Styling
+    guideline: Use scoped styles by default
+    description: Styles scoped to component
+    do: <style> for component styles
+    don_t: Global styles for component
+    code_good: :global() only when needed
+    code_bad: <style> all global
+    severity: Medium
+    docs_url: https://svelte.dev/docs/svelte-components#style
+  - id: "29"
+    category: Styling
+    guideline: Use :global() sparingly
+    description: Escape scoping when needed
+    do: :global for third-party styling
+    don_t: Global for all styles
+    code_good: :global(.external-lib)
+    code_bad: <style> without scoping
+    severity: Medium
+  - id: "30"
+    category: Styling
+    guideline: Use CSS variables for theming
+    description: Dynamic styling
+    do: CSS custom properties
+    don_t: Inline styles for themes
+    code_good: 'style="--color: {color}"'
+    code_bad: 'style="color: {color}"'
+    severity: Low
+  - id: "31"
+    category: Transitions
+    guideline: Use built-in transitions
+    description: Svelte transition directives
+    do: transition:fade for simple effects
+    don_t: Manual CSS transitions
+    code_good: <div transition:fade>
+    code_bad: <div class:fade={visible}>
+    severity: Low
+    docs_url: https://svelte.dev/docs/element-directives#transition-fn
+  - id: "32"
+    category: Transitions
+    guideline: "Use in: and out: separately"
+    description: Different enter/exit animations
+    do: in:fly out:fade for asymmetric
+    don_t: Same transition for both
+    code_good: <div in:fly out:fade>
+    code_bad: <div transition:fly>
+    severity: Low
+  - id: "33"
+    category: Transitions
+    guideline: Add local modifier
+    description: Prevent ancestor trigger
+    do: transition:fade|local
+    don_t: Global transitions for lists
+    code_good: <div transition:slide|local>
+    code_bad: <div transition:slide>
+    severity: Medium
+  - id: "34"
+    category: Actions
+    guideline: Use actions for DOM behavior
+    description: Reusable DOM logic
+    do: use:action for DOM enhancements
+    don_t: onMount for each usage
+    code_good: <div use:clickOutside>
+    code_bad: onMount(() => setupClickOutside(el))
+    severity: Medium
+    docs_url: https://svelte.dev/docs/element-directives#use-action
+  - id: "35"
+    category: Actions
+    guideline: Return update and destroy
+    description: Lifecycle methods for actions
+    do: Return { update, destroy }
+    don_t: Only initial setup
+    code_good: return { update(params) {}, destroy() {} }
+    code_bad: return destroy only
+    severity: Medium
+  - id: "36"
+    category: Actions
+    guideline: Pass parameters to actions
+    description: Configure action behavior
+    do: use:action={params}
+    don_t: Hardcoded action behavior
+    code_good: <div use:tooltip={options}>
+    code_bad: <div use:tooltip>
+    severity: Low
+  - id: "37"
+    category: Logic
+    guideline: Use {#if} for conditionals
+    description: Template conditionals
+    do: "{#if} {:else if} {:else}"
+    don_t: Ternary in expressions
+    code_good: "{#if cond}...{:else}...{/if}"
+    code_bad: "{cond ? a : b} for complex"
+    severity: Low
+    docs_url: https://svelte.dev/docs/logic-blocks#if
+  - id: "38"
+    category: Logic
+    guideline: Use {#each} for lists
+    description: List rendering
+    do: "{#each} with key"
+    don_t: Map in expression
+    code_good: "{#each items as item (item.id)}"
+    code_bad: "{items.map(i => `<div>${i}</div>`)}"
+    severity: Medium
+  - id: "39"
+    category: Logic
+    guideline: Always use keys in {#each}
+    description: Proper list reconciliation
+    do: (item.id) for unique key
+    don_t: Index as key or no key
+    code_good: "{#each items as item (item.id)}"
+    code_bad: "{#each items as item, i (i)}"
+    severity: High
+  - id: "40"
+    category: Logic
+    guideline: Use {#await} for promises
+    description: Handle async states
+    do: "{#await} for loading/error states"
+    don_t: Manual promise handling
+    code_good: "{#await promise}...{:then}...{:catch}"
+    code_bad: "{#if loading}...{#if error}"
+    severity: Medium
+    docs_url: https://svelte.dev/docs/logic-blocks#await
+  - id: "41"
+    category: SvelteKit
+    guideline: Use +page.svelte for routes
+    description: File-based routing
+    do: +page.svelte for route components
+    don_t: Custom routing setup
+    code_good: routes/about/+page.svelte
+    code_bad: routes/About.svelte
+    severity: Medium
+    docs_url: https://kit.svelte.dev/docs/routing
+  - id: "42"
+    category: SvelteKit
+    guideline: Use +page.js for data loading
+    description: Load data before render
+    do: load function in +page.js
+    don_t: onMount for data fetching
+    code_good: export function load() {}
+    code_bad: onMount(() => fetchData())
+    severity: High
+    docs_url: https://kit.svelte.dev/docs/load
+  - id: "43"
+    category: SvelteKit
+    guideline: Use +page.server.js for server-only
+    description: Server-side data loading
+    do: +page.server.js for sensitive data
+    don_t: +page.js for API keys
+    code_good: +page.server.js with DB access
+    code_bad: +page.js with DB access
+    severity: High
+  - id: "44"
+    category: SvelteKit
+    guideline: Use form actions
+    description: Server-side form handling
+    do: +page.server.js actions
+    don_t: API routes for forms
+    code_good: export const actions = { default }
+    code_bad: fetch('/api/submit')
+    severity: Medium
+    docs_url: https://kit.svelte.dev/docs/form-actions
+  - id: "45"
+    category: SvelteKit
+    guideline: Use $app/stores for app state
+    description: $page $navigating $updated
+    do: $page for current page data
+    don_t: Manual URL parsing
+    code_good: import { page } from '$app/stores'
+    code_bad: window.location.pathname
+    severity: Medium
+    docs_url: https://kit.svelte.dev/docs/modules#$app-stores
+  - id: "46"
+    category: Performance
+    guideline: Use {#key} for forced re-render
+    description: Reset component state
+    do: "{#key id} for fresh instance"
+    don_t: Manual destroy/create
+    code_good: "{#key item.id}<Component/>{/key}"
+    code_bad: on:change={() => component = null}
+    severity: Low
+    docs_url: https://svelte.dev/docs/logic-blocks#key
+  - id: "47"
+    category: Performance
+    guideline: Avoid unnecessary reactivity
+    description: "Not everything needs $:"
+    do: "$: only for side effects"
+    don_t: "$: for simple assignments"
+    code_good: "$: if (x) console.log(x)"
+    code_bad: "$: y = x (when y = x works)"
+    severity: Low
+  - id: "48"
+    category: Performance
+    guideline: Use immutable compiler option
+    description: Skip equality checks
+    do: "immutable: true for large lists"
+    don_t: Default for all components
+    code_good: <svelte:options immutable/>
+    code_bad: Default without immutable
+    severity: Low
+  - id: "49"
+    category: TypeScript
+    guideline: Use lang="ts" in script
+    description: TypeScript support
+    do: <script lang="ts">
+    don_t: JavaScript for typed projects
+    code_good: <script lang="ts">
+    code_bad: <script> with JSDoc
+    severity: Medium
+    docs_url: https://svelte.dev/docs/typescript
+  - id: "50"
+    category: TypeScript
+    guideline: Type props with interface
+    description: Explicit prop types
+    do: interface $$Props for types
+    don_t: Untyped props
+    code_good: "interface $$Props { name: string }"
+    code_bad: export let name
+    severity: Medium
+  - id: "51"
+    category: TypeScript
+    guideline: Type events with createEventDispatcher
+    description: Type-safe events
+    do: createEventDispatcher<Events>()
+    don_t: Untyped dispatch
+    code_good: "createEventDispatcher<{ save: Data }>()"
+    code_bad: createEventDispatcher()
+    severity: Medium
+  - id: "52"
+    category: Accessibility
+    guideline: Use semantic elements
+    description: Proper HTML in templates
+    do: button nav main appropriately
+    don_t: div for everything
+    code_good: <button on:click>
+    code_bad: <div on:click>
+    severity: High
+  - id: "53"
+    category: Accessibility
+    guideline: Add aria to dynamic content
+    description: Accessible state changes
+    do: aria-live for updates
+    don_t: Silent dynamic updates
+    code_good: <div aria-live="polite">{message}</div>
+    code_bad: <div>{message}</div>
+    severity: Medium

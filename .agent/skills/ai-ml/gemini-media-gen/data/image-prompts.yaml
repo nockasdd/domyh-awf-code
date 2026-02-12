@@ -1,0 +1,131 @@
+# =============================================================================
+# image-prompts.yaml — Image Generation Prompt Patterns
+# =============================================================================
+# 12 patterns for crafting effective image generation prompts
+# =============================================================================
+
+version: "1.0.0"
+total_patterns: 12
+
+golden_rule:
+  principle: "Describe the SCENE, don't list KEYWORDS"
+  good: "A golden retriever playing fetch on a sandy beach at sunset, waves crashing in the background"
+  bad: "golden retriever, beach, sunset, waves, fetch, sand"
+
+prompt_structure:
+  template: "[Subject] [Action] [Setting] [Style] [Lighting] [Details]"
+  elements:
+    - name: "Subject"
+      desc: "Who or what is the main focus"
+      example: "A young woman in a red dress"
+    - name: "Action"
+      desc: "What is happening"
+      example: "walking through a field of sunflowers"
+    - name: "Setting"
+      desc: "Where the scene takes place"
+      example: "in a vast countryside under open sky"
+    - name: "Style"
+      desc: "Art direction and aesthetic"
+      examples:
+        - "photorealistic"
+        - "oil painting"
+        - "watercolor"
+        - "digital art"
+        - "anime"
+        - "pencil sketch"
+        - "3D render"
+        - "isometric"
+        - "flat design"
+        - "pixel art"
+    - name: "Lighting"
+      desc: "Light quality and direction"
+      examples:
+        - "golden hour sunlight"
+        - "soft diffused studio light"
+        - "dramatic chiaroscuro"
+        - "neon glow"
+        - "moonlit"
+        - "backlit silhouette"
+    - name: "Details"
+      desc: "Additional specifications"
+      examples:
+        - "shallow depth of field"
+        - "wide angle lens"
+        - "bird's eye view"
+        - "macro close-up"
+
+text_rendering:
+  description: "Render text inside generated images"
+  method: "Wrap desired text in quotes within prompt"
+  example: "A neon sign that says 'Open 24 Hours' hanging in a rainy alley"
+  tips:
+    - "Use Pro model for best text accuracy"
+    - "Keep text short (1-5 words best)"
+    - "Specify font style: 'bold', 'handwritten', 'neon', 'serif'"
+    - "Describe text placement: 'centered', 'at the bottom', 'on the sign'"
+
+reference_image_patterns:
+  style_transfer:
+    desc: "Apply art style from reference to new content"
+    max_refs: 3
+    prompt: "Generate an image in the same style as the reference: [content description]"
+
+  subject_consistency:
+    desc: "Keep same character/product across images"
+    max_refs: 1
+    prompt: "Generate this character [reference] in a new scene: [scene description]"
+    tip: "Describe the subject's key features in text too for best consistency"
+
+  multi_reference:
+    desc: "Combine elements from multiple references"
+    max_refs: 14 # Pro only
+    prompt: "Combine the style of [ref1], subject from [ref2], background from [ref3]"
+
+  inpainting:
+    desc: "Edit specific region of existing image"
+    requires: "Mask (white = edit, black = keep)"
+    prompt: "Replace [masked area] with [new content]"
+
+style_keywords:
+  photographic:
+    - "35mm film photography"
+    - "DSLR, f/1.4 bokeh"
+    - "polaroid instant photo"
+    - "long exposure light trails"
+    - "infrared photography"
+  artistic:
+    - "impressionist oil painting"
+    - "Japanese woodblock print (ukiyo-e)"
+    - "Art Nouveau poster"
+    - "pop art halftone"
+    - "baroque still life"
+  digital:
+    - "Unreal Engine 5 render"
+    - "octane render, 8K"
+    - "low poly 3D model"
+    - "vaporwave aesthetic"
+    - "cyberpunk neon city"
+
+quality_enhancers:
+  - "highly detailed"
+  - "sharp focus"
+  - "professional lighting"
+  - "award-winning photography"
+  - "4K resolution" # Use with Pro model
+
+negative_prompts:
+  description: "What to AVOID in the image (Nano Banana supports)"
+  examples:
+    - "blurry, out of focus"
+    - "watermark, signature"
+    - "deformed, distorted"
+    - "low quality, pixelated"
+
+vietnamese_support:
+  description: "Gemini supports Vietnamese prompts natively"
+  example: "Một cô gái Việt Nam mặc áo dài trắng đang đi dưới hàng cây phượng vĩ đỏ"
+  tip: "Vietnamese prompts produce culturally accurate imagery"
+
+# =============================================================================
+# _DOMYH Awesome Code • Image Prompt Patterns v1.0_
+# =============================================================================

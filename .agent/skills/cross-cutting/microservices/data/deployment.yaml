@@ -1,0 +1,153 @@
+# =============================================================================
+# deployment.yaml — Microservices Deployment Strategies
+# =============================================================================
+
+version: "1.0.0"
+
+# =============================================================================
+# STRATEGIES
+# =============================================================================
+
+strategies:
+  blue_green:
+    description: "Two identical environments, instant switch"
+    flow: |
+      1. Blue (current) serves traffic
+      2. Deploy new version to Green
+      3. Test Green thoroughly
+      4. Switch load balancer: Blue → Green
+      5. Old Blue becomes standby
+    rollback: "Instant — switch back to Blue"
+    kubernetes: |
+      # Deploy green version
+      kubectl apply -f deployment-green.yaml
+      # Test green service
+      kubectl port-forward svc/my-app-green 8081:80
+      # Switch traffic (update service selector)
+      kubectl patch svc my-app -p '{"spec":{"selector":{"version":"green"}}}'
+    pros:
+      - "Zero downtime"
+      - "Instant rollback"
+      - "Full testing before switch"
+    cons:
+      - "2x infrastructure cost"
+      - "Database migrations need care"
+
+  canary:
+    description: "Gradual traffic shift to new version"
+    flow: |
+      1. Deploy canary (new version) alongside stable
+      2. Route 5% traffic to canary
+      3. Monitor error rates, latency
+      4. Gradually increase: 5% → 25% → 50% → 100%
+      5. Remove old version
+    rollback: "Route 100% back to stable"
+    kubernetes_istio: |
+      apiVersion: networking.istio.io/v1
+      kind: VirtualService
+      metadata:
+        name: my-app
+      spec:
+        hosts: [my-app]
+        http:
+          - route:
+              - destination:
+                  host: my-app
+                  subset: stable
+                weight: 95
+              - destination:
+                  host: my-app
+                  subset: canary
+                weight: 5
+    monitoring_criteria:
+      - "Error rate < 1%"
+      - "p99 latency < 500ms"
+      - "No increase in 5xx responses"
+
+  rolling:
+    description: "Replace instances one-by-one"
+    kubernetes: |
+      apiVersion: apps/v1
+      kind: Deployment
+      spec:
+        replicas: 4
+        strategy:
+          type: RollingUpdate
+          rollingUpdate:
+            maxSurge: 1        # Max extra pods during update
+            maxUnavailable: 0  # Zero downtime
+    pros:
+      - "No extra infrastructure"
+      - "Built into Kubernetes"
+    cons:
+      - "Slow rollback (re-deploy old version)"
+      - "Both versions run simultaneously"
+
+  feature_flags:
+    description: "Code-level control of feature visibility"
+    tools:
+      - name: LaunchDarkly
+        type: "SaaS"
+      - name: Unleash
+        type: "Open source"
+      - name: Flagsmith
+        type: "Open source"
+    example: |
+      // Feature flag check
+      if featureFlags.IsEnabled("new-checkout", user) {
+          return newCheckoutFlow(ctx, order)
+      }
+      return legacyCheckoutFlow(ctx, order)
+
+# =============================================================================
+# CI/CD FOR MICROSERVICES
+# =============================================================================
+
+ci_cd:
+  principles:
+    - "Independent deployability — each service has its own pipeline"
+    - "Automated testing at all levels (unit, integration, contract, E2E)"
+    - "Infrastructure as Code (Terraform, Pulumi)"
+    - "GitOps — desired state in Git, auto-sync to cluster"
+
+  pipeline_stages:
+    - name: "Build"
+      actions: ["Compile", "Lint", "Unit test"]
+    - name: "Integration Test"
+      actions: ["Contract tests", "Integration tests"]
+    - name: "Security Scan"
+      actions: ["SAST", "Container scan", "Dependency audit"]
+    - name: "Deploy Staging"
+      actions: ["Apply to staging namespace"]
+    - name: "Smoke Test"
+      actions: ["Health checks", "Critical path tests"]
+    - name: "Deploy Production"
+      actions: ["Canary → Full rollout"]
+    - name: "Post-Deploy"
+      actions: ["Monitor metrics", "Alert on anomalies"]
+
+  gitops_tools:
+    - name: ArgoCD
+      description: "Kubernetes-native GitOps"
+    - name: "Flux CD"
+      description: "CNCF project, lightweight"
+
+# =============================================================================
+# DECISION GUIDE
+# =============================================================================
+
+decision_guide:
+  strategy_selection:
+    - scenario: "Mission-critical, zero-tolerance for downtime"
+      strategy: "Blue-Green"
+
+    - scenario: "High traffic, need gradual validation"
+      strategy: "Canary"
+
+    - scenario: "Simple app, limited infrastructure budget"
+      strategy: "Rolling"
+
+    - scenario: "Business needs instant feature toggle"
+      strategy: "Feature Flags"
+
+# _DOMYH Awesome Code • Deployment Strategies_

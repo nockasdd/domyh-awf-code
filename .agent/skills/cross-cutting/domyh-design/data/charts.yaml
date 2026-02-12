@@ -1,0 +1,331 @@
+metadata:
+  skill: domyh-design
+  domain: charts
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: charts.yaml
+  patterns_count: 25
+  columns:
+    - "No"
+    - Data Type
+    - Keywords
+    - Best Chart Type
+    - Secondary Options
+    - Color Guidance
+    - Performance Impact
+    - Accessibility Notes
+    - Library Recommendation
+    - Interactive Level
+patterns:
+  - id: "1"
+    data_type: Trend Over Time
+    keywords:
+      - trend
+      - time-series
+      - line
+      - growth
+      - timeline
+      - progress
+    best_chart_type: Line Chart
+    secondary_options: Area Chart, Smooth Area
+    color_guidance: "Primary: #0080FF. Multiple series: use distinct colors. Fill: 20% opacity"
+    performance_impact: ⚡ Excellent (optimized)
+    accessibility_notes: ✓ Clear line patterns for colorblind users. Add pattern overlays.
+    library_recommendation: Chart.js, Recharts, ApexCharts
+    interactive_level: Hover + Zoom
+  - id: "2"
+    data_type: Compare Categories
+    keywords:
+      - compare
+      - categories
+      - bar
+      - comparison
+      - ranking
+    best_chart_type: Bar Chart (Horizontal or Vertical)
+    secondary_options: Column Chart, Grouped Bar
+    color_guidance: "Each bar: distinct color. Category: grouped same color. Sorted: descending order"
+    performance_impact: ⚡ Excellent
+    accessibility_notes: ✓ Easy to compare. Add value labels on bars for clarity.
+    library_recommendation: Chart.js, Recharts, D3.js
+    interactive_level: Hover + Sort
+  - id: "3"
+    data_type: Part-to-Whole
+    keywords:
+      - part-to-whole
+      - pie
+      - donut
+      - percentage
+      - proportion
+      - share
+    best_chart_type: Pie Chart or Donut
+    secondary_options: Stacked Bar, Treemap
+    color_guidance: "Colors: 5-6 max. Contrasting palette. Large slices first. Use labels."
+    performance_impact: ⚡ Good (limit 6 slices)
+    accessibility_notes: "⚠ Hard for accessibility. Better: Stacked bar with legend. Avoid pie if >5 items."
+    library_recommendation: Chart.js, Recharts, D3.js
+    interactive_level: Hover + Drill
+  - id: "4"
+    data_type: Correlation/Distribution
+    keywords:
+      - correlation
+      - distribution
+      - scatter
+      - relationship
+      - pattern
+    best_chart_type: Scatter Plot or Bubble Chart
+    secondary_options: Heat Map, Matrix
+    color_guidance: "Color axis: gradient (blue-red). Size: relative. Opacity: 0.6-0.8 to show density"
+    performance_impact: ⚠ Moderate (many points)
+    accessibility_notes: ⚠ Provide data table alternative. Use pattern + color distinction.
+    library_recommendation: D3.js, Plotly, Recharts
+    interactive_level: Hover + Brush
+  - id: "5"
+    data_type: Heatmap/Intensity
+    keywords:
+      - heatmap
+      - heat-map
+      - intensity
+      - density
+      - matrix
+    best_chart_type: Heat Map or Choropleth
+    secondary_options: Grid Heat Map, Bubble Heat
+    color_guidance: "Gradient: Cool (blue) to Hot (red). Scale: clear legend. Divergent for ±data"
+    performance_impact: ⚡ Excellent (color CSS)
+    accessibility_notes: "⚠ Colorblind: Use pattern overlay. Provide numerical legend."
+    library_recommendation: D3.js, Plotly, ApexCharts
+    interactive_level: Hover + Zoom
+  - id: "6"
+    data_type: Geographic Data
+    keywords:
+      - geographic
+      - map
+      - location
+      - region
+      - geo
+      - spatial
+    best_chart_type: Choropleth Map, Bubble Map
+    secondary_options: Geographic Heat Map
+    color_guidance: "Regional: single color gradient or categorized colors. Legend: clear scale"
+    performance_impact: ⚠ Moderate (rendering)
+    accessibility_notes: ⚠ Include text labels for regions. Provide data table alternative.
+    library_recommendation: D3.js, Mapbox, Leaflet
+    interactive_level: Pan + Zoom + Drill
+  - id: "7"
+    data_type: Funnel/Flow
+    keywords: funnel/flow
+    best_chart_type: Funnel Chart, Sankey
+    secondary_options: Waterfall (for flows)
+    color_guidance: "Stages: gradient (starting color → ending color). Show conversion %"
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Clear stage labels + percentages. Good for accessibility if labeled.
+    library_recommendation: D3.js, Recharts, Custom SVG
+    interactive_level: Hover + Drill
+  - id: "8"
+    data_type: Performance vs Target
+    keywords: performance-vs-target
+    best_chart_type: Gauge Chart or Bullet Chart
+    secondary_options: Dial, Thermometer
+    color_guidance: "Performance: Red→Yellow→Green gradient. Target: marker line. Threshold colors"
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Add numerical value + percentage label beside gauge.
+    library_recommendation: D3.js, ApexCharts, Custom SVG
+    interactive_level: Hover
+  - id: "9"
+    data_type: Time-Series Forecast
+    keywords: time-series-forecast
+    best_chart_type: Line with Confidence Band
+    secondary_options: Ribbon Chart
+    color_guidance: "Actual: solid line #0080FF. Forecast: dashed #FF9500. Band: light shading"
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Clearly distinguish actual vs forecast. Add legend.
+    library_recommendation: Chart.js, ApexCharts, Plotly
+    interactive_level: Hover + Toggle
+  - id: "10"
+    data_type: Anomaly Detection
+    keywords: anomaly-detection
+    best_chart_type: Line Chart with Highlights
+    secondary_options: Scatter with Alert
+    color_guidance: "Normal: blue #0080FF. Anomaly: red #FF0000 circle/square marker + alert"
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Circle/marker for anomalies. Add text alert annotation.
+    library_recommendation: D3.js, Plotly, ApexCharts
+    interactive_level: Hover + Alert
+  - id: "11"
+    data_type: Hierarchical/Nested Data
+    keywords: hierarchical/nested-data
+    best_chart_type: Treemap
+    secondary_options: Sunburst, Nested Donut, Icicle
+    color_guidance: "Parent: distinct hues. Children: lighter shades. White borders 2-3px."
+    performance_impact: ⚠ Moderate
+    accessibility_notes: ⚠ Poor - provide table alternative. Label large areas.
+    library_recommendation: D3.js, Recharts, ApexCharts
+    interactive_level: Hover + Drilldown
+  - id: "12"
+    data_type: Flow/Process Data
+    keywords: flow/process-data
+    best_chart_type: Sankey Diagram
+    secondary_options: Alluvial, Chord Diagram
+    color_guidance: Gradient from source to target. Opacity 0.4-0.6 for flows.
+    performance_impact: ⚠ Moderate
+    accessibility_notes: ⚠ Poor - provide flow table alternative.
+    library_recommendation: D3.js (d3-sankey), Plotly
+    interactive_level: Hover + Drilldown
+  - id: "13"
+    data_type: Cumulative Changes
+    keywords: cumulative-changes
+    best_chart_type: Waterfall Chart
+    secondary_options: Stacked Bar, Cascade
+    color_guidance: "Increases: #4CAF50. Decreases: #F44336. Start: #2196F3. End: #0D47A1."
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Good - clear directional colors with labels.
+    library_recommendation: ApexCharts, Highcharts, Plotly
+    interactive_level: Hover
+  - id: "14"
+    data_type: Multi-Variable Comparison
+    keywords: multi-variable-comparison
+    best_chart_type: Radar/Spider Chart
+    secondary_options: Parallel Coordinates, Grouped Bar
+    color_guidance: "Single: #0080FF 20% fill. Multiple: distinct colors per dataset."
+    performance_impact: ⚡ Good
+    accessibility_notes: ⚠ Moderate - limit 5-8 axes. Add data table.
+    library_recommendation: Chart.js, Recharts, ApexCharts
+    interactive_level: Hover + Toggle
+  - id: "15"
+    data_type: Stock/Trading OHLC
+    keywords: stock/trading-ohlc
+    best_chart_type: Candlestick Chart
+    secondary_options: OHLC Bar, Heikin-Ashi
+    color_guidance: "Bullish: #26A69A. Bearish: #EF5350. Volume: 40% opacity below."
+    performance_impact: ⚡ Good
+    accessibility_notes: ⚠ Moderate - provide OHLC data table.
+    library_recommendation: Lightweight Charts (TradingView), ApexCharts
+    interactive_level: Real-time + Hover + Zoom
+  - id: "16"
+    data_type: Relationship/Connection Data
+    keywords: relationship/connection-data
+    best_chart_type: Network Graph
+    secondary_options: Hierarchical Tree, Adjacency Matrix
+    color_guidance: "Node types: categorical colors. Edges: #90A4AE 60% opacity."
+    performance_impact: ❌ Poor (500+ nodes struggles)
+    accessibility_notes: ❌ Very Poor - provide adjacency list alternative.
+    library_recommendation: D3.js (d3-force), Vis.js, Cytoscape.js
+    interactive_level: Drilldown + Hover + Drag
+  - id: "17"
+    data_type: Distribution/Statistical
+    keywords: distribution/statistical
+    best_chart_type: Box Plot
+    secondary_options: Violin Plot, Beeswarm
+    color_guidance: "Box: #BBDEFB. Border: #1976D2. Median: #D32F2F. Outliers: #F44336."
+    performance_impact: ⚡ Excellent
+    accessibility_notes: ✓ Good - include stats table (min, Q1, median, Q3, max).
+    library_recommendation: Plotly, D3.js, Chart.js (plugin)
+    interactive_level: Hover
+  - id: "18"
+    data_type: Performance vs Target (Compact)
+    keywords: performance-vs-target-(compact)
+    best_chart_type: Bullet Chart
+    secondary_options: Gauge, Progress Bar
+    color_guidance: "Ranges: #FFCDD2, #FFF9C4, #C8E6C9. Performance: #1976D2. Target: black 3px."
+    performance_impact: ⚡ Excellent
+    accessibility_notes: ✓ Excellent - compact with clear values.
+    library_recommendation: D3.js, Plotly, Custom SVG
+    interactive_level: Hover
+  - id: "19"
+    data_type: Proportional/Percentage
+    keywords: proportional/percentage
+    best_chart_type: Waffle Chart
+    secondary_options: Pictogram, Stacked Bar 100%
+    color_guidance: 10x10 grid. 3-5 categories max. 2-3px spacing between squares.
+    performance_impact: ⚡ Good
+    accessibility_notes: ✓ Good - better than pie for accessibility.
+    library_recommendation: D3.js, React-Waffle, Custom CSS Grid
+    interactive_level: Hover
+  - id: "20"
+    data_type: Hierarchical Proportional
+    keywords: hierarchical-proportional
+    best_chart_type: Sunburst Chart
+    secondary_options: Treemap, Icicle, Circle Packing
+    color_guidance: "Center to outer: darker to lighter. 15-20% lighter per level."
+    performance_impact: ⚠ Moderate
+    accessibility_notes: ⚠ Poor - provide hierarchy table alternative.
+    library_recommendation: D3.js (d3-hierarchy), Recharts, ApexCharts
+    interactive_level: Drilldown + Hover
+  - id: "21"
+    data_type: Root Cause Analysis
+    keywords:
+      - root cause
+      - decomposition
+      - tree
+      - hierarchy
+      - drill-down
+      - ai-split
+    best_chart_type: Decomposition Tree
+    secondary_options: Decision Tree, Flow Chart
+    color_guidance: "Nodes: #2563EB (Primary) vs #EF4444 (Negative impact). Connectors: Neutral grey."
+    performance_impact: ⚠ Moderate (calculation heavy)
+    accessibility_notes: ✓ clear hierarchy. Allow keyboard navigation for nodes.
+    library_recommendation: Power BI (native), React-Flow, Custom D3.js
+    interactive_level: Drill + Expand
+  - id: "22"
+    data_type: 3D Spatial Data
+    keywords:
+      - 3d
+      - spatial
+      - immersive
+      - terrain
+      - molecular
+      - volumetric
+    best_chart_type: 3D Scatter/Surface Plot
+    secondary_options: Volumetric Rendering, Point Cloud
+    color_guidance: "Depth cues: lighting/shading. Z-axis: color gradient (cool to warm)."
+    performance_impact: ❌ Heavy (WebGL required)
+    accessibility_notes: ❌ Poor - requires alternative 2D view or data table.
+    library_recommendation: Three.js, Deck.gl, Plotly 3D
+    interactive_level: Rotate + Zoom + VR
+  - id: "23"
+    data_type: Real-Time Streaming
+    keywords:
+      - streaming
+      - real-time
+      - ticker
+      - live
+      - velocity
+      - pulse
+    best_chart_type: Streaming Area Chart
+    secondary_options: Ticker Tape, Moving Gauge
+    color_guidance: "Current: Bright Pulse (#00FF00). History: Fading opacity. Grid: Dark."
+    performance_impact: ⚡ Optimized (canvas/webgl)
+    accessibility_notes: ⚠ Flashing elements - provide pause button. High contrast.
+    library_recommendation: Smoothed D3.js
+    interactive_level: CanvasJS
+  - id: "24"
+    data_type: Sentiment/Emotion
+    keywords:
+      - sentiment
+      - emotion
+      - nlp
+      - opinion
+      - feeling
+    best_chart_type: Word Cloud with Sentiment
+    secondary_options: Sentiment Arc, Radar Chart
+    color_guidance: "Positive: #22C55E. Negative: #EF4444. Neutral: #94A3B8. Size = Frequency."
+    performance_impact: ⚡ Good
+    accessibility_notes: ⚠ Word clouds poor for screen readers. Use list view.
+    library_recommendation: D3-cloud, Highcharts, Nivo
+    interactive_level: Hover + Filter
+  - id: "25"
+    data_type: Process Mining
+    keywords:
+      - process
+      - mining
+      - variants
+      - path
+      - bottleneck
+      - log
+    best_chart_type: Process Map / Graph
+    secondary_options: Directed Acyclic Graph (DAG), Petri Net
+    color_guidance: "Happy path: #10B981 (Thick). Deviations: #F59E0B (Thin). Bottlenecks: #EF4444."
+    performance_impact: ⚠ Moderate to Heavy
+    accessibility_notes: ⚠ Complex graphs hard to navigate. Provide path summary.
+    library_recommendation: React-Flow, Cytoscape.js, Recharts
+    interactive_level: Drag + Node-Click

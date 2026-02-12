@@ -1,0 +1,97 @@
+# 📋 Versioning Convention Rule
+
+> **Rule ID**: MOD-VER-001
+> **Category**: Workflow / Version Management
+> **Priority**: Mandatory
+
+---
+
+## 🎯 Purpose
+
+Prevent agent from suggesting large version jumps. Follow semantic versioning with conservative increments.
+
+---
+
+## 📊 Semantic Versioning Rules
+
+### Format: `MAJOR.MINOR.PATCH`
+
+| Component | When to Increment | Example |
+|:----------|:------------------|:--------|
+| **PATCH** | Bug fixes, small improvements | `6.1.2` → `6.1.3` |
+| **MINOR** | New features (backward compatible) | `6.1.2` → `6.2.0` |
+| **MAJOR** | Breaking changes only | `6.1.2` → `7.0.0` |
+
+---
+
+## ⚠️ Agent Constraints
+
+### NEVER Do
+- ❌ Suggest `vX.0.0` for non-breaking changes
+- ❌ Suggest version jump > 1 minor (e.g., `6.1` → `6.5`)
+- ❌ Suggest major version for new features
+
+### ALWAYS Do
+- ✅ Check current version in `VERSION.yaml` first
+- ✅ Default to PATCH increment
+- ✅ Only suggest MINOR for confirmed new features
+- ✅ Only suggest MAJOR when explicitly breaking compatibility
+
+---
+
+## 📋 Decision Matrix
+
+| Change Type | Version Increment |
+|:------------|:------------------|
+| Bug fix | PATCH (+0.0.1) |
+| Config update | PATCH (+0.0.1) |
+| New skill | PATCH or MINOR |
+| New workflow | MINOR (+0.1.0) |
+| New IDE support | MINOR (+0.1.0) |
+| Breaking API change | MAJOR (+1.0.0) |
+| Complete rewrite | MAJOR (+1.0.0) |
+
+---
+
+## 🔧 Implementation
+
+### When Suggesting Version
+
+```yaml
+# Check current version
+current: "6.2.1"
+
+# For bug fixes
+suggest: "6.1.3"  # ✅ Correct
+
+# For new features  
+suggest: "6.2.0"  # ✅ Correct
+
+# WRONG suggestions
+wrong: "7.0.0"    # ❌ Only for breaking changes
+wrong: "6.5.0"    # ❌ Too big jump
+```
+
+### Version Check Prompt
+
+Before suggesting version:
+1. Read `.agent/core/VERSION.yaml`
+2. Identify change type
+3. Apply decision matrix
+4. Suggest next version (conservative)
+
+---
+
+## 📁 SSoT
+
+Single Source of Truth: `.agent/core/VERSION.yaml`
+
+```yaml
+system:
+  version: "6.2.1"
+  version_short: "v6.2.1"
+```
+
+---
+
+_DOMYH Awesome Code • Versioning Rule v1.0_

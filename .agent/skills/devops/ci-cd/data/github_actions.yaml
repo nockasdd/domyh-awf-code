@@ -1,0 +1,248 @@
+# =============================================================================
+# GitHub Actions Patterns (Feb 2026)
+# =============================================================================
+# ARM64 runners, SLSA, artifact attestations from 2025-2026
+
+metadata:
+  skill: ci-cd
+  domain: github-actions
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 6
+
+patterns:
+  - id: cicd001
+    name: ARM64 Linux Runners
+    category: github-actions
+    version: "2024+"
+    description: Native ARM64/Graviton runners for 40% cost savings
+    text: github actions arm64 graviton linux runner cost savings
+    example: |
+      # GitHub Actions ARM64 runner
+      jobs:
+        build:
+          runs-on: ubuntu-24.04-arm64  # ARM64 runner
+          steps:
+            - uses: actions/checkout@v4
+            - name: Build
+              run: go build -v ./...
+
+      # Cost comparison:
+      # - ubuntu-latest (x64): $0.008/min
+      # - ubuntu-24.04-arm64: $0.005/min (37% savings!)
+
+      # Performance for Go/Rust/Node:
+      # - Often 10-20% faster builds
+      # - Better for container builds
+
+      # Matrix for multi-arch:
+      strategy:
+        matrix:
+          runner: [ubuntu-latest, ubuntu-24.04-arm64]
+    severity: HIGH
+    docs_url: https://docs.github.com/en/actions/using-github-hosted-runners
+
+  - id: cicd002
+    name: SLSA Build Level 3
+    category: security
+    version: "2024+"
+    description: Supply chain attestation with SLSA Level 3 provenance
+    text: slsa attestation supply chain security provenance level 3
+    example: |
+      name: SLSA Build
+
+      on:
+        push:
+          tags: ['v*']
+
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          permissions:
+            id-token: write
+            contents: read
+            attestations: write
+          steps:
+            - uses: actions/checkout@v4
+
+            - name: Build artifact
+              run: go build -o myapp
+
+            - name: Generate SLSA provenance
+              uses: actions/attest-build-provenance@v2
+              with:
+                subject-path: 'myapp'
+                # SLSA Level 3 - Hermetic, Parameterless
+                slsa-level: 3
+
+      # SLSA Levels:
+      # - Level 1: Basic attestation
+      # - Level 2: Build service generates provenance
+      # - Level 3: Hermetic builds, non-falsifiable provenance
+    severity: CRITICAL
+    docs_url: https://slsa.dev/spec/v1.0/
+
+  - id: cicd003
+    name: Artifact Attestations
+    category: security
+    version: "2024+"
+    description: Cryptographic proof of artifact origin
+    text: artifact attestation sigstore cosign container signing
+    example: |
+      name: Container Build with Attestation
+
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          permissions:
+            packages: write
+            id-token: write
+            attestations: write
+          steps:
+            - uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build and push
+              id: push
+              uses: docker/build-push-action@v5
+              with:
+                push: true
+                tags: ghcr.io/${{ github.repository }}:latest
+
+            - name: Attest container
+              uses: actions/attest-build-provenance@v2
+              with:
+                subject-name: ghcr.io/${{ github.repository }}
+                subject-digest: ${{ steps.push.outputs.digest }}
+
+      # Verify attestation:
+      # gh attestation verify ghcr.io/org/repo:latest
+    severity: HIGH
+    docs_url: https://docs.github.com/en/actions/security-guides/using-artifact-attestations
+
+  - id: cicd004
+    name: Environment Deployment Protection
+    category: deployment
+    version: "2024+"
+    description: Required reviewers and wait timers for production deployments
+    text: github actions environment protection deployment approval
+    example: |
+      name: Deploy to Production
+
+      on:
+        push:
+          branches: [main]
+
+      jobs:
+        deploy-staging:
+          runs-on: ubuntu-latest
+          environment: staging
+          steps:
+            - run: ./deploy.sh staging
+
+        deploy-production:
+          needs: deploy-staging
+          runs-on: ubuntu-latest
+          # Protection rules in repo settings
+          environment:
+            name: production
+            url: https://example.com
+          steps:
+            - run: ./deploy.sh production
+
+      # Environment protection rules (configured in UI):
+      # - Required reviewers: team-leads
+      # - Wait timer: 15 minutes
+      # - Branch restrictions: main only
+      # - Deployment branches: tags matching v*
+    severity: HIGH
+    docs_url: https://docs.github.com/en/actions/deployment/targeting-different-environments
+
+  - id: cicd005
+    name: Reusable Workflows
+    category: github-actions
+    version: "2022+"
+    description: DRY workflows with inputs and secrets passthrough
+    text: reusable workflows dry composite shared workflow call
+    example: |
+      # .github/workflows/reusable-build.yml
+      name: Reusable Build
+
+      on:
+        workflow_call:
+          inputs:
+            node-version:
+              required: true
+              type: string
+          secrets:
+            npm-token:
+              required: true
+
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: ${{ inputs.node-version }}
+            - run: npm ci
+              env:
+                NPM_TOKEN: ${{ secrets.npm-token }}
+
+      # Caller workflow
+      # .github/workflows/main.yml
+      jobs:
+        call-build:
+          uses: ./.github/workflows/reusable-build.yml
+          with:
+            node-version: '20'
+          secrets:
+            npm-token: ${{ secrets.NPM_TOKEN }}
+    severity: MEDIUM
+    docs_url: https://docs.github.com/en/actions/using-workflows/reusing-workflows
+
+  - id: cicd006
+    name: Composite Actions
+    category: github-actions
+    version: "2022+"
+    description: Bundle multiple steps into reusable custom action
+    text: composite action custom reusable steps bundle action.yml
+    example: |
+      # action.yml - Custom composite action
+      name: 'Build and Test'
+      description: 'Build and test Node.js project'
+      inputs:
+        node-version:
+          description: 'Node.js version'
+          required: false
+          default: '20'
+      runs:
+        using: 'composite'
+        steps:
+          - uses: actions/setup-node@v4
+            with:
+              node-version: ${{ inputs.node-version }}
+              cache: 'npm'
+
+          - name: Install
+            shell: bash
+            run: npm ci
+
+          - name: Lint
+            shell: bash
+            run: npm run lint
+
+          - name: Test
+            shell: bash
+            run: npm test -- --coverage
+
+      # Use in workflow:
+      - uses: ./.github/actions/build-and-test
+        with:
+          node-version: '22'
+    severity: MEDIUM
+    docs_url: https://docs.github.com/en/actions/creating-actions/creating-a-composite-action

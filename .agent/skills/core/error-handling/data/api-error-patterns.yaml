@@ -1,0 +1,135 @@
+metadata:
+  skill: error-handling
+  domain: api_error_patterns
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: api-error-patterns.yaml
+  patterns_count: 20
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - standard
+    - level
+patterns:
+  - id: API-001
+    pattern: RFC 9457 Problem Details
+    description: Standard error response format
+    example: '{"type": "uri", "title": "...", "status": 400}'
+    standard: RFC 9457
+    level: INTERMEDIATE
+  - id: API-002
+    pattern: type Field
+    description: URI identifying error type
+    example: 'type: "https://api.example.com/errors/validation"'
+    standard: RFC 9457
+    level: INTERMEDIATE
+  - id: API-003
+    pattern: title Field
+    description: Human-readable summary
+    example: 'title: "Validation Error"'
+    standard: RFC 9457
+    level: BASIC
+  - id: API-004
+    pattern: status Field
+    description: HTTP status code
+    example: "status: 400"
+    standard: RFC 9457
+    level: BASIC
+  - id: API-005
+    pattern: detail Field
+    description: Human-readable explanation
+    example: 'detail: "The email field is required"'
+    standard: RFC 9457
+    level: BASIC
+  - id: API-006
+    pattern: instance Field
+    description: URI identifying occurrence
+    example: 'instance: "/users/123/requests/abc"'
+    standard: RFC 9457
+    level: ADVANCED
+  - id: API-007
+    pattern: Extension Fields
+    description: Custom fields for domain details
+    example: 'errors: [{"field": "email"'
+    standard: '"message": "..."}]'
+    level: RFC 9457
+  - id: API-008
+    pattern: 400 Bad Request
+    description: Client sent invalid data
+    example: Invalid request body
+    standard: HTTP
+    level: BASIC
+  - id: API-009
+    pattern: 401 Unauthorized
+    description: Authentication required
+    example: Access token required
+    standard: HTTP
+    level: BASIC
+  - id: API-010
+    pattern: 403 Forbidden
+    description: Authenticated but not allowed
+    example: Insufficient permissions
+    standard: HTTP
+    level: BASIC
+  - id: API-011
+    pattern: 404 Not Found
+    description: Resource doesn't exist
+    example: User not found
+    standard: HTTP
+    level: BASIC
+  - id: API-012
+    pattern: 409 Conflict
+    description: Resource state conflict
+    example: Email already registered
+    standard: HTTP
+    level: INTERMEDIATE
+  - id: API-013
+    pattern: 422 Unprocessable Entity
+    description: Validation failed
+    example: Field validation errors
+    standard: HTTP
+    level: INTERMEDIATE
+  - id: API-014
+    pattern: 429 Too Many Requests
+    description: Rate limit exceeded
+    example: Retry after 60 seconds
+    standard: HTTP
+    level: INTERMEDIATE
+  - id: API-015
+    pattern: 500 Internal Server Error
+    description: Server-side error
+    example: An unexpected error occurred
+    standard: HTTP
+    level: BASIC
+  - id: API-016
+    pattern: 503 Service Unavailable
+    description: Temporary overload
+    example: Service temporarily unavailable
+    standard: HTTP
+    level: BASIC
+  - id: API-017
+    pattern: Retry-After Header
+    description: When to retry
+    example: "Retry-After: 120"
+    standard: HTTP
+    level: INTERMEDIATE
+  - id: API-018
+    pattern: X-Request-ID Header
+    description: Request identifier for tracking
+    example: "X-Request-ID: abc-123"
+    standard: Custom
+    level: INTERMEDIATE
+  - id: API-019
+    pattern: Validation Error Array
+    description: List field errors
+    example: '{ "errors": [ { "field": "email", "code": "required" } ] }'
+    standard: Custom
+    level: INTERMEDIATE
+  - id: API-020
+    pattern: Error Envelope
+    description: Wrap response in error object
+    example: '{ "error": { "code": "...'
+    standard: '""message"": ""..."" } }"'
+    level: Custom

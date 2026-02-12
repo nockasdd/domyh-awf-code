@@ -1,6 +1,0 @@
-principle,full_name,cpp,csharp,java,python,go,rust,typescript,implementation_mechanism,common_violation
-S,Single Responsibility,✅ class per header,✅ partial classes,✅ small classes,✅ modules,✅ packages,✅ modules + crates,✅ modules,One class = one reason to change,God class with 10+ methods
-O,Open/Closed,✅ virtual/templates,✅ interfaces,✅ interfaces,✅ ABC/protocols,✅ interfaces,✅ traits,✅ interfaces,Extend via inheritance not modification,Switch statements on types
-L,Liskov Substitution,✅ contracts,✅ contracts,✅ contracts,✅ protocols,✅ interfaces,✅ trait bounds,✅ interfaces,Derived honors base contract,Square extends Rectangle problem
-I,Interface Segregation,✅ abstract classes,✅ interfaces,✅ interfaces,✅ ABC,✅ small interfaces,✅ small traits,✅ interfaces,Many small > one large,Fat interface with 20+ methods
-D,Dependency Inversion,✅ pimpl/factory,✅ DI containers,✅ Spring DI,✅ constructor DI,✅ interface DI,✅ trait objects,✅ DI frameworks,Depend on abstractions,Direct new() in high-level code

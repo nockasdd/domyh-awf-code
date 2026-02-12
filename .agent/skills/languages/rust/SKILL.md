@@ -1,12 +1,12 @@
 ---
 name: rust
 detect: ["Cargo.toml", "*.rs", "Cargo.lock"]
-version: "6.1.2"
+version: "6.2.1"
 category: systems
 tier: 1
 ---
 
-# Rust Patterns — DOMYH Awesome Code v6.1.2
+# Rust Patterns — DOMYH Awesome Code
 
 > **Version**: Rust 1.80+ (2025-2026)
 > **Philosophy**: Zero-cost abstractions, fearless concurrency, memory safety
@@ -374,4 +374,4 @@ mod tests {
 
 ---
 
-_DOMYH Awesome Code v6.1.2 • Rust 2025_
+_DOMYH Awesome Code • Rust 2025_

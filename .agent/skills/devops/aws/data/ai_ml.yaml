@@ -1,0 +1,194 @@
+# =============================================================================
+# AWS AI/ML Patterns - Bedrock & SageMaker (Feb 2026)
+# =============================================================================
+# AgentCore, Cross-Region Inference, SageMaker Unified Studio
+
+metadata:
+  skill: aws
+  domain: ai-ml
+  version: "2026.1"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: aws030
+    name: Bedrock AgentCore
+    category: bedrock
+    version: "2026+"
+    description: Quality evaluations and policy controls for trusted AI agents
+    text: bedrock agentcore ai agents evaluation policies trust safety
+    example: |
+      import boto3
+
+      bedrock_agent = boto3.client('bedrock-agent-runtime')
+
+      # Create agent with AgentCore policies
+      response = bedrock_agent.create_agent(
+          agentName='customer-service-agent',
+          foundationModel='anthropic.claude-3-sonnet',
+          instruction='Help customers with orders...',
+          # AgentCore: Quality and safety controls
+          agentCoreConfiguration={
+              'qualityEvaluation': {
+                  'enabled': True,
+                  'metrics': ['accuracy', 'relevance', 'safety']
+              },
+              'policyControls': {
+                  'contentFilters': ['HATE', 'VIOLENCE', 'SEXUAL'],
+                  'piiBehavior': 'REDACT',
+                  'groundingCheck': True
+              }
+          }
+      )
+
+      # Monitor agent quality in CloudWatch
+    severity: CRITICAL
+    docs_url: https://aws.amazon.com/bedrock/agentcore/
+
+  - id: aws031
+    name: Bedrock Cross-Region Inference
+    category: bedrock
+    version: "2026+"
+    description: Automatic failover to other regions during outages
+    text: bedrock cross region inference failover reliability ha
+    example: |
+      import boto3
+
+      # Create inference profile with cross-region
+      bedrock = boto3.client('bedrock')
+
+      response = bedrock.create_inference_profile(
+          inferenceProfileName='resilient-claude',
+          description='Cross-region Claude Sonnet',
+          modelSource={
+              'foundationModel': 'anthropic.claude-3-sonnet-20240229-v1:0'
+          },
+          crossRegionInference={
+              'enabled': True,
+              'regions': ['us-east-1', 'us-west-2', 'eu-west-1'],
+              'failoverBehavior': 'AUTOMATIC'
+          }
+      )
+
+      # Use the profile - automatic failover on outages
+      runtime = boto3.client('bedrock-runtime')
+      response = runtime.invoke_model(
+          modelId=response['inferenceProfileArn'],
+          body=json.dumps({'prompt': 'Hello!'})
+      )
+
+      # Benefits:
+      # - 99.99% availability
+      # - No code changes needed
+      # - Automatic routing
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html
+
+  - id: aws032
+    name: Bedrock Extended Prompt Caching
+    category: bedrock
+    version: "2026+"
+    description: 1-hour TTL for prompt caching in long-running agent workflows
+    text: bedrock prompt caching performance cost cache ttl
+    example: |
+      import boto3
+
+      runtime = boto3.client('bedrock-runtime')
+
+      # Enable extended prompt caching for agents
+      response = runtime.invoke_model(
+          modelId='anthropic.claude-3-sonnet',
+          body=json.dumps({
+              'prompt': 'You are a helpful assistant...',
+              'messages': [...]
+          }),
+          # Extended caching (up to 1 hour TTL)
+          cacheConfig={
+              'enabled': True,
+              'ttlSeconds': 3600,  # 1 hour
+              'cacheablePrefix': 'system_prompt'
+          }
+      )
+
+      # Benefits:
+      # - Cost reduction for repeated prompts
+      # - Faster response times
+      # - Ideal for long-running agent workflows
+    severity: MEDIUM
+    docs_url: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+
+  - id: aws033
+    name: SageMaker Unified Studio
+    category: sagemaker
+    version: "2026+"
+    description: Unified workspace with VPC connectivity and cross-account subscriptions
+    text: sagemaker unified studio workspace vpc cross account
+    example: |
+      # SageMaker Unified Studio features (2026):
+
+      # 1. Private VPC Connectivity
+      aws sagemaker create-domain \
+        --domain-name unified-studio \
+        --vpc-id vpc-12345 \
+        --subnet-ids subnet-a subnet-b \
+        --app-network-access-type VpcOnly
+
+      # 2. Cross-Account Subscriptions
+      aws sagemaker create-subscription \
+        --domain-id domain-123 \
+        --source-account 987654321 \
+        --permission-type ReadOnly
+
+      # 3. Agent-Generated Code
+      # UI now includes AI-generated SQL and Python
+      # Type natural language → get working code
+
+      # 4. New UI Design
+      # Unified workspace for:
+      # - Notebooks (JupyterLab)
+      # - Data catalog
+      # - Model registry
+      # - Feature store
+      # - MLflow experiments
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/sagemaker/latest/dg/studio.html
+
+  - id: aws034
+    name: SageMaker Serverless MLflow
+    category: sagemaker
+    version: "2026+"
+    description: Managed MLflow for AI experimentation with zero infrastructure
+    text: sagemaker mlflow experiment tracking serverless managed
+    example: |
+      import mlflow
+      import sagemaker
+
+      # Connect to SageMaker Managed MLflow
+      mlflow.set_tracking_uri(
+          sagemaker.get_execution_role_mlflow_uri()
+      )
+
+      # Log experiments - zero infrastructure
+      with mlflow.start_run():
+          mlflow.log_param("learning_rate", 0.01)
+          mlflow.log_param("epochs", 100)
+
+          # Train model
+          model = train_model(...)
+
+          mlflow.log_metric("accuracy", 0.95)
+          mlflow.log_metric("f1_score", 0.92)
+
+          # Register model
+          mlflow.sklearn.log_model(
+              model,
+              "model",
+              registered_model_name="my-classifier"
+          )
+
+      # Features:
+      # - Fully managed (no MLflow server)
+      # - Integrates with SageMaker Pipelines
+      # - Auto-scales to workload
+    severity: HIGH
+    docs_url: https://docs.aws.amazon.com/sagemaker/latest/dg/mlflow.html

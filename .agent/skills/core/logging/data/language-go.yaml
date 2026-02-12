@@ -1,0 +1,191 @@
+metadata:
+  skill: logging
+  domain: language_go
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-go.yaml
+  patterns_count: 25
+  columns:
+    - pattern_id
+    - category
+    - library
+    - name
+    - description
+    - example
+    - when_to_use
+patterns:
+  - id: GO-001
+    category: slog
+    library: slog
+    name: slog.New
+    description: Create new slog logger with handler
+    example: logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+    when_to_use: Go 1.21+ projects
+  - id: GO-002
+    category: slog
+    library: slog
+    name: slog.Info
+    description: Log at INFO level with structured fields
+    example: slog.Info("request", "method", r.Method, "path", r.URL.Path)
+    when_to_use: General events
+  - id: GO-003
+    category: slog
+    library: slog
+    name: slog.With
+    description: Create child logger with bound attributes
+    example: logger := slog.Default().With("request_id", reqID)
+    when_to_use: Request-scoped logging
+  - id: GO-004
+    category: slog
+    library: slog
+    name: slog.Group
+    description: Group related attributes together
+    example: slog.Group("user", "id", 123, "name", "John")
+    when_to_use: Organizing log fields
+  - id: GO-005
+    category: slog
+    library: slog
+    name: slog.LogAttrs
+    description: High-performance logging with Attr
+    example: slog.LogAttrs(ctx, slog.LevelInfo, "msg", slog.String("key", val))
+    when_to_use: Performance-critical paths
+  - id: GO-006
+    category: slog
+    library: slog
+    name: JSONHandler
+    description: JSON output handler
+    example: "slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})"
+    when_to_use: Production logging
+  - id: GO-007
+    category: slog
+    library: slog
+    name: TextHandler
+    description: Human-readable text output
+    example: slog.NewTextHandler(os.Stdout, nil)
+    when_to_use: Development logging
+  - id: GO-008
+    category: slog
+    library: slog
+    name: HandlerOptions
+    description: Configure handler behavior
+    example: "&slog.HandlerOptions{AddSource: true, Level: slog.LevelDebug}"
+    when_to_use: Customizing output
+  - id: GO-009
+    category: slog
+    library: slog
+    name: Context Integration
+    description: Pass logger via context
+    example: slog.InfoContext(ctx, "operation complete")
+    when_to_use: Request-scoped logging
+  - id: GO-010
+    category: slog
+    library: slog
+    name: Custom Handler
+    description: Implement slog.Handler interface
+    example: type MyHandler struct { slog.Handler }
+    when_to_use: Custom log destinations
+  - id: GO-011
+    category: zap
+    library: zap
+    name: zap.NewProduction
+    description: Create production logger
+    example: logger, _ := zap.NewProduction()
+    when_to_use: Production environments
+  - id: GO-012
+    category: zap
+    library: zap
+    name: zap.NewDevelopment
+    description: Create development logger
+    example: logger, _ := zap.NewDevelopment()
+    when_to_use: Local development
+  - id: GO-013
+    category: zap
+    library: zap
+    name: SugaredLogger
+    description: Convenience API with slight overhead
+    example: sugar := logger.Sugar(); sugar.Infow("msg", "key", val)
+    when_to_use: Ease of use over performance
+  - id: GO-014
+    category: zap
+    library: zap
+    name: Strongly-Typed Fields
+    description: Zero-allocation typed fields
+    example: logger.Info("msg", zap.String("key", val), zap.Int("count", 5))
+    when_to_use: Maximum performance
+  - id: GO-015
+    category: zap
+    library: zap
+    name: zap.Named
+    description: Create named child logger
+    example: logger = logger.Named("auth-service")
+    when_to_use: Service identification
+  - id: GO-016
+    category: zap
+    library: zap
+    name: zapcore.Core
+    description: Build custom core with sampling
+    example: core := zapcore.NewSamplerWithOptions(baseCore, time.Second, 100, 10)
+    when_to_use: High-volume logging
+  - id: GO-017
+    category: zap
+    library: zap
+    name: Sync Defer
+    description: Flush logs on shutdown
+    example: defer logger.Sync()
+    when_to_use: Graceful shutdown
+  - id: GO-018
+    category: zerolog
+    library: zerolog
+    name: zerolog.New
+    description: Create zerolog logger
+    example: logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
+    when_to_use: Fastest JSON logging
+  - id: GO-019
+    category: zerolog
+    library: zerolog
+    name: Fluent API
+    description: Chain methods for logging
+    example: log.Info().Str("user", "john").Int("age", 30).Msg("user created")
+    when_to_use: Expressive logging
+  - id: GO-020
+    category: zerolog
+    library: zerolog
+    name: Context Logger
+    description: Store logger in context
+    example: log := zerolog.Ctx(ctx); log.Info().Msg("found")
+    when_to_use: Request-scoped logging
+  - id: GO-021
+    category: zerolog
+    library: zerolog
+    name: zerolog.Sampler
+    description: Sample high-volume logs
+    example: "sampler := &zerolog.BurstSampler{Burst: 5, Period: time.Second}"
+    when_to_use: Reducing log volume
+  - id: GO-022
+    category: zerolog
+    library: zerolog
+    name: Pretty Console
+    description: Human-readable output
+    example: "log.Output(zerolog.ConsoleWriter{Out: os.Stderr})"
+    when_to_use: Development logging
+  - id: GO-023
+    category: general
+    library: any
+    name: Error Logging
+    description: Log errors with stack context
+    example: logger.Error("operation failed", "error", err, "operation", op)
+    when_to_use: Error handling
+  - id: GO-024
+    category: general
+    library: any
+    name: HTTP Request Logging
+    description: Log HTTP request details
+    example: logger.Info("request", "method", r.Method, "path", r.URL.Path, "status", status)
+    when_to_use: API logging
+  - id: GO-025
+    category: general
+    library: any
+    name: Database Query Logging
+    description: Log slow queries
+    example: logger.Warn("slow query", "duration_ms", dur, "query", sanitizedQuery)
+    when_to_use: Performance monitoring

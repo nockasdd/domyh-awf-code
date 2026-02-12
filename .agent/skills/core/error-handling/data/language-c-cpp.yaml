@@ -1,0 +1,226 @@
+metadata:
+  skill: error-handling
+  domain: language_c_cpp
+  version: 6.2.1
+  updated: "2026-02-05"
+  migrated_from: language-c-cpp.yaml
+  patterns_count: 30
+  columns:
+    - id
+    - pattern
+    - description
+    - example
+    - language
+    - category
+    - level
+patterns:
+  - id: EH-C-001
+    pattern: errno Global
+    description: Check errno after system call fails
+    example: if (ret == -1) { perror(msg); }
+    language: C
+    category: Return Codes
+    level: BASIC
+  - id: EH-C-002
+    pattern: Return Code Check
+    description: Check function return value for error
+    example: int ret = func(); if (ret < 0) handle_error();
+    language: C
+    category: Return Codes
+    level: BASIC
+  - id: EH-C-003
+    pattern: NULL Check
+    description: Check for NULL pointer return
+    example: FILE *f = fopen(); if (f == NULL) {}
+    language: C
+    category: Return Codes
+    level: BASIC
+  - id: EH-C-004
+    pattern: strerror
+    description: Get human-readable error message
+    example: printf("%s", strerror(errno));
+    language: C
+    category: Error Message
+    level: BASIC
+  - id: EH-C-005
+    pattern: perror
+    description: Print error with custom prefix
+    example: perror("Failed to open file");
+    language: C
+    category: Error Message
+    level: BASIC
+  - id: EH-C-006
+    pattern: setjmp/longjmp
+    description: Non-local jump for error recovery
+    example: if (setjmp(env) == 0) { risky(); }
+    language: C
+    category: Recovery
+    level: ADVANCED
+  - id: EH-C-007
+    pattern: Error Enum
+    description: Define error codes as enum
+    example: enum Error { OK=0, NOMEM=-1, IO=-2 };
+    language: C
+    category: Definition
+    level: INTERMEDIATE
+  - id: EH-C-008
+    pattern: Output Parameter
+    description: Return error via pointer parameter
+    example: int func(int *result, Error *err);
+    language: C
+    category: Return Codes
+    level: INTERMEDIATE
+  - id: EH-C-009
+    pattern: Goto Cleanup
+    description: Use goto for centralized cleanup
+    example: "if (err) goto cleanup; cleanup: free(ptr);"
+    language: C
+    category: Cleanup
+    level: INTERMEDIATE
+  - id: EH-C-010
+    pattern: assert
+    description: Check impossible conditions
+    example: assert(ptr != NULL);
+    language: C
+    category: Debug
+    level: BASIC
+  - id: EH-C-011
+    pattern: Defensive NULL
+    description: Initialize pointers to NULL
+    example: char *ptr = NULL;
+    language: C
+    category: Defensive
+    level: BASIC
+  - id: EH-C-012
+    pattern: Error Callback
+    description: Pass error handler as function pointer
+    example: void func(void (*on_error)(int));
+    language: C
+    category: Callback
+    level: ADVANCED
+  - id: EH-CPP-001
+    pattern: try-catch
+    description: Catch exceptions in block
+    example: try { risky(); } catch (std::exception& e) {}
+    language: C++
+    category: Exception
+    level: BASIC
+  - id: EH-CPP-002
+    pattern: throw
+    description: Throw exception object
+    example: throw std::runtime_error("message");
+    language: C++
+    category: Exception
+    level: BASIC
+  - id: EH-CPP-003
+    pattern: std::exception
+    description: Base class for all exceptions
+    example: catch (const std::exception& e) { e.what(); }
+    language: C++
+    category: Exception
+    level: BASIC
+  - id: EH-CPP-004
+    pattern: Custom Exception
+    description: Derive from std::exception
+    example: "class MyError : public std::exception {};"
+    language: C++
+    category: Definition
+    level: INTERMEDIATE
+  - id: EH-CPP-005
+    pattern: noexcept
+    description: Guarantee function won't throw
+    example: void func() noexcept { /* safe code */ }
+    language: C++
+    category: Performance
+    level: INTERMEDIATE
+  - id: EH-CPP-006
+    pattern: RAII Guard
+    description: Resource cleanup via destructor
+    example: std::unique_ptr<T> ptr(new T());
+    language: C++
+    category: Resource
+    level: BASIC
+  - id: EH-CPP-007
+    pattern: std::expected C++23
+    description: Return value or error explicitly
+    example: std::expected<int, Error> result = func();
+    language: C++
+    category: Modern
+    level: ADVANCED
+  - id: EH-CPP-008
+    pattern: std::optional
+    description: Represent optional values
+    example: std::optional<int> opt = find();
+    language: C++
+    category: Modern
+    level: BASIC
+  - id: EH-CPP-009
+    pattern: std::error_code
+    description: Standard error code type
+    example: std::error_code ec = make_error_code(errc::no_such_file);
+    language: C++
+    category: Standard
+    level: INTERMEDIATE
+  - id: EH-CPP-010
+    pattern: catch(...)
+    description: Catch all exceptions
+    example: catch (...) { log("unknown error"); }
+    language: C++
+    category: Exception
+    level: BASIC
+  - id: EH-CPP-011
+    pattern: std::current_exception
+    description: Capture exception for later
+    example: auto ex = std::current_exception();
+    language: C++
+    category: Advanced
+    level: ADVANCED
+  - id: EH-CPP-012
+    pattern: std::rethrow_exception
+    description: Rethrow captured exception
+    example: std::rethrow_exception(ex);
+    language: C++
+    category: Advanced
+    level: ADVANCED
+  - id: EH-CPP-013
+    pattern: Stack Unwinding
+    description: Automatic destructor calls on throw
+    example: // destructors called during exception propagation
+    language: C++
+    category: Mechanism
+    level: INTERMEDIATE
+  - id: EH-CPP-014
+    pattern: Exception Safety Guarantee
+    description: Define exception safety levels
+    example: Strong guarantee / Basic guarantee / No-throw
+    language: C++
+    category: Contract
+    level: ADVANCED
+  - id: EH-CPP-015
+    pattern: expected::and_then
+    description: Monadic chaining for expected
+    example: result.and_then([](int v) { return process(v); });
+    language: C++
+    category: Modern
+    level: ADVANCED
+  - id: EH-CPP-016
+    pattern: expected::transform
+    description: Map value in expected
+    example: result.transform([](int v) { return v * 2; });
+    language: C++
+    category: Modern
+    level: ADVANCED
+  - id: EH-CPP-017
+    pattern: Destructor No-Throw
+    description: Never throw from destructor
+    example: ~Resource() noexcept { cleanup(); }
+    language: C++
+    category: Contract
+    level: INTERMEDIATE
+  - id: EH-CPP-018
+    pattern: Exception Specification
+    description: Document throwing behavior (deprecated)
+    example: void f() throw(MyError); // C++11 deprecated
+    language: C++
+    category: Legacy
+    level: BASIC

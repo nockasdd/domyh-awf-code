@@ -1,0 +1,295 @@
+# =============================================================================
+# Assembly Advanced Patterns (Feb 2026)
+# Version: x86-64 / ARM64
+# =============================================================================
+
+metadata:
+  skill: asm
+  domain: advanced
+  version: "x86-64"
+  updated: "2026-02-05"
+  patterns_count: 4
+
+patterns:
+  - id: asm101
+    name: Inline Assembly
+    category: inline
+    version: "GCC/Clang"
+    description: |
+      Inline assembly in C/C++ code.
+      GCC extended asm, constraints.
+    text: inline asm gcc clang extended constraints
+    example: |
+      // ✅ Basic inline assembly (GCC/Clang)
+      int result;
+      asm("mov $42, %0" : "=r"(result));
+      printf("%d\n", result);  // 42
+
+      // ✅ Extended asm syntax
+      // asm [volatile] ( template : outputs : inputs : clobbers )
+
+      int add_inline(int a, int b) {
+          int result;
+          asm("addl %1, %0"
+              : "=r"(result)       // Output: result in any register
+              : "r"(a), "0"(b)     // Input: a in register, b in same as output
+          );
+          return result;
+      }
+
+      // ✅ Constraint letters
+      // "r" = any general register
+      // "a" = eax/rax
+      // "b" = ebx/rbx
+      // "c" = ecx/rcx
+      // "d" = edx/rdx
+      // "m" = memory operand
+      // "i" = immediate integer
+      // "=" = write-only
+      // "+" = read-write
+
+      // ✅ Read CPU timestamp counter
+      uint64_t rdtsc_inline(void) {
+          uint32_t lo, hi;
+          asm volatile(
+              "rdtsc"
+              : "=a"(lo), "=d"(hi)  // Outputs
+              :                     // No inputs
+              :                     // No clobbers
+          );
+          return ((uint64_t)hi << 32) | lo;
+      }
+
+      // ✅ Memory barriers
+      asm volatile("mfence" ::: "memory");  // Full barrier
+      asm volatile("lfence" ::: "memory");  // Load barrier
+      asm volatile("sfence" ::: "memory");  // Store barrier
+
+      // ✅ Clobber list
+      void call_with_clobbers(void) {
+          asm volatile(
+              "call external_func"
+              :
+              :
+              : "rax", "rcx", "rdx", "memory"  // Clobbered registers
+          );
+      }
+
+      // ✅ ARM64 inline assembly
+      int arm_add(int a, int b) {
+          int result;
+          asm("add %w0, %w1, %w2"
+              : "=r"(result)
+              : "r"(a), "r"(b)
+          );
+          return result;
+      }
+    severity: HIGH
+    docs_url: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+
+  - id: asm102
+    name: NASM Syntax
+    category: assembler
+    version: "NASM"
+    description: |
+      NASM assembler syntax and macros.
+      Sections, macros, file structure.
+    text: nasm macro sections syntax directive
+    example: |
+      ; ✅ NASM file structure
+      ; nasm -f elf64 file.asm -o file.o
+      ; ld file.o -o file
+
+      ; ✅ Sections
+      section .data           ; Initialized data
+          msg db "Hello", 10
+          msglen equ $ - msg  ; Length calculation
+          
+      section .rodata         ; Read-only data
+          const dd 42
+          
+      section .bss            ; Uninitialized data
+          buffer resb 1024    ; Reserve 1024 bytes
+          counter resd 1      ; Reserve 1 dword
+          
+      section .text           ; Code
+          global _start
+          global main         ; For linking with C
+
+      ; ✅ Macros
+      %macro print 1
+          mov rax, 1          ; sys_write
+          mov rdi, 1          ; stdout
+          mov rsi, %1         ; First argument
+          mov rdx, %1.len     ; Assume .len label
+          syscall
+      %endmacro
+
+      ; ✅ Parameterized macro
+      %macro prologue 0
+          push rbp
+          mov rbp, rsp
+      %endmacro
+
+      %macro epilogue 0
+          mov rsp, rbp
+          pop rbp
+          ret
+      %endmacro
+
+      ; ✅ Conditional assembly
+      %ifdef DEBUG
+          ; Debug code
+      %endif
+
+      %if __BITS__ == 64
+          ; 64-bit specific
+      %else
+          ; 32-bit specific
+      %endif
+
+      ; ✅ Include files
+      %include "macros.inc"
+
+      ; ✅ Local labels
+      function:
+          .loop:
+              dec rcx
+              jnz .loop
+          ret
+
+      another:
+          .loop:              ; Different from function.loop
+              nop
+          ret
+    severity: MEDIUM
+    docs_url: https://www.nasm.us/xdoc/2.16.01/html/nasmdoc0.html
+
+  - id: asm103
+    name: Optimization Techniques
+    category: optimization
+    version: "x86-64"
+    description: |
+      Assembly optimization patterns.
+      Pipeline, cache, branch prediction.
+    text: optimization pipeline cache branch prediction unrolling
+    example: |
+      ; ✅ Avoid dependencies (instruction-level parallelism)
+      ; Bad: sequential dependency
+          mov rax, [data]
+          add rax, 1          ; RAX dependency
+          mov rbx, rax        ; RAX dependency
+
+      ; Better: independent operations
+          mov rax, [data1]
+          mov rbx, [data2]    ; Independent
+          add rax, 1
+          add rbx, 2          ; Can execute in parallel
+
+      ; ✅ Loop unrolling
+      ; Before:
+          mov rcx, 1000
+      .loop:
+          add [array + rcx*8], 1
+          dec rcx
+          jnz .loop
+
+      ; After (unroll 4x):
+          mov rcx, 1000
+      .loop:
+          add qword [array + rcx*8], 1
+          add qword [array + rcx*8 - 8], 1
+          add qword [array + rcx*8 - 16], 1
+          add qword [array + rcx*8 - 24], 1
+          sub rcx, 4
+          jnz .loop
+
+      ; ✅ Branch prediction hints
+          ; Forward branch not taken by default
+          cmp rax, rbx
+          je .unlikely        ; Usually not taken
+          
+          ; Use cmov to avoid branches
+          cmp rax, 10
+          cmovl rax, rbx      ; Conditional move
+
+      ; ✅ Memory alignment
+          align 16            ; Align next instruction/data
+      .hot_loop:
+          ; Cache-line aligned loop
+
+      ; ✅ Prefetching
+          prefetcht0 [array + 256]  ; Prefetch to L1 cache
+          prefetcht1 [array + 512]  ; Prefetch to L2 cache
+
+      ; ✅ Avoid false dependencies
+      ; Bad: false dependency on RAX flags
+          xor eax, eax        ; Clear and set flags
+
+      ; Better: break dependency
+          sub eax, eax        ; Also clears, different µop
+
+      ; ✅ Use LEA for arithmetic
+          lea rax, [rbx + rcx*4 + 8]  ; Faster than add/mul
+    severity: MEDIUM
+    docs_url: https://www.agner.org/optimize/
+
+  - id: asm104
+    name: Debugging Techniques
+    category: debugging
+    version: "x86-64"
+    description: |
+      Debugging assembly with GDB.
+      Breakpoints, registers, disassembly.
+    text: debug gdb breakpoint registers disassemble
+    example: |
+      ; ✅ Compile with debug info
+      ; nasm -f elf64 -g -F dwarf program.asm
+      ; ld -o program program.o
+
+      ; ✅ GDB commands
+      (gdb) break _start             ; Breakpoint at label
+      (gdb) break *0x401000          ; Breakpoint at address
+      (gdb) run                      ; Start program
+      (gdb) stepi                    ; Single instruction step
+      (gdb) nexti                    ; Step over calls
+      (gdb) continue                 ; Continue execution
+
+      ; ✅ Examine registers
+      (gdb) info registers           ; All registers
+      (gdb) info registers rax rbx   ; Specific registers
+      (gdb) print/x $rax             ; Hex format
+      (gdb) print/d $rax             ; Decimal
+      (gdb) print/t $rax             ; Binary
+
+      ; ✅ Examine memory
+      (gdb) x/10x $rsp               ; 10 hex words from stack
+      (gdb) x/s 0x402000             ; String at address
+      (gdb) x/10i $rip               ; 10 instructions from RIP
+      (gdb) x/bx $rsp                ; Bytes at stack pointer
+
+      ; ✅ Disassemble
+      (gdb) disassemble              ; Current function
+      (gdb) disassemble _start       ; Specific function
+      (gdb) set disassembly-flavor intel  ; Intel syntax
+
+      ; ✅ Watchpoints
+      (gdb) watch $rax               ; Break when RAX changes
+      (gdb) watch *0x404000          ; Break when memory changes
+
+      ; ✅ Stack backtrace
+      (gdb) backtrace                ; Show call stack
+      (gdb) frame 2                  ; Select frame
+
+      ; ✅ TUI mode
+      (gdb) layout asm               ; Assembly view
+      (gdb) layout regs              ; Register view
+      (gdb) layout src               ; Source view (if available)
+
+      ; ✅ Debug macro in code
+      ; section .text
+      ; debug_break:
+      ;     int 3                    ; Software breakpoint
+      ;     ret
+    severity: MEDIUM
+    docs_url: https://sourceware.org/gdb/current/onlinedocs/gdb.html/

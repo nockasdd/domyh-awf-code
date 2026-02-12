@@ -1,0 +1,392 @@
+# =============================================================================
+# PHP Core Patterns (Feb 2026)
+# Version: PHP 8.3/8.4
+# =============================================================================
+
+metadata:
+  skill: php
+  domain: core
+  version: "8.4"
+  updated: "2026-02-05"
+  patterns_count: 5
+
+patterns:
+  - id: php001
+    name: Property Hooks
+    category: types
+    version: "PHP8.4"
+    description: |
+      Define getter/setter logic directly in properties.
+      Asymmetric visibility, virtual properties.
+    text: property hook get set visibility readonly
+    example: |
+      <?php
+
+      // ✅ Property hooks (PHP 8.4)
+      class User
+      {
+          public string $firstName {
+              set => ucfirst(strtolower($value));
+          }
+          
+          public string $lastName {
+              set => ucfirst(strtolower($value));
+          }
+          
+          // Virtual property (computed)
+          public string $fullName {
+              get => "{$this->firstName} {$this->lastName}";
+          }
+      }
+
+      $user = new User();
+      $user->firstName = 'JOHN';  // Stored as 'John'
+      echo $user->fullName;       // 'John Doe'
+
+      // ✅ Asymmetric visibility
+      class Product
+      {
+          public private(set) string $name;  // Public read, private write
+          
+          public protected(set) int $stock = 0;
+          
+          public function __construct(string $name)
+          {
+              $this->name = $name;
+          }
+      }
+
+      $product = new Product('Widget');
+      echo $product->name;      // ✅ Works
+      $product->name = 'Other'; // ❌ Error
+
+      // ✅ Readonly classes (PHP 8.2)
+      readonly class Point
+      {
+          public function __construct(
+              public int $x,
+              public int $y,
+          ) {}
+      }
+
+      $point = new Point(3, 4);
+      $point->x = 5;  // ❌ Error - readonly
+    severity: HIGH
+    docs_url: https://www.php.net/manual/en/language.oop5.properties.php
+
+  - id: php002
+    name: Enums
+    category: types
+    version: "PHP8.1+"
+    description: |
+      Type-safe enumerations.
+      Backed enums, traits in enums.
+    text: enum backed unit case match
+    example: |
+      <?php
+
+      // ✅ Unit enum
+      enum Status
+      {
+          case Pending;
+          case Active;
+          case Suspended;
+          case Deleted;
+          
+          public function label(): string
+          {
+              return match($this) {
+                  self::Pending => 'Pending Approval',
+                  self::Active => 'Active',
+                  self::Suspended => 'Suspended',
+                  self::Deleted => 'Deleted',
+              };
+          }
+          
+          public function canTransitionTo(self $status): bool
+          {
+              return match($this) {
+                  self::Pending => in_array($status, [self::Active, self::Deleted]),
+                  self::Active => in_array($status, [self::Suspended, self::Deleted]),
+                  self::Suspended => in_array($status, [self::Active, self::Deleted]),
+                  self::Deleted => false,
+              };
+          }
+      }
+
+      $status = Status::Active;
+      echo $status->label();  // 'Active'
+
+      // ✅ Backed enum (string/int value)
+      enum OrderStatus: string
+      {
+          case Pending = 'pending';
+          case Processing = 'processing';
+          case Shipped = 'shipped';
+          case Delivered = 'delivered';
+          case Cancelled = 'cancelled';
+          
+          public static function fromDatabase(string $value): self
+          {
+              return self::from($value);  // Throws if invalid
+          }
+          
+          public static function tryFromDatabase(string $value): ?self
+          {
+              return self::tryFrom($value);  // Returns null if invalid
+          }
+      }
+
+      // Serialize to database
+      $status = OrderStatus::Shipped;
+      $dbValue = $status->value;  // 'shipped'
+
+      // Restore from database
+      $status = OrderStatus::from('shipped');
+
+      // ✅ Use in match expressions
+      function processOrder(OrderStatus $status): string
+      {
+          return match($status) {
+              OrderStatus::Pending => 'Waiting for payment',
+              OrderStatus::Processing => 'Preparing order',
+              OrderStatus::Shipped => 'On the way',
+              OrderStatus::Delivered => 'Completed',
+              OrderStatus::Cancelled => 'Order cancelled',
+          };
+      }
+    severity: HIGH
+    docs_url: https://www.php.net/manual/en/language.enumerations.php
+
+  - id: php003
+    name: Attributes
+    category: types
+    version: "PHP8+"
+    description: |
+      Native metadata annotations.
+      Custom attributes, reflection.
+    text: attribute annotation metadata reflection
+    example: |
+      <?php
+
+      use Attribute;
+
+      // ✅ Define custom attribute
+      #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PROPERTY)]
+      class Validate
+      {
+          public function __construct(
+              public readonly string $rule,
+              public readonly ?string $message = null,
+          ) {}
+      }
+
+      #[Attribute(Attribute::TARGET_CLASS)]
+      class Table
+      {
+          public function __construct(
+              public readonly string $name,
+          ) {}
+      }
+
+      #[Attribute(Attribute::TARGET_PROPERTY)]
+      class Column
+      {
+          public function __construct(
+              public readonly string $name,
+              public readonly bool $nullable = false,
+          ) {}
+      }
+
+      // ✅ Apply attributes
+      #[Table('users')]
+      class User
+      {
+          #[Column('id')]
+          public int $id;
+          
+          #[Column('email', nullable: false)]
+          #[Validate('email', message: 'Invalid email format')]
+          public string $email;
+          
+          #[Column('name')]
+          #[Validate('min:2', message: 'Name too short')]
+          public string $name;
+      }
+
+      // ✅ Read attributes via Reflection
+      function getTableName(string $className): ?string
+      {
+          $reflection = new ReflectionClass($className);
+          $attributes = $reflection->getAttributes(Table::class);
+          
+          if (empty($attributes)) {
+              return null;
+          }
+          
+          $table = $attributes[0]->newInstance();
+          return $table->name;
+      }
+
+      echo getTableName(User::class);  // 'users'
+
+      // ✅ Built-in attributes
+      class MyClass
+      {
+          #[\Override]  // Ensures method overrides parent
+          public function handle(): void {}
+          
+          #[\Deprecated('Use newMethod() instead')]
+          public function oldMethod(): void {}
+          
+          #[\SensitiveParameter]  // Hide in stack traces
+          public function login(#[\SensitiveParameter] string $password): bool {}
+      }
+    severity: MEDIUM
+    docs_url: https://www.php.net/manual/en/language.attributes.php
+
+  - id: php004
+    name: Match Expression
+    category: language
+    version: "PHP8+"
+    description: |
+      Concise switch alternative.
+      Type-safe, expression-based.
+    text: match expression switch comparison
+    example: |
+      <?php
+
+      // ✅ Basic match expression
+      $result = match($statusCode) {
+          200, 201 => 'Success',
+          400 => 'Bad Request',
+          401 => 'Unauthorized',
+          403 => 'Forbidden',
+          404 => 'Not Found',
+          500 => 'Server Error',
+          default => 'Unknown',
+      };
+
+      // ✅ Match with objects
+      $message = match(true) {
+          $user->isAdmin() => 'Welcome, Admin!',
+          $user->isPremium() => 'Welcome, Premium Member!',
+          $user->isVerified() => 'Welcome back!',
+          default => 'Please verify your email',
+      };
+
+      // ✅ Match for type checking
+      function format(mixed $value): string
+      {
+          return match(true) {
+              is_null($value) => 'null',
+              is_bool($value) => $value ? 'true' : 'false',
+              is_int($value) => (string) $value,
+              is_float($value) => number_format($value, 2),
+              is_string($value) => "\"{$value}\"",
+              is_array($value) => json_encode($value),
+              is_object($value) => get_class($value),
+              default => 'unknown',
+          };
+      }
+
+      // ✅ Match throws UnhandledMatchError
+      try {
+          $result = match($value) {
+              1 => 'one',
+              2 => 'two',
+              // No default - throws if $value is 3
+          };
+      } catch (UnhandledMatchError $e) {
+          echo "Unhandled value: {$value}";
+      }
+
+      // ✅ Match with arrow functions
+      $handler = match($action) {
+          'create' => fn($data) => $this->create($data),
+          'update' => fn($data) => $this->update($data),
+          'delete' => fn($id) => $this->delete($id),
+          default => throw new InvalidArgumentException("Unknown action: {$action}"),
+      };
+    severity: MEDIUM
+    docs_url: https://www.php.net/manual/en/control-structures.match.php
+
+  - id: php005
+    name: Named Arguments and Constructor Promotion
+    category: language
+    version: "PHP8+"
+    description: |
+      Cleaner function calls and class definitions.
+      Named arguments, constructor property promotion.
+    text: named arguments constructor promotion readonly
+    example: |
+      <?php
+
+      // ✅ Constructor property promotion
+      class User
+      {
+          public function __construct(
+              public readonly int $id,
+              public string $name,
+              public string $email,
+              public ?string $phone = null,
+              public bool $active = true,
+          ) {}
+      }
+
+      // Equivalent to:
+      // - Declaring properties
+      // - Assigning in constructor
+      // - Adding readonly modifier
+
+      $user = new User(
+          id: 1,
+          name: 'John Doe',
+          email: 'john@email.com',
+      );
+
+      // ✅ Named arguments
+      function createOrder(
+          int $userId,
+          array $items,
+          ?string $coupon = null,
+          bool $giftWrap = false,
+          ?string $note = null,
+      ): Order {
+          // ...
+      }
+
+      // Skip optional arguments with named args
+      $order = createOrder(
+          userId: 123,
+          items: $cart,
+          note: 'Please leave at door',  // Skip coupon and giftWrap
+      );
+
+      // ✅ Array unpacking with named args
+      $options = [
+          'coupon' => 'SAVE20',
+          'giftWrap' => true,
+      ];
+
+      $order = createOrder(
+          userId: 123,
+          items: $cart,
+          ...$options,
+      );
+
+      // ✅ Variadic named arguments
+      function config(...$options): void
+      {
+          foreach ($options as $key => $value) {
+              echo "{$key}: {$value}\n";
+          }
+      }
+
+      config(debug: true, cache: false, timeout: 30);
+
+      // ✅ First-class callable syntax
+      $callback = $this->handleEvent(...);  // Create closure from method
+      array_map($this->transform(...), $items);
+    severity: MEDIUM
+    docs_url: https://www.php.net/manual/en/functions.arguments.php
