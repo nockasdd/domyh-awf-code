@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Consolidation Engine v6.2.5
+# DOMYH Awesome Code — Memory Consolidation Engine v6.2.6
 # Auto-consolidate, merge, and optimize memory storage
 # Reduce token usage by 30%+ through intelligent compression
 
-version: "6.2.5"
+version: "6.2.6"
 engine: memory_consolidation
 
 # =============================================================================
@@ -74,7 +74,7 @@ strategies:
   merge_similar:
     method: semantic_similarity
 
-    # Algorithm specification (v6.2.5 - HSA integration)
+    # Algorithm specification (v6.2.6 - HSA integration)
     algorithm:
       type: cosine_similarity
       embedding_model: hsa # Prefer HSA hybrid search

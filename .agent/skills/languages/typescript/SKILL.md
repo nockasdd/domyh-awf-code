@@ -1,7 +1,7 @@
 ---
 name: typescript
 detect: ["tsconfig.json", "*.ts", "*.tsx", "*.mts", "*.cts"]
-version: "6.2.5"
+version: "6.2.6"
 category: frontend
 tier: 1
 ---

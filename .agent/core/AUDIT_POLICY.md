@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Audit Policy v6.2.5
+# DOMYH Awesome Code Audit Policy v6.2.6
 
 > Logging and accountability based on 2025 AI governance standards
 

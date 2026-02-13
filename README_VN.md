@@ -175,7 +175,7 @@ nock awf --help            # Xem tất cả commands
 | `/orchestrate`  | Multi-Agent: điều phối parallel tasks, delegate cho specialists       | `/orchestrate Refactor + Test + Deploy module auth`       |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo 2 commits gần nhất`                         |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Kiến trúc microservices cho 10K concurrent users` |
-| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.2.5 across 15 files             |
+| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.2.6 across 15 files             |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |

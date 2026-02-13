@@ -8,7 +8,7 @@
 
 ```yaml
 task_type: audit
-version: "6.2.5"
+version: "6.2.6"
 
 # Required fields
 scope: string              # What to audit

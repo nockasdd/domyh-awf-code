@@ -1,6 +1,6 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
-> **Version**: 6.2.5 | **Cập nhật**: 2026-02-07 | **Official Docs Verified**
+> **Version**: 6.2.6 | **Cập nhật**: 2026-02-07 | **Official Docs Verified**
 > **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled
 
 ---
@@ -363,4 +363,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code v6.2.5 • 22 IDEs • 2-Category Feature Matrix • Platform Verified • Feb 7, 2026_
+_DOMYH Awesome Code v6.2.6 • 22 IDEs • 2-Category Feature Matrix • Platform Verified • Feb 7, 2026_

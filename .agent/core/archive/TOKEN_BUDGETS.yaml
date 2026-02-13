@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Token Budgets v6.2.5
+# DOMYH Awesome Code — Token Budgets v6.2.6
 # Single Source of Truth for all token budget definitions
 # Centralizes 49 max_tokens declarations across 10 config files
 
-version: "6.2.5"
+version: "6.2.6"
 engine: token_budgets
 
 # =============================================================================

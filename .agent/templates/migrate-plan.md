@@ -1,6 +1,6 @@
 ---
 name: migrate-plan
-version: "6.2.5"
+version: "6.2.6"
 type: plan
 triggers: ["/migrate"]
 ---

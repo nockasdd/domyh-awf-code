@@ -1,7 +1,7 @@
 ---
 name: react
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
-version: "6.2.5"
+version: "6.2.6"
 category: frontend
 tier: 1
 ---

@@ -1,11 +1,11 @@
-# DOMYH Awesome Code — Token Loading Strategy v6.2.5
+# DOMYH Awesome Code — Token Loading Strategy v6.2.6
 # Optimizes workflow loading for minimal token consumption
 
 # =============================================================================
 # LOADING CONFIGURATION
 # =============================================================================
 
-version: "6.2.5"
+version: "6.2.6"
 strategy: lazy_sections
 
 # Section-based lazy loading
