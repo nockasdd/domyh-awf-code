@@ -1,7 +1,7 @@
-# DOMYH Awesome Code — Context Cleanup Engine v6.2.4
+# DOMYH Awesome Code — Context Cleanup Engine v6.2.5
 # Automated context management and token optimization
 
-version: "6.2.4"
+version: "6.2.5"
 engine: context_cleanup
 
 # =============================================================================

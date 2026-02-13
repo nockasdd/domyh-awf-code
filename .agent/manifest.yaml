@@ -6,7 +6,7 @@
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: v6.2.4
+version: v6.2.5
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 

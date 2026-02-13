@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Active Memory Management v6.2.4
+# DOMYH Awesome Code — Active Memory Management v6.2.5
 # Self-directing memory inspired by Letta/MemGPT architecture
 # Agent decides what to remember, forget, update, emphasize
 
-version: "6.2.4"
+version: "6.2.5"
 engine: active_memory_manager
 
 # =============================================================================

@@ -1,7 +1,7 @@
 ---
 name: svelte
 detect: ["svelte.config.js", "*.svelte", "+page.svelte", "+layout.svelte"]
-version: "6.2.4"
+version: "6.2.5"
 category: frontend
 tier: 1
 ---

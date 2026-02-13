@@ -1,7 +1,7 @@
 {
   "name": "DOMYH Awesome Code ",
-  "version": "6.2.4",
-  
+  "version": "6.2.5",
+
   "windsurf": {
     "cascade_enabled": true,
     "flows_enabled": true
@@ -33,7 +33,6 @@
       "args": ["-y", "@nockdev/hsa@latest"],
       "auto_start": true,
       "env": {
-        
         "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }

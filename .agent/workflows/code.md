@@ -44,7 +44,7 @@ skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
      - [ ] Dark mode: no pure black/white, CSS variables, prefers-color-scheme
      - [ ] SVG icons only (no emoji as icons)
      - [ ] Focus states visible, transitions 150-300ms
-5. **SYNC** — `hsa_check_changes` to update index, output summary of changes, confidence score (1-10), next steps. Persist key decisions to `memory/state.json`
+5. **SYNC** — `hsa_check_changes` to update index, output summary of changes, confidence score (1-10), next steps. Persist key decisions to `.agent/memory/state.json`
 
 ---
 

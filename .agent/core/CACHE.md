@@ -1,4 +1,4 @@
-# Session Cache v6.2.4
+# Session Cache v6.2.5
 
 ## Caching Strategy
 

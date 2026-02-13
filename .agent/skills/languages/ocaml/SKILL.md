@@ -1,7 +1,7 @@
 ---
 name: ocaml
 detect: ["*.ml", "*.mli", "dune", "dune-project", "*.opam"]
-version: "6.2.4"
+version: "6.2.5"
 category: functional
 tier: 3
 ---

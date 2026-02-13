@@ -1,4 +1,4 @@
-# 📋 Phase Template — DOMYH v6.2.4
+# 📋 Phase Template — DOMYH v6.2.5
 
 > **Mục đích**: Template chuẩn cho phase files khi sử dụng `/plan full`
 > **Tạo bởi**: Agent tự động tạo theo complexity detection

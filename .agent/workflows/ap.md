@@ -7,7 +7,7 @@ skills: { required: [security, audit-pro], contextual: [auto] }
 
 > 12-Expert Panel Audit (5 Core + 7 Conditional) • 222 Checkpoints
 > 📊 ISO 25010 • CWE Top 25 • OWASP Top 10 • WCAG 2.2 • GDPR • SRE
-> 📁 Data: `skills/cross-cutting/audit-pro/data/` (HSA queryable)
+> 📁 Data: `.agent/skills/cross-cutting/audit-pro/data/` (HSA queryable)
 
 ---
 
@@ -18,7 +18,7 @@ skills: { required: [security, audit-pro], contextual: [auto] }
 3. **EXECUTE** — Run active Expert Panels sequentially, collect findings with evidence. Show **progress**: `[Panel 2/8] Architecture — Checkpoint 12/20`
 4. **SELF-REVIEW** — Agent re-reads findings, removes duplicates, verifies evidence accuracy, assigns confidence (1-10) per finding
 5. **REPORT** — Production Readiness Score (0-10), findings by P0/P1/P2/P3, **delta** vs previous audit (↑↓), save to `.domyh/audits/audit_YYYY-MM-DD.md`
-6. **MEMORY PERSIST** — Update `memory/audit_summary.json`, log decisions, update `memory/state.json` scores
+6. **MEMORY PERSIST** — Update `.agent/memory/audit_summary.json`, log decisions, update `.agent/memory/state.json` scores
 
 ---
 
@@ -92,8 +92,8 @@ pre_audit_tools:
 ## DATA LOADING
 
 ```yaml
-checklists: skills/cross-cutting/audit-pro/data/checklists.yaml # 12 experts, 222 checkpoints
-scoring: skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight profiles, grades, scope options
+checklists: .agent/skills/cross-cutting/audit-pro/data/checklists.yaml # 12 experts, 222 checkpoints
+scoring: .agent/skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight profiles, grades, scope options
 ```
 
 ---

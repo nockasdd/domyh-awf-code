@@ -15,7 +15,7 @@ skills: { required: [], contextual: [] }
 1. **COLLECT** — Git changes (`git log --oneline -20`), engine data (`hsa_export`), task list, decisions from memory, file system changes
 2. **ANALYZE** — Categorize changes (features, fixes, refactors, docs), calculate metrics (files changed, lines added/removed)
 3. **SUMMARIZE** — Group by category, generate structured report. Show: `Session: 2h 15m | 8 tasks | 23 files changed`
-4. **PERSIST** — Save key decisions and context to `memory/state.json` for next session continuity
+4. **PERSIST** — Save key decisions and context to `.agent/memory/state.json` for next session continuity
 5. **SUGGEST** — Next steps with priority, suggest `/workflow chain` for follow-up
 
 ---

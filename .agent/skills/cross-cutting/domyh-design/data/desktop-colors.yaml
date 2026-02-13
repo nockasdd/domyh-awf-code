@@ -248,7 +248,7 @@ patterns:
     hex: "#007AFF"
     rgb: 0,122,255
     usage: Default accent color
-    contrast_ratio: v6.2.4:1
+    contrast_ratio: v6.2.5:1
   - id: item_027
     platform: macos
     theme: dark

@@ -1,7 +1,7 @@
 ---
 name: zig
 detect: ["*.zig", "build.zig", "build.zig.zon"]
-version: "6.2.4"
+version: "6.2.5"
 category: systems
 tier: 2
 ---

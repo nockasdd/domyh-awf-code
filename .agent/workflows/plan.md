@@ -18,7 +18,7 @@ skills: { required: [], contextual: [auto] }
 4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts
 5. **PHASE 4: BREAKDOWN** — Task decomposition, effort estimation → ⛔ STOP for user approval
 6. **PHASE 5: VALIDATE** — Review with user, finalize plan
-7. **PHASE 6: PERSIST** — Save to `.domyh/plans/YYYY-MM-DD_{feature-slug}/plan.md`. If scope ≥ L, also save `impact.md` and `tasks.md`. Update `memory/state.json` → `phase_progress.active_plan`. Show: `📁 Saved: .domyh/plans/2026-02-12_payment-gateway/`
+7. **PHASE 6: PERSIST** — Save to `.domyh/plans/YYYY-MM-DD_{feature-slug}/plan.md`. If scope ≥ L, also save `impact.md` and `tasks.md`. Update `.agent/memory/state.json` → `phase_progress.active_plan`. Show: `📁 Saved: .domyh/plans/2026-02-12_payment-gateway/`
 
 ---
 
@@ -53,8 +53,8 @@ output:
   naming:
     slug: "kebab-case from plan title, max 30 chars"
     example: ".domyh/plans/2026-02-12_payment-gateway/"
-  active_ref: "Update memory/state.json → phase_progress.active_plan"
-  memory_sync: "Update memory/state.json with plan metadata"
+  active_ref: "Update .agent/memory/state.json → phase_progress.active_plan"
+  memory_sync: "Update .agent/memory/state.json with plan metadata"
 ```
 
 ---

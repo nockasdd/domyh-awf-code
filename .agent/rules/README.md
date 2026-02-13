@@ -182,7 +182,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.2.4"
+version: "6.2.5"
 rule_id: "MOD-XXX-001"
 
 description: |

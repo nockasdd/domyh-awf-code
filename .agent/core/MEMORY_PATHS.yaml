@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Paths v6.2.4
+# DOMYH Awesome Code — Memory Paths v6.2.5
 # Single Source of Truth for all memory file paths
 # Eliminates 16 duplicate path definitions across config files
 
-version: "6.2.4"
+version: "6.2.5"
 engine: memory_paths
 
 # =============================================================================
