@@ -124,3 +124,58 @@ token_costs:
     deps: "1,000-2,000"
     source: "500-1,000"
     tests: "200-400"
+
+# ── Go ecosystem tools ──────────────────────────────
+go_tools:
+  - { name: sqlc, files: ["sqlc.yaml", "sqlc.yml"], desc: "SQL code generator" }
+  - { name: atlas, files: ["atlas.hcl"], desc: "Database schema migration" }
+  - { name: air, files: [".air.toml"], desc: "Hot reload for Go" }
+  - {
+      name: golangci-lint,
+      files: [".golangci.yml"],
+      desc: "Go linter aggregator",
+    }
+  - { name: wire, content: ["wire.Build"], desc: "Compile-time DI" }
+  - {
+      name: buf,
+      files: ["buf.yaml", "buf.gen.yaml"],
+      desc: "Protobuf toolchain",
+    }
+
+# ── Infrastructure / IaC tools ──────────────────────
+infrastructure:
+  - { name: terraform, files: ["*.tf", "terraform.tfvars"], desc: "IaC (HCL)" }
+  - { name: opentofu, files: ["*.tofu", ".tofurc"], desc: "Terraform fork" }
+  - { name: pulumi, files: ["Pulumi.yaml"], desc: "IaC (code-first)" }
+  - {
+      name: ansible,
+      files: ["ansible.cfg", "playbook.yml"],
+      desc: "Config management",
+    }
+  - { name: helm, files: ["Chart.yaml", "values.yaml"], desc: "K8s packaging" }
+  - { name: skaffold, files: ["skaffold.yaml"], desc: "K8s local dev" }
+  - { name: tilt, files: ["Tiltfile"], desc: "K8s local dev (Starlark)" }
+  - { name: vagrant, files: ["Vagrantfile"], desc: "VM provisioning" }
+  - { name: packer, files: ["*.pkr.hcl"], desc: "Machine image builder" }
+
+# ── Additional build systems ────────────────────────
+additional_build_systems:
+  - { name: mix, root: ["mix.exs"], build: "mix compile", test: "mix test" }
+  - {
+      name: stack,
+      root: ["stack.yaml"],
+      build: "stack build",
+      test: "stack test",
+    }
+  - {
+      name: dune,
+      root: ["dune-project"],
+      build: "dune build",
+      test: "dune test",
+    }
+  - {
+      name: gleam,
+      root: ["gleam.toml"],
+      build: "gleam build",
+      test: "gleam test",
+    }
