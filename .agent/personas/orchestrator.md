@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "orch-001"
 
 # =============================================================================
@@ -69,6 +69,9 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_prepare_handoff
+    - hsa_filter_tools
+    - hsa_get_snapshot
   restricted:
     - replace_file_content # Orchestrator doesn't code
     - run_command # Delegates to appropriate persona

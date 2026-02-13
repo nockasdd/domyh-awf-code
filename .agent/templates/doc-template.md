@@ -1,6 +1,6 @@
 ---
 name: doc-template
-version: "6.2.3"
+version: "6.2.4"
 type: wizard
 triggers: ["/doc", "/generate"]
 ---

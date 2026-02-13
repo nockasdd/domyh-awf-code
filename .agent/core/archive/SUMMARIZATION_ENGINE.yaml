@@ -1,7 +1,7 @@
-# DOMYH Awesome Code — Hierarchical Summarization Engine v6.2.3
+# DOMYH Awesome Code — Hierarchical Summarization Engine v6.2.4
 # Implements 3-level summarization for token optimization
 
-version: "6.2.3"
+version: "6.2.4"
 engine: hierarchical_summarizer
 
 # =============================================================================

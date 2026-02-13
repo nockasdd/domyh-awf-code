@@ -1,6 +1,6 @@
 ---
 description: "🔧 Code refactoring & cleanup: identify smells, clean dead code, organize imports, restructure — verify tests pass"
-skills: { required: [], contextual: [auto] }
+skills: { required: [coding-rules], contextual: [auto] }
 ---
 
 # 🔧 /refactor — Refactor Pro

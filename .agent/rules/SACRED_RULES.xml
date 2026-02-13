@@ -59,13 +59,27 @@
   </requirement>
   
   <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 2: TOOL PREFERENCES -->
+  <!-- TIER 1: TOOL ENFORCEMENT -->
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   
-  <requirement id="MCP_001" tier="2" severity="warn">
-    <text>Prefer MCP tools over browser/shell tools when available. Check available MCP servers at task start. Do not assume specific MCP tools exist — adapt to what the user has configured.</text>
-    <anchor>SHOULD • CLASS:TOOL_POLICY • LABEL:MCP_PREFERENCE</anchor>
-    <rationale>MCP tools provide better control, logging, and security</rationale>
+  <requirement id="MCP_001" tier="1" severity="block">
+    <text>When domyh-hsa MCP server is available:
+    MUST call hsa_detect_stack at the start of any code generation, debugging, testing, or analysis task.
+    MUST call hsa_check_changes after any file creation, modification, or deletion to keep indexes current.
+    MUST call hsa_get_context to retrieve relevant code context instead of manual file scanning for code-related tasks.
+    SHOULD call hsa_prefetch for files planned to be read or modified.
+    SHOULD call hsa_get_repo_map to understand codebase structure before large-scale changes.
+    SHOULD call hsa_get_snapshot for project overview at task start.
+    MUST call hsa_prepare_handoff before delegating sub-agent tasks (Orchestrator persona).
+    MUST call hsa_filter_tools to reduce prompt bloat when spawning sub-agents.
+    SHOULD call hsa_detect_environment to verify runtime/tool availability before running commands.
+    SHOULD call hsa_search_skills to find coding patterns before implementing.
+    SHOULD call hsa_export for structured data when generating reports or summaries.
+    SHOULD call hsa_status to verify engine health when troubleshooting tool failures.
+    SHOULD call hsa_get_agent_config to load commands/personas/rules when user asks about capabilities.
+    Do not assume specific MCP tools exist — check available servers at task start and adapt.</text>
+    <anchor>MUST • CLASS:TOOL_POLICY • LABEL:MCP_ENFORCEMENT</anchor>
+    <rationale>MCP tools provide intelligent indexing, hybrid search, and context optimization that outperform manual file scanning by 70-90% in token efficiency</rationale>
   </requirement>
   
   <!-- ═══════════════════════════════════════════════════════════════════ -->

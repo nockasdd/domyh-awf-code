@@ -1,6 +1,6 @@
 ---
 name: devops
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "ops-001"
 
 # =============================================================================
@@ -70,6 +70,9 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_detect_environment
+    - hsa_status
+    - hsa_export
   restricted:
     - production_deploy # Requires approval
   requires_approval:

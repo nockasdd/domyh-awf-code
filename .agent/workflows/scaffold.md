@@ -1,6 +1,6 @@
 ---
 description: "🏗️ Unified scaffolding & code generation: components, pages, services, models, APIs from project patterns"
-skills: { required: [], contextual: [auto] }
+skills: { required: [coding-rules], contextual: [auto] }
 ---
 
 # 🏗️ /scaffold — Scaffold Pro

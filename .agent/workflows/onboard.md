@@ -17,7 +17,7 @@ skills: { required: [], contextual: [auto] }
 3. **MAP** — Generate Mermaid architecture diagram + module dependency graph. Show: `[Step 3/6] Mapping architecture...`
 4. **ASSESS** — Identify code health: test coverage, lint score, outdated deps, known issues. Show: `[Step 4/6] Assessing code health...`
 5. **GUIDE** — Create "Getting Started" guide: setup steps, key files, conventions, common tasks. Show: `[Step 5/6] Generating guide...`
-6. **SYNC** — Save onboard report to `.domyh/onboard/onboard_YYYY-MM-DD.md`. Show: `[Step 6/6] Saving report...`
+6. **SYNC** — Save onboard report to `.domyh/onboard/onboard_YYYY-MM-DD.md`. `hsa_check_changes` to update index after generating onboarding docs. Show: `[Step 6/6] Saving report...`
 
 ---
 

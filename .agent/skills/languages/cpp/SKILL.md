@@ -1,7 +1,7 @@
 ---
 name: cpp
 detect: ["CMakeLists.txt", "*.cpp", "*.cxx", "*.cc", "*.hpp", "*.hxx", "*.h"]
-version: "6.2.3"
+version: "6.2.4"
 category: language
 tier: 1
 ---

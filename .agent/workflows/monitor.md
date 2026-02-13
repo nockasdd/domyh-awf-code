@@ -1,6 +1,6 @@
 ---
 description: "📡 Setup observability: logging, tracing, metrics, and alerting configuration"
-skills: { required: [], contextual: [auto] }
+skills: { required: [observability, logging], contextual: [auto] }
 ---
 
 # 📡 /monitor — Monitor Pro
@@ -16,6 +16,7 @@ skills: { required: [], contextual: [auto] }
 2. **PLAN** — Recommend libraries & backends, setup OpenTelemetry → ⛔ STOP: confirm before install
 3. **EXECUTE** — Add logging, tracing (OpenTelemetry), metrics (Prometheus), configure alerts
 4. **VERIFY** — Verify data in backends, test alerts
+5. **SYNC** — `hsa_check_changes` to update index after observability config changes
 
 ---
 

@@ -3,7 +3,7 @@
 
 ---
 name: edit-verification
-version: "6.2.3"
+version: "6.2.4"
 rule_id: "MOD-EDV-001"
 
 # =============================================================================
@@ -187,6 +187,9 @@ integration:
     hsa_get_context:
       purpose: "Pre-edit context to assess impact before modifying code"
       usage: "hsa_get_context files=[target] → understand dependencies and callers"
+    hsa_check_changes:
+      purpose: "Sync indexes after file edits to keep search results accurate"
+      usage: "hsa_check_changes paths=[edited_files] → incremental re-index of BM25/CodeGraph/VectorIndex"
 
   reflection:
     enabled: true

@@ -1,6 +1,6 @@
 ---
 description: "⚡ Quick-fix pipeline: capture error → identify → fix → verify (max 60s)"
-skills: { required: [], contextual: [auto] }
+skills: { required: [error-handling], contextual: [auto] }
 ---
 
 # ⚡ /fix — Fix Pro

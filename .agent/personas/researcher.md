@@ -1,6 +1,6 @@
 ---
 name: researcher
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "res-001"
 
 # =============================================================================
@@ -72,6 +72,9 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_get_repo_map
+    - hsa_export
+    - hsa_status
   restricted:
     - replace_file_content
     - run_command

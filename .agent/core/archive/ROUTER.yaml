@@ -2,7 +2,7 @@
 # DOMYH Awesome Code
 # Selects top-K relevant skills AND routes to appropriate personas
 
-version: "6.2.3"
+version: "6.2.4"
 
 # Routing Strategy
 strategy:
@@ -195,7 +195,7 @@ confidence_scoring:
 # =============================================================================
 
 # =============================================================================
-# AUTO-SUGGEST CONFIGURATION (v6.2.3)
+# AUTO-SUGGEST CONFIGURATION (v6.2.4)
 # =============================================================================
 
 auto_suggest:
@@ -206,7 +206,7 @@ auto_suggest:
   show_reason: true # Show why skill was suggested
 
 # =============================================================================
-# CONTEXT-AWARE ROUTING (v6.2.3)
+# CONTEXT-AWARE ROUTING (v6.2.4)
 # =============================================================================
 
 context_routing:
@@ -231,7 +231,7 @@ context_routing:
     project_structure: 0.15
 
 # =============================================================================
-# WORKFLOW ROUTING (v6.2.3)
+# WORKFLOW ROUTING (v6.2.4)
 # =============================================================================
 
 workflow_routing:

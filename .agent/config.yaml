@@ -12,7 +12,7 @@ project:
   install_mode: project # global | project — required by SACRED_RULES ENV_001
 
 # =============================================================================
-# INTERNATIONALIZATION (v6.2.3)
+# INTERNATIONALIZATION (v6.2.4)
 # =============================================================================
 
 i18n:
@@ -45,7 +45,7 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v6.2.3: Auto-suggest configuration
+  # v6.2.4: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3
@@ -90,14 +90,14 @@ detection:
 # =============================================================================
 
 context:
-  # Maximum tokens for T1 baseline (57 skills × ~100 tokens)
-  t1_budget: 5700
+  # Maximum tokens for T1 baseline (82 skills × ~100 tokens)
+  t1_budget: 8200
 
   # Maximum tokens per T2 skill
   t2_budget: 1500
 
   # Maximum total context (T1 + 3 active skills)
-  max_context: 10600
+  max_context: 12700
 
   # Include project README in context
   include_readme: false

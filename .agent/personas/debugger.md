@@ -1,6 +1,6 @@
 ---
 name: debugger
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "dbg-001"
 
 # =============================================================================
@@ -71,6 +71,9 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_check_changes
+    - hsa_prefetch
+    - hsa_get_repo_map
   restricted:
     - deploy # Don't deploy fixes directly
     - delete_file

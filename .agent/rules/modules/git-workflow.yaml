@@ -3,7 +3,7 @@
 
 ---
 name: git-workflow
-version: "6.2.3"
+version: "6.2.4"
 rule_id: "MOD-GIT-001"
 
 # =============================================================================
@@ -160,6 +160,11 @@ integration:
 
   reflection:
     enabled: false
+
+  hsa_tools:
+    hsa_check_changes:
+      purpose: "Re-index changed files after git operations to keep BM25/CodeGraph/VectorIndex current"
+      usage: "hsa_check_changes → after commit, merge, rebase, checkout, or any branch operation"
 
 ---
 _DOMYH Awesome Code • Git Workflow Rule_

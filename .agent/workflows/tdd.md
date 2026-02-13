@@ -12,11 +12,12 @@ skills: { required: [tdd-workflow, testing], contextual: [auto] }
 
 ## TDD FLOW
 
-1. **SETUP** — Detect stack, load TDD skill, identify test framework. Show: `[Step 1/5] Detecting stack and test framework...`
-2. **RED** — Write a failing test that defines the expected behavior. Run tests to confirm it fails. Show: `[Step 2/5] 🔴 RED — Writing failing test: test_[feature]`
-3. **GREEN** — Write the SIMPLEST production code that makes the test pass. Show: `[Step 3/5] 🟢 GREEN — Implementing minimal code to pass`
-4. **REFACTOR** — Clean up code and tests without changing behavior. Re-run tests. Show: `[Step 4/5] 🔵 REFACTOR — Cleaning up (all tests still green)`
-5. **VERIFY** — Run full test suite, check coverage delta. Show: `[Step 5/5] ✅ Coverage: 75% → 83% (+8%)`
+1. **SETUP** — Detect stack via HSA (`hsa_detect_stack`), load TDD skill, load test context (`hsa_get_context`), identify test framework. Show: `[Step 1/6] Detecting stack and test framework...`
+2. **RED** — Write a failing test that defines the expected behavior. Run tests to confirm it fails. Show: `[Step 2/6] 🔴 RED — Writing failing test: test_[feature]`
+3. **GREEN** — Write the SIMPLEST production code that makes the test pass. Show: `[Step 3/6] 🟢 GREEN — Implementing minimal code to pass`
+4. **REFACTOR** — Clean up code and tests without changing behavior. Re-run tests. Show: `[Step 4/6] 🔵 REFACTOR — Cleaning up (all tests still green)`
+5. **VERIFY** — Run full test suite, check coverage delta. Show: `[Step 5/6] ✅ Coverage: 75% → 83% (+8%)`
+6. **SYNC** — `hsa_check_changes` to update index after test/code creation
 
 ---
 

@@ -12,11 +12,12 @@ skills: { required: [testing, tdd-workflow], contextual: [auto] }
 
 ## E2E FLOW
 
-1. **DETECT** — Identify frontend framework, existing E2E setup, test runner. Show: `[Step 1/5] Detecting E2E framework...`
-2. **MAP** — Identify critical user flows from routes/pages. Show: `[Step 2/5] Mapping 8 critical user flows...`
-3. **GENERATE** — Write E2E tests for critical paths. Show: `[Step 3/5] Generating tests for Login → Dashboard → Checkout`
-4. **RUN** — Execute E2E tests, capture screenshots on failure. Show: `[Step 4/5] Running 12 E2E tests...`
-5. **REPORT** — Show results with pass/fail, timing, screenshots. Show: `[Step 5/5] ✅ 11/12 passed (1 flaky)`
+1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), identify frontend framework, existing E2E setup, test runner. Show: `[Step 1/6] Detecting E2E framework...`
+2. **MAP** — Identify critical user flows from routes/pages. Show: `[Step 2/6] Mapping 8 critical user flows...`
+3. **GENERATE** — Write E2E tests for critical paths. Show: `[Step 3/6] Generating tests for Login → Dashboard → Checkout`
+4. **RUN** — Execute E2E tests, capture screenshots on failure. Show: `[Step 4/6] Running 12 E2E tests...`
+5. **REPORT** — Show results with pass/fail, timing, screenshots. Show: `[Step 5/6] ✅ 11/12 passed (1 flaky)`
+6. **SYNC** — `hsa_check_changes` to update index after test file creation
 
 ---
 

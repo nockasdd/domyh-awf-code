@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - Vietnamese Strings
-# i18n/vi.yaml v6.2.3 — Enhanced i18n System
+# i18n/vi.yaml v6.2.4 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version được sync từ core/VERSION.yaml
 # Sử dụng: Agent đọc language từ state.json → load file i18n tương ứng
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.2.3" # Sync từ VERSION.yaml
-  version_short: "v6.2.3"
+  version: "6.2.4" # Sync từ VERSION.yaml
+  version_short: v6.2.4
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"
   language_name: "Tiếng Việt"
@@ -167,6 +167,48 @@ commands:
     desc: "Khám phá, chain, và quản lý workflows"
     help: "Sử dụng: /workflow list | /workflow chain [a] [b] | /workflow suggest"
 
+  # Commands bổ sung (v6.3)
+  tdd:
+    name: "TDD"
+    short: "TDD"
+    desc: "Test-Driven Development: Red-Green-Refactor"
+    help: "Sử dụng: /tdd [function_name] — Viết test trước, code sau"
+  e2e:
+    name: "E2E Test"
+    short: "E2E"
+    desc: "Kiểm thử End-to-End với Playwright/Cypress"
+    help: "Sử dụng: /e2e [scope] — scope: critical | full | smoke"
+  verify:
+    name: "Xác Minh"
+    short: "Verify"
+    desc: "Vòng lặp Build-Lint-Test cho đến khi pass"
+    help: "Sử dụng: /verify [scope] — scope: build | lint | test | all"
+  security:
+    name: "Bảo Mật"
+    short: "Security"
+    desc: "Quét và khắc phục lỗ hổng bảo mật"
+    help: "Sử dụng: /security [scope] — scope: sast | sca | secrets | full"
+  onboard:
+    name: "Khám Phá"
+    short: "Onboard"
+    desc: "Khám phá kiến trúc, mapping dependencies"
+    help: "Sử dụng: /onboard [project_path]"
+  prompt:
+    name: "Tạo Prompt"
+    short: "Prompt"
+    desc: "Tạo AI prompt có cấu trúc"
+    help: "Sử dụng: /prompt [mô tả] — Tạo prompt cho AI"
+  orchestrate:
+    name: "Điều Phối"
+    short: "Orchestrate"
+    desc: "Điều phối đa tác tử, ủy quyền task"
+    help: "Sử dụng: /orchestrate [task] — Phân chia và ủy quyền"
+  dev:
+    name: "Dev Server"
+    short: "Dev"
+    desc: "Khởi động dev server"
+    help: "Sử dụng: /dev [port] — Tự động detect stack và chạy"
+
   # Utility (6)
   status:
     name: "Trạng Thái"
@@ -210,6 +252,18 @@ personas:
   documenter:
     name: "Technical Writer"
     desc: "Tài liệu và knowledge transfer"
+  planner:
+    name: "Kế Hoạch Viên"
+    desc: "Phân rã task và lập kế hoạch"
+  researcher:
+    name: "Nhà Nghiên Cứu"
+    desc: "Điều tra và phân tích để tìm giải pháp"
+  orchestrator:
+    name: "Nhạc Trưởng"
+    desc: "Điều phối đa tác tử song song"
+  security_expert:
+    name: "Chuyên Gia Bảo Mật"
+    desc: "Phân tích và khắc phục lỗ hổng"
 
 # =============================================================================
 # UI MESSAGES — Các thông báo phổ biến
@@ -232,7 +286,7 @@ messages:
   progress_complete: "✅ Hoàn thành!"
   progress_failed: "❌ Thất bại"
 
-  # Deep Interview (v6.2.3)
+  # Deep Interview (v6.2.4)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "Feature này xử lý/quản lý cái gì chính xác?"
   interview_question_who: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
@@ -240,7 +294,7 @@ messages:
   interview_skip: "→ Đủ context, bỏ qua interview"
   interview_complete: "→ Đủ context, tiến hành lên kế hoạch..."
 
-  # Auto Test Loop (v6.2.3)
+  # Auto Test Loop (v6.2.4)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Đang thử cách khác..."
   test_loop_pass: "✅ Tests passed!"
@@ -253,7 +307,7 @@ messages:
     3️⃣ Gọi /debug để phân tích sâu
     4️⃣ Rollback về trước khi sửa
 
-  # Step Confirmation (v6.2.3)
+  # Step Confirmation (v6.2.4)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ ĐÃ XONG: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Tiếp task tiếp? (y/điều chỉnh/dừng)"
 

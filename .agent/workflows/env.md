@@ -16,6 +16,7 @@ skills: { required: [security], contextual: [auto] }
 2. **VALIDATE** — Validate format/types, detect missing/deprecated vars
 3. **SYNC** — Sync .env.example template, drift detection between envs
 4. **REPORT** — Security recommendations, next steps
+5. **INDEX** — `hsa_check_changes` to update index after environment file changes
 
 ---
 

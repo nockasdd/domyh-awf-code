@@ -37,7 +37,7 @@ Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter 
 META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive)
 Skills location: `~/.gemini/antigravity/skills/` (global) or `.agent/skills/` (project)
 
-## MCP Tools (HSA v1.0.2)
+## MCP Tools (HSA v1.1.0)
 
 | Tool                     | Purpose                                 |
 | ------------------------ | --------------------------------------- |

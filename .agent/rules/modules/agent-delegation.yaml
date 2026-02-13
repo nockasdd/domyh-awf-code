@@ -1,9 +1,9 @@
-# Agent Delegation Rule v6.2.3
+# Agent Delegation Rule v6.2.4
 # When and how to delegate to specialized sub-agents
 
 ---
 name: agent-delegation
-version: "6.2.3"
+version: "6.2.4"
 rule_id: "MOD-DEL-001"
 
 # =============================================================================
@@ -131,6 +131,17 @@ integration:
     enabled: true
     check_before: "delegation"
     question: "Could I handle this myself, or does it need a specialist?"
+
+  hsa_tools:
+    hsa_prepare_handoff:
+      purpose: "Generate context packet for sub-agent with project snapshot and relevant files"
+      usage: "hsa_prepare_handoff task_type=[code|test|review|debug] focus_files=[paths] → context packet"
+    hsa_filter_tools:
+      purpose: "Reduce prompt bloat by pruning tool catalog per sub-agent task type (93-97% token savings)"
+      usage: "hsa_filter_tools task_type=[code|test|review] → include/exclude tool lists"
+    hsa_get_snapshot:
+      purpose: "Provide project overview for sub-agent context injection"
+      usage: "hsa_get_snapshot → file tree, detected stack, key symbols"
 
 ---
 _DOMYH Awesome Code • Agent Delegation Rule_

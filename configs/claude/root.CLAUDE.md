@@ -37,7 +37,7 @@ Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter 
 META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive)
 Skills location: `.claude/skills/` (project) or `~/.claude/skills/` (global)
 
-## MCP Tools (HSA v1.0.2)
+## MCP Tools (HSA v1.1.0)
 
 | Tool                     | Purpose                                 |
 | ------------------------ | --------------------------------------- |

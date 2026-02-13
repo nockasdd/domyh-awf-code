@@ -2,7 +2,7 @@
 # Implements lazy loading with lightweight pointers + Priority Positioning 2.0
 # Based on: Anthropic Context Engineering (2025), Found in the Middle (2024)
 
-version: "6.2.3"
+version: "6.2.4"
 engine: just_in_time_loader
 
 # =============================================================================

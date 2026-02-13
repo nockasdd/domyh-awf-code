@@ -36,6 +36,7 @@ skills:
    → Auto-rollback if: error_rate > 0.5% OR p99 > 1000ms OR CPU > 90%
    ```
 6. **FINALIZE** — Tag release in git, update changelog, document rollback point, release deploy lock
+7. **SYNC** — `hsa_check_changes` to update index after deployment config changes
 
 ---
 

@@ -256,6 +256,18 @@ resolution:
     e2e: "cross-cutting/playwright"
     browser-testing: "cross-cutting/playwright"
     browser-agent: "tooling/browser-agent"
+    # Workflow-required skill aliases (synced with manifest.yaml)
+    coding-rules: "cross-cutting/coding-rules"
+    audit-pro: "cross-cutting/audit-pro"
+    domyh-design: "cross-cutting/domyh-design"
+    tdd-workflow: "cross-cutting/tdd-workflow"
+    database: "cross-cutting/database"
+    web-perf: "cross-cutting/web-perf"
+    error-handling: "core/error-handling"
+    logging: "core/logging"
+    observability: "core/observability"
+    ci-cd: "devops/ci-cd"
+    prompt-engineering: "cross-cutting/prompt-engineering"
 
 # =============================================================================
 # TOKEN BUDGET

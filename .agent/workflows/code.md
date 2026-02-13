@@ -1,6 +1,6 @@
 ---
 description: "💻 Write production-ready code, fix/improve existing projects, with proper error handling, types, and documentation"
-skills: { required: [], contextual: [auto, domyh-design, tailwind] }
+skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
 ---
 
 # 💻 /code — Code Pro

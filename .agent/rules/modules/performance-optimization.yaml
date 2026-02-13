@@ -1,9 +1,9 @@
-# Performance Optimization Rule v6.2.3
+# Performance Optimization Rule v6.2.4
 # Model selection, context management, token budget
 
 ---
 name: performance-optimization
-version: "6.2.3"
+version: "6.2.4"
 rule_id: "MOD-PERF-001"
 
 # =============================================================================
@@ -136,6 +136,14 @@ integration:
     enabled: true
     check_before: "tool_call"
     question: "Is this the most efficient way to get the information I need?"
+
+  hsa_tools:
+    hsa_detect_stack:
+      purpose: "Determine available profiling and benchmark tools for the detected stack"
+      usage: "hsa_detect_stack → identifies runtime, framework, available perf tools"
+    hsa_get_context:
+      purpose: "Focus optimization efforts on the right code areas"
+      usage: "hsa_get_context query=[bottleneck|performance] → find related code for optimization"
 
 ---
 _DOMYH Awesome Code • Performance Optimization Rule_

@@ -1,7 +1,7 @@
 ---
 name: haskell
 detect: ["*.hs", "*.cabal", "stack.yaml", "cabal.project", "package.yaml"]
-version: "6.2.3"
+version: "6.2.4"
 category: functional
 tier: 2
 ---

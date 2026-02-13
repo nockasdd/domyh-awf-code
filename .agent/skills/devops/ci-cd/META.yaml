@@ -1,5 +1,5 @@
 name: ci-cd
-version: "6.2.3"
+version: "6.2.4"
 category: infrastructure
 tier: 3
 

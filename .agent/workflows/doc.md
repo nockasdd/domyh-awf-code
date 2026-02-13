@@ -17,6 +17,7 @@ skills: { required: [], contextual: [auto] }
 3. **GENERATE** — Create doc content, use language-specific format, add examples & diagrams
 4. **VALIDATE** — Check links/references, verify code examples compile, lint docs
 5. **OUTPUT** — Generate files (MD/HTML/PDF), update existing docs, show summary
+6. **SYNC** — `hsa_check_changes` to update index after documentation file changes
 
 ---
 

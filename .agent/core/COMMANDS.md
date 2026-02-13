@@ -1,29 +1,29 @@
 # DOMYH Awesome Code — Command Registry
 
-> 31 active slash commands • 3-Layer Skill Resolution
+> 34 active slash commands • 3-Layer Skill Resolution
 
 ---
 
 ## Core Commands (9)
 
-| Command     | Description              | Skills Required   | Skills Contextual       |
-| ----------- | ------------------------ | ----------------- | ----------------------- |
-| `/init`     | ✨ Initialize project    | —                 | [auto]                  |
-| `/code`     | 💻 Write & fix code      | —                 | [auto]                  |
-| `/debug`    | 🐛 Systematic debugging  | —                 | [auto]                  |
-| `/plan`     | 📋 Feature planning      | —                 | —                       |
-| `/test`     | ✅ Run and write tests   | testing           | [auto]                  |
-| `/deploy`   | 🚀 Deploy to production  | ci-cd             | docker, kubernetes, aws |
-| `/refactor` | 🔧 Refactor & cleanup    | —                 | [auto]                  |
-| `/review`   | 👀 Code review           | security          | [auto]                  |
-| `/ap`       | 🔬 Full audit (5-expert) | security, testing | [auto]                  |
+| Command     | Description              | Skills Required     | Skills Contextual              |
+| ----------- | ------------------------ | ------------------- | ------------------------------ |
+| `/init`     | ✨ Initialize project    | —                   | [auto]                         |
+| `/code`     | 💻 Write & fix code      | coding-rules        | [auto, domyh-design, tailwind] |
+| `/debug`    | 🐛 Systematic debugging  | error-handling      | [auto]                         |
+| `/plan`     | 📋 Feature planning      | —                   | —                              |
+| `/test`     | ✅ Run and write tests   | testing             | [auto]                         |
+| `/deploy`   | 🚀 Deploy to production  | ci-cd               | docker, kubernetes, aws        |
+| `/refactor` | 🔧 Refactor & cleanup    | coding-rules        | [auto]                         |
+| `/review`   | 👀 Code review           | security            | [auto]                         |
+| `/ap`       | 🔬 Full audit (5-expert) | security, audit-pro | [auto]                         |
 
 ## Git & Fix Commands (3)
 
 | Command   | Description           | Skills Required | Skills Contextual |
 | --------- | --------------------- | --------------- | ----------------- |
 | `/git`    | 🔀 Git operations hub | —               | —                 |
-| `/fix`    | ⚡ Quick-fix pipeline | —               | [auto]            |
+| `/fix`    | ⚡ Quick-fix pipeline | error-handling  | [auto]            |
 | `/revert` | ⏪ Rollback changes   | —               | ci-cd             |
 
 ## Generation Commands (3)
@@ -31,7 +31,7 @@
 | Command     | Description               | Skills Required | Skills Contextual |
 | ----------- | ------------------------- | --------------- | ----------------- |
 | `/generate` | ⚡ Code generation        | —               | [auto]            |
-| `/scaffold` | 🏗️ Generate from patterns | —               | [auto]            |
+| `/scaffold` | 🏗️ Generate from patterns | coding-rules    | [auto]            |
 | `/doc`      | 📚 Documentation          | —               | [auto]            |
 
 ## Planning & Design (4)
@@ -41,25 +41,25 @@
 | `/think`     | 💡 Brainstorming Pro   | —                  | —                 |
 | `/prompt`    | ✍️ AI prompt generator | prompt-engineering | [domyh-design]    |
 | `/visualize` | 🖼️ UI/UX mockups       | domyh-design       | —                 |
-| `/perf`      | 📈 Performance profile | —                  | [auto]            |
+| `/perf`      | 📈 Performance profile | web-perf           | [auto]            |
 
 ## DevOps Commands (5)
 
-| Command    | Description               | Skills Required       | Skills Contextual |
-| ---------- | ------------------------- | --------------------- | ----------------- |
-| `/migrate` | 🗄️ Database migrations    | database              | [auto]            |
-| `/monitor` | 📊 Observability setup    | observability,logging | —                 |
-| `/env`     | 🔐 Environment management | —                     | —                 |
-| `/upgrade` | ⬆️ Dependency updates     | —                     | [auto]            |
-| `/dev`     | ▶️ Start dev server       | —                     | [auto]            |
+| Command    | Description               | Skills Required        | Skills Contextual |
+| ---------- | ------------------------- | ---------------------- | ----------------- |
+| `/migrate` | 🗄️ Database migrations    | database               | [auto]            |
+| `/monitor` | 📊 Observability setup    | observability, logging | [auto]            |
+| `/env`     | 🔐 Environment management | security               | [auto]            |
+| `/upgrade` | ⬆️ Dependency updates     | —                      | [auto]            |
+| `/dev`     | ▶️ Start dev server       | —                      | [auto]            |
 
 ## Testing & Verification Commands (3)
 
-| Command   | Description               | Skills Required | Skills Contextual |
-| --------- | ------------------------- | --------------- | ----------------- |
-| `/tdd`    | 🧪 TDD Red-Green-Refactor | testing         | [auto]            |
-| `/e2e`    | 🌐 E2E test generation    | testing         | [auto]            |
-| `/verify` | 🔄 Build-Lint-Test loop   | —               | [auto]            |
+| Command   | Description               | Skills Required       | Skills Contextual |
+| --------- | ------------------------- | --------------------- | ----------------- |
+| `/tdd`    | 🧪 TDD Red-Green-Refactor | tdd-workflow, testing | [auto]            |
+| `/e2e`    | 🌐 E2E test generation    | testing, tdd-workflow | [auto]            |
+| `/verify` | 🔄 Build-Lint-Test loop   | testing               | [auto]            |
 
 ## Utility Commands (5)
 

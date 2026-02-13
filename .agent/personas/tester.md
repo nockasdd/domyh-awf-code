@@ -1,6 +1,6 @@
 ---
 name: tester
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "tst-001"
 
 # =============================================================================
@@ -69,6 +69,8 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_check_changes
+    - hsa_detect_environment
   restricted:
     - deploy
     - delete_file

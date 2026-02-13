@@ -1,7 +1,7 @@
 ---
 name: bun
 detect: ["bun.lockb", "bunfig.toml", "bun.lock"]
-version: "6.2.3"
+version: "6.2.4"
 category: runtime
 tier: 2
 ---

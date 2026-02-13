@@ -1,5 +1,5 @@
 name: testing
-version: "6.2.3"
+version: "6.2.4"
 display: Testing
 category: support
 tier: 1
@@ -37,8 +37,9 @@ caps:
   - Mocking strategies
   - Test-driven development
 
-    - search_testing_patterns
-    - get_framework_patterns
+actions:
+  - search_testing_patterns
+  - get_framework_patterns
 
 data_files:
   - data/frameworks.yaml

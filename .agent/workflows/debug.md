@@ -1,6 +1,6 @@
 ---
 description: "🐛 Systematic debugging: reproduce → isolate → analyze → fix → verify"
-skills: { required: [], contextual: [auto] }
+skills: { required: [error-handling], contextual: [auto] }
 ---
 
 # 🐛 /debug — Debug Pro

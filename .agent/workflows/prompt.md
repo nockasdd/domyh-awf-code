@@ -12,7 +12,7 @@ skills: { required: [prompt-engineering], contextual: [domyh-design] }
 
 ## PROMPT FLOW
 
-1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). Extract: mục đích, target tool/model, ngôn ngữ, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
+1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_get_context`). Extract: mục đích, target tool/model, ngôn ngữ, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
 2. **RESEARCH** — Online research về domain, best practices, reference examples. Tìm kiếm: cấu trúc prompt tối ưu cho target tool, industry standards, trending patterns. Show: `[Step 2/5] Researching: "midjourney v6 architecture prompts"...`
 3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → sections phù hợp. Choose template theo prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
 4. **GENERATE** — Tạo structured markdown prompt. Viết bằng ngôn ngữ người dùng yêu cầu. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`

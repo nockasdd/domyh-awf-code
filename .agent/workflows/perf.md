@@ -1,6 +1,6 @@
 ---
 description: "⚡ Performance profiling: CPU, memory, benchmarks, and optimization recommendations"
-skills: { required: [], contextual: [auto] }
+skills: { required: [web-perf], contextual: [auto] }
 ---
 
 # ⚡ /perf — Perf Pro
@@ -17,6 +17,7 @@ skills: { required: [], contextual: [auto] }
 3. **ANALYZE** — Identify hotspots, bottlenecks
 4. **OPTIMIZE** — Apply fixes, verify improvement
 5. **REPORT** — Before/after comparison. Save to `.domyh/perf/benchmark_YYYY-MM-DD.md`
+6. **SYNC** — `hsa_check_changes` to update index after performance optimization edits
 
 ---
 

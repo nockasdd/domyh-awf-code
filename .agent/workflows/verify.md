@@ -12,10 +12,11 @@ skills: { required: [testing], contextual: [auto] }
 
 ## VERIFY FLOW
 
-1. **DETECT** — Identify build system, linter, test runner. Show: `[Step 1/4] Detecting verification pipeline...`
-2. **RUN** — Execute verification pipeline sequentially. Show: `[Step 2/4] Running 4-stage pipeline...`
-3. **FIX** — Auto-fix what's possible (lint, format). Show: `[Step 3/4] Auto-fixing 3 lint issues...`
-4. **RE-RUN** — Loop until all pass or max iterations. Show: `[Step 4/4] Iteration 2/3 — All checks passed ✅`
+1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), identify build system, linter, test runner. Show: `[Step 1/5] Detecting verification pipeline...`
+2. **RUN** — Execute verification pipeline sequentially. Show: `[Step 2/5] Running 4-stage pipeline...`
+3. **FIX** — Auto-fix what's possible (lint, format). Show: `[Step 3/5] Auto-fixing 3 lint issues...`
+4. **RE-RUN** — Loop until all pass or max iterations. Show: `[Step 4/5] Iteration 2/3 — All checks passed ✅`
+5. **SYNC** — `hsa_check_changes` to update index after auto-fixes
 
 ---
 

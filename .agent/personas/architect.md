@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "6.2.3"
+version: "6.2.4"
 persona_id: "arch-001"
 
 # =============================================================================
@@ -66,6 +66,9 @@ tools:
     - hsa_detect_stack
     - hsa_get_context
     - hsa_search_skills
+    - hsa_get_snapshot
+    - hsa_get_repo_map
+    - hsa_export
   restricted:
     - replace_file_content # Architects don't code
     - run_command

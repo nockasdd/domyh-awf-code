@@ -6,7 +6,7 @@
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: "v6.2.3"
+version: v6.2.4
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -44,10 +44,10 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 79 skills × ~100-400 tokens
-  # Activated: +1,500 tokens per skill (SKILL.md)
+  # Baseline: Only META.yaml loaded = 82 skills × ~100-400 tokens
+  # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 skills with T2 loaded
-  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 20 cross-cutting + 4 tooling + 4 ai-ml
+  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 21 cross-cutting + 5 tooling + 7 ai-ml
 
   loading:
     strategy: progressive # progressive | eager | lazy
@@ -109,7 +109,7 @@ skills:
 
     devops:
       priority: 3
-      skills: [docker, kubernetes, aws, ci-cd]
+      skills: [docker, kubernetes, aws, ci-cd, terraform, azure, gcp]
 
     cross-cutting:
       priority: 4
@@ -154,7 +154,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (33 workflows) — : Complete Command Set
+# COMMANDS (34 workflows) — Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
@@ -289,7 +289,7 @@ commands:
     category: deployment
     cache: true
     triggers: [env, environment, môi trường]
-    skills: { required: [], contextual: [] }
+    skills: { required: [security], contextual: [auto] }
 
   - id: monitor
     file: workflows/monitor.md
@@ -297,7 +297,7 @@ commands:
     category: deployment
     cache: true
     triggers: [monitor, observability, giám sát]
-    skills: { required: [], contextual: [] }
+    skills: { required: [observability, logging], contextual: [auto] }
 
   - id: perf
     file: workflows/perf.md
@@ -334,7 +334,7 @@ commands:
     persona: auditor
     cache: true
     triggers: [ap, audit, kiểm tra]
-    skills: { required: [security, testing], contextual: [auto] }
+    skills: { required: [security, audit-pro], contextual: [auto] }
 
   - id: review
     file: workflows/review.md
@@ -453,7 +453,7 @@ commands:
     persona: tester
     cache: true
     triggers: [tdd, red-green, test-driven]
-    skills: { required: [testing], contextual: [auto] }
+    skills: { required: [tdd-workflow, testing], contextual: [auto] }
 
   - id: e2e
     file: workflows/e2e.md
@@ -462,7 +462,7 @@ commands:
     persona: tester
     cache: true
     triggers: [e2e, end-to-end, playwright, cypress]
-    skills: { required: [testing], contextual: [auto] }
+    skills: { required: [testing, tdd-workflow], contextual: [auto] }
 
   - id: verify
     file: workflows/verify.md
@@ -471,7 +471,7 @@ commands:
     persona: developer
     cache: false
     triggers: [verify, validate, kiểm tra]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [testing], contextual: [auto] }
 
 # =============================================================================
 # PERSONAS (On-demand load)
@@ -519,6 +519,6 @@ i18n:
 # =============================================================================
 
 token_budget:
-  idle: 6400 # ~6,400 tokens at rest (64 × META.yaml)
-  single_skill: 7900 # ~7,900 with 1 skill active (+1,500 T2)
-  peak: 10900 # ~10,900 max (3 skills concurrent)
+  idle: 8200 # ~8,200 tokens at rest (82 × META.yaml)
+  single_skill: 9700 # ~9,700 with 1 skill active (+1,500 T2)
+  peak: 12700 # ~12,700 max (3 skills concurrent)
