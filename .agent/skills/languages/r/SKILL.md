@@ -1,7 +1,7 @@
 ---
 name: r
 detect: ["*.R", "*.Rmd", "*.qmd", "DESCRIPTION", ".Rproj", "renv.lock"]
-version: "6.2.6"
+version: "6.2.7"
 category: data
 tier: 2
 ---

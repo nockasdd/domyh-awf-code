@@ -2,7 +2,7 @@
 # Template Index — HSA Semantic Template Matching
 # =============================================================================
 # DOMYH Awesome Code Agent — Template Registry for HSA
-# version: 6.2.3
+# version: 6.2.7
 # =============================================================================
 
 templates:
@@ -114,6 +114,19 @@ templates:
     category: testing
     priority: 100
 
+  # ==========================================================================
+  # Feature Lifecycle Templates
+  # ==========================================================================
+  - id: feature-lifecycle
+    file: feature-lifecycle.md
+    name: Feature Lifecycle
+    description: Full feature lifecycle template with phase tracking and traceability
+    keywords:
+      [feature, lifecycle, requirements, design, plan, implement, sdlc, spec]
+    workflows: ["/feature"]
+    category: planning
+    priority: 100
+
 # =============================================================================
 # Workflow Chains (Multi-Step Prompts)
 # =============================================================================
@@ -219,6 +232,44 @@ chains:
         depends_on: impl-3
         description: Add documentation
 
+  /feature:
+    name: Feature Lifecycle Chain
+    description: Spec-driven 5-step feature development with phase gates
+    steps:
+      - order: 1
+        id: feat-1
+        name: Requirements
+        file: chains/feature/step1-requirements.md
+        description: Define problem, user stories, acceptance criteria
+
+      - order: 2
+        id: feat-2
+        name: Design
+        file: chains/feature/step2-design.md
+        depends_on: feat-1
+        description: Architecture decisions, data models, API design
+
+      - order: 3
+        id: feat-3
+        name: Planning
+        file: chains/feature/step3-planning.md
+        depends_on: feat-2
+        description: Task breakdown with traceability
+
+      - order: 4
+        id: feat-4
+        name: Implementation
+        file: chains/feature/step4-implementation.md
+        depends_on: feat-3
+        description: Execute tasks per plan with decision logging
+
+      - order: 5
+        id: feat-5
+        name: Testing & Ship
+        file: chains/feature/step5-testing.md
+        depends_on: feat-4
+        description: Verify all ACs met, coverage check, ship
+
 # =============================================================================
 # Search Configuration
 # =============================================================================
@@ -236,4 +287,4 @@ search:
 # =============================================================================
 # Footer
 # =============================================================================
-# _DOMYH Awesome Code • Template Index v6.2.6 • HSA Integration_
+# _DOMYH Awesome Code • Template Index v6.2.7 • HSA Integration_

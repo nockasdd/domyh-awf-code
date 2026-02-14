@@ -12,10 +12,10 @@
 # =============================================================================
 
 system:
-  version: "6.2.6"
-  version_short: "v6.2.6" # Dùng cho footer: "_DOMYH Awesome Code "
-  codename: "Ecosystem Expansion"
-  release_date: "2026-02-12"
+  version: "6.3.0"
+  version_short: "v6.3.0" # Dùng cho footer: "_DOMYH Awesome Code "
+  codename: "Dashboard Resilience"
+  release_date: "2026-02-14"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"
@@ -74,14 +74,25 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: v6.2.6
+  default_skill_version: v6.3.0
 
 # =============================================================================
 # VERSION HISTORY
 # =============================================================================
 
 changelog:
-  "6.2.6":
+  "6.3.0":
+    date: "2026-02-14"
+    codename: "Dashboard Resilience"
+    changes:
+      - "HSA Dashboard: Explorer cache 60s TTL — eliminates 504 timeouts"
+      - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
+      - "HSA Dashboard: Fetch timeout 8s→15s to match server 10s timeout"
+      - "Codex IDE: Optimized AGENTS.md with inline rules + disabled unused workflows/personas"
+      - "Cline fix: EEXIST error in copyRules when .clinerules exists as file"
+      - "HSA v1.2.3, AWF v6.3.0"
+
+  "6.2.7":
     date: "2026-02-12"
     codename: "Ecosystem Expansion"
     changes:

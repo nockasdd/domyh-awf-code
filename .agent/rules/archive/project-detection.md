@@ -4,7 +4,7 @@ version: "4.5"
 data_file: "data/build-systems.yaml"
 ---
 
-# 🔍 Project Detection Rule v6.2.6
+# 🔍 Project Detection Rule v6.2.7
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📦 **Data**: See `data/build-systems.yaml` for detection patterns

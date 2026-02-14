@@ -1,10 +1,19 @@
 name: typescript
-version: "6.2.6"
+version: "6.2.7"
 category: frontend
 tier: 3
+priority: 3
 
 desc: "Type-safe JavaScript development for TypeScript 5.8/6.0. Zod validation, Effect-TS, Iterator Helpers, using declaration."
 
+trigger_desc: |
+  Activate when user works with TypeScript files (.ts, .tsx, .mts, .cts),
+  asks about type definitions, generics, utility types, branded types,
+  Zod validation, ESM modules, tsconfig, or TypeScript-specific tooling
+  (biome, tsup, tsx). Also for strict mode, discriminated unions, decorators.
+
+triggers:
+  file_patterns:
     - "tsconfig.json"
     - "*.ts"
     - "*.tsx"
@@ -74,6 +83,15 @@ desc: "Type-safe JavaScript development for TypeScript 5.8/6.0. Zod validation, 
     - typescript interface
     - typescript config
     - typescript strict
+
+caps:
+  - TypeScript 5.8/6.0 features
+  - Type system patterns
+  - Zod/Valibot validation
+  - ESM module system
+  - tsconfig optimization
+
+compatibility: "Node.js >= 18, TypeScript >= 5.0"
 
 related_skills:
   - react

@@ -3,7 +3,7 @@
 # All personas must follow this structure
 
 schema:
-  version: "6.2.6"
+  version: "6.2.7"
 
   required_fields:
     - name # Unique identifier

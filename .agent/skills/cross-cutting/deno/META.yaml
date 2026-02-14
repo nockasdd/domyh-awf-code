@@ -1,17 +1,12 @@
 name: deno
-version: "6.2.6"
+version: "6.2.7"
 category: runtime
 tier: 3
 
 desc: "Deno 2.6+ development patterns. Covers TypeScript-first, permissions, Fresh framework, npm/jsr compat, OpenTelemetry."
 
-patterns:
-  total: 27
-  domains:
-    runtime: 12
-    security: 9
-    tooling: 6
-
+triggers:
+  file_patterns:
     - "deno.json"
     - "deno.jsonc"
     - "deno.lock"
@@ -29,8 +24,8 @@ patterns:
     - permissions deno
     - deno compile
     - deno audit
-    - jsr:
-    - npm:
+    - "jsr:"
+    - "npm:"
     # Security
     - "--allow-net"
     - "--allow-read"
@@ -51,6 +46,20 @@ patterns:
     - fresh app
     - deno deploy
     - deno permissions
+
+caps:
+  - Deno runtime & permissions
+  - Deno.serve HTTP server
+  - Deno KV database
+  - Fresh framework
+  - JSR package registry
+
+patterns:
+  total: 27
+  domains:
+    runtime: 12
+    security: 9
+    tooling: 6
 
 related_skills:
   - typescript

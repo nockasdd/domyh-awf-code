@@ -1,5 +1,5 @@
 name: audit-pro
-version: "6.2.6"
+version: "6.2.7"
 display: Audit Pro System
 category: cross-cutting
 tier: 1
@@ -31,6 +31,14 @@ triggers:
       full audit,
       ai safety review,
     ]
+
+caps:
+  - Security audit (OWASP Top 10, CWE Top 25)
+  - Architecture review (ISO 25010)
+  - Performance profiling
+  - Code quality assessment
+  - DevOps readiness check
+  - Accessibility audit (WCAG 2.2)
 
 data_files:
   - data/checklists.yaml

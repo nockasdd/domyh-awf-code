@@ -1,7 +1,7 @@
 ---
 name: typescript
 detect: ["tsconfig.json", "*.ts", "*.tsx", "*.mts", "*.cts"]
-version: "6.2.6"
+version: "6.2.7"
 category: frontend
 tier: 1
 ---
@@ -12,6 +12,28 @@ tier: 1
 > **Philosophy**: Type-safe, inference-first, ESM-native
 
 ---
+
+## Decision Tree
+
+```
+Task → What TypeScript pattern?
+  ├─ Type design
+  │   ├─ State machine → Discriminated unions
+  │   ├─ API shapes → Utility types (Pick, Omit, Partial)
+  │   ├─ Domain safety → Branded types
+  │   └─ Config → as const + satisfies
+  ├─ Validation
+  │   ├─ API boundaries → Zod (schema-first)
+  │   ├─ Lightweight → Valibot
+  │   └─ Effect ecosystem → Effect Schema
+  ├─ Build setup
+  │   ├─ App → Vite (frontend) / tsx (backend)
+  │   ├─ Library → tsup / unbuild
+  │   └─ Monorepo → Project references + turborepo
+  └─ Error handling
+      ├─ Simple → Result<T, E> pattern
+      └─ Complex → Effect-TS
+```
 
 ## 🎯 When to Use This Skill
 

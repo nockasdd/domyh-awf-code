@@ -1,7 +1,7 @@
 ---
 name: solidity
 detect: ["*.sol", "hardhat.config.js", "hardhat.config.ts", "foundry.toml"]
-version: "6.2.6"
+version: "6.2.7"
 category: blockchain
 tier: 2
 ---

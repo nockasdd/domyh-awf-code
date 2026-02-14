@@ -2,6 +2,131 @@
 
 Kubernetes orchestration patterns for K8s 1.32-1.33+. Covers Gateway API, Sidecar Containers, Kueue, Pod Security.
 
+## Decision Tree
+
+```
+Task → What are you deploying to K8s?
+  ├─ Stateless web app
+  │   ├─ Simple → Deployment + Service + Ingress
+  │   └─ Advanced → Deployment + Gateway API (HTTPRoute)
+  ├─ Stateful service (database, cache)
+  │   └─ StatefulSet + PersistentVolumeClaim
+  ├─ Background job
+  │   ├─ One-time → Job with backoffLimit
+  │   ├─ Scheduled → CronJob
+  │   └─ Queued → Kueue (fair scheduling)
+  ├─ Networking
+  │   ├─ Modern → Gateway API (HTTPRoute, GRPCRoute)
+  │   └─ Legacy → Ingress (nginx/traefik)
+  └─ Package management
+      ├─ Templating → Helm charts
+      └─ Patching → Kustomize overlays
+```
+
+## Quick Start — Deployment + Service
+
+```yaml
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 # Zero-downtime
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: myapp
+          image: myapp:1.0.0
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+
+## Quick Start — Gateway API
+
+```yaml
+# gateway.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: myapp-route
+spec:
+  parentRefs:
+    - name: main-gateway
+  hostnames:
+    - "api.example.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api
+      backendRefs:
+        - name: myapp
+          port: 80
+          weight: 100
+```
+
+## Production Checklist
+
+- [ ] Set `requests` AND `limits` on all containers
+- [ ] Add `readinessProbe` and `livenessProbe`
+- [ ] Use `PodDisruptionBudget` (minAvailable: 1)
+- [ ] Apply `Pod Security Standards` (restricted)
+- [ ] Set `securityContext.runAsNonRoot: true`
+- [ ] Use `Namespace` isolation for multi-tenancy
+- [ ] Configure `NetworkPolicy` for pod-to-pod isolation
+- [ ] Enable `HorizontalPodAutoscaler` for scaling
+- [ ] Use `topologySpreadConstraints` across zones
+- [ ] Implement `startupProbe` for slow-starting apps
+
 ## Patterns (20 total)
 
 ### Networking (5)
@@ -35,14 +160,6 @@ Kubernetes orchestration patterns for K8s 1.32-1.33+. Covers Gateway API, Sideca
 - Topology spread constraints
 - Priority classes for preemption
 - Cluster autoscaler configuration
-
-## Best Practices
-
-- Use Namespace isolation for multi-tenancy
-- Set resource requests AND limits on all containers
-- Use PodDisruptionBudget for high availability
-- Enable audit logging for security compliance
-- Use Helm or Kustomize for reproducible deployments
 
 ## Data Files
 

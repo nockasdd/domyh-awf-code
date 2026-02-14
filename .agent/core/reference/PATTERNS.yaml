@@ -177,7 +177,7 @@ token_saving:
     - "Focus on current phase only"
     - "Unload completed context"
 
-  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.2.6 cleanup)
+  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.2.7 cleanup)
   thresholds:
     reference: core/TOKEN_BUDGETS.yaml
     use:

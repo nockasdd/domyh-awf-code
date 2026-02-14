@@ -1,11 +1,52 @@
 name: database
-version: "6.2.6"
+version: "6.2.7"
 display: Database Patterns
 category: infrastructure
 tier: 1
 priority: 1
 
 desc: "SQL/NoSQL database patterns - PostgreSQL 17/18, MySQL, MongoDB, Redis. Covers ORMs (Prisma, Drizzle, TypeORM), query optimization, migrations."
+
+trigger_desc: |
+  Activate when user works with databases, SQL queries, ORM setup (Prisma,
+  Drizzle, TypeORM), migrations, connection pooling, indexing, or NoSQL
+  (MongoDB, Redis). Also for database schema design, query optimization,
+  and choosing between SQL vs NoSQL solutions.
+
+compatibility: "PostgreSQL >= 15, Node.js >= 18 (for ORMs)"
+
+triggers:
+  file_patterns:
+    - "*.sql"
+    - "prisma/schema.prisma"
+    - "drizzle.config.*"
+    - "knexfile.*"
+    - "typeorm.config.*"
+    - "migrations/"
+    - "docker-compose*.yml"
+  keywords:
+    - database
+    - sql
+    - nosql
+    - postgresql
+    - mysql
+    - mongodb
+    - redis
+    - prisma
+    - drizzle
+    - typeorm
+    - migration
+    - orm
+    - query optimization
+    - connection pool
+    - indexing
+  intents:
+    - "setup database"
+    - "create migration"
+    - "optimize queries"
+    - "choose ORM"
+    - "database design"
+    - "connection pooling"
 
 related_skills:
   - typescript

@@ -1,0 +1,89 @@
+# Feature Development Task Template
+
+> Structured template for feature lifecycle tasks
+
+---
+
+## Schema
+
+```yaml
+task_type: feature_development
+version: "6.2.7"
+
+# Required fields
+feature_name: string        # Feature name
+description: string          # What to build
+user_stories: list           # INVEST user stories
+
+# Optional fields
+acceptance_criteria: list    # AC-xxx with priorities
+constraints: list            # Limitations or requirements
+priority: enum               # [P0, P1, P2, P3]
+estimated_effort: string     # [XS, S, M, L, XL, XXL]
+design_decisions: list       # DD-xxx records
+```
+
+---
+
+## Example Task
+
+```yaml
+task:
+  type: feature_development
+
+  feature_name: "JWT Authentication"
+
+  description: |
+    Implement a complete JWT authentication flow
+    with login, logout, token refresh, and role-based access.
+
+  user_stories:
+    - as: "API consumer"
+      want: "authenticate with email/password"
+      so_that: "I can access protected endpoints"
+    - as: "authenticated user"
+      want: "refresh my expired token"
+      so_that: "I don't need to re-login"
+
+  acceptance_criteria:
+    - id: "AC-001"
+      criterion: "Login returns valid JWT on correct credentials"
+      priority: P0
+    - id: "AC-002"
+      criterion: "Invalid credentials return 401"
+      priority: P0
+    - id: "AC-003"
+      criterion: "Expired tokens are rejected and return 401"
+      priority: P0
+    - id: "AC-004"
+      criterion: "Refresh generates new valid token"
+      priority: P1
+
+  constraints:
+    - "Use bcrypt for password hashing"
+    - "JWT expiry: 24 hours"
+    - "Must work with existing User model"
+    - "No breaking changes to existing API"
+
+  priority: P1
+  estimated_effort: M
+
+  design_decisions:
+    - id: "DD-001"
+      decision: "Use HS256 for JWT signing"
+      rationale: "Simpler than RS256 for single-service"
+```
+
+---
+
+## Workflow Integration
+
+This task type triggers:
+- **Persona:** Developer → Architect (design) → Tester (verification)
+- **Chain:** feature (1_requirements → 2_design → 3_planning → 4_implementation → 5_testing)
+- **Phase Gates:** G1 (requirements approval), G2 (plan approval), G3 (AC verification)
+- **Reflection:** Pre-output critic check at each gate
+
+---
+
+_DOMYH Awesome Code • Feature Development Task Template_

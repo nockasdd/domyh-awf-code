@@ -1,7 +1,7 @@
 ---
 name: react
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
-version: "6.2.6"
+version: "6.2.7"
 category: frontend
 tier: 1
 ---
@@ -12,6 +12,29 @@ tier: 1
 > **Philosophy**: Server-first, compiler-optimized, hooks-based
 
 ---
+
+## Decision Tree
+
+```
+Task → What React pattern?
+  ├─ Component design
+  │   ├─ List/forms → Server Components (RSC)
+  │   ├─ Interactive → Client Component ('use client')
+  │   └─ Layout → Composition pattern (children)
+  ├─ State management
+  │   ├─ Local → useState / useReducer
+  │   ├─ Shared (small) → Context + useReducer
+  │   ├─ Complex → Zustand (simple) / Jotai (atomic)
+  │   └─ Server → TanStack Query / SWR
+  ├─ Data fetching
+  │   ├─ Server → use() + fetch in RSC
+  │   ├─ Client → TanStack Query
+  │   └─ Forms → Server Actions + useActionState
+  └─ Rendering
+      ├─ SEO needed → Next.js SSR/SSG
+      ├─ SPA → Vite + React Router
+      └─ Static → Astro + React islands
+```
 
 ## 🎯 When to Use This Skill
 

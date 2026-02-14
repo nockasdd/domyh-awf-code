@@ -1,43 +1,109 @@
-# Microsoft Azure
+# Azure Cloud Services
 
-> Azure Functions • Azure DevOps • Cosmos DB • AKS
+Azure cloud services patterns for enterprise workloads. Covers App Service, AKS, Functions, Cosmos DB, Azure AI.
 
----
+## Decision Tree
 
-## Khi Nào Dùng
-
-- Deploy serverless functions (Azure Functions)
-- CI/CD pipelines (Azure DevOps)
-- NoSQL database (Cosmos DB)
-- Enterprise app deployment
-
-## Service Selection
-
-| Service             | Type                 | Best For               |
-| ------------------- | -------------------- | ---------------------- |
-| **Azure Functions** | Serverless functions | Event-driven, webhooks |
-| **App Service**     | Managed web apps     | APIs, web apps         |
-| **AKS**             | Managed Kubernetes   | Microservices          |
-| **Cosmos DB**       | Multi-model NoSQL    | Global distribution    |
-| **Azure SQL**       | Managed SQL          | Relational data        |
-
-## Azure Functions Quick Start
-
-```bash
-func init MyProject --typescript
-func new --name HttpTrigger --template "HTTP trigger"
-func start  # Local development
-az functionapp publish MyFunctionApp  # Deploy
+```
+Task → What are you deploying?
+  ├─ Web API
+  │   ├─ Simple → App Service (PaaS)
+  │   ├─ Event-driven → Azure Functions
+  │   └─ Complex / microservices → AKS (Kubernetes)
+  ├─ Static website
+  │   └─ Azure Static Web Apps + CDN
+  ├─ Database
+  │   ├─ Relational → Azure SQL / PostgreSQL Flexible
+  │   ├─ NoSQL → Cosmos DB
+  │   └─ Cache → Azure Cache for Redis
+  ├─ AI/ML
+  │   ├─ OpenAI models → Azure OpenAI Service
+  │   ├─ Custom models → Azure ML
+  │   └─ Search → Azure AI Search (vector + hybrid)
+  └─ DevOps
+      ├─ CI/CD → Azure DevOps Pipelines or GitHub Actions
+      └─ IaC → Bicep (Azure-native) or Terraform
 ```
 
-## Common Traps
+## Quick Start — App Service
 
-| Trap            | Fix                                          |
-| --------------- | -------------------------------------------- |
-| Cold starts     | Premium plan, keep-alive pings               |
-| Entra ID config | Use managed identity, DefaultAzureCredential |
-| Cost management | Azure Cost Management + budget alerts        |
+```bash
+# Create and deploy
+az group create --name myapp-rg --location eastus
+az appservice plan create --name myplan --resource-group myapp-rg --sku B1 --is-linux
+az webapp create --name myapp --resource-group myapp-rg --plan myplan --runtime "NODE:22-lts"
+az webapp up --name myapp --resource-group myapp-rg
+```
 
----
+## Quick Start — Azure Functions
 
-_DOMYH Awesome Code • Azure Skill v1.0.0_
+```typescript
+// src/functions/httpTrigger.ts
+import { app, HttpRequest, HttpResponseInit } from "@azure/functions";
+
+app.http("hello", {
+  methods: ["GET", "POST"],
+  authLevel: "anonymous",
+  handler: async (request: HttpRequest): Promise<HttpResponseInit> => {
+    const name = request.query.get("name") || "World";
+    return { body: `Hello, ${name}!` };
+  },
+});
+```
+
+## Quick Start — Azure OpenAI
+
+```python
+from openai import AzureOpenAI
+
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    api_version="2024-10-21",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello"}]
+)
+```
+
+## Patterns (20 total)
+
+### Compute (5)
+
+- App Service deployment slots (zero-downtime)
+- Azure Functions with Durable Functions
+- AKS cluster with managed identity
+- Container Apps (serverless containers)
+- Azure Spring Apps for Java
+
+### Data (5)
+
+- Cosmos DB partition strategies
+- Azure SQL Hyperscale
+- PostgreSQL Flexible Server
+- Azure Cache for Redis
+- Event Hubs for streaming
+
+### AI (5)
+
+- Azure OpenAI GPT-4o integration
+- Azure AI Search (vector + hybrid)
+- Azure ML endpoints
+- Prompt Flow orchestration
+- Content Safety filters
+
+### Infrastructure (5)
+
+- Bicep modules (IaC)
+- Azure DevOps pipelines
+- Managed Identity (passwordless)
+- Key Vault integration
+- Private Endpoints
+
+## Data Files
+
+- `data/compute.yaml` — App Service, Functions, AKS patterns
+- `data/data.yaml` — Cosmos DB, SQL, Redis patterns
+- `data/ai.yaml` — Azure OpenAI, AI Search patterns

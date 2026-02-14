@@ -2,6 +2,25 @@
 
 12-Expert Panel audit system with 222 checkpoints. Conditional activation auto-detects project type (UI, DB, regulated, AI, cloud).
 
+## Decision Tree
+
+```
+/ap → Discovery
+  ├─ Stack detection (auto)
+  │   ├─ Frontend detected → Activate UX/A11y Expert
+  │   ├─ Database files → Activate Database Expert
+  │   ├─ Cloud config → Activate Cloud Expert
+  │   ├─ API routes → Activate API Expert
+  │   ├─ ML models → Activate AI Safety Expert
+  │   ├─ Regulated industry → Activate Compliance Expert
+  │   └─ Mobile project → Activate Mobile Expert
+  ├─ Complexity estimation
+  │   ├─ Small (<50 files) → Express audit (~15 min)
+  │   ├─ Medium (50-200) → Standard audit (~30 min)
+  │   └─ Large (200+) → Deep audit (~60 min)
+  └─ Expert panel assignment (5 core + conditional)
+```
+
 ## Standards
 
 - ISO 25010 (quality model)
@@ -13,7 +32,7 @@
 
 ## Expert Panel
 
-### Core Experts (5 - always active)
+### Core Experts (5 — always active)
 
 | Expert       | Domain                         | Checkpoints |
 | ------------ | ------------------------------ | ----------- |
@@ -23,7 +42,7 @@
 | Quality      | Code smells, testing, docs     | ~35         |
 | DevOps       | CI/CD, deployment, monitoring  | ~25         |
 
-### Conditional Experts (7 - auto-activated)
+### Conditional Experts (7 — auto-activated)
 
 | Expert     | Trigger                 | Domain                        |
 | ---------- | ----------------------- | ----------------------------- |
@@ -43,9 +62,18 @@
 
 1. **Discovery**: Detect stack, count files, estimate complexity
 2. **Expert Assignment**: Activate relevant experts based on project type
-3. **Parallel Audit**: Each expert evaluates independently
-4. **Consensus**: Cross-reference findings, resolve conflicts
-5. **Report**: Production readiness score, prioritized findings
+3. **Parallel Audit**: Each expert evaluates independently with evidence
+4. **Consensus**: Cross-reference findings, resolve conflicts, prioritize
+5. **Report**: Production readiness score, findings by severity (P0-P3)
+
+## Severity Levels
+
+| Level | Name     | Description                | Action Required |
+| ----- | -------- | -------------------------- | --------------- |
+| P0    | Critical | Security breach, data loss | Block deploy    |
+| P1    | High     | Significant vulnerability  | Fix before prod |
+| P2    | Medium   | Quality/performance issue  | Fix in sprint   |
+| P3    | Low      | Tech debt, style issues    | Backlog         |
 
 ## Scoring
 
@@ -54,6 +82,34 @@
 - **C (60-74)**: Significant issues, fix before deploy
 - **D (40-59)**: Major issues, not production ready
 - **F (0-39)**: Critical issues, requires redesign
+
+## Report Format
+
+```markdown
+# 🔬 Audit Pro Report — {Project Name}
+
+## Summary
+
+- Score: **B (82/100)**
+- Experts: 5 core + 2 conditional
+- Findings: 3 P1, 7 P2, 12 P3
+
+## P0 Critical (0)
+
+_None found_ ✅
+
+## P1 High (3)
+
+1. [SEC-001] SQL injection in user search — `api/users.ts:45`
+2. [SEC-002] Missing rate limiting on auth endpoints
+3. [PERF-001] N+1 query in dashboard list
+
+## Recommendations
+
+1. Fix all P1 before production deployment
+2. Address P2 issues in next sprint
+3. Schedule P3 items in backlog
+```
 
 ## Data Files
 

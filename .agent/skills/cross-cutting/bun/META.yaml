@@ -1,17 +1,12 @@
 name: bun
-version: "6.2.6"
+version: "6.2.7"
 category: runtime
 tier: 3
 
 desc: "Bun 1.3+ runtime development patterns. Covers all-in-one JS runtime, bundler, test runner, package manager."
 
-patterns:
-  total: 24
-  domains:
-    runtime: 10
-    database: 5
-    tooling: 9
-
+triggers:
+  file_patterns:
     - "bun.lockb"
     - "bunfig.toml"
   keywords:
@@ -41,6 +36,20 @@ patterns:
     - bun server
     - migrate to bun
     - bun database
+
+caps:
+  - Bun runtime & bundler
+  - Bun.serve HTTP server
+  - Bun.sql native database
+  - Bun test runner
+  - Package management
+
+patterns:
+  total: 24
+  domains:
+    runtime: 10
+    database: 5
+    tooling: 9
 
 related_skills:
   - typescript

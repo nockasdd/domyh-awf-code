@@ -7,7 +7,7 @@ detect:
     "@tailwind",
     '@import "tailwindcss"',
   ]
-version: "6.2.6"
+version: "6.2.7"
 category: styling
 tier: 1
 ---

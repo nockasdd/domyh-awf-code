@@ -1,9 +1,9 @@
-# Agent Delegation Rule v6.2.6
+# Agent Delegation Rule v6.2.7
 # When and how to delegate to specialized sub-agents
 
 ---
 name: agent-delegation
-version: "6.2.6"
+version: "6.2.7"
 rule_id: "MOD-DEL-001"
 
 # =============================================================================

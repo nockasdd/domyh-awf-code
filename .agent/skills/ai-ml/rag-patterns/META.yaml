@@ -7,6 +7,8 @@ version: "1.0.0"
 category: ai-ml
 priority: 3
 
+desc: "RAG patterns — chunking, embeddings, vector DBs, retrieval optimization, evaluation"
+
 description: |
   Retrieval-Augmented Generation patterns: chunking strategies,
   embedding models, vector databases, retrieval optimization, evaluation.

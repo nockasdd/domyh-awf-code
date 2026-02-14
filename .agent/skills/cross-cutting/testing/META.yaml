@@ -1,11 +1,17 @@
 name: testing
-version: "6.2.6"
+version: "6.2.7"
 display: Testing
 category: support
 tier: 1
 priority: 2
 
 desc: "Testing patterns: unit tests, integration tests, mocking, TDD, coverage, e2e"
+
+trigger_desc: |
+  Activate when user asks about writing tests, test coverage, mocking,
+  test-driven development (TDD), integration tests, e2e tests, test
+  fixtures, assertions, or testing framework selection (Vitest, Jest,
+  pytest, Go testing). Also for CI test pipeline setup.
 
 triggers:
   file_patterns:

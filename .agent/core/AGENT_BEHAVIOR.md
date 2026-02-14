@@ -1,4 +1,4 @@
-# Agent Behavior Guide v6.2.6
+# Agent Behavior Guide v6.2.7
 
 > Consolidated from ROUTER, TOKEN_LOADING, TOKEN_BUDGETS, CONTEXT_LOADER, SKILLS_FLOW
 

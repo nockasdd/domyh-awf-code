@@ -2,7 +2,7 @@
 name: nextjs
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
-version: "6.2.6"
+version: "6.2.7"
 category: frontend
 tier: 1
 ---

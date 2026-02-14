@@ -1,6 +1,6 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
-> **Version**: 6.2.6 | **Cập nhật**: 2026-02-07 | **Official Docs Verified**
+> **Version**: 6.2.8 | **Cập nhật**: 2026-02-14 | **Official Docs Verified** | **Extension Storage Forensics**
 > **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled
 
 ---
@@ -182,28 +182,79 @@ root/
 
 ## 🔌 MCP Support Chi Tiết (20 IDEs)
 
-| #   | IDE             | Config Path                                     | Format |  Scope  | Note                                         |
-| --- | --------------- | ----------------------------------------------- | :----: | :-----: | -------------------------------------------- |
-| 1   | **Codex**       | `~/.codex/config.toml`                          |  TOML  | Global  | `[mcp_servers]` section                      |
-| 2   | **Cursor**      | `~/.cursor/mcp.json`                            |  JSON  | Global  | Cline-compatible format                      |
-| 3   | **Claude**      | `.mcp.json` / `~/.claude.json`                  |  JSON  |  Both   | CLI: `.mcp.json` (project), Desktop: OS path |
-| 4   | **Gemini CLI**  | `~/.gemini/settings.json`                       |  JSON  | Global  | `mcpServers` key                             |
-| 5   | **VS Code**     | `.vscode/mcp.json`                              |  JSON  | Project | Also used by Amp, Void                       |
-| 6   | **Windsurf**    | `~/.codeium/windsurf/mcp_config.json`           |  JSON  | Global  | Cascade integration                          |
-| 7   | **Antigravity** | `~/.gemini/antigravity/mcp_config.json`         |  JSON  | Global  | Google IDE                                   |
-| 8   | **Cline**       | `globalStorage/.../cline_mcp_settings.json`     |  JSON  | Per-OS  | Windows/macOS/Linux paths differ             |
-| 9   | **Continue**    | `.continue/mcpServers/*.yaml`                   |  YAML  |  Both   | Can import Claude JSON format too            |
-| 10  | **Roo**         | `.roo/mcp.json`                                 |  JSON  | Project | ⭐ Recommended over global                   |
-| 11  | **JetBrains**   | `.junie/mcp/mcp.json`                           |  JSON  |  Both   | ⚠️ `mcp.json` NOT `servers.json`             |
-| 12  | **Amazon Q**    | `.amazonq/mcp.json` / `~/.aws/amazonq/mcp.json` |  JSON  |  Both   | ✨ NEW: Confirmed mid-2025                   |
-| 13  | **Kiro**        | `.kiro/settings/mcp.json`                       |  JSON  | Project | AWS integration                              |
-| 14  | **Zed**         | `settings.json` `context_servers`               |  JSON  | Global  | ✨ NEW: Extensions + custom servers          |
-| 17  | **Cody**        | `~/.config/cody/mcp_servers.json`               |  JSON  | Global  | Windows: `%USERPROFILE%/.config/cody/`       |
-| 18  | **Tabnine**     | `.tabnine/mcp_servers.json`                     |  JSON  |  Both   | Enterprise, STDIO/HTTP/SSE                   |
-| 19  | **Trae**        | `.trae/mcp.json`                                |  JSON  | Project | ByteDance                                    |
-| 20  | **Amp**         | `.vscode/mcp.json`                              |  JSON  | Project | Shares VS Code config                        |
-| 21  | **OpenCode**    | `opencode.json` `mcp` section                   |  JSON  |  Both   | ✨ NEW: Local+Remote+OAuth, per-agent        |
-| 22  | **Augment**     | `~/.augment/settings.json`                      |  JSON  | Global  | Context Engine                               |
+| #   | IDE             | Config Path                                         | Format |       Scope       | Note                                                    |
+| --- | --------------- | --------------------------------------------------- | :----: | :---------------: | ------------------------------------------------------- |
+| 1   | **Codex**       | `~/.codex/config.toml`                              |  TOML  |      Global       | `[mcp_servers]` section                                 |
+| 2   | **Cursor**      | `~/.cursor/mcp.json`                                |  JSON  |      Global       | Cline-compatible format                                 |
+| 3   | **Claude**      | `.mcp.json` / `~/.claude.json`                      |  JSON  |       Both        | CLI: `.mcp.json` (project), Desktop: OS path            |
+| 4   | **Gemini CLI**  | `~/.gemini/settings.json`                           |  JSON  |      Global       | `mcpServers` key                                        |
+| 5   | **VS Code**     | `.vscode/mcp.json`                                  |  JSON  |      Project      | Also used by Amp, Void                                  |
+| 6   | **Windsurf**    | `~/.codeium/windsurf/mcp_config.json`               |  JSON  |      Global       | Cascade integration                                     |
+| 7   | **Antigravity** | `~/.gemini/antigravity/mcp_config.json`             |  JSON  |      Global       | Google IDE                                              |
+| 8   | **Cline**       | globalStorage `cline_mcp_settings.json`             |  JSON  |      Per-IDE      | ⚠️ Isolated per IDE fork — see §Extension Storage       |
+| 9   | **Continue**    | `~/.continue/config.yaml` `mcpServers`              |  YAML  |      Shared       | ⚠️ Shared across ALL IDE forks — see §Extension Storage |
+| 10  | **Roo**         | globalStorage `mcp_settings.json` / `.roo/mcp.json` |  JSON  | Per-IDE + Project | ⚠️ Global=isolated, Project=shared — see §Ext Storage   |
+| 11  | **JetBrains**   | `.junie/mcp/mcp.json`                               |  JSON  |       Both        | ⚠️ `mcp.json` NOT `servers.json`                        |
+| 12  | **Amazon Q**    | `.amazonq/mcp.json` / `~/.aws/amazonq/mcp.json`     |  JSON  |       Both        | ✨ NEW: Confirmed mid-2025                              |
+| 13  | **Kiro**        | `.kiro/settings/mcp.json`                           |  JSON  |      Project      | AWS integration                                         |
+| 14  | **Zed**         | `settings.json` `context_servers`                   |  JSON  |      Global       | ✨ NEW: Extensions + custom servers                     |
+| 17  | **Cody**        | `~/.config/cody/mcp_servers.json`                   |  JSON  |      Global       | Windows: `%USERPROFILE%/.config/cody/`                  |
+| 18  | **Tabnine**     | `.tabnine/mcp_servers.json`                         |  JSON  |       Both        | Enterprise, STDIO/HTTP/SSE                              |
+| 19  | **Trae**        | `.trae/mcp.json`                                    |  JSON  |      Project      | ByteDance                                               |
+| 20  | **Amp**         | `.vscode/mcp.json`                                  |  JSON  |      Project      | Shares VS Code config                                   |
+| 21  | **OpenCode**    | `opencode.json` `mcp` section                       |  JSON  |       Both        | ✨ NEW: Local+Remote+OAuth, per-agent                   |
+| 22  | **Augment**     | `~/.augment/settings.json`                          |  JSON  |      Global       | Settings Panel UI + Easy MCP (Jul 2025)                 |
+
+---
+
+## 🗄️ Extension Storage Architecture (VS Code Forks)
+
+> ⚠️ **Critical**: Extensions cài trên VS Code forks (Cursor, Windsurf, Antigravity, Trae) có **storage riêng biệt** cho mỗi fork.
+> MCP settings trong globalStorage **KHÔNG SHARED** giữa các IDE forks.
+
+### 3 Storage Strategies
+
+| Strategy                             | Extensions                             | Lưu ở đâu                                             | Shared giữa IDE forks? |
+| ------------------------------------ | -------------------------------------- | ----------------------------------------------------- | ---------------------- |
+| **globalStorage** (per-IDE isolated) | Cline, Roo Code, Tabnine, Copilot Chat | `%APPDATA%\{IDE}\User\globalStorage\{ext-id}\`        | ❌ **KHÔNG**           |
+| **Home Directory** (IDE-shared)      | Continue                               | `~/.continue/config.yaml`                             | ✅ **CÓ**              |
+| **Home Directory** (IDE-shared)      | Continue, Augment                      | `~/.continue/config.yaml`, `~/.augment/settings.json` | ✅ **CÓ**              |
+
+### AppData Folder Name theo IDE Fork
+
+> Verified trực tiếp trên filesystem (Windows `%APPDATA%`)
+
+| IDE Fork        | AppData Folder | Ví dụ Full Path                             |
+| --------------- | -------------- | ------------------------------------------- |
+| **VS Code**     | `Code`         | `%APPDATA%\Code\User\globalStorage\`        |
+| **Cursor**      | `Cursor`       | `%APPDATA%\Cursor\User\globalStorage\`      |
+| **Windsurf**    | `Windsurf`     | `%APPDATA%\Windsurf\User\globalStorage\`    |
+| **Antigravity** | `Antigravity`  | `%APPDATA%\Antigravity\User\globalStorage\` |
+| **Trae**        | `Trae`         | `%APPDATA%\Trae\User\globalStorage\`        |
+
+> macOS: `~/Library/Application Support/{IDE}/User/globalStorage/`
+> Linux: `~/.config/{IDE}/User/globalStorage/`
+
+### Extension MCP Settings Map
+
+| Extension        | Publisher ID                 | MCP Filename                                   | Storage                 |
+| ---------------- | ---------------------------- | ---------------------------------------------- | ----------------------- |
+| **Cline**        | `saoudrizwan.claude-dev`     | `settings/cline_mcp_settings.json`             | globalStorage (per-IDE) |
+| **Roo Code**     | `rooveterinaryinc.roo-cline` | `settings/mcp_settings.json`                   | globalStorage (per-IDE) |
+| **Continue**     | `continue.continue`          | `~/.continue/config.yaml` → key `mcpServers`   | Home dir (shared)       |
+| **Tabnine**      | `tabnine.tabnine-vscode`     | (trong globalStorage)                          | globalStorage (per-IDE) |
+| **Augment**      | `augmentcode.augment`        | `~/.augment/settings.json` (Settings Panel UI) | Home dir (shared)       |
+| **Copilot Chat** | `github.copilot-chat`        | N/A (built-in)                                 | globalStorage (per-IDE) |
+
+> **Source**: Filesystem forensics 2026-02-14 trên 4 IDE forks cùng máy Windows.
+> **Docs**: [Roo Code MCP](https://docs.roocode.com/features/mcp/using-mcp-in-roo), [Continue MCP](https://docs.continue.dev/customize/model-providers/mcp), [VS Code Extension API](https://code.visualstudio.com/api/references/vscode-api#ExtensionContext)
+
+### ⚠️ Hệ Quả Quan Trọng
+
+1. **Cline trên VS Code ≠ Cline trên Antigravity**: MCP settings hoàn toàn riêng biệt
+2. **Continue là ngoại lệ duy nhất**: Dùng `~/.continue/`, shared cho MỌI IDE fork
+3. **Roo Code có 2 scope**: Global (globalStorage, per-IDE) + Project (`.roo/mcp.json`, shared)
+4. **AWF installer**: Chỉ quản lý project-level files (rules, skills, workflows) — MCP trong globalStorage do extension quản lý
 
 ---
 
@@ -363,4 +414,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code v6.2.6 • 22 IDEs • 2-Category Feature Matrix • Platform Verified • Feb 7, 2026_
+_DOMYH Awesome Code v6.2.8 • 22 IDEs • Extension Storage Forensics • Platform Verified • Feb 14, 2026_

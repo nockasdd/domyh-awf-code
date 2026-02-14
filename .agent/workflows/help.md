@@ -25,11 +25,12 @@ skills: { required: [], contextual: [] }
 
 ### Planning & Design
 
-| Command             | Description         | Example                |
-| ------------------- | ------------------- | ---------------------- |
-| `/plan [feature]`   | 📋 Feature planning | `/plan shopping cart`  |
-| `/think [topic]`    | 💡 Brainstorming    | `/think architecture`  |
-| `/visualize [page]` | 🖼️ UI/UX mockups    | `/visualize dashboard` |
+| Command             | Description          | Example                |
+| ------------------- | -------------------- | ---------------------- |
+| `/plan [feature]`   | 📋 Feature planning  | `/plan shopping cart`  |
+| `/feature [name]`   | 🏗️ Feature lifecycle | `/feature jwt-auth`    |
+| `/think [topic]`    | 💡 Brainstorming     | `/think architecture`  |
+| `/visualize [page]` | 🖼️ UI/UX mockups     | `/visualize dashboard` |
 
 ### Quality & Ops
 
@@ -54,6 +55,7 @@ skills: { required: [], contextual: [] }
 | Command    | Description           | Example        |
 | ---------- | --------------------- | -------------- |
 | `/status`  | 📊 Project health     | `/status`      |
+| `/doctor`  | 🩺 Environment check  | `/doctor`      |
 | `/recap`   | 📖 Session summary    | `/recap`       |
 | `/upgrade` | 📦 Update deps        | `/upgrade`     |
 | `/env`     | 🔐 Environment config | `/env scan`    |

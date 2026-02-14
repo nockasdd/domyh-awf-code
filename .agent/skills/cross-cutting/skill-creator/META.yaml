@@ -1,0 +1,37 @@
+name: skill-creator
+version: "6.2.7"
+display: Skill Creator
+category: cross-cutting
+tier: 2
+priority: 4
+
+desc: "Meta-skill for creating new domyh-awf skills with proper schema, structure, and progressive disclosure."
+
+trigger_desc: |
+  Activate when user wants to create a new skill, scaffold a skill template,
+  or understand the skill system schema. Guides through META.yaml creation,
+  SKILL.md authoring, and data file organization.
+
+triggers:
+  keywords:
+    - create skill
+    - new skill
+    - skill template
+    - scaffold skill
+    - META.yaml schema
+    - skill structure
+  intents:
+    - "create a new skill"
+    - "make a skill for"
+    - "skill template"
+    - "skill schema reference"
+
+caps:
+  - Skill scaffolding
+  - META.yaml v2 schema
+  - Progressive disclosure patterns
+  - SKILL.md authoring guide
+
+related_skills:
+  - coding-rules
+  - audit-pro
