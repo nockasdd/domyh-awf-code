@@ -1,3 +1,9 @@
+---
+name: accessibility
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Accessibility (WCAG 2.2)
 
 > ♿ **Build inclusive web experiences for all users**

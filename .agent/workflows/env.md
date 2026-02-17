@@ -97,3 +97,10 @@ skills: { required: [security], contextual: [auto] }
 | Service URLs | `DATABASE_URL`, `API_BASE`   | 🟡 Medium      |
 | API Keys     | `STRIPE_KEY`, `GITHUB_TOKEN` | 🔴 High        |
 | Credentials  | `DB_PASSWORD`, `JWT_SECRET`  | 🔴 Critical    |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

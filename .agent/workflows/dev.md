@@ -135,3 +135,10 @@ docker_compose:
 | Turbopack | ⚡⚡ Fastest | Next.js 15+              |
 | Rspack    | ⚡⚡ Fast    | webpack migration        |
 | esbuild   | ⚡⚡ Fastest | Build-only               |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

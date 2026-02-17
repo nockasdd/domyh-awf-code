@@ -1,0 +1,323 @@
+# Clean Tools Registry — 30+ Languages
+# Used by /clean workflow • Auto-selected via hsa_detect_stack
+# Schema: markers, dead_code, imports, deps, format, lint
+
+# ═══════════════════════════════════════════════════════════════
+# BACKEND / SYSTEMS LANGUAGES
+# ═══════════════════════════════════════════════════════════════
+
+go:
+  markers: ["go.mod", "*.go"]
+  dead_code: "deadcode ./..."
+  imports: "goimports -w ."
+  deps: "go mod tidy"
+  format: "gofmt -w ."
+  lint: "golangci-lint run"
+
+rust:
+  markers: ["Cargo.toml", "*.rs"]
+  dead_code: "cargo clippy -- -W dead_code"
+  imports: "rustfmt"
+  deps: "cargo udeps"
+  format: "cargo fmt"
+  lint: "cargo clippy"
+
+java:
+  markers: ["pom.xml", "build.gradle", "*.java"]
+  dead_code: "spotbugs, PMD"
+  imports: "google-java-format"
+  deps: "mvn dependency:analyze"
+  format: "google-java-format -i"
+  lint: "checkstyle"
+
+kotlin:
+  markers: ["build.gradle.kts", "*.kt"]
+  dead_code: "detekt"
+  imports: "ktlint"
+  deps: "gradle dependencies"
+  format: "ktlint -F"
+  lint: "detekt"
+
+csharp:
+  markers: ["*.csproj", "*.sln", "*.cs"]
+  dead_code: "ReSharper CLI"
+  imports: "dotnet format"
+  deps: "dotnet list package --outdated"
+  format: "dotnet format"
+  lint: "dotnet format --verify-no-changes"
+
+cpp:
+  markers: ["CMakeLists.txt", "*.cpp", "*.h", "*.hpp"]
+  dead_code: "cppcheck --enable=unusedFunction"
+  imports: "include-what-you-use"
+  deps: "conan info"
+  format: "clang-format -i"
+  lint: "clang-tidy"
+
+c:
+  markers: ["Makefile", "*.c", "*.h"]
+  dead_code: "cppcheck --enable=unusedFunction"
+  imports: "include-what-you-use"
+  deps: "N/A"
+  format: "clang-format -i"
+  lint: "clang-tidy"
+
+# ═══════════════════════════════════════════════════════════════
+# SCRIPTING / DYNAMIC LANGUAGES
+# ═══════════════════════════════════════════════════════════════
+
+python:
+  markers: ["requirements.txt", "pyproject.toml", "*.py"]
+  dead_code: "vulture ."
+  imports: "isort ."
+  deps: "pip-autoremove --list"
+  format: "black ."
+  lint: "ruff check . --fix"
+
+ruby:
+  markers: ["Gemfile", "*.rb"]
+  dead_code: "debride ."
+  imports: "rubocop -A"
+  deps: "bundle clean --dry-run"
+  format: "rubocop -A"
+  lint: "rubocop"
+
+php:
+  markers: ["composer.json", "*.php"]
+  dead_code: "psalm --find-dead-code"
+  imports: "php-cs-fixer fix"
+  deps: "composer unused"
+  format: "php-cs-fixer fix"
+  lint: "phpstan analyse"
+
+perl:
+  markers: ["cpanfile", "*.pl", "*.pm"]
+  dead_code: "Perl::Critic"
+  imports: "perltidy"
+  deps: "cpan-outdated"
+  format: "perltidy -b"
+  lint: "perlcritic"
+
+lua:
+  markers: ["*.lua", "rockspec"]
+  dead_code: "luacheck --no-unused-args"
+  imports: "N/A"
+  deps: "luarocks list"
+  format: "stylua"
+  lint: "luacheck"
+
+# ═══════════════════════════════════════════════════════════════
+# JAVASCRIPT / TYPESCRIPT ECOSYSTEM
+# ═══════════════════════════════════════════════════════════════
+
+nodejs:
+  markers: ["package.json", "*.js"]
+  dead_code: "npx depcheck --ignores=''"
+  imports: "npx organize-imports-cli ."
+  deps: "npx depcheck"
+  format: "npx prettier --write ."
+  lint: "npx eslint . --fix"
+
+typescript:
+  markers: ["tsconfig.json", "*.ts", "*.tsx"]
+  dead_code: "npx ts-prune"
+  imports: "npx organize-imports-cli ."
+  deps: "npx depcheck"
+  format: "npx prettier --write ."
+  lint: "npx eslint . --fix"
+
+deno:
+  markers: ["deno.json", "deno.jsonc", "mod.ts"]
+  dead_code: "deno lint"
+  imports: "deno fmt"
+  deps: "deno info"
+  format: "deno fmt"
+  lint: "deno lint"
+
+bun:
+  markers: ["bun.lockb", "bunfig.toml"]
+  dead_code: "bun x depcheck"
+  imports: "bun x organize-imports-cli ."
+  deps: "bun pm ls"
+  format: "bun x prettier --write ."
+  lint: "bun x eslint . --fix"
+
+# ═══════════════════════════════════════════════════════════════
+# MOBILE DEVELOPMENT
+# ═══════════════════════════════════════════════════════════════
+
+swift:
+  markers: ["Package.swift", "*.swift", "*.xcodeproj"]
+  dead_code: "periphery scan"
+  imports: "swift-format"
+  deps: "swift package show-dependencies"
+  format: "swift-format -i -r ."
+  lint: "swiftlint"
+
+dart:
+  markers: ["pubspec.yaml", "*.dart"]
+  dead_code: "dart analyze"
+  imports: "dart fix --apply"
+  deps: "dart pub outdated"
+  format: "dart format ."
+  lint: "dart analyze"
+
+flutter:
+  markers: ["pubspec.yaml", "lib/*.dart", "android/", "ios/"]
+  dead_code: "flutter analyze"
+  imports: "dart fix --apply"
+  deps: "flutter pub outdated"
+  format: "dart format ."
+  lint: "flutter analyze"
+
+# ═══════════════════════════════════════════════════════════════
+# FUNCTIONAL LANGUAGES
+# ═══════════════════════════════════════════════════════════════
+
+elixir:
+  markers: ["mix.exs", "*.ex", "*.exs"]
+  dead_code: "mix xref unreachable"
+  imports: "mix format"
+  deps: "mix deps.unlock --unused"
+  format: "mix format"
+  lint: "mix credo"
+
+haskell:
+  markers: ["*.cabal", "stack.yaml", "*.hs"]
+  dead_code: "hlint"
+  imports: "hindent"
+  deps: "stack ls dependencies"
+  format: "ormolu -i"
+  lint: "hlint"
+
+scala:
+  markers: ["build.sbt", "*.scala"]
+  dead_code: "scalafix"
+  imports: "scalafix OrganizeImports"
+  deps: "sbt dependencyUpdates"
+  format: "scalafmt"
+  lint: "scalafix"
+
+clojure:
+  markers: ["project.clj", "deps.edn", "*.clj"]
+  dead_code: "clj-kondo"
+  imports: "cljfmt"
+  deps: "lein ancient"
+  format: "cljfmt fix"
+  lint: "clj-kondo --lint ."
+
+fsharp:
+  markers: ["*.fsproj", "*.fs"]
+  dead_code: "Fantomas"
+  imports: "Fantomas"
+  deps: "dotnet list package --outdated"
+  format: "fantomas ."
+  lint: "dotnet fsharplint lint"
+
+ocaml:
+  markers: ["dune", "*.ml", "*.mli"]
+  dead_code: "ocaml-lsp"
+  imports: "ocamlformat"
+  deps: "opam list --installed"
+  format: "ocamlformat -i"
+  lint: "ocaml-lsp"
+
+# ═══════════════════════════════════════════════════════════════
+# DATA / ML LANGUAGES
+# ═══════════════════════════════════════════════════════════════
+
+r:
+  markers: ["DESCRIPTION", "*.R", "*.Rmd"]
+  dead_code: "lintr"
+  imports: "styler"
+  deps: "pak::pkg_deps()"
+  format: "styler::style_pkg()"
+  lint: "lintr::lint_package()"
+
+julia:
+  markers: ["Project.toml", "*.jl"]
+  dead_code: "JuliaFormatter"
+  imports: "JuliaFormatter"
+  deps: "Pkg.status()"
+  format: "JuliaFormatter.format()"
+  lint: "Lint.jl"
+
+# ═══════════════════════════════════════════════════════════════
+# WEB / MARKUP
+# ═══════════════════════════════════════════════════════════════
+
+html_css:
+  markers: ["*.html", "*.css", "*.scss", "*.sass"]
+  dead_code: "PurgeCSS"
+  imports: "N/A"
+  deps: "N/A"
+  format: "prettier --write"
+  lint: "stylelint"
+
+vue:
+  markers: ["*.vue", "vite.config.ts"]
+  dead_code: "eslint-plugin-vue"
+  imports: "organize-imports"
+  deps: "depcheck"
+  format: "prettier --write"
+  lint: "eslint --fix"
+
+svelte:
+  markers: ["*.svelte", "svelte.config.js"]
+  dead_code: "eslint-plugin-svelte"
+  imports: "organize-imports"
+  deps: "depcheck"
+  format: "prettier --write"
+  lint: "eslint --fix"
+
+# ═══════════════════════════════════════════════════════════════
+# INFRASTRUCTURE / CONFIG
+# ═══════════════════════════════════════════════════════════════
+
+terraform:
+  markers: ["*.tf", "*.tfvars"]
+  dead_code: "tflint"
+  imports: "terraform fmt"
+  deps: "terraform providers"
+  format: "terraform fmt -recursive"
+  lint: "tflint"
+
+yaml_json:
+  markers: ["*.yaml", "*.yml", "*.json"]
+  dead_code: "N/A"
+  imports: "N/A"
+  deps: "N/A"
+  format: "prettier --write"
+  lint: "yamllint, jsonlint"
+
+dockerfile:
+  markers: ["Dockerfile", "*.dockerfile"]
+  dead_code: "hadolint"
+  imports: "N/A"
+  deps: "N/A"
+  format: "N/A"
+  lint: "hadolint"
+
+sql:
+  markers: ["*.sql"]
+  dead_code: "N/A"
+  imports: "N/A"
+  deps: "N/A"
+  format: "sqlfluff fix"
+  lint: "sqlfluff lint"
+
+shell:
+  markers: ["*.sh", "*.bash", "*.zsh"]
+  dead_code: "shellcheck"
+  imports: "N/A"
+  deps: "N/A"
+  format: "shfmt -w"
+  lint: "shellcheck"
+
+powershell:
+  markers: ["*.ps1", "*.psm1"]
+  dead_code: "PSScriptAnalyzer"
+  imports: "N/A"
+  deps: "N/A"
+  format: "Invoke-Formatter"
+  lint: "Invoke-ScriptAnalyzer"

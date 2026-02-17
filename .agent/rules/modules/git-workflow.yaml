@@ -1,170 +1,61 @@
-# Git Workflow Rule v6.0
-# Modular rule for git operations
-
+# Git Workflow Rule v6.3.1
 ---
 name: git-workflow
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-GIT-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Rules for git operations: detection, prerequisite checks, and deployment readiness.
-
+description: "Git operations: commit conventions, branching, and safety checks."
 category: "workflow"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: false
   personas: ["developer", "devops"]
-  workflows: ["/code", "/deploy", "/refactor"]
+  trigger: "When performing git operations"
 
-# =============================================================================
-# GIT DETECTION
-# =============================================================================
+# --- COMMIT CONVENTIONS ---
 
-detection:
-  commands:
-    powershell: "Test-Path .git -PathType Container"
-    bash: "test -d .git"
+commits:
+  format: "type(scope): description"
+  types: ["feat", "fix", "refactor", "docs", "test", "chore", "perf", "ci"]
+  rules:
+    - "Atomic commits — one logical change per commit"
+    - "Description in imperative mood: 'Add feature' not 'Added feature'"
+    - "Max 72 chars for first line"
+    - "Reference issue/ticket in body when applicable"
 
-  on_detected:
-    - "Include git commands (commit, push, diff)"
-    - "Show git status in next steps"
+# --- BRANCHING ---
 
-  on_missing:
-    - "Skip git suggestions"
-    - "Offer initialization"
+branching:
+  convention: "type/description (e.g., feat/user-auth, fix/login-redirect)"
+  protected: ["main", "master", "production", "staging"]
+  rule: "Request approval before force-pushing to protected branches"
 
-# =============================================================================
-# PRE-DEPLOY CHECKS
-# =============================================================================
+# --- SAFETY CHECKS ---
 
-pre_deploy:
-  preconditions:
-    1_git_init:
-      check: ".git/ directory exists"
-      fail_action: "Suggest: git init"
+safety:
+  before_commit:
+    - "Review staged changes with git diff --staged"
+    - "Ensure no secrets/credentials in diff"
+    - "Run lint/build/tests if available"
+  before_push:
+    - "Pull/rebase to resolve conflicts locally"
+    - "Verify correct remote and branch"
+  before_merge:
+    - "Ensure CI passes"
+    - "Squash fixup commits if applicable"
 
-    2_remote:
-      check: "git remote -v has origin"
-      fail_action: "Suggest: git remote add origin <url>"
+# --- DANGEROUS OPERATIONS ---
 
-    3_uncommitted:
-      check: "git status --porcelain is empty"
-      fail_action: "Suggest: git add .; git commit -m 'message'"
-
-  decision_flow: |
-    Before suggesting /deploy:
-        │
-        ├── No .git/? → "Initialize git: git init"
-        │
-        ├── No remote? → "Add remote: git remote add origin <url>"
-        │
-        ├── Uncommitted? → "Commit: git add .; git commit -m 'msg'"
-        │
-        └── All good → Proceed with /deploy
-
-# =============================================================================
-# OUTPUT TEMPLATES
-# =============================================================================
-
-templates:
-  with_git: |
-    Next Steps:
-    ├── ✅ Review changes: git diff
-    ├── ✅ Commit: git commit -am "{message}"
-    └── ✅ Push: git push
-
-  without_git: |
-    Next Steps:
-    ├── ✅ Changes saved successfully
-    └── 💡 Consider: git init; git add .; git commit -m 'Initial'
-
-  pre_deploy_no_git: |
-    📋 NEXT STEPS:
-    1️⃣ Initialize git: git init
-    2️⃣ Add remote: git remote add origin <your-repo-url>
-    3️⃣ First commit: git add .; git commit -m 'Initial commit'
-    4️⃣ Push: git push -u origin main
-
-    Would you like me to help set this up?
-
-# =============================================================================
-# SAFE OPERATIONS
-# =============================================================================
-
-safe_operations:
-  always_safe:
-    - "git status"
-    - "git diff"
-    - "git log"
-    - "git branch"
-    - "git remote -v"
-
+dangerous:
   require_confirmation:
-    - pattern: "git reset --hard"
-      reason: "Discards all uncommitted changes"
-    - pattern: "git push --force"
-      reason: "Overwrites remote history"
-    - pattern: "git clean -fd"
-      reason: "Removes untracked files"
-    - pattern: "git rebase"
-      reason: "Rewrites commit history"
-
-# =============================================================================
-# COMMIT MESSAGE GUIDELINES
-# =============================================================================
-
-commit_messages:
-  format: "type(scope): message"
-  types:
-    - feat: "New feature"
-    - fix: "Bug fix"
-    - docs: "Documentation"
-    - style: "Formatting"
-    - refactor: "Code restructure"
-    - test: "Adding tests"
-    - chore: "Maintenance"
-
-  examples:
-    - "feat(auth): add JWT authentication"
-    - "fix(payment): resolve checkout timeout"
-    - "docs(readme): update installation guide"
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Check .git/ directory exists"
-  - "Check git remote -v has origin"
-  - "Check git status for uncommitted changes"
-  - "Only suggest /deploy if all conditions pass"
-  - "Provide helpful git setup if missing"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+    - "git push --force (history rewrite)"
+    - "git reset --hard (discard changes)"
+    - "git clean -fd (delete untracked files)"
+    - "Merging into protected branches"
 
 integration:
-  tier: 2 # Execution tier
-  related_modules:
-    - terminal-safety
-    - edit-verification
-
-  reflection:
-    enabled: false
-
-  hsa_tools:
-    hsa_check_changes:
-      purpose: "Re-index changed files after git operations to keep BM25/CodeGraph/VectorIndex current"
-      usage: "hsa_check_changes → after commit, merge, rebase, checkout, or any branch operation"
+  tier: 2
+  related_modules: ["terminal-safety"]
 
 ---
 _DOMYH Awesome Code • Git Workflow Rule_

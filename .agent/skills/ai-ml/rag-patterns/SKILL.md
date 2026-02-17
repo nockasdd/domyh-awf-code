@@ -1,3 +1,9 @@
+---
+name: rag-patterns
+version: "6.3.1"
+category: ai-ml
+---
+
 # 🧠 RAG Patterns
 
 > Retrieval-Augmented Generation architecture patterns

@@ -1,5 +1,5 @@
 name: sql
-version: "6.2.7"
+version: "6.3.1"
 category: database
 tier: 3
 
@@ -13,6 +13,8 @@ patterns:
     json: 6
     queries: 6
 
+triggers:
+  file_patterns:
     - "*.sql"
     - "migrations/*.sql"
     - "*.pgsql"

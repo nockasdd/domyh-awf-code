@@ -1,6 +1,7 @@
 ---
 description: "🔧 Code refactoring & cleanup: identify smells, clean dead code, organize imports, restructure — verify tests pass"
 skills: { required: [coding-rules], contextual: [auto] }
+success_criteria: "Code improved, all tests pass, no behavior change"
 ---
 
 # 🔧 /refactor — Refactor Pro
@@ -37,11 +38,11 @@ skills: { required: [coding-rules], contextual: [auto] }
 
 ### Cleanup Safety Rules
 
-- Never delete without preview
+- Preview changes before any deletion
 - Show exact lines before removal
 - Offer backup (`git stash`)
 - Run build after changes
-- Never auto-remove: deprecated functions, TODO files, test files, configs, migrations
+- Confirm before removing: deprecated functions, TODO files, test files, configs, migrations
 
 ---
 
@@ -159,3 +160,18 @@ skills: { required: [coding-rules], contextual: [auto] }
 1. Make one refactoring
 2. Run tests → Pass? Commit. Fail? Revert.
 3. Repeat
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After VERIFY step, apply `templates/reflection/critic.md`:
+> 1. Behavior unchanged (tests green)?
+> 2. Complexity actually reduced (metrics improved)?
+> 3. On success → `templates/reflection/success_analysis.md` to capture reusable patterns
+
+---
+
+## 💾 SESSION SAVE
+
+After refactor completes: update `memory/CONTEXT_SNAPSHOT.md` (what was refactored, patterns used) and append summary to `memory/session.md`.

@@ -115,10 +115,17 @@ Quick fix: `/doctor fix` (2 auto-fixable issues)
 ## ⛔ SAFETY
 
 - Auto-fix only applies to safe items (config formatting, gitignore)
-- Never auto-install system dependencies without confirmation
-- Never modify .env files (only create templates)
+- Confirm with user before installing system dependencies
+- Create .env.example templates instead of modifying .env files directly
 - Show exact commands before executing
 
 ---
 
 _DOMYH Awesome Code • System Doctor Pro • Environment Diagnostics_
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -12,7 +12,7 @@ project:
   install_mode: project # global | project — required by SACRED_RULES ENV_001
 
 # =============================================================================
-# INTERNATIONALIZATION (v6.2.7)
+# INTERNATIONALIZATION (v6.3.1)
 # =============================================================================
 
 i18n:
@@ -45,7 +45,7 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v6.2.7: Auto-suggest configuration
+  # v6.3.1: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3
@@ -90,8 +90,9 @@ detection:
 # =============================================================================
 
 context:
-  # Maximum tokens for T1 baseline (82 skills × ~100 tokens)
-  t1_budget: 8200
+  # Total budget for ALL T1 META.yaml files (83 skills × ~100 tokens each)
+  # Not to be confused with IDE baseline (runtime prompt overhead in ide/*.json)
+  t1_budget: 8300
 
   # Maximum tokens per T2 skill
   t2_budget: 1500

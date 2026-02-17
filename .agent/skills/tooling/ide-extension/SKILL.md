@@ -1,3 +1,9 @@
+---
+name: ide-extension
+version: "6.3.1"
+category: tooling
+---
+
 # IDE Extension Development — VS Code • JetBrains • Neovim
 
 > Multi-IDE extension development  

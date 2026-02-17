@@ -1,3 +1,9 @@
+---
+name: event-driven
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Event-Driven Architecture — Kafka • RabbitMQ • NATS
 
 > Pub/Sub • Event Sourcing • CQRS • Saga Pattern  

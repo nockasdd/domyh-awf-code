@@ -1,5 +1,5 @@
-# DOMYH Awesome Code — Templates Registry v6.0
-# version: 6.2.3
+# DOMYH Awesome Code — Templates Registry v6.3.1
+# version: 6.3.1
 # Purpose: Comprehensive template system for prompts, tasks, outputs, and infrastructure
 
 # =============================================================================
@@ -15,7 +15,7 @@ prompts:
       - "{{PERSONA_NAME}}"
       - "{{PERSONA_ROLE}}"
       - "{{PERSONA_GOAL}}"
-      - "{{PERSONA_BACKSTORY}}"
+      - "{{PERSONA_APPROACH}}"
       - "{{TRAITS}}"
       - "{{ALLOWED_TOOLS}}"
       - "{{RESTRICTED_TOOLS}}"
@@ -41,8 +41,8 @@ prompts:
     path: .agent/templates/prompts/guardrails_block.md
     description: "Safety guardrails from constitutional rules"
     include_rules:
-      - .agent/rules/constitutional/tier-0-core.yaml
-      - .agent/rules/constitutional/tier-1-safety.yaml
+      - .agent/rules/archive/constitutional/tier-0-core.yaml
+      - .agent/rules/archive/constitutional/tier-1-safety.yaml
 
   # Tools instruction template
   tools_block:

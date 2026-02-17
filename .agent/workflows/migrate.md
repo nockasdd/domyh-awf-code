@@ -133,3 +133,10 @@ django: manage.py loaddata fixtures.json
 
 # Seed types: dev (admin+test data) | staging (admin+anonymized) | prod (system roles only)
 ```
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

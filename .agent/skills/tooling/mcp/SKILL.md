@@ -1,3 +1,9 @@
+---
+name: mcp
+version: "6.3.1"
+category: tooling
+---
+
 # MCP — Model Context Protocol Server Development
 
 > Skill cho phát triển MCP servers & clients  

@@ -12,8 +12,8 @@ skills: { required: [], contextual: [auto] }
 
 ## PLAN FLOW
 
-1. **PHASE 0: DEEP INTERVIEW** — Thu thập context (skip if clear) → ⛔ STOP if info missing
-2. **PHASE 1: UNDERSTAND** — Parse request, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), use `hsa_get_repo_map` for codebase overview, clarify scope
+1. **PHASE 0: DEEP INTERVIEW** — Gather context (skip if clear) → ⛔ STOP if info missing
+2. **PHASE 1: UNDERSTAND** — Parse request, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context` with `output_mode='references'` for quick overview), use `hsa_get_repo_map` for codebase overview, clarify scope
 3. **PHASE 2: ANALYZE** — Impact assessment, risk analysis, dependencies. `hsa_prefetch` target files for deep analysis
 4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts
 5. **PHASE 4: BREAKDOWN** — Task decomposition, effort estimation → ⛔ STOP for user approval
@@ -67,9 +67,9 @@ output:
 
 | #   | Question                                     | Purpose          | Skip If                |
 | --- | -------------------------------------------- | ---------------- | ---------------------- |
-| 1   | Feature xử lý/quản lý cái gì?                | Domain & scope   | Request đã rõ ràng     |
-| 2   | Ai dùng? Bao nhiêu user?                     | Scale & UX needs | Obvious from context   |
-| 3   | Có constraints nào? (deadline, budget, tech) | Boundaries       | No special constraints |
+| 1   | What does this feature handle/manage?         | Domain & scope   | Request already clear   |
+| 2   | Who uses it? How many users?                  | Scale & UX needs | Obvious from context    |
+| 3   | Any constraints? (deadline, budget, tech)     | Boundaries       | No special constraints  |
 
 ### Follow-up Categories
 
@@ -127,3 +127,10 @@ output:
 | **E**ffort     | Person-months | Dev time required                                  |
 
 > Formula: `(R × I × C) / E` → Higher = prioritize
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

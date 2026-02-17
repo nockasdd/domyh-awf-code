@@ -1,3 +1,9 @@
+---
+name: gemini-media-gen
+version: "6.3.1"
+category: ai-ml
+---
+
 # Gemini Media Generation
 
 > 🎨 **Native image + video generation via Gemini API**

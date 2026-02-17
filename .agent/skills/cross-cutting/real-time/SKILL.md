@@ -1,3 +1,9 @@
+---
+name: real-time
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Real-time Communication — WebSocket • Socket.IO • SSE
 
 > Full-duplex • Rooms & Namespaces • Server Push  

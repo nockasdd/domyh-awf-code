@@ -1,62 +1,50 @@
-# ⚙️ DOMYH Awesome Code Core v6.2.7
+# ⚙️ DOMYH Awesome Code Core v6.3.1
 
-Core system files (always loaded).
+Core system files — always loaded or on-demand reference.
 
-## Files (44 total)
+## Active Files
 
-### Engine Files
+### System Config
 
-| File                      | Purpose               | Tokens |
-| ------------------------- | --------------------- | ------ |
-| ROUTER.yaml               | Semantic routing      | ~350   |
-| FLOW_ENGINE.yaml          | Workflow chaining     | ~500   |
-| MEMORY_ENGINE.yaml        | 4-layer memory system | ~600   |
-| SEMANTIC_ENGINE.yaml      | Vector DB (optional)  | ~600   |
-| TOKEN_LOADING.yaml        | Lazy loading strategy | ~350   |
-| TOKEN_BUDGETS.yaml        | SSoT for token limits | ~400   |
-| CONTEXT_LOADER.yaml       | JIT context loading   | ~450   |
-| CONTEXT_INJECTOR.yaml     | Smart injection       | ~600   |
-| CONTEXT_PRIORITY.yaml     | Priority scoring      | ~600   |
-| ACTIVE_MEMORY.yaml        | Self-directing memory | ~650   |
-| MEMORY_CONSOLIDATION.yaml | Auto-consolidation    | ~600   |
+| File                | Purpose                    |
+| ------------------- | -------------------------- |
+| VERSION.yaml        | SSoT for all versions      |
+| MEMORY_PATHS.yaml   | SSoT for memory file paths |
+| session_cache.json  | LRU session state          |
 
-### Registry Files
+### Documentation (always loaded)
+
+| File            | Purpose              | Lines |
+| --------------- | -------------------- | ----- |
+| AGENT_BEHAVIOR  | Agent execution guide | ~86   |
+| AUDIT_POLICY    | Audit configuration  | ~68   |
+| CACHE           | Caching strategy     | ~59   |
+| COMMANDS        | Command registry     | ~106  |
+| CUSTOMIZE       | Skill customization  | ~196  |
+| DATA_SAFETY     | Sensitive data rules | ~92   |
+| PERMISSIONS     | Access control tiers | ~100  |
+
+### Reference (on-demand)
 
 | File                  | Purpose                 | Tokens |
 | --------------------- | ----------------------- | ------ |
 | ARCH_REGISTRY.yaml    | Architecture patterns   | ~1,900 |
+| BRANDING.yaml         | Project identity SSoT   | ~600   |
+| CODING_STYLES.yaml    | Language conventions ⚠️ | ~650   |
+| HSA.yaml              | HSA master config       | ~1,100 |
 | LIBRARY_REGISTRY.yaml | Library recommendations | ~650   |
-| INTENT_DETECTION.yaml | Intent classification   | ~700   |
-| CODING_STYLES.yaml    | Language conventions    | ~650   |
-| PATTERNS.yaml         | Workflow patterns       | ~550   |
-| SKILLS_FLOW.yaml      | Skill loading rules     | ~900   |
-| SKILL_SCHEMA.yaml     | Skill structure         | ~400   |
+| MCP_TOOLS.yaml        | MCP tool definitions    | ~1,100 |
+| PATTERNS.yaml         | Shared workflow patterns| ~550   |
+| SKILL_SCHEMA.yaml     | Skill structure schema  | ~400   |
+| TEMPLATES.yaml        | Template registry       | ~300   |
 
-### Documentation Files
+> ⚠️ CODING_STYLES.yaml is deprecated — kept for reference. SSoT is `/code` workflow.
 
-| File            | Purpose              | Tokens |
-| --------------- | -------------------- | ------ |
-| README.md       | This file            | ~200   |
-| CACHE.md        | Caching strategy     | ~250   |
-| COMMANDS.md     | Command registry     | ~500   |
-| CUSTOMIZE.md    | Skill customization  | ~600   |
-| DATA_SAFETY.md  | Sensitive data rules | ~300   |
-| PERMISSIONS.md  | Access control tiers | ~350   |
-| AUDIT_POLICY.md | Audit configuration  | ~250   |
-| TEMPLATES.yaml  | Output templates     | ~300   |
+## Archive
 
-### Utilities
+`archive/` contains 25 legacy engine files (ROUTER, TOKEN_BUDGETS, CONTEXT_LOADER, SKILLS_FLOW, MEMORY_ENGINE, etc.). These were consolidated into `AGENT_BEHAVIOR.md` and are kept for historical reference only.
 
-| File                      | Purpose             | Tokens |
-| ------------------------- | ------------------- | ------ |
-| MEMORY_PATHS.yaml         | SSoT for paths      | ~200   |
-| MEMORY_UTILS.yaml         | Memory helpers      | ~400   |
-| SCORING_FORMULA.yaml      | Priority algorithm  | ~300   |
-| SUMMARIZATION_ENGINE.yaml | Content compression | ~450   |
-| CLEANUP_ENGINE.yaml       | Context cleanup     | ~550   |
-| TOKEN_SUMMARY.yaml        | Token analytics     | ~350   |
-| embeddings.json           | TF-IDF vectors      | N/A    |
-| session_cache.json        | LRU session state   | N/A    |
+See `archive/README.md` for details.
 
 ## Architecture
 
@@ -75,17 +63,6 @@ Tier 3: ADVANCED.md (~4,000 tokens) → Referenced only
 - Threshold: 30% similarity
 - Cache: LRU (max 3 active skills)
 
-## Token Budget
-
-| State            | Tokens | Reference              |
-| ---------------- | ------ | ---------------------- |
-| Idle baseline    | ~2,100 | 21 × META.yaml         |
-| 1 skill active   | ~3,600 | +1,500 SKILL.md        |
-| Peak (3 skills)  | ~6,600 | 3 × SKILL.md           |
-| + Semantic layer | +2,500 | TOKEN_BUDGETS.yaml:119 |
-
-> **Note**: Semantic layer is disabled by default. Enable in `MEMORY_ENGINE.yaml`.
-
 ---
 
-_DOMYH Awesome Code • Core System_
+_DOMYH Awesome Code • Core System v6.3.1_

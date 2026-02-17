@@ -1,0 +1,291 @@
+# Progressive Escalation Rule v6.3.1
+# Perspective Pivot Engine — Detect stuck agents, auto-pivot strategy
+---
+name: progressive-escalation
+version: "6.3.1"
+rule_id: "MOD-ESC-001"
+
+description: |
+  When an AI agent fails to fix a bug after repeated attempts,
+  detect the stuck state and progressively escalate through
+  6 levels of increasingly different debugging strategies.
+  Based on: Reflexion, Tree-of-Thought, DoVer, Devil's Advocate,
+  Meta-Cognitive Monitoring, and Cognitive Bias Mitigation research.
+
+category: "workflow"
+
+context:
+  always_apply: false
+  personas: ["Developer", "Debugger"]
+  workflows: ["/debug", "/fix"]
+
+# =============================================================================
+# STUCK DETECTION
+# =============================================================================
+
+stuck_detection:
+  # 5 Behavioral Signals
+  signals:
+    S1_repeat_fix:
+      description: "Agent edits same file, same location, same approach"
+      detection: "Diff similarity > 70% between consecutive fixes"
+      weight: 0.9
+
+    S2_oscillation:
+      description: "Agent adds code then removes it (A→B→A pattern)"
+      detection: "Revert pattern within 3 consecutive edits"
+      weight: 1.0
+
+    S3_same_error:
+      description: "Same error message persists after each fix attempt"
+      detection: "Error output similarity > 85% after 2+ attempts"
+      weight: 0.8
+
+    S4_scope_creep:
+      description: "More files changed but error unchanged"
+      detection: "Changed file count increases while error persists"
+      weight: 0.7
+
+    S5_circular:
+      description: "Returns to a previously failed approach"
+      detection: "Current strategy matches a prior failed strategy"
+      weight: 0.85
+
+  # 3 Cognitive Bias Detectors
+  bias_detectors:
+    B1_confirmation:
+      description: "Only seeking evidence supporting initial hypothesis"
+      detection: "Searching only 1 file/function, ignoring other errors"
+      counter: "Force search ≥3 related files, list counter-evidence"
+
+    B2_anchoring:
+      description: "Clinging to first hypothesis despite weak evidence"
+      detection: "Same hypothesis unchanged after 2+ failed fixes"
+      counter: "Force ≥3 hypotheses ranked by evidence strength"
+
+    B3_tunnel_vision:
+      description: "Only looking at code, ignoring config/env/data"
+      detection: "Only source code modified, no config/env/deps check"
+      counter: "Force checklist: code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓"
+
+  # Stuck Score Thresholds
+  thresholds:
+    level_2_reflect: 0.6
+    level_3_reframe: 0.75
+    level_4_widen: 0.85
+    level_5_decompose: 0.90
+    level_6_escalate: 0.95
+
+# =============================================================================
+# 6 ESCALATION LEVELS
+# =============================================================================
+
+levels:
+  level_1_retry:
+    name: "RETRY"
+    max_attempts: 2
+    strategy: "Standard fix — current approach"
+    trigger: "Initial fix attempt"
+    action: "Apply targeted fix, verify, retry if fail"
+
+  level_2_reflect:
+    name: "REFLECT"
+    strategies: ["S01_reflexion_analysis", "S02_bias_checkpoint"]
+    trigger: "After 2 failed retries OR stuck_score ≥ 0.6"
+    purpose: "Analyze WHY current approach failed"
+    prompt: |
+      🪞 DỪNG LẠI VÀ PHÂN TÍCH.
+
+      1. LIỆT KÊ mọi attempt đã thử:
+         | # | Approach | File:Line | Kết quả | Tại sao fail |
+
+      2. TÌM PATTERN trong failures:
+         - Tất cả fail ở cùng chỗ? → Bug ở upstream
+         - Fail khác nhau mỗi lần? → Nhiều bugs / race condition
+         - Fix 1 bug tạo bug mới? → Tight coupling issue
+
+      3. KIỂM TRA THIÊN KIẾN:
+         □ Confirmation: "Tôi chỉ tìm evidence ủng hộ?"
+           → List 3 evidence CHỐNG LẠI giả thuyết
+         □ Anchoring: "Giả thuyết đầu vẫn là chính?"
+           → Tạo 2 giả thuyết MỚI, rank theo evidence
+         □ Tunnel Vision: "Đã check ngoài code chưa?"
+           → code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓
+
+      4. LƯU episodic memory entry
+
+  level_3_reframe:
+    name: "REFRAME"
+    strategies:
+      - "S03_invert"
+      - "S04_rubber_duck"
+      - "S05_devils_advocate"
+      - "S06_fresh_eyes"
+    trigger: "Level 2 failed OR stuck_score ≥ 0.75"
+    purpose: "Change perspective COMPLETELY"
+    prompt: |
+      🔄 THAY ĐỔI GÓC NHÌN HOÀN TOÀN.
+
+      INVERT — Đảo ngược mọi giả thuyết:
+      - "Nếu TOÀN BỘ code ĐÚNG, bug đến từ ĐÂU?"
+      - "Error message có MISLEADING không?"
+      - "Tôi fix TRIỆU CHỨNG hay NGUYÊN NHÂN?"
+
+      RUBBER DUCK — Giải thích từ đầu:
+      1. Chương trình LẼ RA làm gì? (expected)
+      2. Chương trình THỰC TẾ làm gì? (actual)
+      3. Data đi qua đâu input → output? (flow)
+      4. Ở mỗi bước data đúng format? (validate)
+      5. Bước nào data bắt đầu SAI? (pinpoint)
+
+      DEVIL'S ADVOCATE — Tự phản bác:
+      - "Fix đề xuất CÓ THỂ gây hại gì?"
+      - "Trường hợp nào fix KHÔNG hoạt động?"
+      - "Adversary sẽ phá fix này bằng cách nào?"
+
+      FRESH EYES — Quên tất cả, đọc code từ đầu:
+      - Signature, docstring, line-by-line, boundaries, returns
+
+  level_4_widen:
+    name: "WIDEN"
+    strategies:
+      - "S07_upstream_downstream"
+      - "S08_diff_forensics"
+      - "S09_environmental_audit"
+      - "S10_contract_verification"
+    trigger: "Level 3 failed OR stuck_score ≥ 0.85"
+    purpose: "Expand search scope BEYOND current area"
+    prompt: |
+      🔍 MỞ RỘNG PHẠM VI.
+
+      UPSTREAM/DOWNSTREAM:
+      → grep -rn "functionName(" . --include="*.ext"
+      → Trace ALL callers: data truyền vào đúng?
+      → Trace ALL callees: return values handled?
+      → Middleware/interceptors/hooks ảnh hưởng?
+
+      DIFF FORENSICS:
+      → git log --oneline -20 -- [affected_files]
+      → git diff HEAD~5 -- [affected_files]
+      → Khi nào lần cuối hoạt động? Commit nào thay đổi?
+
+      ENVIRONMENTAL AUDIT:
+      → Runtime version, ENV vars, port conflicts
+      → Dependencies compatible? Lock file stale?
+      → Config conflict? Feature flags? API keys?
+      → External services available? Response format changed?
+
+      CONTRACT VERIFICATION:
+      → Function input types match caller output?
+      → API request format match spec?
+      → DB model match actual table schema?
+      → Event payload match subscriber expectation?
+
+  level_5_decompose:
+    name: "DECOMPOSE"
+    strategies:
+      - "S11_minimal_reproduction"
+      - "S12_binary_search_isolation"
+    trigger: "Level 4 failed OR stuck_score ≥ 0.90"
+    purpose: "Isolate precisely through systematic elimination"
+    prompt: |
+      🧩 CHIA NHỎ VÀ ISOLATE.
+
+      MINIMAL REPRODUCTION:
+      1. Copy function → separate test file
+      2. Hardcode inputs → run → pass/fail?
+         - PASS → bug is in CONTEXT not logic
+         - FAIL → bug is IN the function
+      3. Add complexity incrementally:
+         +DB → +middleware → +auth → which breaks it?
+      4. DoVer: hypothesis → minimal change → re-verify
+
+      BINARY SEARCH:
+      1. Identify full data path (input → output)
+      2. Add log/breakpoint at MIDPOINT
+      3. Data correct at mid? → bug in second half
+         Data wrong at mid? → bug in first half
+      4. Repeat until narrowed to ≤5 lines
+
+      COMPONENT ISOLATION (parallel):
+      | Component Off | Result | Conclusion |
+      |---------------|--------|------------|
+      | Auth          |        |            |
+      | Cache         |        |            |
+      | Middleware    |        |            |
+      | External APIs |        |            |
+      | Database      |        |            |
+
+  level_6_escalate:
+    name: "ESCALATE"
+    trigger: "Level 5 failed OR stuck_score ≥ 0.95"
+    purpose: "Report to user with full investigation evidence"
+    prompt: |
+      👤 ESCALATE — Tạo báo cáo đầy đủ:
+
+      ## Bug Investigation Report
+
+      ### Summary
+      [1-line description]
+
+      ### Attempts (with results)
+      | Level | Strategy | Findings |
+      |-------|----------|----------|
+      | 1 RETRY | [approaches] | [results] |
+      | 2 REFLECT | [analysis] | [findings] |
+      | 3 REFRAME | [perspective shift] | [findings] |
+      | 4 WIDEN | [expanded scope] | [findings] |
+      | 5 DECOMPOSE | [isolation tests] | [findings] |
+
+      ### Key Findings
+      - [Finding + evidence]
+
+      ### Remaining Hypotheses (unverifiable)
+      - [Hypothesis — why can't verify]
+
+      ### Recommended Next Steps
+      1. [Option A — pros/cons]
+      2. [Option B — pros/cons]
+      3. [Option C — external help]
+
+# =============================================================================
+# FAILURE MEMORY (EPISODIC BUFFER)
+# =============================================================================
+
+episodic_memory:
+  storage: ".domyh/debug/episodic_memory.yaml"
+  purpose: "Prevent repeating failed approaches"
+
+  entry_schema:
+    id: "EP-{timestamp}"
+    bug_signature: "hash(error_message + file + line)"
+    failed_approaches:
+      - approach: "description"
+        reason_failed: "why it didn't work"
+    successful_approach: "what worked (if resolved)"
+    lesson: "one-line takeaway"
+
+  lookup: |
+    Before EACH fix attempt:
+    1. Hash current error → search episodic_memory
+    2. If match → load failed_approaches → exclude them
+    3. If successful_approach exists → try that first
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  tier: 2
+  related_modules:
+    - "stop-conditions"
+    - "edit-verification"
+  workflows:
+    - "/debug"
+    - "/fix"
+  templates:
+    - "reflection/pivot_analysis.md"
+    - "reflection/error_analysis.md"
+
+---
+_DOMYH Awesome Code • Progressive Escalation Rule • Perspective Pivot Engine_

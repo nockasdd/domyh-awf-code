@@ -5,7 +5,7 @@
 # =============================================================================
 
 name: microservices
-version: "1.0.0"
+version: "6.3.1"
 category: cross-cutting
 priority: 2
 

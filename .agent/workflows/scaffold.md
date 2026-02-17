@@ -109,11 +109,32 @@ pattern_scan:
 
 ---
 
-## 🎨 DESIGN-AWARE GENERATION (→ FLOW.md §18.5)\r\n\r\nWhen scaffolding UI components:\r\n\r\n1. **Detect Design System** — Check for existing tokens/theme\r\n2. **Apply Component Decision Tree** (§18.2 A6) — Reuse > Framework > Compose > Build\r\n3. **Use Design Tokens** — Import from existing token files (no magic values)\r\n4. **Add Accessibility** — Semantic HTML, ARIA labels, keyboard support\r\n5. **Follow Atomic Level** — Assign correct level (atom/molecule/organism)\r\n\r\n> Auto-triggered when `/scaffold component` or `/scaffold layout` is called\r\n\r\n---\r\n\r\n## ⛔ SAFETY
+## 🎨 DESIGN-AWARE GENERATION
 
-- Never overwrite existing files
+When scaffolding UI components:
+
+1. **Detect Design System** — Check for existing tokens/theme
+2. **Apply Component Decision Tree** — Reuse > Framework > Compose > Build
+3. **Use Design Tokens** — Import from existing token files (no magic values)
+4. **Add Accessibility** — Semantic HTML, ARIA labels, keyboard support
+5. **Follow Atomic Level** — Assign correct level (atom/molecule/organism)
+
+> Auto-triggered when `/scaffold component` or `/scaffold layout` is called. Load `domyh-design` skill for full UI guidelines.
+
+---
+
+## ⛔ SAFETY
+
+- Preserve existing files — only create new ones
 - Show file list before creation
 - Confirm if > 5 files will be created
 - Validate names against project conventions
 - Detect and warn about naming conflicts
 - Preserve import ordering conventions
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -1,3 +1,9 @@
+---
+name: electron
+version: "6.3.1"
+category: desktop
+---
+
 ﻿---
 name: electron
 detect:

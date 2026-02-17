@@ -1,6 +1,7 @@
 ---
 description: "👀 Code review for PRs: logic, quality, security, and tests verification"
 skills: { required: [security], contextual: [auto] }
+success_criteria: "All findings documented with file:line evidence"
 ---
 
 # 👀 /review — Review Pro
@@ -13,7 +14,7 @@ skills: { required: [security], contextual: [auto] }
 ## REVIEW FLOW
 
 1. **CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), load review context (`hsa_get_context`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR
-2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Show: `[Analyzing] 12 files changed, 3 high-risk`
+2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Use `hsa_trace_flow` to trace impact of changed functions. Show: `[Analyzing] 12 files changed, 3 high-risk`
 3. **REVIEW** — Apply 5-category checklist on changed code, inline comments with severity
 4. **SELF-REVIEW** — Agent re-reads own findings, removes false positives, verifies evidence accuracy
 5. **REPORT** — Structured feedback with severity, approve/comment/request changes decision
@@ -105,3 +106,19 @@ pre_review_tools:
   go: "go vet {files}; govulncheck ./..."
   general: "semgrep --config auto --json {files}"
 ```
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After SELF-REVIEW step, apply `templates/reflection/critic.md`:
+> 1. All findings have `file:line` evidence?
+> 2. False positives removed?
+> 3. Confidence ≥ 7/10 per finding?
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -2,7 +2,7 @@
   "name": "codex",
   "displayName": "OpenAI Codex CLI",
   "description": "Configuration template for OpenAI Codex CLI integration",
-  "version": "1.0.0",
+  "version": "v6.3.1",
   "configFiles": [
     {
       "path": ".codex/.codex-rules.md",
@@ -16,7 +16,24 @@
     }
   ],
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/fix"],
+    "triggers": [
+      "/ap",
+      "/code",
+      "/debug",
+      "/deploy",
+      "/dev",
+      "/doc",
+      "/fix",
+      "/git",
+      "/hsa",
+      "/init",
+      "/plan",
+      "/refactor",
+      "/review",
+      "/security",
+      "/status",
+      "/test"
+    ],
     "auto_context": true
   },
   "features": {
@@ -27,12 +44,14 @@
   },
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.0.0 Context Management",
+      "description": "HSA v1.2.8 Context Management",
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest"],
+      "args": [
+        "-y",
+        "@nockdev/hsa@1.2.8"
+      ],
       "auto_start": true,
       "env": {
-        
         "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }

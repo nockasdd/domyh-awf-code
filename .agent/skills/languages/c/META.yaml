@@ -1,5 +1,5 @@
 name: c
-version: "6.2.7"
+version: "6.3.1"
 display: C
 category: language
 tier: 3
@@ -7,6 +7,8 @@ priority: 1
 
 desc: "Pure C (ISO C23) development patterns. typeof, constexpr, nullptr, memory patterns, MISRA."
 
+triggers:
+  file_patterns:
     - "*.c"
     - "*.h"
     - "Makefile"

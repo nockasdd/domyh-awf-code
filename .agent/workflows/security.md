@@ -179,8 +179,15 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 
 ## ⛔ SAFETY
 
-- Never auto-fix without user confirmation
+- Confirm with user before applying auto-fixes
 - Never expose actual secret values in reports (mask to `sk-****...****`)
 - Warn before scanning large directories (> 10,000 files)
 - Skip scanning `node_modules/`, `vendor/`, `.git/` by default
 - Output findings to `.domyh/security/` (gitignored) for sensitive content
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

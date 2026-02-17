@@ -5,7 +5,7 @@
 # Source: https://ai.google.dev/gemini-api/docs/live
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 total_patterns: 8
 
 overview:

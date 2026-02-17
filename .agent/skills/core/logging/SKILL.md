@@ -1,3 +1,9 @@
+---
+name: logging
+version: "6.3.1"
+category: core
+---
+
 # 📝 Logging Best Practices Skill
 
 > Comprehensive logging patterns for 12+ languages with HSA integration

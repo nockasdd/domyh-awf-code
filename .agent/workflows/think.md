@@ -124,3 +124,10 @@ ReAct Pattern: `Thought → Action [Search/Read/Test] → Observation → Repeat
 | Premature optimization   | Solve the problem first    |
 | Solution without problem | Define problem clearly     |
 | Bikeshedding             | Focus on high-impact items |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

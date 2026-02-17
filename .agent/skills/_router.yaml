@@ -2,10 +2,10 @@
 # _router.yaml — Smart Skill Router
 # =============================================================================
 # Single Source of Truth for skill loading strategy
-# Integrates with HSA v1.0.0 project detector for optimal token usage
+# Integrates with HSA v1.2.8 project detector for optimal token usage
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 engine: "hsa"
 schema: "hierarchical"
 
@@ -60,7 +60,7 @@ strategy:
 selection:
   default_threshold: 0.30
   recency_boost: 0.15
-  max_active_skills: 5 # Max T1 META.yaml detected
+  max_active_skills: 3 # Synced with manifest.yaml max_active
   max_active_t2: 3 # Max SKILL.md loaded simultaneously
 
 # =============================================================================
@@ -114,7 +114,7 @@ routing:
       - "dependency"
       - "extension"
     priority: 4
-    count: 21
+    count: 22
 
     # HSA adapter overrides for cross-cutting skills
     skills:
@@ -267,7 +267,8 @@ resolution:
     logging: "core/logging"
     observability: "core/observability"
     ci-cd: "devops/ci-cd"
-    prompt-engineering: "cross-cutting/prompt-engineering"
+    prompt-engineering: "ai-ml/prompt-engineering"
+    skill-creator: "cross-cutting/skill-creator"
 
 # =============================================================================
 # TOKEN BUDGET
@@ -277,7 +278,7 @@ token_budget:
   baseline: 500 # Router + core/security META
   per_detected: 100 # Each detected skill META
   per_active: 1500 # Each active skill SKILL.md
-  max_total: 6000 # Cap for skill tokens
+  max_total: 12700 # Synced with manifest.yaml peak budget
 
 
 # =============================================================================

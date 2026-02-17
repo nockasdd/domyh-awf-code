@@ -71,12 +71,14 @@ capabilities: [Cap1, Cap2, Cap3]
 
 | Category  | Priority | Description                     |
 | --------- | -------- | ------------------------------- |
-| core      | 0        | Always-active skills (security) |
-| language  | 1        | Programming languages           |
-| framework | 2        | Frameworks (React, Vue, etc.)   |
-| devops    | 3        | Infrastructure tools            |
-| support   | 4        | Cross-cutting concerns          |
-| custom    | 5        | User-defined skills             |
+| core           | 0        | Always-active skills (security) |
+| language       | 1        | Programming languages           |
+| framework      | 2        | Frameworks (React, Vue, etc.)   |
+| devops         | 3        | Infrastructure tools            |
+| cross-cutting  | 4        | Cross-cutting concerns          |
+| tooling        | 5        | Developer tools (testing, CI)   |
+| ai-ml          | 5        | AI/ML patterns                  |
+| custom         | 6        | User-defined skills             |
 
 ---
 
@@ -177,7 +179,7 @@ keywords:
 ### Regenerate Embeddings
 
 ```bash
-python scripts/semantic_selector.py --generate
+python scripts/semantic_selector.py --generate  # NOTE: HSA future — not yet implemented
 ```
 
 ---

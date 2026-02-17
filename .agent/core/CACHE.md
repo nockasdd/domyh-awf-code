@@ -1,4 +1,4 @@
-# Session Cache v6.2.7
+# Session Cache v6.3.1
 
 ## Caching Strategy
 
@@ -48,7 +48,7 @@ ttl: 1800
 
 ```
 Target: < 10,000 tokens peak
-├── META.yaml baseline: 1,773 tokens
+├── META.yaml baseline: 2,200 tokens
 ├── Active skills (3×): 4,500 tokens
 ├── Current workflow: 500 tokens
 └── Buffer: 3,227 tokens

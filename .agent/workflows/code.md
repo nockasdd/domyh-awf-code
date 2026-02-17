@@ -1,6 +1,7 @@
 ---
 description: "💻 Write production-ready code, fix/improve existing projects, with proper error handling, types, and documentation"
 skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
+success_criteria: "Feature implemented, build passes, tests written"
 ---
 
 # 💻 /code — Code Pro
@@ -13,11 +14,10 @@ skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
 ## CODE FLOW
 
 1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect_stack`), load language skill via HSA (`hsa_get_context`, `hsa_search_skills`)
-   - **UI INTENT CHECK** (→ See FLOW.md §18.1):
-     Classify intent into T1 (Create) / T2 (Modify) / T3 (Design):
-     T1 (new UI, no existing ref) → Follow FLOW.md §18.2 Create Pipeline (12 steps)
-     T2 (modify existing UI) → Follow FLOW.md §18.3 Modify Pipeline (9 steps)
-     T3 (design-only, no code) → Route to /visualize (§18.4)
+   - **UI INTENT CHECK**: Classify intent:
+     T1 (Create new UI, no existing ref) → Load `domyh-design` skill → design tokens + accessibility guidelines
+     T2 (Modify existing UI) → Analyze existing components + design tokens → apply via `domyh-design` patterns
+     T3 (Design-only, no code) → Route to `/visualize`
      Auto-load: `domyh-design` + `tailwind` skills
      Auto-run: design system search → inject design tokens + platform guidelines
 2. **PLAN** — Break down into steps, identify dependencies → `hsa_prefetch` planned files → ⛔ STOP if major change (>50 lines). Show step count: `Plan: 4 steps, ~85 lines`
@@ -30,7 +30,7 @@ skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
    - [ ] Names follow language conventions?
    - [ ] No security anti-patterns (hardcoded secrets, raw SQL)?
    - → If issues found: fix silently before output
-   - **UI QUALITY GATE** (if UI intent detected → FLOW.md §18.2 A9):
+   - **UI QUALITY GATE** (if UI intent detected):
      Apply Visual QA Pipeline (score /100):
      L1. Accessibility (30pts): WCAG 2.2 AA, contrast ≥ 4.5:1, keyboard nav, focus visible
      L2. Visual Consistency (25pts): design tokens (no magic values), spacing rhythm, typography scale
@@ -44,7 +44,7 @@ skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
      - [ ] Dark mode: no pure black/white, CSS variables, prefers-color-scheme
      - [ ] SVG icons only (no emoji as icons)
      - [ ] Focus states visible, transitions 150-300ms
-5. **SYNC** — `hsa_check_changes` to update index, output summary of changes, confidence score (1-10), next steps. Persist key decisions to `.agent/memory/state.json`
+5. **SYNC** — `hsa_check_changes` to update index, `hsa_feedback` on key files used, output summary of changes, confidence score (1-10), next steps. Persist key decisions to `.agent/memory/state.json`
 
 ---
 
@@ -149,3 +149,19 @@ self_review:
 | 2     | Static Analysis | Snyk, SonarQube, ESLint; cyclomatic < 10   |
 | 3     | Self-Review     | Agent self-critique before delivery        |
 | 4     | Human Review    | Complex logic, security, infra, >100 lines |
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> Before delivering, apply `templates/reflection/critic.md`:
+> 1. Does output meet `success_criteria`?
+> 2. Confidence ≥ 7/10? If not, self-critique and revise
+> 3. On error → `templates/reflection/error_analysis.md`
+> 4. On success → `templates/reflection/success_analysis.md`
+
+---
+
+## 💾 SESSION SAVE
+
+After code completes: update `memory/CONTEXT_SNAPSHOT.md` (what was built, key decisions) and append summary to `memory/session.md`.

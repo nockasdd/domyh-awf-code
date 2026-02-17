@@ -1,10 +1,12 @@
 name: nim
-version: "6.2.7"
+version: "6.3.1"
 category: systems
 tier: 3
 
 desc: "Nim development patterns for Nim 2.2+. Types, macros, templates, effects, async, ARC/ORC, C FFI."
 
+triggers:
+  file_patterns:
     - "*.nim"
     - "*.nimble"
     - "nim.cfg"

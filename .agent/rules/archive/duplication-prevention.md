@@ -6,7 +6,7 @@ category: quality
 version: "4.5"
 ---
 
-# 🔄 Duplication Prevention v6.2.7
+# 🔄 Duplication Prevention v6.3.1
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📝 **Note**: Consolidates `code-deduplication.md` + `logic-duplication-check.md`

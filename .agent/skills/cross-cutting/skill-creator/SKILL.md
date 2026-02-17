@@ -1,3 +1,9 @@
+---
+name: skill-creator
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Skill Creator — DOMYH Awesome Code
 
 Guide for creating new domyh-awf skills with proper schema, progressive disclosure, and quality standards.
@@ -36,7 +42,7 @@ categories:
 ```yaml
 # Template — META.yaml v2
 name: my-skill # lowercase, hyphen-separated
-version: "6.2.7"
+version: "6.3.1"
 display: My Skill # Human-readable name
 category: cross-cutting # One of the 7 categories
 tier: 2 # 1=core, 2=standard, 3=specialized

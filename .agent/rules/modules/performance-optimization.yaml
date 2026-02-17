@@ -1,149 +1,58 @@
-# Performance Optimization Rule v6.2.7
-# Model selection, context management, token budget
-
+# Performance Optimization Rule v6.3.1
 ---
 name: performance-optimization
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-PERF-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Guidelines for performance optimization of AI agent operations:
-  model selection, context window management, token budget,
-  and efficient tool usage patterns.
-
+description: "Model selection, context management, and token budget optimization."
 category: "engineering"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: true
-  personas: ["all"]
-  workflows: ["all"]
 
-# =============================================================================
-# MODEL SELECTION
-# =============================================================================
+# --- MODEL SELECTION ---
 
 model_selection:
-  guidelines:
-    - scenario: "Simple code generation, formatting"
-      recommended: "Fast model (flash/mini)"
-      reason: "Low complexity, speed matters"
+  - scenario: "Simple code generation, formatting, data parsing"
+    recommended: "Fast model (flash/mini)"
+    reason: "Pattern matching, speed > reasoning"
+  - scenario: "Complex architecture, debugging, security review"
+    recommended: "Strong model (opus/pro)"
+    reason: "Requires deep multi-step reasoning"
+  - scenario: "Code review, refactoring, documentation"
+    recommended: "Balanced model (sonnet/standard)"
+    reason: "Good reasoning at reasonable cost"
 
-    - scenario: "Complex architecture, debugging"
-      recommended: "Strong model (opus/pro)"
-      reason: "Requires deep reasoning"
-
-    - scenario: "Code review, refactoring"
-      recommended: "Balanced model (sonnet/standard)"
-      reason: "Good reasoning at reasonable cost"
-
-    - scenario: "Data parsing, extraction"
-      recommended: "Fast model (flash/mini)"
-      reason: "Pattern matching, not reasoning"
-
-# =============================================================================
-# CONTEXT MANAGEMENT
-# =============================================================================
+# --- CONTEXT MANAGEMENT ---
 
 context_management:
-  principles:
-    - name: "Minimal Context"
-      rule: "Include only relevant files/sections"
-      anti_pattern: "Loading entire codebase into context"
+  - "Include only relevant files/sections — avoid loading entire codebase"
+  - "Start with file outline, load detail on-demand (progressive loading)"
+  - "Re-read files after edits before verification (context freshness)"
+  - "Summarize long context when approaching 60% of window capacity"
 
-    - name: "Progressive Loading"
-      rule: "Start with summary, load detail on demand"
-      technique: "Use file outline first, then view specific functions"
-
-    - name: "Context Freshness"
-      rule: "Re-read files that may have changed"
-      when: "After edits, before verification"
-
-    - name: "Compaction"
-      rule: "Summarize long context when approaching limits"
-      trigger: "Context exceeds 60% of window"
-
-# =============================================================================
-# TOKEN BUDGET
-# =============================================================================
+# --- TOKEN BUDGET ---
 
 token_budget:
-  allocation:
-    system_prompt: "10%"
-    skill_loading: "15%"
-    code_context: "40%"
-    reasoning: "25%"
-    output: "10%"
+  system_prompt: "10%"
+  skill_loading: "15%"
+  code_context: "40%"
+  reasoning: "25%"
+  output: "10%"
 
-  optimization:
-    - "Use view_file_outline before full file read"
-    - "Grep for specific patterns instead of reading entire files"
-    - "Load META.yaml (T1) before SKILL.md (T2)"
-    - "Limit data file reads to relevant sections"
-    - "Avoid loading ADVANCED.md (T3) unless referenced"
-
-# =============================================================================
-# EFFICIENT TOOL USAGE
-# =============================================================================
+# --- EFFICIENT TOOL USAGE ---
 
 tool_efficiency:
-  patterns:
-    - name: "Parallel tool calls"
-      rule: "Call independent tools in parallel"
-      example: "Read 3 files simultaneously"
-
-    - name: "Targeted search"
-      rule: "Use grep before listing/reading directories"
-      anti_pattern: "list_dir → view_file for every file"
-
-    - name: "Batch edits"
-      rule: "Use multi_replace for multiple edits in same file"
-      anti_pattern: "Separate edit calls for each change"
-
-    - name: "Early termination"
-      rule: "Stop searching after finding the answer"
-      anti_pattern: "Reading all files when first match suffices"
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Am I loading only necessary context?"
-  - "Could I use a lighter/faster model for this?"
-  - "Am I making parallel tool calls where possible?"
-  - "Have I used targeted search instead of browsing?"
-  - "Is my context within budget?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+  - "Call independent tools in parallel (e.g., read 3 files simultaneously)"
+  - "Use grep/search before listing/reading whole directories"
+  - "Use multi_replace for multiple edits in same file"
+  - "Stop searching after finding the answer (early termination)"
+  - "Use view_file_outline before full file reads"
+  - "Load META.yaml before SKILL.md before ADVANCED.md"
 
 integration:
   tier: 2
-  related_modules:
-    - yagni
-    - stop-conditions
-
-  reflection:
-    enabled: true
-    check_before: "tool_call"
-    question: "Is this the most efficient way to get the information I need?"
-
-  hsa_tools:
-    hsa_detect_stack:
-      purpose: "Determine available profiling and benchmark tools for the detected stack"
-      usage: "hsa_detect_stack → identifies runtime, framework, available perf tools"
-    hsa_get_context:
-      purpose: "Focus optimization efforts on the right code areas"
-      usage: "hsa_get_context query=[bottleneck|performance] → find related code for optimization"
+  related_modules: ["yagni", "stop-conditions"]
 
 ---
 _DOMYH Awesome Code • Performance Optimization Rule_

@@ -5,6 +5,7 @@ skills:
     required: [ci-cd],
     contextual: [docker, kubernetes, aws, terraform, gcp, azure],
   }
+success_criteria: "Deployed, health checks pass, monitoring stable for 15min"
 ---
 
 # 🚀 /deploy — Deploy Pro
@@ -195,3 +196,10 @@ checks:
 | `/deploy signoff`                | Stakeholder sign-off  |
 | `/deploy validate-prompts`       | AI prompt validation  |
 | `/rollback`                      | Rollback to previous  |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

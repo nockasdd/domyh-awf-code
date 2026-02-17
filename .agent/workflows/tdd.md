@@ -107,3 +107,10 @@ skills: { required: [tdd-workflow, testing], contextual: [auto] }
 📊 Coverage: 78% → 82% (+4%)
 ⏱️ Cycle time: 8 min
 ```
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

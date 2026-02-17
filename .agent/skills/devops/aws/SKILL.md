@@ -1,3 +1,9 @@
+---
+name: aws
+version: "6.3.1"
+category: infrastructure
+---
+
 # AWS Cloud Services
 
 AWS cloud services patterns for serverless, containers, and AI/ML. Covers Lambda, S3, ECS, EKS, Bedrock, and SageMaker.

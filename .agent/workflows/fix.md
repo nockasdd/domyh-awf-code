@@ -1,6 +1,7 @@
 ---
 description: "⚡ Quick-fix pipeline: capture error → identify → fix → verify (max 60s)"
 skills: { required: [error-handling], contextual: [auto] }
+success_criteria: "Error resolved, build passes, no regressions"
 ---
 
 # ⚡ /fix — Fix Pro
@@ -33,15 +34,15 @@ skills: { required: [error-handling], contextual: [auto] }
 
 ---
 
-## ⚡ vs 🐛 Khi nào dùng /fix vs /debug?
+## ⚡ vs 🐛 When to use /fix vs /debug?
 
 | Use `/fix` when                               | Use `/debug` when                        |
 | --------------------------------------------- | ---------------------------------------- |
-| Error message rõ ràng (compile, type, import) | Lỗi logic phức tạp, không rõ nguyên nhân |
-| Biết file nào lỗi                             | Runtime error intermittent               |
-| Fix đơn giản (< 10 lines)                     | Need root cause analysis                 |
-| Cần fix nhanh để unblock                      | Multiple files involved                  |
-| —                                             | `/fix` đã thử 2 lần vẫn fail             |
+| Clear error message (compile, type, import)   | Complex logic error, unclear root cause  |
+| Know which file has the error                  | Runtime error intermittent               |
+| Simple fix (< 10 lines)                        | Need root cause analysis                 |
+| Need quick fix to unblock                      | Multiple files involved                  |
+| —                                              | `/fix` failed after 2 attempts           |
 
 ---
 
@@ -59,13 +60,44 @@ skills: { required: [error-handling], contextual: [auto] }
 
 ---
 
-## 🎨 UI FIX CATEGORY (→ FLOW.md §18.6)\r\n\r\n| Category | Detect Pattern | Additional Steps |\r\n|-----------|---------------------------------------------|---------------------------------------|\r\n| CSS/Style | overflow, z-index, opacity, display, visible | Load design tokens, check dark mode |\r\n| Layout | flex/grid, position, float, alignment | Verify responsive (mobile + desktop) |\r\n| Color | color, background, gradient, contrast | Verify WCAG contrast ≥ 4.5:1 |\r\n| Font | font-size, line-height, font-family | Check typography scale compliance |\r\n| Animation | transition, transform, keyframes | Check prefers-reduced-motion |\r\n| Dark Mode | dark: prefix, color-scheme, theme toggle | Test both modes after fix |\r\n\r\nWhen UI fix detected → auto-load `domyh-design` skill, apply §18.6 additional verify.\r\n\r\n---\r\n\r\n## 🔄 ESCALATION
+## 🎨 UI FIX CATEGORY
 
-After 2 retries fail:
+| Category  | Detect Pattern                                | Additional Steps                      |
+| --------- | --------------------------------------------- | ------------------------------------- |
+| CSS/Style | overflow, z-index, opacity, display, visible  | Load design tokens, check dark mode   |
+| Layout    | flex/grid, position, float, alignment         | Verify responsive (mobile + desktop)  |
+| Color     | color, background, gradient, contrast         | Verify WCAG contrast ≥ 4.5:1         |
+| Font      | font-size, line-height, font-family           | Check typography scale compliance     |
+| Animation | transition, transform, keyframes              | Check prefers-reduced-motion          |
+| Dark Mode | dark: prefix, color-scheme, theme toggle      | Test both modes after fix             |
 
-- 1️⃣ Gọi `/debug` để phân tích sâu
-- 2️⃣ Thử cách khác
-- 3️⃣ Bỏ qua, làm tiếp
+When UI fix detected → auto-load `domyh-design` skill, apply UI quality checks (design tokens, responsive, dark mode, accessibility).
+
+---
+
+## 🔄 ESCALATION
+
+After 2 retries fail → activate **Progressive Escalation** (`rules/modules/progressive-escalation.yaml`):
+
+1. 🪞 **REFLECT** — List all attempts in a table (# | Approach | Result | Why fail). Check 3 biases: Confirmation (only seeking supporting evidence?), Anchoring (same hypothesis unchanged?), Tunnel Vision (only modifying code, ignoring config/env/deps?)
+2. 🔄 **REFRAME** — Invert: "If ALL code is correct, where does the bug come from?" Rubber Duck: explain expected vs actual flow step-by-step. Devil's Advocate: "Could my fix cause NEW problems?"
+3. 🔍 **WIDEN** — Checklist: code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓. Run: `git log --oneline -10` for recent changes, check lockfile versions, verify env variables
+4. 🧩 **DECOMPOSE** — Create minimal reproduction (smallest code that triggers bug). Binary search: comment out half the code, narrow to exact line
+5. 👤 **ESCALATE** — Full report to user: error message, all attempts tried, evidence collected, 2-3 recommended actions
+
+> Use `templates/reflection/pivot_analysis.md` for structured analysis at each level.
+> Check episodic memory (`.domyh/debug/episodic_memory.yaml`) before retrying.
+
+---
+
+## 💡 EXAMPLE
+
+<example>
+User: "TypeError: Cannot read properties of undefined at auth.ts:42"
+→ DETECT: Null reference in `user.session` at auth.ts:42
+→ FIX: Add optional chaining: `user?.session?.token`
+→ VERIFY: Build ✅ | Tests ✅ (auth.test.ts: 12/12)
+</example>
 
 ---
 
@@ -74,3 +106,17 @@ After 2 retries fail:
 - Max changed files: 3
 - Max changed lines: 30
 - Require confirmation if: > 3 files, > 30 lines, modifies test/config files
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After verify step, apply `templates/reflection/critic.md`:
+> 1. Error actually resolved (not just suppressed)?
+> 2. On 2nd retry failure → `templates/reflection/error_analysis.md` before escalation
+
+---
+
+## 💾 SESSION SAVE
+
+After fix completes: update `memory/CONTEXT_SNAPSHOT.md` (what was fixed, approach) and append summary to `memory/session.md`.

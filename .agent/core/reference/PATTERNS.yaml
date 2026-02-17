@@ -1,5 +1,5 @@
 # DOMYH Awesome Code — Shared Patterns Library
-# Version: 5.5
+# Version: 6.3.1
 # Purpose: Reduce token duplication across workflows
 
 # =============================================================================
@@ -68,7 +68,7 @@ stack_detection:
 
   # .NET
   dotnet:
-    files: ["*.csproj", "*.sln", "*.fsproj"]
+    files: ["*.csproj", "*.slnx", "*.sln", "*.fsproj"]
     extensions: [".cs", ".fs"]
     commands: ["dotnet"]
 
@@ -177,9 +177,9 @@ token_saving:
     - "Focus on current phase only"
     - "Unload completed context"
 
-  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.2.7 cleanup)
+  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.3.1 cleanup)
   thresholds:
-    reference: core/TOKEN_BUDGETS.yaml
+    reference: archive/TOKEN_BUDGETS.yaml
     use:
       warning: workflow.thresholds.high_load # 8000
       critical: workflow.thresholds.peak_usage # 12000

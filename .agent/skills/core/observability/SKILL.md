@@ -1,3 +1,9 @@
+---
+name: observability
+version: "6.3.1"
+category: core
+---
+
 # 🔭 Observability Skill v1.0
 
 > **400+ Patterns** | **12 Languages** | **OpenTelemetry Standard**

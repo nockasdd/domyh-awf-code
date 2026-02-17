@@ -1,3 +1,9 @@
+---
+name: monorepo
+version: "6.3.1"
+category: cross-cutting
+---
+
 # 📦 Monorepo Management
 
 > Patterns for multi-package repository management

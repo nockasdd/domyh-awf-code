@@ -1,3 +1,9 @@
+---
+name: ci-cd
+version: "6.3.1"
+category: infrastructure
+---
+
 # CI/CD Pipelines
 
 CI/CD pipeline patterns for GitHub Actions, GitLab CI, and GitOps. Includes SLSA Build Level 3, ARM64 runners, security scanning.

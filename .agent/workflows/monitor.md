@@ -132,3 +132,10 @@ skills: { required: [observability, logging], contextual: [auto] }
 | CPU usage           | > 70%   | > 90%    |
 | Memory usage        | > 80%   | > 95%    |
 | Disk usage          | > 75%   | > 90%    |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -1,3 +1,9 @@
+---
+name: authentication
+version: "6.3.1"
+category: core
+---
+
 # Authentication Skill v1.0
 
 > **370+ Patterns** | **12 Languages** | **OAuth 2.1 + Passkeys**

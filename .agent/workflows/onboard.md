@@ -142,3 +142,10 @@ graph TD
 | Security Vulns | 0 critical | moderate   | critical    |
 | Build Time     | < 30s      | 30-60s     | > 60s       |
 | Bundle Size    | < 200KB    | 200-500KB  | > 500KB     |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

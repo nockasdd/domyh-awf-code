@@ -1,3 +1,9 @@
+---
+name: api-design
+version: "6.3.1"
+category: core
+---
+
 # 🔗 API Design Patterns
 
 > Comprehensive patterns for REST, GraphQL, and gRPC API design

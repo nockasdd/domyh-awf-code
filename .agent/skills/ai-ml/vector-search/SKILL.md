@@ -1,3 +1,9 @@
+---
+name: vector-search
+version: "6.3.1"
+category: ai-ml
+---
+
 # Vector Search & Embeddings
 
 > Vector databases • Semantic search • Hybrid retrieval  

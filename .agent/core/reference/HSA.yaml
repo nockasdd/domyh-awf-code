@@ -10,8 +10,8 @@
 # SYSTEM OVERVIEW
 # =============================================================================
 
-version: "1.0.0"
-codename: "Context Mesh"
+version: "6.3.1"
+codename: "SSoT & Hygiene"
 architecture: "CANSH v2.0" # Context-Aware Neural-Symbolic Hierarchy
 
 description: |
@@ -299,7 +299,7 @@ metrics:
 # =============================================================================
 
 modules:
-  base_path: ".agent/scripts/hsa"
+  base_path: ".agent/scripts/hsa" # NOTE: aspirational — dir not yet created
 
   # Core v1.0.0 modules
   files:

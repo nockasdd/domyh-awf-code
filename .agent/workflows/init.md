@@ -146,3 +146,10 @@ P6: Production — Dockerfile, CI/CD, health checks, deploy config
 | `/init templates`              | List templates            |
 | `/init --level [1\|2\|3]`      | Basic/Standard/Enterprise |
 | `/init --monorepo [turbo\|nx]` | Create monorepo           |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

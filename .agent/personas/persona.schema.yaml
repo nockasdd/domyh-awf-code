@@ -1,9 +1,9 @@
-# Persona Schema v6.0
+# Persona Schema v6.3.1
 # Based on CrewAI + Anthropic + LangGraph patterns
 # All personas must follow this structure
 
 schema:
-  version: "6.2.7"
+  version: "6.3.1"
 
   required_fields:
     - name # Unique identifier
@@ -15,11 +15,11 @@ schema:
   optional_fields:
     - persona_id # UUID for tracking
     - traits # Behavioral traits
-    - capabilities # Cognitive capabilities
-    - memory # Memory integration
-    - tools # Tool permissions
+    - methodology # Domain-specific methods
+    - workflow # Step-by-step process
+    - constraints # Must/must-not rules
     - collaboration # Multi-agent patterns
-    - output # Output configuration
+    - checklists # Domain checklists (e.g. OWASP)
 
 # =============================================================================
 # IDENTITY BLOCK (CrewAI Pattern)
@@ -38,13 +38,13 @@ identity:
       description: "Primary objective"
       example: "Write clean, maintainable, production-ready code"
 
-    backstory:
-      type: string
-      multiline: true
-      description: "Background and expertise that shapes behavior"
-      example: |
-        You are a senior developer with 15+ years of experience.
-        You've worked on large-scale systems and believe in clean code.
+    approach:
+      type: list
+      description: "Key behavioral principles (replaces verbose backstory)"
+      example:
+        - "Code review before merge"
+        - "Write tests first"
+        - "Evidence-based decisions"
 
 # =============================================================================
 # TRAITS BLOCK (Anthropic Pattern)

@@ -1,167 +1,77 @@
-# YAGNI Enforcement Rule v6.0
-# Modular rule for You Aren't Gonna Need It principle
-
+# YAGNI Enforcement Rule v6.3.1
 ---
-name: yagni-enforcement
-version: "6.2.7"
+name: yagni
+version: "6.3.1"
 rule_id: "MOD-YAG-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Enforce YAGNI (You Aren't Gonna Need It) principle to prevent over-engineering.
-  Only implement what is explicitly requested.
-
-category: "engineering"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
+description: "You Aren't Gonna Need It — prevent premature abstraction and over-engineering."
+category: "quality"
 
 context:
   always_apply: true
-  personas: ["developer", "planner", "architect"]
-  workflows: ["/code", "/plan", "/refactor"]
+  personas: ["developer", "planner"]
 
-# =============================================================================
-# CORE PRINCIPLE
-# =============================================================================
+# --- CORE PRINCIPLE ---
 
-core_principle:
-  name: "YAGNI - You Aren't Gonna Need It"
-  description: |
-    Don't implement features or abstractions until they are actually needed.
-    Premature optimization and over-engineering waste time and add complexity.
+principle: "Build only what is explicitly requested. Defer everything else."
 
-# =============================================================================
-# DETECTION TRIGGERS
-# =============================================================================
+# --- YAGNI VIOLATIONS ---
 
-triggers:
-  phrases_to_watch:
-    - "we might need"
-    - "in the future"
-    - "just in case"
-    - "it would be nice to"
-    - "for extensibility"
-    - "for flexibility"
-    - "potential use case"
+violations:
+  - name: "Premature Abstraction"
+    signs:
+      [
+        "Creating interfaces before second implementation",
+        "Generic factory for single type",
+        "Abstract base for one subclass",
+      ]
+    fix: "Start concrete, abstract when pattern emerges (Rule of Three)"
 
-  patterns_to_avoid:
-    - description: "Creating interfaces/abstractions for single implementations"
-      example: "IUserService when only UserService exists"
+  - name: "Speculative Generality"
+    signs:
+      [
+        "Adding parameters 'for future use'",
+        "Building plugin system before need",
+        "Supporting formats not yet required",
+      ]
+    fix: "Implement only current requirements. Future is uncertain."
 
-    - description: "Adding unused parameters"
-      example: "options: Options = {} that's never used"
+  - name: "Gold Plating"
+    signs:
+      [
+        "Adding features not requested",
+        "Over-optimizing before profiling",
+        "Building admin UI before core logic",
+      ]
+    fix: "Ship the simplest working solution first."
 
-    - description: "Building plugin systems for internal tools"
-      example: "Dynamic loading when static import works"
+  - name: "Premature Optimization"
+    signs:
+      [
+        "Caching before measuring",
+        "Async before bottleneck identified",
+        "Custom data structures for small data",
+      ]
+    fix: "Measure first, optimize only proven bottlenecks."
 
-    - description: "Creating configuration for values that never change"
-      example: "Config file for hardcoded constants"
+# --- ALLOWED EXCEPTIONS ---
 
-# =============================================================================
-# ACCEPTABLE PREPARATIONS
-# =============================================================================
+exceptions:
+  - "Security hardening — always apply regardless of request"
+  - "Error handling — always handle errors properly"
+  - "Accessibility — always build accessible UIs"
+  - "Data validation — always validate inputs"
 
-acceptable:
-  always_ok:
-    - "Proper error handling"
-    - "Basic security measures"
-    - "Standard logging"
-    - "Type definitions"
-    - "Unit tests"
+# --- DECISION FRAMEWORK ---
 
-  conditionally_ok:
-    - condition: "If explicitly requested"
-      examples: ["API versioning", "Multi-tenant support"]
-
-    - condition: "If required by framework"
-      examples: ["Interface implementation", "Dependency injection"]
-
-    - condition: "If standard practice in ecosystem"
-      examples: ["DTOs", "Repository pattern in heavy ORM usage"]
-
-# =============================================================================
-# DECISION FRAMEWORK
-# =============================================================================
-
-decision_framework:
-  ask_before_implementing:
-    - "Is this explicitly requested?"
-    - "Is this required to complete the task?"
-    - "Does the immediate use case need this?"
-    - "Can this be added later if needed?"
-
-  if_all_no:
-    action: "Don't implement"
-    template: |
-      💡 Noticing opportunity for {feature}.
-      Should I add this now or keep it simple for current needs?
-
-# =============================================================================
-# REFACTORING EXCEPTIONS
-# =============================================================================
-
-refactoring_exceptions:
-  when_ok_to_abstract:
-    - "Clear duplication (3+ occurrences)"
-    - "Performance bottleneck proven by profiling"
-    - "Security vulnerability"
-    - "User explicitly requests"
-
-  not_ok:
-    - "Theoretical future need"
-    - "Best practice without context"
-    - "Making code more 'elegant'"
-
-# =============================================================================
-# OUTPUT TEMPLATES
-# =============================================================================
-
-templates:
-  minimal_implementation: |
-    ✅ Implemented: {feature}
-
-    Kept simple because:
-    - Meets current requirements
-    - Can be extended later if needed
-    - Avoids unnecessary complexity
-
-  abstraction_question: |
-    💡 YAGNI Check
-
-    I could add {abstraction} for {reason}.
-
-    Current implementation works and is simpler.
-    Add this now? (yes/no/later):
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Only implementing what's requested?"
-  - "No speculative features?"
-  - "Abstractions have concrete use cases?"
-  - "Can be simplified further?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+decision:
+  ask: "Is this explicitly in the requirements?"
+  yes: "Build it with the simplest approach that works"
+  no: "Skip it — document as future consideration if relevant"
 
 integration:
-  tier: 2 # Execution tier
-  related_modules:
-    - quality
-    - stop-conditions
-
-  reflection:
-    enabled: true
-    check_before: "implementation"
-    question: "Am I adding more than what's needed?"
+  tier: 2
+  related_modules: ["quality", "stop-conditions"]
 
 ---
 _DOMYH Awesome Code • YAGNI Enforcement Rule_

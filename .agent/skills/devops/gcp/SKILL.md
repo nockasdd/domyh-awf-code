@@ -1,3 +1,9 @@
+---
+name: gcp
+version: "6.3.1"
+category: devops
+---
+
 # GCP Cloud Services
 
 Google Cloud Platform patterns for compute, data, and AI/ML. Covers Cloud Run, GKE, Cloud Functions, Firestore, Vertex AI.

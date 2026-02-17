@@ -13,7 +13,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { glob } from "node:fs";
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -86,7 +86,7 @@ function collectFiles(rootDir) {
   const results = [];
   const SKIP = new Set([
     "node_modules", ".git", "dist", "build", ".next", "__pycache__",
-    ".turbo", ".cache", "coverage",
+    ".turbo", ".cache", "coverage", "archive",
   ]);
 
   function walk(dir) {
@@ -117,19 +117,54 @@ function collectFiles(rootDir) {
 function replaceInFile(filePath, oldVer, newVer) {
   const content = fs.readFileSync(filePath, "utf-8");
 
+  // === GUARD: Skip VERSION.yaml changelog & sync sections ===
+  // The changelog contains historical versions that must remain immutable.
+  // The sync section has its own schema version ("1.0.0").
+  const isVersionYaml = filePath.endsWith("VERSION.yaml");
+  let processedContent = content;
+
+  if (isVersionYaml) {
+    // Only replace versions in the system/components section (before changelog)
+    const changelogIdx = content.indexOf("\nchangelog:");
+    if (changelogIdx > 0) {
+      const before = content.substring(0, changelogIdx);
+      const after = content.substring(changelogIdx);
+      const escaped = oldVer.replace(/\./g, "\\.");
+      const regex = new RegExp(`(?<!\\d)${escaped}(?!\\d)`, "g");
+      const vPrefixRegex = new RegExp(`(?<!\\w)v${escaped}(?!\\d)`, "g");
+      const matches = before.match(regex) || [];
+      const vMatches = before.match(vPrefixRegex) || [];
+      const totalMatches = matches.length + vMatches.length;
+      if (totalMatches === 0) return 0;
+      let updated = before.replace(regex, newVer);
+      updated = updated.replace(vPrefixRegex, `v${newVer}`);
+      processedContent = updated + after;
+      if (!dryRun) fs.writeFileSync(filePath, processedContent, "utf-8");
+      return totalMatches;
+    }
+  }
+
   // Use word-boundary-like matching to avoid partial replacements
   // e.g., don't match "16.2.5" or "6.2.50"
   const escaped = oldVer.replace(/\./g, "\\.");
-  const regex = new RegExp(escaped, "g");
+  const regex = new RegExp(`(?<!\\d)${escaped}(?!\\d)`, "g");
 
-  const matches = content.match(regex);
-  if (!matches || matches.length === 0) return 0;
+  // Also match v-prefixed versions (v6.2.7 → v6.3.0)
+  // This catches persona .md frontmatter, YAML comments, IDE JSON, footers
+  const vPrefixRegex = new RegExp(`(?<!\\w)v${escaped}(?!\\d)`, "g");
 
-  const newContent = content.replace(regex, newVer);
+  // Count v-prefixed first (more specific), then bare excluding v-prefixed
+  const vMatches = content.match(vPrefixRegex) || [];
+  const bareOnly = content.replace(vPrefixRegex, "___VPREFIX___").match(regex) || [];
+  const totalMatches = bareOnly.length + vMatches.length;
+  if (totalMatches === 0) return 0;
+
+  let newContent = content.replace(regex, newVer);
+  newContent = newContent.replace(vPrefixRegex, `v${newVer}`);
   if (!dryRun) {
     fs.writeFileSync(filePath, newContent, "utf-8");
   }
-  return matches.length;
+  return totalMatches;
 }
 
 // ── Main ────────────────────────────────────────────────────

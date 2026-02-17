@@ -111,3 +111,10 @@ test.describe("User Login Flow", () => {
 | Clean up after tests            | Avoid inter-test dependencies  |
 | Run in CI with retries          | Handle flakiness               |
 | Screenshot on failure           | Visual debugging               |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

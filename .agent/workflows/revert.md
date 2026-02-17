@@ -74,7 +74,7 @@ skills: { required: [], contextual: [] }
 
 - Backup before reverting
 - Forward-only migrations preferred (add new, don't drop)
-- Never: drop column, rename column, change type without backup
+- Require backup before: drop column, rename column, change type
 
 ---
 
@@ -97,3 +97,10 @@ skills: { required: [], contextual: [] }
 | `:latest`    | `v1.2.3` (semver)               |
 | `:stable`    | `2026-02-01-abc123` (date+hash) |
 | Mutable tags | `sha-abc123def` (git SHA)       |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

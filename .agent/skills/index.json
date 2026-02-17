@@ -1,7 +1,7 @@
 {
-  "version": "6.2.7",
+  "version": "6.3.1",
   "changelog": [
-    "v6.2.7: Added 15 new skills across 2 new categories (tooling, ai-ml)",
+    "v6.3.0: Added 15 new skills across 2 new categories (tooling, ai-ml)",
     "Migrated prompt-engineering + rag-patterns from cross-cutting → ai-ml",
     "New: mcp, api-protocols, ide-extension, cli-dev, browser-agent (tooling)",
     "New: ai-agents, vector-search, gemini-media-gen, gemini-tts, gemini-live (ai-ml)",
@@ -9,17 +9,15 @@
     "New: tauri, real-time, wasm, event-driven, playwright (cross-cutting)",
     "Smart routing via _router.yaml",
     "Token savings: 90% baseline reduction (5,100 → 500)",
-    "82 total skills organized into 7 categories"
+    "83 total skills organized into 7 categories"
   ],
   "schema": "hierarchical",
-  "total": 82,
-
+  "total": 83,
   "tiers": {
     "T1_META": "META.yaml (~100 tokens) - Always available",
     "T2_SKILL": "SKILL.md (~1500 tokens) - On-demand",
     "T3_ADVANCED": "ADVANCED.md (~4000 tokens) - Referenced only"
   },
-
   "categories": {
     "core": {
       "description": "Core patterns - security, API, errors, logging, observability, auth",
@@ -107,7 +105,7 @@
       "description": "Cross-cutting concerns and utilities",
       "path": "skills/cross-cutting/",
       "priority": 4,
-      "count": 21,
+      "count": 22,
       "skills": [
         "testing",
         "database",
@@ -129,7 +127,8 @@
         "tauri",
         "real-time",
         "wasm",
-        "playwright"
+        "playwright",
+        "skill-creator"
       ]
     },
     "tooling": {
@@ -161,7 +160,6 @@
       ]
     }
   },
-
   "skills": [
     {
       "id": "security",
@@ -199,13 +197,16 @@
       "category": "core",
       "always_load_meta": true
     },
-
     {
       "id": "python",
       "path": "skills/languages/python/",
       "category": "languages"
     },
-    { "id": "go", "path": "skills/languages/go/", "category": "languages" },
+    {
+      "id": "go",
+      "path": "skills/languages/go/",
+      "category": "languages"
+    },
     {
       "id": "typescript",
       "path": "skills/languages/typescript/",
@@ -216,10 +217,26 @@
       "path": "skills/languages/javascript/",
       "category": "languages"
     },
-    { "id": "rust", "path": "skills/languages/rust/", "category": "languages" },
-    { "id": "cpp", "path": "skills/languages/cpp/", "category": "languages" },
-    { "id": "c", "path": "skills/languages/c/", "category": "languages" },
-    { "id": "java", "path": "skills/languages/java/", "category": "languages" },
+    {
+      "id": "rust",
+      "path": "skills/languages/rust/",
+      "category": "languages"
+    },
+    {
+      "id": "cpp",
+      "path": "skills/languages/cpp/",
+      "category": "languages"
+    },
+    {
+      "id": "c",
+      "path": "skills/languages/c/",
+      "category": "languages"
+    },
+    {
+      "id": "java",
+      "path": "skills/languages/java/",
+      "category": "languages"
+    },
     {
       "id": "kotlin",
       "path": "skills/languages/kotlin/",
@@ -230,23 +247,51 @@
       "path": "skills/languages/csharp/",
       "category": "languages"
     },
-    { "id": "ruby", "path": "skills/languages/ruby/", "category": "languages" },
-    { "id": "php", "path": "skills/languages/php/", "category": "languages" },
+    {
+      "id": "ruby",
+      "path": "skills/languages/ruby/",
+      "category": "languages"
+    },
+    {
+      "id": "php",
+      "path": "skills/languages/php/",
+      "category": "languages"
+    },
     {
       "id": "swift",
       "path": "skills/languages/swift/",
       "category": "languages"
     },
-    { "id": "perl", "path": "skills/languages/perl/", "category": "languages" },
-    { "id": "lua", "path": "skills/languages/lua/", "category": "languages" },
-    { "id": "asm", "path": "skills/languages/asm/", "category": "languages" },
-    { "id": "nim", "path": "skills/languages/nim/", "category": "languages" },
+    {
+      "id": "perl",
+      "path": "skills/languages/perl/",
+      "category": "languages"
+    },
+    {
+      "id": "lua",
+      "path": "skills/languages/lua/",
+      "category": "languages"
+    },
+    {
+      "id": "asm",
+      "path": "skills/languages/asm/",
+      "category": "languages"
+    },
+    {
+      "id": "nim",
+      "path": "skills/languages/nim/",
+      "category": "languages"
+    },
     {
       "id": "crystal",
       "path": "skills/languages/crystal/",
       "category": "languages"
     },
-    { "id": "zig", "path": "skills/languages/zig/", "category": "languages" },
+    {
+      "id": "zig",
+      "path": "skills/languages/zig/",
+      "category": "languages"
+    },
     {
       "id": "haskell",
       "path": "skills/languages/haskell/",
@@ -277,7 +322,11 @@
       "path": "skills/languages/ocaml/",
       "category": "languages"
     },
-    { "id": "r", "path": "skills/languages/r/", "category": "languages" },
+    {
+      "id": "r",
+      "path": "skills/languages/r/",
+      "category": "languages"
+    },
     {
       "id": "julia",
       "path": "skills/languages/julia/",
@@ -288,13 +337,16 @@
       "path": "skills/languages/solidity/",
       "category": "languages"
     },
-
     {
       "id": "react",
       "path": "skills/frameworks/react/",
       "category": "frameworks"
     },
-    { "id": "vue", "path": "skills/frameworks/vue/", "category": "frameworks" },
+    {
+      "id": "vue",
+      "path": "skills/frameworks/vue/",
+      "category": "frameworks"
+    },
     {
       "id": "angular",
       "path": "skills/frameworks/angular/",
@@ -325,23 +377,41 @@
       "path": "skills/frameworks/react-native/",
       "category": "frameworks"
     },
-
-    { "id": "docker", "path": "skills/devops/docker/", "category": "devops" },
+    {
+      "id": "docker",
+      "path": "skills/devops/docker/",
+      "category": "devops"
+    },
     {
       "id": "kubernetes",
       "path": "skills/devops/kubernetes/",
       "category": "devops"
     },
-    { "id": "aws", "path": "skills/devops/aws/", "category": "devops" },
-    { "id": "ci-cd", "path": "skills/devops/ci-cd/", "category": "devops" },
+    {
+      "id": "aws",
+      "path": "skills/devops/aws/",
+      "category": "devops"
+    },
+    {
+      "id": "ci-cd",
+      "path": "skills/devops/ci-cd/",
+      "category": "devops"
+    },
     {
       "id": "terraform",
       "path": "skills/devops/terraform/",
       "category": "devops"
     },
-    { "id": "gcp", "path": "skills/devops/gcp/", "category": "devops" },
-    { "id": "azure", "path": "skills/devops/azure/", "category": "devops" },
-
+    {
+      "id": "gcp",
+      "path": "skills/devops/gcp/",
+      "category": "devops"
+    },
+    {
+      "id": "azure",
+      "path": "skills/devops/azure/",
+      "category": "devops"
+    },
     {
       "id": "testing",
       "path": "skills/cross-cutting/testing/",
@@ -447,8 +517,11 @@
       "path": "skills/cross-cutting/playwright/",
       "category": "cross-cutting"
     },
-
-    { "id": "mcp", "path": "skills/tooling/mcp/", "category": "tooling" },
+    {
+      "id": "mcp",
+      "path": "skills/tooling/mcp/",
+      "category": "tooling"
+    },
     {
       "id": "api-protocols",
       "path": "skills/tooling/api-protocols/",
@@ -469,7 +542,6 @@
       "path": "skills/tooling/browser-agent/",
       "category": "tooling"
     },
-
     {
       "id": "ai-agents",
       "path": "skills/ai-ml/ai-agents/",
@@ -506,7 +578,6 @@
       "category": "ai-ml"
     }
   ],
-
   "aliases": {
     "_comment": "Backward compatibility: flat skill names → hierarchical paths",
     "python": "languages/python",
@@ -525,12 +596,11 @@
     "gcp": "devops/gcp",
     "azure": "devops/azure"
   },
-
   "token_budget": {
     "router_baseline": "500 tokens (router + core META)",
     "per_detected_skill": "100 tokens (META only)",
     "per_active_skill": "1,500 tokens (SKILL.md)",
-    "max_active": 5,
-    "peak_estimate": "500 + (5 × 1,500) = 8,000 tokens"
+    "max_active": 3,
+    "peak_estimate": "500 + (3 × 1,500) = 5,000 tokens"
   }
 }

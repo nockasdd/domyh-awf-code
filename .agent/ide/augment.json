@@ -1,32 +1,48 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": v6.2.7,
+  "version": "v6.3.1",
   "ide": "Augment Code",
   "value": "augment",
-
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/fix"],
+    "triggers": [
+      "/ap",
+      "/code",
+      "/debug",
+      "/deploy",
+      "/dev",
+      "/doc",
+      "/fix",
+      "/git",
+      "/hsa",
+      "/init",
+      "/plan",
+      "/refactor",
+      "/review",
+      "/security",
+      "/status",
+      "/test"
+    ],
     "auto_context": true
   },
-
   "skills": {
     "loading": "progressive",
     "max_active": 3
   },
-
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.0.0 Context Management",
+      "description": "HSA v1.2.8 Context Management",
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest"],
+      "args": [
+        "-y",
+        "@nockdev/hsa@1.2.8"
+      ],
       "auto_start": true,
-      "env": {        
+      "env": {
         "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }
     }
   },
-
   "config_files": {
     "settings": "~/.augment/settings.json",
     "mcp_key": "mcp",

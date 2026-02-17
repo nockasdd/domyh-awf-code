@@ -8,7 +8,7 @@ category: security
 # 🛡️ Prompt Injection Guard
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
-> 📚 **Based on**: CVE-2025-53773, CVE-2025-32711
+> 📚 **Based on**: Prompt injection attack patterns (⚠️ CVE-2025-53773, CVE-2025-32711 are unverified placeholders — not found in public CVE databases)
 
 ## Description
 
@@ -18,7 +18,7 @@ Critical security rules to prevent prompt injection attacks.
 
 ## 🔴 CRITICAL VULNERABILITY
 
-### CVE-2025-53773 - Remote Code Execution
+### Prompt Injection → RCE (ref: CVE-2025-53773 — unverified)
 
 ```
 ⚠️ CRITICAL SECURITY ALERT

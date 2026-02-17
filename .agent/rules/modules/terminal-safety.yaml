@@ -1,273 +1,80 @@
-# Terminal Safety Rule v6.0
-# Modular rule for terminal command safety
-
+# Terminal Safety Rule v6.3.1
 ---
 name: terminal-safety
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-TRM-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Rules to prevent terminal execution errors based on documented agent failures.
-  Based on AI Agent Error Research 2024-2025.
-
+description: "Safe terminal command execution patterns and platform-aware syntax."
 category: "safety"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: true
-  personas: ["developer", "debugger", "devops", "tester"]
-  workflows: ["*"]
+  personas: ["developer", "devops"]
 
-# =============================================================================
-# PRE-FLIGHT CHECKS
-# =============================================================================
+# --- CORE PRINCIPLES ---
 
-pre_flight:
-  always_check:
-    - name: "Working Directory"
-      command_ps: "$PWD"
-      command_bash: "pwd"
-      purpose: "Verify current directory"
+principles:
+  - "Detect shell (PowerShell/Bash/CMD) before generating commands"
+  - "Use shell-specific chaining syntax (PS5: semicolons, Bash: &&)"
+  - "Confirm with user before running destructive commands"
+  - "Prefer non-interactive flags (--yes, -y) for scripted operations"
+  - "Set reasonable timeouts for long-running commands"
 
-    - name: "Environment"
-      command_ps: "$PSVersionTable.PSVersion"
-      command_bash: "uname -a"
-      purpose: "Verify OS/shell"
-
-    - name: "Runtime Versions"
-      commands:
-        node: "node -v"
-        go: "go version"
-        python: "python --version"
-      purpose: "Verify tool versions"
-
-  environment_detection:
-    wsl:
-      indicators: ["/mnt/", "WSL_DISTRO_NAME"]
-      action: "Use Linux commands"
-    remote:
-      indicators: ["SSH_CONNECTION", "REMOTE_CONTAINERS"]
-      action: "Note remote execution"
-
-# =============================================================================
-# TIMEOUT RULES
-# =============================================================================
-
-timeout:
-  no_output_warning: 60 # Seconds without output
-  force_stop: 180 # Maximum total time
-  interactive_detected: "warn_and_wait"
-
-  actions:
-    on_hang: |
-      ⏸️ Command timeout (no output for 60s)
-
-      Options:
-      1️⃣ Wait longer
-      2️⃣ Cancel command
-      3️⃣ Check for prompts
-
-# =============================================================================
-# DANGEROUS COMMANDS
-# =============================================================================
+# --- DANGEROUS COMMANDS ---
 
 dangerous_commands:
-  always_confirm:
-    - pattern: "rm -rf"
-      impact: "Recursive delete"
-      reversible: false
-    - pattern: "rm -r"
-      impact: "Recursive delete"
-      reversible: false
-    - pattern: "drop table"
-      impact: "Delete database table"
-      reversible: false
-    - pattern: "truncate"
-      impact: "Delete all data"
-      reversible: false
-    - pattern: "git reset --hard"
-      impact: "Discard all changes"
-      reversible: false
-    - pattern: "git push --force"
-      impact: "Overwrite remote history"
-      reversible: "with reflog"
-    - pattern: "docker system prune"
-      impact: "Remove all unused data"
-      reversible: false
-    - pattern: "npm publish"
-      impact: "Publish to registry"
-      reversible: false
+  require_confirmation:
+    - pattern: "rm -rf|Remove-Item -Recurse|del /s"
+      reason: "Recursive deletion"
+    - pattern: "DROP TABLE|DROP DATABASE|TRUNCATE"
+      reason: "Data destruction"
+    - pattern: "chmod 777|icacls /grant Everyone"
+      reason: "Insecure permissions"
+    - pattern: "curl.*| sh|wget.*| bash"
+      reason: "Remote code execution"
+    - pattern: "force push|--force"
+      reason: "History rewrite"
+    - pattern: "> /dev/null 2>&1|*> $null"
+      reason: "Output suppression hides errors"
 
-  confirmation_template: |
-    ⚠️ DANGEROUS COMMAND DETECTED
+  always_blocked:
+    - pattern: ":(){ :|:& };:|fork bomb"
+      reason: "System crash"
+    - pattern: "mkfs|format [A-Z]:"
+      reason: "Disk format"
 
-    Command: {command}
-    Impact: {impact}
-    Reversible: {reversible}
+# --- SHELL SYNTAX REFERENCE ---
 
-    Proceed? (y/n):
+shell_syntax:
+  chaining:
+    powershell_5: "cmd1; cmd2"
+    powershell_7: "cmd1 && cmd2"
+    bash: "cmd1 && cmd2"
+    cmd: "cmd1 & cmd2"
 
-# =============================================================================
-# ANTI-LOOP PROTECTION
-# =============================================================================
+  path_separator:
+    windows: "\\"
+    unix: "/"
 
-anti_loop:
-  max_retries: 2
-  same_command_interval: 60 # seconds
+  env_vars:
+    powershell: "$env:VAR"
+    bash: "$VAR"
+    cmd: "%VAR%"
 
-  on_loop_detected: |
-    🔁 LOOP DETECTED
+# --- SAFE PATTERNS ---
 
-    Command `{command}` failed {count} times.
-    Errors: {errors}
-
-    Options:
-    1️⃣ Try with elevated permissions
-    2️⃣ Clear cache and retry
-    3️⃣ Manual intervention
-
-    Enter number:
-
-# =============================================================================
-# PROTECTED FILES
-# =============================================================================
-
-protected_files:
-  patterns:
-    - ".env*"
-    - "*.config.*"
-    - "docker-compose*.yml"
-    - "Makefile"
-    - "*.sql"
-    - "package.json"
-    - "go.mod"
-    - "requirements.txt"
-    - ".git*"
-
-  procedure:
-    1_notify: "Explain what will be done"
-    2_reason: "Why it's needed"
-    3_impact: "Consequences if done"
-    4_wait: "Wait for user confirmation"
-
-# =============================================================================
-# OUTPUT VERIFICATION
-# =============================================================================
-
-output_verification:
-  exit_codes:
-    0: "success"
-    non_zero: "investigate"
-
-  no_output_action: "Check for shell issues"
-
-  always_show:
-    - exit_code
-    - relevant_output
-    - any_errors
-
-# =============================================================================
-# OUTPUT FORMATTING (CLI COMMANDS)
-# =============================================================================
-
-output_formatting:
-  rule_id: "MOD-TRM-002"
-  description: |
-    CLI/terminal output MUST use ASCII-safe characters only.
-    Emoji and Unicode icons render incorrectly on:
-    - Windows CMD and older PowerShell (< 7)
-    - CI/CD pipeline logs (GitHub Actions, Jenkins, GitLab CI)
-    - SSH remote terminals
-    - Screen readers (accessibility)
-
-  cli_output_rules:
-    - id: "TRM-002-001"
-      rule: "NO emoji or Unicode icons in console.log/Write-Host terminal output"
-      wrong: 'console.log("✅ Done") or console.log("📋 Summary")'
-      right: 'console.log(pc.green("[OK]") + " Done") or console.log(pc.bold("[i] Summary"))'
-
-    - id: "TRM-002-002"
-      rule: "Use text markers with color (picocolors/chalk) instead of emoji icons"
-      mapping:
-        success: 'pc.green("[OK]") or pc.green("+")'
-        warning: 'pc.yellow("[!]") or pc.yellow("WARN")'
-        error: 'pc.red("[X]") or pc.red("ERR")'
-        info: 'pc.cyan("[i]") or pc.blue(">")'
-        check_pass: 'pc.green("[v]")'
-        check_fail: 'pc.red("[x]")'
-        skip: 'pc.dim("[-]") or pc.dim("~")'
-        progress: 'pc.cyan("[*]") or pc.cyan("...")'
-
-    - id: "TRM-002-003"
-      rule: "Exception: Emoji in documentation and config files is allowed"
-      details: |
-        Emoji in rootConfig files (.cursorrules, GEMINI.md, etc.), SKILL.md,
-        workflow descriptions, and other files READ BY LLM (not displayed in terminal)
-        is acceptable. This rule only applies to console.log/terminal output.
-
-  checklist:
-    - "No emoji or Unicode icons in console.log()?"
-    - "Using picocolors/chalk for status indicators?"
-    - "Text markers are ASCII-only ([OK], [!], [X])?"
-
-# =============================================================================
-# SHELL INTEGRATION
-# =============================================================================
-
-shell_integration:
-  known_conflicts:
-    - "Starship prompt"
-    - "Oh My Posh"
-    - "ble.sh"
-    - "OSC 633/133 sequences"
-
-  workaround: |
-    If terminal output not visible:
-    1. Settings > Agents > Inline Editing & Terminal
-    2. Enable "Legacy Terminal Tool"
-    3. Kill all terminals (Ctrl+Shift+P)
-    4. Restart IDE
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Verified current directory?"
-  - "Checked OS/environment?"
-  - "Command is safe?"
-  - "Not repeating failed command?"
-  - "Timeout configured?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+safe_patterns:
+  - name: "Dry run first"
+    rule: "Use --dry-run or --what-if before destructive operations"
+  - name: "Capture output"
+    rule: "Redirect output to files for long operations: command > output.log 2>&1"
+  - name: "Check before delete"
+    rule: "List files before deletion: ls/dir first, then rm/del"
+  - name: "Background safety"
+    rule: "Monitor long-running background commands with status checks"
 
 integration:
-  tier: 1 # Safety tier
-  related_modules:
-    - stop-conditions
-    - edit-verification
-
-  hsa_tools:
-    hsa_detect_stack:
-      purpose: "Auto-detect runtime versions and correct shell for pre-flight checks"
-      usage: "hsa_detect_stack → determines OS, shell type, package manager, runtime versions"
-    hsa_search_skills:
-      purpose: "Lookup safe command patterns for the detected stack"
-      usage: "hsa_search_skills query=[command] domain=[infra] → safe alternatives"
-
-  reflection:
-    enabled: true
-    check_before: "command"
-    question: "Is this command safe to run?"
+  tier: 1
 
 ---
 _DOMYH Awesome Code • Terminal Safety Rule_

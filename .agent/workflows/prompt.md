@@ -12,50 +12,50 @@ skills: { required: [prompt-engineering], contextual: [domyh-design] }
 
 ## PROMPT FLOW
 
-1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_get_context`). Extract: mục đích, target tool/model, ngôn ngữ, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
-2. **RESEARCH** — Online research về domain, best practices, reference examples. Tìm kiếm: cấu trúc prompt tối ưu cho target tool, industry standards, trending patterns. Show: `[Step 2/5] Researching: "midjourney v6 architecture prompts"...`
-3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → sections phù hợp. Choose template theo prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
-4. **GENERATE** — Tạo structured markdown prompt. Viết bằng ngôn ngữ người dùng yêu cầu. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`
-5. **REFINE** — Present output → ⛔ **STOP — user review**. Iterate nếu cần: thêm chi tiết, đổi style, adjust parameters.
+1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_get_context`). Extract: purpose, target tool/model, language, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
+2. **RESEARCH** — Online research on domain, best practices, reference examples. Search: optimal prompt structure for target tool, industry standards, trending patterns. Show: `[Step 2/5] Researching: "midjourney v6 architecture prompts"...`
+3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → appropriate sections. Choose template by prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
+4. **GENERATE** — Create structured markdown prompt. Write in the language requested by user. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`
+5. **REFINE** — Present output → ⛔ **STOP — user review**. Iterate if needed: add details, change style, adjust parameters.
 6. **SAVE** (Optional) — If user confirms, save to `.domyh/prompts/prompt_YYYY-MM-DD_{type}.md`
 
 ---
 
 ## COMMANDS
 
-| Command                  | Loại        | Mô tả                     | Output              |
-| ------------------------ | ----------- | ------------------------- | ------------------- |
-| `/prompt [anything]`     | auto-detect | Tự phân tích và chọn loại | Markdown prompt     |
-| `/prompt image [desc]`   | image       | Prompt tạo ảnh AI         | Image gen prompt    |
-| `/prompt project [desc]` | project     | Prompt tạo dự án mới      | Project spec prompt |
-| `/prompt modify [desc]`  | modify      | Prompt chỉnh sửa dự án    | Modification prompt |
-| `/prompt system [desc]`  | system      | System prompt cho AI      | System prompt       |
+| Command                  | Type        | Description                      | Output              |
+| ------------------------ | ----------- | -------------------------------- | ------------------- |
+| `/prompt [anything]`     | auto-detect | Auto-analyze and select type     | Markdown prompt     |
+| `/prompt image [desc]`   | image       | AI image generation prompt       | Image gen prompt    |
+| `/prompt project [desc]` | project     | New project specification prompt | Project spec prompt |
+| `/prompt modify [desc]`  | modify      | Project modification prompt      | Modification prompt |
+| `/prompt system [desc]`  | system      | System prompt for AI             | System prompt       |
 
 ### Flags
 
-| Flag                                      | Mô tả                                    |
-| ----------------------------------------- | ---------------------------------------- |
-| `--lang vi/en`                            | Ngôn ngữ output (default: ngôn ngữ user) |
-| `--tool midjourney/dalle/flux/claude/gpt` | Target AI tool                           |
-| `--detail minimal/standard/detailed`      | Mức chi tiết (default: detailed)         |
-| `--format markdown/yaml/json`             | Output format (default: markdown)        |
+| Flag                                      | Description                         |
+| ----------------------------------------- | ----------------------------------- |
+| `--lang vi/en`                            | Output language (default: user lang)|
+| `--tool midjourney/dalle/flux/claude/gpt` | Target AI tool                      |
+| `--detail minimal/standard/detailed`      | Detail level (default: detailed)    |
+| `--format markdown/yaml/json`             | Output format (default: markdown)   |
 
 ---
 
 ## RCTO FRAMEWORK
 
-Mọi prompt đều follow cấu trúc RCTO:
+All prompts follow the RCTO structure:
 
 ```
 ┌─────────────────────────────────────────┐
 │  R — ROLE                               │
-│  Ai sẽ thực hiện? Persona, expertise    │
+│  Who will execute? Persona, expertise   │
 ├─────────────────────────────────────────┤
 │  C — CONTEXT                            │
 │  Background, constraints, domain info   │
 ├─────────────────────────────────────────┤
 │  T — TASK                               │
-│  Yêu cầu cụ thể, step-by-step          │
+│  Specific requirements, step-by-step    │
 ├─────────────────────────────────────────┤
 │  O — OUTPUT                             │
 │  Format, structure, quality criteria    │
@@ -110,7 +110,7 @@ Mọi prompt đều follow cấu trúc RCTO:
 
 ## Context
 
-- **Mục đích**: [Why this project exists]
+- **Purpose**: [Why this project exists]
 - **Target users**: [Who will use it]
 - **Domain**: [Industry/area]
 
@@ -244,15 +244,15 @@ Mọi prompt đều follow cấu trúc RCTO:
 ```
 User Input → Keyword Analysis:
 │
-├─ Contains: "ảnh", "image", "hình", "photo", "illustration",
+├─ Contains: "image", "photo", "illustration",
 │  "midjourney", "dall-e", "flux", "wallpaper", "poster"
 │  → Type: IMAGE
 │
-├─ Contains: "dự án", "project", "tạo app", "build", "website",
+├─ Contains: "project", "build", "website",
 │  "application", "startup", "SaaS", "platform"
 │  → Type: PROJECT
 │
-├─ Contains: "sửa", "modify", "fix", "thêm", "add", "change",
+├─ Contains: "modify", "fix", "add", "change",
 │  "refactor", "improve", "upgrade", "migrate"
 │  → Type: MODIFY
 │
@@ -267,7 +267,7 @@ User Input → Keyword Analysis:
 
 ## RESEARCH STRATEGY
 
-Trước khi tạo prompt, agent PHẢI research online:
+Before generating a prompt, agent MUST research online:
 
 | Prompt Type | Research Targets                                                  |
 | ----------- | ----------------------------------------------------------------- |
@@ -278,40 +278,40 @@ Trước khi tạo prompt, agent PHẢI research online:
 
 ### Research Quality Gates
 
-- ✅ Ít nhất 2-3 sources đáng tin cậy
-- ✅ Cross-reference thông tin giữa sources
-- ✅ Ưu tiên official docs và recent articles (< 6 tháng)
-- ✅ Ghi citation vào phần "References" của output
+- ✅ At least 2-3 trustworthy sources
+- ✅ Cross-reference information across sources
+- ✅ Prioritize official docs and recent articles (< 6 months)
+- ✅ Include citations in the "References" section of output
 
 ---
 
 ## QUALITY CRITERIA
 
-Mọi prompt generated phải đạt:
+All generated prompts must meet:
 
-| Criteria       | Description                                |
-| -------------- | ------------------------------------------ |
-| **Specific**   | Không mơ hồ, có chi tiết cụ thể            |
-| **Structured** | Sections rõ ràng, hierarchy tốt            |
-| **Actionable** | Có thể copy-paste trực tiếp vào tool       |
-| **Complete**   | Đủ context, không thiếu thông tin critical |
-| **Tested**     | Format đúng cho target tool                |
+| Criteria       | Description                                     |
+| -------------- | ----------------------------------------------- |
+| **Specific**   | No ambiguity, includes concrete details         |
+| **Structured** | Clear sections, good hierarchy                  |
+| **Actionable** | Can be copy-pasted directly into the target tool|
+| **Complete**   | Sufficient context, no missing critical info    |
+| **Tested**     | Format validated for target tool                |
 
 ---
 
 ## INTEGRATION
 
-### Với prompt-engineering skill
+### With prompt-engineering skill
 
-- Load reasoning patterns từ `reasoning-patterns.yaml`
-- Apply output formatting từ `output-patterns.yaml`
-- Check safety guardrails từ `safety-patterns.yaml`
+- Load reasoning patterns from `reasoning-patterns.yaml`
+- Apply output formatting from `output-patterns.yaml`
+- Check safety guardrails from `safety-patterns.yaml`
 
-### Với domyh-design skill (contextual)
+### With domyh-design skill (contextual)
 
-- Load style/color data cho image prompts
-- Apply typography/layout knowledge cho UI prompts
-- Use image-gen-prompts.yaml templates khi relevant
+- Load style/color data for image prompts
+- Apply typography/layout knowledge for UI prompts
+- Use image-gen-prompts.yaml templates when relevant
 
 ---
 
@@ -319,8 +319,15 @@ Mọi prompt generated phải đạt:
 
 | Don't                               | Do Instead                                |
 | ----------------------------------- | ----------------------------------------- |
-| Prompt quá ngắn, thiếu context      | Luôn include đủ RCTO sections             |
-| Copy-paste template không customize | Customize mọi section cho use case cụ thể |
-| Skip research                       | Luôn research trước khi generate          |
-| Ngôn ngữ lẫn lộn                    | Giữ consistent 1 ngôn ngữ throughout      |
-| Quá nhiều jargon                    | Viết clear cho target audience            |
+| Prompt too short, missing context   | Always include all RCTO sections          |
+| Copy-paste template without custom  | Customize every section for the use case  |
+| Skip research                       | Always research before generating         |
+| Mixed languages                     | Keep consistent 1 language throughout     |
+| Too much jargon                     | Write clearly for target audience         |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

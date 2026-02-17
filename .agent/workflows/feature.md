@@ -119,12 +119,28 @@ Requirement   Task    Implementation  Test Case
 
 ## ⛔ SAFETY
 
-- Never skip Phase 1 gate (requirements approval)
-- Never overwrite existing feature docs without confirmation
+- Complete Phase 1 gate (requirements approval) before proceeding
+- Confirm before overwriting existing feature docs
 - Warn if feature scope exceeds XL (suggest breakdown)
 - All code changes must reference task IDs
 - Log all architecture decisions in design.md
 
 ---
 
+## 🪞 REFLECTION CHECKPOINT
+
+> At Phase 6 (Ship), apply `templates/reflection/critic.md`:
+> 1. All ACs verified via traceability matrix?
+> 2. All phase docs complete?
+> 3. On success → `templates/reflection/success_analysis.md` to capture feature patterns
+
+---
+
 _DOMYH Awesome Code • Feature Lifecycle Pro • Spec-Driven Development_
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

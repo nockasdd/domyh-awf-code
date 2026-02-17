@@ -1,36 +1,52 @@
 {
-  "name": "DOMYH Awesome Code ",
-  "version": "6.2.7",
-
+  "name": "DOMYH Awesome Code",
+  "version": "v6.3.1",
   "windsurf": {
     "cascade_enabled": true,
     "flows_enabled": true
   },
-
   "activation": {
-    "triggers": ["@domyh", "/ap", "/code", "/debug", "/plan", "/test", "/fix"],
+    "triggers": [
+      "@domyh",
+      "/ap",
+      "/code",
+      "/debug",
+      "/deploy",
+      "/dev",
+      "/doc",
+      "/fix",
+      "/git",
+      "/hsa",
+      "/init",
+      "/plan",
+      "/refactor",
+      "/review",
+      "/security",
+      "/status",
+      "/test"
+    ],
     "auto_context": true
   },
-
   "skills": {
     "loading": "progressive",
     "max_active": 3
   },
-
   "token_budget": {
-    "baseline": 1500,
-    "per_skill": 1000
+    "baseline": 2200,
+    "per_skill": 1500,
+    "max_peak": 9700
   },
-
   "config_files": {
     "rules": ".windsurfrules"
   },
-
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.0.0 Context Management",
+      "description": "HSA v1.2.8 Context Management",
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest"],
+      "args": [
+        "-y",
+        "@nockdev/hsa@1.2.8"
+      ],
       "auto_start": true,
       "env": {
         "HSA_DASHBOARD": "true",
@@ -38,10 +54,9 @@
       }
     }
   },
-
   "session_engine": {
     "enabled": true,
-    "version": "2.0.0",
+    "version": "v6.3.1",
     "auto_detect_preferences": true,
     "config_file": ".windsurfrules",
     "context_injection": {
@@ -50,7 +65,11 @@
     },
     "cross_ide_sync": {
       "enabled": true,
-      "targets": ["claude", "cursor", "gemini"]
+      "targets": [
+        "claude",
+        "cursor",
+        "gemini"
+      ]
     }
   }
 }

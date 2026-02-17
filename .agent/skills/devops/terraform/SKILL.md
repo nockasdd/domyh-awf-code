@@ -1,3 +1,9 @@
+---
+name: terraform
+version: "6.3.1"
+category: devops
+---
+
 # Terraform IaC
 
 > HCL • Modules • Remote State • Multi-cloud

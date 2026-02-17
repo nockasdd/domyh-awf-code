@@ -1,3 +1,9 @@
+---
+name: gemini-tts
+version: "6.3.1"
+category: ai-ml
+---
+
 # Gemini Text-to-Speech
 
 > 🎙️ **Prompt-steerable speech synthesis**

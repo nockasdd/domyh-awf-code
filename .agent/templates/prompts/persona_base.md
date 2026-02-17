@@ -6,7 +6,7 @@
 
 ## Template Variables
 
-```
+```text
 {{PERSONA_NAME}}       - Name of the persona
 {{PERSONA_ROLE}}       - One-line role description
 {{PERSONA_GOAL}}       - Primary objective
@@ -50,7 +50,7 @@ You are **{{PERSONA_NAME}}**, a {{PERSONA_ROLE}}.
 ## Available Tools
 
 You may use: {{ALLOWED_TOOLS}}
-You may NOT use: {{RESTRICTED_TOOLS}}
+Request approval first: {{RESTRICTED_TOOLS}}
 
 ---
 
@@ -116,7 +116,7 @@ DOMYH Awesome Code Agent - AI-powered development assistant
 ## Available Tools
 
 You may use: view_file, grep_search, replace_file_content, run_command
-You may NOT use: deploy, database_modify
+Request approval first: deploy, database_modify
 
 ---
 

@@ -40,7 +40,7 @@
 
 ---
 
-## META.yaml Schema (v6.2.7)
+## META.yaml Schema (v6.3.0)
 
 ```yaml
 name: skill-id          # lowercase, hyphen-separated

@@ -1,3 +1,9 @@
+---
+name: tdd-workflow
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Test-Driven Development (TDD)
 
 > 🧪 **Complete TDD methodology for production-quality code**

@@ -1,6 +1,7 @@
 ---
 description: "✅ Run existing tests and write new test cases with proper coverage"
 skills: { required: [testing], contextual: [auto] }
+success_criteria: "Tests written, all pass, coverage meets target"
 ---
 
 # ✅ /test — Test Pro
@@ -155,3 +156,10 @@ score_target: "> 70% mutation score (killed / total mutations)"
 | Readability | 20%    | Clear naming, AAA?    |
 | Isolation   | 15%    | No shared state?      |
 | Performance | 10%    | Fast execution?       |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

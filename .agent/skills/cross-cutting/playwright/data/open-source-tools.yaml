@@ -2,7 +2,7 @@
 # open-source-tools.yaml — Browser Automation Ecosystem Reference
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 
 tools:
   - name: "Playwright MCP"

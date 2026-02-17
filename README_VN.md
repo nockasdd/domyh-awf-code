@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=82+Skills+•+21+IDEs+•+36+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=83+Skills+•+22+IDEs+•+41+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,9 +15,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-82-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
-  <img src="https://img.shields.io/badge/IDEs-21-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-36-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/skills-83-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/IDEs-22-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
+  <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -54,6 +54,60 @@ nock awf --help            # Xem tất cả commands
 | **npm** | `npm install -g @nockdev/cli`                              |
 | **npx** | `npx @nockdev/awf init`                                    |
 | **git** | `git clone https://github.com/nockasdd/domyh-awf-code.git` |
+
+</details>
+
+---
+
+<!-- MCP Requirement Note -->
+<blockquote>
+  <p>⚠️ <strong>Yêu cầu MCP Server</strong></p>
+  <p>DOMYH Awesome Code sử dụng <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> để cung cấp context thông minh — tìm kiếm code, phân tích ngữ nghĩa, và hiểu project. <strong>Cài MCP cho IDE của bạn để mở khóa toàn bộ tiềm năng:</strong></p>
+
+  <pre><code>nock awf mcp install --ide all      # Tất cả IDE hỗ trợ
+nock awf mcp install --ide cursor   # Chỉ IDE cụ thể</code></pre>
+</blockquote>
+
+## 🖥️ Web Dashboard & Logs
+
+HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc định đã bật**.
+
+| URL                                | Mô tả                                                       |
+| :--------------------------------- | :----------------------------------------------------------- |
+| `http://localhost:13100/dashboard` | 📊 Tổng quan project, file tree, stack detection, cache stats |
+| `http://localhost:13100/logs`      | 📋 Real-time tool call logs với SSE streaming                |
+| `http://localhost:13100/health`    | ❤️ Health check endpoint                                     |
+
+<details>
+<summary><b>⚙️ Cấu hình Dashboard</b></summary>
+<br>
+
+**Tắt dashboard** — đặt `HSA_DASHBOARD` là `false` trong MCP config của IDE:
+
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "-p", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": {
+        "HSA_DASHBOARD": "false",
+        "HSA_MAX_TOKENS": "8000"
+      }
+    }
+  }
+}
+```
+
+**Đổi port** — đặt `HSA_DASHBOARD_PORT`:
+
+```json
+"env": {
+  "HSA_DASHBOARD": "true",
+  "HSA_DASHBOARD_PORT": "13200",
+  "HSA_MAX_TOKENS": "8000"
+}
+```
 
 </details>
 
@@ -117,7 +171,7 @@ nock awf --help            # Xem tất cả commands
 </table>
 
 <details>
-<summary><b>📋 Tất cả 36 Commands — Chi tiết & Ví dụ</b></summary>
+<summary><b>📋 Tất cả 41 Commands — Chi tiết & Ví dụ</b></summary>
 <br>
 
 ### 🔥 Chính (9 commands)
@@ -175,7 +229,7 @@ nock awf --help            # Xem tất cả commands
 | `/orchestrate`  | Multi-Agent: điều phối parallel tasks, delegate cho specialists       | `/orchestrate Refactor + Test + Deploy module auth`       |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo 2 commits gần nhất`                         |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Kiến trúc microservices cho 10K concurrent users` |
-| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.2.7 across 15 files             |
+| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.3.0 across 15 files             |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |
@@ -215,11 +269,11 @@ nock awf --help            # Xem tất cả commands
 
 ---
 
-## 🧠 Skills (82 tổng)
+## 🧠 Skills (83 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+8+Frameworks;6+Core+•+7+DevOps;21+Cross-cutting+•+5+Tooling+•+7+AI-ML;82+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+8+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+7+AI-ML;83+Tổng+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -253,7 +307,7 @@ nock awf --help            # Xem tất cả commands
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (27)
+### 🔧 Core & Cross-cutting (28)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -262,7 +316,7 @@ nock awf --help            # Xem tất cả commands
 <p align="center">
   <sub><b>Core (6):</b> Security, API Design, Error Handling, Logging, Observability, Auth</sub>
   <br>
-  <sub><b>Cross-cutting (21):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright</sub>
+  <sub><b>Cross-cutting (22):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator</sub>
 </p>
 
 ### 🛠️ Tooling (5)
@@ -291,10 +345,10 @@ nock awf --help            # Xem tất cả commands
 | **Frameworks**    | 8        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native                                                                                                                                                   |
 | **Core**          | 6        | Security, API Design, Error Handling, Logging, Observability, Authentication                                                                                                                                        |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 21       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright |
+| **Cross-cutting** | 22       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator |
 | **Tooling**       | 5        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
 | **AI-ML**         | 7        | AI Agents, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                               |
-| **Tổng**          | **82**   |                                                                                                                                                                                                                     |
+| **Tổng**          | **83**   |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -358,15 +412,15 @@ nock awf --help            # Xem tất cả commands
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 82 skills chuyên biệt
+├── 🧠 skills/                # 83 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (8)     # React, Vue, Next.js, Flutter...
 │   ├── core/         (6)     # Security, API Design, Auth...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (21)   # Testing, Database, Playwright...
+│   ├── cross-cutting/ (22)   # Testing, Database, Playwright...
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
 │   └── ai-ml/        (7)     # AI Agents, Gemini, RAG...
-├── 🔄 workflows/     (30)    # 36 command handlers
+├── 🔄 workflows/     (41)    # 41 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Cấu hình engine

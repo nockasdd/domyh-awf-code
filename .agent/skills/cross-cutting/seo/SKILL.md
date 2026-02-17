@@ -1,3 +1,9 @@
+---
+name: seo
+version: "6.3.1"
+category: cross-cutting
+---
+
 # SEO & Core Web Vitals
 
 > 🔍 **Search engine optimization for modern web applications**

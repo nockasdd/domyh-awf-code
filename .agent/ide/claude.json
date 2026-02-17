@@ -1,40 +1,63 @@
 {
-  "name": "DOMYH Awesome Code ",
-  "version": v6.2.7,
-  
+  "name": "DOMYH Awesome Code",
+  "version": "v6.3.1",
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/deploy", "/init", "/fix", "/refactor", "/review", "/status", "/migrate", "/git", "/doc", "/security", "/hsa"],
-    "file_patterns": ["*.go", "*.py", "*.ts", "*.tsx", "*.vue"],
+    "triggers": [
+      "/ap",
+      "/code",
+      "/debug",
+      "/deploy",
+      "/dev",
+      "/doc",
+      "/fix",
+      "/git",
+      "/hsa",
+      "/init",
+      "/migrate",
+      "/plan",
+      "/refactor",
+      "/review",
+      "/security",
+      "/status",
+      "/test"
+    ],
+    "file_patterns": [
+      "*.go",
+      "*.py",
+      "*.ts",
+      "*.tsx",
+      "*.vue"
+    ],
     "auto_detect": true
   },
-
   "skills": {
     "loading": "progressive",
     "max_active": 3,
     "cache_ttl": 3600,
-    "preload": ["security"]
+    "preload": [
+      "security"
+    ]
   },
-
   "token_budget": {
-    "baseline": 1773,
+    "baseline": 2200,
     "per_skill": 1500,
     "max_peak": 6273
   },
-
   "features": {
     "semantic_selection": true,
     "lru_cache": true,
     "context_compression": false
   },
-
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.0.0 Context Management",
+      "description": "HSA v1.2.8 Context Management",
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest"],
+      "args": [
+        "-y",
+        "@nockdev/hsa@1.2.8"
+      ],
       "auto_start": true,
       "env": {
-        
         "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }

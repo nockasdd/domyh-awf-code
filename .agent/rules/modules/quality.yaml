@@ -1,185 +1,63 @@
-# Quality Rule v6.0
-# Modular rule for code quality standards
-
+# Quality Rule v6.3.1
 ---
 name: quality
-version: "6.2.7"
-rule_id: "MOD-QLT-001"
+version: "6.3.1"
+rule_id: "MOD-QUA-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Code quality standards and best practices for all generated code.
-
+description: "Code quality standards: naming, structure, error handling, documentation."
 category: "quality"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: true
-  personas: ["developer", "debugger", "tester", "auditor"]
-  workflows: ["/code", "/refactor", "/review"]
+  personas: ["developer", "tester"]
 
-# =============================================================================
-# CODE QUALITY PRINCIPLES
-# =============================================================================
+# --- CODE QUALITY STANDARDS ---
 
-principles:
+standards:
   naming:
-    description: "Use clear, descriptive names"
-    rules:
-      - "Variables describe content (userEmail, not e)"
-      - "Functions describe action (validateUser, not check)"
-      - "Constants in UPPER_SNAKE_CASE"
-      - "Classes in PascalCase"
+    - "Use descriptive, intent-revealing names (avoid abbreviations)"
+    - "Follow language conventions: camelCase (JS/TS), snake_case (Python/Go), PascalCase (C#)"
+    - "Boolean variables start with is/has/should/can"
+    - "Functions describe actions: getUserById, calculateTotal"
+
+  structure:
+    - "Single Responsibility: each function/class does one thing"
+    - "Keep functions under 50 lines, classes under 300 lines"
+    - "Max 3 levels of nesting — refactor deeper logic into helpers"
+    - "Prefer early returns over deep if/else chains"
 
   error_handling:
-    description: "Always handle errors properly"
-    rules:
-      - "Never swallow errors silently"
-      - "Provide meaningful error messages"
-      - "Log errors with context"
-      - "Use appropriate error types"
-
-  type_safety:
-    description: "Use types effectively"
-    rules:
-      - "Avoid 'any' type without reason"
-      - "Define proper interfaces"
-      - "Use generics where appropriate"
-      - "Document complex types"
+    - "Handle errors explicitly — never silently swallow exceptions"
+    - "Use typed errors when language supports it"
+    - "Include context in error messages: what failed, why, what to do"
+    - "Log errors with structured data (not just message strings)"
 
   documentation:
-    description: "Document the 'why', not the 'what'"
-    rules:
-      - "Comment on non-obvious logic"
-      - "Explain business rules"
-      - "Skip obvious comments"
-      - "Keep comments updated"
+    - "Document WHY, not WHAT (code shows what, comments explain why)"
+    - "Public APIs require JSDoc/GoDoc/docstring with params and return types"
+    - "Update docs when changing behavior — stale docs are worse than no docs"
 
-  dry_principle:
-    description: "Don't Repeat Yourself"
-    rules:
-      - "Extract repeated logic"
-      - "Use shared utilities"
-      - "Avoid copy-paste code"
-      - "Create reusable components"
-
-# =============================================================================
-# FUNCTION GUIDELINES
-# =============================================================================
-
-functions:
-  size_limits:
-    max_lines: 50
-    max_parameters: 4
-    max_nesting: 3
-
-  rules:
-    - "Single responsibility principle"
-    - "Pure functions where possible"
-    - "Early returns for guard clauses"
-    - "Avoid side effects"
-
-# =============================================================================
-# ANTI-PATTERNS
-# =============================================================================
+# --- ANTI-PATTERNS ---
 
 anti_patterns:
-  never_do:
-    - pattern: "Magic numbers/strings"
-      fix: "Use named constants"
-    - pattern: "Catch-all error handling"
-      fix: "Handle specific errors"
-    - pattern: "Overly clever one-liners"
-      fix: "Readable multi-line code"
-    - pattern: "Deep nesting (>3 levels)"
-      fix: "Early returns or extraction"
-    - pattern: "God functions (>50 lines)"
-      fix: "Break into smaller functions"
-    - pattern: "Hardcoded secrets"
-      fix: "Use environment variables"
+  - "Magic numbers — use named constants"
+  - "God classes/functions — break into focused units"
+  - "Copy-paste code — extract shared logic"
+  - "Commented-out code — delete it, git remembers"
+  - "TODO without issue reference — add ticket number"
 
-# =============================================================================
-# SECURITY DEFAULTS
-# =============================================================================
+# --- CODE REVIEW CRITERIA ---
 
-security_defaults:
-  input_validation:
-    - "Validate all user input"
-    - "Sanitize before use"
-    - "Type coercion checks"
-
-  output_encoding:
-    - "Context-aware encoding"
-    - "XSS prevention"
-    - "SQL parameterization"
-
-  error_handling:
-    - "Non-revealing errors"
-    - "Structured logging"
-    - "No stack traces in prod"
-
-  secrets:
-    - "Environment variables only"
-    - "No hardcoded secrets"
-    - "Rotation support"
-
-# =============================================================================
-# TESTING REQUIREMENTS
-# =============================================================================
-
-testing:
-  minimum_coverage: 80
-  required_test_types:
-    - unit: "All public functions"
-    - integration: "API endpoints"
-    - edge_cases: "Boundary conditions"
-
-  test_quality:
-    - "Meaningful test names"
-    - "Arrange-Act-Assert pattern"
-    - "One assertion per test (preferable)"
-    - "No test interdependencies"
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Clear naming?"
-  - "Error handling complete?"
-  - "Types defined?"
-  - "No anti-patterns?"
-  - "Security considered?"
-  - "Tests added?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+review_criteria:
+  - "Does it solve the stated problem?"
+  - "Are edge cases handled?"
+  - "Is error handling complete?"
+  - "Are there security implications?"
+  - "Is it testable?"
 
 integration:
-  tier: 2 # Execution tier
-  related_modules:
-    - edit-verification
-    - evidence
-
-  hsa_tools:
-    hsa_search_skills:
-      purpose: "Retrieve language-specific best practices and anti-patterns"
-      usage: "hsa_search_skills query=[pattern] domain=[lang] → quality guidance from skill knowledge"
-    hsa_detect_stack:
-      purpose: "Auto-detect correct lint/format tools for quality gates"
-      usage: "hsa_detect_stack → determines lint_check, format_check commands"
-
-  reflection:
-    enabled: true
-    check_before: "output"
-    question: "Does this code meet quality standards?"
+  tier: 2
+  related_modules: ["edit-verification", "yagni"]
 
 ---
 _DOMYH Awesome Code • Quality Rule_

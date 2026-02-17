@@ -133,3 +133,9 @@ scoring: .agent/skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight prof
 | `/ap --compare`      | Compare with previous audit           |
 | `/ap --experts`      | Show active/inactive expert status    |
 | `/ap --force [name]` | Force-include a conditional expert    |
+
+---
+
+## 💾 SESSION SAVE
+
+After audit completes: update `memory/CONTEXT_SNAPSHOT.md` (audit results, key findings) and append summary to `memory/session.md`. Update `memory/state.json` with audit score.

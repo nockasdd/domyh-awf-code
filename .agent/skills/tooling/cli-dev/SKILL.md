@@ -1,3 +1,9 @@
+---
+name: cli-dev
+version: "6.3.1"
+category: tooling
+---
+
 # CLI Tool Development
 
 > Progressive Discovery • Subcommands • Structured Output  

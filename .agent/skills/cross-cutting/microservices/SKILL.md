@@ -1,3 +1,9 @@
+---
+name: microservices
+version: "6.3.1"
+category: cross-cutting
+---
+
 # 🏗️ Microservices Patterns
 
 > Architecture patterns for distributed systems

@@ -12,9 +12,9 @@
 # =============================================================================
 
 system:
-  version: "6.3.0"
-  version_short: "v6.3.0" # Dùng cho footer: "_DOMYH Awesome Code "
-  codename: "Dashboard Resilience"
+  version: "6.3.1"
+  version_short: "v6.3.1" # Dùng cho footer: "_DOMYH Awesome Code "
+  codename: "SSoT & Hygiene"
   release_date: "2026-02-14"
 
   # Identity comes from BRANDING.yaml
@@ -74,32 +74,39 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: v6.3.0
+  default_skill_version: "v6.3.1"
 
 # =============================================================================
 # VERSION HISTORY
 # =============================================================================
 
 changelog:
-  "6.3.0":
+  "6.3.1":
+    date: "2026-02-17"
+    codename: "SSoT & Hygiene"
+    changes:
+      - "Version SSoT: sync-version.mjs script for single-source version propagation"
+      - "Personas optimized: 2,397→761 lines (-68%), removed dead banners/backstories"
+      - "Rules optimized: 55KB→17.8KB (-68%), removed decorative banners"
+      - "HSA engine: +7 stacks, SAFETY_MODULES fix, rationale regex"
+      - "Fixed 7 persona dead enforces references"
+      - "Version drift cleanup: 60+ files synced"
+
+  "6.3.1-rc1":
     date: "2026-02-14"
     codename: "Dashboard Resilience"
     changes:
       - "HSA Dashboard: Explorer cache 60s TTL — eliminates 504 timeouts"
       - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
-      - "HSA Dashboard: Fetch timeout 8s→15s to match server 10s timeout"
-      - "Codex IDE: Optimized AGENTS.md with inline rules + disabled unused workflows/personas"
-      - "Cline fix: EEXIST error in copyRules when .clinerules exists as file"
-      - "HSA v1.2.3, AWF v6.3.0"
+      - "Codex IDE: Optimized AGENTS.md with inline rules"
 
-  "6.2.7":
+  "6.3.0":
     date: "2026-02-12"
     codename: "Ecosystem Expansion"
     changes:
       - "7 new skills: tdd-workflow, prompt-engineering, accessibility, seo, microservices, monorepo, rag-patterns"
       - "2 new rules: agent-delegation, performance-optimization"
       - "3 new workflows: /tdd, /e2e, /verify"
-      - "5 data enrichments: ADR, E2E, OWASP LLM Top 10, Modern APIs, Passkeys"
       - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
 
   "6.2.4":
@@ -118,7 +125,7 @@ changelog:
     codename: "Agentic Personas"
     changes:
       - "11 personas with CrewAI/Anthropic/LangGraph patterns"
-      - "3-tier constitutional rule hierarchy"
+      - "5-tier constitutional rule hierarchy (SACRED_RULES.xml)"
       - "13 prompt chain templates"
       - "Deep Interview (PHASE 0) trong /plan"
       - "Auto Test Loop (3 retries) trong /code"
@@ -179,13 +186,13 @@ sync:
       targets:
         - ".agent/core/*.yaml"
         - ".agent/skills/**/META.yaml"
+        - ".agent/skills/_router.yaml"
         - ".agent/templates/tasks/*.yaml"
-        - ".agent/personas/*.yaml"
+        - ".agent/personas/*.md"
+        - ".agent/i18n/*.yaml"
+        - ".agent/rules/**/*.yaml"
       exclude:
         - ".agent/core/VERSION.yaml" # SSoT itself
-        - ".agent/core/HSA.yaml" # HSA-specific version
-        - ".agent/skills/_router.yaml" # Schema version
-        - ".agent/skills/_categories.yaml"
 
     # Pattern 2: Markdown footers
     md_footer:
@@ -214,7 +221,8 @@ sync:
       regex: '"version": "v?[0-9]+\\.[0-9]+\\.[0-9]+"'
       replace: '"version": "v{system.version}"'
       targets:
-        - ".agent/memory/state.json"
+        - ".agent/memory/**/*.json"
+        - ".agent/ide/*.json"
 
   # ==========================================================================
   # VALIDATION

@@ -2,7 +2,7 @@
 # evaluation.yaml — RAG Evaluation Framework
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 
 ragas:
   description: "Reference-free RAG evaluation framework"

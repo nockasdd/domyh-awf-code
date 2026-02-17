@@ -137,7 +137,7 @@ skills: { required: [domyh-design], contextual: [] }
 
 ### Rules
 
-- ❌ Never pure black `#000` / pure white `#fff` — causes eye strain
+- ✅ Use off-black/off-white (e.g., `#1a1a2e` / `#f8f9fa`) — avoids eye strain
 - ✅ Use deep grays `oklch(15%)` and off-whites `oklch(90%)`
 - ✅ Re-evaluate brand colors for dark backgrounds
 - ✅ Provide user toggle + persist preference (localStorage)
@@ -325,3 +325,10 @@ SKILL_DATA: ".agent/skills/cross-cutting/domyh-design/data"
 | `/visualize responsive` | `data/platform-guidelines.yaml` | 12 platform breakpoints   |
 | `/visualize component`  | `data/component-mapping.yaml`   | 30 components with scores |
 | `/visualize dark-mode`  | `data/ux-guidelines.yaml`       | Dark mode contrast rules  |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

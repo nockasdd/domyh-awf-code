@@ -1,3 +1,9 @@
+---
+name: wasm
+version: "6.3.1"
+category: cross-cutting
+---
+
 # WebAssembly — WASM • WASI • Component Model
 
 > Browser WASM • Server-side WASM • Near-native performance

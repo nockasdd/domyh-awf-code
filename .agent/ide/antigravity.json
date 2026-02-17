@@ -1,48 +1,81 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": v6.2.7,
+  "version": "v6.3.1",
   "ide": "Antigravity",
   "value": "antigravity",
-
   "activation": {
-    "triggers": ["/ap", "/code", "/debug", "/plan", "/test", "/init", "/fix", "/refactor", "/review", "/status", "/deploy", "/git", "/doc", "/security", "/dev", "/perf", "/scaffold", "/think", "/recap", "/hsa"],
+    "triggers": [
+      "/ap",
+      "/code",
+      "/debug",
+      "/deploy",
+      "/dev",
+      "/doc",
+      "/fix",
+      "/git",
+      "/hsa",
+      "/init",
+      "/perf",
+      "/plan",
+      "/recap",
+      "/refactor",
+      "/review",
+      "/scaffold",
+      "/security",
+      "/status",
+      "/test",
+      "/think"
+    ],
     "workspace_detection": true
   },
-
   "skills": {
     "loading": "progressive",
     "max_active": 5,
     "cache_enabled": true
   },
-
   "token_budget": {
-    "baseline": 1773,
+    "baseline": 2200,
     "per_skill": 1500,
     "max_peak": 9273
   },
-
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.0.0 Context Management - Intelligent context retrieval",
+      "description": "HSA v1.2.8 Context Management - Intelligent context retrieval",
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest"],
+      "args": [
+        "-y",
+        "@nockdev/hsa@1.2.8"
+      ],
       "auto_start": true,
       "env": {
-        
         "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }
     }
   },
-
   "config_files": {
     "instructions": "GEMINI.md",
     "mcp": "~/.gemini/antigravity/mcp_config.json"
   },
-
   "hsa": {
     "enabled": true,
     "auto_detect_stack": true,
-    "tools": ["hsa_get_context", "hsa_detect_stack", "hsa_check_changes", "hsa_prefetch", "hsa_status"]
+    "tools": [
+      "hsa_get_context",
+      "hsa_detect_stack",
+      "hsa_check_changes",
+      "hsa_prefetch",
+      "hsa_status",
+      "hsa_get_snapshot",
+      "hsa_export",
+      "hsa_get_agent_config",
+      "hsa_get_repo_map",
+      "hsa_search_skills",
+      "hsa_detect_environment",
+      "hsa_prepare_handoff",
+      "hsa_filter_tools",
+      "hsa_trace_flow",
+      "hsa_feedback"
+    ]
   }
 }

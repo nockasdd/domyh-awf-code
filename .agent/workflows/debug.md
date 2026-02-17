@@ -1,6 +1,7 @@
 ---
 description: "🐛 Systematic debugging: reproduce → isolate → analyze → fix → verify"
 skills: { required: [error-handling], contextual: [auto] }
+success_criteria: "Root cause identified and verified, fix applied, tests pass"
 ---
 
 # 🐛 /debug — Debug Pro
@@ -15,7 +16,7 @@ skills: { required: [error-handling], contextual: [auto] }
 1. **CAPTURE** (Auto) — Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`, `hsa_search_skills`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/7] Capturing error context...`
 2. **TIMELINE** — Reconstruct event timeline: `git log --oneline -10`, check recent changes to affected files, correlate with error timestamps. Answer: "When did this start?"
 3. **REPRODUCE** — Create minimal reproduction, confirm error occurs consistently → ⛔ STOP if cannot reproduce: ask user 5 questions
-4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location
+4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location. Use `hsa_trace_flow` to trace call chains upstream/downstream
 5. **HYPOTHESIZE** — Form 2-3 hypotheses based on evidence:
    ```
    H1: [hypothesis] — Evidence: [what supports it] — Test: [how to verify]
@@ -23,8 +24,8 @@ skills: { required: [error-handling], contextual: [auto] }
    → Test each hypothesis systematically → Confirm/reject
    ```
 6. **ANALYZE** — 5 Whys on CONFIRMED root cause (not assumptions)
-7. **FIX** — Create FAILING test first, implement single fix → if 3+ fixes fail → question architecture. Add **prevention guard** to block similar bugs
-8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel
+7. **FIX** — Create FAILING test first, implement single fix → if 2 fixes fail → trigger **Progressive Escalation** (`rules/modules/progressive-escalation.yaml`): REFLECT → REFRAME → WIDEN → DECOMPOSE → ESCALATE. Add **prevention guard** to block similar bugs
+8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel. Check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs before starting
 
 ---
 
@@ -215,6 +216,25 @@ failure_patterns:
 
 ---
 
+## PROGRESSIVE ESCALATION
+
+> When fixes repeatedly fail, progressively shift debugging strategy.
+> See `rules/modules/progressive-escalation.yaml` for full protocol.
+
+```
+Level 1 RETRY     → Fix directly (2 attempts)
+Level 2 REFLECT   → Analyze WHY approach fails (Reflexion + Bias Check)
+Level 3 REFRAME   → Change perspective (Invert + Rubber Duck + Devil's Advocate)
+Level 4 WIDEN     → Expand scope (Trace chain + Git forensics + Env audit)
+Level 5 DECOMPOSE → Isolate precisely (Minimal repro + Binary search)
+Level 6 ESCALATE  → Full report to user with all evidence
+```
+
+**Before ANY fix**: Check episodic memory (`.domyh/debug/episodic_memory.yaml`) for past solutions.
+**After resolution**: Save lesson via `templates/reflection/pivot_analysis.md` → episodic memory entry.
+
+---
+
 ## SUB-COMMANDS
 
 | Command                  | Description                |
@@ -228,3 +248,19 @@ failure_patterns:
 | `/debug --profile`       | Performance profiling      |
 | `/debug --memory`        | Memory leak detection      |
 | `/debug --timeline`      | Reconstruct event timeline |
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After fix verified, apply `templates/reflection/critic.md`:
+> 1. Root cause proven (5 Whys complete)?
+> 2. Prevention guard added?
+> 3. On novel failure → `templates/reflection/error_analysis.md` → persist to `failures.yaml`
+> 4. On successful debug → `templates/reflection/success_analysis.md`
+
+---
+
+## 💾 SESSION SAVE
+
+After debug completes: update `memory/CONTEXT_SNAPSHOT.md` (what was debugged, resolution) and append summary to `memory/session.md`.

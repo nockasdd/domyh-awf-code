@@ -95,3 +95,10 @@ Examples: `feat(auth): add JWT refresh token` • `fix(api): handle null respons
 - Confirm target branch before merge/rebase
 
 **Conflict resolution**: Show conflicting files → Offer: manual | theirs | ours → Run tests after resolution
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

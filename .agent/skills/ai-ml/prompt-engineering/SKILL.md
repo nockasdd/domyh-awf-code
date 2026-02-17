@@ -1,3 +1,9 @@
+---
+name: prompt-engineering
+version: "6.3.1"
+category: ai-ml
+---
+
 # Prompt Engineering Patterns v2.0
 
 > 🧠 **LLM prompt design for production AI systems**

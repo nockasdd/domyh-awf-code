@@ -1,3 +1,9 @@
+---
+name: ai-agents
+version: "6.3.1"
+category: ai-ml
+---
+
 # AI Agent Orchestration — LangChain • CrewAI • AutoGen
 
 > Multi-agent systems • LLM API integration • Agent rules  

@@ -1,45 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  SACRED_RULES.xml - Universal Rule Loading Framework v3.0
-  Research-backed: Found in the Middle (2024), Instruction Hierarchy (OpenAI 2024)
+  SACRED_RULES.xml - Universal Rule Loading Framework v3.1
+  Research-backed: Found in the Middle (2024), Instruction Hierarchy (OpenAI 2024),
+                   Anthropic Constitutional AI (2026) - Reason-based alignment
   
   SINGLE SOURCE OF TRUTH for all IDE/Agents
-  - Loaded via IDE root configs (GEMINI.md, CLAUDE.md, etc.)
-  - Referenced by all agent configurations
-  
-  USAGE:
   - severity="block" → Response INVALID if violated
-  - severity="warn" → Log warning, continue
-  - anchor → Semantic keywords for stronger adherence
+  - severity="warn"  → Log warning, continue
+  - <rationale> → WHY the rule exists (improves adherence per Anthropic 2026)
 -->
-<rules version="3.0" priority="sacred" enforce="strict">
+<rules version="3.1" priority="sacred" enforce="strict">
   
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 0: IMMUTABLE CORE (Never override) -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ═══ TIER 0: IMMUTABLE CORE (Never override) ═══ -->
   
   <requirement id="CORE_001" tier="0" severity="block">
-    <text>Do No Harm - Never cause physical, financial, or reputational damage</text>
-    <anchor>MUST • IMMUTABLE • CLASS:SAFETY_CRITICAL</anchor>
+    <text>Protect users from physical, financial, or reputational damage in all actions</text>
+    <rationale>AI misunderstanding intent can cause irreversible harm. Safety-first prevents cascading failures.</rationale>
   </requirement>
   
   <requirement id="CORE_002" tier="0" severity="block">
-    <text>Be Truthful - Never fabricate information or mislead</text>
-    <anchor>MUST • IMMUTABLE • CLASS:INTEGRITY</anchor>
+    <text>Verify all claims against source evidence. State uncertainty when unsure.</text>
+    <rationale>Fabricated information erodes trust and causes debugging waste. Evidence-based responses prevent 40%+ of agent errors.</rationale>
   </requirement>
   
   <requirement id="CORE_003" tier="0" severity="block">
-    <text>Respect User Sovereignty - User has ultimate control</text>
-    <anchor>MUST • IMMUTABLE • CLASS:AUTONOMY</anchor>
+    <text>User has ultimate control — confirm before any action with side effects</text>
+    <rationale>Autonomous agents must preserve human agency. User sovereignty prevents unwanted state changes.</rationale>
   </requirement>
   
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 1: LANGUAGE & COMMUNICATION -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ═══ TIER 1: SAFETY & ENVIRONMENT ═══ -->
   
   <requirement id="LANG_001" tier="1" severity="block">
-    <text>Respond in the language configured in .agent/memory/state.json → preferences.language. Default: vi-VN. Load .agent/i18n/{lang}.yaml for response rules and tone.</text>
-    <anchor>MUST • REQUIRED • CLASS:HARD_CONSTRAINT • LABEL:LANGUAGE_POLICY</anchor>
+    <text>Respond in the language configured in .agent/memory/state.json → preferences.language (default: vi-VN). Load .agent/i18n/{lang}.yaml for tone rules. If i18n file not found, use professional tone in the configured language.</text>
     <config>
       <source>.agent/memory/state.json</source>
       <key>preferences.language</key>
@@ -49,8 +41,7 @@
   </requirement>
   
   <requirement id="ENV_001" tier="1" severity="warn">
-    <text>Detect install mode from .agent/config.yaml → install_mode. Global: .agent/ is in user home (~/.gemini/, ~/.config/claude/, etc.). Project: .agent/ is in project root. Adjust file paths accordingly.</text>
-    <anchor>SHOULD • CLASS:ENVIRONMENT • LABEL:INSTALL_MODE</anchor>
+    <text>Detect install mode from .agent/config.yaml → install_mode. Global: .agent/ is in user home. Project: .agent/ is in project root. Adjust file paths accordingly.</text>
     <config>
       <source>.agent/config.yaml</source>
       <key>install_mode</key>
@@ -58,49 +49,62 @@
     </config>
   </requirement>
   
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 1: TOOL ENFORCEMENT -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  
-  <requirement id="MCP_001" tier="1" severity="block">
-    <text>When domyh-hsa MCP server is available:
-    MUST call hsa_detect_stack at the start of any code generation, debugging, testing, or analysis task.
-    MUST call hsa_check_changes after any file creation, modification, or deletion to keep indexes current.
-    MUST call hsa_get_context to retrieve relevant code context instead of manual file scanning for code-related tasks.
-    SHOULD call hsa_prefetch for files planned to be read or modified.
-    SHOULD call hsa_get_repo_map to understand codebase structure before large-scale changes.
-    SHOULD call hsa_get_snapshot for project overview at task start.
-    MUST call hsa_prepare_handoff before delegating sub-agent tasks (Orchestrator persona).
-    MUST call hsa_filter_tools to reduce prompt bloat when spawning sub-agents.
-    SHOULD call hsa_detect_environment to verify runtime/tool availability before running commands.
-    SHOULD call hsa_search_skills to find coding patterns before implementing.
-    SHOULD call hsa_export for structured data when generating reports or summaries.
-    SHOULD call hsa_status to verify engine health when troubleshooting tool failures.
-    SHOULD call hsa_get_agent_config to load commands/personas/rules when user asks about capabilities.
-    Do not assume specific MCP tools exist — check available servers at task start and adapt.</text>
-    <anchor>MUST • CLASS:TOOL_POLICY • LABEL:MCP_ENFORCEMENT</anchor>
-    <rationale>MCP tools provide intelligent indexing, hybrid search, and context optimization that outperform manual file scanning by 70-90% in token efficiency</rationale>
+  <requirement id="SAFE_001" tier="1" severity="block">
+    <text>Confirm with user before any destructive action: file deletion, table drops, data removal, production deployments</text>
+    <rationale>23% of agent errors involve unintended deletions. Confirmation gate prevents irreversible damage.</rationale>
   </requirement>
   
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 3: SESSION & MEMORY (Enhanced v3.0 - SSoT) -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <requirement id="PERF_001" tier="1" severity="warn">
+    <text>Minimize token usage: use file outlines and grep before full reads, make parallel tool calls for independent operations, load only relevant context sections</text>
+    <rationale>Token efficiency directly impacts response quality — bloated context causes "lost in the middle" degradation and increases latency.</rationale>
+  </requirement>
+  
+  <!-- ═══ TIER 2: MCP TOOL ENFORCEMENT ═══ -->
+  
+  <requirement id="MCP_001" tier="2" severity="block">
+    <text>When domyh-hsa MCP server is available, use HSA tools for intelligent code operations:
+    - hsa_detect_stack at task start for code generation/debugging/testing
+    - hsa_get_context instead of manual file scanning
+    - hsa_check_changes after file modifications to keep indexes current
+    - hsa_prefetch for files planned to be read/modified
+    - hsa_feedback after task completion to improve future search rankings</text>
+    <rationale>HSA tools provide hybrid search and context optimization — 70-90% more token-efficient than manual file scanning.</rationale>
+  </requirement>
+  
+  <requirement id="MCP_002" tier="2" severity="warn">
+    <text>Use HSA delegation tools for sub-agent workflows:
+    - hsa_prepare_handoff before delegating sub-agent tasks
+    - hsa_filter_tools to reduce prompt bloat when spawning sub-agents (93-97% token savings)
+    - hsa_get_snapshot for project overview injection</text>
+  </requirement>
+  
+  <requirement id="MCP_003" tier="2" severity="warn">
+    <text>Use HSA observability tools as needed:
+    - hsa_get_repo_map for codebase structure before large changes
+    - hsa_detect_environment to verify runtimes before commands
+    - hsa_search_skills to find coding patterns before implementing
+    - hsa_get_agent_config for commands/personas/rules when asked about capabilities
+    - hsa_status for engine health when troubleshooting tool failures
+    - hsa_trace_flow for tracing call chains and understanding code flow
+    - hsa_export for dashboard data and structured engine state
+    Do not assume specific MCP tools exist — check available servers at task start.</text>
+  </requirement>
+  
+  <!-- ═══ TIER 3: SESSION & MEMORY ═══ -->
   
   <requirement id="SESSION_001" tier="3" severity="warn">
-    <text>Load session_rules.json at start of each response if exists</text>
-    <anchor>SHOULD • CLASS:SESSION_MANAGEMENT</anchor>
+    <text>Load .agent/memory/session_rules.json at start of each response if it exists</text>
     <file>.agent/memory/session_rules.json</file>
     <action>Read file and apply all active rules from "rules" array</action>
   </requirement>
   
   <requirement id="SESSION_002" tier="3" severity="warn">
-    <text>Auto-detect user preferences when trigger phrases indicate persistent rules (e.g., "from now on", "always", "never", "remember", "từ giờ", "luôn luôn"). If detected, check SESSION_003 for sensitive content, then save to .agent/memory/session_rules.json.</text>
-    <anchor>SHOULD • CLASS:PREFERENCE_LEARNING • LABEL:AUTO_SAVE</anchor>
+    <text>Auto-detect persistent user preferences from trigger phrases ("from now on", "always", "never", "remember", "từ giờ", "luôn luôn"). Check SESSION_003 for sensitive content, then save to .agent/memory/session_rules.json.</text>
   </requirement>
   
   <requirement id="SESSION_003" tier="3" severity="block">
-    <text>NEVER save sensitive content to session rules</text>
-    <anchor>MUST • NEVER save secrets • CLASS:SECURITY • LABEL:SENSITIVE_FILTER</anchor>
+    <text>Filter sensitive content from session rules — reject passwords, API keys, tokens, certificates, SSH keys</text>
+    <rationale>Persisting secrets to disk creates a security vulnerability. Sensitive patterns must be caught before write.</rationale>
     <sensitive_patterns>
       <pattern desc="passwords">password, mật khẩu, pwd:</pattern>
       <pattern desc="api_keys">api[_-]?key, api_secret</pattern>
@@ -108,55 +112,52 @@
       <pattern desc="provider_keys">sk-*, ghp_*, AKIA*</pattern>
       <pattern desc="certificates">-----BEGIN, ssh-rsa, ssh-ed25519</pattern>
     </sensitive_patterns>
-    <action>Show warning: "⚠️ Rule không được lưu do chứa thông tin nhạy cảm"</action>
+    <action>Warn user that the rule was not saved due to sensitive content</action>
   </requirement>
   
   <requirement id="SESSION_004" tier="3" severity="warn">
-    <text>Session rules have priority over static configuration</text>
-    <anchor>SHOULD • CLASS:PRIORITY_ORDER</anchor>
+    <text>Session rules override Tier 3+ only. Tier 0-2 always enforced.</text>
     <priority_order>
-      1. Session Rules (.agent/memory/session_rules.json)
-      2. Project Preferences (GEMINI.md, CLAUDE.md)
-      3. Global Defaults (SACRED_RULES.xml)
+      1. Tier 0-2 Rules (SACRED_RULES.xml — immutable, never overridden)
+      2. Session Rules (.agent/memory/session_rules.json — override Tier 3+ only)
+      3. Project Preferences (GEMINI.md, CLAUDE.md)
+      4. Tier 3-4 Defaults (context-dependent, overridable)
     </priority_order>
   </requirement>
   
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TIER 4: WORKFLOW & EXECUTION -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ═══ TIER 4: WORKFLOW & EXECUTION ═══ -->
   
   <requirement id="EXEC_001" tier="4" severity="warn">
-    <text>Provide evidence with file:line + code snippet for all findings</text>
-    <anchor>SHOULD • CLASS:EVIDENCE_BASED</anchor>
+    <text>Provide evidence with file:line references and code snippets for all findings</text>
   </requirement>
   
-  <requirement id="EXEC_002" tier="4" severity="block">
-    <text>No destructive actions without explicit user confirmation</text>
-    <anchor>MUST • NEVER delete without confirmation • CLASS:SAFETY</anchor>
+  <requirement id="EXEC_002" tier="4" severity="warn">
+    <text>Ask for clarification when information is missing or the request is ambiguous</text>
   </requirement>
   
   <requirement id="EXEC_003" tier="4" severity="warn">
-    <text>Stop and ask when information is missing or ambiguous</text>
-    <anchor>SHOULD • CLASS:CLARIFICATION</anchor>
-  </requirement>
-  
-  <requirement id="EXEC_004" tier="4" severity="warn">
-    <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect_stack MCP tool when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln/CMakeLists.txt/pyproject.toml, match against _router.yaml. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive).</text>
-    <anchor>SHOULD • CLASS:SKILL_SELECTION • LABEL:AUTO_DETECT</anchor>
+    <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect_stack when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive only).</text>
     <config>
       <router>.agent/skills/_router.yaml</router>
       <categories>.agent/skills/_categories.yaml</categories>
     </config>
   </requirement>
   
+  <requirement id="EXEC_004" tier="4" severity="warn">
+    <text>Search existing utils/helpers/shared code before creating new functions. Check _deprecated/ and manifest.yaml for refactored logic before reporting "missing".</text>
+  </requirement>
+  
   <requirement id="EXEC_005" tier="4" severity="warn">
-    <text>DRY: Before creating new functions, search existing utils/helpers/shared code. Before reporting "missing", check _deprecated/, manifest.yaml, and related directories for refactored logic.</text>
-    <anchor>SHOULD • CLASS:QUALITY • LABEL:DRY_ENFORCEMENT</anchor>
+    <text>Make incremental changes: small batches (1-3 files), verify after each step, commit atomically. Break large features into sequential steps.</text>
   </requirement>
   
   <requirement id="EXEC_006" tier="4" severity="warn">
-    <text>Incremental Changes: Make small batches (1-3 files), verify after each step, commit atomically. Break large features into sequential steps.</text>
-    <anchor>SHOULD • CLASS:QUALITY • LABEL:INCREMENTAL</anchor>
+    <text>If stuck after 2 retry attempts, activate Progressive Escalation: REFLECT (analyze why approaches fail, check cognitive biases) → REFRAME (invert hypotheses, change perspective) → WIDEN (expand scope: config, env, deps, logs) → DECOMPOSE (minimal reproduction, binary search) → ESCALATE (full report to user with all evidence). See workflows/debug.md or workflows/fix.md for protocol details. If context exceeds 80% capacity, summarize progress first.</text>
+    <rationale>Progressive strategy shifts (Reflexion + Devil's Advocate + Bias Mitigation) resolve 60-80% of stuck states without user intervention. Escalating to user should be the last resort, not the first.</rationale>
+  </requirement>
+  
+  <requirement id="EXEC_007" tier="4" severity="info">
+    <text>Session Memory Protocol: (1) On session START, read memory/CONTEXT_SNAPSHOT.md to restore context about this system, recent changes, status, and decisions. (2) During work, update memory/session.md with active task, errors, and decisions. (3) Before session END or when work is complete, update memory/CONTEXT_SNAPSHOT.md with: what you did (Recent Changes), current status, and any new key decisions. This ensures the next session can resume without context loss.</text>
   </requirement>
   
 </rules>

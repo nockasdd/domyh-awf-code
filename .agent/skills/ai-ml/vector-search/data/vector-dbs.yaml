@@ -1,5 +1,5 @@
 # Vector Databases Comparison — HSA Tier 3 Data
-version: "1.0.0"
+version: "6.3.1"
 
 patterns:
   - id: VDB-001

@@ -1,7 +1,7 @@
 metadata:
   skill: security
   domain: ai_ml_security
-  version: 6.2.3
+  version: v6.3.1
   updated: "2026-02-05"
   migrated_from: ai-ml-security.yaml
   patterns_count: 20

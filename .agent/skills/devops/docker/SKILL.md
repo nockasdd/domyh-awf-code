@@ -1,3 +1,9 @@
+---
+name: docker
+version: "6.3.1"
+category: infrastructure
+---
+
 # Docker Containerization
 
 Docker containerization patterns for builds, security, and deployment. Covers Compose v5, Hardened Images, Build Cloud, Bake.

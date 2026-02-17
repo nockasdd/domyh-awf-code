@@ -2,7 +2,7 @@
 # retrieval-patterns.yaml — Advanced Retrieval Patterns
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 
 hybrid_search:
   description: "Combine dense (vector) + sparse (keyword) search"

@@ -1,30 +1,27 @@
 # DOMYH Awesome Code
 
-> ðŸŽ¯ AI-powered development assistant â€” NockDev
-> ðŸŒ Language: `.agent/memory/state.json` â†’ `preferences.language` (default: vi-VN)
+> í¾¯ AI-powered development assistant â€” NockDev
+> í¼ Language: `.agent/memory/state.json` â†’ `preferences.language` (default: vi-VN)
 
 ## Core Rules
 
-- Load `.agent/rules/SACRED_RULES.xml` â€” Tier 0-4 constitutional rules
-- Evidence with `file:line` for all findings
-- No destructive actions without user confirmation
-- Auto-detect project stack â†’ load matching skills from `.agent/skills/`
+Load `.agent/rules/SACRED_RULES.xml` â€” 17 rules across 5 tiers governing safety, tools, memory, and execution.
 
 ## Commands
 
-| Command     | Description             |
-| ----------- | ----------------------- |
-| `/code`     | ðŸ’» Write quality code   |
-| `/debug`    | ðŸ› Systematic debugging |
-| `/test`     | âœ… Run and write tests  |
-| `/deploy`   | ðŸš€ Deploy to production |
-| `/ap`       | ðŸ”¬ Full project audit   |
-| `/plan`     | ðŸ“‹ Feature planning     |
-| `/fix`      | âš¡ Quick-fix pipeline   |
-| `/refactor` | ðŸ”§ Code refactoring     |
-| `/help`     | â“ Full commands list   |
+| Command | Description |
+|---------|-------------|
+| `/code` | í²» Write quality code |
+| `/debug` | í°› Systematic debugging |
+| `/test` | âœ… Run and write tests |
+| `/deploy` | íº€ Deploy to production |
+| `/ap` | í´¬ Full project audit |
+| `/plan` | í³‹ Feature planning |
+| `/fix` | âš¡ Quick-fix pipeline |
+| `/refactor` | í´§ Code refactoring |
+| `/help` | â“ Full commands list |
 
-> 28+ commands available. Full list: `hsa_get_agent_config("commands")` or `.agent/workflows/`
+> 41 commands available. Full list: `hsa_get_agent_config("commands")` or `.agent/workflows/`
 
 ## Personas
 
@@ -35,24 +32,11 @@ Developer Â· Architect Â· Auditor Â· Debugger Â· Tester Â· DevOps Â· Documenter 
 ## Skills (Progressive Disclosure)
 
 META.yaml (always) â†’ SKILL.md (on-demand) â†’ ADVANCED.md (deep dive)
-Skills location: `~/.gemini/antigravity/skills/` (global) or `.agent/skills/` (project)
+Skills: `~/.gemini/antigravity/skills/` (global) or `.agent/skills/` (project)
 
-## MCP Tools (HSA v1.1.0)
+## MCP Tools (HSA v1.2.8)
 
-| Tool                     | Purpose                                 |
-| ------------------------ | --------------------------------------- |
-| `hsa_get_context`        | Intelligent code context                |
-| `hsa_detect_stack`       | Tech stack detection                    |
-| `hsa_get_agent_config`   | Commands/personas/rules/skills details  |
-| `hsa_check_changes`      | File change tracking                    |
-| `hsa_prefetch`           | Predictive prefetch                     |
-| `hsa_status`             | Engine health                           |
-| `hsa_get_snapshot`       | Project snapshot (tree + symbols + env) |
-| `hsa_export`             | Structured engine data export           |
-| `hsa_get_repo_map`       | PageRank-ranked repository map          |
-| `hsa_search_skills`      | Skill pattern search (BM25)             |
-| `hsa_detect_environment` | System runtime & tool detection         |
-| `hsa_prepare_handoff`    | Sub-agent context packet                |
-| `hsa_filter_tools`       | Task-type tool catalog pruning          |
+15 HSA tools available. Key: `hsa_get_context` (code search), `hsa_detect_stack` (project setup), `hsa_get_agent_config` (capabilities), `hsa_trace_flow` (call chain tracing), `hsa_feedback` (relevance learning).
+Full usage rules: SACRED_RULES.xml Tier 2.
 
-_DOMYH Awesome Code Â· SLIM Config v2 Â· NockDev_
+_DOMYH Awesome Code Â· SLIM Config v3 Â· NockDev_

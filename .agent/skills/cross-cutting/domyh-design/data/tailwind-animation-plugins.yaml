@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: tailwind_animation_plugins
-  version: 6.2.3
+  version: v6.3.1
   updated: "2026-02-12"
   description: "Tailwind CSS animation plugins, utilities, and custom @keyframes patterns"
   patterns_count: 48

@@ -1,147 +1,64 @@
-# Agent Delegation Rule v6.2.7
-# When and how to delegate to specialized sub-agents
-
+# Agent Delegation Rule v6.3.1
 ---
 name: agent-delegation
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-DEL-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Guidelines for agent delegation: when to delegate tasks to specialized
-  sub-agents, scope limits, tool restrictions, and handoff patterns.
-
+description: "When and how to delegate tasks to specialized sub-agents."
 category: "workflow"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: false
   personas: ["orchestrator", "developer", "architect"]
-  workflows: ["/orchestrate", "/plan", "/code"]
   trigger: "When task complexity exceeds single-agent capacity"
 
-# =============================================================================
-# DELEGATION CRITERIA
-# =============================================================================
+# --- DELEGATION CRITERIA ---
 
 when_to_delegate:
-  always_delegate:
-    - "Security review (→ Security persona)"
-    - "Performance audit (→ Performance persona)"
-    - "E2E test generation (→ Tester persona)"
-    - "Documentation sync (→ Documenter persona)"
+  always:
+    - "Security review → Security persona"
+    - "Performance audit → Performance persona"
+    - "E2E test generation → Tester persona"
+    - "Documentation sync → Documenter persona"
 
-  consider_delegating:
+  consider:
     - "Task involves 3+ distinct domains"
     - "Code review with 500+ changed lines"
     - "Multi-language refactoring"
     - "Simultaneous frontend + backend changes"
 
-  never_delegate:
-    - "Tasks requiring full conversation context"
-    - "User preference/style decisions"
-    - "Critical data migrations without review"
-    - "Destructive operations (delete, drop)"
+  requires_full_context:
+    - "Tasks requiring full conversation context — keep in main agent"
+    - "User preference/style decisions — defer to user"
+    - "Critical data migrations — require user review before delegation"
+    - "Destructive operations (delete, drop) — confirm with user first"
 
-# =============================================================================
-# SCOPE LIMITS
-# =============================================================================
+# --- SCOPE LIMITS ---
 
 scope_limits:
-  per_agent:
-    max_files: 10
-    max_tool_calls: 50
-    timeout_minutes: 15
-    allowed_tools:
-      - "Read"
-      - "Grep"
-      - "Glob"
-      - "View"
+  max_files: 10
+  max_tool_calls: 50
+  timeout_minutes: 15
+  default_tools: ["Read", "Grep", "Glob", "View"]
+  elevated_tools: ["Write", "Edit", "Bash", "Terminal"]
+  elevated_requires: "Explicit approval"
 
-  elevated_tools:
-    requires_approval: true
-    tools:
-      - "Write"
-      - "Edit"
-      - "Bash"
-      - "Terminal"
+# --- HANDOFF PATTERNS ---
 
-# =============================================================================
-# HANDOFF PATTERNS
-# =============================================================================
+patterns:
+  sequential: "Agent A → Result → Agent B → Orchestrator (for dependent tasks)"
+  parallel: "Orchestrator → [A, B, C] → Merge (for independent tasks)"
+  review_loop: "Developer → Code → Reviewer → Feedback → Developer (for quality-critical)"
 
-handoff_patterns:
-  - name: sequential-handoff
-    description: "One agent completes, passes result to next"
-    flow: "Agent A → Result → Agent B → Result → Orchestrator"
-    when: "Tasks have dependencies"
+# --- AGENT SPEC FORMAT ---
 
-  - name: parallel-fan-out
-    description: "Multiple agents work simultaneously"
-    flow: "Orchestrator → [Agent A, Agent B, Agent C] → Merge"
-    when: "Tasks are independent"
-
-  - name: review-loop
-    description: "Agent produces, reviewer validates"
-    flow: "Developer → Code → Reviewer → Feedback → Developer"
-    when: "Quality-critical changes"
-
-# =============================================================================
-# COMMUNICATION FORMAT
-# =============================================================================
-
-agent_spec_format:
-  template: |
-    ## Agent: {name}
-    **Role**: {role description}
-    **Scope**: {files/directories}
-    **Tools**: {allowed tools}
-    **Output**: {expected deliverable}
-    **Constraints**: {limitations}
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Is the task clearly scoped?"
-  - "Are tools restricted appropriately?"
-  - "Is the expected output defined?"
-  - "Does the agent have sufficient context?"
-  - "Are destructive operations blocked?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+spec_template: |
+  ## Agent: {name}
+  **Role**: {description} | **Scope**: {files} | **Tools**: {allowed} | **Output**: {deliverable}
 
 integration:
   tier: 2
-  related_modules:
-    - quality
-    - stop-conditions
-    - yagni
-
-  reflection:
-    enabled: true
-    check_before: "delegation"
-    question: "Could I handle this myself, or does it need a specialist?"
-
-  hsa_tools:
-    hsa_prepare_handoff:
-      purpose: "Generate context packet for sub-agent with project snapshot and relevant files"
-      usage: "hsa_prepare_handoff task_type=[code|test|review|debug] focus_files=[paths] → context packet"
-    hsa_filter_tools:
-      purpose: "Reduce prompt bloat by pruning tool catalog per sub-agent task type (93-97% token savings)"
-      usage: "hsa_filter_tools task_type=[code|test|review] → include/exclude tool lists"
-    hsa_get_snapshot:
-      purpose: "Provide project overview for sub-agent context injection"
-      usage: "hsa_get_snapshot → file tree, detected stack, key symbols"
+  related_modules: ["quality", "stop-conditions"]
 
 ---
 _DOMYH Awesome Code • Agent Delegation Rule_

@@ -1,3 +1,9 @@
+---
+name: audit-pro
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Audit Pro System
 
 12-Expert Panel audit system with 222 checkpoints. Conditional activation auto-detects project type (UI, DB, regulated, AI, cloud).

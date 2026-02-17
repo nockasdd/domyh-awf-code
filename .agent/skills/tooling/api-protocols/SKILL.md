@@ -1,3 +1,9 @@
+---
+name: api-protocols
+version: "6.3.1"
+category: tooling
+---
+
 # Modern API Protocols — GraphQL • tRPC • gRPC
 
 > GraphQL federation & schema design • tRPC end-to-end TypeScript • gRPC high-performance polyglot  

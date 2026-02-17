@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - English Strings
-# i18n/en.yaml v6.2.7 — Enhanced i18n System
+# i18n/en.yaml v6.3.1 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version synced from core/VERSION.yaml
 # Usage: Agent reads language from state.json → loads corresponding i18n file
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.2.7" # Sync from VERSION.yaml
-  version_short: v6.2.7
+  version: "6.3.1" # Sync from VERSION.yaml
+  version_short: v6.3.1
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
   language_name: "English"
@@ -167,6 +167,85 @@ commands:
     desc: "Workflow discovery, chaining, and management"
     help: "Usage: /workflow list | /workflow chain [a] [b] | /workflow suggest"
 
+  # Extended Commands (v6.3)
+  tdd:
+    name: "TDD"
+    short: "TDD"
+    desc: "Test-Driven Development: Red-Green-Refactor"
+    help: "Usage: /tdd [function_name] — Write tests first, code after"
+  e2e:
+    name: "E2E Test"
+    short: "E2E"
+    desc: "End-to-End testing with Playwright/Cypress"
+    help: "Usage: /e2e [scope] — scope: critical | full | smoke"
+  verify:
+    name: "Verify"
+    short: "Verify"
+    desc: "Build-Lint-Test verification loop until all pass"
+    help: "Usage: /verify [scope] — scope: build | lint | test | all"
+  security:
+    name: "Security"
+    short: "Security"
+    desc: "Security scanning and vulnerability remediation"
+    help: "Usage: /security [scope] — scope: sast | sca | secrets | full"
+  onboard:
+    name: "Onboard"
+    short: "Onboard"
+    desc: "Discover architecture, map dependencies"
+    help: "Usage: /onboard [project_path]"
+  prompt:
+    name: "Prompt"
+    short: "Prompt"
+    desc: "Generate structured AI prompts"
+    help: "Usage: /prompt [description] — Create a structured prompt"
+  orchestrate:
+    name: "Orchestrate"
+    short: "Orchestrate"
+    desc: "Multi-agent orchestration, task delegation"
+    help: "Usage: /orchestrate [task] — Split and delegate tasks"
+  dev:
+    name: "Dev Server"
+    short: "Dev"
+    desc: "Start development server"
+    help: "Usage: /dev [port] — Auto-detect stack and run"
+
+  # Workflow Commands
+  clean:
+    name: "Clean"
+    short: "Clean"
+    desc: "Remove dead code, organize imports, remove unused dependencies"
+    help: "Usage: /clean [scope] — scope: dead-code | imports | deps | all"
+  suggest:
+    name: "Suggest"
+    short: "Suggest"
+    desc: "Smart suggestions based on project context"
+    help: "Usage: /suggest"
+  feature:
+    name: "Feature"
+    short: "Feature"
+    desc: "Feature lifecycle with scaffold, implement, and traceability"
+    help: "Usage: /feature [name] — Full lifecycle from spec to ship"
+  modify:
+    name: "Modify"
+    short: "Modify"
+    desc: "Detect stack, analyze, plan fixes, and execute"
+    help: "Usage: /modify [scope] — scope: full | quick | targeted"
+  doctor:
+    name: "Doctor"
+    short: "Doctor"
+    desc: "System diagnostics, runtime checks, config validation"
+    help: "Usage: /doctor"
+  search:
+    name: "Search"
+    short: "Search"
+    desc: "Semantic search across memory and audit history"
+    help: "Usage: /search [query]"
+  sync_version:
+    name: "Sync Version"
+    short: "Sync"
+    desc: "Sync version from VERSION.yaml SSoT across all files"
+    help: "Usage: /sync-version"
+
   # Utility (6)
   status:
     name: "Status"
@@ -210,6 +289,18 @@ personas:
   documenter:
     name: "Technical Writer"
     desc: "Documentation and knowledge transfer"
+  planner:
+    name: "Planner"
+    desc: "Task breakdown and effort estimation"
+  researcher:
+    name: "Researcher"
+    desc: "Information gathering and analysis"
+  orchestrator:
+    name: "Multi-Agent Coordinator"
+    desc: "Parallel task delegation and synthesis"
+  security:
+    name: "Security Expert"
+    desc: "Vulnerability analysis and remediation"
 
 # =============================================================================
 # UI MESSAGES — Common messages
@@ -232,7 +323,7 @@ messages:
   progress_complete: "✅ Complete!"
   progress_failed: "❌ Failed"
 
-  # Deep Interview (v6.2.7)
+  # Deep Interview (v6.3.1)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "What exactly does this feature handle/manage?"
   interview_question_who: "Who uses it? □ Solo | □ Team (2-10) | □ Public"
@@ -240,7 +331,7 @@ messages:
   interview_skip: "→ Sufficient context, skipping interview"
   interview_complete: "→ Context gathered, proceeding with planning..."
 
-  # Auto Test Loop (v6.2.7)
+  # Auto Test Loop (v6.3.1)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Trying different approach..."
   test_loop_pass: "✅ Tests passed!"
@@ -253,7 +344,7 @@ messages:
     3️⃣ Run /debug for deep analysis
     4️⃣ Rollback to before the fix
 
-  # Step Confirmation (v6.2.7)
+  # Step Confirmation (v6.3.1)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ DONE: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Continue to next task? (y/adjust/stop)"
 

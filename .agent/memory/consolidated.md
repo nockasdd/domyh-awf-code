@@ -1,5 +1,6 @@
 # DOMYH Awesome Code — Consolidated Memory View
 
+> ⚠️ **Status**: Placeholder — consolidation engine not yet implemented
 > Auto-generated consolidated view of all active memories
 > Optimized for minimal token usage while preserving key information
 

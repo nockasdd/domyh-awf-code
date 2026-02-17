@@ -1,3 +1,9 @@
+---
+name: gemini-live
+version: "6.3.1"
+category: ai-ml
+---
+
 # Gemini Live & Advanced APIs
 
 > 🔴 **Real-time streaming + Advanced Gemini capabilities**

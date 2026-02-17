@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - Vietnamese Strings
-# i18n/vi.yaml v6.2.7 — Enhanced i18n System
+# i18n/vi.yaml v6.3.1 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version được sync từ core/VERSION.yaml
 # Sử dụng: Agent đọc language từ state.json → load file i18n tương ứng
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.2.7" # Sync từ VERSION.yaml
-  version_short: v6.2.7
+  version: "6.3.1" # Sync từ VERSION.yaml
+  version_short: v6.3.1
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"
   language_name: "Tiếng Việt"
@@ -209,6 +209,43 @@ commands:
     desc: "Khởi động dev server"
     help: "Sử dụng: /dev [port] — Tự động detect stack và chạy"
 
+  # Workflow Commands
+  clean:
+    name: "Dọn Dẹp"
+    short: "Clean"
+    desc: "Xóa dead code, sắp xếp imports, loại bỏ dependencies không dùng"
+    help: "Sử dụng: /clean [scope] — scope: dead-code | imports | deps | all"
+  suggest:
+    name: "Gợi Ý"
+    short: "Suggest"
+    desc: "Gợi ý thông minh dựa trên context dự án"
+    help: "Sử dụng: /suggest"
+  feature:
+    name: "Tính Năng"
+    short: "Feature"
+    desc: "Vòng đời tính năng: scaffold, implement, và traceability"
+    help: "Sử dụng: /feature [tên] — Từ spec đến ship"
+  modify:
+    name: "Sửa Đổi"
+    short: "Modify"
+    desc: "Detect stack, phân tích, lên kế hoạch sửa, và thực thi"
+    help: "Sử dụng: /modify [scope] — scope: full | quick | targeted"
+  doctor:
+    name: "Chẩn Đoán"
+    short: "Doctor"
+    desc: "Chẩn đoán hệ thống, kiểm tra runtime, xác thực config"
+    help: "Sử dụng: /doctor"
+  search:
+    name: "Tìm Kiếm"
+    short: "Search"
+    desc: "Tìm kiếm ngữ nghĩa trong memory và audit history"
+    help: "Sử dụng: /search [truy vấn]"
+  sync_version:
+    name: "Đồng Bộ Version"
+    short: "Sync"
+    desc: "Đồng bộ version từ VERSION.yaml SSoT"
+    help: "Sử dụng: /sync-version"
+
   # Utility (6)
   status:
     name: "Trạng Thái"
@@ -261,7 +298,7 @@ personas:
   orchestrator:
     name: "Nhạc Trưởng"
     desc: "Điều phối đa tác tử song song"
-  security_expert:
+  security:
     name: "Chuyên Gia Bảo Mật"
     desc: "Phân tích và khắc phục lỗ hổng"
 
@@ -286,7 +323,7 @@ messages:
   progress_complete: "✅ Hoàn thành!"
   progress_failed: "❌ Thất bại"
 
-  # Deep Interview (v6.2.7)
+  # Deep Interview (v6.3.1)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "Feature này xử lý/quản lý cái gì chính xác?"
   interview_question_who: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
@@ -294,7 +331,7 @@ messages:
   interview_skip: "→ Đủ context, bỏ qua interview"
   interview_complete: "→ Đủ context, tiến hành lên kế hoạch..."
 
-  # Auto Test Loop (v6.2.7)
+  # Auto Test Loop (v6.3.1)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Đang thử cách khác..."
   test_loop_pass: "✅ Tests passed!"
@@ -307,7 +344,7 @@ messages:
     3️⃣ Gọi /debug để phân tích sâu
     4️⃣ Rollback về trước khi sửa
 
-  # Step Confirmation (v6.2.7)
+  # Step Confirmation (v6.3.1)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ ĐÃ XONG: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Tiếp task tiếp? (y/điều chỉnh/dừng)"
 

@@ -1,155 +1,40 @@
-# Language Rule v6.0
-# Modular rule for language and i18n
-
+# Language Rule v6.3.1
 ---
 name: language
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-LNG-001"
 
-# =============================================================================
-# RULE METADATA
-# =============================================================================
-
-description: |
-  Language and internationalization rules for agent responses.
-  Default language: Tiếng Việt (Vietnamese)
-
+description: "Language and i18n rules for multilingual agent responses."
 category: "communication"
-
-# =============================================================================
-# CONTEXT APPLICATION
-# =============================================================================
 
 context:
   always_apply: true
-  personas: ["*"]
-  workflows: ["*"]
 
-# =============================================================================
-# CORE LANGUAGE SETTINGS
-# =============================================================================
+# --- LANGUAGE DETECTION ---
 
-settings:
-  default_language: "vi"
-  supported: ["vi", "en"]
-  fallback: "en"
+detection:
+  source: ".agent/memory/state.json → preferences.language"
+  default: "vi-VN"
+  i18n_file: ".agent/i18n/{lang}.yaml"
+  fallback: "Use professional tone in detected language if i18n file missing"
 
-  switch_commands:
-    vietnamese: "/lang vi"
-    english: "/lang en"
+# --- RESPONSE RULES ---
 
-# =============================================================================
-# RESPONSE RULES
-# =============================================================================
+response:
+  - "Match user's language — if they write in English, respond in English"
+  - "Technical terms stay in English (e.g., API, endpoint, middleware)"
+  - "Code comments follow the project's existing language convention"
+  - "Error messages and logs should be in English for consistency"
 
-response_rules:
-  vietnamese:
-    always_use:
-      - "Explanations and descriptions"
-      - "Error messages"
-      - "Questions to user"
-      - "Status updates"
-      - "Confirmations"
+# --- BILINGUAL SUPPORT (vi-VN) ---
 
-    keep_english:
-      - "Code samples"
-      - "Technical terms"
-      - "File names and paths"
-      - "Commands"
-      - "Variable names"
-
-    examples:
-      greeting: "Chào bạn! Em có thể giúp gì?"
-      confirmation: "Em đã hoàn thành task này."
-      question: "Bạn có muốn tiếp tục không?"
-      error: "Có lỗi xảy ra: {error}"
-
-  english:
-    always_use:
-      - "All responses"
-      - "Technical explanations"
-
-    examples:
-      greeting: "Hello! How can I help?"
-      confirmation: "I've completed this task."
-      question: "Would you like to continue?"
-
-# =============================================================================
-# TONE GUIDELINES
-# =============================================================================
-
-tone:
-  characteristics:
-    - "Professional but friendly"
-    - "Clear and concise"
-    - "Helpful and supportive"
-    - "Acknowledge mistakes openly"
-
-  avoid:
-    - "Overly formal language"
-    - "Excessive apologies"
-    - "Unnecessary filler words"
-    - "Ambiguous statements"
-
-# =============================================================================
-# TECHNICAL TERM HANDLING
-# =============================================================================
-
-technical_terms:
-  keep_in_english:
-    - "API, REST, GraphQL"
-    - "JWT, OAuth, CORS"
-    - "Docker, Kubernetes"
-    - "Git, commit, push"
-    - "Build, deploy, test"
-    - "Frontend, backend"
-    - "Framework, library"
-
-  translate_when_explaining:
-    api: "giao diện lập trình ứng dụng"
-    bug: "lỗi"
-    feature: "tính năng"
-    refactor: "tái cấu trúc"
-    deploy: "triển khai"
-
-# =============================================================================
-# FORMAT LOCALIZATION
-# =============================================================================
-
-localization:
-  date_format:
-    vi: "DD/MM/YYYY"
-    en: "YYYY-MM-DD"
-
-  number_format:
-    vi: "1.000.000"
-    en: "1,000,000"
-
-  emoji_usage:
-    enabled: true
-    categories:
-      status: ["✅", "❌", "⚠️", "🔄", "⏳"]
-      files: ["📁", "📄", "📝"]
-      actions: ["🚀", "🔧", "🐛", "💻"]
-
-# =============================================================================
-# CHECKLIST
-# =============================================================================
-
-checklist:
-  - "Response in correct language?"
-  - "Technical terms kept in English?"
-  - "Tone is appropriate?"
-  - "Clear and concise?"
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+vietnamese:
+  tone: "Professional, friendly, concise"
+  technical_terms: "Keep English technical terms (không dịch: API, server, database)"
+  format: "Use Vietnamese for explanations, English for code/commands"
 
 integration:
-  tier: 2 # Execution tier
-  config_source: ".agent/memory/state.json"
-  config_path: "preferences.language"
+  tier: 1
 
 ---
 _DOMYH Awesome Code • Language Rule_

@@ -8,7 +8,7 @@
 
 This template injects tool permissions and usage guidance.
 
-```
+```text
 {{TOOLS_BLOCK}}
 ```
 
@@ -83,7 +83,7 @@ tools:
   restricted:
     - replace_file_content: "Auditors observe, don't modify"
     - write_to_file: "Only for reports"
-    - delete_file: "Never allowed"
+    - delete_file: "Requires explicit user confirmation"
 ```
 
 ### Security

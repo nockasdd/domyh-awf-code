@@ -105,3 +105,10 @@ skills: { required: [web-perf], contextual: [auto] }
 | Fonts    | `font-display: swap`, preload       |
 | Caching  | CDN, `Cache-Control`, ETags         |
 | Network  | HTTP/3, preconnect, resource hints  |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

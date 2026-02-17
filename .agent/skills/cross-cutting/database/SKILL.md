@@ -1,8 +1,14 @@
+---
+name: database
+version: "6.3.1"
+category: infrastructure
+---
+
 ﻿---
 name: database
 detect:
   ["*.sql", "schema.prisma", "drizzle/", "migrations/", "*.db", "*.sqlite"]
-version: "6.2.7"
+version: "6.3.1"
 category: infrastructure
 tier: 1
 ---

@@ -1,3 +1,9 @@
+---
+name: azure
+version: "6.3.1"
+category: devops
+---
+
 # Azure Cloud Services
 
 Azure cloud services patterns for enterprise workloads. Covers App Service, AKS, Functions, Cosmos DB, Azure AI.

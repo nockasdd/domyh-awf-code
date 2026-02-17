@@ -1,7 +1,7 @@
 ---
 name: csharp
 detect: ["*.csproj", "*.sln", "*.cs", "global.json"]
-version: "6.2.7"
+version: "6.3.1"
 category: language
 tier: 1
 ---

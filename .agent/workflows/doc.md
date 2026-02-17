@@ -123,3 +123,10 @@ docs_as_code: "Docs live with code, version controlled, CI validated, auto-gener
 | `/doc changelog`     | CHANGELOG from git |
 | `/doc --check`       | Audit coverage     |
 | `/doc --format html` | Output as HTML     |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -2,7 +2,7 @@
 # Template Index — HSA Semantic Template Matching
 # =============================================================================
 # DOMYH Awesome Code Agent — Template Registry for HSA
-# version: 6.2.7
+# version: 6.3.1
 # =============================================================================
 
 templates:
@@ -113,6 +113,36 @@ templates:
     workflows: ["/test"]
     category: testing
     priority: 100
+
+  # ==========================================================================
+  # Reflection Templates
+  # ==========================================================================
+  - id: reflection-critic
+    file: reflection/critic.md
+    name: Self-Critique
+    description: Pre-delivery self-evaluation using Reflexion Pattern
+    keywords: [reflection, critique, review, quality, self-check]
+    workflows: ["/code", "/debug", "/fix", "/refactor", "/review"]
+    category: reflection
+    priority: 80
+
+  - id: reflection-error-analysis
+    file: reflection/error_analysis.md
+    name: Error Analysis
+    description: 5-Whys root cause analysis and pattern storage
+    keywords: [error, analysis, root cause, 5-whys, debugging, failure]
+    workflows: ["/debug", "/fix"]
+    category: reflection
+    priority: 75
+
+  - id: reflection-success-analysis
+    file: reflection/success_analysis.md
+    name: Success Analysis
+    description: Positive pattern reinforcement and knowledge capture
+    keywords: [success, pattern, reinforcement, learning, improvement]
+    workflows: ["/code", "/debug", "/refactor"]
+    category: reflection
+    priority: 70
 
   # ==========================================================================
   # Feature Lifecycle Templates
@@ -287,4 +317,4 @@ search:
 # =============================================================================
 # Footer
 # =============================================================================
-# _DOMYH Awesome Code • Template Index v6.2.7 • HSA Integration_
+# _DOMYH Awesome Code • Template Index v6.3.1 • HSA Integration_

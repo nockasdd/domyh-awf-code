@@ -107,3 +107,10 @@ skills: { required: [], contextual: [auto] }
 
 Tests: ✅ 42/42 | Build: ✅ Pass | Lint: ✅ 0 issues
 ```
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

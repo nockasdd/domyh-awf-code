@@ -6,7 +6,7 @@
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: v6.2.7
+version: v6.3.1
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -29,9 +29,10 @@ defaults:
 
 core:
   # Rules System (modular files)
-  rules_dir: rules/ # 8 active rule modules
+  rules_dir: rules/ # 11 active rule modules
   rules_index: rules/README.md # Rules registry
   # SSoT Files
+  context_snapshot: memory/CONTEXT_SNAPSHOT.md # Cold-start context
   memory_paths: core/MEMORY_PATHS.yaml # Memory file locations
   # Reference data (read-only)
   reference_dir: core/reference/ # PATTERNS, TEMPLATES, HSA, etc.
@@ -44,15 +45,16 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 82 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 83 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 skills with T2 loaded
-  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 21 cross-cutting + 5 tooling + 7 ai-ml
+  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 22 cross-cutting + 5 tooling + 7 ai-ml
 
   loading:
-    strategy: progressive # progressive | eager | lazy
-    max_active: 3 # Max skills in context at once
-    cache_ttl: 3600 # 1 hour cache
+    # NOTE: These defaults can be overridden by config.yaml (project-level)
+    strategy: progressive # progressive | eager | lazy (override: config.yaml)
+    max_active: 3 # Max skills in context at once (override: config.yaml)
+    cache_ttl: 3600 # 1 hour cache (override: config.yaml)
 
   # Categories with priority (lower = higher priority)
   categories:
@@ -113,8 +115,7 @@ skills:
 
     cross-cutting:
       priority: 4
-      skills:
-        [
+      skills: [
           database,
           testing,
           coding-rules,
@@ -127,12 +128,34 @@ skills:
           web-perf,
           audit-pro,
           tdd-workflow,
-          prompt-engineering,
           accessibility,
           seo,
           microservices,
           monorepo,
+          # v6.3 New
+          tauri,
+          real-time,
+          event-driven,
+          wasm,
+          playwright,
+          skill-creator,
+        ]
+
+    tooling:
+      priority: 5
+      skills: [mcp, ide-extension, cli-dev, api-protocols, browser-agent]
+
+    ai-ml:
+      priority: 6
+      skills:
+        [
+          ai-agents,
+          vector-search,
+          prompt-engineering,
           rag-patterns,
+          gemini-media-gen,
+          gemini-tts,
+          gemini-live,
         ]
 
 # =============================================================================
@@ -154,7 +177,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (34 workflows) — Complete Command Set
+# COMMANDS (41 workflows) — Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
@@ -170,7 +193,8 @@ commands:
     persona: developer
     cache: true
     triggers: [code, write, implement, viết code]
-    skills: { required: [], contextual: [auto, domyh-design, tailwind] }
+    skills:
+      { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
 
   - id: dev
     file: workflows/dev.md
@@ -187,14 +211,14 @@ commands:
     category: development
     persona: debugger
     cache: true
-    triggers: [debug, fix, error, lỗi]
-    skills: { required: [], contextual: [auto] }
+    triggers: [debug, error, lỗi]
+    skills: { required: [error-handling], contextual: [auto] }
 
   - id: test
     file: workflows/test.md
     icon: "✅"
     category: development
-    persona: developer
+    persona: tester
     cache: true
     triggers: [test, kiểm thử]
     skills: { required: [testing], contextual: [auto] }
@@ -203,20 +227,22 @@ commands:
     file: workflows/refactor.md
     icon: "🔧"
     category: development
+    persona: developer
     cache: true
     triggers: [refactor, cleanup, tái cấu trúc]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [coding-rules], contextual: [auto] }
 
   - id: generate
     file: workflows/generate.md
     icon: "🏗️"
     category: development
+    persona: developer
     cache: true
-    triggers: [generate, scaffold, tạo code]
+    triggers: [generate, tạo code]
     skills: { required: [], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # PLANNING & DESIGN (5 commands)
+  # PLANNING & DESIGN (6 commands)
   # ═══════════════════════════════════════════════════════════════════════════
 
   - id: plan
@@ -243,7 +269,7 @@ commands:
     category: planning
     persona: architect
     cache: true
-    triggers: [prompt, tạo prompt, generate prompt, viết prompt]
+    triggers: [prompt, tạo prompt, viết prompt]
     skills: { required: [prompt-engineering], contextual: [domyh-design] }
 
   - id: visualize
@@ -259,6 +285,7 @@ commands:
     file: workflows/doc.md
     icon: "📝"
     category: planning
+    persona: documenter
     cache: true
     triggers: [doc, document, tài liệu]
     skills: { required: [], contextual: [auto] }
@@ -267,6 +294,7 @@ commands:
     file: workflows/init.md
     icon: "✨"
     category: planning
+    persona: developer
     cache: false
     triggers: [init, create, new, tạo mới]
     skills: { required: [], contextual: [auto] }
@@ -279,6 +307,7 @@ commands:
     file: workflows/deploy.md
     icon: "🚀"
     category: deployment
+    persona: devops
     cache: false
     triggers: [deploy, release, triển khai]
     skills: { required: [ci-cd], contextual: [docker, kubernetes, aws] }
@@ -287,6 +316,7 @@ commands:
     file: workflows/env.md
     icon: "🔐"
     category: deployment
+    persona: devops
     cache: true
     triggers: [env, environment, môi trường]
     skills: { required: [security], contextual: [auto] }
@@ -295,6 +325,7 @@ commands:
     file: workflows/monitor.md
     icon: "📡"
     category: deployment
+    persona: devops
     cache: true
     triggers: [monitor, observability, giám sát]
     skills: { required: [observability, logging], contextual: [auto] }
@@ -303,14 +334,16 @@ commands:
     file: workflows/perf.md
     icon: "⚡"
     category: deployment
+    persona: developer
     cache: true
     triggers: [perf, performance, hiệu năng]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [web-perf], contextual: [auto] }
 
   - id: revert
     file: workflows/revert.md
     icon: "⏪"
     category: deployment
+    persona: devops
     cache: false
     triggers: [revert, rollback, undo, hoàn tác]
     skills: { required: [], contextual: [ci-cd] }
@@ -319,6 +352,7 @@ commands:
     file: workflows/migrate.md
     icon: "🗃️"
     category: deployment
+    persona: developer
     cache: true
     triggers: [migrate, migration, di chuyển]
     skills: { required: [database], contextual: [auto] }
@@ -333,13 +367,14 @@ commands:
     category: quality
     persona: auditor
     cache: true
-    triggers: [ap, audit, kiểm tra]
+    triggers: [ap, audit, kiểm toán]
     skills: { required: [security, audit-pro], contextual: [auto] }
 
   - id: review
     file: workflows/review.md
     icon: "👀"
     category: quality
+    persona: developer
     cache: true
     triggers: [review, pr, xem xét]
     skills: { required: [security], contextual: [auto] }
@@ -348,6 +383,7 @@ commands:
     file: workflows/upgrade.md
     icon: "📦"
     category: quality
+    persona: developer
     cache: true
     triggers: [upgrade, update, cập nhật]
     skills: { required: [], contextual: [auto] }
@@ -368,7 +404,7 @@ commands:
     persona: developer
     cache: true
     triggers: [fix, quick fix, sửa nhanh]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [error-handling], contextual: [auto] }
 
   - id: scaffold
     file: workflows/scaffold.md
@@ -377,7 +413,7 @@ commands:
     persona: developer
     cache: true
     triggers: [scaffold, generate component, tạo component]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [coding-rules], contextual: [auto] }
 
   - id: workflow
     file: workflows/workflow.md
@@ -389,13 +425,14 @@ commands:
     skills: { required: [], contextual: [] }
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # UTILITY (6 commands)
+  # UTILITY (7 commands)
   # ═══════════════════════════════════════════════════════════════════════════
 
   - id: status
     file: workflows/status.md
     icon: "📊"
     category: utility
+    persona: developer
     cache: false
     triggers: [status, health, sức khỏe]
     skills: { required: [], contextual: [] }
@@ -404,6 +441,7 @@ commands:
     file: workflows/recap.md
     icon: "📖"
     category: utility
+    persona: documenter
     cache: false
     triggers: [recap, summary, tóm tắt]
     skills: { required: [], contextual: [] }
@@ -412,7 +450,7 @@ commands:
     file: workflows/orchestrate.md
     icon: "🎭"
     category: utility
-    persona: architect
+    persona: orchestrator
     cache: true
     triggers: [orchestrate, multi-agent, đa tác tử]
     skills: { required: [], contextual: [] }
@@ -421,6 +459,7 @@ commands:
     file: workflows/onboard.md
     icon: "📦"
     category: utility
+    persona: researcher
     cache: false
     triggers: [onboard, discover, khám phá]
     skills: { required: [], contextual: [auto] }
@@ -438,6 +477,7 @@ commands:
     file: workflows/help.md
     icon: "❓"
     category: utility
+    persona: developer
     cache: true
     triggers: [help, trợ giúp]
     skills: { required: [], contextual: [] }
@@ -473,6 +513,73 @@ commands:
     triggers: [verify, validate, kiểm tra]
     skills: { required: [testing], contextual: [auto] }
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # ADDITIONAL (6 commands)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: doctor
+    file: workflows/doctor.md
+    icon: "🩺"
+    category: utility
+    persona: devops
+    cache: false
+    triggers: [doctor, diagnose, chẩn đoán]
+    skills: { required: [], contextual: [] }
+
+  - id: feature
+    file: workflows/feature.md
+    icon: "🏗️"
+    category: development
+    persona: planner
+    cache: true
+    triggers: [feature, tính năng]
+    skills: { required: [coding-rules], contextual: [auto] }
+
+  - id: clean
+    file: workflows/clean.md
+    icon: "🧹"
+    category: utility
+    persona: developer
+    cache: true
+    triggers: [clean, cleanup, dọn dẹp]
+    skills: { required: [coding-rules], contextual: [auto] }
+
+  - id: modify
+    file: workflows/modify.md
+    icon: "🔧"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [modify, sửa đổi]
+    skills: { required: [], contextual: [auto] }
+
+  - id: search
+    file: workflows/search.md
+    icon: "🔍"
+    category: utility
+    persona: researcher
+    cache: false
+    triggers: [search, tìm kiếm]
+    skills: { required: [], contextual: [] }
+
+  - id: suggest
+    file: workflows/suggest.md
+    icon: "➡️"
+    category: utility
+    persona: developer
+    cache: false
+    triggers: [suggest, gợi ý]
+    skills: { required: [], contextual: [auto] }
+
+  - id: sync-version
+    file: workflows/sync-version.md
+    icon: "🔄"
+    category: utility
+    persona: developer
+    cache: false
+    triggers: [sync-version, sync version, đồng bộ version]
+    skills: { required: [], contextual: [] }
+
 # =============================================================================
 # PERSONAS (On-demand load)
 # =============================================================================
@@ -482,7 +589,7 @@ personas:
   available:
     - id: auditor
       file: personas/auditor.md
-      experts: 5
+      experts: 12 # 5 core + 7 conditional
     - id: developer
       file: personas/developer.md
     - id: architect
@@ -519,6 +626,6 @@ i18n:
 # =============================================================================
 
 token_budget:
-  idle: 8200 # ~8,200 tokens at rest (82 × META.yaml)
+  idle: 8300 # ~8,300 tokens at rest (83 × META.yaml)
   single_skill: 9700 # ~9,700 with 1 skill active (+1,500 T2)
   peak: 12700 # ~12,700 max (3 skills concurrent)

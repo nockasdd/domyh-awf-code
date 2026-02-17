@@ -2,7 +2,7 @@
 # owasp-llm-top10.yaml — OWASP Top 10 for LLM Applications (2025)
 # =============================================================================
 
-version: "1.0.0"
+version: "6.3.1"
 
 risks:
   LLM01:

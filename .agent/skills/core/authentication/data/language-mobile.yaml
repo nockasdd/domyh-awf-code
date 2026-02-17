@@ -1,7 +1,7 @@
 metadata:
   skill: authentication
   domain: language_mobile
-  version: 6.2.3
+  version: v6.3.1
   updated: "2026-02-05"
   migrated_from: language-mobile.yaml
   patterns_count: 25

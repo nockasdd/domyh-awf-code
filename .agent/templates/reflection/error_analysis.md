@@ -146,4 +146,29 @@ When starting a new task:
 
 ---
 
+## 7. Episodic Memory Integration
+
+> Connect error analysis to the progressive escalation system.
+
+After completing this analysis, save an episodic memory entry:
+
+```yaml
+# Save to .domyh/debug/episodic_memory.yaml
+- id: "EP-[timestamp]"
+  bug_signature: "[hash of error + file + line]"
+  failed_approaches:
+    - approach: "[what was tried]"
+      reason: "[why it failed]"
+  successful_approach: "[what finally worked]"
+  lesson: "[one-line takeaway]"
+  level_reached: "[1-6]"  # Progressive escalation level
+  bias_detected: "[none | confirmation | anchoring | tunnel_vision]"
+```
+
+This entry is used by `rules/modules/progressive-escalation.yaml` to:
+- Prevent repeating failed approaches on similar bugs
+- Accelerate resolution by trying successful patterns first
+
+---
+
 # DOMYH Awesome Code • Error Analysis Template

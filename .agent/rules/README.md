@@ -11,13 +11,17 @@ trigger: always_on
 
 ## Overview
 
-The rules system uses a **constitutional hierarchy** with three tiers:
+The rules system uses a **constitutional hierarchy** with five tiers (enforced in `SACRED_RULES.xml`):
 
-- **Tier 0: Core** — Immutable principles (cannot be overridden)
-- **Tier 1: Safety** — Critical safety (limited override with approval)
-- **Tier 2: Execution** — Quality guidelines (context-dependent)
+- **Tier 0: Core** — Immutable principles: CORE_001–003 (3 rules)
+- **Tier 1: Safety & Environment** — LANG_001, ENV_001, SAFE_001, PERF_001 (4 rules)
+- **Tier 2: MCP Tool Enforcement** — MCP_001–003 (3 rules)
+- **Tier 3: Session & Memory** — SESSION_001–004 (4 rules)
+- **Tier 4: Workflow & Execution** — EXEC_001–007 (7 rules)
 
 Additional **modular rules** can be composed for specific use cases.
+
+> **Note**: The `archive/constitutional/` YAML files (tier-0-core.yaml, etc.) contain an expanded aspirational rule set using C0/C1/C2 notation. The actual enforced rules are in `SACRED_RULES.xml` using CORE/LANG/ENV/SAFE/PERF/MCP/SESSION/EXEC IDs.
 
 ---
 
@@ -25,42 +29,53 @@ Additional **modular rules** can be composed for specific use cases.
 
 ### Tier 0: Core Principles (Immutable)
 
-**Always apply, no override possible**
+**Always apply, no override possible** — Source: `SACRED_RULES.xml`
 
-| Rule   | Description                                          |
-| ------ | ---------------------------------------------------- |
-| C0-001 | **Do No Harm** — Never cause physical/financial harm |
-| C0-002 | **Truthfulness** — Never fabricate information       |
-| C0-003 | **User Sovereignty** — User has ultimate control     |
-| C0-004 | **Transparency** — Be open about capabilities        |
-| C0-005 | **Privacy** — Protect sensitive information          |
+| Rule ID   | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| CORE_001  | **Do No Harm** — Protect from physical/financial/reputational harm |
+| CORE_002  | **Truthfulness** — Verify claims against evidence                |
+| CORE_003  | **User Sovereignty** — User has ultimate control                 |
 
-📁 Source: `constitutional/tier-0-core.yaml`
+### Tier 1: Safety & Environment
 
-### Tier 1: Safety (Override with Approval)
+| Rule ID   | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| LANG_001  | **Language** — Respond in configured language from state.json    |
+| ENV_001   | **Install Mode** — Detect global vs project mode from config    |
+| SAFE_001  | **Destructive Action Prevention** — Confirm before deleting     |
+| PERF_001  | **Token Efficiency** — Minimize context usage                   |
 
-| Rule   | Description                                                 |
-| ------ | ----------------------------------------------------------- |
-| C1-001 | **Destructive Action Prevention** — Confirm before deleting |
-| C1-002 | **Scope Containment** — Stay within agreed scope            |
-| C1-003 | **Command Execution Safety** — Verify dangerous commands    |
-| C1-004 | **Information Boundaries** — Respect context boundaries     |
-| C1-005 | **Error Recovery** — Fail safely, preserve state            |
+### Tier 2: MCP Tool Enforcement
 
-📁 Source: `constitutional/tier-1-safety.yaml`
+| Rule ID   | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| MCP_001   | **HSA Priority** — Use HSA tools for code operations            |
+| MCP_002   | **HSA Delegation** — Use handoff tools for sub-agents           |
+| MCP_003   | **HSA Observability** — Use repo map, env detect, skill search  |
 
-### Tier 2: Execution Quality (Context-Dependent)
+### Tier 3: Session & Memory
 
-| Rule   | Description                                                |
-| ------ | ---------------------------------------------------------- |
-| C2-001 | **Evidence-Based Claims** — Support claims with evidence   |
-| C2-002 | **Self-Critique** — Review before delivering               |
-| C2-003 | **Planning Before Action** — Plan non-trivial tasks        |
-| C2-004 | **Incremental Verification** — Verify changes step-by-step |
-| C2-005 | **Clear Communication** — Communicate appropriately        |
-| C2-006 | **Context Management** — Manage tokens efficiently         |
+| Rule ID      | Description                                                   |
+| ------------ | ------------------------------------------------------------- |
+| SESSION_001  | **Load Session Rules** — Read session_rules.json at start     |
+| SESSION_002  | **Detect Preferences** — Auto-save from trigger phrases       |
+| SESSION_003  | **Filter Secrets** — Block sensitive content from persistence |
+| SESSION_004  | **Override Scope** — Session rules override Tier 3+ only      |
 
-📁 Source: `constitutional/tier-2-execution.yaml`
+### Tier 4: Workflow & Execution
+
+| Rule ID   | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| EXEC_001  | **Evidence** — Provide file:line references                     |
+| EXEC_002  | **Clarification** — Ask when ambiguous                          |
+| EXEC_003  | **Stack Detection** — Load matching skills at task start        |
+| EXEC_004  | **DRY** — Search existing code before creating new              |
+| EXEC_005  | **Incremental** — Small batches, verify each step               |
+| EXEC_006  | **Progressive Escalation** — REFLECT→REFRAME→WIDEN→ESCALATE    |
+| EXEC_007  | **Session Memory** — Read/update CONTEXT_SNAPSHOT               |
+
+> Archive: See `archive/constitutional/` for expanded aspirational rules (C0-001 to C0-005, C1-001 to C1-005, C2-001 to C2-006)
 
 ---
 
@@ -80,6 +95,7 @@ Composable rule modules for specific use cases:
 | `online-research.yaml`          | Web research guidelines      | Researcher          |
 | `agent-delegation.yaml`         | Task delegation patterns     | Orchestrator        |
 | `performance-optimization.yaml` | Perf optimization guidelines | Developer, DevOps   |
+| `progressive-escalation.yaml`   | Stuck detection & pivot      | Developer, Debugger |
 
 > **Merged into constitutional tiers** (in `archive/`): `reflection.yaml`, `context-management.yaml`, `evidence.yaml`
 
@@ -93,14 +109,7 @@ Composable rule modules for specific use cases:
 .agent/rules/
 ├── README.md                    # This file
 ├── SACRED_RULES.xml             # Core XML rules (always active)
-├── constitutional/              # v6.0 Constitutional hierarchy
-│   ├── tier-0-core.yaml         # Immutable principles
-│   ├── tier-1-safety.yaml       # Safety rules
-│   └── tier-2-execution.yaml    # Quality guidelines
-├── modules/                     # v6.0 Modular rules (10 YAML files)
-│   ├── reflection.yaml          # Self-improvement
-│   ├── context-management.yaml  # Token efficiency
-│   ├── evidence.yaml            # Evidence requirements
+├── modules/                     # v6.0 Modular rules (11 YAML files)
 │   ├── stop-conditions.yaml     # When to pause
 │   ├── edit-verification.yaml   # Code edit verification
 │   ├── terminal-safety.yaml     # Terminal safety
@@ -108,11 +117,15 @@ Composable rule modules for specific use cases:
 │   ├── quality.yaml             # Code quality
 │   ├── language.yaml            # Language/i18n
 │   ├── yagni.yaml               # YAGNI enforcement
-│   └── online-research.yaml     # Web research
+│   ├── online-research.yaml     # Web research
+│   └── progressive-escalation.yaml # Stuck detection & pivot
 ├── data/                        # Supporting data files
 │   └── build-systems.yaml       # Build system detection data
 ├── archive/                     # Merged/legacy rules
-│   ├── constitutional/          # Constitutional YAML tiers
+│   ├── constitutional/          # v6.0 Constitutional YAML tiers
+│   │   ├── tier-0-core.yaml     # Immutable principles
+│   │   ├── tier-1-safety.yaml   # Safety rules
+│   │   └── tier-2-execution.yaml # Quality guidelines
 │   ├── reflection.yaml          # Merged into Tier 2
 │   ├── context-management.yaml  # Merged into Tier 2
 │   ├── evidence.yaml            # Merged into Tier 2
@@ -140,7 +153,7 @@ Tier 0 (Core) > Tier 1 (Safety) > Tier 2 (Execution) > Modular Rules
 | Persona    | Always Load  | Additional Modules              |
 | ---------- | ------------ | ------------------------------- |
 | Developer  | Tier 0, 1, 2 | edit-verification, quality, git |
-| Debugger   | Tier 0, 1, 2 | edit-verification, evidence     |
+| Debugger   | Tier 0, 1, 2 | edit-verification, evidence, progressive-escalation |
 | Auditor    | Tier 0, 1, 2 | evidence                        |
 | Tester     | Tier 0, 1, 2 | quality                         |
 | DevOps     | Tier 0, 1, 2 | terminal-safety, git            |
@@ -182,7 +195,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.2.7"
+version: "6.3.1"
 rule_id: "MOD-XXX-001"
 
 description: |

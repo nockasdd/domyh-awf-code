@@ -1,3 +1,9 @@
+---
+name: kubernetes
+version: "6.3.1"
+category: infrastructure
+---
+
 # Kubernetes Orchestration
 
 Kubernetes orchestration patterns for K8s 1.32-1.33+. Covers Gateway API, Sidecar Containers, Kueue, Pod Security.

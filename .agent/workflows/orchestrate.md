@@ -115,3 +115,10 @@ monitoring:
 | Loop prevention | Detect recursive/circular calls   |
 | Alert           | Notify at 90% of limit            |
 | Budget tracking | Show token usage per specialist   |
+---
+
+## SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

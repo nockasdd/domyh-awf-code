@@ -1,3 +1,9 @@
+---
+name: error-handling
+version: "6.3.1"
+category: core
+---
+
 # Error Handling Skill
 
 > 🛡️ **Comprehensive error handling patterns for 12 languages**

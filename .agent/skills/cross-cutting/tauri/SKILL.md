@@ -1,3 +1,9 @@
+---
+name: tauri
+version: "6.3.1"
+category: cross-cutting
+---
+
 # Tauri 2.0 — Desktop & Mobile Apps
 
 > Rust core • System WebView • Capability-based Security  

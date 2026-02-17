@@ -26,3 +26,9 @@ All `/generate` commands map directly to `/scaffold`:
 | `/generate dto CreateUser`     | `/scaffold dto CreateUser`     |
 
 > 📖 See `/scaffold` for full documentation, framework templates, and convention matching.
+
+---
+
+## 💾 SESSION SAVE
+
+After generation completes: update `memory/session.md` (generated files, patterns used) and `memory/state.json` (last_workflow: generate).

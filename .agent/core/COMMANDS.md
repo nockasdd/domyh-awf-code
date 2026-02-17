@@ -1,6 +1,6 @@
 # DOMYH Awesome Code — Command Registry
 
-> 34 active slash commands • 3-Layer Skill Resolution
+> 41 active slash commands • 3-Layer Skill Resolution
 
 ---
 
@@ -11,12 +11,12 @@
 | `/init`     | ✨ Initialize project    | —                   | [auto]                         |
 | `/code`     | 💻 Write & fix code      | coding-rules        | [auto, domyh-design, tailwind] |
 | `/debug`    | 🐛 Systematic debugging  | error-handling      | [auto]                         |
-| `/plan`     | 📋 Feature planning      | —                   | —                              |
 | `/test`     | ✅ Run and write tests   | testing             | [auto]                         |
 | `/deploy`   | 🚀 Deploy to production  | ci-cd               | docker, kubernetes, aws        |
 | `/refactor` | 🔧 Refactor & cleanup    | coding-rules        | [auto]                         |
 | `/review`   | 👀 Code review           | security            | [auto]                         |
 | `/ap`       | 🔬 Full audit (5-expert) | security, audit-pro | [auto]                         |
+| `/modify`   | 🔧 Fix existing project  | coding-rules        | [auto]                         |
 
 ## Git & Fix Commands (3)
 
@@ -34,24 +34,28 @@
 | `/scaffold` | 🏗️ Generate from patterns | coding-rules    | [auto]            |
 | `/doc`      | 📚 Documentation          | —               | [auto]            |
 
-## Planning & Design (4)
+## Planning & Design (6)
 
 | Command      | Description            | Skills Required    | Skills Contextual |
 | ------------ | ---------------------- | ------------------ | ----------------- |
+| `/plan`      | 📋 Feature planning    | —                  | —                 |
+| `/feature`   | 🏗️ Feature lifecycle   | —                  | [auto]            |
 | `/think`     | 💡 Brainstorming Pro   | —                  | —                 |
 | `/prompt`    | ✍️ AI prompt generator | prompt-engineering | [domyh-design]    |
 | `/visualize` | 🖼️ UI/UX mockups       | domyh-design       | —                 |
 | `/perf`      | 📈 Performance profile | web-perf           | [auto]            |
 
-## DevOps Commands (5)
+## DevOps Commands (7)
 
-| Command    | Description               | Skills Required        | Skills Contextual |
-| ---------- | ------------------------- | ---------------------- | ----------------- |
-| `/migrate` | 🗄️ Database migrations    | database               | [auto]            |
-| `/monitor` | 📊 Observability setup    | observability, logging | [auto]            |
-| `/env`     | 🔐 Environment management | security               | [auto]            |
-| `/upgrade` | ⬆️ Dependency updates     | —                      | [auto]            |
-| `/dev`     | ▶️ Start dev server       | —                      | [auto]            |
+| Command      | Description                    | Skills Required        | Skills Contextual     |
+| ------------ | ------------------------------ | ---------------------- | --------------------- |
+| `/migrate`   | 🗄️ Database migrations         | database               | [auto]                |
+| `/monitor`   | 📊 Observability setup         | observability, logging | [auto]                |
+| `/env`       | 🔐 Environment management      | security               | [auto]                |
+| `/upgrade`   | ⬆️ Dependency updates          | —                      | [auto]                |
+| `/dev`       | ▶️ Start dev server            | —                      | [auto]                |
+| `/doctor`    | 🩺 System diagnostics          | —                      | [auto]                |
+| `/security`  | 🔒 Security scan & remediation | security               | [auto]                |
 
 ## Testing & Verification Commands (3)
 
@@ -61,7 +65,7 @@
 | `/e2e`    | 🌐 E2E test generation    | testing, tdd-workflow | [auto]            |
 | `/verify` | 🔄 Build-Lint-Test loop   | testing               | [auto]            |
 
-## Utility Commands (5)
+## Utility Commands (10)
 
 | Command        | Description                      | Skills |
 | -------------- | -------------------------------- | ------ |
@@ -70,12 +74,17 @@
 | `/help`        | ❓ Help                          | —      |
 | `/workflow`    | 🔄 Workflow discovery & chaining | —      |
 | `/orchestrate` | 🎭 Multi-agent coordination      | —      |
+| `/onboard`     | 📦 Project onboarding guide      | —      |
+| `/clean`       | 🧹 Remove dead code & imports    | —      |
+| `/suggest`     | ➡️ Context-aware next steps      | —      |
+| `/search`      | 🔍 Semantic search               | —      |
+| `/sync-version`| 🔄 Sync version from SSoT         | —      |
 
 ---
 
 ## Skill Resolution Flow
 
-```
+```text
 User: /command [args]
     │
     ▼
