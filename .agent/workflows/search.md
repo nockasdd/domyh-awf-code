@@ -238,7 +238,7 @@ local_dependencies:
 
 ---
 
-_DOMYH Awesome Code v6.3.1 • Semantic Search v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v6.3.2 • Semantic Search v1.1 • Hybrid Mode_
 ---
 
 ## SESSION SAVE

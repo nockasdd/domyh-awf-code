@@ -1,7 +1,7 @@
-# Git Workflow Rule v6.3.1
+# Git Workflow Rule v6.3.2
 ---
 name: git-workflow
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-GIT-001"
 
 description: "Git operations: commit conventions, branching, and safety checks."

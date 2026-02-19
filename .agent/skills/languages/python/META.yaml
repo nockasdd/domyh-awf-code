@@ -1,5 +1,5 @@
 name: python
-version: "6.3.1"
+version: "7.0.0"
 category: backend
 tier: 3
 
@@ -56,8 +56,19 @@ triggers:
     - pytorch
     - tensorflow
     - scikit-learn
+    - sklearn
     - transformers
     - huggingface
+    # MLOps
+    - dvc
+    - mlflow
+    - dagshub
+    - mlops
+    # Packaging
+    - uv
+    - pyproject.toml
+    # UI
+    - streamlit
     # Testing
     - pytest
     - pytest asyncio
@@ -78,9 +89,19 @@ triggers:
     - data analysis
     - machine learning
 
+data_files:
+  - data/core.yaml
+  - data/async.yaml
+  - data/fastapi.yaml
+  - data/testing.yaml
+  - data/ml-data-science.yaml
+  - data/packaging.yaml
+
 related_skills:
   - database
   - docker
+  - ml-pipelines
+  - streamlit
 
 prevent_confusion_with:
   - javascript: "Python uses def/async def, JS uses function/async function"

@@ -1,6 +1,6 @@
 ---
 name: tdd-workflow
-version: "6.3.1"
+version: "7.0.0"
 category: cross-cutting
 ---
 

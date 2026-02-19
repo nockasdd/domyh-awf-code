@@ -1,5 +1,5 @@
 name: ai-agents
-version: "6.3.1"
+version: "7.0.0"
 display: AI Agent Orchestration
 category: ai-ml
 tier: 1
@@ -7,11 +7,12 @@ priority: 1
 
 desc: "AI agent development & orchestration. LangChain/LangGraph, CrewAI, AutoGen, Google ADK. Covers multi-agent patterns, LLM API integration (OpenAI/Anthropic/Gemini), MCP built-in support, Gemini Live agents, tool use, memory, and production deployment."
 
-  ### Data Files (4 domains, ~32 patterns)
-  - orchestration-patterns.yaml: supervisor/swarm/sequential/hierarchical (8)
-  - llm-integration.yaml: OpenAI/Anthropic/Gemini API patterns, streaming (8)
-  - agent-rules.yaml: Cursor/Cline/Codex/DOMYH rule system comparison (8)
-  - memory-patterns.yaml: short-term, long-term, vector memory (8)
+# Data Files (5 domains, ~38 patterns)
+# - orchestration-patterns.yaml: supervisor/swarm/sequential/hierarchical (8)
+# - llm-integration.yaml: OpenAI/Anthropic/Gemini API patterns, streaming (8)
+# - agent-rules.yaml: Cursor/Cline/Codex/DOMYH rule system comparison (8)
+# - memory-patterns.yaml: short-term, long-term, vector memory (8)
+# - agentic-apps.yaml: FastAPI+LangChain scaffold, React UI, Langfuse (6)
 
 triggers:
   file_patterns:
@@ -120,6 +121,8 @@ related_skills:
   - vector-search
   - gemini-live
   - gemini-media-gen
+  - ml-pipelines
+  - streamlit
 
 hsa_adapter:
   enabled: true

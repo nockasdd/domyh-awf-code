@@ -1,0 +1,231 @@
+# =============================================================================
+# Computer Vision Patterns (Feb 2026)
+# Source: Hand Tracking (OpenCV+MediaPipe), Chest Disease (CNN)
+# =============================================================================
+
+metadata:
+  skill: ml-pipelines
+  domain: computer-vision
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 4
+
+patterns:
+  - id: cv001
+    name: OpenCV Real-Time Camera
+    category: capture
+    description: |
+      Real-time video capture and frame processing with OpenCV.
+      Foundation for hand tracking, face detection, etc.
+    text: opencv camera capture video real-time frame webcam
+    example: |
+      import cv2
+      import time
+
+      class CameraCapture:
+          def __init__(self, camera_id: int = 0):
+              self.cap = cv2.VideoCapture(camera_id)
+              self.prev_time = time.time()
+
+          def read_frame(self) -> tuple[bool, any]:
+              return self.cap.read()
+
+          def show_fps(self, frame):
+              """Overlay FPS counter on frame."""
+              curr_time = time.time()
+              fps = 1 / (curr_time - self.prev_time)
+              self.prev_time = curr_time
+              cv2.putText(
+                  frame, f"FPS: {int(fps)}",
+                  (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                  1, (0, 255, 0), 2,
+              )
+
+          def run(self, process_fn=None):
+              """Main loop with optional frame processor."""
+              while True:
+                  success, frame = self.read_frame()
+                  if not success:
+                      break
+
+                  if process_fn:
+                      frame = process_fn(frame)
+
+                  self.show_fps(frame)
+                  cv2.imshow("Frame", frame)
+
+                  if cv2.waitKey(1) & 0xFF == ord("q"):
+                      break
+
+              self.cap.release()
+              cv2.destroyAllWindows()
+    severity: MEDIUM
+
+  - id: cv002
+    name: MediaPipe Pose/Hand Detection
+    category: detection
+    description: |
+      Real-time hand/pose/face detection with Google MediaPipe.
+      Draw landmarks and extract coordinates.
+    text: mediapipe hand pose face detection tracking landmarks
+    example: |
+      import cv2
+      import mediapipe as mp
+
+      class HandTracker:
+          def __init__(self, max_hands: int = 2):
+              self.mp_hands = mp.solutions.hands
+              self.hands = self.mp_hands.Hands(
+                  static_image_mode=False,
+                  max_num_hands=max_hands,
+                  min_detection_confidence=0.7,
+                  min_tracking_confidence=0.5,
+              )
+              self.mp_draw = mp.solutions.drawing_utils
+
+          def process(self, frame):
+              """Detect hands and draw landmarks."""
+              rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+              results = self.hands.process(rgb)
+
+              if results.multi_hand_landmarks:
+                  for hand_landmarks in results.multi_hand_landmarks:
+                      # Draw landmarks
+                      self.mp_draw.draw_landmarks(
+                          frame, hand_landmarks,
+                          self.mp_hands.HAND_CONNECTIONS,
+                      )
+                      # Extract coordinates
+                      h, w, _ = frame.shape
+                      for id, lm in enumerate(hand_landmarks.landmark):
+                          cx, cy = int(lm.x * w), int(lm.y * h)
+                          if id == 0:  # Wrist
+                              cv2.circle(frame, (cx, cy), 10, (255, 0, 0), cv2.FILLED)
+
+              return frame
+
+      # ✅ Usage
+      # tracker = HandTracker()
+      # camera = CameraCapture()
+      # camera.run(process_fn=tracker.process)
+    severity: MEDIUM
+
+  - id: cv003
+    name: Image Preprocessing
+    category: preprocessing
+    description: |
+      Image preprocessing for CNN training: resize, normalize,
+      augmentation with OpenCV or PIL.
+    text: image preprocessing resize normalize augmentation cnn
+    example: |
+      import cv2
+      import numpy as np
+      from pathlib import Path
+
+      class ImagePreprocessor:
+          def __init__(self, target_size: tuple = (224, 224)):
+              self.target_size = target_size
+
+          def preprocess(self, image_path: str) -> np.ndarray:
+              """Load, resize, and normalize image."""
+              img = cv2.imread(image_path)
+              img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+              img = cv2.resize(img, self.target_size)
+              return img / 255.0  # Normalize to [0, 1]
+
+          def augment(self, img: np.ndarray) -> list[np.ndarray]:
+              """Simple data augmentation."""
+              augmented = [img]
+              # Horizontal flip
+              augmented.append(cv2.flip(img, 1))
+              # Rotation
+              h, w = img.shape[:2]
+              matrix = cv2.getRotationMatrix2D((w/2, h/2), 15, 1.0)
+              augmented.append(cv2.warpAffine(img, matrix, (w, h)))
+              # Brightness
+              augmented.append(np.clip(img * 1.2, 0, 1))
+              return augmented
+
+          def load_dataset(self, data_dir: str) -> tuple[np.ndarray, np.ndarray]:
+              """Load image dataset from directory structure."""
+              images, labels = [], []
+              data_path = Path(data_dir)
+              for label_idx, class_dir in enumerate(sorted(data_path.iterdir())):
+                  if class_dir.is_dir():
+                      for img_path in class_dir.glob("*.jpg"):
+                          img = self.preprocess(str(img_path))
+                          images.append(img)
+                          labels.append(label_idx)
+              return np.array(images), np.array(labels)
+    severity: MEDIUM
+
+  - id: cv004
+    name: CNN Image Classification
+    category: training
+    description: |
+      Transfer learning with TensorFlow/Keras for image classification.
+      Fine-tune VGG16/ResNet for custom datasets (e.g. chest disease).
+    text: cnn image classification tensorflow keras transfer learning vgg resnet
+    example: |
+      import tensorflow as tf
+      from tensorflow.keras.layers import Dense, Flatten, Dropout
+      from tensorflow.keras.models import Model
+      from tensorflow.keras.applications import VGG16
+      from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+      class ChestDiseaseClassifier:
+          def __init__(self, num_classes: int = 2, image_size: int = 224):
+              self.image_size = image_size
+              self.num_classes = num_classes
+              self.model = self._build_model()
+
+          def _build_model(self) -> Model:
+              """Transfer learning with VGG16."""
+              base = VGG16(
+                  weights="imagenet",
+                  include_top=False,
+                  input_shape=(self.image_size, self.image_size, 3),
+              )
+              # Freeze base layers
+              for layer in base.layers:
+                  layer.trainable = False
+
+              x = Flatten()(base.output)
+              x = Dense(256, activation="relu")(x)
+              x = Dropout(0.5)(x)
+              output = Dense(self.num_classes, activation="softmax")(x)
+
+              model = Model(inputs=base.input, outputs=output)
+              model.compile(
+                  optimizer="adam",
+                  loss="categorical_crossentropy",
+                  metrics=["accuracy"],
+              )
+              return model
+
+          def train(self, train_dir: str, val_dir: str, epochs: int = 10):
+              train_gen = ImageDataGenerator(
+                  rescale=1./255,
+                  rotation_range=20,
+                  horizontal_flip=True,
+                  zoom_range=0.2,
+              ).flow_from_directory(
+                  train_dir,
+                  target_size=(self.image_size, self.image_size),
+                  batch_size=32,
+              )
+              val_gen = ImageDataGenerator(
+                  rescale=1./255,
+              ).flow_from_directory(
+                  val_dir,
+                  target_size=(self.image_size, self.image_size),
+                  batch_size=32,
+              )
+
+              history = self.model.fit(
+                  train_gen, validation_data=val_gen,
+                  epochs=epochs,
+              )
+              self.model.save("Artifacts/chest_model.h5")
+              return history
+    severity: MEDIUM

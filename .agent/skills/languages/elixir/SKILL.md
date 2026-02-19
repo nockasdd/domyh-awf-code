@@ -1,7 +1,7 @@
 ---
 name: elixir
 detect: ["*.ex", "*.exs", "mix.exs", "mix.lock"]
-version: "6.3.1"
+version: "7.0.0"
 category: functional
 tier: 2
 ---

@@ -2,7 +2,7 @@
 # locator-patterns.yaml — Priority-Ordered Locator Strategies
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 priority_order:
   - priority: 1

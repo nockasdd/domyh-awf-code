@@ -1,0 +1,55 @@
+# Drift Prevention
+# Rule module for DOMYH v7.0 — enforces periodic alignment checks
+---
+name: drift-prevention
+version: "7.0.0"
+rule_id: "MOD-DRF-001"
+
+description: |
+  Prevent agent drift by enforcing periodic alignment checks.
+  Triggers warnings when actions diverge from declared intent.
+
+category: "governance"
+
+context:
+  always_apply: false
+  personas:
+    - Developer
+    - Debugger
+  trigger: "Every 10 tool calls or on scope change"
+
+rules:
+  - id: DRF-001
+    name: "Scope Guard"
+    severity: warning
+    description: |
+      Before editing files outside the declared scope:
+      1. Call hsa_check_drift with current_action describing the edit
+      2. If drift detected, evaluate necessity
+      3. Either update intent or refocus on declared goals
+
+  - id: DRF-002
+    name: "Goal Alignment"
+    severity: info
+    description: |
+      Periodically verify current work aligns with session goals:
+      - After completing a tactic, check remaining goals
+      - Before starting new work, verify it matches a declared goal
+      - If all goals completed, declare new intent or end session
+
+  - id: DRF-003
+    name: "Mode Consistency"
+    severity: info
+    description: |
+      Ensure behavior matches declared mode:
+      - plan_driven: follow structured plan, track progress meticulously
+      - exploration: allow flexibility but still check drift periodically
+      - bugfix: stay focused on the specific bug, avoid feature creep
+      - refactor: limit scope to refactoring, avoid adding new features
+
+integration:
+  tier: 2
+  related_modules:
+    - session-governance
+    - context-integrity
+    - stop-conditions

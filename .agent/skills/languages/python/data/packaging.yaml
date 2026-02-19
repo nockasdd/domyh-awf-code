@@ -1,0 +1,267 @@
+# =============================================================================
+# Python Packaging Patterns (Feb 2026)
+# Source: All E2E repos (setup.py), Doclify (pyproject.toml + uv)
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: packaging
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 6
+
+patterns:
+  - id: pypkg001
+    name: pyproject.toml Modern Config
+    category: packaging
+    description: |
+      PEP 621 pyproject.toml for modern Python project configuration.
+      Replaces setup.py, setup.cfg, and MANIFEST.in.
+    text: pyproject toml pep621 modern config project metadata
+    example: |
+      # ✅ pyproject.toml (PEP 621)
+      [project]
+      name = "doclify"
+      version = "0.1.0"
+      description = "AI-powered documentation generator"
+      readme = "README.md"
+      license = {text = "AGPL-3.0"}
+      requires-python = ">=3.10"
+      authors = [{name = "Author", email = "author@example.com"}]
+
+      dependencies = [
+          "google-genai>=1.0",
+          "rich>=13.0",
+          "pyyaml>=6.0",
+          "click>=8.0",
+      ]
+
+      [project.optional-dependencies]
+      dev = ["pytest", "ruff", "mypy"]
+
+      [project.scripts]
+      doclify = "doclify.cli:main"
+
+      [build-system]
+      requires = ["hatchling"]
+      build-backend = "hatchling.build"
+
+      # ✅ Tool configs in same file
+      [tool.ruff]
+      line-length = 88
+      target-version = "py312"
+
+      [tool.pytest.ini_options]
+      testpaths = ["tests"]
+
+      [tool.mypy]
+      python_version = "3.12"
+      strict = true
+    severity: HIGH
+
+  - id: pypkg002
+    name: uv Package Manager
+    category: tooling
+    description: |
+      uv — ultra-fast Python package installer (Rust-based).
+      10-100x faster than pip. Drop-in replacement.
+    text: uv package manager fast rust install dependency venv
+    example: |
+      # ✅ Install uv
+      # curl -LsSf https://astral.sh/uv/install.sh | sh
+      # pip install uv
+
+      # ✅ Create project
+      # uv init my-project
+      # cd my-project
+
+      # ✅ Add dependencies
+      # uv add pandas scikit-learn flask
+      # uv add --dev pytest ruff mypy
+
+      # ✅ Run scripts
+      # uv run python app.py
+      # uv run pytest
+
+      # ✅ Sync from lock file
+      # uv sync
+
+      # ✅ Lock file: uv.lock (auto-generated)
+      # ✅ Python version: .python-version file
+
+      # ✅ Virtual env management
+      # uv venv                    # Create .venv
+      # uv venv --python 3.12     # Specific version
+      # source .venv/bin/activate  # Activate
+
+      # ✅ pip compatibility
+      # uv pip install -r requirements.txt
+      # uv pip install -e .
+    severity: HIGH
+
+  - id: pypkg003
+    name: setup.py for ML Projects
+    category: packaging
+    description: |
+      Classic setup.py with find_packages for ML project packaging.
+      Makes src/ package installable for imports.
+    text: setup.py find_packages install editable ml project
+    example: |
+      # setup.py (classic, used by most E2E ML repos)
+      from setuptools import find_packages, setup
+
+      setup(
+          name="FlightPricePrediction",
+          version="0.0.1",
+          author="Author",
+          author_email="author@example.com",
+          packages=find_packages(where="src"),
+          package_dir={"": "src"},
+          install_requires=[
+              "pandas>=2.0",
+              "numpy>=1.24",
+              "scikit-learn>=1.3",
+              "flask>=3.0",
+              "dvc>=3.0",
+              "mlflow>=2.0",
+              "seaborn>=0.13",
+              "matplotlib>=3.8",
+              "catboost>=1.2",
+              "xgboost>=2.0",
+          ],
+          python_requires=">=3.10",
+      )
+
+      # ✅ Install in editable mode
+      # pip install -e .
+      # Creates: FlightPricePrediction.egg-info/
+
+      # ✅ Then import anywhere:
+      # from FlightPricePrediction.components.data_ingestion import DataIngestion
+    severity: MEDIUM
+
+  - id: pypkg004
+    name: Virtual Environment Management
+    category: environment
+    description: |
+      Python virtual environment setup and activation patterns.
+      Support for venv, conda, and .python-version file.
+    text: venv virtualenv conda environment activate python version
+    example: |
+      # ✅ Standard venv
+      python -m venv .venv
+      # Linux/Mac: source .venv/bin/activate
+      # Windows: .venv\Scripts\activate
+
+      # ✅ .python-version file (used by pyenv, uv)
+      # echo "3.12" > .python-version
+
+      # ✅ Conda environment
+      # conda create -n ml-project python=3.10
+      # conda activate ml-project
+      # conda install scikit-learn pandas
+
+      # ✅ Conda from YAML
+      # environment.yml:
+      # name: ml-project
+      # dependencies:
+      #   - python=3.10
+      #   - scikit-learn
+      #   - pandas
+      #   - pip:
+      #     - flask
+      # conda env create -f environment.yml
+    severity: LOW
+
+  - id: pypkg005
+    name: requirements.txt Management
+    category: dependencies
+    description: |
+      Requirements file management with pinning strategies.
+      Separate dev and production dependencies.
+    text: requirements txt pip freeze pin dependency production dev
+    example: |
+      # ✅ requirements.txt (production)
+      # Pin major+minor for reproducibility
+      pandas>=2.0,<3.0
+      numpy>=1.24,<2.0
+      scikit-learn>=1.3,<2.0
+      flask>=3.0,<4.0
+      gunicorn>=21.0
+
+      # ✅ requirements-dev.txt
+      -r requirements.txt
+      pytest>=8.0
+      pytest-cov>=4.0
+      ruff>=0.3
+      mypy>=1.8
+
+      # ✅ Generate from environment
+      # pip freeze > requirements.txt
+
+      # ✅ Install
+      # pip install -r requirements.txt
+      # pip install -r requirements-dev.txt
+    severity: LOW
+
+  - id: pypkg006
+    name: template.py Project Scaffold
+    category: scaffolding
+    description: |
+      Script to generate ML project directory structure.
+      Common pattern across all KalyanM45 E2E repos.
+    text: template scaffold generate project structure create dirs
+    example: |
+      # template.py — Run once to create project structure
+      import os
+      from pathlib import Path
+      import logging
+
+      logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+      project_name = "MyMLProject"
+
+      list_of_files = [
+          f"src/{project_name}/__init__.py",
+          f"src/{project_name}/components/__init__.py",
+          f"src/{project_name}/components/data_ingestion.py",
+          f"src/{project_name}/components/data_transformation.py",
+          f"src/{project_name}/components/model_trainer.py",
+          f"src/{project_name}/components/model_evaluation.py",
+          f"src/{project_name}/pipelines/__init__.py",
+          f"src/{project_name}/pipelines/training_pipeline.py",
+          f"src/{project_name}/pipelines/prediction_pipeline.py",
+          f"src/{project_name}/config/__init__.py",
+          f"src/{project_name}/config/configuration.py",
+          f"src/{project_name}/utils/__init__.py",
+          f"src/{project_name}/utils/common.py",
+          f"src/{project_name}/exception.py",
+          f"src/{project_name}/logger.py",
+          "Notebook_Experiments/.gitkeep",
+          "Artifacts/.gitkeep",
+          "static/style.css",
+          "templates/index.html",
+          "templates/result.html",
+          ".github/workflows/main.yaml",
+          "app.py",
+          "requirements.txt",
+          "setup.py",
+          "Dockerfile",
+          "README.md",
+          ".gitignore",
+      ]
+
+      for filepath in list_of_files:
+          filepath = Path(filepath)
+          filedir = filepath.parent
+
+          if filedir != Path("."):
+              os.makedirs(filedir, exist_ok=True)
+
+          if not filepath.exists() or filepath.stat().st_size == 0:
+              with open(filepath, "w") as f:
+                  pass  # Create empty file
+              logging.info(f"✅ Created: {filepath}")
+          else:
+              logging.info(f"⏭️  Exists:  {filepath}")
+    severity: MEDIUM

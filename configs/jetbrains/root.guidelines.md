@@ -1,7 +1,7 @@
 # DOMYH Awesome Code
 
-> í¾¯ AI-powered development assistant â€” NockDev
-> í¼ Language: `.agent/memory/state.json` â†’ `preferences.language` (default: vi-VN)
+> ðŸ¤– AI-powered development assistant â€” NockDev
+> ðŸŒ Language: `.agent/memory/state.json` â†’ `preferences.language` (default: vi-VN)
 
 ## Core Rules
 
@@ -11,14 +11,14 @@ Load `.agent/rules/SACRED_RULES.xml` â€” 17 rules across 5 tiers governing safet
 
 | Command | Description |
 |---------|-------------|
-| `/code` | í²» Write quality code |
-| `/debug` | í°› Systematic debugging |
+| `/code` | ðŸ’» Write quality code |
+| `/debug` | ðŸ› Systematic debugging |
 | `/test` | âœ… Run and write tests |
-| `/deploy` | íº€ Deploy to production |
-| `/ap` | í´¬ Full project audit |
-| `/plan` | í³‹ Feature planning |
+| `/deploy` | ðŸš€ Deploy to production |
+| `/ap` | ðŸ”¬ Full project audit |
+| `/plan` | ðŸ“‹ Feature planning |
 | `/fix` | âš¡ Quick-fix pipeline |
-| `/refactor` | í´§ Code refactoring |
+| `/refactor` | ðŸ”§ Code refactoring |
 | `/help` | â“ Full commands list |
 
 > 41 commands available. Full list: `hsa_get_agent_config("commands")` or `.agent/workflows/`
@@ -34,9 +34,31 @@ Developer Â· Architect Â· Auditor Â· Debugger Â· Tester Â· DevOps Â· Documenter 
 META.yaml (always) â†’ SKILL.md (on-demand) â†’ ADVANCED.md (deep dive)
 Skills: `.agent/skills/` (project)
 
-## MCP Tools (HSA v1.2.8)
+## MCP Tools (HSA v1.3.2)
 
-15 HSA tools available. Key: `hsa_get_context` (code search), `hsa_detect_stack` (project setup), `hsa_get_agent_config` (capabilities), `hsa_trace_flow` (call chain tracing), `hsa_feedback` (relevance learning).
+19 HSA tools available. Key: `hsa_get_context` (code search), `hsa_detect_stack` (project setup), `hsa_get_agent_config` (capabilities), `hsa_trace_flow` (call chain tracing), `hsa_feedback` (relevance learning), `hsa_declare_intent` (session governance), `hsa_track_progress` (progress tracking), `hsa_save_anchor` (immutable facts), `hsa_check_drift` (drift detection).
 Full usage rules: SACRED_RULES.xml Tier 2.
 
 _DOMYH Awesome Code Â· SLIM Config v3 Â· NockDev_
+
+## Auto-Activation Protocol
+
+**On conversation start (if HSA MCP available):**
+1. `hsa_get_agent_config("bootstrap")` â†’ load rules + intent mapping
+
+**On every user message â€” Intent Matching:**
+| Keywords | Workflow | Skills |
+|----------|----------|--------|
+| fix, quick fix, sá»­a nhanh | /fix | error-handling |
+| debug, error, lá»—i | /debug | error-handling |
+| test, kiá»ƒm thá»­ | /test | testing |
+| code, write, implement, viáº¿t code | /code | coding-rules |
+| refactor, cleanup, tÃ¡i cáº¥u trÃºc | /refactor | coding-rules |
+| deploy, release, triá»ƒn khai | /deploy | ci-cd |
+| security, scan, báº£o máº­t | /security | security |
+| review, pr, xem xÃ©t | /review | security |
+
+**Loading protocol:**
+- Read workflow: `.agent/workflows/{id}.md`
+- Load skill: `.agent/skills/{cat}/{name}/SKILL.md` or `hsa_search_skills`
+- Rules: `hsa_get_agent_config("rules")` or `.agent/rules/SACRED_RULES.xml`

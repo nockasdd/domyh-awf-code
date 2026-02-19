@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-version: "6.3.1"
+version: "7.0.0"
 persona_id: "orch-001"
 
 identity:

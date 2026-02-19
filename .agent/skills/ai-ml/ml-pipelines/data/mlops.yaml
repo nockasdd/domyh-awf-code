@@ -1,0 +1,382 @@
+# =============================================================================
+# MLOps Patterns (Feb 2026)
+# Source: Diamond, Heart, Flight (DVC+MLflow), all E2E repos (Docker+CI/CD)
+# =============================================================================
+
+metadata:
+  skill: ml-pipelines
+  domain: mlops
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 8
+
+patterns:
+  - id: mlo001
+    name: DVC Data Versioning
+    category: versioning
+    description: |
+      Data Version Control for tracking datasets and model artifacts.
+      Integrates with Git for reproducible ML pipelines.
+    text: dvc data version control tracking pipeline reproducible
+    example: |
+      # ✅ Initialize DVC
+      # dvc init
+      # dvc remote add -d storage s3://my-bucket/dvc-store
+
+      # ✅ dvc.yaml — Define pipeline stages
+      stages:
+        data_ingestion:
+          cmd: python src/pipeline/stage_01_ingestion.py
+          deps:
+            - src/pipeline/stage_01_ingestion.py
+            - data/source.csv
+          outs:
+            - Artifacts/train.csv
+            - Artifacts/test.csv
+
+        training:
+          cmd: python src/pipeline/stage_02_training.py
+          deps:
+            - src/pipeline/stage_02_training.py
+            - Artifacts/train.csv
+          outs:
+            - Artifacts/model.pkl
+          metrics:
+            - scores.json:
+                cache: false
+          plots:
+            - Artifacts/confusion_matrix.png:
+                cache: false
+
+      # ✅ Run pipeline
+      # dvc repro
+      # dvc push
+
+      # ✅ .dvcignore
+      # __pycache__
+      # *.pyc
+      # .ipynb_checkpoints
+    severity: HIGH
+
+  - id: mlo002
+    name: MLflow Experiment Tracking
+    category: tracking
+    description: |
+      Track experiments with MLflow. Log params, metrics, and models.
+      Supports local (mlruns/) and remote (DagsHub) backends.
+    text: mlflow experiment tracking log params metrics model dagshub
+    example: |
+      import mlflow
+      import mlflow.sklearn
+      import os
+
+      # ✅ Local tracking (default: ./mlruns/)
+      # mlflow.set_tracking_uri("file:///path/to/mlruns")
+
+      # ✅ Remote tracking with DagsHub
+      os.environ["MLFLOW_TRACKING_URI"] = (
+          "https://dagshub.com/username/repo.mlflow"
+      )
+      os.environ["MLFLOW_TRACKING_USERNAME"] = "username"
+      os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_TOKEN")
+
+      # ✅ Log experiment
+      mlflow.set_experiment("diamond-price-prediction")
+
+      with mlflow.start_run(run_name="gradient-boosting-v1"):
+          # Parameters
+          mlflow.log_param("n_estimators", 100)
+          mlflow.log_param("learning_rate", 0.1)
+          mlflow.log_param("max_depth", 5)
+
+          # Train model...
+          model.fit(X_train, y_train)
+          y_pred = model.predict(X_test)
+
+          # Metrics
+          mlflow.log_metric("r2_score", r2_score(y_test, y_pred))
+          mlflow.log_metric("mae", mean_absolute_error(y_test, y_pred))
+          mlflow.log_metric("rmse", np.sqrt(mean_squared_error(y_test, y_pred)))
+
+          # Model artifact
+          mlflow.sklearn.log_model(model, "model")
+
+          # Custom artifacts
+          mlflow.log_artifact("scores.json")
+
+      # ✅ View UI: mlflow ui --port 5000
+    severity: HIGH
+
+  - id: mlo003
+    name: Model Serialization
+    category: artifacts
+    description: |
+      Save/load models and preprocessors using pickle or joblib.
+      Store in Artifacts/ directory for serving.
+    text: model serialization save load pickle joblib artifacts
+    example: |
+      import pickle
+      import joblib
+      import os
+
+      ARTIFACTS_DIR = "Artifacts"
+
+      # ✅ Save with pickle
+      def save_model_pickle(model, name: str = "model") -> str:
+          path = os.path.join(ARTIFACTS_DIR, f"{name}.pkl")
+          os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+          with open(path, "wb") as f:
+              pickle.dump(model, f)
+          return path
+
+      # ✅ Save with joblib (better for large numpy arrays)
+      def save_model_joblib(model, name: str = "model") -> str:
+          path = os.path.join(ARTIFACTS_DIR, f"{name}.joblib")
+          os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+          joblib.dump(model, path)
+          return path
+
+      # ✅ Load
+      def load_model(path: str):
+          if path.endswith(".joblib"):
+              return joblib.load(path)
+          with open(path, "rb") as f:
+              return pickle.load(f)
+
+      # ✅ Save multiple artifacts
+      def save_artifacts(model, preprocessor, scaler=None):
+          save_model_pickle(model, "model")
+          save_model_pickle(preprocessor, "preprocessor")
+          if scaler:
+              save_model_pickle(scaler, "scaler")
+    severity: MEDIUM
+
+  - id: mlo004
+    name: GitHub Actions ML CI/CD
+    category: ci-cd
+    description: |
+      CI/CD pipeline for ML projects with training, testing,
+      Docker build, and deployment.
+    text: github actions ci cd ml pipeline deploy docker workflow
+    example: |
+      # .github/workflows/main.yaml
+      name: ML Pipeline CI/CD
+
+      on:
+        push:
+          branches: [main]
+        pull_request:
+          branches: [main]
+
+      jobs:
+        test:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                python-version: "3.10"
+
+            - name: Install dependencies
+              run: |
+                pip install -r requirements.txt
+                pip install pytest
+
+            - name: Run tests
+              run: pytest tests/ -v
+
+        build-deploy:
+          needs: test
+          runs-on: ubuntu-latest
+          if: github.ref == 'refs/heads/main'
+          steps:
+            - uses: actions/checkout@v4
+
+            - name: Login to DockerHub
+              uses: docker/login-action@v3
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v5
+              with:
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/ml-app:latest
+    severity: MEDIUM
+
+  - id: mlo005
+    name: ML Docker Deployment
+    category: deployment
+    description: |
+      Docker containerization for ML projects.
+      Multi-stage build with slim base image.
+    text: docker dockerfile ml deployment container slim python
+    example: |
+      # ✅ Dockerfile for ML Flask app
+      FROM python:3.10-slim
+
+      WORKDIR /app
+
+      # Install system dependencies (for scipy, sklearn, etc.)
+      RUN apt-get update && apt-get install -y \
+          gcc g++ \
+          && rm -rf /var/lib/apt/lists/*
+
+      # Install Python dependencies
+      COPY requirements.txt .
+      RUN pip install --no-cache-dir -r requirements.txt
+
+      # Copy source code and artifacts
+      COPY src/ src/
+      COPY Artifacts/ Artifacts/
+      COPY templates/ templates/
+      COPY static/ static/
+      COPY app.py .
+
+      EXPOSE 5000
+
+      CMD ["python", "app.py"]
+
+      # ✅ Build & Run
+      # docker build -t ml-app .
+      # docker run -p 5000:5000 ml-app
+
+      # ✅ Docker Compose for dev
+      # docker-compose.yaml:
+      # services:
+      #   app:
+      #     build: .
+      #     ports:
+      #       - "5000:5000"
+      #     volumes:
+      #       - ./Artifacts:/app/Artifacts
+    severity: MEDIUM
+
+  - id: mlo006
+    name: scores.json Metric Tracking
+    category: metrics
+    description: |
+      Simple JSON metric file for DVC pipeline tracking.
+      Used as DVC metrics output for comparison across runs.
+    text: scores json metrics tracking comparison dvc
+    example: |
+      import json
+
+      def save_scores(results: dict, path: str = "scores.json"):
+          """Save model evaluation scores for DVC tracking."""
+          scores = {
+              "best_model": results["best_model"],
+              "best_score": round(results["best_r2"], 4),
+              "metrics": {
+                  name: {
+                      "r2_score": round(m["r2"], 4),
+                      "mae": round(m["mae"], 4),
+                  }
+                  for name, m in results["all"].items()
+              },
+          }
+          with open(path, "w") as f:
+              json.dump(scores, f, indent=2)
+
+      # ✅ Compare with DVC
+      # dvc metrics show
+      # dvc metrics diff
+
+      # ✅ Example scores.json output:
+      # {
+      #   "best_model": "GradientBoosting",
+      #   "best_score": 0.9234,
+      #   "metrics": {
+      #     "LinearRegression": {"r2_score": 0.8123, "mae": 1234.5},
+      #     "GradientBoosting": {"r2_score": 0.9234, "mae": 876.3}
+      #   }
+      # }
+    severity: LOW
+
+  - id: mlo007
+    name: setup.py ML Package
+    category: packaging
+    description: |
+      setup.py configuration for ML projects.
+      Makes src/ installable as a package.
+    text: setup.py package install find_packages egg-info
+    example: |
+      # setup.py
+      from setuptools import find_packages, setup
+
+      setup(
+          name="DiamondPricePrediction",
+          version="0.0.1",
+          author="Author",
+          author_email="author@example.com",
+          packages=find_packages(where="src"),
+          package_dir={"": "src"},
+          install_requires=[
+              "pandas",
+              "numpy",
+              "scikit-learn",
+              "flask",
+              "dvc",
+              "mlflow",
+              "seaborn",
+              "matplotlib",
+          ],
+      )
+
+      # ✅ Install in dev mode
+      # pip install -e .
+
+      # ✅ This creates {Name}.egg-info/ directory
+      # which allows imports like:
+      # from DiamondPricePrediction.components.data_ingestion import DataIngestion
+    severity: LOW
+
+  - id: mlo008
+    name: Notebook EDA Workflow
+    category: exploration
+    description: |
+      Exploratory Data Analysis in Jupyter notebooks.
+      Standard EDA flow before building pipeline.
+    text: notebook eda exploratory analysis jupyter experiment
+    example: |
+      # Notebook_Experiments/01_EDA.ipynb (typical cells)
+
+      # Cell 1: Load data
+      import pandas as pd
+      import numpy as np
+      import seaborn as sns
+      import matplotlib.pyplot as plt
+
+      df = pd.read_csv("data/diamonds.csv")
+      print(f"Shape: {df.shape}")
+      df.head()
+
+      # Cell 2: Basic stats
+      df.describe()
+      df.info()
+      df.isnull().sum()
+
+      # Cell 3: Distribution plots
+      fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+      for i, col in enumerate(df.select_dtypes(include="number").columns[:6]):
+          ax = axes[i // 3, i % 3]
+          sns.histplot(df[col], ax=ax, kde=True)
+          ax.set_title(col)
+      plt.tight_layout()
+
+      # Cell 4: Correlation heatmap
+      plt.figure(figsize=(10, 8))
+      sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm")
+
+      # Cell 5: Feature vs Target
+      sns.pairplot(df, vars=["carat", "depth", "table"], hue="cut")
+
+      # Cell 6: Outlier detection
+      for col in ["price", "carat", "depth"]:
+          Q1 = df[col].quantile(0.25)
+          Q3 = df[col].quantile(0.75)
+          IQR = Q3 - Q1
+          outliers = df[(df[col] < Q1 - 1.5 * IQR) | (df[col] > Q3 + 1.5 * IQR)]
+          print(f"{col}: {len(outliers)} outliers ({len(outliers)/len(df)*100:.1f}%)")
+    severity: MEDIUM

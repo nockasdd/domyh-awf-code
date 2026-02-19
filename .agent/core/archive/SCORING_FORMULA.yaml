@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Scoring Formula v6.3.1
+# DOMYH Awesome Code — Scoring Formula v6.3.2
 # status: archived — Design spec, not runtime config
 # Single Source of Truth for context priority scoring
 
-version: "6.3.1"
+version: "6.3.2"
 engine: scoring_formula
 
 # =============================================================================

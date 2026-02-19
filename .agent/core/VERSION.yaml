@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.3.1"
-  version_short: "v6.3.1" # Dùng cho footer: "_DOMYH Awesome Code "
+  version: "6.3.2"
+  version_short: "v6.3.2" # Dùng cho footer: "_DOMYH Awesome Code "
   codename: "SSoT & Hygiene"
   release_date: "2026-02-14"
 
@@ -74,14 +74,14 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: "v6.3.1"
+  default_skill_version: "v6.3.2"
 
 # =============================================================================
 # VERSION HISTORY
 # =============================================================================
 
 changelog:
-  "6.3.1":
+  "6.3.2":
     date: "2026-02-17"
     codename: "SSoT & Hygiene"
     changes:
@@ -92,7 +92,7 @@ changelog:
       - "Fixed 7 persona dead enforces references"
       - "Version drift cleanup: 60+ files synced"
 
-  "6.3.1-rc1":
+  "6.3.2-rc1":
     date: "2026-02-14"
     codename: "Dashboard Resilience"
     changes:
@@ -100,7 +100,7 @@ changelog:
       - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
       - "Codex IDE: Optimized AGENTS.md with inline rules"
 
-  "6.3.0":
+  "6.3.2":
     date: "2026-02-12"
     codename: "Ecosystem Expansion"
     changes:
@@ -109,7 +109,7 @@ changelog:
       - "3 new workflows: /tdd, /e2e, /verify"
       - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
 
-  "6.2.4":
+  "6.3.2":
     date: "2026-02-05"
     codename: "Context Mesh"
     changes:

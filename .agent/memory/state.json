@@ -1,49 +1,50 @@
 {
-  "version": "v6.3.1",
+  "version": "v6.3.2",
   "last_updated": "2026-02-17T16:09:00+07:00",
-
   "system": {
     "name": "DOMYH Awesome Code",
-    "version": "v6.3.1",
-    "version_short": "v6.3.1",
+    "version": "v6.3.2",
+    "version_short": "v6.3.2",
     "_note": "Sync from core/VERSION.yaml"
   },
-
   "project": {
     "name": "DOMYH Awesome Code",
     "path": ".",
     "type": "ai-agent-library",
-    "stack": ["yaml", "markdown", "json", "mjs"],
+    "stack": [
+      "yaml",
+      "markdown",
+      "json",
+      "mjs"
+    ],
     "initialized_at": "2026-02-01T11:17:00+07:00"
   },
-
   "skills": {
     "frequently_used": [],
     "last_active": [],
     "preferences": {}
   },
-
   "workflows": {
     "last_executed": "/ap",
     "execution_count": {
       "ap": 2
     },
-    "favorites": ["/fix", "/debug"]
+    "favorites": [
+      "/fix",
+      "/debug"
+    ]
   },
-
   "audit": {
     "last_score": 9.5,
     "last_date": "2026-02-17",
     "_note": "Full history in audit_summary.json"
   },
-
   "context": {
     "current_branch": null,
     "current_phase": null,
     "pending_tasks": [],
     "blockers": []
   },
-
   "preferences": {
     "language": "vi",
     "verbosity": "normal",
@@ -55,7 +56,6 @@
       "enterprise": true
     }
   },
-
   "phase_progress": {
     "active_plan": null,
     "current_phase": null,
@@ -66,15 +66,21 @@
       "completed": 0
     }
   },
-
   "flags": {
     "has_unfinished_work": false,
     "needs_review": false,
     "has_critical_issues": false
   },
-
   "memory": {
     "last_sync": "2026-02-17T20:26:00+07:00",
     "metrics_ref": "metrics.json"
+  },
+  "governance": {
+    "version": "1.0",
+    "automation_level": "assisted",
+    "session_count": 0,
+    "total_anchors": 0,
+    "drift_warnings_total": 0,
+    "_note": "Session state persisted in .agent/hsa/session-state.json by HSA MCP tools"
   }
 }

@@ -2,7 +2,7 @@
 # e2e-patterns.yaml — End-to-End Testing Patterns
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 playwright:
   config: |

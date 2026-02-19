@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: web_animation_libraries
-  version: v6.3.1
+  version: v6.3.2
   updated: "2026-02-12"
   description: "Web animation library decision matrix — when to use which library"
   patterns_count: 42

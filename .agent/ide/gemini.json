@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.1",
+  "version": "v6.3.2",
   "gemini": {
     "model_preference": "gemini-2.0-flash",
     "context_window": 1000000,
@@ -40,11 +40,11 @@
   },
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.2.8 Context Management - Intelligent context retrieval",
+      "description": "HSA v1.3.2 Context Management - Intelligent context retrieval",
       "command": "npx",
       "args": [
         "-y",
-        "@nockdev/hsa@1.2.8"
+        "@nockdev/hsa@1.2.9"
       ],
       "auto_start": true,
       "env": {

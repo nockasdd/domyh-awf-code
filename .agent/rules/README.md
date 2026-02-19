@@ -96,6 +96,9 @@ Composable rule modules for specific use cases:
 | `agent-delegation.yaml`         | Task delegation patterns     | Orchestrator        |
 | `performance-optimization.yaml` | Perf optimization guidelines | Developer, DevOps   |
 | `progressive-escalation.yaml`   | Stuck detection & pivot      | Developer, Debugger |
+| `session-governance.yaml`       | Session governance discipline| All                 |
+| `context-integrity.yaml`        | Context coherence across sessions | Developer, Architect |
+| `drift-prevention.yaml`         | Drift alignment checks       | Developer, Debugger |
 
 > **Merged into constitutional tiers** (in `archive/`): `reflection.yaml`, `context-management.yaml`, `evidence.yaml`
 
@@ -109,7 +112,7 @@ Composable rule modules for specific use cases:
 .agent/rules/
 ├── README.md                    # This file
 ├── SACRED_RULES.xml             # Core XML rules (always active)
-├── modules/                     # v6.0 Modular rules (11 YAML files)
+├── modules/                     # v7.0 Modular rules (14 YAML files)
 │   ├── stop-conditions.yaml     # When to pause
 │   ├── edit-verification.yaml   # Code edit verification
 │   ├── terminal-safety.yaml     # Terminal safety
@@ -118,7 +121,10 @@ Composable rule modules for specific use cases:
 │   ├── language.yaml            # Language/i18n
 │   ├── yagni.yaml               # YAGNI enforcement
 │   ├── online-research.yaml     # Web research
-│   └── progressive-escalation.yaml # Stuck detection & pivot
+│   ├── progressive-escalation.yaml # Stuck detection & pivot
+│   ├── session-governance.yaml  # Session governance discipline (v7.0)
+│   ├── context-integrity.yaml   # Context coherence (v7.0)
+│   └── drift-prevention.yaml    # Drift alignment checks (v7.0)
 ├── data/                        # Supporting data files
 │   └── build-systems.yaml       # Build system detection data
 ├── archive/                     # Merged/legacy rules
@@ -152,13 +158,14 @@ Tier 0 (Core) > Tier 1 (Safety) > Tier 2 (Execution) > Modular Rules
 
 | Persona    | Always Load  | Additional Modules              |
 | ---------- | ------------ | ------------------------------- |
-| Developer  | Tier 0, 1, 2 | edit-verification, quality, git |
-| Debugger   | Tier 0, 1, 2 | edit-verification, evidence, progressive-escalation |
+| Developer  | Tier 0, 1, 2 | edit-verification, quality, git, session-governance |
+| Debugger   | Tier 0, 1, 2 | edit-verification, evidence, progressive-escalation, drift-prevention |
+| Architect  | Tier 0, 1, 2 | context-integrity, session-governance |
 | Auditor    | Tier 0, 1, 2 | evidence                        |
 | Tester     | Tier 0, 1, 2 | quality                         |
 | DevOps     | Tier 0, 1, 2 | terminal-safety, git            |
 | Researcher | Tier 0, 1, 2 | online-research                 |
-| All        | Tier 0, 1, 2 | reflection, context             |
+| All        | Tier 0, 1, 2 | reflection, context, session-governance |
 
 ### Override Behavior
 
@@ -195,7 +202,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-XXX-001"
 
 description: |

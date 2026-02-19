@@ -1,7 +1,7 @@
-# YAGNI Enforcement Rule v6.3.1
+# YAGNI Enforcement Rule v6.3.2
 ---
 name: yagni
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-YAG-001"
 
 description: "You Aren't Gonna Need It — prevent premature abstraction and over-engineering."

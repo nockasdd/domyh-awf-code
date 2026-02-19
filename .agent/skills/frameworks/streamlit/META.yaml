@@ -1,0 +1,60 @@
+# =============================================================================
+# Streamlit — META.yaml
+# Data Apps & ML Model Serving UI
+# =============================================================================
+
+name: streamlit
+version: "7.0.0"
+category: frameworks
+tier: 2
+description: |
+  Streamlit framework for building interactive data apps,
+  ML model serving UIs, and chat interfaces. Fast prototyping
+  for data scientists and ML engineers.
+
+detect:
+  files:
+    - ".streamlit/config.toml"
+  content:
+    - "import streamlit"
+    - "import streamlit as st"
+    - "st.title"
+    - "st.chat_input"
+    - "st.sidebar"
+  dependencies:
+    - "streamlit"
+
+keywords:
+  - streamlit
+  - data app
+  - ml ui
+  - chat interface
+  - dashboard
+  - st.sidebar
+  - st.session_state
+  - st.chat_message
+  - streamlit cloud
+
+intents:
+  - "build streamlit app"
+  - "create data dashboard"
+  - "ml model ui"
+  - "chat interface"
+  - "deploy streamlit"
+
+capabilities:
+  - "Interactive data apps"
+  - "ML model serving UI"
+  - "Chat interfaces with LLMs"
+  - "File upload and processing"
+  - "Data visualization"
+  - "Multi-page apps"
+  - "Real-time updates"
+
+related_skills:
+  - python
+  - ml-pipelines
+  - gemini-live
+  - rag-patterns
+
+# _DOMYH Awesome Code • Streamlit Skill • v7.0_

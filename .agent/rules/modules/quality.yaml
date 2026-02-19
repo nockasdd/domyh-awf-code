@@ -1,7 +1,7 @@
-# Quality Rule v6.3.1
+# Quality Rule v6.3.2
 ---
 name: quality
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-QUA-001"
 
 description: "Code quality standards: naming, structure, error handling, documentation."

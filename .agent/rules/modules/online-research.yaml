@@ -1,7 +1,7 @@
-# Online Research Rule v6.3.1
+# Online Research Rule v6.3.2
 ---
 name: online-research
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-RES-001"
 
 description: "Guidelines for web research and external source verification."

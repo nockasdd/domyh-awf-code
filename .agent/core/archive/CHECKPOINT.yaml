@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Checkpoint System v6.3.1
+# DOMYH Awesome Code — Checkpoint System v6.3.2
 # status: archived — Design spec, not runtime config
 # Implements periodic rule re-injection to prevent drift in long sessions
 
-version: "6.3.1"
+version: "6.3.2"
 engine: checkpoint_system
 
 # =============================================================================

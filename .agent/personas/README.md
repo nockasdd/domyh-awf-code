@@ -20,17 +20,17 @@ Personas define specialized agent roles with distinct:
 
 | Persona          | Role                             | Triggers             | Version |
 | ---------------- | -------------------------------- | -------------------- | ------- |
-| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.3.1   |
-| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.3.1   |
-| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.3.1   |
-| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.3.1   |
-| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.3.1   |
-| **security**     | Security Specialist              | `/security`, `/scan` | 6.3.1   |
-| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 6.3.1   |
-| **debugger**     | Bug Hunter                       | `/debug`             | 6.3.1   |
-| **tester**       | Quality Assurance                | `/test`              | 6.3.1   |
-| **devops**       | Infrastructure Engineer          | `/deploy`            | 6.3.1   |
-| **documenter**   | Technical Writer                 | `/doc`               | 6.3.1   |
+| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 7.0.0   |
+| **architect**    | Solution Architect               | `/plan`, `/design`   | 7.0.0   |
+| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 7.0.0   |
+| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 7.0.0   |
+| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 7.0.0   |
+| **security**     | Security Specialist              | `/security`, `/scan` | 7.0.0   |
+| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 7.0.0   |
+| **debugger**     | Bug Hunter                       | `/debug`             | 7.0.0   |
+| **tester**       | Quality Assurance                | `/test`              | 7.0.0   |
+| **devops**       | Infrastructure Engineer          | `/deploy`            | 7.0.0   |
+| **documenter**   | Technical Writer                 | `/doc`               | 7.0.0   |
 
 ---
 
@@ -41,7 +41,7 @@ All personas follow the enhanced schema:
 ```yaml
 ---
 name: [persona_name]
-version: "6.3.1"
+version: "7.0.0"
 persona_id: "[prefix]-001"
 
 # Core Identity (CrewAI Pattern)

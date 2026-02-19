@@ -1,0 +1,368 @@
+# =============================================================================
+# Python ML & Data Science Patterns (Feb 2026)
+# Source: All E2E ML repos (scikit-learn, pandas, numpy workflows)
+# =============================================================================
+
+metadata:
+  skill: python
+  domain: ml-data-science
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 8
+
+patterns:
+  - id: pyml001
+    name: Pandas EDA Workflow
+    category: data-analysis
+    description: |
+      Standard EDA workflow with pandas: load, inspect, clean, analyze.
+      Used as first step before building ML pipeline.
+    text: pandas eda dataframe describe info isnull groupby
+    example: |
+      import pandas as pd
+      import numpy as np
+
+      # ✅ Load and inspect
+      df = pd.read_csv("data/dataset.csv")
+      print(f"Shape: {df.shape}")
+      print(f"Columns: {df.columns.tolist()}")
+      df.info()
+      df.describe()
+
+      # ✅ Missing values
+      missing = df.isnull().sum()
+      print(missing[missing > 0])
+
+      # ✅ Value counts for categoricals
+      for col in df.select_dtypes(include="object").columns:
+          print(f"\n{col}:\n{df[col].value_counts()}")
+
+      # ✅ Correlations
+      corr = df.corr(numeric_only=True)
+      print(corr["target"].sort_values(ascending=False))
+
+      # ✅ Duplicates
+      dupes = df.duplicated().sum()
+      print(f"Duplicates: {dupes}")
+      if dupes > 0:
+          df = df.drop_duplicates()
+    severity: HIGH
+
+  - id: pyml002
+    name: Scikit-learn Pipeline
+    category: preprocessing
+    description: |
+      Build sklearn Pipeline with ColumnTransformer for
+      mixed numeric/categorical data preprocessing.
+    text: sklearn pipeline column transformer preprocessor
+    example: |
+      from sklearn.compose import ColumnTransformer
+      from sklearn.pipeline import Pipeline, make_pipeline
+      from sklearn.preprocessing import (
+          StandardScaler, MinMaxScaler, OneHotEncoder,
+          LabelEncoder, OrdinalEncoder,
+      )
+      from sklearn.impute import SimpleImputer
+
+      def build_preprocessor(
+          num_cols: list[str],
+          cat_cols: list[str],
+      ) -> ColumnTransformer:
+          """Build reusable preprocessing pipeline."""
+          num_transformer = Pipeline([
+              ("imputer", SimpleImputer(strategy="median")),
+              ("scaler", StandardScaler()),
+          ])
+
+          cat_transformer = Pipeline([
+              ("imputer", SimpleImputer(strategy="most_frequent")),
+              ("onehot", OneHotEncoder(
+                  handle_unknown="ignore",
+                  sparse_output=False,
+              )),
+          ])
+
+          return ColumnTransformer(
+              transformers=[
+                  ("num", num_transformer, num_cols),
+                  ("cat", cat_transformer, cat_cols),
+              ],
+              remainder="passthrough",
+          )
+
+      # ✅ Full pipeline with model
+      full_pipeline = Pipeline([
+          ("preprocessor", build_preprocessor(num_cols, cat_cols)),
+          ("model", RandomForestRegressor(n_estimators=100)),
+      ])
+      full_pipeline.fit(X_train, y_train)
+    severity: HIGH
+
+  - id: pyml003
+    name: Feature Engineering
+    category: features
+    description: |
+      Common feature engineering techniques: encoding, binning,
+      interaction features, datetime features.
+    text: feature engineering encoding binning interaction create new
+    example: |
+      import pandas as pd
+      import numpy as np
+      from sklearn.preprocessing import LabelEncoder, PolynomialFeatures
+
+      class FeatureEngineer:
+          def __init__(self, df: pd.DataFrame):
+              self.df = df.copy()
+
+          def encode_ordinal(self, col: str, order: list[str]):
+              """Ordinal encoding with custom order."""
+              mapping = {v: i for i, v in enumerate(order)}
+              self.df[col] = self.df[col].map(mapping)
+              return self
+
+          def bin_numeric(self, col: str, bins: int = 5, labels=None):
+              """Bin continuous variable into categories."""
+              self.df[f"{col}_binned"] = pd.cut(
+                  self.df[col], bins=bins, labels=labels
+              )
+              return self
+
+          def datetime_features(self, col: str):
+              """Extract features from datetime column."""
+              dt = pd.to_datetime(self.df[col])
+              self.df[f"{col}_year"] = dt.dt.year
+              self.df[f"{col}_month"] = dt.dt.month
+              self.df[f"{col}_day"] = dt.dt.day
+              self.df[f"{col}_dayofweek"] = dt.dt.dayofweek
+              self.df[f"{col}_hour"] = dt.dt.hour
+              return self
+
+          def interaction(self, col1: str, col2: str):
+              """Create interaction feature."""
+              self.df[f"{col1}_{col2}"] = self.df[col1] * self.df[col2]
+              return self
+
+          def log_transform(self, col: str):
+              """Log transform skewed feature."""
+              self.df[f"{col}_log"] = np.log1p(self.df[col])
+              return self
+
+          def get(self) -> pd.DataFrame:
+              return self.df
+    severity: MEDIUM
+
+  - id: pyml004
+    name: Train/Test Split and Stratification
+    category: splitting
+    description: |
+      Proper data splitting with stratification for imbalanced
+      datasets and cross-validation strategies.
+    text: train test split stratify cross validation kfold
+    example: |
+      from sklearn.model_selection import (
+          train_test_split, StratifiedKFold,
+          KFold, cross_val_score,
+      )
+
+      # ✅ Basic split
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.2, random_state=42,
+      )
+
+      # ✅ Stratified split (for classification)
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.2, random_state=42,
+          stratify=y,  # Preserve class distribution
+      )
+
+      # ✅ K-Fold Cross Validation
+      kf = KFold(n_splits=5, shuffle=True, random_state=42)
+      scores = cross_val_score(model, X, y, cv=kf, scoring="r2")
+      print(f"CV R²: {scores.mean():.4f} ± {scores.std():.4f}")
+
+      # ✅ Stratified K-Fold (classification)
+      skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+      scores = cross_val_score(model, X, y, cv=skf, scoring="f1_macro")
+    severity: MEDIUM
+
+  - id: pyml005
+    name: Hyperparameter Tuning
+    category: optimization
+    description: |
+      Grid search, random search, and optuna for hyperparameter
+      optimization with cross-validation.
+    text: hyperparameter tuning grid search random optuna optimize
+    example: |
+      from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+      from sklearn.ensemble import RandomForestRegressor
+
+      # ✅ Grid Search
+      param_grid = {
+          "n_estimators": [100, 200, 500],
+          "max_depth": [5, 10, 20, None],
+          "min_samples_split": [2, 5, 10],
+      }
+      grid = GridSearchCV(
+          RandomForestRegressor(),
+          param_grid,
+          cv=5,
+          scoring="r2",
+          n_jobs=-1,
+          verbose=1,
+      )
+      grid.fit(X_train, y_train)
+      print(f"Best params: {grid.best_params_}")
+      print(f"Best R²: {grid.best_score_:.4f}")
+
+      # ✅ Random Search (faster for large param spaces)
+      from scipy.stats import randint, uniform
+      param_dist = {
+          "n_estimators": randint(50, 500),
+          "max_depth": randint(3, 30),
+          "min_samples_split": randint(2, 20),
+      }
+      random_search = RandomizedSearchCV(
+          RandomForestRegressor(),
+          param_dist,
+          n_iter=50,
+          cv=5,
+          scoring="r2",
+          random_state=42,
+      )
+      random_search.fit(X_train, y_train)
+    severity: MEDIUM
+
+  - id: pyml006
+    name: Model Comparison Framework
+    category: evaluation
+    description: |
+      Compare multiple ML algorithms side by side.
+      Standard pattern across all E2E repos.
+    text: model comparison algorithms evaluate best select multiple
+    example: |
+      from sklearn.linear_model import LinearRegression, Ridge, Lasso
+      from sklearn.ensemble import (
+          RandomForestRegressor, GradientBoostingRegressor,
+          AdaBoostRegressor,
+      )
+      from sklearn.tree import DecisionTreeRegressor
+      from sklearn.neighbors import KNeighborsRegressor
+      from sklearn.svm import SVR
+      from sklearn.metrics import r2_score, mean_absolute_error
+      import pandas as pd
+
+      def compare_models(X_train, y_train, X_test, y_test) -> pd.DataFrame:
+          """Train and compare multiple models."""
+          models = {
+              "Linear": LinearRegression(),
+              "Ridge": Ridge(alpha=1.0),
+              "Lasso": Lasso(alpha=0.01),
+              "DecisionTree": DecisionTreeRegressor(max_depth=10),
+              "RandomForest": RandomForestRegressor(n_estimators=100),
+              "GradientBoosting": GradientBoostingRegressor(n_estimators=100),
+              "KNN": KNeighborsRegressor(n_neighbors=5),
+              "AdaBoost": AdaBoostRegressor(n_estimators=100),
+          }
+
+          results = []
+          for name, model in models.items():
+              model.fit(X_train, y_train)
+              y_pred = model.predict(X_test)
+              results.append({
+                  "Model": name,
+                  "R²": round(r2_score(y_test, y_pred), 4),
+                  "MAE": round(mean_absolute_error(y_test, y_pred), 4),
+              })
+
+          return pd.DataFrame(results).sort_values("R²", ascending=False)
+    severity: HIGH
+
+  - id: pyml007
+    name: Data Visualization Patterns
+    category: visualization
+    description: |
+      Standard visualization patterns with matplotlib, seaborn, and plotly
+      for EDA and model evaluation.
+    text: visualization matplotlib seaborn plotly chart plot heatmap
+    example: |
+      import matplotlib.pyplot as plt
+      import seaborn as sns
+
+      # ✅ Correlation heatmap
+      def plot_correlation(df, figsize=(10, 8)):
+          plt.figure(figsize=figsize)
+          sns.heatmap(
+              df.corr(numeric_only=True),
+              annot=True, cmap="coolwarm", center=0,
+              fmt=".2f", linewidths=0.5,
+          )
+          plt.title("Feature Correlation Heatmap")
+          plt.tight_layout()
+          plt.savefig("Artifacts/correlation.png")
+
+      # ✅ Feature distribution
+      def plot_distributions(df, cols, figsize=(15, 10)):
+          fig, axes = plt.subplots(2, 3, figsize=figsize)
+          for i, col in enumerate(cols[:6]):
+              ax = axes[i // 3, i % 3]
+              sns.histplot(df[col], ax=ax, kde=True)
+              ax.set_title(col)
+          plt.tight_layout()
+          plt.savefig("Artifacts/distributions.png")
+
+      # ✅ Actual vs Predicted scatter
+      def plot_predictions(y_true, y_pred):
+          plt.figure(figsize=(8, 6))
+          plt.scatter(y_true, y_pred, alpha=0.5, s=10)
+          plt.plot([y_true.min(), y_true.max()],
+                   [y_true.min(), y_true.max()], "r--")
+          plt.xlabel("Actual")
+          plt.ylabel("Predicted")
+          plt.title("Actual vs Predicted")
+          plt.savefig("Artifacts/predictions.png")
+
+      # ✅ Model comparison bar chart
+      def plot_model_comparison(results_df):
+          fig, ax = plt.subplots(figsize=(10, 6))
+          results_df.plot.barh(x="Model", y="R²", ax=ax, color="steelblue")
+          ax.set_xlabel("R² Score")
+          ax.set_title("Model Comparison")
+          plt.tight_layout()
+          plt.savefig("Artifacts/model_comparison.png")
+    severity: MEDIUM
+
+  - id: pyml008
+    name: Model Selection Metrics
+    category: evaluation
+    description: |
+      Comprehensive evaluation metrics for regression and classification.
+      Generate classification reports and confusion matrices.
+    text: metrics r2 mae rmse accuracy f1 precision recall confusion
+    example: |
+      from sklearn.metrics import (
+          # Regression
+          r2_score, mean_absolute_error, mean_squared_error,
+          # Classification
+          accuracy_score, f1_score, precision_score, recall_score,
+          classification_report, confusion_matrix,
+      )
+      import numpy as np
+
+      def evaluate_regression(y_true, y_pred) -> dict:
+          return {
+              "r2": round(r2_score(y_true, y_pred), 4),
+              "mae": round(mean_absolute_error(y_true, y_pred), 4),
+              "rmse": round(np.sqrt(mean_squared_error(y_true, y_pred)), 4),
+              "mape": round(np.mean(np.abs((y_true - y_pred) / y_true)) * 100, 2),
+          }
+
+      def evaluate_classification(y_true, y_pred, labels=None) -> dict:
+          report = classification_report(y_true, y_pred, output_dict=True)
+          return {
+              "accuracy": round(accuracy_score(y_true, y_pred), 4),
+              "f1_macro": round(report["macro avg"]["f1-score"], 4),
+              "f1_weighted": round(report["weighted avg"]["f1-score"], 4),
+              "confusion_matrix": confusion_matrix(y_true, y_pred).tolist(),
+              "report": report,
+          }
+    severity: HIGH

@@ -16,7 +16,7 @@ They can be adjusted based on context and user preferences.
 
 ```yaml
 rule: evidence_based_claims
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 
@@ -65,7 +65,7 @@ adjustment:
 
 ```yaml
 rule: self_critique
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 
@@ -103,7 +103,7 @@ adjustment:
 
 ```yaml
 rule: planning_before_action
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 
@@ -151,7 +151,7 @@ adjustment:
 
 ```yaml
 rule: incremental_verification
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 
@@ -188,7 +188,7 @@ adjustment:
 
 ```yaml
 rule: clear_communication
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 
@@ -230,7 +230,7 @@ adjustment:
 
 ```yaml
 rule: context_management
-version: "6.3.1"
+version: "6.3.2"
 tier: 2
 category: quality
 

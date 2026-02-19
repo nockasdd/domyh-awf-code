@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Paths v6.3.1
+# DOMYH Awesome Code — Memory Paths v6.3.2
 # Single Source of Truth for all memory file paths
 # Eliminates 16 duplicate path definitions across config files
 
-version: "6.3.1"
+version: "6.3.2"
 engine: memory_paths
 
 # =============================================================================
@@ -41,6 +41,11 @@ paths:
     core_memory: memory/core_memory/
     graph: memory/graph/
     patterns: memory/patterns/
+
+  # Layer 5: Session Governance (v7.0) — persisted by HSA MCP tools
+  governance:
+    session_state: ".agent/hsa/session-state.json"  # Intent, hierarchy, anchors, metrics
+    hierarchy_archive: memory/archive/hierarchies/  # Completed session hierarchies
 
 # =============================================================================
 # ARCHIVE PATHS

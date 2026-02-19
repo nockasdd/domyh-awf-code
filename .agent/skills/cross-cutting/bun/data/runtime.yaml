@@ -6,7 +6,7 @@
 metadata:
   skill: bun
   domain: runtime
-  version: "6.3.1"
+  version: "7.0.0"
   updated: "2026-02-05"
   patterns_count: 10
 

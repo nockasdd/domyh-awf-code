@@ -1,6 +1,6 @@
 # DOMYH Awesome Code — IDE Configurations
 
-> Version 6.3.1 | Progressive Disclosure Architecture
+> Version 7.0.0 | Progressive Disclosure Architecture
 
 ## Supported AI Coding Assistants
 
@@ -17,7 +17,7 @@ Each IDE config contains:
 ```json
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.1",
+  "version": "v6.3.2",
 
   "activation": {
     /* Trigger commands */

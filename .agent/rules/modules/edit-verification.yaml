@@ -1,7 +1,7 @@
-# Edit Verification Rule v6.3.1
+# Edit Verification Rule v6.3.2
 ---
 name: edit-verification
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-EDV-001"
 
 description: "Mandatory verification after code edits to prevent silent failures."

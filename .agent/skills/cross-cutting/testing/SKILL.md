@@ -8,7 +8,7 @@ detect:
     "vitest.config.*",
     "playwright.config.*",
   ]
-version: "6.3.1"
+version: "7.0.0"
 ---
 
 # Testing Patterns (2026)

@@ -1,0 +1,271 @@
+# =============================================================================
+# NLP Text Processing Patterns (Feb 2026)
+# Source: Spam Email Detection, Movie RecSys, Article Scraping
+# =============================================================================
+
+metadata:
+  skill: ml-pipelines
+  domain: nlp-text
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 6
+
+patterns:
+  - id: nlp001
+    name: Text Preprocessing with NLTK
+    category: preprocessing
+    description: |
+      Standard NLP text cleaning pipeline: lowercasing, tokenization,
+      stopword removal, stemming/lemmatization.
+    text: nltk text preprocessing tokenize stopword stem lemma clean
+    example: |
+      import nltk
+      from nltk.corpus import stopwords
+      from nltk.stem import PorterStemmer, WordNetLemmatizer
+      from nltk.tokenize import word_tokenize
+      import re
+
+      # ✅ Download required resources
+      nltk.download("punkt")
+      nltk.download("stopwords")
+      nltk.download("wordnet")
+
+      class TextPreprocessor:
+          def __init__(self):
+              self.stemmer = PorterStemmer()
+              self.lemmatizer = WordNetLemmatizer()
+              self.stop_words = set(stopwords.words("english"))
+
+          def clean(self, text: str) -> str:
+              # Lowercase
+              text = text.lower()
+              # Remove HTML tags
+              text = re.sub(r"<[^>]+>", "", text)
+              # Remove special characters
+              text = re.sub(r"[^a-zA-Z\s]", "", text)
+              # Tokenize
+              tokens = word_tokenize(text)
+              # Remove stopwords + lemmatize
+              tokens = [
+                  self.lemmatizer.lemmatize(t)
+                  for t in tokens
+                  if t not in self.stop_words and len(t) > 2
+              ]
+              return " ".join(tokens)
+    severity: HIGH
+
+  - id: nlp002
+    name: TF-IDF Text Vectorization
+    category: feature-extraction
+    description: |
+      Convert text to numerical features using TF-IDF or CountVectorizer
+      for text classification tasks.
+    text: tfidf count vectorizer text feature extraction bow
+    example: |
+      from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+
+      # ✅ TF-IDF (recommended for classification)
+      tfidf = TfidfVectorizer(
+          max_features=5000,
+          ngram_range=(1, 2),  # unigrams + bigrams
+          min_df=2,
+          max_df=0.95,
+      )
+      X_tfidf = tfidf.fit_transform(corpus)
+
+      # ✅ CountVectorizer (bag of words)
+      count_vec = CountVectorizer(
+          max_features=3000,
+          stop_words="english",
+      )
+      X_counts = count_vec.fit_transform(corpus)
+
+      # ✅ Save vectorizer for prediction
+      import pickle
+      with open("Artifacts/vectorizer.pkl", "wb") as f:
+          pickle.dump(tfidf, f)
+    severity: HIGH
+
+  - id: nlp003
+    name: Text Classification Pipeline
+    category: classification
+    description: |
+      End-to-end text classification with preprocessing, vectorization,
+      and multi-model comparison. Used for spam detection, sentiment analysis.
+    text: text classification spam email sentiment svm logistic naive bayes
+    example: |
+      from sklearn.pipeline import Pipeline
+      from sklearn.feature_extraction.text import TfidfVectorizer
+      from sklearn.svm import SVC
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.naive_bayes import MultinomialNB
+      from sklearn.ensemble import RandomForestClassifier
+      from sklearn.metrics import classification_report, accuracy_score
+
+      # ✅ Models to compare
+      MODELS = {
+          "SVM": SVC(kernel="linear"),
+          "LogisticRegression": LogisticRegression(max_iter=1000),
+          "NaiveBayes": MultinomialNB(),
+          "RandomForest": RandomForestClassifier(n_estimators=100),
+      }
+
+      # ✅ Full pipeline per model
+      def train_text_classifiers(X_train, y_train, X_test, y_test):
+          results = {}
+          for name, model in MODELS.items():
+              pipeline = Pipeline([
+                  ("tfidf", TfidfVectorizer(max_features=5000)),
+                  ("classifier", model),
+              ])
+              pipeline.fit(X_train, y_train)
+              y_pred = pipeline.predict(X_test)
+
+              acc = accuracy_score(y_test, y_pred)
+              report = classification_report(y_test, y_pred, output_dict=True)
+              results[name] = {
+                  "accuracy": acc,
+                  "f1_macro": report["macro avg"]["f1-score"],
+                  "pipeline": pipeline,
+              }
+              print(f"{name}: {acc:.4f}")
+
+          return results
+    severity: HIGH
+
+  - id: nlp004
+    name: HTML Content Extraction
+    category: scraping
+    description: |
+      Extract clean text from HTML using BeautifulSoup.
+      Used in web scraping, email processing, and PDF parsing.
+    text: beautifulsoup html extract text scrape web content parse
+    example: |
+      from bs4 import BeautifulSoup
+      import requests
+      import re
+
+      class ContentExtractor:
+          def from_html(self, html: str) -> str:
+              """Extract clean text from HTML string."""
+              soup = BeautifulSoup(html, "html.parser")
+              # Remove script/style tags
+              for tag in soup(["script", "style", "nav", "footer"]):
+                  tag.decompose()
+              text = soup.get_text(separator=" ")
+              # Clean whitespace
+              return re.sub(r"\s+", " ", text).strip()
+
+          def from_url(self, url: str) -> str:
+              """Fetch and extract text from URL."""
+              response = requests.get(url, timeout=10)
+              response.raise_for_status()
+              return self.from_html(response.text)
+
+          def from_email(self, raw_body: str) -> str:
+              """Extract text from email body (HTML or plain)."""
+              if "<html" in raw_body.lower():
+                  return self.from_html(raw_body)
+              return raw_body.strip()
+
+      # ✅ API-based scraping (e.g., Guardian API)
+      def scrape_articles(api_key: str, section: str = "technology"):
+          url = f"https://content.guardianapis.com/{section}"
+          params = {"api-key": api_key, "show-fields": "bodyText"}
+          response = requests.get(url, params=params)
+          articles = response.json()["response"]["results"]
+          return [
+              {"title": a["webTitle"], "body": a["fields"]["bodyText"]}
+              for a in articles
+          ]
+    severity: MEDIUM
+
+  - id: nlp005
+    name: Text Similarity and Recommendation
+    category: similarity
+    description: |
+      Content-based similarity using cosine similarity on TF-IDF or
+      count vectors. Used for recommendation systems.
+    text: cosine similarity recommendation content-based tfidf movie
+    example: |
+      from sklearn.feature_extraction.text import CountVectorizer
+      from sklearn.metrics.pairwise import cosine_similarity
+      import pandas as pd
+
+      class ContentRecommender:
+          def __init__(self, df: pd.DataFrame, text_col: str):
+              self.df = df
+              self.vectorizer = CountVectorizer(
+                  max_features=5000,
+                  stop_words="english",
+              )
+              self.similarity_matrix = cosine_similarity(
+                  self.vectorizer.fit_transform(df[text_col])
+              )
+
+          def recommend(self, title: str, top_n: int = 10) -> list[str]:
+              idx = self.df[self.df["title"] == title].index[0]
+              scores = list(enumerate(self.similarity_matrix[idx]))
+              scores = sorted(scores, key=lambda x: x[1], reverse=True)
+              top_indices = [i for i, _ in scores[1 : top_n + 1]]
+              return self.df.iloc[top_indices]["title"].tolist()
+
+      # ✅ Usage (Movie Recommendation System)
+      # movies = pd.read_csv("data/movies.csv")
+      # movies["tags"] = movies["overview"] + " " + movies["genres"]
+      # recommender = ContentRecommender(movies, "tags")
+      # recommendations = recommender.recommend("The Dark Knight")
+    severity: MEDIUM
+
+  - id: nlp006
+    name: Email/Document Processing
+    category: document
+    description: |
+      Process email archives (mbox) and documents for classification.
+      Handle encoding, MIME types, and batch processing.
+    text: email mbox document processing batch encoding mime
+    example: |
+      import mailbox
+      import email
+      from email.header import decode_header
+      from bs4 import BeautifulSoup
+
+      class EmailProcessor:
+          def process_mbox(self, mbox_path: str) -> list[dict]:
+              """Process entire mbox file into structured data."""
+              mbox = mailbox.mbox(mbox_path)
+              emails = []
+              for msg in mbox:
+                  subject = self._decode_header(msg["subject"])
+                  body = self._extract_body(msg)
+                  emails.append({
+                      "subject": subject,
+                      "from": msg["from"],
+                      "date": msg["date"],
+                      "body": body,
+                  })
+              return emails
+
+          def _extract_body(self, msg) -> str:
+              """Extract text body from email message."""
+              if msg.is_multipart():
+                  for part in msg.walk():
+                      if part.get_content_type() == "text/plain":
+                          return part.get_payload(decode=True).decode(
+                              errors="ignore"
+                          )
+                      elif part.get_content_type() == "text/html":
+                          html = part.get_payload(decode=True).decode(
+                              errors="ignore"
+                          )
+                          return BeautifulSoup(html, "html.parser").get_text()
+              return msg.get_payload(decode=True).decode(errors="ignore")
+
+          def _decode_header(self, header: str | None) -> str:
+              if not header:
+                  return ""
+              decoded, encoding = decode_header(header)[0]
+              if isinstance(decoded, bytes):
+                  return decoded.decode(encoding or "utf-8", errors="ignore")
+              return decoded
+    severity: LOW

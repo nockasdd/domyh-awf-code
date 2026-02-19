@@ -217,7 +217,7 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v6.3.1 • Suggest Pro v3.1 • Git-Aware Suggestions_
+_DOMYH Awesome Code v6.3.2 • Suggest Pro v3.1 • Git-Aware Suggestions_
 
 ---
 

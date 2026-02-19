@@ -1,7 +1,7 @@
-# Language Rule v6.3.1
+# Language Rule v6.3.2
 ---
 name: language
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-LNG-001"
 
 description: "Language and i18n rules for multilingual agent responses."

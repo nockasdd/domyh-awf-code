@@ -2,10 +2,10 @@
 # _router.yaml — Smart Skill Router
 # =============================================================================
 # Single Source of Truth for skill loading strategy
-# Integrates with HSA v1.2.8 project detector for optimal token usage
+# Integrates with HSA v1.3.2 project detector for optimal token usage
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 engine: "hsa"
 schema: "hierarchical"
 
@@ -82,7 +82,7 @@ routing:
       - "dependency" # react in package.json
       - "special_file" # next.config.js → nextjs
     priority: 2
-    count: 8
+    count: 9
 
   devops:
     path: "skills/devops/"
@@ -210,10 +210,11 @@ routing:
   ai-ml:
     path: "skills/ai-ml/"
     detect_by:
-      - "dependency" # langchain, openai, pinecone
-      - "keyword" # RAG, embeddings, vector, gemini
+      - "dependency" # langchain, openai, pinecone, sklearn, dvc
+      - "keyword" # RAG, embeddings, vector, gemini, ml pipeline
+      - "special_file" # dvc.yaml, MLproject, mlruns/
     priority: 6
-    count: 7
+    count: 8
 
 # =============================================================================
 # SKILL RESOLUTION
@@ -269,6 +270,12 @@ resolution:
     ci-cd: "devops/ci-cd"
     prompt-engineering: "ai-ml/prompt-engineering"
     skill-creator: "cross-cutting/skill-creator"
+    # v7.0 New aliases
+    ml-pipelines: "ai-ml/ml-pipelines"
+    sklearn: "ai-ml/ml-pipelines"
+    dvc: "ai-ml/ml-pipelines"
+    mlflow: "ai-ml/ml-pipelines"
+    streamlit: "frameworks/streamlit"
 
 # =============================================================================
 # TOKEN BUDGET

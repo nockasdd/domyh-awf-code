@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.1",
+  "version": "v6.3.2",
   "windsurf": {
     "cascade_enabled": true,
     "flows_enabled": true
@@ -41,11 +41,11 @@
   },
   "mcp_servers": {
     "domyh-hsa": {
-      "description": "HSA v1.2.8 Context Management",
+      "description": "HSA v1.3.2 Context Management",
       "command": "npx",
       "args": [
         "-y",
-        "@nockdev/hsa@1.2.8"
+        "@nockdev/hsa@1.2.9"
       ],
       "auto_start": true,
       "env": {
@@ -56,7 +56,7 @@
   },
   "session_engine": {
     "enabled": true,
-    "version": "v6.3.1",
+    "version": "v6.3.2",
     "auto_detect_preferences": true,
     "config_file": ".windsurfrules",
     "context_injection": {

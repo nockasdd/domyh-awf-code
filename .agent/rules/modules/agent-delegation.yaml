@@ -1,7 +1,7 @@
-# Agent Delegation Rule v6.3.1
+# Agent Delegation Rule v6.3.2
 ---
 name: agent-delegation
-version: "6.3.1"
+version: "7.0.0"
 rule_id: "MOD-DEL-001"
 
 description: "When and how to delegate tasks to specialized sub-agents."

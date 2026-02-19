@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-version: "6.3.1"
+version: "7.0.0"
 category: cross-cutting
 ---
 
@@ -42,7 +42,7 @@ categories:
 ```yaml
 # Template — META.yaml v2
 name: my-skill # lowercase, hyphen-separated
-version: "6.3.1"
+version: "7.0.0"
 display: My Skill # Human-readable name
 category: cross-cutting # One of the 7 categories
 tier: 2 # 1=core, 2=standard, 3=specialized

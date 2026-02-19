@@ -1,5 +1,5 @@
 # Socket.IO Patterns — HSA Tier 3 Data
-version: "6.3.1"
+version: "7.0.0"
 
 patterns:
   - id: SIO-001

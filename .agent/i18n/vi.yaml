@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - Vietnamese Strings
-# i18n/vi.yaml v6.3.1 — Enhanced i18n System
+# i18n/vi.yaml v6.3.2 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version được sync từ core/VERSION.yaml
 # Sử dụng: Agent đọc language từ state.json → load file i18n tương ứng
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.3.1" # Sync từ VERSION.yaml
-  version_short: v6.3.1
+  version: "7.0.0" # Sync từ VERSION.yaml
+  version_short: v6.3.2
   tagline: "Trợ lý Phát triển Ứng dụng AI"
   developer: "NockDev"
   language_name: "Tiếng Việt"
@@ -323,7 +323,7 @@ messages:
   progress_complete: "✅ Hoàn thành!"
   progress_failed: "❌ Thất bại"
 
-  # Deep Interview (v6.3.1)
+  # Deep Interview (v6.3.2)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "Feature này xử lý/quản lý cái gì chính xác?"
   interview_question_who: "Ai sử dụng? □ Solo | □ Team (2-10) | □ Public"
@@ -331,7 +331,7 @@ messages:
   interview_skip: "→ Đủ context, bỏ qua interview"
   interview_complete: "→ Đủ context, tiến hành lên kế hoạch..."
 
-  # Auto Test Loop (v6.3.1)
+  # Auto Test Loop (v6.3.2)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Đang thử cách khác..."
   test_loop_pass: "✅ Tests passed!"
@@ -344,7 +344,7 @@ messages:
     3️⃣ Gọi /debug để phân tích sâu
     4️⃣ Rollback về trước khi sửa
 
-  # Step Confirmation (v6.3.1)
+  # Step Confirmation (v6.3.2)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ ĐÃ XONG: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Tiếp task tiếp? (y/điều chỉnh/dừng)"
 

@@ -1,0 +1,98 @@
+# =============================================================================
+# ML Pipelines — META.yaml
+# End-to-End Machine Learning Pipeline Patterns
+# =============================================================================
+
+name: ml-pipelines
+version: "7.0.0"
+category: ai-ml
+tier: 2
+description: |
+  End-to-end ML pipeline patterns: data ingestion, transformation, 
+  model training, evaluation, and deployment. Covers MLOps with DVC,
+  MLflow, and CI/CD for ML projects.
+
+detect:
+  files:
+    - "dvc.yaml"
+    - "dvc.lock"
+    - "mlflow"
+    - "MLproject"
+    - "scores.json"
+  content:
+    - "from sklearn"
+    - "import tensorflow"
+    - "import torch"
+    - "from src.*.components"
+    - "from src.*.pipeline"
+  directories:
+    - "Artifacts"
+    - "Notebook_Experiments"
+    - "mlruns"
+    - ".dvc"
+
+keywords:
+  - machine learning
+  - ml pipeline
+  - data ingestion
+  - data transformation
+  - model training
+  - model evaluation
+  - prediction pipeline
+  - scikit-learn
+  - sklearn
+  - tensorflow
+  - pytorch
+  - dvc
+  - mlflow
+  - dagshub
+  - mlops
+  - feature engineering
+  - hyperparameter tuning
+  - cross validation
+  - model selection
+  - pickle
+  - joblib
+  - catboost
+  - xgboost
+  - lightgbm
+
+intents:
+  - "build ml pipeline"
+  - "train model"
+  - "create ml project"
+  - "setup dvc"
+  - "track experiments"
+  - "deploy ml model"
+  - "data preprocessing"
+  - "feature engineering"
+  - "model evaluation"
+
+capabilities:
+  - "E2E ML project scaffolding"
+  - "Data ingestion from CSV/API/DB"
+  - "Data transformation with sklearn Pipeline"
+  - "Multi-algorithm model comparison"
+  - "MLflow experiment tracking"
+  - "DVC data versioning"
+  - "Model serving with Flask/FastAPI"
+  - "Docker deployment for ML"
+  - "GitHub Actions ML CI/CD"
+  - "NLP text classification"
+  - "Computer vision with OpenCV"
+
+data_files:
+  - data/pipeline-patterns.yaml
+  - data/mlops.yaml
+  - data/nlp-text.yaml
+  - data/computer-vision.yaml
+
+related_skills:
+  - python
+  - docker
+  - ci-cd
+  - ai-agents
+  - rag-patterns
+  - streamlit
+
+# _DOMYH Awesome Code • ML Pipelines Skill • v7.0_

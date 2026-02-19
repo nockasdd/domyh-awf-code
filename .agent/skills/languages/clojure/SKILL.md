@@ -1,7 +1,7 @@
 ---
 name: clojure
 detect: ["*.clj", "*.cljs", "*.cljc", "deps.edn", "project.clj"]
-version: "6.3.1"
+version: "7.0.0"
 category: functional
 tier: 3
 ---

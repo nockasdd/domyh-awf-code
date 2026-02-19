@@ -60,4 +60,6 @@ temp/
 .agent/private/
 # ── FLOW.md ──────────────────────────────────────────────
 FLOW(Chi-dung-de-lay-thong-tin).md
+
+# ── scripts ──────────────────────────────────────────────
 scripts/

@@ -1,0 +1,346 @@
+# =============================================================================
+# Agentic Application Patterns (Feb 2026)
+# Source: MarketInsight (FastAPI+LangChain+React+Langfuse)
+# =============================================================================
+
+metadata:
+  skill: ai-agents
+  domain: agentic-apps
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 6
+
+patterns:
+  - id: agt001
+    name: FastAPI + LangChain Backend
+    category: scaffold
+    description: |
+      Backend scaffold for agentic applications using FastAPI for
+      API layer and LangChain/LangGraph for AI agent orchestration.
+    text: fastapi langchain backend scaffold agent api endpoint
+    example: |
+      # main.py — FastAPI + LangChain agentic backend
+      from fastapi import FastAPI
+      from fastapi.middleware.cors import CORSMiddleware
+      from pydantic import BaseModel
+
+      from components.agent import AgentRunner
+      from utils.config import settings
+
+      app = FastAPI(title="MarketInsight Agent API")
+      app.add_middleware(
+          CORSMiddleware,
+          allow_origins=["http://localhost:3000"],  # React frontend
+          allow_methods=["*"],
+          allow_headers=["*"],
+      )
+
+      class QueryRequest(BaseModel):
+          query: str
+          session_id: str | None = None
+
+      class QueryResponse(BaseModel):
+          answer: str
+          sources: list[str]
+          agent_steps: list[dict]
+
+      agent = AgentRunner()
+
+      @app.post("/api/chat", response_model=QueryResponse)
+      async def chat(request: QueryRequest):
+          result = await agent.run(
+              query=request.query,
+              session_id=request.session_id,
+          )
+          return QueryResponse(
+              answer=result["output"],
+              sources=result.get("sources", []),
+              agent_steps=result.get("steps", []),
+          )
+
+      # ✅ Project structure:
+      # main.py
+      # components/
+      # │   ├── agent.py          # LangChain agent setup
+      # │   ├── tools.py          # Custom tools (YFinance, APIs)
+      # │   └── prompts.py        # System prompts
+      # utils/
+      # │   ├── config.py         # Settings + env vars
+      # │   └── callbacks.py      # Langfuse callbacks
+      # frontend/                 # React app
+      # requirements.txt
+    severity: HIGH
+
+  - id: agt002
+    name: React Frontend for Agents
+    category: frontend
+    description: |
+      React frontend for agentic applications with chat interface,
+      streaming responses, and agent step visualization.
+    text: react frontend chat agent ui streaming interface
+    example: |
+      // frontend/src/components/Chat.tsx
+      import { useState } from "react";
+
+      interface Message {
+        role: "user" | "assistant";
+        content: string;
+        steps?: AgentStep[];
+      }
+
+      interface AgentStep {
+        tool: string;
+        input: string;
+        output: string;
+      }
+
+      export function Chat() {
+        const [messages, setMessages] = useState<Message[]>([]);
+        const [input, setInput] = useState("");
+        const [loading, setLoading] = useState(false);
+
+        const sendMessage = async () => {
+          if (!input.trim()) return;
+
+          const userMsg: Message = { role: "user", content: input };
+          setMessages((prev) => [...prev, userMsg]);
+          setInput("");
+          setLoading(true);
+
+          try {
+            const res = await fetch("/api/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ query: input }),
+            });
+            const data = await res.json();
+
+            const assistantMsg: Message = {
+              role: "assistant",
+              content: data.answer,
+              steps: data.agent_steps,
+            };
+            setMessages((prev) => [...prev, assistantMsg]);
+          } catch (error) {
+            console.error("Chat error:", error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        return (
+          <div className="chat-container">
+            <div className="messages">
+              {messages.map((msg, i) => (
+                <div key={i} className={`message ${msg.role}`}>
+                  <p>{msg.content}</p>
+                  {msg.steps && (
+                    <details>
+                      <summary>Agent Steps ({msg.steps.length})</summary>
+                      {msg.steps.map((s, j) => (
+                        <div key={j} className="step">
+                          <strong>{s.tool}</strong>: {s.output}
+                        </div>
+                      ))}
+                    </details>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="input-bar">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                placeholder="Ask about the market..."
+                disabled={loading}
+              />
+              <button onClick={sendMessage} disabled={loading}>
+                {loading ? "..." : "Send"}
+              </button>
+            </div>
+          </div>
+        );
+      }
+    severity: MEDIUM
+
+  - id: agt003
+    name: Multi-Tool Agent
+    category: agent
+    description: |
+      LangChain/LangGraph agent with multiple tools.
+      Example: YFinance for stock data, web search, calculations.
+    text: multi-tool agent langchain tools yfinance search calculator
+    example: |
+      from langchain.agents import AgentExecutor, create_openai_tools_agent
+      from langchain_openai import ChatOpenAI
+      from langchain.tools import Tool, tool
+      from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+      # ✅ Custom tools
+      @tool
+      def get_stock_price(ticker: str) -> str:
+          """Get current stock price for a ticker symbol."""
+          import yfinance as yf
+          stock = yf.Ticker(ticker)
+          price = stock.info.get("currentPrice", "N/A")
+          return f"{ticker}: ${price}"
+
+      @tool
+      def get_market_news(query: str) -> str:
+          """Search for recent market news."""
+          # API call to news service
+          return f"Latest news about {query}: ..."
+
+      @tool
+      def calculate(expression: str) -> str:
+          """Evaluate a mathematical expression."""
+          try:
+              return str(eval(expression))
+          except Exception as e:
+              return f"Error: {e}"
+
+      # ✅ Agent setup
+      llm = ChatOpenAI(model="gpt-4", temperature=0)
+      tools = [get_stock_price, get_market_news, calculate]
+
+      prompt = ChatPromptTemplate.from_messages([
+          ("system", "You are a market analysis assistant. Use tools to get real data."),
+          MessagesPlaceholder("chat_history"),
+          ("human", "{input}"),
+          MessagesPlaceholder("agent_scratchpad"),
+      ])
+
+      agent = create_openai_tools_agent(llm, tools, prompt)
+      executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    severity: HIGH
+
+  - id: agt004
+    name: Langfuse Observability
+    category: observability
+    description: |
+      Integrate Langfuse for LLM observability: trace calls,
+      monitor costs, and debug agent behavior.
+    text: langfuse observability trace llm monitoring cost debugging
+    example: |
+      from langfuse.callback import CallbackHandler
+
+      # ✅ Initialize Langfuse handler
+      langfuse_handler = CallbackHandler(
+          public_key="pk-...",
+          secret_key="sk-...",
+          host="https://cloud.langfuse.com",
+      )
+
+      # ✅ Add to LangChain agent
+      result = executor.invoke(
+          {"input": "What is AAPL stock price?"},
+          config={"callbacks": [langfuse_handler]},
+      )
+
+      # ✅ Custom traces
+      from langfuse import Langfuse
+
+      langfuse = Langfuse()
+
+      trace = langfuse.trace(
+          name="market-analysis",
+          user_id="user-123",
+          metadata={"query_type": "stock"},
+      )
+
+      span = trace.span(name="agent-execution")
+      # ... agent logic ...
+      span.end(output={"result": "..."})
+    severity: MEDIUM
+
+  - id: agt005
+    name: Streaming Agent Responses
+    category: streaming
+    description: |
+      Server-Sent Events (SSE) for streaming agent responses
+      from FastAPI to React frontend.
+    text: streaming sse server-sent events fastapi real-time response
+    example: |
+      # ✅ FastAPI SSE endpoint
+      from fastapi.responses import StreamingResponse
+      import asyncio
+      import json
+
+      @app.post("/api/chat/stream")
+      async def chat_stream(request: QueryRequest):
+          async def event_generator():
+              async for event in agent.stream(request.query):
+                  if event["type"] == "tool_start":
+                      yield f"data: {json.dumps({'type': 'tool', 'name': event['tool']})}\n\n"
+                  elif event["type"] == "token":
+                      yield f"data: {json.dumps({'type': 'token', 'content': event['content']})}\n\n"
+                  elif event["type"] == "done":
+                      yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
+          return StreamingResponse(
+              event_generator(),
+              media_type="text/event-stream",
+          )
+
+      # ✅ React SSE consumer
+      # const eventSource = new EventSource("/api/chat/stream");
+      # eventSource.onmessage = (event) => {
+      #   const data = JSON.parse(event.data);
+      #   if (data.type === "token") {
+      #     setResponse(prev => prev + data.content);
+      #   }
+      # };
+    severity: MEDIUM
+
+  - id: agt006
+    name: Agentic App Deployment
+    category: deployment
+    description: |
+      Deploy agentic applications with Docker, Vercel (frontend),
+      and cloud services.
+    text: deploy docker vercel cloud agentic app production
+    example: |
+      # ✅ docker-compose.yaml — Full stack
+      version: "3.8"
+      services:
+        backend:
+          build:
+            context: .
+            dockerfile: Dockerfile
+          ports:
+            - "8000:8000"
+          environment:
+            - OPENAI_API_KEY=${OPENAI_API_KEY}
+            - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+          volumes:
+            - ./data:/app/data
+
+        frontend:
+          build:
+            context: ./frontend
+          ports:
+            - "3000:3000"
+          depends_on:
+            - backend
+
+      # ✅ Backend Dockerfile
+      # FROM python:3.10-slim
+      # WORKDIR /app
+      # COPY requirements.txt .
+      # RUN pip install --no-cache-dir -r requirements.txt
+      # COPY . .
+      # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+      # ✅ Vercel — Frontend deployment
+      # vercel.json:
+      # {
+      #   "rewrites": [
+      #     { "source": "/api/(.*)", "destination": "https://api.example.com/$1" }
+      #   ]
+      # }
+
+      # ✅ Deploy commands:
+      # Backend: docker build -t agent-api . && docker push agent-api
+      # Frontend: cd frontend && vercel --prod
+    severity: LOW

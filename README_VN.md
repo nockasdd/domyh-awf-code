@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=83+Skills+•+22+IDEs+•+41+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=85+Skills+•+22+IDEs+•+41+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,7 +15,7 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-83-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-85-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-22-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
@@ -229,7 +229,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 | `/orchestrate`  | Multi-Agent: điều phối parallel tasks, delegate cho specialists       | `/orchestrate Refactor + Test + Deploy module auth`       |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo 2 commits gần nhất`                         |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Kiến trúc microservices cho 10K concurrent users` |
-| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.3.0 across 15 files             |
+| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.3.2 across 15 files             |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |
@@ -269,11 +269,11 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 
 ---
 
-## 🧠 Skills (83 tổng)
+## 🧠 Skills (85 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+8+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+7+AI-ML;83+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+8+AI-ML;85+Tổng+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -295,7 +295,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 </td>
 <td width="50%" valign="top">
 
-### 🖼️ Frameworks (8)
+### 🖼️ Frameworks (9)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=react,vue,nextjs,angular,nuxt,svelte,flutter,tailwind&theme=dark" />
@@ -325,10 +325,10 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
   <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent</sub>
 </p>
 
-### 🤖 AI-ML (7)
+### 🤖 AI-ML (8)
 
 <p align="center">
-  <sub>AI Agents, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live</sub>
+  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live</sub>
 </p>
 
 </td>
@@ -342,13 +342,13 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 | Danh mục          | Số lượng | Skills                                                                                                                                                                                                              |
 | :---------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Languages**     | 28       | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal                             |
-| **Frameworks**    | 8        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native                                                                                                                                                   |
+| **Frameworks**    | 9        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 6        | Security, API Design, Error Handling, Logging, Observability, Authentication                                                                                                                                        |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
 | **Cross-cutting** | 22       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator |
 | **Tooling**       | 5        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
-| **AI-ML**         | 7        | AI Agents, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                               |
-| **Tổng**          | **83**   |                                                                                                                                                                                                                     |
+| **AI-ML**         | 8        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                 |
+| **Tổng**          | **85**   |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -412,14 +412,14 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 83 skills chuyên biệt
+├── 🧠 skills/                # 85 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
-│   ├── frameworks/   (8)     # React, Vue, Next.js, Flutter...
+│   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (6)     # Security, API Design, Auth...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
 │   ├── cross-cutting/ (22)   # Testing, Database, Playwright...
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
-│   └── ai-ml/        (7)     # AI Agents, Gemini, RAG...
+│   └── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
 ├── 🔄 workflows/     (41)    # 41 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...

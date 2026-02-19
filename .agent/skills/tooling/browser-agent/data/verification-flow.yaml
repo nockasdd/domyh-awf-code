@@ -2,7 +2,7 @@
 # verification-flow.yaml — 5-Phase Comprehensive Browser Verification Flow
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 phases:
   - phase: 1

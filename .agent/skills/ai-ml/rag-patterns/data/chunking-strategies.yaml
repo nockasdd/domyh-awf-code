@@ -2,7 +2,7 @@
 # chunking-strategies.yaml — Document Chunking Patterns
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 fixed_size:
   description: "Split by character/token count"

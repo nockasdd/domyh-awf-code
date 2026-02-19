@@ -1,7 +1,7 @@
 ---
 name: vue
 detect: ["*.vue", "package.json:vue", "vite.config.ts"]
-version: "6.3.1"
+version: "7.0.0"
 category: frontend
 tier: 1
 ---

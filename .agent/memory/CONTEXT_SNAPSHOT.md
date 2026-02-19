@@ -7,7 +7,7 @@
 
 ## System
 
-DOMYH Awesome Code v6.3.1 — AI agent framework for intelligent development assistance.
+DOMYH Awesome Code v6.3.2 — AI agent framework for intelligent development assistance.
 
 **Structure**: `.agent/` directory containing:
 - `rules/` — 11 modular YAML rules + SACRED_RULES.xml (constitutional hierarchy)

@@ -1,0 +1,396 @@
+# =============================================================================
+# ML Pipeline Patterns (Feb 2026)
+# Source: 9 E2E ML projects (Airbnb, Diamond, Heart, Student, Flight, etc.)
+# =============================================================================
+
+metadata:
+  skill: ml-pipelines
+  domain: pipeline-patterns
+  version: "1.0"
+  updated: "2026-02-19"
+  patterns_count: 8
+
+patterns:
+  - id: mlp001
+    name: ML Project Structure
+    category: scaffold
+    description: |
+      Standard E2E ML project layout with src/{Name}/ package,
+      components for pipeline stages, and Artifacts for outputs.
+    text: ml project structure scaffold template layout setup
+    example: |
+      # template.py — Scaffold generator (found in all E2E repos)
+      import os
+      from pathlib import Path
+
+      project_name = "DiamondPricePrediction"
+
+      list_of_files = [
+          f"src/{project_name}/__init__.py",
+          f"src/{project_name}/components/__init__.py",
+          f"src/{project_name}/components/data_ingestion.py",
+          f"src/{project_name}/components/data_transformation.py",
+          f"src/{project_name}/components/model_trainer.py",
+          f"src/{project_name}/components/model_evaluation.py",
+          f"src/{project_name}/pipelines/__init__.py",
+          f"src/{project_name}/pipelines/training_pipeline.py",
+          f"src/{project_name}/pipelines/prediction_pipeline.py",
+          f"src/{project_name}/config/__init__.py",
+          f"src/{project_name}/config/configuration.py",
+          f"src/{project_name}/utils/__init__.py",
+          f"src/{project_name}/utils/common.py",
+          f"src/{project_name}/exception.py",
+          f"src/{project_name}/logger.py",
+          "Artifacts/.gitkeep",
+          "Notebook_Experiments/.gitkeep",
+          "static/style.css",
+          "templates/index.html",
+          "app.py",
+          "requirements.txt",
+          "setup.py",
+          "Dockerfile",
+          "README.md",
+          ".github/workflows/main.yaml",
+      ]
+
+      for filepath in list_of_files:
+          filepath = Path(filepath)
+          filepath.parent.mkdir(parents=True, exist_ok=True)
+          if not filepath.exists() or filepath.stat().st_size == 0:
+              filepath.touch()
+              print(f"Created: {filepath}")
+    severity: HIGH
+
+  - id: mlp002
+    name: Data Ingestion Component
+    category: data
+    description: |
+      Load raw data from CSV/API/DB, split into train/test,
+      save to Artifacts directory.
+    text: data ingestion load csv read split train test
+    example: |
+      import os
+      import pandas as pd
+      from dataclasses import dataclass
+      from sklearn.model_selection import train_test_split
+      from src.logger import logging
+      from src.exception import CustomException
+
+      @dataclass
+      class DataIngestionConfig:
+          raw_data_path: str = os.path.join("Artifacts", "raw.csv")
+          train_data_path: str = os.path.join("Artifacts", "train.csv")
+          test_data_path: str = os.path.join("Artifacts", "test.csv")
+
+      class DataIngestion:
+          def __init__(self):
+              self.config = DataIngestionConfig()
+
+          def initiate(self) -> tuple[str, str]:
+              try:
+                  logging.info("Data ingestion started")
+                  df = pd.read_csv("notebooks/data/source.csv")
+
+                  os.makedirs(os.path.dirname(self.config.raw_data_path), exist_ok=True)
+                  df.to_csv(self.config.raw_data_path, index=False)
+
+                  train_set, test_set = train_test_split(
+                      df, test_size=0.2, random_state=42
+                  )
+                  train_set.to_csv(self.config.train_data_path, index=False)
+                  test_set.to_csv(self.config.test_data_path, index=False)
+
+                  logging.info("Data ingestion completed")
+                  return self.config.train_data_path, self.config.test_data_path
+              except Exception as e:
+                  raise CustomException(e)
+    severity: HIGH
+
+  - id: mlp003
+    name: Data Transformation Pipeline
+    category: preprocessing
+    description: |
+      sklearn ColumnTransformer with separate pipelines for
+      numerical (impute→scale) and categorical (impute→encode) features.
+    text: transformation pipeline column transformer scaler encoder preprocessing
+    example: |
+      import numpy as np
+      import pandas as pd
+      import pickle
+      from sklearn.compose import ColumnTransformer
+      from sklearn.pipeline import Pipeline
+      from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
+      from sklearn.impute import SimpleImputer
+
+      class DataTransformation:
+          def __init__(self):
+              self.preprocessor_path = "Artifacts/preprocessor.pkl"
+
+          def get_transformer(
+              self,
+              num_cols: list[str],
+              cat_cols: list[str],
+              ordinal_cols: list[str] | None = None,
+          ) -> ColumnTransformer:
+              # ✅ Numerical: impute missing → scale
+              num_pipeline = Pipeline([
+                  ("imputer", SimpleImputer(strategy="median")),
+                  ("scaler", StandardScaler()),
+              ])
+
+              # ✅ Categorical: impute → one-hot encode
+              cat_pipeline = Pipeline([
+                  ("imputer", SimpleImputer(strategy="most_frequent")),
+                  ("encoder", OneHotEncoder(
+                      handle_unknown="ignore",
+                      sparse_output=False,
+                  )),
+              ])
+
+              transformers = [
+                  ("num", num_pipeline, num_cols),
+                  ("cat", cat_pipeline, cat_cols),
+              ]
+
+              # ✅ Optional: ordinal encoding for ordered categories
+              if ordinal_cols:
+                  ord_pipeline = Pipeline([
+                      ("imputer", SimpleImputer(strategy="most_frequent")),
+                      ("encoder", OrdinalEncoder()),
+                  ])
+                  transformers.append(("ord", ord_pipeline, ordinal_cols))
+
+              return ColumnTransformer(transformers)
+
+          def fit_transform(self, train_df: pd.DataFrame, test_df: pd.DataFrame, target: str):
+              X_train = train_df.drop(columns=[target])
+              y_train = train_df[target]
+              X_test = test_df.drop(columns=[target])
+              y_test = test_df[target]
+
+              num_cols = X_train.select_dtypes(include="number").columns.tolist()
+              cat_cols = X_train.select_dtypes(include="object").columns.tolist()
+
+              preprocessor = self.get_transformer(num_cols, cat_cols)
+              X_train_t = preprocessor.fit_transform(X_train)
+              X_test_t = preprocessor.transform(X_test)
+
+              with open(self.preprocessor_path, "wb") as f:
+                  pickle.dump(preprocessor, f)
+
+              return X_train_t, y_train.values, X_test_t, y_test.values
+    severity: HIGH
+
+  - id: mlp004
+    name: Multi-Algorithm Model Trainer
+    category: training
+    description: |
+      Train multiple algorithms, compare performance, save best model.
+      Supports regression (R², MAE, RMSE) and classification (Accuracy, F1).
+    text: model trainer train compare algorithms best model selection
+    example: |
+      import pickle
+      import json
+      from sklearn.ensemble import (
+          RandomForestRegressor, GradientBoostingRegressor,
+          AdaBoostRegressor, RandomForestClassifier,
+      )
+      from sklearn.linear_model import LinearRegression, LogisticRegression
+      from sklearn.tree import DecisionTreeRegressor
+      from sklearn.neighbors import KNeighborsRegressor
+      from sklearn.svm import SVR
+      from sklearn.metrics import r2_score, mean_absolute_error
+
+      class ModelTrainer:
+          REGRESSION_MODELS = {
+              "LinearRegression": LinearRegression(),
+              "DecisionTree": DecisionTreeRegressor(),
+              "RandomForest": RandomForestRegressor(n_estimators=100),
+              "GradientBoosting": GradientBoostingRegressor(n_estimators=100),
+              "AdaBoost": AdaBoostRegressor(n_estimators=100),
+              "KNN": KNeighborsRegressor(n_neighbors=5),
+          }
+
+          def train(self, X_train, y_train, X_test, y_test) -> dict:
+              results = {}
+              best_score, best_name = -float("inf"), ""
+
+              for name, model in self.REGRESSION_MODELS.items():
+                  model.fit(X_train, y_train)
+                  y_pred = model.predict(X_test)
+
+                  score = r2_score(y_test, y_pred)
+                  mae = mean_absolute_error(y_test, y_pred)
+                  results[name] = {"r2": round(score, 4), "mae": round(mae, 4)}
+
+                  if score > best_score:
+                      best_score, best_name = score, name
+
+              # ✅ Save best model
+              best_model = self.REGRESSION_MODELS[best_name]
+              with open("Artifacts/model.pkl", "wb") as f:
+                  pickle.dump(best_model, f)
+
+              # ✅ Save scores
+              with open("scores.json", "w") as f:
+                  json.dump({"best": best_name, "results": results}, f, indent=2)
+
+              return {"best_model": best_name, "best_r2": best_score, "all": results}
+    severity: HIGH
+
+  - id: mlp005
+    name: Model Evaluation with MLflow
+    category: evaluation
+    description: |
+      Evaluate model with metrics and log to MLflow/DagsHub.
+      Supports local and remote tracking.
+    text: model evaluation metrics mlflow dagshub logging tracking
+    example: |
+      import mlflow
+      import mlflow.sklearn
+      import json
+      from sklearn.metrics import (
+          r2_score, mean_absolute_error, mean_squared_error,
+          accuracy_score, classification_report,
+      )
+      import numpy as np
+
+      class ModelEvaluation:
+          def __init__(self, tracking_uri: str | None = None):
+              if tracking_uri:
+                  mlflow.set_tracking_uri(tracking_uri)
+
+          def evaluate_regression(self, model, X_test, y_test, model_name: str):
+              y_pred = model.predict(X_test)
+
+              metrics = {
+                  "r2_score": r2_score(y_test, y_pred),
+                  "mae": mean_absolute_error(y_test, y_pred),
+                  "rmse": np.sqrt(mean_squared_error(y_test, y_pred)),
+              }
+
+              # ✅ Log to MLflow
+              with mlflow.start_run(run_name=model_name):
+                  mlflow.log_param("model_type", model_name)
+                  for k, v in metrics.items():
+                      mlflow.log_metric(k, round(v, 4))
+                  mlflow.sklearn.log_model(model, "model")
+
+              return metrics
+    severity: MEDIUM
+
+  - id: mlp006
+    name: Prediction Pipeline
+    category: serving
+    description: |
+      Load saved model and preprocessor, transform input, predict.
+      Used by Flask/FastAPI/Streamlit app.
+    text: prediction pipeline predict serve inference load model
+    example: |
+      import pickle
+      import numpy as np
+      import pandas as pd
+
+      class PredictionPipeline:
+          def __init__(self):
+              self.model = pickle.load(open("Artifacts/model.pkl", "rb"))
+              self.preprocessor = pickle.load(open("Artifacts/preprocessor.pkl", "rb"))
+
+          def predict(self, features: dict) -> float:
+              """Single prediction from form/API input."""
+              df = pd.DataFrame([features])
+              transformed = self.preprocessor.transform(df)
+              prediction = self.model.predict(transformed)
+              return round(float(prediction[0]), 2)
+
+          def predict_batch(self, df: pd.DataFrame) -> np.ndarray:
+              """Batch prediction from DataFrame."""
+              transformed = self.preprocessor.transform(df)
+              return self.model.predict(transformed)
+    severity: HIGH
+
+  - id: mlp007
+    name: Training Pipeline Orchestrator
+    category: pipeline
+    description: |
+      Orchestrate full training: ingestion → transformation → training → evaluation.
+      Used as main entry point and DVC stage.
+    text: training pipeline orchestrate end-to-end run full train
+    example: |
+      from src.components.data_ingestion import DataIngestion
+      from src.components.data_transformation import DataTransformation
+      from src.components.model_trainer import ModelTrainer
+      from src.components.model_evaluation import ModelEvaluation
+      from src.logger import logging
+
+      class TrainingPipeline:
+          def run(self):
+              logging.info("=== Training Pipeline Started ===")
+
+              # Stage 1: Data Ingestion
+              ingestion = DataIngestion()
+              train_path, test_path = ingestion.initiate()
+
+              # Stage 2: Data Transformation
+              transformation = DataTransformation()
+              X_train, y_train, X_test, y_test = transformation.fit_transform(
+                  train_path, test_path, target="price"
+              )
+
+              # Stage 3: Model Training
+              trainer = ModelTrainer()
+              results = trainer.train(X_train, y_train, X_test, y_test)
+              logging.info(f"Best model: {results['best_model']} (R²={results['best_r2']:.4f})")
+
+              # Stage 4: Evaluation
+              evaluator = ModelEvaluation()
+              metrics = evaluator.evaluate_regression(
+                  trainer.REGRESSION_MODELS[results["best_model"]],
+                  X_test, y_test, results["best_model"]
+              )
+
+              logging.info(f"=== Training Complete: {metrics} ===")
+
+      if __name__ == "__main__":
+          TrainingPipeline().run()
+    severity: HIGH
+
+  - id: mlp008
+    name: Custom Exception and Logger
+    category: infrastructure
+    description: |
+      Reusable custom exception with traceback and centralized
+      logging configuration for ML projects.
+    text: exception logger logging custom error handling traceback
+    example: |
+      # src/{Name}/exception.py
+      import sys
+
+      class CustomException(Exception):
+          def __init__(self, error: Exception, error_detail=sys):
+              super().__init__(str(error))
+              _, _, exc_tb = error_detail.exc_info()
+              self.file_name = exc_tb.tb_frame.f_code.co_filename
+              self.line_number = exc_tb.tb_lineno
+              self.error_message = (
+                  f"Error in [{self.file_name}] line [{self.line_number}]: {error}"
+              )
+
+          def __str__(self):
+              return self.error_message
+
+      # src/{Name}/logger.py
+      import logging
+      import os
+      from datetime import datetime
+
+      LOG_FILE = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
+      LOG_DIR = os.path.join(os.getcwd(), "logs")
+      os.makedirs(LOG_DIR, exist_ok=True)
+
+      logging.basicConfig(
+          filename=os.path.join(LOG_DIR, LOG_FILE),
+          format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s",
+          level=logging.INFO,
+      )
+    severity: MEDIUM

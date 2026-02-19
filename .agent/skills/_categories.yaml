@@ -4,7 +4,7 @@
 # Metadata for skill categories in hierarchical organization
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 categories:
   # ==========================================================================
@@ -62,7 +62,7 @@ categories:
       - crystal
 
   # ==========================================================================
-  # FRAMEWORKS (8 skills)
+  # FRAMEWORKS (9 skills)
   # ==========================================================================
   frameworks:
     description: "Frontend/Backend frameworks"
@@ -77,6 +77,8 @@ categories:
       - nuxt
       - flutter
       - react-native
+      # v7.0 New
+      - streamlit
 
   # ==========================================================================
   # DEVOPS (7 skills)
@@ -131,12 +133,12 @@ categories:
       - bun
       - audit-pro
 
-      # P0 Skills (v6.3.0)
+      # P0 Skills (v6.3.2)
       - tdd-workflow
       - accessibility
       - seo
 
-      # P1 Skills (v6.3.0)
+      # P1 Skills (v6.3.2)
       - microservices
       - monorepo
 
@@ -163,10 +165,10 @@ categories:
       - browser-agent
 
   # ==========================================================================
-  # AI-ML (7 skills) — v6.3 + Google AI
+  # AI-ML (8 skills) — v6.3 + Google AI + v7.0 ML Pipelines
   # ==========================================================================
   ai-ml:
-    description: "AI/ML agent systems, vector search, prompt engineering, and Gemini APIs"
+    description: "AI/ML agent systems, ML pipelines, vector search, prompt engineering, and Gemini APIs"
     path: "ai-ml/"
     priority: 3
     skills:
@@ -179,16 +181,18 @@ categories:
       - gemini-media-gen
       - gemini-tts
       - gemini-live
+      # v7.0 New — Classic ML
+      - ml-pipelines
 
 # =============================================================================
 # STATISTICS
 # =============================================================================
 
 stats:
-  total_skills: 83
+  total_skills: 85
   categories: 7
   estimated_tokens:
-    all_meta: 8300 # ~100 tokens × 83
+    all_meta: 8500 # ~100 tokens × 85
     router_only: 500 # Router + core META
     typical_session: 3000 # Router + 2 language + 1 framework + 1 tooling
 

@@ -1,6 +1,6 @@
 ---
 name: documenter
-version: "6.3.1"
+version: "7.0.0"
 persona_id: "doc-001"
 
 identity:

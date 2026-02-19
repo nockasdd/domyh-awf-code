@@ -1,5 +1,5 @@
 # DOMYH Awesome Code — Shared Patterns Library
-# Version: 6.3.1
+# Version: 7.0.0
 # Purpose: Reduce token duplication across workflows
 
 # =============================================================================
@@ -177,7 +177,7 @@ token_saving:
     - "Focus on current phase only"
     - "Unload completed context"
 
-  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.3.1 cleanup)
+  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.3.2 cleanup)
   thresholds:
     reference: archive/TOKEN_BUDGETS.yaml
     use:

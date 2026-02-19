@@ -1,6 +1,6 @@
 # 🧠 DOMYH Awesome Code Memory System
 
-> Version 6.1.2 — 4-Layer Hierarchical Memory Architecture
+> Version 7.0.0 — 5-Layer Hierarchical Memory Architecture
 
 ---
 
@@ -32,6 +32,10 @@ This directory contains the persistent memory system for DOMYH Awesome Code, ena
 ├──────────────────────────────────────────────────────────────┤
 │ Layer 4: SEMANTIC MEMORY (optional)         ~2,500 tokens    │
 │ └── vectors/ — LanceDB (when enabled)                        │
+├──────────────────────────────────────────────────────────────┤
+│ Layer 5: SESSION GOVERNANCE (v7.0)          ~200 tokens      │
+│ └── .agent/hsa/session-state.json — Intent, hierarchy,        │
+│     anchors, drift metrics (managed by HSA MCP tools)        │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -53,14 +57,17 @@ This directory contains the persistent memory system for DOMYH Awesome Code, ena
 
 The memory system automatically saves when:
 
-| Trigger               | Files Updated                      |
-| --------------------- | ---------------------------------- |
-| Workflow completes    | `session.md`, `state.json`         |
-| Decision made         | `decisions.md`, `state.json`       |
-| Audit completes       | `audit_summary.json`, `state.json` |
-| Error resolved        | `session.md`                       |
-| Every 10 interactions | `session.md`                       |
-| Session ends          | All files                          |
+| Trigger               | Files Updated                              |
+| --------------------- | ------------------------------------------ |
+| Workflow completes    | `session.md`, `state.json`                 |
+| Decision made         | `decisions.md`, `state.json`               |
+| Audit completes       | `audit_summary.json`, `state.json`         |
+| Error resolved        | `session.md`                               |
+| Every 10 interactions | `session.md`                               |
+| Intent declared       | `.agent/hsa/session-state.json`            |
+| Progress tracked      | `.agent/hsa/session-state.json`            |
+| Anchor saved          | `.agent/hsa/session-state.json`            |
+| Session ends          | All files                                  |
 
 ---
 

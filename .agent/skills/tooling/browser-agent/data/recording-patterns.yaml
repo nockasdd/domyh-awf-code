@@ -2,7 +2,7 @@
 # recording-patterns.yaml — WebP Video Recording Best Practices
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 # browser_subagent automatically records sessions as WebP videos
 

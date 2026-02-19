@@ -1,7 +1,7 @@
 metadata:
   skill: testing
   domain: frameworks
-  version: v6.3.1
+  version: v6.3.2
   updated: "2026-02-05"
   migrated_from: frameworks.yaml
   patterns_count: 20
@@ -55,7 +55,7 @@ patterns:
     mocking: vi.fn(), vi.mock()
     coverage: --coverage
     docs_url: https://vitest.dev
-    # v6.3.0: Version-specific info
+    # v6.3.2: Version-specific info
     version_info:
       current: "4.0.0"
       min_supported: "2.0.0"

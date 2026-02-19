@@ -1,7 +1,7 @@
 metadata:
   skill: security
   domain: swift_security
-  version: v6.3.1
+  version: v6.3.2
   updated: "2026-02-05"
   migrated_from: swift-security.yaml
   patterns_count: 20

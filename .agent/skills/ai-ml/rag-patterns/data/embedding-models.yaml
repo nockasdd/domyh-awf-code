@@ -2,7 +2,7 @@
 # embedding-models.yaml — Embedding Model Selection
 # =============================================================================
 
-version: "6.3.1"
+version: "7.0.0"
 
 models:
   openai:
