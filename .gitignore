@@ -63,3 +63,6 @@ FLOW(Chi-dung-de-lay-thong-tin).md
 
 # ── scripts ──────────────────────────────────────────────
 scripts/
+
+# ── DOMYH local runtime (audits, session data) ───────────
+.domyh/
