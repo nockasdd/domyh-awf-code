@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Paths v6.3.2
+# DOMYH Awesome Code — Memory Paths v6.3.9
 # Single Source of Truth for all memory file paths
 # Eliminates 16 duplicate path definitions across config files
 
-version: "6.3.2"
+version: "6.3.9"
 engine: memory_paths
 
 # =============================================================================
@@ -85,6 +85,7 @@ usage:
       # Use: paths.session.notes, paths.archive.sessions, etc.
 
   examples:
+    # NOTE: These engines are archived design specs in core/archive/
     - "MEMORY_ENGINE.yaml → archive.base"
     - "CONTEXT_INJECTOR.yaml → paths.session.notes"
     - "CLEANUP_ENGINE.yaml → archive.sessions"

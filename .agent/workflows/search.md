@@ -1,7 +1,7 @@
 ---
-name: search
-trigger: ["/search", "/find", "/recall", "tìm kiếm"]
 description: "🔍 Semantic search across memory and audit history"
+skills: { required: [], contextual: [] }
+success_criteria: "Relevant results found, ranked by score, within token budget"
 ---
 
 # 🔍 /search — Semantic Memory Search v1.0
@@ -238,7 +238,13 @@ local_dependencies:
 
 ---
 
-_DOMYH Awesome Code v6.3.2 • Semantic Search v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v6.3.9 • Semantic Search v1.1 • Hybrid Mode_
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: results relevant to query? Token budget respected? Ranking scores accurate?
+
 ---
 
 ## SESSION SAVE

@@ -13,7 +13,7 @@ success_criteria: "Tests written, all pass, coverage meets target"
 
 ## TEST FLOW
 
-1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), load test context (`hsa_get_context`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`
+1. **DETECT** — `hsa_declare_intent("testing: {scope}")`, identify stack via HSA (`hsa_detect_stack`), load test context (`hsa_get_context`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`
 2. **RUN** — Execute tests, collect coverage. Show: `[Step 2/6] Running 42 tests... ✅ 40 passed, ❌ 2 failed`
 3. **ANALYZE** — Identify failures, coverage gaps, suggest missing test categories
 4. **WRITE** — Generate missing tests (TDD cycle). Show progress: `[Step 4/6] Writing tests for UserService (3/5 cases)`
@@ -156,6 +156,15 @@ score_target: "> 70% mutation score (killed / total mutations)"
 | Readability | 20%    | Clear naming, AAA?    |
 | Isolation   | 15%    | No shared state?      |
 | Performance | 10%    | Fast execution?       |
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After VERIFY step, apply `templates/reflection/critic.md`:
+> 1. Coverage target met?
+> 2. Tests meaningful (not just coverage padding)?
+> 3. On success → `templates/reflection/success_analysis.md` to capture test patterns
+
 ---
 
 ## SESSION SAVE

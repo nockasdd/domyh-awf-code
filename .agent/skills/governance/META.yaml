@@ -1,0 +1,19 @@
+name: governance
+description: >
+  Session governance & context discipline.
+  Prevents drift, preserves memory, enforces evidence-based claims.
+  Inspired by HiveMind Context Governance patterns.
+version: "1.0.0"
+
+skills:
+  - session-memory
+  - session-lifecycle
+  - evidence-discipline
+  - context-integrity
+  - delegation-intelligence
+
+triggers:
+  - "declare_intent, track_progress, save_anchor, check_drift"
+  - "session start, session end, context lost"
+  - "subagent delegation, subagent return"
+  - "drift score low, evidence needed"

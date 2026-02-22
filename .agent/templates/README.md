@@ -1,4 +1,4 @@
-# 📄 DOMYH Awesome Code Templates v6.3.2
+# 📄 DOMYH Awesome Code Templates v6.3.9
 
 > Output templates for agent-generated reports and plans
 
@@ -27,7 +27,7 @@
 ```yaml
 ---
 name: template-name
-version: "7.0.0"
+version: "6.3.9"
 type: report|plan|format|wizard
 triggers: ["/command"]
 ---

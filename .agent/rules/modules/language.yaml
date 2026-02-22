@@ -1,10 +1,10 @@
-# Language Rule v6.3.2
+# Language Rule v8.1.0
 ---
 name: language
-version: "7.0.0"
+version: "8.1.0"
 rule_id: "MOD-LNG-001"
 
-description: "Language and i18n rules for multilingual agent responses."
+description: "Language enforcement and i18n rules. Config language takes absolute priority over input language."
 category: "communication"
 
 context:
@@ -14,17 +14,35 @@ context:
 
 detection:
   source: ".agent/memory/state.json → preferences.language"
-  default: "vi-VN"
+  default: "vi"
   i18n_file: ".agent/i18n/{lang}.yaml"
   fallback: "Use professional tone in detected language if i18n file missing"
 
 # --- RESPONSE RULES ---
 
 response:
-  - "Match user's language — if they write in English, respond in English"
+  - "ALWAYS respond in the language from state.json → preferences.language"
+  - "NEVER switch language based on user's input language — config takes absolute priority"
   - "Technical terms stay in English (e.g., API, endpoint, middleware)"
   - "Code comments follow the project's existing language convention"
   - "Error messages and logs should be in English for consistency"
+
+# --- ENFORCEMENT ---
+
+enforcement:
+  priority: |
+    1. state.json → preferences.language (HIGHEST — set by user at install time)
+    2. i18n/{lang}.yaml → agent_instructions.response_language (tone/style)
+    3. If user explicitly asks to switch language → update state.json, NOT just current turn
+  red_flags:
+    - thought: "User typed in English, I should respond in English"
+      reality: "Config says 'vi'. Respond in Vietnamese. User chose this at install."
+    - thought: "The code is in English so my response should be too"
+      reality: "Code stays English. Explanations stay in configured language."
+    - thought: "This is a technical response, English is more natural"
+      reality: "Vietnamese developers read Vietnamese. Use configured language."
+    - thought: "The previous response was in English, I should stay consistent"
+      reality: "Previous response was WRONG. Follow config, not history."
 
 # --- BILINGUAL SUPPORT (vi-VN) ---
 
@@ -37,4 +55,4 @@ integration:
   tier: 1
 
 ---
-_DOMYH Awesome Code • Language Rule_
+_DOMYH Awesome Code • Language Enforcement Rule v8.1_

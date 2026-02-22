@@ -1,6 +1,6 @@
 ---
 name: auditor
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "aud-001"
 
 identity:

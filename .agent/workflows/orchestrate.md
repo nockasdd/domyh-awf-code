@@ -1,47 +1,133 @@
 ---
 description: "🎭 Multi-Agent Orchestration: coordinate parallel tasks, delegate to specialists"
-skills: { required: [], contextual: [] }
+skills: { required: [], contextual: [auto] }
+success_criteria: "all sub-tasks completed, outputs synthesized, conflicts resolved, log saved"
 ---
 
-# 🎭 /orchestrate — Orchestrate Pro
+# 🎭 /orchestrate — Orchestrate Pro v2.0
 
-> Multi-Agent Task Coordination
-> 📚 Parallel Execution • Fault Tolerance • Checkpoints • DAG-based Dependencies
+> Multi-Agent Task Coordination with Auto-Detection
+> 📚 Auto-Scoring • DAG Execution • Fault Tolerance • Checkpoints • Shared State
 
 ---
 
-## ORCHESTRATE FLOW
+## 🔄 ORCHESTRATE FLOW (8 Steps)
 
-1. **DECOMPOSE** — Break complex task into sub-tasks, identify dependencies, build DAG (Directed Acyclic Graph). Show: `[Step 1/5] Decomposing into 4 parallel tasks...`
-2. **ASSIGN** — Map sub-tasks to specialist personas, define interfaces between agents. Use `hsa_prepare_handoff` per sub-task for context injection
-3. **PLAN** — Define execution order, checkpoints, rollback points. Use `hsa_filter_tools` per sub-agent to reduce prompt bloat → ⛔ STOP for user approval. Show task DAG visualization
-4. **EXECUTE** — Run parallel tasks, monitor progress, handle failures. Show: `[Task 2/4] Backend API ████████░░ 80%`
-5. **SYNTHESIZE** — Merge results, resolve conflicts, verify integration. Run cross-task tests
+```
+User Message / /orchestrate
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 0: SCORE (Auto-Detection)                      │
+│ ▸ Evaluate H1-H5 heuristics (complexity-scoring)    │
+│ ▸ Score < 5 → route to single persona (EXIT)        │
+│ ▸ Score 5-7 → suggest orchestration to user         │
+│ ▸ Score ≥ 8 or /orchestrate → proceed to STEP 1     │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 1: INIT STATE                                  │
+│ ▸ hsa_detect_stack → project context                │
+│ ▸ hsa_declare_intent → session governance           │
+│ ▸ Create orchestration-state.yaml                   │
+│ ▸ Show: [Step 1/8] Init state — score: {N}          │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 2: DECOMPOSE                                   │
+│ ▸ Break into sub-tasks with dependencies (DAG)      │
+│ ▸ hsa_get_context → relevant code for each task     │
+│ ▸ hsa_get_repo_map → understand structure           │
+│ ▸ Identify parallel groups                          │
+│ ▸ Show: [Step 2/8] Decomposed into {N} tasks        │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 3: ASSIGN (Speaker Selection)                  │
+│ ▸ Match tasks → specialist personas (speaker rules) │
+│ ▸ hsa_prepare_handoff per task → context packet     │
+│ ▸ hsa_filter_tools per specialist → tool allow      │
+│ ▸ Define: scope, constraints, deliverables          │
+│ ▸ Show: Task assignments table                      │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 4: PLAN ⛔ STOP                                │
+│ ▸ Show complete DAG + assignments + budget          │
+│ ▸ Show estimated token usage per task               │
+│ ▸ ⛔ WAIT for user approval before execution        │
+│ ▸ hsa_track_progress → create trajectory            │
+└─────────────────────────────────────────────────────┘
+    │ (user approves)
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 5: EXECUTE                                     │
+│ ▸ Run tasks per DAG order (deps first)              │
+│ ▸ Parallel: run independent tasks simultaneously    │
+│ ▸ Each task: specialist workflow + shared state      │
+│ ▸ Checkpoint after each task completion              │
+│ ▸ Show: [Task 2/4] Backend API ████████░░ 80%       │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 6: MONITOR                                     │
+│ ▸ Track task lifecycle (pending→running→completed)  │
+│ ▸ hsa_check_drift → detect scope drift              │
+│ ▸ Handle failures (retry/skip/reassign/escalate)    │
+│ ▸ Auto-save checkpoints                             │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 7: SYNTHESIZE                                  │
+│ ▸ Merge outputs from all specialists                │
+│ ▸ Resolve conflicts between task results            │
+│ ▸ hsa_check_changes → verify integration            │
+│ ▸ Cross-task validation (imports, types, deps)      │
+└─────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────────┐
+│ STEP 8: REPORT + SYNC                               │
+│ ▸ Generate orchestration log (orchestration-log.md) │
+│ ▸ hsa_feedback → rate file relevance for learning   │
+│ ▸ Update CONTEXT_SNAPSHOT.md                        │
+│ ▸ Show: summary, files, decisions, next steps       │
+└─────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## COMMANDS
 
-| Command                 | Description             |
-| ----------------------- | ----------------------- |
-| `/orchestrate [task]`   | Coordinate complex task |
-| `/orchestrate status`   | Check progress          |
-| `/orchestrate merge`    | Synthesize results      |
-| `/orchestrate resume`   | Resume from checkpoint  |
-| `/orchestrate --visual` | Show DAG visualization  |
+| Command                  | Description                       |
+| ------------------------ | --------------------------------- |
+| `/orchestrate [task]`    | Coordinate complex task           |
+| `/orchestrate status`    | Check progress                    |
+| `/orchestrate merge`     | Synthesize results                |
+| `/orchestrate resume`    | Resume from checkpoint            |
+| `/orchestrate checkpoint`| Manual checkpoint save            |
+| `/orchestrate --visual`  | Show DAG visualization            |
+| *(auto-activated)*       | Score ≥ 8 from complexity-scoring |
 
 ---
 
 ## 🔧 SPECIALIST ROLES
 
-| Specialist | Skills                      | Delegates To               |
-| ---------- | --------------------------- | -------------------------- |
-| Backend    | API, database, auth         | `/code`, `/test`, `/debug` |
-| Frontend   | UI, UX, components          | `/code`, `/visualize`      |
-| DevOps     | Deploy, infra, monitoring   | `/deploy`, `/monitor`      |
-| Quality    | Testing, review, audit      | `/test`, `/review`, `/ap`  |
-| Security   | Audit, scanning, hardening  | `/ap security`, `/review`  |
-| Data       | Migrations, seeding, schema | `/migrate`, `/generate`    |
+| Specialist | Skills                      | Workflow                     |
+| ---------- | --------------------------- | ---------------------------- |
+| Backend    | API, database, auth         | `/code`, `/test`, `/debug`   |
+| Frontend   | UI, UX, components          | `/code`, `/visualize`        |
+| DevOps     | Deploy, infra, monitoring   | `/deploy`, `/monitor`        |
+| Quality    | Testing, review, audit      | `/test`, `/review`, `/ap`    |
+| Security   | Audit, scanning, hardening  | `/security`, `/review`       |
+| Data       | Migrations, seeding, schema | `/migrate`, `/generate`      |
+| Docs       | README, API docs, changelog | `/doc`                       |
 
 ---
 
@@ -54,7 +140,6 @@ skills: { required: [], contextual: [] }
 | **Fan-out/Fan-in**      | Distribute → collect → merge           | Multi-module refactoring    |
 | **Feedback Loop**       | Draft → review → refine → repeat       | Iterative quality work      |
 | **DAG-based**           | Dependency graph execution             | Tasks with prerequisites    |
-| **Peer-to-Peer**        | Agents communicate directly            | Distributed decision-making |
 
 ### DAG Example
 
@@ -72,37 +157,16 @@ skills: { required: [], contextual: [] }
 
 ## 🛡️ FAULT TOLERANCE
 
-| Strategy             | Trigger           | Action                                |
-| -------------------- | ----------------- | ------------------------------------- |
-| Retry                | Task fails        | Retry 3x with exponential backoff     |
-| Graceful degradation | Partial failure   | Continue with available results       |
-| Circuit breaker      | Repeated failures | Stop after 3 fails in 5 attempts      |
-| Checkpoint/Resume    | Recovery          | `/orchestrate resume [checkpoint_id]` |
-| Compensation         | Late failure      | Undo completed sub-tasks              |
+| Strategy             | Trigger           | Action                                         |
+| -------------------- | ----------------- | ---------------------------------------------- |
+| Retry                | Task fails        | 3x with exponential backoff (1s, 2s, 4s)       |
+| Reassign             | Retry exhausted   | Re-assign to alternative persona               |
+| Skip                 | Optional task     | Mark skipped, continue (no downstream deps)    |
+| Escalate             | All exhausted     | Ask user for guidance (input_required)          |
+| Checkpoint/Resume    | Recovery          | `/orchestrate resume [checkpoint_id]`          |
+| Compensation         | Late failure      | Undo completed sub-tasks                       |
 
----
-
-## 📊 EXECUTION MONITORING
-
-```yaml
-monitoring:
-  per_task:
-    - status: "pending | running | completed | failed"
-    - progress: "percentage or step count"
-    - duration: "elapsed time"
-    - dependencies: "blocked by / blocking"
-
-  overall:
-    - total_tasks: N
-    - completed: M
-    - failed: F
-    - eta: "estimated completion"
-
-  alerts:
-    - task_timeout: "30 minutes per sub-task"
-    - stuck_detection: "No progress for 5 minutes"
-    - loop_prevention: "Max 3 retries per task"
-```
+> See `workflows/data/checkpoint-resume.yaml` for full recovery spec.
 
 ---
 
@@ -110,15 +174,39 @@ monitoring:
 
 | Rule            | Description                       |
 | --------------- | --------------------------------- |
-| Per-agent limit | Set explicit token caps per task  |
-| Timeout         | Max execution time per task (30m) |
+| Per-agent limit | Explicit token caps per task      |
+| Total budget    | 50,000 tokens max per orchestration|
+| Timeout         | Max 30m per task, 2h total        |
 | Loop prevention | Detect recursive/circular calls   |
 | Alert           | Notify at 90% of limit            |
 | Budget tracking | Show token usage per specialist   |
+
+---
+
+## 📁 RELATED FILES
+
+| File | Purpose |
+| ---- | ------- |
+| `rules/modules/complexity-scoring.yaml` | Auto-detection scoring engine |
+| `workflows/data/orchestration-state.yaml` | Shared state schema |
+| `rules/modules/agent-communication.yaml` | Message protocol |
+| `workflows/data/checkpoint-resume.yaml` | Recovery specification |
+| `workflows/data/orchestration-log.md` | Log output template |
+| `rules/modules/agent-delegation.yaml` | Delegation rules + permissions |
+| `personas/orchestrator.md` | Persona definition |
+| `rules/SACRED_RULES.xml` | MCP_004 enforcement |
+
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all sub-tasks completed? Outputs synthesized? No conflicts between sub-agent results? Log saved?
+
 ---
 
 ## SESSION SAVE
 
 After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`
+1. Update `memory/CONTEXT_SNAPSHOT.md` — what changed, current status
+2. Save orchestration log to `memory/orchestration/logs/`
+3. Append summary to `memory/session.md`

@@ -13,7 +13,7 @@ success_criteria: "Error resolved, build passes, no regressions"
 
 ## FIX FLOW
 
-1. **DETECT** (5s) — Parse error, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate file + line, read surrounding code, classify fix category
+1. **DETECT** (5s) — `hsa_declare_intent("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate file + line, read surrounding code, classify fix category
 2. **EXECUTE** (30s) — Apply targeted fix, minimal changes only, preserve existing behavior
 3. **VERIFY** (15s) — Build/syntax check, run affected tests → If FAIL: retry (max 2) → If still FAIL: escalate to `/debug`
 4. **SYNC** — `hsa_check_changes` to update index after edits
@@ -119,4 +119,6 @@ User: "TypeError: Cannot read properties of undefined at auth.ts:42"
 
 ## 💾 SESSION SAVE
 
-After fix completes: update `memory/CONTEXT_SNAPSHOT.md` (what was fixed, approach) and append summary to `memory/session.md`.
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

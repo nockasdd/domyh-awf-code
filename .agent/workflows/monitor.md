@@ -1,6 +1,7 @@
 ---
 description: "📡 Setup observability: logging, tracing, metrics, and alerting configuration"
 skills: { required: [observability, logging], contextual: [auto] }
+success_criteria: "logs/traces/metrics configured, data verified in backends, alerts set"
 ---
 
 # 📡 /monitor — Monitor Pro
@@ -12,7 +13,7 @@ skills: { required: [observability, logging], contextual: [auto] }
 
 ## MONITOR FLOW
 
-1. **DETECT** (Auto) — Detect stack via HSA (`hsa_detect_stack`), load obs context (`hsa_get_context`), check existing observability, identify gaps
+1. **DETECT** (Auto) — `hsa_declare_intent("setup observability")`, detect stack via HSA (`hsa_detect_stack`), load obs context (`hsa_get_context`), check existing observability, identify gaps
 2. **PLAN** — Recommend libraries & backends, setup OpenTelemetry → ⛔ STOP: confirm before install
 3. **EXECUTE** — Add logging, tracing (OpenTelemetry), metrics (Prometheus), configure alerts
 4. **VERIFY** — Verify data in backends, test alerts
@@ -88,6 +89,8 @@ skills: { required: [observability, logging], contextual: [auto] }
 | **Tempo**  | Grafana native | `docker-compose` with Grafana                                     |
 | **Zipkin** | Lightweight    | `docker run -p 9411:9411 openzipkin/zipkin`                       |
 
+> 💡 **Recommended**: Use **OpenTelemetry Collector** as a unified pipeline for logs, traces, and metrics. Supports batching, filtering, enrichment, and multi-backend routing.
+
 ---
 
 ## 📈 PILLAR 3: METRICS
@@ -132,6 +135,12 @@ skills: { required: [observability, logging], contextual: [auto] }
 | CPU usage           | > 70%   | > 90%    |
 | Memory usage        | > 80%   | > 95%    |
 | Disk usage          | > 75%   | > 90%    |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all 3 pillars configured? Data visible in backends? Alerts tested and thresholds appropriate?
+
 ---
 
 ## SESSION SAVE

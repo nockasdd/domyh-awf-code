@@ -1,7 +1,7 @@
 metadata:
   skill: testing
   domain: frameworks
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: frameworks.yaml
   patterns_count: 20
@@ -28,7 +28,7 @@ patterns:
     docs_url: https://jestjs.io
     version_info:
       current: "29.7.0"
-      min_supported: "27.0.0"
+      min_supported: "26.3.9"
       breaking_changes:
         "29.0":
           - "Node 14 dropped, requires Node 16+"
@@ -55,7 +55,7 @@ patterns:
     mocking: vi.fn(), vi.mock()
     coverage: --coverage
     docs_url: https://vitest.dev
-    # v6.3.2: Version-specific info
+    # v6.3.9: Version-specific info
     version_info:
       current: "4.0.0"
       min_supported: "2.0.0"
@@ -151,7 +151,7 @@ patterns:
     docs_url: https://pytest.org
     version_info:
       current: "8.3.0"
-      min_supported: "7.0.0"
+      min_supported: "6.3.9"
       breaking_changes:
         "8.0":
           - "Python 3.8 dropped, requires 3.9+"

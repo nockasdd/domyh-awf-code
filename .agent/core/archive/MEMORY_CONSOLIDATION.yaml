@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Consolidation Engine v6.3.2
+# DOMYH Awesome Code — Memory Consolidation Engine v6.3.9
 # status: archived — Design spec, not runtime config
 # Auto-consolidate, merge, and optimize memory storage
 
-version: "6.3.2"
+version: "6.3.9"
 engine: memory_consolidation
 
 # =============================================================================
@@ -74,7 +74,7 @@ strategies:
   merge_similar:
     method: semantic_similarity
 
-    # Algorithm specification (v6.3.2 - HSA integration)
+    # Algorithm specification (v6.3.9 - HSA integration)
     algorithm:
       type: cosine_similarity
       embedding_model: hsa # Prefer HSA hybrid search

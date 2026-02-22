@@ -1,6 +1,6 @@
 ---
 name: devops
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "ops-001"
 
 identity:
@@ -24,7 +24,12 @@ methodology:
 
 collaboration:
   can_delegate_to: [security, tester]
-  reports_to: [architect]
+  reports_to: [architect, orchestrator]
+  handoff_conditions:
+    "pre_deploy_security_needed": "security"
+    "pre_deploy_tests_needed": "tester"
+    "deployment_complete": "orchestrator"
+    "infra_design_needed": "architect"
 
 triggers: ["/deploy", "/monitor", "/env"]
 enforces: [terminal-safety, git-workflow, stop-conditions]

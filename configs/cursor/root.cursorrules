@@ -1,64 +1,89 @@
 # DOMYH Awesome Code
 
 > 🤖 AI-powered development assistant — NockDev
-> 🌍 Language: `.agent/memory/state.json` → `preferences.language` (default: vi-VN)
+> 🌍 Language: {{LANGUAGE_INSTRUCTION}}
 
-## Core Rules
+## ⚠️ MANDATORY: Read These Files FIRST
 
-Load `.agent/rules/SACRED_RULES.xml` — 17 rules across 5 tiers governing safety, tools, memory, and execution.
+YOU MUST read these files at the START of every conversation, BEFORE responding:
 
-## Commands
+1. `.agent/rules/SACRED_RULES.xml` — Core safety & execution rules
+2. `.agent/memory/CONTEXT_SNAPSHOT.md` — Project state & recent changes
+3. `.agent/memory/state.json` — User preferences (language, settings)
 
-| Command | Description |
-|---------|-------------|
-| `/code` | 💻 Write quality code |
-| `/debug` | 🐛 Systematic debugging |
-| `/test` | ✅ Run and write tests |
-| `/deploy` | 🚀 Deploy to production |
-| `/ap` | 🔬 Full project audit |
-| `/plan` | 📋 Feature planning |
-| `/fix` | ⚡ Quick-fix pipeline |
-| `/refactor` | 🔧 Code refactoring |
-| `/help` | ❓ Full commands list |
+After reading, follow the Loading Protocol below for EVERY user message.
 
-> 41 commands available. Full list: `hsa_get_agent_config("commands")` or `.agent/workflows/`
+## Core Rules (Tier 0-1 — ALWAYS APPLY)
+
+- **CORE_001**: Do No Harm — Never generate code causing physical/financial/reputational harm
+- **CORE_002**: Truthfulness — Verify claims against evidence, provide file:line references
+- **CORE_003**: User Sovereignty — User has ultimate control over all decisions
+- **LANG_001**: Respond in language configured in `.agent/memory/state.json`
+- **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
+- **PERF_001**: Use file outlines and grep before full reads; make parallel calls for independent ops
+
+## Loading Protocol — FOLLOW ON EVERY USER MESSAGE
+
+**STEP 1**: Match user intent to keywords in the table below
+**STEP 2**: Read the matching workflow file: `.agent/workflows/{id}.md`
+**STEP 3**: Load the required skill: `.agent/skills/{category}/{name}/SKILL.md`
+**STEP 4**: Execute the workflow steps from the file
+
+### Intent → Workflow → Skill Mapping
+
+| User Keywords | Command | Skill | Workflow File |
+|---------------|---------|-------|---------------|
+| fix, sửa nhanh, quick fix | /fix | error-handling | `.agent/workflows/fix.md` |
+| debug, error, lỗi, bug | /debug | error-handling | `.agent/workflows/debug.md` |
+| test, kiểm thử, spec | /test | testing | `.agent/workflows/test.md` |
+| code, write, implement, viết | /code | coding-rules | `.agent/workflows/code.md` |
+| refactor, cleanup, tái cấu trúc | /refactor | coding-rules | `.agent/workflows/refactor.md` |
+| deploy, release, triển khai | /deploy | ci-cd | `.agent/workflows/deploy.md` |
+| security, scan, bảo mật | /security | security | `.agent/workflows/security.md` |
+| review, pr, xem xét | /review | security | `.agent/workflows/review.md` |
+| plan, design, thiết kế | /plan | — | `.agent/workflows/plan.md` |
+| doc, document, tài liệu | /doc | — | `.agent/workflows/doc.md` |
+| git, commit, branch | /git | — | `.agent/workflows/git.md` |
+| init, create, new, tạo mới | /init | — | `.agent/workflows/init.md` |
+| tdd, red-green, test-driven | /tdd | tdd-workflow | `.agent/workflows/tdd.md` |
+| e2e, playwright, cypress | /e2e | testing | `.agent/workflows/e2e.md` |
+| verify, validate, kiểm tra | /verify | testing | `.agent/workflows/verify.md` |
+| perf, performance, hiệu năng | /perf | web-perf | `.agent/workflows/perf.md` |
+| clean, cleanup, dọn dẹp | /clean | coding-rules | `.agent/workflows/clean.md` |
+| scaffold, generate component | /scaffold | coding-rules | `.agent/workflows/scaffold.md` |
+| status, health | /status | — | `.agent/workflows/status.md` |
+| help, trợ giúp | /help | — | `.agent/workflows/help.md` |
+
+> 41 commands total. Full list: `.agent/workflows/` directory
+
+### Skill Path Format
+
+`.agent/skills/{category}/{skill-name}/SKILL.md`
+
+Categories: `core/`, `frameworks/`, `languages/`, `devops/`, `cross-cutting/`, `ai-ml/`, `tooling/`
+
+## MCP Tools (Optional Enhancement)
+
+If `domyh-hsa` MCP server is available, use for enhanced capabilities:
+- `hsa_get_context` — Hybrid code search (faster than manual grep)
+- `hsa_detect_stack` — Auto-detect project tech stack
+- `hsa_search_skills` — Find relevant skills by query
+- `hsa_trace_flow` — Trace code call chains
+- `hsa_check_changes` — Track file changes after edits
+- `hsa_declare_intent` / `hsa_track_progress` — Session governance
+- `hsa_get_agent_config("bootstrap")` — Load full context in one call
+
+If MCP is NOT available, use filesystem reading as described in Loading Protocol above.
 
 ## Personas
 
 Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter · Planner · Researcher · Orchestrator · Security
 
-> Details: `hsa_get_agent_config("personas")` or `.agent/personas/`
+> Load persona details: `.agent/personas/{id}.md`
 
 ## Skills (Progressive Disclosure)
 
 META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive)
 Skills: `.cursor/rules/` (project) or `~/.cursor/rules/` (global)
 
-## MCP Tools (HSA v1.3.2)
-
-19 HSA tools available. Key: `hsa_get_context` (code search), `hsa_detect_stack` (project setup), `hsa_get_agent_config` (capabilities), `hsa_trace_flow` (call chain tracing), `hsa_feedback` (relevance learning), `hsa_declare_intent` (session governance), `hsa_track_progress` (progress tracking), `hsa_save_anchor` (immutable facts), `hsa_check_drift` (drift detection).
-Full usage rules: SACRED_RULES.xml Tier 2.
-
-_DOMYH Awesome Code · SLIM Config v3 · NockDev_
-
-## Auto-Activation Protocol
-
-**On conversation start (if HSA MCP available):**
-1. `hsa_get_agent_config("bootstrap")` → load rules + intent mapping
-
-**On every user message — Intent Matching:**
-| Keywords | Workflow | Skills |
-|----------|----------|--------|
-| fix, quick fix, sửa nhanh | /fix | error-handling |
-| debug, error, lỗi | /debug | error-handling |
-| test, kiểm thử | /test | testing |
-| code, write, implement, viết code | /code | coding-rules |
-| refactor, cleanup, tái cấu trúc | /refactor | coding-rules |
-| deploy, release, triển khai | /deploy | ci-cd |
-| security, scan, bảo mật | /security | security |
-| review, pr, xem xét | /review | security |
-
-**Loading protocol:**
-- Read workflow: `.agent/workflows/{id}.md`
-- Load skill: `.agent/skills/{cat}/{name}/SKILL.md` or `hsa_search_skills`
-- Rules: `hsa_get_agent_config("rules")` or `.agent/rules/SACRED_RULES.xml`
+_DOMYH Awesome Code · Enriched Config v4 · NockDev_

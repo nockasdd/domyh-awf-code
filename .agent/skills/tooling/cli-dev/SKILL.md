@@ -1,6 +1,6 @@
 ---
 name: cli-dev
-version: "7.0.0"
+version: "6.3.9"
 category: tooling
 ---
 

@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Permissions v6.3.2
+# DOMYH Awesome Code Permissions v6.3.9
 
 > Access control tiers based on 2025 AI safety best practices
 

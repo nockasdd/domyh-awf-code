@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Just-in-Time Context Loader v6.0
+# DOMYH Awesome Code — Just-in-Time Context Loader v6.3.9
 # Implements lazy loading with lightweight pointers + Priority Positioning 2.0
 # Based on: Anthropic Context Engineering (2025), Found in the Middle (2024)
 
-version: "6.3.2"
+version: "6.3.9"
 engine: just_in_time_loader
 
 # =============================================================================

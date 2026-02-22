@@ -1,6 +1,7 @@
 ---
 description: "🗃️ Database migrations: create, run, rollback, and seed with safety checks"
 skills: { required: [database], contextual: [auto] }
+success_criteria: "migrations applied successfully, schema validated, data integrity verified"
 ---
 
 # 🗃️ /migrate — Migrate Pro
@@ -12,7 +13,7 @@ skills: { required: [database], contextual: [auto] }
 
 ## MIGRATION FLOW
 
-1. **DETECT** (Auto) — Detect stack via HSA (`hsa_detect_stack`), load DB context (`hsa_get_context`), find migration tool, check pending
+1. **DETECT** (Auto) — `hsa_declare_intent("migration: {operation}")`, detect stack via HSA (`hsa_detect_stack`), load DB context (`hsa_get_context`), find migration tool, check pending
 2. **VALIDATE** — Check migration syntax, detect breaking changes, verify rollback exists → ⛔ STOP if destructive
 3. **BACKUP** — Create backup (required for production), snapshot schema, log attempt
 4. **EXECUTE** — Run migrations in transaction, apply changes, update version table
@@ -133,6 +134,12 @@ django: manage.py loaddata fixtures.json
 
 # Seed types: dev (admin+test data) | staging (admin+anonymized) | prod (system roles only)
 ```
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all migrations applied? Schema matches expectations? Rollback tested? Data integrity confirmed?
+
 ---
 
 ## SESSION SAVE

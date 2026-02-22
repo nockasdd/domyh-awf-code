@@ -1,6 +1,7 @@
 ---
 description: "📦 Update dependencies: check outdated, apply safe updates, review breaking changes"
 skills: { required: [], contextual: [auto] }
+success_criteria: "Dependencies updated, no vulnerabilities, tests pass"
 ---
 
 # 📦 /upgrade — Upgrade Pro
@@ -12,11 +13,12 @@ skills: { required: [], contextual: [auto] }
 
 ## UPGRADE FLOW
 
-1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), detect package manager, list outdated. Show: `[Step 1/5] Scanning 127 dependencies...`
+1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), detect package manager, list outdated. Show: `[Step 1/6] Scanning 127 dependencies...`
 2. **PLAN** — Check changelogs, identify breaking changes, classify by semver. Show: `Found: 3 security, 8 patch, 4 minor, 2 major`
-3. **EXECUTE** — Apply patches first, then minor, then major → ⛔ STOP before major updates
-4. **VERIFY** — Run tests, build, lint after each batch. Show: `[Step 4/5] Tests: ✅ 42/42 passed`
-5. **SYNC** — Summary of updates, failed updates, breaking changes noted. `hsa_check_changes`
+3. **EXECUTE (Safe)** — Apply patches + minor updates automatically
+4. **EXECUTE (Major)** — ⛔ STOP: show breaking changes, confirm before applying major updates
+5. **VERIFY** — Run tests, build, lint after each batch. Show: `[Step 5/6] Tests: ✅ 42/42 passed`
+6. **SYNC** — Summary of updates, failed updates, breaking changes noted. `hsa_check_changes`
 
 ---
 
@@ -107,6 +109,12 @@ skills: { required: [], contextual: [auto] }
 
 Tests: ✅ 42/42 | Build: ✅ Pass | Lint: ✅ 0 issues
 ```
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: security-first update order followed? Breaking changes documented? All tests pass?
+
 ---
 
 ## SESSION SAVE

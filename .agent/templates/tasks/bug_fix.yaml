@@ -8,7 +8,7 @@
 
 ```yaml
 task_type: bug_fix
-version: "7.0.0"
+version: "6.3.9"
 
 # Required fields
 symptom: string              # What's the visible problem

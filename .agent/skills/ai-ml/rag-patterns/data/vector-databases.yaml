@@ -2,7 +2,7 @@
 # vector-databases.yaml — Vector Database Comparison
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 
 databases:
   pgvector:

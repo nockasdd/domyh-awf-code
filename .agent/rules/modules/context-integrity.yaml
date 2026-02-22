@@ -2,7 +2,7 @@
 # Rule module for DOMYH v7.0 — preserves context coherence across long sessions
 ---
 name: context-integrity
-version: "7.0.0"
+version: "6.3.9"
 rule_id: "MOD-CTX-001"
 
 description: |
@@ -52,6 +52,31 @@ rules:
       1. Call hsa_check_drift to get current hierarchy state
       2. Mark completed items with hsa_track_progress
       3. Anchors and hierarchy persist in session-state.json automatically
+
+  - id: CTX-005
+    name: "Context-First Gate"
+    severity: warning
+    description: |
+      Before ANY implementation, pass through the context gate:
+      1. Check anchors: hsa_check_drift(include_anchors: true)
+      2. Read files: hsa_get_context for relevant code
+      3. DRY check: search for existing similar code
+      4. Load skills: hsa_search_skills for patterns
+      5. Verify intent: ensure hsa_declare_intent is active
+      Never write code without reading existing code first.
+      See skill: governance/context-first-gatekeeping for full protocol.
+
+  - id: CTX-006
+    name: "Cross-Session Bridge"
+    severity: info
+    description: |
+      At session boundaries, create a bridge anchor:
+        hsa_save_anchor({
+          content: "[SESSION] Topic: X. Done: list. Pending: list. Files: key files.",
+          category: "context"
+        })
+      On resume: hsa_check_drift(include_anchors: true) → read bridge → declare intent.
+      This ensures continuity across sessions without re-debating decisions.
 
 integration:
   tier: 2

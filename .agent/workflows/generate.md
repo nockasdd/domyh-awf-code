@@ -1,6 +1,6 @@
 ---
 description: "🏗️ Code generation: models, APIs, components, services, and tests from templates"
-skills: { required: [], contextual: [auto] }
+skills: { required: [coding-rules], contextual: [auto] }
 ---
 
 # 🏗️ /generate — Alias for /scaffold
@@ -31,4 +31,6 @@ All `/generate` commands map directly to `/scaffold`:
 
 ## 💾 SESSION SAVE
 
-After generation completes: update `memory/session.md` (generated files, patterns used) and `memory/state.json` (last_workflow: generate).
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -164,4 +164,6 @@ self_review:
 
 ## 💾 SESSION SAVE
 
-After code completes: update `memory/CONTEXT_SNAPSHOT.md` (what was built, key decisions) and append summary to `memory/session.md`.
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

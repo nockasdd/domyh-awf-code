@@ -1,0 +1,82 @@
+# Checkpoint/Resume Specification v7.1.0
+# Fault tolerance for orchestration via state snapshots
+# Source: LangGraph checkpointers, semantic checkpointing patterns
+---
+
+# ═══ CHECKPOINT SPECIFICATION ═══
+
+checkpoint:
+  # When to create checkpoints
+  triggers:
+    - "After each task completion"
+    - "Before risky operations (deploy, migrate, delete)"
+    - "On user request (/orchestrate checkpoint)"
+    - "On failure (auto-save before error propagation)"
+
+  # What to save in checkpoint
+  snapshot:
+    orchestration_state: "Full copy of orchestration-state.yaml"
+    completed_tasks: "List of task IDs with their outputs"
+    shared_context: "Current decisions, conventions, blockers"
+    event_log: "Full audit trail up to checkpoint"
+    timestamp: "{ISO}"
+
+  # Where to save
+  location: "memory/orchestration/checkpoints/cp-{task_id}-{timestamp}.yaml"
+
+  # Maximum checkpoints to keep (oldest auto-pruned)
+  max_checkpoints: 10
+
+# ═══ RESUME PROTOCOL ═══
+
+resume:
+  command: "/orchestrate resume [checkpoint_id]"
+  steps:
+    1: "Load checkpoint file from memory/orchestration/checkpoints/"
+    2: "Restore orchestration state"
+    3: "Identify incomplete tasks (status != completed)"
+    4: "Re-validate dependencies (completed deps still valid?)"
+    5: "Continue execution from next pending task"
+    6: "⛔ STOP — Show resume plan for user approval"
+
+# ═══ SEMANTIC CHECKPOINTING ═══
+# Save structured summary for LLM context restoration (not raw tokens)
+
+semantic:
+  format:
+    what_completed: "Summary of completed tasks"
+    key_decisions: "List of architectural/technical decisions made"
+    files_created: "List of files created or modified"
+    next_tasks: "Remaining tasks to execute"
+    blockers: "Any unresolved blockers"
+
+  example:
+    what_completed: "Tasks T1 (DB models) and T2 (API routes) completed"
+    key_decisions: ["Used Prisma ORM for type safety", "JWT for authentication", "bcrypt for password hashing"]
+    files_created: ["src/models/user.ts", "src/routes/auth.ts", "src/middleware/auth.ts"]
+    next_tasks: ["T3: Build auth UI", "T4: Write integration tests"]
+    blockers: "None"
+
+# ═══ FAILURE RECOVERY ═══
+
+recovery:
+  strategies:
+    retry:
+      max_attempts: 3
+      backoff: "exponential (1s, 2s, 4s)"
+      condition: "task.attempts < task.max_retries"
+
+    reassign:
+      condition: "Retry exhausted, different specialist may succeed"
+      action: "Re-assign task to alternative persona"
+
+    skip:
+      condition: "Task is optional (no downstream dependents)"
+      action: "Mark as skipped, continue with next task"
+
+    escalate:
+      condition: "All strategies exhausted"
+      action: "Set task.status = 'input_required', ask user for guidance"
+
+---
+_DOMYH Awesome Code • Checkpoint/Resume Specification_

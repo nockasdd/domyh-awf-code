@@ -1,6 +1,7 @@
 ---
 description: "▶️ Start development server: detect stack, run dev commands, validate output"
 skills: { required: [], contextual: [auto] }
+success_criteria: "Dev server running, health check passes"
 ---
 
 # ▶️ /dev — Dev Pro
@@ -12,7 +13,7 @@ skills: { required: [], contextual: [auto] }
 
 ## DEV FLOW
 
-1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
+1. **DETECT** — `hsa_declare_intent("start dev server")`, identify stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
 2. **DEPS CHECK** — Verify dependencies installed:
    - Node.js: `node_modules/` exists? → If not: auto-run `npm install` (or yarn/pnpm/bun)
    - Go: `go.sum` exists? → If not: `go mod download`
@@ -36,7 +37,8 @@ skills: { required: [], contextual: [auto] }
 6. **VALIDATE** — Confirm server running, show access URL:
    - Check health endpoint responds
    - Show URL for browser access
-     → Show: `[Step 6/6] ✅ Server running at http://localhost:3000`
+      → Show: `[Step 6/7] ✅ Server running at http://localhost:3000`
+7. **SYNC** — `hsa_check_changes` to update index after dependency installs or config changes
 
 ---
 
@@ -135,6 +137,15 @@ docker_compose:
 | Turbopack | ⚡⚡ Fastest | Next.js 15+              |
 | Rspack    | ⚡⚡ Fast    | webpack migration        |
 | esbuild   | ⚡⚡ Fastest | Build-only               |
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After VALIDATE step, apply `templates/reflection/critic.md`:
+> 1. Server responding to health checks?
+> 2. All required services running?
+> 3. No error output in console?
+
 ---
 
 ## SESSION SAVE

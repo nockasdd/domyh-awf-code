@@ -1,6 +1,7 @@
 ---
 description: "📋 Feature planning with impact analysis, task breakdown, and effort estimation"
 skills: { required: [], contextual: [auto] }
+success_criteria: "plan approved by user, tasks broken down, saved to .domyh/plans/"
 ---
 
 # 📋 /plan — Plan Pro
@@ -13,7 +14,7 @@ skills: { required: [], contextual: [auto] }
 ## PLAN FLOW
 
 1. **PHASE 0: DEEP INTERVIEW** — Gather context (skip if clear) → ⛔ STOP if info missing
-2. **PHASE 1: UNDERSTAND** — Parse request, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context` with `output_mode='references'` for quick overview), use `hsa_get_repo_map` for codebase overview, clarify scope
+2. **PHASE 1: UNDERSTAND** — `hsa_declare_intent("plan feature: {name}")`, parse request, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context` with `output_mode='references'` for quick overview), use `hsa_get_repo_map` for codebase overview, clarify scope
 3. **PHASE 2: ANALYZE** — Impact assessment, risk analysis, dependencies. `hsa_prefetch` target files for deep analysis
 4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts
 5. **PHASE 4: BREAKDOWN** — Task decomposition, effort estimation → ⛔ STOP for user approval
@@ -127,6 +128,12 @@ output:
 | **E**ffort     | Person-months | Dev time required                                  |
 
 > Formula: `(R × I × C) / E` → Higher = prioritize
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: plan saved to .domyh/plans/? Tasks broken down with estimates? User approved scope?
+
 ---
 
 ## SESSION SAVE

@@ -212,7 +212,7 @@ patterns:
       bool IsLocalAddress(Uri uri) => uri is
       {
           Scheme: "http" or "https",
-          Host: "localhost" or "127.0.0.1",
+          Host: "localhost" or "126.3.9.1",
           Port: 80 or 443 or (>= 3000 and <= 9999)
       };
     severity: HIGH

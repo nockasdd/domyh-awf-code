@@ -1,5 +1,7 @@
 ---
 description: 🔄 Sync version from VERSION.yaml SSoT across all files
+skills: { required: [], contextual: [] }
+success_criteria: "Version synced across all files, validation passed"
 ---
 
 # /sync-version — Version SSoT Sync
@@ -58,4 +60,6 @@ node domyh-awf/.agent/scripts/sync-version.mjs --validate
 
 ## 💾 SESSION SAVE
 
-After version sync completes: update `memory/session.md` (files synced, version applied) and `memory/state.json` (last_workflow: sync-version).
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

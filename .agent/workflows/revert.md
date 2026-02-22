@@ -1,6 +1,7 @@
 ---
 description: "⏪ Revert changes: git rollback, deployment rollback, database rollback"
-skills: { required: [], contextual: [] }
+skills: { required: [], contextual: [ci-cd] }
+success_criteria: "Changes reverted, backup created, tests passing"
 ---
 
 # ⏪ /revert — Revert Pro
@@ -13,8 +14,8 @@ skills: { required: [], contextual: [] }
 ## REVERT FLOW
 
 1. **DETECT** — What to revert, how far back
-2. **PLAN** — Impact assessment (files, deps, data), create backup of current state
-3. **EXECUTE** — Execute reversal → ⛔ STOP after PLAN for user confirmation
+2. **PLAN** — Impact assessment (files, deps, data), create backup → ⛔ STOP for user confirmation
+3. **EXECUTE** — Execute reversal
 4. **VERIFY** — Confirm reversal applied correctly, run tests
 5. **SYNC** — `hsa_check_changes` to update index after reversal
 
@@ -97,6 +98,12 @@ skills: { required: [], contextual: [] }
 | `:latest`    | `v1.2.3` (semver)               |
 | `:stable`    | `2026-02-01-abc123` (date+hash) |
 | Mutable tags | `sha-abc123def` (git SHA)       |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: backup created before revert? Revert verified correct? Tests passing after rollback?
+
 ---
 
 ## SESSION SAVE

@@ -1,8 +1,7 @@
 ---
-name: suggest
-trigger: ["/suggest", "what next", "tiếp theo"]
-persona: assistant
 description: "➡️ Smart suggestions: context-aware next steps based on project state"
+skills: { required: [], contextual: [auto] }
+success_criteria: "Top suggestions presented with rationale and commands"
 ---
 
 # ➡️ /suggest — Smart Suggestions Pro v3.0
@@ -190,17 +189,42 @@ git_checks:
 
 ```yaml
 transitions:
-  init: [plan, code]
-  plan: [code, design]
+  init: [env, dev, scaffold]
+  plan: [code, scaffold]
+  scaffold: [code]
   code: [test, review]
-  test: [deploy, refactor] # deploy requires git check
-  deploy: [monitor, recap]
-  debug: [code, test]
-  review: [refactor, merge]
+  test_pass: [git_commit, deploy]
+  test_fail: [fix, debug]
+  fix: [test, git_commit]
+  deploy: [monitor, status]
+  debug: [fix, test]
+  review: [refactor, code_fix]
+  refactor: [test, clean]
+  ap: [refactor, fix]
+  security: [fix, ap]
+  security_pass: [deploy]
+  migrate: [test, deploy]
+  onboard: [plan, code, suggest]
+  visualize: [scaffold, code]
+  modify: [test, review]
+  feature: [test, deploy]
+  tdd: [code, test]
+  orchestrate: [recap, deploy, test, verify]
+  orchestrate_partial: [debug, fix, orchestrate_resume]
 
 guards:
   deploy:
     requires: [git_initialized, tests_pass, no_uncommitted]
+  revert:
+    requires: [git_initialized, backup_created]
+  upgrade_major:
+    requires: [tests_pass, changelog_reviewed]
+  migrate:
+    requires: [backup_exists, tests_pass]
+  security_fix:
+    requires: [scan_completed, findings_reviewed]
+  orchestrate:
+    requires: [complexity_scored, dag_approved]
 ```
 
 ---
@@ -217,10 +241,18 @@ token_saving:
 
 ---
 
-_DOMYH Awesome Code v6.3.2 • Suggest Pro v3.1 • Git-Aware Suggestions_
+_DOMYH Awesome Code v6.3.9 • Suggest Pro v3.1 • Git-Aware Suggestions_
+
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: suggestions context-relevant? Git state checked? Recommended commands valid?
 
 ---
 
 ## 💾 SESSION SAVE
 
-After suggestions delivered: update `memory/session.md` (suggestions given, user actions) and `memory/state.json` (last_workflow: suggest).
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

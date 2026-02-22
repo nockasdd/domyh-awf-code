@@ -1,7 +1,7 @@
 metadata:
   skill: api-design
   domain: test_apis
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: test-apis.yaml
   patterns_count: 25

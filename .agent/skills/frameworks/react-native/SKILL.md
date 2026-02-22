@@ -1,7 +1,7 @@
 ---
 name: react-native
 detect: ["metro.config.js", "app.json:expo", "react-native.config.js"]
-version: "7.0.0"
+version: "6.3.9"
 category: mobile
 tier: 1
 ---

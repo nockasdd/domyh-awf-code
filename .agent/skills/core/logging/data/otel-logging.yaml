@@ -1,7 +1,7 @@
 metadata:
   skill: logging
   domain: otel_logging
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: otel-logging.yaml
   patterns_count: 20

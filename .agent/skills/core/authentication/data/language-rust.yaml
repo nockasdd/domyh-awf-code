@@ -1,7 +1,7 @@
 metadata:
   skill: authentication
   domain: language_rust
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: language-rust.yaml
   patterns_count: 25

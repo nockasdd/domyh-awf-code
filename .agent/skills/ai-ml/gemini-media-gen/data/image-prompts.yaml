@@ -4,7 +4,7 @@
 # 12 patterns for crafting effective image generation prompts
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 total_patterns: 12
 
 golden_rule:

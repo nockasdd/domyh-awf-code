@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Token Budgets v6.3.2
+# DOMYH Awesome Code — Token Budgets v6.3.9
 # status: archived — Design spec, not runtime config
 # Single Source of Truth for all token budget definitions
 
-version: "6.3.2"
+version: "6.3.9"
 engine: token_budgets
 
 # =============================================================================

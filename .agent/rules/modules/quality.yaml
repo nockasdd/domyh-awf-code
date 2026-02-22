@@ -1,15 +1,56 @@
-# Quality Rule v6.3.2
+# Quality Rule v7.1.0
 ---
 name: quality
-version: "7.0.0"
+version: "7.1.0"
 rule_id: "MOD-QUA-001"
 
-description: "Code quality standards: naming, structure, error handling, documentation."
+description: "Code quality standards: SOLID, naming, structure, error handling, documentation, quality gates."
 category: "quality"
 
 context:
   always_apply: true
-  personas: ["developer", "tester"]
+  personas: ["developer", "tester", "architect"]
+
+# --- SOLID PRINCIPLES (ref: coding-rules/data/solid-principles.yaml) ---
+
+solid:
+  source: "skills/cross-cutting/coding-rules/data/solid-principles.yaml"
+  enforcement:
+    S_single_responsibility:
+      - "Each file/module has one purpose"
+      - "Functions do one thing — max 50 lines"
+      - "Classes max 300 lines"
+      - "Violation: God class with 10+ methods"
+    O_open_closed:
+      - "Extend via interfaces/traits, not modification"
+      - "Violation: Switch statements on types"
+    L_liskov_substitution:
+      - "Subtypes honor base contracts"
+      - "Violation: Square extends Rectangle problem"
+    I_interface_segregation:
+      - "Small, focused interfaces (not 20+ method APIs)"
+      - "Violation: Fat interface with unused methods"
+    D_dependency_inversion:
+      - "High-level depends on abstractions, not concretions"
+      - "Violation: Direct new() in high-level code"
+
+# --- DESIGN PRINCIPLES ---
+
+principles:
+  DRY:
+    - "No duplicated logic — extract shared code into utils/helpers"
+    - "Search existing code before creating new (EXEC_004)"
+  KISS:
+    - "Simple over clever — prefer readability"
+    - "Architecture complexity ≤ project needs"
+  YAGNI:
+    - "No premature features — build only what's needed now"
+    - "Scope gate: P0-P6 phases define boundaries"
+  twelve_factor:
+    - "Config via environment variables (.env)"
+    - "Explicit dependencies (lock files)"
+    - "Backing services as attached resources"
+    - "Dev/prod parity via Docker"
 
 # --- CODE QUALITY STANDARDS ---
 
@@ -45,6 +86,8 @@ anti_patterns:
   - "Copy-paste code — extract shared logic"
   - "Commented-out code — delete it, git remembers"
   - "TODO without issue reference — add ticket number"
+  - "Circular dependencies — use DI or events"
+  - "Premature optimization — profile before optimizing"
 
 # --- CODE REVIEW CRITERIA ---
 
@@ -54,10 +97,26 @@ review_criteria:
   - "Is error handling complete?"
   - "Are there security implications?"
   - "Is it testable?"
+  - "Does it follow SOLID principles?"
+  - "Is the architecture pattern respected?"
+
+# --- QUALITY GATE (for /init and /code) ---
+
+quality_gate:
+  description: "Minimum quality checks before marking a phase complete"
+  checks:
+    - "Build succeeds with zero errors"
+    - "Linter passes with zero warnings"
+    - "No god classes (> 300 lines)"
+    - "No functions > 50 lines"
+    - "Test coverage ≥ 80% (unit), ≥ 60% (integration)"
+    - "No circular dependencies"
+    - "All public APIs documented"
 
 integration:
   tier: 2
   related_modules: ["edit-verification", "yagni"]
+  related_skills: ["coding-rules"]
 
 ---
 _DOMYH Awesome Code • Quality Rule_

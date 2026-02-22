@@ -2,8 +2,8 @@
   "commands": {
     "audit": {
       "key": "ap",
-      "description": "🔬 Full project audit (5-expert panel)",
-      "prompt": "Analyze this project with the DOMYH 5-expert audit panel (Security, Architecture, Performance, Quality, DevOps). Provide findings with file:line references and severity ratings.",
+      "description": "🔬 Full project audit (12-expert panel with conditional activation)",
+      "prompt": "Analyze this project with the DOMYH audit panel (12 experts: Security, Architecture, Performance, Quality, DevOps, Product + 6 conditional). Provide findings with file:line references and severity ratings.",
       "context": {
         "currentDir": true,
         "selection": true

@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.2",
+  "version": "v6.3.9",
   "cursor": {
     "agent_mode": true,
     "composer_integration": true
@@ -35,7 +35,7 @@
   "token_budget": {
     "baseline": 2200,
     "per_skill": 1500,
-    "max_peak": 9700
+    "max_peak": 6700
   },
   "rules": {
     "sacred_rules": "../rules/SACRED_RULES.xml"

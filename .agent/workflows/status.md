@@ -1,6 +1,7 @@
 ---
 description: "📊 Project health: build, tests, coverage, lint metrics, and recent activity"
 skills: { required: [], contextual: [auto] }
+success_criteria: "Health score calculated, actionable recommendations shown"
 ---
 
 # 📊 /status — Status Pro
@@ -101,3 +102,11 @@ CI/CD    🟢 Last pass    Git      🟢 Clean
 | `git status --porcelain`                 | Uncommitted changes |
 | `git rev-list --count HEAD ^origin/main` | Ahead of remote     |
 | `git stash list`                         | Stashed changes     |
+
+---
+
+## 💾 SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

@@ -1,6 +1,7 @@
 ---
 description: "🏗️ Unified scaffolding & code generation: components, pages, services, models, APIs from project patterns"
 skills: { required: [coding-rules], contextual: [auto] }
+success_criteria: "Files generated matching project conventions, build passes"
 ---
 
 # 🏗️ /scaffold — Scaffold Pro
@@ -131,6 +132,12 @@ When scaffolding UI components:
 - Validate names against project conventions
 - Detect and warn about naming conflicts
 - Preserve import ordering conventions
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: generated files match project conventions? Build passes? No duplicate code introduced?
+
 ---
 
 ## SESSION SAVE

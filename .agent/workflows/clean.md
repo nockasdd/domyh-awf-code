@@ -1,8 +1,6 @@
 ---
-name: clean
-trigger: ["/clean", "cleanup", "dead code", "organize"]
-persona: developer
 description: "🧹 Code cleanup: remove dead code, organize imports, remove unused dependencies"
+skills: { required: [coding-rules], contextual: [auto] }
 success_criteria: "Dead code removed, imports organized, build passes"
 ---
 
@@ -21,7 +19,8 @@ User: /clean [option]
     ▼
 ┌─────────────────────────────────────────┐
 │ PHASE 1: DETECT (Auto - 5s)            │
-│ ▸ Identify tech stack                   │
+│ ▸ hsa_declare_intent("code cleanup")    │
+│ ▸ Identify tech stack (hsa_detect_stack) │
 │ ▸ Find relevant tools                   │
 │ ▸ Check tool availability               │
 └─────────────────────────────────────────┘
@@ -55,6 +54,13 @@ User: /clean [option]
 │ ▸ Run build to confirm no breaks        │
 │ ▸ Show summary of changes               │
 │ ▸ Offer rollback if issues              │
+└─────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│ PHASE 6: SYNC                           │
+│ ▸ hsa_check_changes to update index     │
+│ ▸ After file removals/edits             │
 └─────────────────────────────────────────┘
 ```
 
@@ -383,10 +389,10 @@ pip install vulture isort black pip-autoremove
 | Phase   | Rules                                  |
 | ------- | -------------------------------------- |
 | Detect  | `terminal-safety`                      |
-| Scan    | `context-management`                   |
+| Scan    | `perf-001`                             |
 | Preview | `stop-conditions`, `edit-verification` |
 | Execute | `safety`, `edit-verification`          |
-| Verify  | `terminal-safety`, `evidence`          |
+| Verify  | `terminal-safety`, `exec-001`          |
 
 ---
 
@@ -627,11 +633,17 @@ audit_reset:
 
 ---
 
-_DOMYH Awesome Code v6.3.2 • Clean Pro v2.2 • Dead Code + Dependency + Memory Cleanup_
+## 🪞 REFLECTION CHECKPOINT
+
+> After VERIFY phase, apply `templates/reflection/critic.md`:
+> 1. No false positives in dead code detection?
+> 2. Build + tests still pass after cleanup?
+> 3. Protected patterns correctly skipped?
+
 ---
 
 ## 💾 SESSION SAVE
 
 After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` — what changed, current status
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
 2. Append summary to `memory/session.md`

@@ -1,6 +1,7 @@
 ---
 description: "🖼️ UI/UX Design: mockups, wireframes, component design, visual prototyping"
-skills: { required: [domyh-design], contextual: [] }
+skills: { required: [domyh-design], contextual: [auto] }
+success_criteria: "Design assets generated, WCAG compliance verified, tokens exported"
 ---
 
 # 🖼️ /visualize — Visualize Pro
@@ -325,6 +326,12 @@ SKILL_DATA: ".agent/skills/cross-cutting/domyh-design/data"
 | `/visualize responsive` | `data/platform-guidelines.yaml` | 12 platform breakpoints   |
 | `/visualize component`  | `data/component-mapping.yaml`   | 30 components with scores |
 | `/visualize dark-mode`  | `data/ux-guidelines.yaml`       | Dark mode contrast rules  |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: WCAG compliance checked? Design tokens exported correctly? VRT baseline captured?
+
 ---
 
 ## SESSION SAVE

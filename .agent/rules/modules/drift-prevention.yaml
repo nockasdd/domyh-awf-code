@@ -2,7 +2,7 @@
 # Rule module for DOMYH v7.0 — enforces periodic alignment checks
 ---
 name: drift-prevention
-version: "7.0.0"
+version: "6.3.9"
 rule_id: "MOD-DRF-001"
 
 description: |
@@ -46,6 +46,33 @@ rules:
       - exploration: allow flexibility but still check drift periodically
       - bugfix: stay focused on the specific bug, avoid feature creep
       - refactor: limit scope to refactoring, avoid adding new features
+
+  - id: DRF-004
+    name: "Debug Escalation Timeout"
+    severity: warning
+    description: |
+      When debugging, follow escalation timeline:
+        0-10 min: Normal debugging — follow 5-phase protocol
+        10-20 min: REFLECT — re-read error, check assumptions
+        20-30 min: REFRAME — try completely different hypothesis
+        30-45 min: WIDEN — search docs, issues, external resources
+        45+ min: ESCALATE — save progress as anchor, ask user for help
+      At 30 min, MUST save: hsa_save_anchor({
+        content: "[DEBUG-STUCK] Bug: X. Tried: Y. Rejected: Z. Current theory: W.",
+        category: "context"
+      })
+      See skill: governance/debug-orchestration for full protocol.
+
+  - id: DRF-005
+    name: "Hypothesis Journaling"
+    severity: info
+    description: |
+      During debugging, maintain a hypothesis tree:
+        1. List all hypotheses ranked by likelihood
+        2. For each: test, record evidence, verdict (confirmed/rejected)
+        3. Save confirmed root cause as anchor
+      This prevents circular debugging and preserves investigation progress
+      across context compaction.
 
 integration:
   tier: 2

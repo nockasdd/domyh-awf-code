@@ -1,47 +1,45 @@
-# DOMYH Awesome Code — IDE Configurations
+# 🤖 IDE Configurations — DOMYH Awesome Code
 
-> Version 7.0.0 | Progressive Disclosure Architecture
-
-## Supported AI Coding Assistants
-
-| IDE                        | Config File  | Description             |
-| -------------------------- | ------------ | ----------------------- |
-| [Claude Code](claude.json) | CLAUDE.md    | Claude Code integration |
-| [Cursor](cursor.json)      | .cursorrules | Cursor AI integration   |
-| [Gemini CLI](gemini.json)  | GEMINI.md    | Gemini CLI integration  |
-
-## Configuration Structure
-
-Each IDE config contains:
-
-```json
-{
-  "name": "DOMYH Awesome Code",
-  "version": "v6.3.2",
-
-  "activation": {
-    /* Trigger commands */
-  },
-  "skills": {
-    /* Progressive loading */
-  },
-  "token_budget": {
-    /* Token limits */
-  }
-}
-```
-
-## Session Rules
-
-Session rules are **automatically handled** by the agent reading `GEMINI.md`:
-
-1. Agent reads `## Session Rules (v6.0)` section in GEMINI.md
-2. Agent detects trigger phrases in user messages
-3. Agent saves preferences to `.agent/memory/session_rules.json`
-4. Agent loads rules via CONTEXT_LOADER.yaml at start of each response
-
-**No external scripts needed** — agent self-executes based on instructions.
+> Supported AI coding assistants (23 IDEs)
+> Full details: see `configs/README.md`
 
 ---
 
-_DOMYH Awesome Code • NockDev_
+## Supported IDEs
+
+| IDE              | Config File                       | Type            |
+| :--------------- | :-------------------------------- | :-------------- |
+| Claude Code      | `CLAUDE.md`                       | AI Agent        |
+| Gemini CLI       | `GEMINI.md`                       | AI Agent        |
+| Antigravity      | `.gemini/`                        | AI Agent        |
+| Cursor           | `.cursorrules`                    | AI IDE          |
+| GitHub Copilot   | `.github/copilot-instructions.md` | AI Assistant    |
+| OpenAI Codex     | `.codex/`                         | AI Agent        |
+| Windsurf         | `.windsurfrules`                  | AI IDE          |
+| Aider            | `.aider.conf.yml`                 | AI CLI          |
+| AMP              | `.amp/`                           | AI Assistant    |
+| Augment          | `.augment/`                       | AI Assistant    |
+| Continue         | `.continue/`                      | AI Assistant    |
+| Cline            | `.clinerules`                     | AI Assistant    |
+| Roo Code         | `.roo/`                           | AI Assistant    |
+| CodeRabbit       | `.coderabbit.yaml`                | AI Review       |
+| Amazon Q         | `.amazonq/`                       | AI Assistant    |
+| JetBrains AI     | `.junie/`                         | AI IDE          |
+| OpenCode         | `.opencode/`                      | AI CLI          |
+| Tabnine          | `.tabnine/`                       | AI Autocomplete |
+| Sourcegraph Cody | `.cody/`                          | AI Assistant    |
+| VS Code          | `.vscode/`                        | IDE             |
+| Kiro             | `.kiro/`                          | AI IDE          |
+| Qodo             | `.qodo/`                          | AI Testing      |
+| Zed AI           | `.zed/`                           | AI IDE          |
+
+---
+
+## Configuration Structure
+
+Each IDE config integrates via its native format (JSON, YAML, or Markdown).
+Session rules are auto-loaded from `memory/session_rules.json`.
+
+---
+
+_DOMYH Awesome Code • IDE Configurations_

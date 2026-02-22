@@ -1,6 +1,6 @@
 ---
 name: debugger
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "dbg-001"
 
 identity:
@@ -31,7 +31,12 @@ methodology:
 
 collaboration:
   can_delegate_to: [tester, developer]
-  reports_to: [developer]
+  reports_to: [developer, orchestrator]
+  handoff_conditions:
+    "root_cause_found_fix_needed": "developer"
+    "fix_needs_regression_test": "tester"
+    "stuck_after_escalation": "orchestrator"
+    "3_hypotheses_exhausted": "orchestrator"
 
 triggers: ["/debug"]
 enforces: [terminal-safety, edit-verification, stop-conditions, progressive-escalation]

@@ -6,7 +6,7 @@
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: v6.3.2
+version: v6.3.9
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -29,7 +29,7 @@ defaults:
 
 core:
   # Rules System (modular files)
-  rules_dir: rules/ # 11 active rule modules
+  rules_dir: rules/ # 16 active rule modules
   rules_index: rules/README.md # Rules registry
   # SSoT Files
   context_snapshot: memory/CONTEXT_SNAPSHOT.md # Cold-start context
@@ -45,9 +45,9 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 83 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 86 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
-  # Max active: 3 skills with T2 loaded
+  # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
   # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 22 cross-cutting + 5 tooling + 7 ai-ml
 
   loading:
@@ -239,7 +239,7 @@ commands:
     persona: developer
     cache: true
     triggers: [generate, tạo code]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [coding-rules], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # PLANNING & DESIGN (6 commands)
@@ -252,7 +252,7 @@ commands:
     persona: architect
     cache: true
     triggers: [plan, design, lên kế hoạch]
-    skills: { required: [], contextual: [] }
+    skills: { required: [], contextual: [auto] }
 
   - id: think
     file: workflows/think.md
@@ -297,7 +297,7 @@ commands:
     persona: developer
     cache: false
     triggers: [init, create, new, tạo mới]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [coding-rules], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # DEPLOYMENT & OPS (6 commands)
@@ -310,7 +310,7 @@ commands:
     persona: devops
     cache: false
     triggers: [deploy, release, triển khai]
-    skills: { required: [ci-cd], contextual: [docker, kubernetes, aws] }
+    skills: { required: [ci-cd], contextual: [docker, kubernetes, aws, terraform, gcp, azure] }
 
   - id: env
     file: workflows/env.md
@@ -374,7 +374,7 @@ commands:
     file: workflows/review.md
     icon: "👀"
     category: quality
-    persona: developer
+    persona: auditor
     cache: true
     triggers: [review, pr, xem xét]
     skills: { required: [security], contextual: [auto] }
@@ -435,7 +435,7 @@ commands:
     persona: developer
     cache: false
     triggers: [status, health, sức khỏe]
-    skills: { required: [], contextual: [] }
+    skills: { required: [], contextual: [auto] }
 
   - id: recap
     file: workflows/recap.md
@@ -524,7 +524,7 @@ commands:
     persona: devops
     cache: false
     triggers: [doctor, diagnose, chẩn đoán]
-    skills: { required: [], contextual: [] }
+    skills: { required: [], contextual: [auto] }
 
   - id: feature
     file: workflows/feature.md
@@ -551,7 +551,7 @@ commands:
     persona: developer
     cache: true
     triggers: [modify, sửa đổi]
-    skills: { required: [], contextual: [auto] }
+    skills: { required: [coding-rules], contextual: [auto] }
 
   - id: search
     file: workflows/search.md

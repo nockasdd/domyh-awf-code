@@ -17,7 +17,7 @@ success_criteria: "Deployed, health checks pass, monitoring stable for 15min"
 
 ## DEPLOYMENT FLOW
 
-1. **PRE-FLIGHT** (Auto) — Detect stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), load deploy context (`hsa_get_context`). Run pre-flight checklist:
+1. **PRE-FLIGHT** (Auto) — `hsa_declare_intent("deploy to {environment}")`, detect stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), load deploy context (`hsa_get_context`). Run pre-flight checklist:
    - [ ] Tests pass (`npm test` / `go test ./...`)
    - [ ] Security scan (no P0 vulnerabilities)
    - [ ] Dependencies up to date (no critical outdated)
@@ -195,7 +195,17 @@ checks:
 | `/deploy readiness`              | SRE readiness check   |
 | `/deploy signoff`                | Stakeholder sign-off  |
 | `/deploy validate-prompts`       | AI prompt validation  |
-| `/rollback`                      | Rollback to previous  |
+| `/deploy rollback`                 | Rollback to previous  |
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After MONITOR step, apply `templates/reflection/critic.md`:
+> 1. All health checks green for 15min?
+> 2. Error rate within threshold?
+> 3. On rollback → `templates/reflection/error_analysis.md` to capture deployment failure patterns
+
 ---
 
 ## SESSION SAVE

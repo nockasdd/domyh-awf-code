@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.2",
+  "version": "v6.3.9",
   "windsurf": {
     "cascade_enabled": true,
     "flows_enabled": true
@@ -34,7 +34,7 @@
   "token_budget": {
     "baseline": 2200,
     "per_skill": 1500,
-    "max_peak": 9700
+    "max_peak": 6700
   },
   "config_files": {
     "rules": ".windsurfrules"
@@ -56,7 +56,7 @@
   },
   "session_engine": {
     "enabled": true,
-    "version": "v6.3.2",
+    "version": "v6.3.9",
     "auto_detect_preferences": true,
     "config_file": ".windsurfrules",
     "context_injection": {

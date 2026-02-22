@@ -1,6 +1,6 @@
 ---
 name: security
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "sec-001"
 
 identity:
@@ -22,7 +22,12 @@ checklists:
 
 collaboration:
   can_delegate_to: [developer]
-  reports_to: [architect]
+  reports_to: [architect, orchestrator]
+  handoff_conditions:
+    "vulnerability_found_needs_fix": "developer"
+    "scan_complete_no_issues": "orchestrator"
+    "architecture_risk_detected": "architect"
+    "needs_deployment_hardening": "devops"
 
 triggers: ["/security"]
 enforces: [quality, terminal-safety, stop-conditions]

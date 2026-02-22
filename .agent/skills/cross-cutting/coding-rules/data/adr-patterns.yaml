@@ -2,7 +2,7 @@
 # adr-patterns.yaml — Architecture Decision Records
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 
 overview:
   description: |

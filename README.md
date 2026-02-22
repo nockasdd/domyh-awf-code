@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=85+Skills+•+22+IDEs+•+41+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+23+IDEs+•+41+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,8 +15,8 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-85-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
-  <img src="https://img.shields.io/badge/IDEs-22-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
+  <img src="https://img.shields.io/badge/skills-93-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/IDEs-23-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
@@ -229,7 +229,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.3.2 across 15 files                |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.3.9 across 15 files                |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
 | `/lang`         | Switch agent language (English ↔ Tiếng Việt)                          | `/lang vi` → Switch to Vietnamese                            |
@@ -269,11 +269,11 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 
 ---
 
-## 🧠 Skills (85 total)
+## 🧠 Skills (93 total)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+8+AI-ML;85+Total+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+8+AI-ML;8+Governance+•+93+Total+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -307,7 +307,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (28)
+### 🔧 Core & Cross-cutting (28) + Governance (8)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -348,13 +348,14 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | **Cross-cutting** | 22     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator |
 | **Tooling**       | 5      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
 | **AI-ML**         | 8      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                 |
-| **Total**         | **85** |                                                                                                                                                                                                                     |
+| **Governance**    | 8      | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation                                                     |
+| **Total**         | **93** |                                                                                                                                                                                                                     |
 
 </details>
 
 ---
 
-## 💻 IDE Support (22)
+## 💻 IDE Support (23)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude-6366F1?style=for-the-badge&logo=anthropic&logoColor=white" />
@@ -375,7 +376,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 </p>
 
 <details>
-<summary><b>📋 All 22 IDEs & Configuration Files</b></summary>
+<summary><b>📋 All 23 IDEs & Configuration Files</b></summary>
 <br>
 
 | IDE              | Config File                       | Type            |
@@ -400,6 +401,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | Tabnine          | `.tabnine/`                       | AI Autocomplete |
 | Sourcegraph Cody | `.cody/`                          | AI Assistant    |
 | VS Code          | `.vscode/`                        | IDE             |
+| Kiro             | `.kiro/`                          | AI IDE          |
 | Zed AI           | `.zed/`                           | AI IDE          |
 
 </details>
@@ -411,14 +413,15 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Agent configuration
-├── 🧠 skills/                # 85 specialized skills
+├── 🧠 skills/                # 93 specialized skills
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (6)     # Security, API Design, Auth...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
 │   ├── cross-cutting/ (22)   # Testing, Database, Playwright...
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
-│   └── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
+│   ├── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
+│   └── governance/   (8)     # Drift Prevention, Session Governance...
 ├── 🔄 workflows/     (41)    # 41 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...

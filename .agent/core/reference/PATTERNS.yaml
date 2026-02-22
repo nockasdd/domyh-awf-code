@@ -1,5 +1,5 @@
 # DOMYH Awesome Code — Shared Patterns Library
-# Version: 7.0.0
+# Version: 6.3.9
 # Purpose: Reduce token duplication across workflows
 
 # =============================================================================
@@ -177,9 +177,12 @@ token_saving:
     - "Focus on current phase only"
     - "Unload completed context"
 
-  # Reference TOKEN_BUDGETS.yaml as SSoT (v6.3.2 cleanup)
+  # Token budget thresholds
+  # NOTE: archive/TOKEN_BUDGETS.yaml is a legacy design spec.
+  # Actual HSA engine budgets: hsa-engine-ts/src/config/constants.ts (TOKEN_BUDGETS)
+  # Agent-side cache budget: core/CACHE.md
   thresholds:
-    reference: archive/TOKEN_BUDGETS.yaml
+    reference: archive/TOKEN_BUDGETS.yaml  # archived — see NOTE above
     use:
       warning: workflow.thresholds.high_load # 8000
       critical: workflow.thresholds.peak_usage # 12000

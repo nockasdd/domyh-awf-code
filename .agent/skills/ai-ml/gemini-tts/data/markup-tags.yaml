@@ -4,7 +4,7 @@
 # 15 patterns for speech control via inline markup tags
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 total_patterns: 15
 
 modes:

@@ -1,6 +1,7 @@
 ---
 description: "🔐 Environment management: configure variables, secrets, and multi-environment setup"
 skills: { required: [security], contextual: [auto] }
+success_criteria: "Environment secure, no exposed secrets, .env.example synced"
 ---
 
 # 🔐 /env — Env Pro
@@ -12,11 +13,11 @@ skills: { required: [security], contextual: [auto] }
 
 ## ENV FLOW
 
-1. **SCAN** (Auto) — Detect stack via HSA (`hsa_detect_stack`), find all .env\* files, check .gitignore rules, detect exposed secrets
+1. **SCAN** (Auto) — `hsa_declare_intent("environment config audit")`, detect stack via HSA (`hsa_detect_stack`), find all .env\* files, check .gitignore rules, detect exposed secrets
 2. **VALIDATE** — Validate format/types, detect missing/deprecated vars
 3. **SYNC** — Sync .env.example template, drift detection between envs
 4. **REPORT** — Security recommendations, next steps
-5. **INDEX** — `hsa_check_changes` to update index after environment file changes
+5. **SYNC** — `hsa_check_changes` to update index after environment file changes
 
 ---
 
@@ -97,6 +98,15 @@ skills: { required: [security], contextual: [auto] }
 | Service URLs | `DATABASE_URL`, `API_BASE`   | 🟡 Medium      |
 | API Keys     | `STRIPE_KEY`, `GITHUB_TOKEN` | 🔴 High        |
 | Credentials  | `DB_PASSWORD`, `JWT_SECRET`  | 🔴 Critical    |
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After REPORT step, apply `templates/reflection/critic.md`:
+> 1. No secrets exposed in .env files committed to git?
+> 2. .env.example synced with current .env?
+> 3. All security recommendations addressed?
+
 ---
 
 ## SESSION SAVE

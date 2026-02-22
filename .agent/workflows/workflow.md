@@ -1,6 +1,7 @@
 ---
 description: "🔄 Meta-command: workflow discovery, chaining, and aliasing"
 skills: { required: [], contextual: [] }
+success_criteria: "Workflow chain executed, transitions logged"
 ---
 
 # 🔄 /workflow — Workflow Meta
@@ -26,17 +27,18 @@ skills: { required: [], contextual: [] }
 
 ## 📋 WORKFLOW CATEGORIES
 
-| Category    | Label                  | Commands                                             |
-| ----------- | ---------------------- | ---------------------------------------------------- |
-| core        | 💻 Core Development    | `/code`, `/debug`, `/fix`, `/test`                   |
-| quality     | 🔍 Quality & Review    | `/ap`, `/review`, `/refactor`, `/security`           |
-| planning    | 📋 Planning & Thinking | `/plan`, `/think`, `/visualize`                      |
-| generation  | 🏗️ Generation          | `/init`, `/scaffold` (also `/generate`), `/doc`      |
-| operations  | 🚀 Operations          | `/deploy`, `/env`, `/migrate`, `/monitor`, `/revert` |
-| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`                          |
-| utility     | 📊 Utility             | `/status`, `/recap`, `/save`, `/suggest`, `/help`    |
-| onboarding  | 📦 Onboarding          | `/onboard`                                           |
-| meta        | 🔄 Meta                | `/workflow`, `/orchestrate`, `/lang`                 |
+| Category    | Label                  | Commands                                                       |
+| ----------- | ---------------------- | -------------------------------------------------------------- |
+| core        | 💻 Core Development    | `/code`, `/debug`, `/fix`, `/test`, `/modify`, `/tdd`          |
+| quality     | 🔍 Quality & Review    | `/ap`, `/review`, `/refactor`, `/security`, `/clean`           |
+| planning    | 📋 Planning & Thinking | `/plan`, `/think`, `/visualize`                                |
+| generation  | 🏗️ Generation          | `/init`, `/scaffold` (= `/generate`), `/doc`, `/prompt`        |
+| operations  | 🚀 Operations          | `/deploy`, `/env`, `/migrate`, `/monitor`, `/revert`           |
+| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`, `/sync-version`                   |
+| utility     | 📊 Utility             | `/status`, `/recap`, `/suggest`, `/help`                       |
+| onboarding  | 📦 Onboarding          | `/onboard`                                                     |
+| diagnosis   | 🩺 Diagnosis           | `/doctor`, `/e2e`                                              |
+| meta        | 🔄 Meta                | `/workflow`, `/orchestrate`                                    |
 
 ---
 
@@ -54,6 +56,7 @@ graph LR
         init["/init"]
         scaffold["/scaffold"]
         doc["/doc"]
+        prompt["/prompt"]
     end
 
     subgraph core["💻 Core Development"]
@@ -61,6 +64,8 @@ graph LR
         debug["/debug"]
         fix["/fix"]
         test["/test"]
+        modify["/modify"]
+        tdd["/tdd"]
     end
 
     subgraph quality["🔍 Quality & Review"]
@@ -68,6 +73,7 @@ graph LR
         review["/review"]
         refactor["/refactor"]
         security["/security"]
+        clean["/clean"]
     end
 
     subgraph operations["🚀 Operations"]
@@ -82,6 +88,19 @@ graph LR
         upgrade["/upgrade"]
         perf["/perf"]
         git["/git"]
+        syncver["/sync-version"]
+    end
+
+    subgraph utility["📊 Utility"]
+        status["/status"]
+        recap["/recap"]
+        suggest["/suggest"]
+        help["/help"]
+    end
+
+    subgraph diagnosis["🩺 Diagnosis"]
+        doctor["/doctor"]
+        e2e["/e2e"]
     end
 
     %% Cross-group connections
@@ -91,18 +110,23 @@ graph LR
     scaffold --> code
     code --> test
     code --> review
+    tdd --> code
     debug --> fix
     fix --> test
     test -->|pass| deploy
     test -->|fail| fix
     review --> refactor
     refactor --> test
+    clean --> test
+    modify --> test
     ap --> refactor
     ap --> fix
     security --> fix
     deploy --> monitor
     migrate --> test
     upgrade --> test
+    doctor --> fix
+    e2e --> fix
 ```
 
 ---
@@ -124,12 +148,13 @@ graph LR
     end
 ```
 
-| Variant      | Workflows                                                                                                      |
-| ------------ | -------------------------------------------------------------------------------------------------------------- |
-| **Standard** | `/code`, `/refactor`, `/scaffold`, `/env`, `/migrate`, `/monitor`, `/revert`, `/upgrade`, `/visualize`, `/doc` |
-| **Deep**     | `/ap`, `/debug`, `/plan`, `/deploy`, `/test`, `/perf`, `/review`                                               |
-| **Quick**    | `/fix`, `/dev`, `/git`, `/status`, `/recap`, `/help`                                                           |
-| **Unique**   | `/think` (decision), `/orchestrate` (multi-agent), `/init` (interview)                                         |
+| Variant              | Workflows                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Standard** (5-6-step) | `/code`, `/refactor`, `/scaffold`, `/env`, `/migrate`, `/monitor`, `/revert`, `/visualize`, `/doc`, `/prompt`, `/clean`, `/security`, `/e2e` |
+| **Deep** (6-step)     | `/ap`, `/debug`, `/plan`, `/test`, `/perf`, `/review`, `/modify`                                                         |
+| **Quick** (3-4-step)  | `/fix`, `/dev`, `/git`, `/recap`, `/help`, `/generate`, `/sync-version`                                                  |
+| **Report** (3-step)   | `/status`, `/doctor`                                                                                                     |
+| **Unique**            | `/think` (decision), `/orchestrate` (DAG), `/init` (interview), `/deploy` (7-step ops), `/tdd` (Red-Green-Refactor), `/upgrade` (6-step safe/major), `/suggest` (context-aware), `/onboard` (discovery) |
 
 ---
 
@@ -153,6 +178,10 @@ Run multiple workflows in sequence with data passing between them.
 | 🆕 UI Flow     | `/think → /visualize → /scaffold → /code → /test`       | `/workflow chain think visualize scaffold code test` — Design → Code                          |
 | 🆕 UI Refactor | `/visualize compare → /refactor ui → /test → /review`   | `/workflow chain visualize refactor test review` — Modernize UI                               |
 | 🆕 Mobile App  | `/init → /visualize mobile → /scaffold → /code → /test` | `/workflow chain init visualize scaffold code test` — Mobile app                              |
+| 🆕 Maintain    | `/status → /upgrade → /test → /deploy`                   | `/workflow chain status upgrade test deploy` — Dependency maintenance                         |
+| 🆕 TDD Feature | `/plan → /tdd → /verify → /deploy`                       | `/workflow chain plan tdd verify deploy` — Test-first development                             |
+| 🆕 Full Audit  | `/doctor → /ap → /refactor → /clean → /test → /security` | `/workflow chain doctor ap refactor clean test security` — Complete quality sweep              |
+| 🆕 Orch Deploy | `/orchestrate → /verify → /deploy`                        | `/workflow chain orchestrate verify deploy` — Multi-domain orchestrated release               |
 
 ---
 
@@ -182,6 +211,21 @@ Run multiple workflows in sequence with data passing between them.
 | `--dark-mode` flag   | → `/visualize dark-mode`        |
 | New project opened   | → `discovery` chain             |
 | `/refactor ui`       | → `/test`, `/visualize compare` |
+| `/modify`            | → `/test`, `/review`            |
+| `/feature`           | → `/test`, `/deploy`            |
+| `/tdd`               | → `/code`, `/test`              |
+| `/clean`             | → `/test`, `/verify`            |
+| `/e2e`               | → `/fix`, `/deploy`             |
+| `/upgrade`           | → `/test`, `/deploy`            |
+| `/verify` pass       | → `/git commit`, `/deploy`      |
+| `/verify` fail       | → `/fix`, `/debug`              |
+| `/doctor`            | → `/fix`, `/env`                |
+| `/prompt`            | → `/code`, `/plan`              |
+| `/perf`              | → `/refactor`, `/deploy`        |
+| `/recap`             | → `/suggest`, `/plan`           |
+| `/orchestrate` done  | → `/recap`, `/deploy`, `/test`  |
+| `/orchestrate` fail  | → `/debug`, `/orchestrate resume`|
+| Task spans 3+ domains| → `/orchestrate` (auto-scored)  |
 
 ---
 
@@ -194,3 +238,11 @@ Run multiple workflows in sequence with data passing between them.
 | Skip logic     | Skip steps if preconditions already met   |
 | Progress       | Show: `[Chain 2/4] Running /test...`      |
 | Rollback       | Option to undo on chain failure           |
+
+---
+
+## 💾 SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

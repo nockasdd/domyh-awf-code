@@ -1,9 +1,23 @@
 # =============================================================================
-# DOMYH Awesome Code
-# MCP Tools - Model Context Protocol Integration
+# ⚠️ STATUS: ASPIRATIONAL DESIGN SPEC — NOT RUNTIME
+# The tool schemas below (memory_*, graph_*, reflect, etc.) are NOT implemented
+# in the current HSA engine. The actual HSA engine (v1.3.18) provides 19 tools:
+#
+# REAL HSA TOOLS (from hsa-engine-ts/src/server/tool-definitions.ts):
+#   Retrieval: hsa_get_context, hsa_get_snapshot, hsa_get_repo_map, hsa_trace_flow
+#   Detection: hsa_detect_stack, hsa_detect_environment
+#   Indexing:  hsa_check_changes, hsa_prefetch
+#   Config:    hsa_get_agent_config, hsa_search_skills
+#   Delegation: hsa_prepare_handoff, hsa_filter_tools
+#   Observability: hsa_status, hsa_export
+#   Learning:  hsa_feedback
+#   Governance: hsa_declare_intent, hsa_track_progress, hsa_save_anchor, hsa_check_drift
+#
+# This file is kept as a DESIGN REFERENCE for future MCP expansion.
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
+status: aspirational  # NOT runtime — see header
 
 # =============================================================================
 # OVERVIEW
@@ -11,9 +25,13 @@ version: "7.0.0"
 # =============================================================================
 
 description: |
+  ⚠️ ASPIRATIONAL DESIGN SPEC — NOT RUNTIME
+
   Model Context Protocol (MCP) is an open standard for connecting AI systems
-  with external tools and data sources. This file defines MCP-compliant
-  tool schemas for the DOMYH agent.
+  with external tools and data sources. This file defines ASPIRATIONAL MCP-compliant
+  tool schemas for the DOMYH agent. These tools are NOT yet implemented.
+
+  For actual running tools, see: hsa-engine-ts/src/server/tool-definitions.ts (19 tools)
 
   Benefits:
   - Standard protocol (Anthropic, OpenAI, Google)
@@ -27,7 +45,7 @@ description: |
 
 server:
   name: "domyh-agent"
-  version: "7.0.0"
+  version: "6.3.9"
 
   transport:
     - "stdio"

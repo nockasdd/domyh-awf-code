@@ -1,7 +1,7 @@
 {
-  "version": "7.0.0",
+  "version": "6.3.9",
   "changelog": [
-    "v6.3.2: Added 15 new skills across 2 new categories (tooling, ai-ml)",
+    "v6.3.9: Added 15 new skills across 2 new categories (tooling, ai-ml)",
     "Migrated prompt-engineering + rag-patterns from cross-cutting → ai-ml",
     "New: mcp, api-protocols, ide-extension, cli-dev, browser-agent (tooling)",
     "New: ai-agents, vector-search, gemini-media-gen, gemini-tts, gemini-live (ai-ml)",

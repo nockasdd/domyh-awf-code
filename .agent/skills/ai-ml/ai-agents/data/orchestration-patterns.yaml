@@ -4,7 +4,7 @@
 metadata:
   skill: ai-agents
   domain: orchestration
-  version: "7.0.0"
+  version: "6.3.9"
   updated: "2026-02-12"
   patterns_count: 8
 

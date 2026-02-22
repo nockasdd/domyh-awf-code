@@ -1,6 +1,6 @@
 ---
 name: deploy-plan
-version: "7.0.0"
+version: "6.3.9"
 type: plan
 triggers: ["/deploy"]
 ---

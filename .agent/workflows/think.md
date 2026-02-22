@@ -1,6 +1,7 @@
 ---
 description: "💡 Think Pro : 6 methods, 5 tiers, multi-mode reasoning"
 skills: { required: [], contextual: [] }
+success_criteria: "Analysis complete, evidence cited, recommendation actionable"
 ---
 
 # 💡 /think — Think Pro

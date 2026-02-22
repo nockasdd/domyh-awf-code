@@ -1,6 +1,7 @@
 ---
 description: "🔬 Full project audit (12-expert panel with conditional activation)"
 skills: { required: [security, audit-pro], contextual: [auto] }
+success_criteria: "Audit report generated with score and P0-P3 findings"
 ---
 
 # 🔬 /ap — Audit Pro
@@ -13,7 +14,7 @@ skills: { required: [security, audit-pro], contextual: [auto] }
 
 ## AUDIT FLOW
 
-1. **DISCOVERY** (Auto 30s) — Detect stack (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files, load audit-pro checklists via HSA (`hsa_get_context`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
+1. **DISCOVERY** (Auto 30s) — `hsa_declare_intent("audit project")`, detect stack (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files, load audit-pro checklists via HSA (`hsa_get_context`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
 2. **SCOPE CONTRACT** — Display scope options (from scoring.yaml) → ⛔ STOP wait for user selection (1-5). Show **previous audit score** if available for delta comparison. Show **active experts** based on detection
 3. **EXECUTE** — Run active Expert Panels sequentially, collect findings with evidence. Show **progress**: `[Panel 2/8] Architecture — Checkpoint 12/20`
 4. **SELF-REVIEW** — Agent re-reads findings, removes duplicates, verifies evidence accuracy, assigns confidence (1-10) per finding
@@ -81,8 +82,6 @@ pre_audit_tools:
     - "golangci-lint run --out-format json" # Lint
   general:
     - "trivy fs --format json ." # Container/FS scan
-
-
 # Tool results are fed as additional context to Expert Panels
 # This achieves ~95% accuracy (vs ~78% AI-only)
 ```
@@ -136,6 +135,14 @@ scoring: .agent/skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight prof
 
 ---
 
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: audit scores justified? All experts activated? Findings actionable with file:line evidence?
+
+---
+
 ## 💾 SESSION SAVE
 
-After audit completes: update `memory/CONTEXT_SNAPSHOT.md` (audit results, key findings) and append summary to `memory/session.md`. Update `memory/state.json` with audit score.
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

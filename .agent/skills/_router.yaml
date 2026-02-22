@@ -5,7 +5,7 @@
 # Integrates with HSA v1.3.2 project detector for optimal token usage
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 engine: "hsa"
 schema: "hierarchical"
 
@@ -268,6 +268,8 @@ resolution:
     logging: "core/logging"
     observability: "core/observability"
     ci-cd: "devops/ci-cd"
+    kubernetes: "devops/kubernetes"
+    aws: "devops/aws"
     prompt-engineering: "ai-ml/prompt-engineering"
     skill-creator: "cross-cutting/skill-creator"
     # v7.0 New aliases

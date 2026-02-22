@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.2",
+  "version": "v6.3.9",
   "activation": {
     "triggers": [
       "/ap",
@@ -41,7 +41,7 @@
   "token_budget": {
     "baseline": 2200,
     "per_skill": 1500,
-    "max_peak": 6273
+    "max_peak": 6700
   },
   "features": {
     "semantic_selection": true,

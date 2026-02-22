@@ -1,6 +1,7 @@
 ---
 description: "🔄 Verification loop: build → lint → test → validate cycle until all pass"
 skills: { required: [testing], contextual: [auto] }
+success_criteria: "All pipeline stages pass (type check, lint, build, test)"
 ---
 
 # 🔄 /verify — Verification Loop
@@ -115,6 +116,12 @@ skills: { required: [testing], contextual: [auto] }
 
 ✅ ALL CHECKS PASSED — Ready to commit
 ```
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all pipeline stages pass? No skipped checks? Failures addressed or documented?
+
 ---
 
 ## SESSION SAVE

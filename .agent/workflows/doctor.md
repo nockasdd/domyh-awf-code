@@ -1,6 +1,7 @@
 ---
 description: "🩺 System doctor: environment diagnostics, runtime checks, config validation, dependency health"
 skills: { required: [], contextual: [auto] }
+success_criteria: "All checks reported with fix recommendations"
 ---
 
 # 🩺 /doctor — System Doctor Pro
@@ -13,10 +14,11 @@ skills: { required: [], contextual: [auto] }
 
 ## DOCTOR FLOW
 
-1. **SCAN** — Detect environment via HSA (`hsa_detect_environment`), identify OS, shell, runtimes, package managers. Show: `[Step 1/4] Scanning environment...`
+1. **SCAN** — `hsa_declare_intent("environment diagnostics")`, detect environment via HSA (`hsa_detect_environment`), identify OS, shell, runtimes, package managers. Show: `[Step 1/4] Scanning environment...`
 2. **VALIDATE** — Check runtime versions, required tools, config files, permissions. Show: `[Step 2/4] Validating 12 checks...`
 3. **DIAGNOSE** — Identify issues, classify severity (🔴 Critical / 🟡 Warning / 🟢 OK). Show: `[Step 3/4] Found 2 issues`
-4. **PRESCRIBE** — Generate fix commands, link docs, offer auto-fix for safe items. Show: `[Step 4/4] Generating prescriptions...`
+4. **PRESCRIBE** — Generate fix commands, link docs, offer auto-fix for safe items. Show: `[Step 4/5] Generating prescriptions...`
+5. **SYNC** — `hsa_check_changes` to update index after auto-fix config changes
 
 ---
 
@@ -122,6 +124,15 @@ Quick fix: `/doctor fix` (2 auto-fixable issues)
 ---
 
 _DOMYH Awesome Code • System Doctor Pro • Environment Diagnostics_
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After PRESCRIBE step, apply `templates/reflection/critic.md`:
+> 1. All critical issues identified?
+> 2. Auto-fix suggestions safe to apply?
+> 3. No false positives in diagnostics?
+
 ---
 
 ## SESSION SAVE

@@ -1,6 +1,6 @@
 # 🧠 DOMYH Awesome Code Memory System
 
-> Version 7.0.0 — 5-Layer Hierarchical Memory Architecture
+> Version 6.3.9 — 5-Layer Hierarchical Memory Architecture
 
 ---
 
@@ -86,7 +86,7 @@ Memory is loaded when:
 
 ## Configuration
 
-Memory engine configuration: `core/MEMORY_ENGINE.yaml`
+Memory engine configuration: `core/archive/MEMORY_ENGINE.yaml` _(archived design spec)_
 
 Key settings:
 

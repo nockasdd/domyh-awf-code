@@ -2,7 +2,7 @@
 # mcp-tools.yaml — Playwright MCP Tool Reference (19 tools)
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 
 navigation:
   - name: browser_navigate

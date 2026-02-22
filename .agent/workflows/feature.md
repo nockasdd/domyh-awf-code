@@ -1,6 +1,7 @@
 ---
 description: "🏗️ Feature lifecycle: scaffold docs, implement with traceability, enforce SDLC phases"
 skills: { required: [coding-rules], contextual: [auto] }
+success_criteria: "All ACs verified via traceability matrix, phase docs complete"
 ---
 
 # 🏗️ /feature — Feature Lifecycle Pro
@@ -13,13 +14,14 @@ skills: { required: [coding-rules], contextual: [auto] }
 
 ## FEATURE FLOW
 
-1. **PHASE 0: CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), gather codebase context (`hsa_get_context`), repo map (`hsa_get_repo_map`), understand existing patterns
+1. **PHASE 0: CONTEXT** — `hsa_declare_intent("implement feature: {name}")`, detect stack via HSA (`hsa_detect_stack`), gather codebase context (`hsa_get_context`), repo map (`hsa_get_repo_map`), understand existing patterns
 2. **PHASE 1: REQUIREMENTS** — Define problem, user stories (INVEST), acceptance criteria (AC-xxx), constraints, out-of-scope → Scaffold `docs/features/{slug}/requirements.md` → ⛔ STOP for user approval
 3. **PHASE 2: DESIGN** — Architecture decisions (ADR-xxx format), data models, API contracts, risk matrix → Create `design.md` with decision records → ⛔ STOP if breaking changes
 4. **PHASE 3: PLANNING** — Task breakdown with traceability (T-xxx → AC-xxx), effort estimation (XS-XXL), dependency graph, RICE scoring → Create `planning.md` → ⛔ STOP for user approval
 5. **PHASE 4: IMPLEMENTATION** — Execute tasks per plan, log decisions in `implementation.md`, `hsa_check_changes` after each milestone. Each code change references task ID (T-xxx)
 6. **PHASE 5: TESTING** — Write tests per `testing.md` strategy, run coverage check, validate all ACs met → Update test results
 7. **PHASE 6: SHIP** — Create summary, update `implementation.md` with final status, verify all phase docs complete, run `/verify` for final gate
+8. **PHASE 7: SYNC** — `hsa_check_changes` to update index after all feature files created
 
 ---
 

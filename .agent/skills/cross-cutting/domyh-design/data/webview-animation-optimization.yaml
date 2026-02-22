@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: webview_animation_optimization
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-12"
   description: "C++ WebView2, QtWebEngine, Tauri — single-EXE, embedded resources, GPU-only CSS/JS animation rules"
   patterns_count: 32

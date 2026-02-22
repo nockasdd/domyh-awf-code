@@ -1,5 +1,5 @@
 name: wasm
-version: "7.0.0"
+version: "6.3.9"
 display: WebAssembly
 category: cross-cutting
 tier: 1

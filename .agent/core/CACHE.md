@@ -1,4 +1,4 @@
-# Session Cache v6.3.2
+# Session Cache v6.3.9
 
 ## Caching Strategy
 
@@ -46,12 +46,16 @@ ttl: 1800
 
 ## Memory Budget
 
+> **Note**: This is the **agent-side skill/workflow cache** budget, NOT the HSA engine
+> context retrieval budget (which defaults to 8,000 tokens — see `hsa-engine-ts/config/constants.ts`).
+> IDE adapters may define their own `max_peak` in `.agent/ide/{ide}.json`.
+
 ```
-Target: < 10,000 tokens peak
+Target: < 10,000 tokens peak (agent-side, 3 active skills)
 ├── META.yaml baseline: 2,200 tokens
 ├── Active skills (3×): 4,500 tokens
 ├── Current workflow: 500 tokens
-└── Buffer: 3,227 tokens
+└── Buffer: 2,800 tokens
 ```
 
 ---

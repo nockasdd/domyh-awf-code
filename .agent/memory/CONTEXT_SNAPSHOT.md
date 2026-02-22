@@ -7,17 +7,19 @@
 
 ## System
 
-DOMYH Awesome Code v6.3.2 — AI agent framework for intelligent development assistance.
+DOMYH Awesome Code v6.3.9 — AI agent framework for intelligent development assistance.
 
 **Structure**: `.agent/` directory containing:
-- `rules/` — 11 modular YAML rules + SACRED_RULES.xml (constitutional hierarchy)
+- `rules/` — 16 modular YAML rules + SACRED_RULES.xml (constitutional hierarchy, 18 rules Tier 0-4)
 - `workflows/` — 41 command workflows (/debug, /fix, /code, /ap, etc.)
 - `personas/` — 11 personas (Developer, Debugger, Auditor, Tester, etc.)
 - `templates/` — 13 templates + 4 chain directories (18 chain files)
-- `skills/` — 83 skills (progressive disclosure: META.yaml → SKILL.md → ADVANCED.md)
+- `skills/` — 86 skills (progressive disclosure: META.yaml → SKILL.md → ADVANCED.md)
 - `memory/` — Session memory (this file + session.md + state.json)
 - `core/` — AGENT_BEHAVIOR.md, MEMORY_PATHS.yaml, VERSION.yaml
 - `ide/` — IDE-specific configs (Gemini, Claude, Cursor, Windsurf, etc.)
+
+**MCP Integration**: HSA engine provides context retrieval, skill search, and session governance when available. Agent works standalone without it (see AGENT_BEHAVIOR.md Flow Matrix).
 
 **Key files**: `SACRED_RULES.xml` (core rules, HEAD zone), `AGENT_BEHAVIOR.md` (behavior guide), `manifest.yaml` (SSoT)
 
@@ -51,7 +53,7 @@ DOMYH Awesome Code v6.3.2 — AI agent framework for intelligent development ass
 
 ## User Preferences
 
-- **Language**: per `.agent/memory/state.json` → `preferences.language`
+- **Language**: **Tiếng Việt** (vi) — Trả lời TOÀN BỘ bằng tiếng Việt. KHÔNG tự chuyển sang tiếng Anh.
 - **Evidence**: Required with `file:line` format
 - **Destructive actions**: Always confirm first
 - **Auto-fix**: Disabled

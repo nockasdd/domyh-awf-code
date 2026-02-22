@@ -4,7 +4,7 @@
 # Metadata for skill categories in hierarchical organization
 # =============================================================================
 
-version: "7.0.0"
+version: "6.3.9"
 
 categories:
   # ==========================================================================
@@ -133,12 +133,12 @@ categories:
       - bun
       - audit-pro
 
-      # P0 Skills (v6.3.2)
+      # P0 Skills (v6.3.9)
       - tdd-workflow
       - accessibility
       - seo
 
-      # P1 Skills (v6.3.2)
+      # P1 Skills (v6.3.9)
       - microservices
       - monorepo
 

@@ -1,6 +1,6 @@
 ---
 name: test-report
-version: "7.0.0"
+version: "6.3.9"
 type: report
 triggers: ["/test"]
 ---

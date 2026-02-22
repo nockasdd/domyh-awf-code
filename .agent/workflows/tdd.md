@@ -1,6 +1,7 @@
 ---
 description: "🧪 TDD cycle: Red-Green-Refactor with automatic test verification loop"
 skills: { required: [tdd-workflow, testing], contextual: [auto] }
+success_criteria: "All tests pass green, coverage meets target, refactor clean"
 ---
 
 # 🧪 /tdd — Test-Driven Development
@@ -107,6 +108,12 @@ skills: { required: [tdd-workflow, testing], contextual: [auto] }
 📊 Coverage: 78% → 82% (+4%)
 ⏱️ Cycle time: 8 min
 ```
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: Red-Green-Refactor cycle completed? No skipped phases? Coverage meets target?
+
 ---
 
 ## SESSION SAVE

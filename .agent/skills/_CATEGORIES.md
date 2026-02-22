@@ -2,7 +2,7 @@
 
 > Two-level classification convention
 
-## Filesystem Categories (7 directories)
+## Filesystem Categories (8 directories)
 
 Physical grouping in `.agent/skills/`:
 
@@ -10,11 +10,12 @@ Physical grouping in `.agent/skills/`:
 |---|---|---|
 | `core/` | 6 | Security, API design, auth, error handling, logging, observability |
 | `languages/` | 28 | Programming language skills |
-| `frameworks/` | 8 | React, Vue, Next.js, Angular, Nuxt, Svelte, Flutter, React Native |
+| `frameworks/` | 9 | React, Vue, Next.js, Angular, Nuxt, Svelte, Flutter, React Native, Streamlit |
 | `devops/` | 7 | Docker, K8s, AWS, CI/CD, Terraform, Azure, GCP |
-| `cross-cutting/` | 21 | Database, testing, Tailwind, Electron, Bun, Deno, etc. |
+| `cross-cutting/` | 22 | Database, testing, Tailwind, Electron, Bun, Deno, etc. |
 | `tooling/` | 5 | MCP, IDE extension, CLI dev, API protocols, Browser agent |
-| `ai-ml/` | 7 | AI agents, vector search, prompt engineering, RAG, Gemini |
+| `ai-ml/` | 8 | AI agents, vector search, prompt engineering, RAG, Gemini, ML pipelines |
+| `governance/` | 8 | Drift prevention, session governance, context integrity, progressive escalation |
 
 ## META.yaml `category:` (Semantic Sub-tags)
 

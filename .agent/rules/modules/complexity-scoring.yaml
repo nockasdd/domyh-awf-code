@@ -1,0 +1,155 @@
+# Complexity Scoring Engine v7.1.0
+# Auto-detect task complexity for orchestration activation
+# Source: LangGraph conditional routing, CrewAI Flows, Anthropic orchestrator analysis
+---
+name: complexity-scoring
+version: "7.1.0"
+rule_id: "MOD-CMP-001"
+
+description: |
+  Auto-detect multi-agent orchestration need by scoring task complexity.
+  Evaluated BEFORE persona routing on every user message.
+  Score ≥ 8 → auto-activate Orchestrator. Score 5-7 → suggest. Score < 5 → normal routing.
+
+category: "workflow"
+
+context:
+  always_apply: true
+  personas: ["*"]
+  trigger: "On every user message before persona routing"
+
+# ═══ SCORING HEURISTICS ═══
+
+scoring:
+  heuristics:
+
+    # H1: Domain Count — How many technical domains does the task touch?
+    domain_count:
+      description: "Count distinct technical domains in request"
+      domains:
+        backend: ["api", "database", "auth", "server", "endpoint", "model", "migration", "route", "middleware", "orm"]
+        frontend: ["ui", "ux", "component", "css", "page", "layout", "responsive", "form", "modal", "sidebar"]
+        testing: ["test", "coverage", "e2e", "unit", "integration", "jest", "vitest", "cypress"]
+        devops: ["deploy", "ci", "cd", "docker", "kubernetes", "infra", "monitoring", "pipeline"]
+        security: ["security", "auth", "permission", "encryption", "vulnerability", "scan", "owasp"]
+        data: ["migration", "seed", "schema", "database", "orm", "backup", "restore"]
+        documentation: ["doc", "readme", "api-doc", "changelog", "comment"]
+      scoring:
+        1_domain: 0
+        2_domains: 2
+        3_domains: 5
+        4_plus: 8
+
+    # H2: Sub-task Detection — How many implicit sub-tasks?
+    subtask_count:
+      description: "Detect implicit sub-tasks via linguistic patterns"
+      indicators:
+        conjunction_words: ["và", "and", "rồi", "then", "sau đó", "tiếp theo", "cũng", "also", "plus"]
+        list_patterns: ["1.", "2.", "3.", "- ", "* ", "firstly", "secondly", "thứ nhất", "thứ hai"]
+        multi_verb: ["implement AND test", "build AND deploy", "fix AND verify", "create AND document"]
+      scoring:
+        1_subtask: 0
+        2_subtasks: 1
+        3_subtasks: 3
+        5_plus: 6
+
+    # H3: File Scope — Estimated number of files to be changed
+    file_scope:
+      description: "Estimate files affected by the task"
+      signals:
+        full_feature: ["feature", "module", "tính năng", "chức năng", "system", "hệ thống"]
+        refactor_broad: ["refactor all", "across", "toàn bộ", "tất cả", "entire", "whole"]
+        single_fix: ["fix", "sửa", "update", "cập nhật", "tweak", "adjust"]
+      scoring:
+        1_3_files: 0
+        4_7_files: 2
+        8_plus_files: 5
+
+    # H4: Cross-Persona Need — Does task need multiple specialist personas?
+    cross_persona:
+      description: "Detect need for multiple specialized personas"
+      patterns:
+        dev_plus_test: ["implement.*test", "code.*verify", "viết.*kiểm tra", "build.*test"]
+        dev_plus_security: ["implement.*security", "build.*auth", "code.*permission"]
+        dev_plus_deploy: ["build.*deploy", "implement.*release", "code.*ship"]
+        plan_plus_implement: ["design.*implement", "thiết kế.*triển khai", "plan.*build"]
+        full_stack: ["full.?stack", "frontend.*backend", "client.*server"]
+      scoring:
+        0_cross: 0
+        1_cross: 3
+        2_plus_cross: 6
+
+    # H5: Complexity Keywords — Explicit complexity signals
+    complexity_keywords:
+      description: "Direct complexity indicators in user request"
+      high: ["complex", "phức tạp", "full-stack", "end-to-end", "from scratch", "complete system", "toàn diện"]
+      medium: ["multiple", "several", "nhiều", "across", "integrate", "coordinate", "phối hợp"]
+      scoring:
+        high_keyword: 5
+        medium_keyword: 2
+
+# ═══ THRESHOLDS ═══
+
+thresholds:
+  single_agent:
+    max: 4
+    description: "Normal single-agent workflow"
+    action: "Route via ROUTER persona_routing (command_triggers + intent_triggers)"
+
+  consider_orchestration:
+    min: 5
+    max: 7
+    description: "Suggest orchestration, don't force"
+    action: |
+      Suggest to user: "Task này có thể cần phối hợp nhiều specialist.
+      Bạn muốn dùng orchestration mode không?"
+
+  auto_orchestrate:
+    min: 8
+    description: "Auto-activate orchestration"
+    action: |
+      1. Switch to Orchestrator persona
+      2. Execute orchestrate.md workflow (INIT → DECOMPOSE → ASSIGN → PLAN ⛔)
+      3. Show DAG to user for approval before execution
+
+# ═══ EVALUATION FLOW ═══
+
+evaluation_flow:
+  steps:
+    1: "Parse user message text"
+    2: "Score H1 (domain_count) — scan for domain keywords"
+    3: "Score H2 (subtask_count) — detect conjunctions, lists, multi-verb"
+    4: "Score H3 (file_scope) — estimate files from scope signals"
+    5: "Score H4 (cross_persona) — match cross-domain patterns"
+    6: "Score H5 (complexity_keywords) — check explicit keywords"
+    7: "Sum total = H1 + H2 + H3 + H4 + H5"
+    8: "Apply threshold → single_agent | consider | auto_orchestrate"
+
+# ═══ EXAMPLES ═══
+
+examples:
+  score_low:
+    message: "Fix the button color on login page"
+    scores: { H1: 0, H2: 0, H3: 0, H4: 0, H5: 0 }
+    total: 0
+    decision: "single_agent → developer persona → /code workflow"
+
+  score_medium:
+    message: "Build auth module and write tests for it"
+    scores: { H1: 2, H2: 1, H3: 2, H4: 3, H5: 0 }
+    total: 8
+    decision: "auto_orchestrate → Orchestrator persona"
+
+  score_high:
+    message: "Build complete auth system: API endpoints, database models, frontend UI, tests, and deploy"
+    scores: { H1: 8, H2: 6, H3: 5, H4: 6, H5: 5 }
+    total: 30
+    decision: "auto_orchestrate → Orchestrator persona → full DAG"
+
+integration:
+  tier: 2
+  related_modules: ["agent-delegation", "agent-communication", "stop-conditions"]
+  referenced_by: ["SACRED_RULES.xml MCP_004", "orchestrator.md", "agent-delegation.yaml"]
+
+---
+_DOMYH Awesome Code • Complexity Scoring Engine • Auto-Detection_

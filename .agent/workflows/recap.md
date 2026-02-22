@@ -1,6 +1,7 @@
 ---
 description: "📖 Session summary: completed tasks, changed files, decisions, and next steps"
 skills: { required: [], contextual: [] }
+success_criteria: "Session summary generated, decisions saved, next steps listed"
 ---
 
 # 📖 /recap — Recap Pro
@@ -99,3 +100,17 @@ Generate with `/recap handoff` for session continuity:
 Triggers: Context window > 80%, Session > 2 hours, Major phase complete
 
 Strategy: Keep key decisions + critical code changes, compress repetitive details, save to memory for next session
+
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all changes captured? Key decisions persisted? Handoff doc complete for next session?
+
+---
+
+## 💾 SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

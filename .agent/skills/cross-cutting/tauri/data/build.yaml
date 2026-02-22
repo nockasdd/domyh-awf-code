@@ -1,5 +1,5 @@
 # Tauri Build & Distribution — HSA Tier 3 Data
-version: "7.0.0"
+version: "6.3.9"
 
 patterns:
   - id: TAURI-BLD-001

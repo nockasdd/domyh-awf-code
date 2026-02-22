@@ -8,7 +8,7 @@
 
 | Metric          | Value                 |
 | --------------- | --------------------- |
-| Total Skills    | 82                    |
+| Total Skills    | 93                    |
 | Total META Size | ~17KB                 |
 | Avg per skill   | ~300 bytes (~100 tok) |
 | Max detected    | 5 META.yaml           |
@@ -22,11 +22,12 @@
 | ---------------------- | ----------------------------------------------------------------------------------------------------- | ---------- |
 | **Core** (6)           | security, api-design, error-handling, logging, observability, authentication                          | 0 (always) |
 | **Language** (28)      | go, python, typescript, javascript, rust, cpp, c, csharp, java, php, kotlin, swift, lua, asm, ...     | 1          |
-| **Framework** (8)      | react, vue, nextjs, nuxt, angular, svelte, flutter, react-native                                      | 2          |
+| **Framework** (9)      | react, vue, nextjs, nuxt, angular, svelte, flutter, react-native, streamlit                           | 2          |
 | **DevOps** (7)         | docker, kubernetes, aws, ci-cd, terraform, gcp, azure                                                 | 3          |
-| **Cross-cutting** (21) | testing, database, sql, tailwind, electron, coding-rules, domyh-design, web-perf, playwright, ...     | 4          |
+| **Cross-cutting** (22) | testing, database, sql, tailwind, electron, coding-rules, domyh-design, web-perf, playwright, ...     | 4          |
 | **Tooling** (5)        | mcp, api-protocols, ide-extension, cli-dev, browser-agent                                             | 5          |
-| **AI-ML** (7)          | ai-agents, prompt-engineering, rag-patterns, vector-search, gemini-media-gen, gemini-tts, gemini-live | 6          |
+| **AI-ML** (8)          | ai-agents, prompt-engineering, rag-patterns, vector-search, gemini-media-gen, gemini-tts, gemini-live, ml-pipelines | 6          |
+| **Governance** (8)     | drift-prevention, session-governance, context-integrity, progressive-escalation, stop-conditions, edit-verification, performance-optimization, agent-delegation | 7          |
 
 ---
 
@@ -40,12 +41,12 @@
 
 ---
 
-## META.yaml Schema (v6.3.2)
+## META.yaml Schema (v6.3.9)
 
 ```yaml
 name: skill-id          # lowercase, hyphen-separated
 display: Display Name   # Human-readable
-category: language      # core|language|framework|devops|cross-cutting|tooling|ai-ml
+category: language      # core|language|framework|devops|cross-cutting|tooling|ai-ml|governance
 priority: 1             # 0-6 (lower = higher)
 desc: "Short desc"      # Max 80 chars
 keywords: [kw1, kw2]    # Max 5-7 keywords

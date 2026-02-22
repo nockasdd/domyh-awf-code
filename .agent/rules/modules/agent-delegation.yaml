@@ -1,7 +1,8 @@
-# Agent Delegation Rule v6.3.2
+# Agent Delegation Rule v7.1.0
+# Enhanced with complexity scoring, state permissions, and checkpoint support
 ---
 name: agent-delegation
-version: "7.0.0"
+version: "7.1.0"
 rule_id: "MOD-DEL-001"
 
 description: "When and how to delegate tasks to specialized sub-agents."
@@ -9,10 +10,11 @@ category: "workflow"
 
 context:
   always_apply: false
-  personas: ["orchestrator", "developer", "architect"]
+  personas: ["orchestrator", "developer", "architect", "planner"]
   trigger: "When task complexity exceeds single-agent capacity"
+  scoring_ref: "rules/modules/complexity-scoring.yaml"
 
-# --- DELEGATION CRITERIA ---
+# ═══ DELEGATION CRITERIA ═══
 
 when_to_delegate:
   always:
@@ -20,12 +22,14 @@ when_to_delegate:
     - "Performance audit → Performance persona"
     - "E2E test generation → Tester persona"
     - "Documentation sync → Documenter persona"
+    - "Complexity score >= 8 → Orchestrator persona"
 
   consider:
-    - "Task involves 3+ distinct domains"
+    - "Task involves 3+ distinct domains (H1 >= 3)"
     - "Code review with 500+ changed lines"
     - "Multi-language refactoring"
-    - "Simultaneous frontend + backend changes"
+    - "Simultaneous frontend + backend changes (H4 cross_persona)"
+    - "Complexity score 5-7 → suggest orchestration to user"
 
   requires_full_context:
     - "Tasks requiring full conversation context — keep in main agent"
@@ -33,24 +37,44 @@ when_to_delegate:
     - "Critical data migrations — require user review before delegation"
     - "Destructive operations (delete, drop) — confirm with user first"
 
-# --- SCOPE LIMITS ---
+# ═══ SCOPE LIMITS ═══
 
 scope_limits:
   max_files: 10
   max_tool_calls: 50
+  max_tokens: 10000
   timeout_minutes: 15
   default_tools: ["Read", "Grep", "Glob", "View"]
   elevated_tools: ["Write", "Edit", "Bash", "Terminal"]
   elevated_requires: "Explicit approval"
 
-# --- HANDOFF PATTERNS ---
+# ═══ STATE PERMISSIONS ═══
+
+state_permissions:
+  orchestrator:
+    read: ["*"]
+    write: ["dag", "event_log", "budget", "shared_context", "status"]
+  specialist:
+    read: ["shared_context", "own_task", "dependency_task.output"]
+    write: ["own_task.output", "shared_context.decisions", "shared_context.blockers"]
+
+# ═══ HANDOFF PATTERNS ═══
 
 patterns:
   sequential: "Agent A → Result → Agent B → Orchestrator (for dependent tasks)"
   parallel: "Orchestrator → [A, B, C] → Merge (for independent tasks)"
   review_loop: "Developer → Code → Reviewer → Feedback → Developer (for quality-critical)"
+  escalation: "Any Persona → handoff_condition → Orchestrator (for scope overflow)"
 
-# --- AGENT SPEC FORMAT ---
+# ═══ CHECKPOINT ═══
+
+checkpoint:
+  auto_save: "After each task completion during orchestration"
+  manual: "/orchestrate checkpoint"
+  resume: "/orchestrate resume {id}"
+  spec: "workflows/data/checkpoint-resume.yaml"
+
+# ═══ AGENT SPEC FORMAT ═══
 
 spec_template: |
   ## Agent: {name}
@@ -58,7 +82,7 @@ spec_template: |
 
 integration:
   tier: 2
-  related_modules: ["quality", "stop-conditions"]
+  related_modules: ["quality", "stop-conditions", "complexity-scoring", "agent-communication"]
 
 ---
 _DOMYH Awesome Code • Agent Delegation Rule_

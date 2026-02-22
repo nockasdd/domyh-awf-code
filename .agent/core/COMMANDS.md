@@ -42,7 +42,7 @@
 | `/feature`   | 🏗️ Feature lifecycle   | —                  | [auto]            |
 | `/think`     | 💡 Brainstorming Pro   | —                  | —                 |
 | `/prompt`    | ✍️ AI prompt generator | prompt-engineering | [domyh-design]    |
-| `/visualize` | 🖼️ UI/UX mockups       | domyh-design       | —                 |
+| `/visualize` | 🖼️ UI/UX mockups       | domyh-design       | [auto]            |
 | `/perf`      | 📈 Performance profile | web-perf           | [auto]            |
 
 ## DevOps Commands (7)

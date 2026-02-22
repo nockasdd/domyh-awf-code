@@ -1,15 +1,15 @@
-# Online Research Rule v6.3.2
+# Online Research Rule v6.3.9
 ---
 name: online-research
-version: "7.0.0"
+version: "6.3.9"
 rule_id: "MOD-RES-001"
 
-description: "Guidelines for web research and external source verification."
+description: "Guidelines for web research, source verification, and time-aware freshness."
 category: "workflow"
 
 context:
   always_apply: false
-  personas: ["researcher"]
+  personas: ["researcher", "developer", "debugger", "architect"]
   trigger: "When task requires external information not in codebase"
 
 # --- RESEARCH PROTOCOL ---
@@ -20,6 +20,8 @@ protocol:
     - "Library/framework API questions beyond codebase docs"
     - "Security vulnerability research (CVE, advisory)"
     - "Best practices or architecture patterns"
+    - "AI/ML model capabilities, pricing, or API changes"
+    - "MCP tools, agent frameworks, or IDE feature updates"
 
   when_not_to_search:
     - "Answer is clearly in the codebase"
@@ -43,11 +45,74 @@ source_priority:
 
 citation:
   format: "Include source URL with relevant snippet"
-  freshness: "Prefer sources from last 12 months for evolving topics"
   verification: "Cross-reference critical findings with 2+ sources"
+
+# --- TIME-AWARE SEARCH (RES-TIME-001) ---
+# AI/agent technology outdates within 1-2 weeks in 2026.
+# Agent MUST use current date as time-anchor in searches.
+
+time_awareness:
+  rule_id: "RES-TIME-001"
+  severity: "required"
+  description: >
+    AI/ML/agent technology evolves weekly. Agent MUST anchor searches to
+    current date to avoid outdated information causing incorrect implementations.
+
+  protocol:
+    - step: "1. Determine topic decay rate"
+      categories:
+        fast_decay:
+          window: "1 month"
+          topics:
+            - "AI models, LLM APIs, model pricing"
+            - "Agent frameworks (Claude SDK, OpenAI Agents, ADK)"
+            - "MCP specification, MCP tools, MCP servers"
+            - "IDE features (Cursor, Windsurf, Copilot, Gemini)"
+            - "AI coding patterns, prompt engineering"
+          action: "Add current YYYY-MM to search query"
+        medium_decay:
+          window: "6 months"
+          topics:
+            - "Web frameworks (Next.js, React, Vue, Angular)"
+            - "Libraries, package managers, build tools"
+            - "Cloud services, container orchestration"
+            - "Security CVEs, vulnerability advisories"
+          action: "Add current YYYY to search query"
+        slow_decay:
+          window: "24 months"
+          topics:
+            - "Algorithms, data structures"
+            - "Design patterns, architecture principles"
+            - "Network protocols, standards (HTTP, TCP, DNS)"
+            - "Programming language core syntax"
+          action: "No date filter required"
+
+    - step: "2. Include temporal anchors in search queries"
+      examples:
+        - query: "MCP specification changes february 2026"
+          decay: fast
+        - query: "Next.js 15 migration guide 2026"
+          decay: medium
+        - query: "binary search algorithm"
+          decay: slow (no date needed)
+      anti_patterns:
+        - "Do NOT search fast-decay topics without date context"
+        - "Do NOT use results older than search_window without ⚠️ warning"
+        - "Do NOT assume last month's info is still current for AI topics"
+
+    - step: "3. Validate source date before using"
+      action: >
+        Check publication/update date of every source.
+        If older than the topic's search_window, prepend:
+        ⚠️ OUTDATED (published {date}, window is {window})
+        and warn user the information may be stale.
+
+    - step: "4. Declare freshness in research outputs"
+      format: "Include '📅 Researched: {current_date}' in all research responses"
 
 integration:
   tier: 2
+  related_modules: ["drift-prevention"]
 
 ---
-_DOMYH Awesome Code • Online Research Rule_
+_DOMYH Awesome Code • Online Research Rule (Time-Aware)_

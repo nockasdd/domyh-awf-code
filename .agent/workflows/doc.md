@@ -1,6 +1,7 @@
 ---
 description: "📝 Generate documentation: API docs, README, code comments, and changelogs"
 skills: { required: [], contextual: [auto] }
+success_criteria: "Documentation generated, links validated, examples compile"
 ---
 
 # 📝 /doc — Doc Pro
@@ -12,7 +13,7 @@ skills: { required: [], contextual: [auto] }
 
 ## DOCUMENTATION FLOW
 
-1. **ANALYZE** (Auto) — Detect stack via HSA (`hsa_detect_stack`), load code context (`hsa_get_context`), scan codebase, identify undocumented items
+1. **ANALYZE** (Auto) — `hsa_declare_intent("generate documentation")`, detect stack via HSA (`hsa_detect_stack`), load code context (`hsa_get_context`), scan codebase, identify undocumented items
 2. **PLAN** — Show documentation gaps, estimate scope → ⛔ STOP if large: confirm scope
 3. **GENERATE** — Create doc content, use language-specific format, add examples & diagrams
 4. **VALIDATE** — Check links/references, verify code examples compile, lint docs
@@ -123,6 +124,27 @@ docs_as_code: "Docs live with code, version controlled, CI validated, auto-gener
 | `/doc changelog`     | CHANGELOG from git |
 | `/doc --check`       | Audit coverage     |
 | `/doc --format html` | Output as HTML     |
+---
+
+## ⚠️ SAFETY RULES
+
+```yaml
+safety:
+  - Confirm before overwriting existing documentation files
+  - Preview generated content before writing
+  - Preserve existing manual documentation sections
+  - Backup existing docs if major regeneration
+```
+
+---
+
+## 🪞 REFLECTION CHECKPOINT
+
+> After VALIDATE step, apply `templates/reflection/critic.md`:
+> 1. All public APIs documented?
+> 2. Code examples compile and are accurate?
+> 3. Links and references validated?
+
 ---
 
 ## SESSION SAVE

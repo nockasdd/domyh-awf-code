@@ -1,6 +1,7 @@
 ---
 description: "❓ Show all available commands, usage examples, and language settings"
 skills: { required: [], contextual: [] }
+success_criteria: "All commands listed with correct descriptions"
 ---
 
 # ❓ /help — Command Reference
@@ -36,7 +37,7 @@ skills: { required: [], contextual: [] }
 
 | Command    | Description              | Example           |
 | ---------- | ------------------------ | ----------------- |
-| `/ap`      | 🔬 Full 5-expert audit   | `/ap`             |
+| `/ap`      | 🔬 Full 12-expert audit  | `/ap`             |
 | `/review`  | 👀 Code review           | `/review pr #123` |
 | `/perf`    | ⚡ Performance profiling | `/perf cpu`       |
 | `/deploy`  | 🚀 Deploy to production  | `/deploy staging` |
@@ -75,3 +76,11 @@ skills: { required: [], contextual: [] }
 1. `/debug` with error message
 2. `/status` for project health
 3. `/recap` to see context
+
+---
+
+## 💾 SESSION SAVE
+
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

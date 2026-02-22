@@ -1,6 +1,7 @@
 ---
 description: "🔒 Security scanning & remediation: SAST, SCA, secrets, containers, licenses"
 skills: { required: [security], contextual: [auto] }
+success_criteria: "Scan complete, findings documented with CWE references"
 ---
 
 # 🔒 /security — Security Pro
@@ -184,6 +185,12 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 - Warn before scanning large directories (> 10,000 files)
 - Skip scanning `node_modules/`, `vendor/`, `.git/` by default
 - Output findings to `.domyh/security/` (gitignored) for sensitive content
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: scan complete for all categories? Findings documented with CWE references? Remediation plan created?
+
 ---
 
 ## SESSION SAVE

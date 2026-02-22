@@ -1,9 +1,7 @@
 ---
-name: modify
-trigger:
-  ["/modify", "/fix-project", "sửa project", "update project", "fix existing"]
-persona: developer
 description: "🔧 Fix existing project: detect stack → analyze issues → plan → execute → verify"
+skills: { required: [coding-rules], contextual: [auto] }
+success_criteria: "issues fixed, lint/type/test pass, debt score improved"
 ---
 
 # 🔧 /modify — Project Modification Pro v3.0
@@ -21,7 +19,8 @@ User: /modify [options]
     ▼
 ┌─────────────────────────────────────────┐
 │ PHASE 1: DETECT (Auto)                 │
-│ ▸ Detect project stack                  │
+│ ▸ hsa_declare_intent("modify project")  │
+│ ▸ Detect project stack (hsa_detect_stack)│
 │ ▸ Identify architecture pattern         │
 │ ▸ Map project structure                 │
 └─────────────────────────────────────────┘
@@ -64,6 +63,7 @@ User: /modify [options]
 │ ▸ Summary of changes                    │
 │ ▸ Technical debt score                  │
 │ ▸ Suggested next steps                  │
+│ ▸ hsa_check_changes → update index      │
 └─────────────────────────────────────────┘
 ```
 
@@ -288,7 +288,7 @@ verification:
   ruby:
     lint: "rubocop"
     test: "rspec"
-````
+```
 
 ### Verification Output
 
@@ -468,16 +468,19 @@ token_saving:
 
 | Phase   | Rules                         |
 | ------- | ----------------------------- |
-| Detect  | `context-management`          |
+| Detect  | `perf-001`                    |
 | Analyze | `stop-conditions`             |
 | Plan    | `stop-conditions`             |
 | Execute | `edit-verification`, `safety` |
-| Verify  | `evidence`                    |
-| Report  | `evidence`                    |
+| Verify  | `exec-001`                    |
+| Report  | `exec-001`                    |
 
 ---
 
-_DOMYH Awesome Code v6.3.2 • Modify Pro v3.1 • AI-Driven Modernization_
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: all targeted fixes applied? Lint/type/test all pass? Debt score improved? No regressions introduced?
+
 ---
 
 ## SESSION SAVE

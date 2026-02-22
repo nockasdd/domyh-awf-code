@@ -1,0 +1,95 @@
+# Orchestration State Schema v7.1.0
+# Shared state created during /orchestrate execution
+# Source: LangGraph StateGraph + A2A Task Lifecycle
+# Location: memory/orchestration/orch-{id}.yaml
+---
+
+# ═══ ORCHESTRATION STATE SCHEMA ═══
+
+orchestration:
+  # Session identification
+  id: "orch-{timestamp}"
+  trigger: "manual | auto_scored | handoff"
+  complexity_score: 0
+  status: "planning | executing | synthesizing | completed | failed"
+  created_at: "{ISO timestamp}"
+  updated_at: "{ISO timestamp}"
+
+  # ═══ TASK DAG ═══
+  dag:
+    tasks:
+      - id: "t1"
+        name: "Task description"
+        specialist: "persona_name"
+        workflow: "/code | /test | /deploy | ..."
+        dependencies: []
+        priority: 1
+        estimated_complexity: "S | M | L"
+        status: "pending | running | completed | failed | blocked | input_required"
+
+        # Results (written by specialist)
+        output:
+          files_changed: []
+          summary: ""
+          decisions: []
+          artifacts: []
+
+        # Fault tolerance
+        attempts: 0
+        max_retries: 3
+        checkpoint_id: ""
+        error_message: ""
+
+    # Parallel groups (tasks with no mutual dependencies)
+    parallel_groups:
+      - group_id: "g1"
+        task_ids: ["t1", "t2"]
+        description: "Independent tasks runnable in parallel"
+
+  # ═══ SHARED CONTEXT (readable by ALL specialists) ═══
+  shared_context:
+    project_stack: ""
+    conventions: []
+    decisions: []
+    blockers: []
+
+  # ═══ TOKEN BUDGET ═══
+  budget:
+    total_limit: 50000
+    used: 0
+    per_task: {}
+
+  # ═══ EXECUTION LOG (append-only) ═══
+  event_log:
+    - timestamp: "{ISO}"
+      task_id: ""
+      event: "started | completed | failed | retried | checkpoint | decision | blocker"
+      detail: ""
+
+# ═══ TASK LIFECYCLE STATE MACHINE ═══
+#
+#   [*] ──→ pending ──→ running ──→ completed ──→ [*]
+#              │            │            │
+#              ▼            ▼            │
+#           blocked   input_required     │
+#              │            │            │
+#              ▼            ▼            │
+#           pending      running         │
+#                           │            │
+#                           ▼            │
+#                        failed ─────────│
+#                           │            │
+#                      (retry < max)     │
+#                           ▼            │
+#                        running         │
+#
+# States:
+#   pending         — Created, waiting for deps or assignment
+#   blocked         — Has unmet dependencies
+#   running         — Specialist actively executing
+#   input_required  — Agent needs user input (A2A pattern)
+#   completed       — Task finished, output stored
+#   failed          — Error occurred (retryable or terminal)
+
+---
+_DOMYH Awesome Code • Orchestration State Schema_

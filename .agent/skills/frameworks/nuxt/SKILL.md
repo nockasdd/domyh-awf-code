@@ -1,7 +1,7 @@
 ---
 name: nuxt
 detect: ["nuxt.config.ts", "nuxt.config.js", ".nuxtrc", "app.vue"]
-version: "7.0.0"
+version: "6.3.9"
 category: frontend
 tier: 1
 ---

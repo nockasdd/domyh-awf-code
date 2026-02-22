@@ -1,6 +1,7 @@
 ---
 description: "🔀 Git operations: commit, branch, stash, log, diff, merge, rebase"
-skills: { required: [], contextual: [] }
+skills: { required: [], contextual: [auto] }
+success_criteria: "git operation completed, repo state verified, index synced"
 ---
 
 # 🔀 /git — Git Pro
@@ -12,7 +13,7 @@ skills: { required: [], contextual: [] }
 
 ## GIT FLOW
 
-1. **PARSE** — Identify git command intent, check current repo state, detect branch strategy
+1. **PARSE** — `hsa_declare_intent("git: {operation}")`, identify git command intent, detect stack via HSA (`hsa_detect_stack`), check current repo state, detect branch strategy
 2. **DETECT** — Current branch & status, uncommitted changes, remote sync state
 3. **EXECUTE** — Run git operations, handle conflicts → ⛔ STOP on destructive actions
 4. **SYNC** — `hsa_check_changes` after commit/merge/rebase/checkout to update index
@@ -58,7 +59,11 @@ skills: { required: [], contextual: [] }
 
 Format: `{type}({scope}): {description}`
 
-Examples: `feat(auth): add JWT refresh token` • `fix(api): handle null response` • `docs(readme): update install guide`
+Breaking changes: append `!` after type/scope — `feat!: remove legacy API` or `feat(api)!: change response format`
+
+> `BREAKING CHANGE:` footer also accepted for detailed explanation.
+
+Examples: `feat(auth): add JWT refresh token` • `fix(api): handle null response` • `feat!: drop Node 16 support`
 
 ### Auto-Generate Commit Message
 
@@ -95,6 +100,12 @@ Examples: `feat(auth): add JWT refresh token` • `fix(api): handle null respons
 - Confirm target branch before merge/rebase
 
 **Conflict resolution**: Show conflicting files → Offer: manual | theirs | ours → Run tests after resolution
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: operation completed cleanly? No uncommitted changes? Remote in sync? Conflicts resolved?
+
 ---
 
 ## SESSION SAVE

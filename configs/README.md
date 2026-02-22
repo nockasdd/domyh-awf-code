@@ -1,6 +1,6 @@
 # 🔧 IDE Configs — DOMYH Awesome Code
 
-> Root configuration files for 22 supported IDEs/Agents.
+> Root configuration files for 23 supported IDEs/Agents.
 
 ## Structure
 

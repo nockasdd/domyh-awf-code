@@ -1,6 +1,6 @@
 ---
 name: planner
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "plan-001"
 
 identity:
@@ -19,11 +19,12 @@ traits:
 
 collaboration:
   can_delegate_to: [developer, researcher, architect]
-  reports_to: [architect]
+  reports_to: [architect, orchestrator]
   handoff_conditions:
     "plan_approved": "developer"
     "needs_research": "researcher"
     "needs_design": "architect"
+    "plan_requires_multi_persona": "orchestrator"
 
 triggers: ["/feature"]
 enforces: [yagni, quality, stop-conditions]

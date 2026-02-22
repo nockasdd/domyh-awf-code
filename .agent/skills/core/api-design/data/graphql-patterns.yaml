@@ -1,7 +1,7 @@
 metadata:
   skill: api-design
   domain: graphql_patterns
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: graphql-patterns.yaml
   patterns_count: 25

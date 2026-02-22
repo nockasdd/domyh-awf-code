@@ -1,15 +1,62 @@
-# Agent Behavior Guide v6.3.2
+# Agent Behavior Guide v6.3.9
 
 > Consolidated from ROUTER, TOKEN_LOADING, TOKEN_BUDGETS, CONTEXT_LOADER, SKILLS_FLOW
 
 ## Cold Start Protocol
 
-On new session or context reset, read these files IN ORDER:
-1. `memory/CONTEXT_SNAPSHOT.md` — System overview, recent changes, status, decisions (~400 tokens)
-2. `memory/session.md` — Previous session notes, active task, errors (~200 tokens)
-3. `memory/state.json` — Project state, preferences, flags (~150 tokens)
+On new session or context reset:
+
+### Step 1: Load Base Context (always — no dependencies)
+1. `memory/CONTEXT_SNAPSHOT.md` — System overview (~400 tokens)
+2. `memory/session.md` — Previous session notes (~200 tokens)
+3. `memory/state.json` — Preferences, flags (~150 tokens)
 
 > If CONTEXT_SNAPSHOT is empty → read `manifest.yaml` headers for system overview.
+
+### Step 2: Detect MCP Availability (branch)
+
+```
+IF HSA MCP server is available:
+  → hsa_get_agent_config("bootstrap") → loads Tier 0-2 rules + intent mapping
+  → hsa_detect_stack → auto-detect project language/framework
+  → hsa_declare_intent → set session governance context
+  → Skills: loaded via hsa_search_skills (MCP-managed)
+
+ELSE (no HSA MCP — standalone mode):
+  → Read rules/SACRED_RULES.xml manually (Tier 0-2)
+  → Read manifest.yaml → commands section for routing table
+  → Detect stack from file extensions + config files (package.json, Cargo.toml, etc.)
+  → Skills: direct file read of skills/{cat}/{name}/META.yaml
+```
+
+### Step 3: Route User Input (branch)
+
+```
+IF user message starts with slash command (/code, /debug, etc.):
+  → Match command → manifest.yaml commands[].triggers
+  → Load persona: personas/{command.persona}.md
+  → Load workflow: workflows/{command.id}.md
+  → Load required skills: command.skills.required[]
+  → Auto-detect contextual skills: command.skills.contextual[]
+
+ELSE (freeform text — no slash command):
+  → Match intent keywords from bootstrap intent→workflow mapping
+  → IF match found: route to matched command workflow
+  → IF no match: use active persona (default: developer)
+  → Load skills based on detected project stack
+```
+
+### Flow Matrix — 4 Scenarios
+
+| # | HSA | Slash | Rules Source | Skill Loading | Routing | Context Retrieval |
+|---|-----|-------|-------------|---------------|---------|-------------------|
+| 1 | ✅ | ✅ | `hsa_get_agent_config("bootstrap")` | `hsa_search_skills` + required | manifest persona + workflow | `hsa_get_context` |
+| 2 | ✅ | ❌ | `hsa_get_agent_config("bootstrap")` | `hsa_search_skills` by intent | intent keyword matching | `hsa_get_context` |
+| 3 | ❌ | ✅ | Direct read `SACRED_RULES.xml` | Direct read `META.yaml` | manifest persona + workflow | Manual file read |
+| 4 | ❌ | ❌ | Direct read `SACRED_RULES.xml` | Stack-based file read | Default developer persona | Manual file read |
+
+> **Scenarios 3-4 MUST work.** Agent must NOT crash when HSA MCP is unavailable.
+> All HSA tool calls should be treated as optional enhancements, not hard requirements.
 
 ## Session Save Protocol
 
@@ -22,6 +69,8 @@ Update memory files at these triggers:
 | After resolving an error | `session.md` (append error + solution) |
 | Before ending session | `CONTEXT_SNAPSHOT.md` (full update: changes, status, decisions) |
 | After workflow completes | `state.json` (update current_phase, last_workflow) |
+| On session start/intent change | `hsa_declare_intent` → `.agent/hsa/session-state.json` |
+| On milestone completion | `hsa_track_progress`, `hsa_save_anchor` → session-state.json |
 
 ## Skill Loading (Progressive Disclosure)
 
@@ -41,13 +90,18 @@ Update memory files at these triggers:
 ## Token Budgets
 <!-- POSITION: HEAD zone — load with SACRED_RULES -->
 
+**IDE Agent-Side Formula**: `max_peak = baseline + (max_active × per_skill) = 2200 + (N × 1500)`
+
 | State             | Max Tokens | Includes                  |
 | ----------------- | ---------- | ------------------------- |
 | Boot              | 2,500      | core rules + router only  |
-| Idle              | 8,300      | boot + all 83 skill METAs |
+| Idle              | 8,600      | boot + all 86 skill METAs |
 | Single workflow   | 9,700      | idle + 1 skill T2 active  |
 | Workflow + skills | 11,000     | idle + up to 3 skills     |
 | Peak              | 12,700     | max concurrent, warn@10K  |
+
+> **HSA Engine Budget**: Separate system — `constants.ts` uses proportional allocation
+> (50% context, 10% skills, 10% repo map) × `HSA_MAX_TOKENS` (default: 8000).
 
 > **Token Tip**: When loading workflow files, strip YAML frontmatter comments,
 > ASCII box-drawing decorations (`━`, `═`), and inline data blocks that have
@@ -79,6 +133,8 @@ Update memory files at these triggers:
 | `/feature`  | Planner      | (none specific)               |
 
 **Loading**: On /command → load `.agent/personas/{name}.md` (max ~1,500 tokens)
+
+> Complete routing for all 41 commands: see `manifest.yaml` → `commands` section.
 
 ## Workflow Loading
 
@@ -136,6 +192,7 @@ When fix attempts fail **2+ times**, activate Progressive Escalation:
 
 > Check `.domyh/debug/episodic_memory.yaml` for past solutions before retrying.
 > See `workflows/debug.md` or `workflows/fix.md` for full protocol.
+> Timing, telemetry, and prompt details: `rules/modules/progressive-escalation.yaml`.
 
 ## References
 

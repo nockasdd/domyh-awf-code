@@ -1,6 +1,7 @@
 ---
 description: "📦 Project onboarding: discover architecture, map dependencies, generate getting-started guide"
 skills: { required: [], contextual: [auto] }
+success_criteria: "architecture mapped, getting-started guide generated, report saved"
 ---
 
 # 📦 /onboard — Project Discovery
@@ -12,7 +13,7 @@ skills: { required: [], contextual: [auto] }
 
 ## ONBOARD FLOW
 
-1. **DETECT** — Stack detection (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files/dirs, identify entry points & configs. Show: `[Step 1/6] Detecting stack...`
+1. **DETECT** — `hsa_declare_intent("onboard project")`, stack detection (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files/dirs, identify entry points & configs. Show: `[Step 1/6] Detecting stack...`
 2. **ANALYZE** — Parse architecture: folder structure, key modules, dependency graph, build system. Use `hsa_get_repo_map` for file importance ranking. Show: `[Step 2/6] Analyzing 342 files...`
 3. **MAP** — Generate Mermaid architecture diagram + module dependency graph. Show: `[Step 3/6] Mapping architecture...`
 4. **ASSESS** — Identify code health: test coverage, lint score, outdated deps, known issues. Show: `[Step 4/6] Assessing code health...`
@@ -142,6 +143,12 @@ graph TD
 | Security Vulns | 0 critical | moderate   | critical    |
 | Build Time     | < 30s      | 30-60s     | > 60s       |
 | Bundle Size    | < 200KB    | 200-500KB  | > 500KB     |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: architecture diagram accurate? Getting-started guide tested? Conventions listed correctly? Health metrics current?
+
 ---
 
 ## SESSION SAVE

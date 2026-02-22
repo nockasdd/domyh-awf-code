@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "arch-001"
 
 identity:
@@ -19,8 +19,13 @@ traits:
 
 collaboration:
   can_delegate_to: [developer, devops, security]
-  reports_to: []
+  reports_to: [orchestrator]
   supervises: [developer, devops, security]
+  handoff_conditions:
+    "design_approved": "developer"
+    "infra_changes_needed": "devops"
+    "security_implications": "security"
+    "task_exceeds_scope": "orchestrator"
 
 triggers: ["/plan"]
 enforces: [yagni, quality, stop-conditions]

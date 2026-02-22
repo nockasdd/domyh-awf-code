@@ -1,7 +1,7 @@
 ---
 name: streamlit
 detect: ["streamlit", "st.title", "st.sidebar", "st.chat_input"]
-version: "7.0.0"
+version: "6.3.9"
 category: frameworks
 tier: 2
 ---

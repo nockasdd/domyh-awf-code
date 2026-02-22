@@ -285,7 +285,7 @@ patterns:
       local redis = require "resty.redis"
       local red = redis:new()
 
-      red:connect("127.0.0.1", 6379)
+      red:connect("126.3.9.1", 6379)
       red:set("key", "value")
       local value = red:get("key")
 

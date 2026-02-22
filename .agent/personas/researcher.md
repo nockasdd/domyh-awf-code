@@ -1,6 +1,6 @@
 ---
 name: researcher
-version: "7.0.0"
+version: "6.3.9"
 persona_id: "res-001"
 
 identity:
@@ -23,7 +23,12 @@ source_quality:
 
 collaboration:
   can_delegate_to: []
-  reports_to: [planner, developer, architect]
+  reports_to: [planner, developer, architect, orchestrator]
+  handoff_conditions:
+    "research_complete": "requester"
+    "findings_need_implementation": "developer"
+    "findings_need_architecture": "architect"
+    "insufficient_sources": "orchestrator"
 
 triggers: ["/research", "/search", "/onboard"]
 enforces: [online-research, quality, stop-conditions]

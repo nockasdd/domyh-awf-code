@@ -1,6 +1,7 @@
 ---
 description: "⚡ Performance profiling: CPU, memory, benchmarks, and optimization recommendations"
 skills: { required: [web-perf], contextual: [auto] }
+success_criteria: "baseline recorded, hotspots identified, optimizations applied, before/after comparison saved"
 ---
 
 # ⚡ /perf — Perf Pro
@@ -12,7 +13,7 @@ skills: { required: [web-perf], contextual: [auto] }
 
 ## PERF FLOW
 
-1. **BASELINE** — Detect stack via HSA (`hsa_detect_stack`), load perf context (`hsa_get_context`), collect current metrics
+1. **BASELINE** — `hsa_declare_intent("performance profiling")`, detect stack via HSA (`hsa_detect_stack`), load perf context (`hsa_get_context`), collect current metrics
 2. **PROFILE** — CPU/memory profiling, flamegraphs
 3. **ANALYZE** — Identify hotspots, bottlenecks
 4. **OPTIMIZE** — Apply fixes, verify improvement
@@ -105,6 +106,12 @@ skills: { required: [web-perf], contextual: [auto] }
 | Fonts    | `font-display: swap`, preload       |
 | Caching  | CDN, `Cache-Control`, ETags         |
 | Network  | HTTP/3, preconnect, resource hints  |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: baseline vs optimized metrics captured? Improvements measurable? No performance regressions in other areas?
+
 ---
 
 ## SESSION SAVE

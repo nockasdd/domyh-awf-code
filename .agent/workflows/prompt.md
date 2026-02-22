@@ -1,6 +1,7 @@
 ---
 description: "✍️ AI Prompt Generator: research, analyze, and create structured markdown prompts"
 skills: { required: [prompt-engineering], contextual: [domyh-design] }
+success_criteria: "Prompt generated, research cited, RCTO structure applied"
 ---
 
 # ✍️ /prompt — Prompt Generator Pro
@@ -324,6 +325,12 @@ All generated prompts must meet:
 | Skip research                       | Always research before generating         |
 | Mixed languages                     | Keep consistent 1 language throughout     |
 | Too much jargon                     | Write clearly for target audience         |
+---
+
+## REFLECTION CHECKPOINT
+
+> Before saving session, verify: RCTO structure applied? Research cited with sources? Anti-patterns avoided? Prompt tested?
+
 ---
 
 ## SESSION SAVE

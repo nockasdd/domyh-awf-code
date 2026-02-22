@@ -1,7 +1,7 @@
 metadata:
   skill: coding-rules
   domain: concurrency_patterns
-  version: v6.3.2
+  version: v6.3.9
   updated: "2026-02-05"
   migrated_from: concurrency-patterns.yaml
   patterns_count: 9

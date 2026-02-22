@@ -8,7 +8,7 @@
 
 ```yaml
 task_type: refactor
-version: "7.0.0"
+version: "6.3.9"
 
 # Required fields
 target: string            # What to refactor

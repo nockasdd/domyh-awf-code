@@ -289,7 +289,7 @@ async function updateUser(id: string, data: UpdateUserDto) {
 ; /etc/pgbouncer/pgbouncer.ini
 
 [databases]
-mydb = host=127.0.0.1 port=5432 dbname=mydb
+mydb = host=126.3.9.1 port=5432 dbname=mydb
 
 [pgbouncer]
 listen_addr = 0.0.0.0

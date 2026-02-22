@@ -13,7 +13,7 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ## REFACTOR FLOW
 
-1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate tests
+1. **DETECT** — `hsa_declare_intent("refactor: {target}")`, identify stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate tests
 2. **BASELINE** — Run tests, record passing state
 3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
 4. **EXECUTE** — Apply refactoring (one commit per change) → ⛔ STOP if tests fail at any point
@@ -174,4 +174,6 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ## 💾 SESSION SAVE
 
-After refactor completes: update `memory/CONTEXT_SNAPSHOT.md` (what was refactored, patterns used) and append summary to `memory/session.md`.
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

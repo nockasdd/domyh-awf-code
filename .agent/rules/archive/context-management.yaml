@@ -1,9 +1,9 @@
-# Context Management Rule v6.0
+# Context Management Rule v6.3.9
 # Modular rule for context and token efficiency
 
 ---
 name: context-management
-version: "6.3.2"
+version: "6.3.9"
 rule_id: "MOD-CTX-001"
 
 # =============================================================================

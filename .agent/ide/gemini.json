@@ -1,6 +1,6 @@
 {
   "name": "DOMYH Awesome Code",
-  "version": "v6.3.2",
+  "version": "v6.3.9",
   "gemini": {
     "model_preference": "gemini-2.0-flash",
     "context_window": 1000000,
@@ -36,7 +36,7 @@
   "token_budget": {
     "baseline": 2200,
     "per_skill": 1500,
-    "max_peak": 9273
+    "max_peak": 9700
   },
   "mcp_servers": {
     "domyh-hsa": {
@@ -56,22 +56,6 @@
   "hsa": {
     "enabled": true,
     "auto_detect_stack": true,
-    "tools": [
-      "hsa_get_context",
-      "hsa_detect_stack",
-      "hsa_check_changes",
-      "hsa_prefetch",
-      "hsa_status",
-      "hsa_get_snapshot",
-      "hsa_export",
-      "hsa_get_agent_config",
-      "hsa_get_repo_map",
-      "hsa_search_skills",
-      "hsa_detect_environment",
-      "hsa_prepare_handoff",
-      "hsa_filter_tools",
-      "hsa_trace_flow",
-      "hsa_feedback"
-    ]
+    "_note": "Tools auto-discovered via MCP tools/list RPC — see hsa-engine-ts/src/server/tool-definitions.ts for source of truth"
   }
 }

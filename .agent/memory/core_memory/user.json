@@ -1,7 +1,7 @@
 {
   "block_id": "user",
   "description": "User preferences and information learned over time",
-  "version": "v6.3.2",
+  "version": "v6.3.9",
   "editable_by_agent": true,
   "content": {
     "preferences": {

@@ -1,8 +1,8 @@
-# Progressive Escalation Rule v6.3.2
+# Progressive Escalation Rule v6.3.9
 # Perspective Pivot Engine — Detect stuck agents, auto-pivot strategy
 ---
 name: progressive-escalation
-version: "7.0.0"
+version: "6.3.9"
 rule_id: "MOD-ESC-001"
 
 description: |
@@ -94,25 +94,25 @@ levels:
     trigger: "After 2 failed retries OR stuck_score ≥ 0.6"
     purpose: "Analyze WHY current approach failed"
     prompt: |
-      🪞 DỪNG LẠI VÀ PHÂN TÍCH.
+      🪞 STOP AND ANALYZE.
 
-      1. LIỆT KÊ mọi attempt đã thử:
-         | # | Approach | File:Line | Kết quả | Tại sao fail |
+      1. LIST all attempts tried:
+         | # | Approach | File:Line | Result | Why it failed |
 
-      2. TÌM PATTERN trong failures:
-         - Tất cả fail ở cùng chỗ? → Bug ở upstream
-         - Fail khác nhau mỗi lần? → Nhiều bugs / race condition
-         - Fix 1 bug tạo bug mới? → Tight coupling issue
+      2. FIND PATTERNS in failures:
+         - All fail at same spot? → Bug is upstream
+         - Different failure each time? → Multiple bugs / race condition
+         - Fixing 1 bug creates another? → Tight coupling issue
 
-      3. KIỂM TRA THIÊN KIẾN:
-         □ Confirmation: "Tôi chỉ tìm evidence ủng hộ?"
-           → List 3 evidence CHỐNG LẠI giả thuyết
-         □ Anchoring: "Giả thuyết đầu vẫn là chính?"
-           → Tạo 2 giả thuyết MỚI, rank theo evidence
-         □ Tunnel Vision: "Đã check ngoài code chưa?"
+      3. CHECK COGNITIVE BIASES:
+         □ Confirmation: "Am I only seeking evidence that supports my hypothesis?"
+           → List 3 pieces of COUNTER-evidence
+         □ Anchoring: "Is my first hypothesis still dominant?"
+           → Generate 2 NEW hypotheses, rank by evidence strength
+         □ Tunnel Vision: "Have I checked beyond the code?"
            → code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓
 
-      4. LƯU episodic memory entry
+      4. SAVE episodic memory entry
 
   level_3_reframe:
     name: "REFRAME"
@@ -124,26 +124,26 @@ levels:
     trigger: "Level 2 failed OR stuck_score ≥ 0.75"
     purpose: "Change perspective COMPLETELY"
     prompt: |
-      🔄 THAY ĐỔI GÓC NHÌN HOÀN TOÀN.
+      🔄 CHANGE PERSPECTIVE COMPLETELY.
 
-      INVERT — Đảo ngược mọi giả thuyết:
-      - "Nếu TOÀN BỘ code ĐÚNG, bug đến từ ĐÂU?"
-      - "Error message có MISLEADING không?"
-      - "Tôi fix TRIỆU CHỨNG hay NGUYÊN NHÂN?"
+      INVERT — Reverse all hypotheses:
+      - "If ALL the code is CORRECT, where does the bug come from?"
+      - "Is the error message MISLEADING?"
+      - "Am I fixing the SYMPTOM or the ROOT CAUSE?"
 
-      RUBBER DUCK — Giải thích từ đầu:
-      1. Chương trình LẼ RA làm gì? (expected)
-      2. Chương trình THỰC TẾ làm gì? (actual)
-      3. Data đi qua đâu input → output? (flow)
-      4. Ở mỗi bước data đúng format? (validate)
-      5. Bước nào data bắt đầu SAI? (pinpoint)
+      RUBBER DUCK — Explain from scratch:
+      1. What SHOULD the program do? (expected)
+      2. What does it ACTUALLY do? (actual)
+      3. What path does data take input → output? (flow)
+      4. At each step, is the data in correct format? (validate)
+      5. At which step does data START going wrong? (pinpoint)
 
-      DEVIL'S ADVOCATE — Tự phản bác:
-      - "Fix đề xuất CÓ THỂ gây hại gì?"
-      - "Trường hợp nào fix KHÔNG hoạt động?"
-      - "Adversary sẽ phá fix này bằng cách nào?"
+      DEVIL'S ADVOCATE — Self-contradict:
+      - "What HARM could the proposed fix cause?"
+      - "In what scenario does the fix NOT work?"
+      - "How would an adversary break this fix?"
 
-      FRESH EYES — Quên tất cả, đọc code từ đầu:
+      FRESH EYES — Forget everything, read code from scratch:
       - Signature, docstring, line-by-line, boundaries, returns
 
   level_4_widen:
@@ -156,18 +156,18 @@ levels:
     trigger: "Level 3 failed OR stuck_score ≥ 0.85"
     purpose: "Expand search scope BEYOND current area"
     prompt: |
-      🔍 MỞ RỘNG PHẠM VI.
+      🔍 EXPAND SCOPE.
 
       UPSTREAM/DOWNSTREAM:
       → grep -rn "functionName(" . --include="*.ext"
-      → Trace ALL callers: data truyền vào đúng?
-      → Trace ALL callees: return values handled?
-      → Middleware/interceptors/hooks ảnh hưởng?
+      → Trace ALL callers: is the data passed in correct?
+      → Trace ALL callees: are return values handled?
+      → Do middleware/interceptors/hooks affect the flow?
 
       DIFF FORENSICS:
       → git log --oneline -20 -- [affected_files]
       → git diff HEAD~5 -- [affected_files]
-      → Khi nào lần cuối hoạt động? Commit nào thay đổi?
+      → When did it last work? Which commit changed it?
 
       ENVIRONMENTAL AUDIT:
       → Runtime version, ENV vars, port conflicts
@@ -189,7 +189,7 @@ levels:
     trigger: "Level 4 failed OR stuck_score ≥ 0.90"
     purpose: "Isolate precisely through systematic elimination"
     prompt: |
-      🧩 CHIA NHỎ VÀ ISOLATE.
+      🧩 DECOMPOSE AND ISOLATE.
 
       MINIMAL REPRODUCTION:
       1. Copy function → separate test file
@@ -221,7 +221,7 @@ levels:
     trigger: "Level 5 failed OR stuck_score ≥ 0.95"
     purpose: "Report to user with full investigation evidence"
     prompt: |
-      👤 ESCALATE — Tạo báo cáo đầy đủ:
+      👤 ESCALATE — Create full investigation report:
 
       ## Bug Investigation Report
 

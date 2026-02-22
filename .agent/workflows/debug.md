@@ -13,7 +13,7 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
 
 ## DEBUG FLOW
 
-1. **CAPTURE** (Auto) — Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`, `hsa_search_skills`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/7] Capturing error context...`
+1. **CAPTURE** (Auto) — `hsa_declare_intent("debug: {error_summary}")`, check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs FIRST. Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`, `hsa_search_skills`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/8] Capturing error context...`
 2. **TIMELINE** — Reconstruct event timeline: `git log --oneline -10`, check recent changes to affected files, correlate with error timestamps. Answer: "When did this start?"
 3. **REPRODUCE** — Create minimal reproduction, confirm error occurs consistently → ⛔ STOP if cannot reproduce: ask user 5 questions
 4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location. Use `hsa_trace_flow` to trace call chains upstream/downstream
@@ -25,7 +25,7 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
    ```
 6. **ANALYZE** — 5 Whys on CONFIRMED root cause (not assumptions)
 7. **FIX** — Create FAILING test first, implement single fix → if 2 fixes fail → trigger **Progressive Escalation** (`rules/modules/progressive-escalation.yaml`): REFLECT → REFRAME → WIDEN → DECOMPOSE → ESCALATE. Add **prevention guard** to block similar bugs
-8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel. Check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs before starting
+8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel bug pattern discovered
 
 ---
 
@@ -263,4 +263,6 @@ Level 6 ESCALATE  → Full report to user with all evidence
 
 ## 💾 SESSION SAVE
 
-After debug completes: update `memory/CONTEXT_SNAPSHOT.md` (what was debugged, resolution) and append summary to `memory/session.md`.
+After completing this workflow:
+1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
+2. Append summary to `memory/session.md`

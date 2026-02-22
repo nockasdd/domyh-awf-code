@@ -2,7 +2,7 @@
 # Rule module for DOMYH v7.0 — teaches agents to use session governance discipline
 ---
 name: session-governance
-version: "7.0.0"
+version: "6.3.9"
 rule_id: "MOD-GOV-001"
 
 description: |
@@ -69,6 +69,30 @@ rules:
         1. Evaluate: is this deviation necessary?
         2. If yes: call hsa_declare_intent to update intent
         3. If no: return to declared focus
+
+  - id: GOV-005
+    name: "Pre-Stop Checklist"
+    severity: warning
+    when: "Before claiming 'done' or ending a session"
+    action: |
+      Before ANY stop, verify 5 points:
+        1. BUILD passes (run build command)
+        2. TESTS pass (run test suite)
+        3. HIERARCHY updated (hsa_track_progress status: completed)
+        4. SESSION archived (hsa_save_anchor category: context)
+        5. USER notified (report what's done, what's pending)
+      Never stop without checking. Incomplete stops compound into lost work.
+      See skill: governance/pre-stop-checklist for full protocol.
+
+  - id: GOV-006
+    name: "Session Handoff Format"
+    severity: info
+    when: "Ending a session or saving session state"
+    action: |
+      Use structured format for session anchors:
+        [SESSION-END] Topic: {what}. Done: {completed}. Pending: {remaining}.
+        Files: {key files}. Build: pass/fail. Tests: X/Y pass.
+      This enables clean resume in next session via hsa_check_drift(include_anchors: true).
 
 integration:
   tier: 2
