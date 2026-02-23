@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: configs/
+          config_data: |
+            extends: relaxed
+            rules:
+              line-length:
+                max: 200
+              truthy: disable
+
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "**/*.md"
+          config: |
+            {
+              "MD013": false,
+              "MD033": false,
+              "MD041": false
+            }
+
+      - name: Check JSON syntax
+        run: |
+          errors=0
+          for f in $(find configs/ -name '*.json'); do
+            if ! python3 -c "import json; json.load(open('$f'))"; then
+              echo "❌ Invalid JSON: $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then exit 1; fi
+
+      - name: Check broken links in README
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress README.md README_VN.md
+          fail: true
