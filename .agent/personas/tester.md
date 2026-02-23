@@ -1,6 +1,6 @@
 ---
 name: tester
-version: "6.4.0"
+version: "6.4.2"
 persona_id: "tst-001"
 
 identity:

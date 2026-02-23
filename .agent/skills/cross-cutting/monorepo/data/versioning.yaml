@@ -2,7 +2,7 @@
 # versioning.yaml — Monorepo Versioning Strategies
 # =============================================================================
 
-version: "6.4.0"
+version: "6.4.2"
 
 changesets:
   description: "Intent-based versioning for monorepos"

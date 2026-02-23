@@ -1,7 +1,7 @@
-# Stop Conditions Rule v6.4.0
+# Stop Conditions Rule v6.4.2
 ---
 name: stop-conditions
-version: "6.4.0"
+version: "6.4.2"
 rule_id: "MOD-STP-001"
 
 description: "When to pause and consult the user before proceeding."

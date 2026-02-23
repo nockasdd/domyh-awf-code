@@ -1,6 +1,6 @@
 # =============================================================================
 # DOMYH Awesome Code - English Strings
-# i18n/en.yaml v6.4.0 — Enhanced i18n System
+# i18n/en.yaml v6.4.2 — Enhanced i18n System
 # =============================================================================
 # NOTE: Version synced from core/VERSION.yaml
 # Usage: Agent reads language from state.json → loads corresponding i18n file
@@ -8,8 +8,8 @@
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.4.0" # Sync from VERSION.yaml
-  version_short: v6.4.0
+  version: "6.4.2" # Sync from VERSION.yaml
+  version_short: v6.4.2
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
   language_name: "English"
@@ -323,7 +323,7 @@ messages:
   progress_complete: "✅ Complete!"
   progress_failed: "❌ Failed"
 
-  # Deep Interview (v6.4.0)
+  # Deep Interview (v6.4.2)
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "What exactly does this feature handle/manage?"
   interview_question_who: "Who uses it? □ Solo | □ Team (2-10) | □ Public"
@@ -331,7 +331,7 @@ messages:
   interview_skip: "→ Sufficient context, skipping interview"
   interview_complete: "→ Context gathered, proceeding with planning..."
 
-  # Auto Test Loop (v6.4.0)
+  # Auto Test Loop (v6.4.2)
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Trying different approach..."
   test_loop_pass: "✅ Tests passed!"
@@ -344,7 +344,7 @@ messages:
     3️⃣ Run /debug for deep analysis
     4️⃣ Rollback to before the fix
 
-  # Step Confirmation (v6.4.0)
+  # Step Confirmation (v6.4.2)
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ DONE: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Continue to next task? (y/adjust/stop)"
 

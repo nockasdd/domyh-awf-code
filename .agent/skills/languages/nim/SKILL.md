@@ -1,7 +1,7 @@
 ---
 name: nim
 detect: ["*.nim", "*.nimble", "nim.cfg"]
-version: "6.4.0"
+version: "6.4.2"
 category: systems
 tier: 3
 ---

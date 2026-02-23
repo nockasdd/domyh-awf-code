@@ -5,7 +5,7 @@
 | Field      | Type   | Max Length | Description                                                                |
 | ---------- | ------ | ---------- | -------------------------------------------------------------------------- |
 | `name`     | string | 30 chars   | Lowercase, hyphen-separated identifier                                     |
-| `version`  | string | -          | Semver string (e.g., "6.4.0")                                              |
+| `version`  | string | -          | Semver string (e.g., "6.4.2")                                              |
 | `category` | enum   | -          | One of: core, languages, frameworks, cross-cutting, devops, tooling, ai-ml |
 | `desc`     | string | 80 chars   | Short description for listings                                             |
 

@@ -1,6 +1,6 @@
 ---
 name: gcp
-version: "6.4.0"
+version: "6.4.2"
 category: devops
 ---
 

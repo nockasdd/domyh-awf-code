@@ -1,6 +1,6 @@
 ---
 name: developer
-version: "6.4.0"
+version: "6.4.2"
 persona_id: "dev-001"
 
 identity:

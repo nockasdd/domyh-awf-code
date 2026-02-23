@@ -1,7 +1,7 @@
 ---
 name: ml-pipelines
 detect: ["dvc.yaml", "mlflow", "Artifacts/", "Notebook_Experiments/", "scores.json"]
-version: "6.4.0"
+version: "6.4.2"
 category: ai-ml
 tier: 2
 ---

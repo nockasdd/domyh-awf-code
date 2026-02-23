@@ -1,6 +1,6 @@
 ---
 name: security
-version: "6.4.0"
+version: "6.4.2"
 persona_id: "sec-001"
 
 identity:

@@ -1,7 +1,7 @@
-# DOMYH Awesome Code — Context Cleanup Engine v6.4.0
+# DOMYH Awesome Code — Context Cleanup Engine v6.4.2
 # status: archived — Design spec, not runtime config
 
-version: "6.4.0"
+version: "6.4.2"
 engine: context_cleanup
 
 # =============================================================================

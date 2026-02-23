@@ -1,8 +1,8 @@
-# Progressive Escalation Rule v6.4.0
+# Progressive Escalation Rule v6.4.2
 # Perspective Pivot Engine — Detect stuck agents, auto-pivot strategy
 ---
 name: progressive-escalation
-version: "6.4.0"
+version: "6.4.2"
 rule_id: "MOD-ESC-001"
 
 description: |

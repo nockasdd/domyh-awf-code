@@ -1,6 +1,6 @@
 ---
 name: monorepo
-version: "6.4.0"
+version: "6.4.2"
 category: cross-cutting
 ---
 

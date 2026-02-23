@@ -1,7 +1,7 @@
 metadata:
   skill: domyh-design
   domain: web_interface
-  version: v6.4.0
+  version: v6.4.2
   updated: "2026-02-05"
   migrated_from: web-interface.yaml
   patterns_count: 30

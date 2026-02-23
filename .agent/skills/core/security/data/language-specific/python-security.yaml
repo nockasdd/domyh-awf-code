@@ -1,7 +1,7 @@
 metadata:
   skill: security
   domain: python_security
-  version: v6.4.0
+  version: v6.4.2
   updated: "2026-02-05"
   migrated_from: python-security.yaml
   patterns_count: 25

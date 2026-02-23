@@ -2,7 +2,7 @@
 # subagent-patterns.yaml — browser_subagent Task Description Templates
 # =============================================================================
 
-version: "6.4.0"
+version: "6.4.2"
 
 # These templates are used with the browser_subagent tool in AI IDEs
 # (e.g., Antigravity). The Task argument should be detailed and explicit.

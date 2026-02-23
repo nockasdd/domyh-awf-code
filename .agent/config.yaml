@@ -12,7 +12,7 @@ project:
   install_mode: project # global | project — required by SACRED_RULES ENV_001
 
 # =============================================================================
-# INTERNATIONALIZATION (v6.4.0)
+# INTERNATIONALIZATION (v6.4.2)
 # =============================================================================
 
 i18n:
@@ -45,7 +45,7 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v6.4.0: Auto-suggest configuration
+  # v6.4.2: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3

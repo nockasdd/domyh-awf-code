@@ -1,7 +1,7 @@
 ---
 name: go
 detect: ["go.mod", "go.sum", "*.go", "go.work"]
-version: "6.4.0"
+version: "6.4.2"
 category: backend
 tier: 1
 ---

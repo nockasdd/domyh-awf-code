@@ -1,4 +1,4 @@
-# 🎭 Personas System v6.4.0
+# 🎭 Personas System v6.4.2
 
 > AI agent personas with identity, memory, and collaboration
 
@@ -20,28 +20,28 @@ Personas define specialized agent roles with distinct:
 
 | Persona          | Role                             | Triggers             | Version |
 | ---------------- | -------------------------------- | -------------------- | ------- |
-| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.4.0   |
-| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.4.0   |
-| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.4.0   |
-| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.4.0   |
-| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.4.0   |
-| **security**     | Security Specialist              | `/security`, `/scan` | 6.4.0   |
-| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 6.4.0   |
-| **debugger**     | Bug Hunter                       | `/debug`             | 6.4.0   |
-| **tester**       | Quality Assurance                | `/test`              | 6.4.0   |
-| **devops**       | Infrastructure Engineer          | `/deploy`            | 6.4.0   |
-| **documenter**   | Technical Writer                 | `/doc`               | 6.4.0   |
+| **developer**    | Senior Code Craftsman            | `/code`, `/refactor` | 6.4.2   |
+| **architect**    | Solution Architect               | `/plan`, `/design`   | 6.4.2   |
+| **planner**      | Task Decomposition Specialist    | `/plan`, `/break`    | 6.4.2   |
+| **researcher**   | Information Gathering Specialist | `/research`, `/find` | 6.4.2   |
+| **orchestrator** | Multi-Agent Coordinator          | Auto-activated       | 6.4.2   |
+| **security**     | Security Specialist              | `/security`, `/scan` | 6.4.2   |
+| **auditor**      | 5-Expert Audit Panel             | `/ap`                | 6.4.2   |
+| **debugger**     | Bug Hunter                       | `/debug`             | 6.4.2   |
+| **tester**       | Quality Assurance                | `/test`              | 6.4.2   |
+| **devops**       | Infrastructure Engineer          | `/deploy`            | 6.4.2   |
+| **documenter**   | Technical Writer                 | `/doc`               | 6.4.2   |
 
 ---
 
-## v6.4.0 Schema
+## v6.4.2 Schema
 
 All personas follow the enhanced schema:
 
 ```yaml
 ---
 name: [persona_name]
-version: "6.4.0"
+version: "6.4.2"
 persona_id: "[prefix]-001"
 
 # Core Identity (CrewAI Pattern)
@@ -126,12 +126,12 @@ output:
 .agent/personas/
 ├── README.md              # This file
 ├── persona.schema.yaml    # Schema definition
-├── developer.md           # Enhanced v6.4.0
-├── architect.md           # Enhanced v6.4.0
-├── planner.md             # NEW v6.4.0
-├── researcher.md          # NEW v6.4.0
-├── orchestrator.md        # NEW v6.4.0
-├── security.md            # NEW v6.4.0
+├── developer.md           # Enhanced v6.4.2
+├── architect.md           # Enhanced v6.4.2
+├── planner.md             # NEW v6.4.2
+├── researcher.md          # NEW v6.4.2
+├── orchestrator.md        # NEW v6.4.2
+├── security.md            # NEW v6.4.2
 ├── auditor.md
 ├── debugger.md
 ├── tester.md

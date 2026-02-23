@@ -2,7 +2,7 @@
 name: java
 detect:
   ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "settings.gradle"]
-version: "6.4.0"
+version: "6.4.2"
 category: backend
 tier: 1
 ---
