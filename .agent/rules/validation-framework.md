@@ -6,7 +6,7 @@ category: quality
 version: "4.5"
 ---
 
-# ✅ Validation Framework v6.3.9
+# ✅ Validation Framework v6.4.0
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📝 **Note**: Consolidates `pre-check-validation.md` + `architecture-aware-implementation.md`

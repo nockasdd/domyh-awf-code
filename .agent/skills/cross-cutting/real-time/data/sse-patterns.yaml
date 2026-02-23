@@ -1,5 +1,5 @@
 # Server-Sent Events Patterns — HSA Tier 3 Data
-version: "6.3.9"
+version: "6.4.0"
 
 patterns:
   - id: SSE-001

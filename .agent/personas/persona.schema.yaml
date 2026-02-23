@@ -1,9 +1,9 @@
-# Persona Schema v6.3.9
+# Persona Schema v6.4.0
 # Based on CrewAI + Anthropic + LangGraph patterns
 # All personas must follow this structure
 
 schema:
-  version: "6.3.9"
+  version: "6.4.0"
 
   required_fields:
     - name # Unique identifier

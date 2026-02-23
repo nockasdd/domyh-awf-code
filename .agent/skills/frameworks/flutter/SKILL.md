@@ -1,7 +1,7 @@
 ---
 name: flutter
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
-version: "6.3.9"
+version: "6.4.0"
 category: mobile
 tier: 1
 ---

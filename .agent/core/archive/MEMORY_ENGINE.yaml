@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Memory Engine Configuration v6.3.9
+# DOMYH Awesome Code — Memory Engine Configuration v6.4.0
 # Implements 5-Tier Memory Architecture with Active Management
 # Based on 2025-2026 Best Practices: Anthropic, MemGPT/Letta, LangGraph
 
-version: "6.3.9"
+version: "6.4.0"
 engine: hierarchical_memory_v6_with_graph
 
 # =============================================================================
@@ -25,12 +25,12 @@ sub_engines:
   active_memory: core/ACTIVE_MEMORY.yaml # Self-directing memory
   consolidation: core/MEMORY_CONSOLIDATION.yaml # Auto-consolidation
 
-  # Phase 5: Centralized Configs (v6.3.9 Cleanup)
+  # Phase 5: Centralized Configs (v6.4.0 Cleanup)
   scoring_formula: core/SCORING_FORMULA.yaml # SSoT for scoring
   memory_paths: core/MEMORY_PATHS.yaml # SSoT for paths
   token_budgets: core/TOKEN_BUDGETS.yaml # SSoT for token limits
 
-  # Phase 6: v6.3.9 Upgrades (2025-2026 Best Practices)
+  # Phase 6: v6.4.0 Upgrades (2025-2026 Best Practices)
   state_machine: core/STATE_MACHINE.yaml # LangGraph-inspired flow
   reflection: core/REFLECTION_ENGINE.yaml # Critic + Reflexion
   graph_memory: core/GRAPH_MEMORY.yaml # 5th tier: Knowledge Graph

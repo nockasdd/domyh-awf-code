@@ -1,7 +1,7 @@
 ---
 name: python
 detect: ["pyproject.toml", "requirements.txt", "*.py", "Pipfile", "setup.py"]
-version: "6.3.9"
+version: "6.4.0"
 category: backend
 tier: 1
 ---

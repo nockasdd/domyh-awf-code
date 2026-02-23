@@ -1,7 +1,7 @@
 {
   "block_id": "project",
   "description": "Current project context",
-  "version": "v6.3.9",
+  "version": "v6.4.0",
   "editable_by_agent": true,
   "content": {
     "current_project": {

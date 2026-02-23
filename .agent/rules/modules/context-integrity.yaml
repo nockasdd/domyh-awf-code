@@ -2,7 +2,7 @@
 # Rule module for DOMYH v7.0 — preserves context coherence across long sessions
 ---
 name: context-integrity
-version: "6.3.9"
+version: "6.4.0"
 rule_id: "MOD-CTX-001"
 
 description: |

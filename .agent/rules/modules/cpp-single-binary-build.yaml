@@ -1,0 +1,117 @@
+# =============================================================================
+# cpp-single-binary-build.yaml — Single Binary Build Enforcement
+# =============================================================================
+
+name: cpp-single-binary-build
+version: "1.0.0"
+rule_id: "MOD-SBB-001"
+
+description: |
+  Enforce single binary output for C++ projects.
+  Build output must be 1 file .exe OR 1 file .dll only.
+  No additional files except user config files.
+  WebView2 + embedded HTML/Tailwind v4 must comply.
+
+category: "build"
+
+context:
+  always_apply: true
+  personas: ["Developer", "Architect", "DevOps"]
+  workflows: ["/code", "/deploy", "/init"]
+
+rules:
+  SBB_001_single_output:
+    name: "Single Output File"
+    severity: critical
+    desc: |
+      Build output MUST be exactly 1 file:
+      - Application: 1 .exe
+      - Library: 1 .dll
+      No additional .dll, .lib, .pdb (release), .dat, .json (build-generated)
+
+  SBB_002_static_crt:
+    name: "Static CRT Linking"
+    severity: critical
+    desc: "/MT (Release) or /MTd (Debug). NEVER /MD."
+    cmake: 'set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")'
+
+  SBB_003_static_dependencies:
+    name: "Static Library Dependencies"
+    severity: critical
+    desc: "All dependencies MUST be static linked."
+    vcpkg: "VCPKG_TARGET_TRIPLET=x64-windows-static"
+
+  SBB_004_embed_resources:
+    name: "Embed All Resources"
+    severity: high
+    desc: "HTML, CSS, JS, images, icons — embed via .rc resource file."
+    exception: "User-editable config files (.ini, .json, .yaml) allowed"
+
+  SBB_005_webview2_static:
+    name: "WebView2 Static Loader"
+    severity: high
+    desc: "WebView2Loader.dll MUST be static linked."
+    setting: "WebView2LoaderPreference=Static"
+
+  SBB_006_no_side_files:
+    name: "No Side Output Files"
+    severity: high
+    desc: "No .dll, .dat, .bin alongside output. No .pdb in release."
+    allowed:
+      - "User config files (.ini, .json, .yaml)"
+      - "Log files (runtime generated)"
+      - "WebView2 Evergreen Runtime (system-wide)"
+
+  SBB_007_tailwind_precompile:
+    name: "Tailwind CSS Precompile"
+    severity: medium
+    desc: "Tailwind v4 must precompile to static .css, embed via .rc."
+    build_cmd: "npx @tailwindcss/cli -i input.css -o tailwind-output.css --minify"
+
+  SBB_008_cmake_template:
+    name: "CMake Single Binary Template"
+    severity: info
+    template: |
+      cmake_minimum_required(VERSION 3.25)
+      project(MyApp LANGUAGES CXX)
+      set(CMAKE_CXX_STANDARD 20)
+      cmake_policy(SET CMP0091 NEW)
+      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+      add_executable(${PROJECT_NAME} WIN32 src/main.cpp resources/resources.rc)
+
+  SBB_009_msbuild_template:
+    name: "MSBuild Template"
+    severity: info
+    settings: |
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+
+  SBB_010_webview2_resource_serve:
+    name: "WebView2 Resource Serving Pattern"
+    severity: medium
+    desc: |
+      WebView2 UI content MUST serve from embedded resources:
+      1. Embed HTML/CSS/JS via .rc
+      2. Register WebResourceRequested handler
+      3. Map virtual domain (https://app.local/*)
+      4. Load via FindResource/LoadResource
+      5. Serve as IStream response
+
+checklist:
+  - "Build config: /MT (not /MD)?"
+  - "vcpkg triplet: x64-windows-static?"
+  - "All dependencies static linked?"
+  - "Resources embedded via .rc file?"
+  - "WebView2Loader static linked?"
+  - "Build output only 1 file .exe/.dll?"
+  - "Tailwind CSS precompiled and embedded?"
+  - "No .dll alongside output file?"
+  - "Release build no .pdb?"
+  - "Config files optional, not mandatory?"
+
+integration:
+  tier: 4
+  related_modules: ["game-dev-security", "quality"]
+
+# _DOMYH Awesome Code • Single Binary Build Rules_

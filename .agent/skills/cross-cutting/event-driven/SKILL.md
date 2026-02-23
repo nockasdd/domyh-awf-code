@@ -1,6 +1,6 @@
 ---
 name: event-driven
-version: "6.3.9"
+version: "6.4.0"
 category: cross-cutting
 ---
 

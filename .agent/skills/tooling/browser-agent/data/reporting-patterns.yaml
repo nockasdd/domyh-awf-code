@@ -2,7 +2,7 @@
 # reporting-patterns.yaml — Evidence-Based Reporting Templates
 # =============================================================================
 
-version: "6.3.9"
+version: "6.4.0"
 
 templates:
   summary_table:

@@ -53,20 +53,19 @@ reviews:
 chat:
   auto_reply: true
 
-# DOMYH Awesome Code Agent Framework — Enriched Config v4
+# DOMYH Awesome Code Agent Framework — Enriched Config v5
 #
 # MANDATORY: Read `.agent/rules/SACRED_RULES.xml` and `.agent/memory/CONTEXT_SNAPSHOT.md` FIRST
 #
-# Core Rules: CORE_001 (Do No Harm), CORE_002 (Truthfulness), CORE_003 (User Sovereignty)
-# SAFE_001: Confirm before destructive actions
+# Core: Do No Harm | Truthfulness (file:line) | User Sovereignty | Confirm destructive | File outlines+grep first
+# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags
 #
-# Loading Protocol: Match user intent → read `.agent/workflows/{id}.md` → load skill
+# Loading Protocol: Match intent → read `.agent/workflows/{id}.md` → load `.agent/skills/{cat}/{name}/SKILL.md`
 # Keywords: fix→/fix, debug→/debug, test→/test, code→/code, refactor→/refactor,
-#   deploy→/deploy, security→/security, review→/review, plan→/plan, doc→/doc
+#   deploy→/deploy, security→/security, review→/review, plan→/plan, doc→/doc, git→/git
+#   tdd/e2e→/tdd, perf→/perf, scaffold→/scaffold, init→/init (41 commands total)
 #
-# Commands (41): /code, /debug, /test, /fix, /deploy, /ap, /plan, /refactor, /help + 32 more
-# Personas: Developer, Architect, Auditor, Debugger, Tester, DevOps, Documenter,
-#   Planner, Researcher, Orchestrator, Security
-# Skills: Progressive Disclosure (META.yaml → SKILL.md → ADVANCED.md)
-# MCP Tools: hsa_get_context, hsa_detect_stack, hsa_search_skills, hsa_trace_flow,
-#   hsa_check_changes, hsa_declare_intent, hsa_track_progress
+# Skill categories: core/languages/frameworks/devops/cross-cutting/tooling/ai-ml (85+ skills)
+# MCP: hsa_get_context, hsa_detect_stack, hsa_search_skills, hsa_trace_flow,
+#   hsa_get_agent_config(bootstrap), hsa_declare_intent, hsa_track_progress
+

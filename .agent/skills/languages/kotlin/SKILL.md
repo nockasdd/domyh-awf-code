@@ -1,7 +1,7 @@
 ---
 name: kotlin
 detect: ["build.gradle.kts", "settings.gradle.kts", "*.kt", "*.kts"]
-version: "6.3.9"
+version: "6.4.0"
 category: mobile
 tier: 1
 ---

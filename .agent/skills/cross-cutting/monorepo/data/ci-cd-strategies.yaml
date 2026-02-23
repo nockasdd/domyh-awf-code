@@ -2,7 +2,7 @@
 # ci-cd-strategies.yaml — CI/CD for Monorepos
 # =============================================================================
 
-version: "6.3.9"
+version: "6.4.0"
 
 affected_detection:
   description: "Only build/test packages affected by changes"

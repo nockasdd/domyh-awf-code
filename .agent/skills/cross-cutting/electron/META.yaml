@@ -1,5 +1,5 @@
 ﻿name: electron
-version: "6.3.9" # Refactored to YAML-based adapter
+version: "6.4.0" # Refactored to YAML-based adapter
 display: Electron Desktop Framework
 category: desktop
 tier: 1

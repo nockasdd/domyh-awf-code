@@ -1,7 +1,7 @@
 ---
 name: scala
 detect: ["*.scala", "*.sc", "build.sbt", "project/*.scala"]
-version: "6.3.9"
+version: "6.4.0"
 category: functional
 tier: 2
 ---

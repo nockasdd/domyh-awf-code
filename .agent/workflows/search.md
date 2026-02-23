@@ -238,7 +238,7 @@ local_dependencies:
 
 ---
 
-_DOMYH Awesome Code v6.3.9 • Semantic Search v1.1 • Hybrid Mode_
+_DOMYH Awesome Code v6.4.0 • Semantic Search v1.1 • Hybrid Mode_
 ---
 
 ## REFLECTION CHECKPOINT

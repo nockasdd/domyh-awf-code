@@ -1,0 +1,66 @@
+# =============================================================================
+# game-dev-security.yaml — Game Development Security Rules
+# =============================================================================
+
+name: game-dev-security
+version: "1.0.0"
+rule_id: "MOD-GDS-001"
+description: "Security rules specific to game automation development."
+category: "security"
+
+context:
+  always_apply: false
+  personas: ["Developer", "Security"]
+  workflows: ["/code", "/security", "/review"]
+
+rules:
+  GDS_001_no_plaintext_strings:
+    name: "No Plaintext Sensitive Strings"
+    severity: critical
+    desc: |
+      Sensitive strings (WinAPI names, game function names, target addresses)
+      MUST be encrypted at compile-time. Use XorString or equivalent.
+    examples:
+      bad: 'auto fn = "ReadProcessMemory";'
+      good: 'auto fn = XS("ReadProcessMemory");'
+
+  GDS_002_raii_handles:
+    name: "RAII for All HANDLEs"
+    severity: high
+    desc: "All WinAPI HANDLEs MUST use RAII wrappers. No raw CloseHandle."
+
+  GDS_003_no_hardcode_address:
+    name: "No Hardcoded Addresses"
+    severity: critical
+    desc: "All memory addresses MUST be resolved via pattern scan or offset calculation."
+
+  GDS_004_error_handling:
+    name: "Silent Error Handling"
+    severity: high
+    desc: "Errors MUST NOT produce visible output. Log silently or fail gracefully."
+
+  GDS_005_thread_safety:
+    name: "Thread-Safe Game Interaction"
+    severity: high
+    desc: "All cross-thread game data access MUST use lock-free queues or atomics."
+
+  GDS_006_timing_randomization:
+    name: "Randomized Timing"
+    severity: medium
+    desc: "All delays MUST use randomized intervals (normal_distribution, not fixed Sleep)."
+
+  GDS_007_minimal_footprint:
+    name: "Minimal Memory Footprint"
+    severity: medium
+    desc: "Keep injected code size minimal. Remove debug symbols, unused code."
+
+  GDS_008_injection_method:
+    name: "Stealth Injection Method"
+    severity: high
+    desc: "Use manual mapping or reflective loading. Avoid CreateRemoteThread for production."
+
+integration:
+  tier: 4
+  related_modules: ["quality", "cpp-single-binary-build"]
+
+# _DOMYH Awesome Code • Game Dev Security Rules_

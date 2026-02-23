@@ -1,7 +1,7 @@
 ---
 name: web-perf
 detect: ["lighthouse.json", "web-vitals.*", ".lighthouserc.js"]
-version: "6.3.9"
+version: "6.4.0"
 category: support
 tier: 1
 ---

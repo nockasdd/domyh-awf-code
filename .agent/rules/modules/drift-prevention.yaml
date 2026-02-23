@@ -2,7 +2,7 @@
 # Rule module for DOMYH v7.0 — enforces periodic alignment checks
 ---
 name: drift-prevention
-version: "6.3.9"
+version: "6.4.0"
 rule_id: "MOD-DRF-001"
 
 description: |

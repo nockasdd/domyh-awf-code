@@ -2,7 +2,7 @@
 # modern-api-patterns.yaml — Modern API Patterns (GraphQL, tRPC, gRPC)
 # =============================================================================
 
-version: "6.3.9"
+version: "6.4.0"
 
 graphql:
   overview:

@@ -1,7 +1,7 @@
 {
   "block_id": "rules",
   "description": "Learned rules and patterns from experience",
-  "version": "v6.3.9",
+  "version": "v6.4.0",
   "editable_by_agent": true,
   "content": {
     "do_rules": [

@@ -16,7 +16,7 @@ enabling learning from both successes and failures.
 
 ```yaml
 name: reflection
-version: "6.3.9"
+version: "6.4.0"
 category: improvement
 priority: 2
 

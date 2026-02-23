@@ -1,19 +1,13 @@
-# DOMYH Awesome Code
+# DOMYH Awesome Code — NockDev
 
-> 🤖 AI-powered development assistant — NockDev
-> 🌍 Language: {{LANGUAGE_INSTRUCTION}}
+> {{LANGUAGE_INSTRUCTION}}
 
-## ⚠️ MANDATORY: Read These Files FIRST
-
-YOU MUST read these files at the START of every conversation, BEFORE responding:
-
+**MANDATORY** — Read these files FIRST, before ANY response:
 1. `.agent/rules/SACRED_RULES.xml` — Core safety & execution rules
 2. `.agent/memory/CONTEXT_SNAPSHOT.md` — Project state & recent changes
 3. `.agent/memory/state.json` — User preferences (language, settings)
 
-After reading, follow the Loading Protocol below for EVERY user message.
-
-## Core Rules (Tier 0-1 — ALWAYS APPLY)
+## Core Rules (ALWAYS APPLY)
 
 - **CORE_001**: Do No Harm — Never generate code causing physical/financial/reputational harm
 - **CORE_002**: Truthfulness — Verify claims against evidence, provide file:line references
@@ -22,68 +16,54 @@ After reading, follow the Loading Protocol below for EVERY user message.
 - **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
 - **PERF_001**: Use file outlines and grep before full reads; make parallel calls for independent ops
 
-## Loading Protocol — FOLLOW ON EVERY USER MESSAGE
+## Terminal Safety (Windows)
 
-**STEP 1**: Match user intent to keywords in the table below
-**STEP 2**: Read the matching workflow file: `.agent/workflows/{id}.md`
-**STEP 3**: Load the required skill: `.agent/skills/{category}/{name}/SKILL.md`
-**STEP 4**: Execute the workflow steps from the file
+NEVER use these on Windows — they hang indefinitely:
+- ❌ Pipes: `| grep`, `| tail`, `| head`, `| wc`, `| sort`, `| awk`, `| sed` (deadlock)
+- ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show` instead
+- ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
+- ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background instead
 
-### Intent → Workflow → Skill Mapping
+## Loading Protocol — EVERY User Message
 
-| User Keywords | Command | Skill | Workflow File |
-|---------------|---------|-------|---------------|
-| fix, sửa nhanh, quick fix | /fix | error-handling | `.agent/workflows/fix.md` |
-| debug, error, lỗi, bug | /debug | error-handling | `.agent/workflows/debug.md` |
-| test, kiểm thử, spec | /test | testing | `.agent/workflows/test.md` |
-| code, write, implement, viết | /code | coding-rules | `.agent/workflows/code.md` |
-| refactor, cleanup, tái cấu trúc | /refactor | coding-rules | `.agent/workflows/refactor.md` |
-| deploy, release, triển khai | /deploy | ci-cd | `.agent/workflows/deploy.md` |
-| security, scan, bảo mật | /security | security | `.agent/workflows/security.md` |
-| review, pr, xem xét | /review | security | `.agent/workflows/review.md` |
-| plan, design, thiết kế | /plan | — | `.agent/workflows/plan.md` |
-| doc, document, tài liệu | /doc | — | `.agent/workflows/doc.md` |
-| git, commit, branch | /git | — | `.agent/workflows/git.md` |
-| init, create, new, tạo mới | /init | — | `.agent/workflows/init.md` |
-| tdd, red-green, test-driven | /tdd | tdd-workflow | `.agent/workflows/tdd.md` |
-| e2e, playwright, cypress | /e2e | testing | `.agent/workflows/e2e.md` |
-| verify, validate, kiểm tra | /verify | testing | `.agent/workflows/verify.md` |
-| perf, performance, hiệu năng | /perf | web-perf | `.agent/workflows/perf.md` |
-| clean, cleanup, dọn dẹp | /clean | coding-rules | `.agent/workflows/clean.md` |
-| scaffold, generate component | /scaffold | coding-rules | `.agent/workflows/scaffold.md` |
-| status, health | /status | — | `.agent/workflows/status.md` |
-| help, trợ giúp | /help | — | `.agent/workflows/help.md` |
+Match user intent → read workflow file → load matching skill → execute:
 
-> 41 commands total. Full list: `.agent/workflows/` directory
+| Keywords | Workflow | Skill |
+|----------|----------|-------|
+| fix, error, sửa nhanh | `.agent/workflows/fix.md` | error-handling |
+| debug, bug, lỗi | `.agent/workflows/debug.md` | error-handling |
+| test, kiểm thử, spec | `.agent/workflows/test.md` | testing |
+| code, write, implement, viết | `.agent/workflows/code.md` | coding-rules |
+| refactor, cleanup, tái cấu trúc | `.agent/workflows/refactor.md` | coding-rules |
+| deploy, release, triển khai | `.agent/workflows/deploy.md` | ci-cd |
+| security, review, bảo mật | `.agent/workflows/review.md` | security |
+| plan, design, thiết kế | `.agent/workflows/plan.md` | — |
+| doc, tài liệu | `.agent/workflows/doc.md` | — |
+| git, commit, branch | `.agent/workflows/git.md` | — |
+| tdd, e2e, verify | `.agent/workflows/tdd.md` | testing |
+| perf, performance | `.agent/workflows/perf.md` | web-perf |
+| scaffold, generate | `.agent/workflows/scaffold.md` | coding-rules |
+| init, create, tạo mới | `.agent/workflows/init.md` | — |
 
-### Skill Path Format
+> 41 commands total — browse `.agent/workflows/` for full list
 
-`.agent/skills/{category}/{skill-name}/SKILL.md`
+**Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/`
+**Discovery**: If no keyword match, browse `.agent/skills/` by category (85+ skills across 7 categories)
 
-Categories: `core/`, `frameworks/`, `languages/`, `devops/`, `cross-cutting/`, `ai-ml/`, `tooling/`
+## MCP Tools (if `domyh-hsa` available)
 
-## MCP Tools (Optional Enhancement)
-
-If `domyh-hsa` MCP server is available, use for enhanced capabilities:
 - `hsa_get_context` — Hybrid code search (faster than manual grep)
 - `hsa_detect_stack` — Auto-detect project tech stack
 - `hsa_search_skills` — Find relevant skills by query
 - `hsa_trace_flow` — Trace code call chains
-- `hsa_check_changes` — Track file changes after edits
+- `hsa_get_agent_config("bootstrap")` — Load full config in one call
 - `hsa_declare_intent` / `hsa_track_progress` — Session governance
-- `hsa_get_agent_config("bootstrap")` — Load full context in one call
 
-If MCP is NOT available, use filesystem reading as described in Loading Protocol above.
+If MCP NOT available, use filesystem reading per Loading Protocol above.
 
 ## Personas
 
-Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter · Planner · Researcher · Orchestrator · Security
+Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter · Planner · Researcher · Orchestrator · Security — Load details: `.agent/personas/{id}.md`
 
-> Load persona details: `.agent/personas/{id}.md`
-
-## Skills (Progressive Disclosure)
-
-META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive)
-Skills: `.github/skills/` (project) or `.agent/skills/` (project)
-
-_DOMYH Awesome Code · Enriched Config v4 · NockDev_
+_DOMYH Awesome Code · Enriched Config v5 · NockDev_

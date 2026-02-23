@@ -1,5 +1,5 @@
 name: go
-version: "6.3.9"
+version: "6.4.0"
 display: Go
 category: backend
 tier: 3

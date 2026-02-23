@@ -1,7 +1,7 @@
-# Terminal Safety Rule v6.3.9
+# Terminal Safety Rule v6.4.0
 ---
 name: terminal-safety
-version: "6.3.9"
+version: "6.4.0"
 rule_id: "MOD-TRM-001"
 
 description: "Safe terminal command execution patterns and platform-aware syntax."

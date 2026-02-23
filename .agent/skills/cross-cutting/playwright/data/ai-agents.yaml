@@ -2,7 +2,7 @@
 # ai-agents.yaml — Playwright AI Test Agent Patterns
 # =============================================================================
 
-version: "6.3.9"
+version: "6.4.0"
 
 agents:
   planner:

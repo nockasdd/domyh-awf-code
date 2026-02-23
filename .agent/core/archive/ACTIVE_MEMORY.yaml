@@ -1,8 +1,8 @@
-# DOMYH Awesome Code — Active Memory Management v6.3.9
+# DOMYH Awesome Code — Active Memory Management v6.4.0
 # status: archived — Design spec, not runtime config
 # Self-directing memory inspired by Letta/MemGPT architecture
 
-version: "6.3.9"
+version: "6.4.0"
 engine: active_memory_manager
 
 # =============================================================================

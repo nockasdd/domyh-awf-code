@@ -1,4 +1,4 @@
-# Feature Lifecycle Template — DOMYH v6.3.9
+# Feature Lifecycle Template — DOMYH v6.4.0
 
 > **Mục đích**: Template chuẩn cho feature docs khi sử dụng `/feature`
 > **Tạo bởi**: Agent tự động tạo theo feature workflow
