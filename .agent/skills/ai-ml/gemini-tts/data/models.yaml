@@ -5,7 +5,7 @@
 # Source: https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
 # =============================================================================
 
-version: "6.4.2"
+version: "6.4.3"
 total_patterns: 6
 
 models:

@@ -3,7 +3,7 @@ display: Assembly Language
 category: language
 tier: 3
 priority: 2
-version: "6.4.2"
+version: "6.4.3"
 
 desc: "Assembly patterns: x86/x64, ARM64, SIMD, inline ASM, optimization, debugging"
 

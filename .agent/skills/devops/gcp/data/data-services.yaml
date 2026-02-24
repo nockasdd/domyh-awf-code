@@ -1,5 +1,5 @@
 # GCP Data Services — HSA Tier 3 Data
-version: "6.4.2"
+version: "6.4.3"
 
 patterns:
   - id: GCP-DAT-001

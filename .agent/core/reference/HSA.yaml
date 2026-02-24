@@ -12,7 +12,7 @@
 # SYSTEM OVERVIEW
 # =============================================================================
 
-version: "6.4.2"
+version: "6.4.3"
 codename: "SSoT & Hygiene"
 architecture: "CANSH v2.0" # Context-Aware Neural-Symbolic Hierarchy
 

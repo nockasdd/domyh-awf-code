@@ -2,30 +2,30 @@
 
 > {{LANGUAGE_INSTRUCTION}}
 
-**MANDATORY** — Read these files FIRST, before ANY response:
-1. `.agent/rules/SACRED_RULES.xml` — Core safety & execution rules
-2. `.agent/memory/CONTEXT_SNAPSHOT.md` — Project state & recent changes
-3. `.agent/memory/state.json` — User preferences (language, settings)
+## ⛔ MANDATORY FIRST ACTIONS (Every Conversation)
 
-## MCP Tools — ALWAYS Prefer (if `domyh-hsa` server connected)
+BEFORE any response, MUST call MCP tools in this order:
+1. `hsa_get_agent_config("bootstrap")` — Load ALL rules, commands, skills
+2. `hsa_declare_intent(focus, mode)` — Declare session intent
 
-**USE MCP TOOLS FIRST** before manual file reads or grep:
+## ⛔ BEFORE ANY Code Implementation
 
-- `hsa_get_agent_config("bootstrap")` — Load ALL config (rules, commands, skills) in ONE call
-- `hsa_get_context` — Hybrid code search (BM25 + vector, faster than grep)
-- `hsa_search_skills` — Find relevant skills by query
-- `hsa_detect_stack` — Auto-detect project tech stack
-- `hsa_trace_flow` — Trace code call chains
-- `hsa_declare_intent` / `hsa_track_progress` — Session governance
+MUST execute before writing code:
+1. `hsa_search_skills(relevant_query)` — Find matching skill patterns
+2. `hsa_get_context(query)` — Search codebase (NEVER use grep when MCP available)
+3. `hsa_detect_stack()` — On first code task per project
 
-> If MCP NOT connected, fall back to Loading Protocol below.
+## ❌ NEVER (When MCP Connected)
+
+- `grep_search` for code → use `hsa_get_context` instead
+- Skip skills search → ALWAYS `hsa_search_skills` first
+- Start coding without `hsa_declare_intent`
 
 ## Core Rules (ALWAYS APPLY)
 
 - **CORE_001**: Do No Harm — Never generate code causing physical/financial/reputational harm
 - **CORE_002**: Truthfulness — Verify claims against evidence, provide file:line references
 - **CORE_003**: User Sovereignty — User has ultimate control over all decisions
-- **LANG_001**: Respond in language configured in `.agent/memory/state.json`
 - **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
 - **PERF_001**: Use file outlines and grep before full reads; parallel calls for independent ops
 
@@ -36,6 +36,9 @@ NEVER use these on Windows — they hang indefinitely:
 - ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show`
 - ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
 - ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background
+✅ ALWAYS wrap commands with `cmd /c` on Windows to prevent stdin race hang:
+- Use `cmd /c "go test ./..."` instead of `go test ./...`
+- Escape special chars: `^&`, `^|`, `^(`, `^)` inside cmd /c
 
 ## Skills & Workflows
 
@@ -50,4 +53,4 @@ Match user intent → read `.agent/workflows/{command}.md` → load matching ski
 
 Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter · Planner · Researcher · Orchestrator · Security — Load details: `.agent/personas/{id}.md`
 
-_DOMYH Awesome Code · Enriched Config v6 · NockDev_
+_DOMYH Awesome Code · Enforced Config v7 · NockDev_

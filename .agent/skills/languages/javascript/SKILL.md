@@ -1,7 +1,7 @@
 ---
 name: javascript
 detect: ["*.js", "*.mjs", "*.cjs", ".eslintrc*", "package.json"]
-version: "6.4.2"
+version: "6.4.3"
 category: web
 tier: 1
 ---

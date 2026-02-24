@@ -128,7 +128,7 @@ Composable rule modules for specific use cases:
 ├── data/                        # Supporting data files
 │   └── build-systems.yaml       # Build system detection data
 ├── archive/                     # Merged/legacy rules
-│   ├── constitutional/          # v6.4.2 Constitutional YAML tiers
+│   ├── constitutional/          # v6.4.3 Constitutional YAML tiers
 │   │   ├── tier-0-core.yaml     # Immutable principles
 │   │   ├── tier-1-safety.yaml   # Safety rules
 │   │   └── tier-2-execution.yaml # Quality guidelines
@@ -202,7 +202,7 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.4.2"
+version: "6.4.3"
 rule_id: "MOD-XXX-001"
 
 description: |

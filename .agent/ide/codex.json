@@ -2,7 +2,7 @@
   "name": "codex",
   "displayName": "OpenAI Codex CLI",
   "description": "Configuration template for OpenAI Codex CLI integration",
-  "version": "v6.4.2",
+  "version": "v6.4.3",
   "configFiles": [
     {
       "path": ".codex/.codex-rules.md",

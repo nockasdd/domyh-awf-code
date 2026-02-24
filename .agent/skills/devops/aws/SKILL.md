@@ -1,6 +1,6 @@
 ---
 name: aws
-version: "6.4.2"
+version: "6.4.3"
 category: infrastructure
 ---
 

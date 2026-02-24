@@ -1,7 +1,7 @@
-# Terminal Safety Rule v6.4.2
+# Terminal Safety Rule v6.4.3
 ---
 name: terminal-safety
-version: "6.4.2"
+version: "6.4.3"
 rule_id: "MOD-TRM-001"
 
 description: "Safe terminal command execution patterns and platform-aware syntax."
@@ -72,6 +72,41 @@ safe_patterns:
     rule: "List files before deletion: ls/dir first, then rm/del"
   - name: "Background safety"
     rule: "Monitor long-running background commands with status checks"
+
+# --- ANTI-HANG: cmd /c Wrapper (Windows) ---
+
+anti_hang:
+  description: |
+    On Windows, ConPTY + MinGW (Git Bash) has a stdin race condition
+    that intermittently drops sendText() input, causing commands to
+    never execute. Wrapping with cmd /c bypasses MinGW PTY layer.
+    Ref: https://github.com/microsoft/vscode/issues/215402
+
+  rule: "On Windows, ALWAYS wrap terminal commands with cmd /c to ensure EOF signal"
+
+  examples:
+    correct:
+      - 'cmd /c "go test ./..."'
+      - 'cmd /c "npm run build"'
+      - 'cmd /c "git status"'
+      - "cmd /c \"python -c 'print(1)'\""
+    incorrect:
+      - "go test ./..."
+      - "npm run build"
+
+  exceptions:
+    - "Commands already running inside bash scripts"
+    - "Background/long-running processes (use cmd /c start instead)"
+    - "Interactive commands (vim, nano) — should not be run at all"
+
+  escaping:
+    note: "Special chars in cmd /c need ^ prefix"
+    chars: ["&", "|", "(", ")", "<", ">"]
+    example: 'cmd /c "echo hello ^& world"'
+
+  limitations:
+    - "Max command length: 8191 characters"
+    - "Unix tools (grep, sed, awk) unavailable inside cmd /c"
 
 integration:
   tier: 1

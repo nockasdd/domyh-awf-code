@@ -2,7 +2,7 @@
 # nx-patterns.yaml — Nx Workspace Patterns
 # =============================================================================
 
-version: "6.4.2"
+version: "6.4.3"
 
 generators:
   description: "Code scaffolding for consistent structure"

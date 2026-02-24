@@ -53,18 +53,16 @@ reviews:
 chat:
   auto_reply: true
 
-# DOMYH Awesome Code Agent Framework — Enriched Config v6
+# DOMYH Awesome Code Agent Framework — Enforced Config v7
 #
-# MANDATORY: Read `.agent/rules/SACRED_RULES.xml` and `.agent/memory/CONTEXT_SNAPSHOT.md` FIRST
+# ⛔ MANDATORY: MUST call hsa_get_agent_config('bootstrap') FIRST.
+# MUST call hsa_search_skills(query) before implementing code.
+# MUST call hsa_declare_intent(focus, mode) for session governance.
 #
-# MCP Tools — ALWAYS PREFER (if domyh-hsa connected):
-#   USE MCP TOOLS FIRST: hsa_get_agent_config(bootstrap), hsa_get_context,
-#   hsa_search_skills, hsa_detect_stack, hsa_trace_flow,
-#   hsa_declare_intent, hsa_track_progress
-#   If MCP NOT connected, fall back to Loading Protocol.
+# ❌ NEVER: grep_search for code (use hsa_get_context), skip skills search, code without declare_intent.
 #
 # Core: Do No Harm | Truthfulness (file:line) | User Sovereignty | Confirm destructive | File outlines+grep first
-# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags
+# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. ALWAYS wrap commands with cmd /c to prevent stdin race hang.
 #
 # Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (85+ skills)
-# Fallback Loading Protocol: Match intent → read .agent/workflows/{id}.md → load skill → execute (41 commands)
+# Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (41 commands)

@@ -2,7 +2,7 @@
 # turborepo-patterns.yaml — Turborepo Patterns
 # =============================================================================
 
-version: "6.4.2"
+version: "6.4.3"
 
 pipeline:
   description: "Define task relationships and caching"

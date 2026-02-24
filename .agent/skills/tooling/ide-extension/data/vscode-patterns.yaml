@@ -1,6 +1,6 @@
 # VS Code Extension Patterns — HSA Tier 3 Data
 # IDE Extension Development Skill
-version: "6.4.2"
+version: "6.4.3"
 
 patterns:
   # ==========================================================================

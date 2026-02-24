@@ -1,7 +1,7 @@
 ---
 name: ruby
 detect: ["Gemfile", "*.rb", "*.gemspec", "Rakefile", "config.ru"]
-version: "6.4.2"
+version: "6.4.3"
 category: scripting
 tier: 1
 ---

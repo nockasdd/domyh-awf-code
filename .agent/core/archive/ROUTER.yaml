@@ -2,7 +2,7 @@
 # DOMYH Awesome Code
 # Selects top-K relevant skills AND routes to appropriate personas
 
-version: "6.4.2"
+version: "6.4.3"
 
 # Routing Strategy
 strategy:
@@ -195,7 +195,7 @@ confidence_scoring:
 # =============================================================================
 
 # =============================================================================
-# AUTO-SUGGEST CONFIGURATION (v6.4.2)
+# AUTO-SUGGEST CONFIGURATION (v6.4.3)
 # =============================================================================
 
 auto_suggest:
@@ -206,7 +206,7 @@ auto_suggest:
   show_reason: true # Show why skill was suggested
 
 # =============================================================================
-# CONTEXT-AWARE ROUTING (v6.4.2)
+# CONTEXT-AWARE ROUTING (v6.4.3)
 # =============================================================================
 
 context_routing:
@@ -231,7 +231,7 @@ context_routing:
     project_structure: 0.15
 
 # =============================================================================
-# WORKFLOW ROUTING (v6.4.2)
+# WORKFLOW ROUTING (v6.4.3)
 # =============================================================================
 
 workflow_routing:
@@ -317,7 +317,7 @@ recommendations:
 # _DOMYH Awesome Code
 
 # =============================================================================
-# PERSONA ROUTING (v6.4.2)
+# PERSONA ROUTING (v6.4.3)
 # =============================================================================
 
 persona_routing:
@@ -396,7 +396,7 @@ persona_routing:
     security_to_developer: "vulnerabilities_found"
 
 # =============================================================================
-# CONSTITUTIONAL RULES LOADING (v6.4.2)
+# CONSTITUTIONAL RULES LOADING (v6.4.3)
 # =============================================================================
 
 constitutional:

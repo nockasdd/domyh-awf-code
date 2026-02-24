@@ -1,6 +1,6 @@
 ---
 name: architect
-version: "6.4.2"
+version: "6.4.3"
 persona_id: "arch-001"
 
 identity:

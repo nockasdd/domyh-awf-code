@@ -2,7 +2,7 @@ name: javascript
 display: JavaScript Development
 category: web
 priority: 1
-version: "6.4.2"
+version: "6.4.3"
 tier: 3
 
 desc: "JavaScript ES2025/ES2026 - Node.js, Bun, Deno, React, Vue"

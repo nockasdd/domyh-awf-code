@@ -16,7 +16,7 @@
 # This file is kept as a DESIGN REFERENCE for future MCP expansion.
 # =============================================================================
 
-version: "6.4.2"
+version: "6.4.3"
 status: aspirational  # NOT runtime — see header
 
 # =============================================================================
@@ -45,7 +45,7 @@ description: |
 
 server:
   name: "domyh-agent"
-  version: "6.4.2"
+  version: "6.4.3"
 
   transport:
     - "stdio"
