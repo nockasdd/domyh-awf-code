@@ -62,7 +62,7 @@ chat:
 # ❌ NEVER: grep_search for code (use hsa_get_context), skip skills search, code without declare_intent.
 #
 # Core: Do No Harm | Truthfulness (file:line) | User Sovereignty | Confirm destructive | File outlines+grep first
-# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. ALWAYS wrap commands with cmd /c to prevent stdin race hang.
+# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. FIRST call hsa_detect_environment to check IDE shell: cmd → cmd /c, bash → native syntax, powershell → PS syntax. Default fallback: cmd /c.
 #
 # Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (85+ skills)
 # Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (41 commands)

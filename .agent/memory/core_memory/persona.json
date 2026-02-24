@@ -1,11 +1,11 @@
 {
   "block_id": "persona",
   "description": "Agent's self-description and capabilities",
-  "version": "v6.4.3",
+  "version": "v6.4.5",
   "editable_by_agent": true,
   "content": {
     "name": "DOMYH Awesome Code Agent",
-    "version": "v6.4.3",
+    "version": "v6.4.5",
     "description": "AI-powered development assistant with advanced memory, reflection, and self-improvement capabilities.",
     "capabilities": [
       "Code generation in 51+ languages",

@@ -1,7 +1,7 @@
-# Build Systems Detection Data v6.4.3
+# Build Systems Detection Data v6.4.5
 # Externalized from project-detection.md
 
-version: "6.4.3"
+version: "6.4.5"
 last_updated: "2026-02-01"
 
 # Root file patterns for project detection

@@ -12,10 +12,10 @@
 # =============================================================================
 
 system:
-  version: "6.4.3"
-  version_short: "v6.4.3" # Dùng cho footer: "_DOMYH Awesome Code "
+  version: "6.4.5"
+  version_short: "v6.4.5" # Dùng cho footer: "_DOMYH Awesome Code "
   codename: "SSoT & Hygiene"
-  release_date: "2026-02-14"
+  release_date: "2026-02-25"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"
@@ -74,7 +74,7 @@ components:
   web_perf: "5.0" # Web Performance
 
   # Default for unlisted
-  default_skill_version: "v6.4.3"
+  default_skill_version: "v6.4.5"
 
 # =============================================================================
 # VERSION HISTORY
@@ -82,8 +82,8 @@ components:
 
 changelog:
   # NOTE: Each key MUST be unique per YAML spec. Duplicate keys cause silent data loss.
-  "6.4.3":
-    date: "2026-02-17"
+  "6.4.5":
+    date: "2026-02-25"
     codename: "SSoT & Hygiene"
     changes:
       - "Version SSoT: sync-version.mjs script for single-source version propagation"
@@ -92,8 +92,13 @@ changelog:
       - "HSA engine: +7 stacks, SAFETY_MODULES fix, rationale regex"
       - "Fixed 7 persona dead enforces references"
       - "Version drift cleanup: 60+ files synced"
+      - "NEW: hsa_search_files tool (21 MCP tools total)"
+      - "Terminal safety: cmd /c conditional based on IDE shell detection (was ALWAYS)"
+      - "SACRED_RULES: MCP_001+MCP_003 updated with hsa_search_files + shell guidance"
+      - "22 IDE configs updated with conditional shell rule"
+      - "Error format standardization: formatToolError utility across 6 handlers"
 
-  "6.4.3-rc1":
+  "6.4.5-rc1":
     date: "2026-02-14"
     codename: "Dashboard Resilience"
     changes:
@@ -101,7 +106,7 @@ changelog:
       - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
       - "Codex IDE: Optimized AGENTS.md with inline rules"
 
-  "6.4.3-beta.2":
+  "6.4.5-beta.2":
     date: "2026-02-12"
     codename: "Ecosystem Expansion"
     changes:
@@ -110,7 +115,7 @@ changelog:
       - "3 new workflows: /tdd, /e2e, /verify"
       - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
 
-  "6.4.3-beta.1":
+  "6.4.5-beta.1":
     date: "2026-02-05"
     codename: "Context Mesh"
     changes:

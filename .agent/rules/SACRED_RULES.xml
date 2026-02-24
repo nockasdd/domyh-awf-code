@@ -78,9 +78,11 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     <text>When domyh-hsa MCP server is available, use HSA tools for intelligent code operations:
     - hsa_detect_stack at task start for code generation/debugging/testing
     - hsa_get_context instead of manual file scanning
+    - hsa_search_files to find files by name/pattern (instead of grep for filenames)
     - hsa_check_changes after file modifications to keep indexes current
     - hsa_prefetch for files planned to be read/modified
-    - hsa_feedback after task completion to improve future search rankings</text>
+    - hsa_feedback after task completion to improve future search rankings
+    - hsa_detect_environment BEFORE running terminal commands to identify IDE shell (bash/cmd/powershell)</text>
     <rationale>HSA tools provide hybrid search and context optimization — 70-90% more token-efficient than manual file scanning.</rationale>
   </requirement>
   
@@ -94,8 +96,9 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   <requirement id="MCP_003" tier="2" severity="warn">
     <text>Use HSA observability tools as needed:
     - hsa_get_repo_map for codebase structure before large changes
-    - hsa_detect_environment to verify runtimes before commands
+    - hsa_detect_environment to verify runtimes and identify IDE terminal shell before commands
     - hsa_search_skills to find coding patterns before implementing
+    - hsa_search_files to find files by name or glob pattern (complementary to hsa_get_context)
     - hsa_get_agent_config for commands/personas/rules when asked about capabilities
     - hsa_status for engine health when troubleshooting tool failures
     - hsa_trace_flow for tracing call chains and understanding code flow

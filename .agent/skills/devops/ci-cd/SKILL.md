@@ -1,6 +1,6 @@
 ---
 name: ci-cd
-version: "6.4.3"
+version: "6.4.5"
 category: infrastructure
 ---
 

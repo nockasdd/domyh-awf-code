@@ -1,4 +1,4 @@
-# ⚙️ DOMYH Awesome Code Core v6.4.3
+# ⚙️ DOMYH Awesome Code Core v6.4.5
 
 Core system files — always loaded or on-demand reference.
 

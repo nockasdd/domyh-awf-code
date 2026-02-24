@@ -1,7 +1,7 @@
-# Online Research Rule v6.4.3
+# Online Research Rule v6.4.5
 ---
 name: online-research
-version: "6.4.3"
+version: "6.4.5"
 rule_id: "MOD-RES-001"
 
 description: "Guidelines for web research, source verification, and time-aware freshness."

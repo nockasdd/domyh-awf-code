@@ -1,6 +1,6 @@
 # 🧠 DOMYH Awesome Code Memory System
 
-> Version 6.4.3 — 5-Layer Hierarchical Memory Architecture
+> Version 6.4.5 — 5-Layer Hierarchical Memory Architecture
 
 ---
 

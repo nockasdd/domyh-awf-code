@@ -2,7 +2,7 @@
 # communication.yaml — Inter-Service Communication Patterns
 # =============================================================================
 
-version: "6.4.3"
+version: "6.4.5"
 
 # =============================================================================
 # SYNCHRONOUS PATTERNS

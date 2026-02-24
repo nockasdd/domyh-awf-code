@@ -36,9 +36,11 @@ NEVER use these on Windows — they hang indefinitely:
 - ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show`
 - ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
 - ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background
-✅ ALWAYS wrap commands with `cmd /c` on Windows to prevent stdin race hang:
-- Use `cmd /c "go test ./..."` instead of `go test ./...`
-- Escape special chars: `^&`, `^|`, `^(`, `^)` inside cmd /c
+✅ FIRST call `hsa_detect_environment` to check IDE terminal shell:
+- Shell = `cmd` → wrap with `cmd /c "command"` (prevent stdin race hang)
+- Shell = `bash`/`zsh` → use native syntax (`&&` chaining, NO cmd /c)
+- Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
+- Shell unknown → default to `cmd /c` (safest fallback)
 
 ## Skills & Workflows
 

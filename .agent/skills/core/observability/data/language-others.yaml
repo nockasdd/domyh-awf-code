@@ -1,7 +1,7 @@
 metadata:
   skill: observability
   domain: language_others
-  version: v6.4.3
+  version: v6.4.5
   updated: "2026-02-05"
   migrated_from: language-others.yaml
   patterns_count: 40

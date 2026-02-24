@@ -1,5 +1,5 @@
 name: lua
-version: "6.4.3"
+version: "6.4.5"
 display: Lua
 category: scripting
 tier: 3

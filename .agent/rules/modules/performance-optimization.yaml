@@ -1,7 +1,7 @@
-# Performance Optimization Rule v6.4.3
+# Performance Optimization Rule v6.4.5
 ---
 name: performance-optimization
-version: "6.4.3"
+version: "6.4.5"
 rule_id: "MOD-PERF-001"
 
 description: "Model selection, context management, and token budget optimization."

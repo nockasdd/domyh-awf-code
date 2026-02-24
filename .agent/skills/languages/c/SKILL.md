@@ -1,7 +1,7 @@
 ---
 name: c
 detect: ["*.c", "*.h", "Makefile", "CMakeLists.txt"]
-version: "6.4.3"
+version: "6.4.5"
 category: language
 tier: 1
 ---

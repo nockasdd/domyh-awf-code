@@ -1,6 +1,6 @@
 ---
 name: planner
-version: "6.4.3"
+version: "6.4.5"
 persona_id: "plan-001"
 
 identity:

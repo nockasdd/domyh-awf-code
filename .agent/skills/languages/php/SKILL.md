@@ -1,7 +1,7 @@
 ---
 name: php
 detect: ["composer.json", "*.php", "artisan", "symfony.lock"]
-version: "6.4.3"
+version: "6.4.5"
 category: backend
 tier: 1
 ---

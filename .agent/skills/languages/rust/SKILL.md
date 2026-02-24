@@ -1,7 +1,7 @@
 ---
 name: rust
 detect: ["Cargo.toml", "*.rs", "Cargo.lock"]
-version: "6.4.3"
+version: "6.4.5"
 category: systems
 tier: 1
 ---
