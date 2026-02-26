@@ -1,7 +1,6 @@
 ---
 name: react-native
 detect: ["metro.config.js", "app.json:expo", "react-native.config.js"]
-version: "6.4.5"
 category: mobile
 tier: 1
 ---
@@ -60,16 +59,12 @@ Use for: Cross-platform mobile apps (iOS/Android), React teams.
 ### Overview
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  JavaScript                          │
-├─────────────────────────────────────────────────────┤
-│                      JSI                             │
-│        (Direct JS ↔ Native Communication)           │
-├─────────────────────────────────────────────────────┤
-│    Fabric (UI)     │     Turbo Modules (Native)     │
-├─────────────────────────────────────────────────────┤
-│                 Native (iOS/Android)                 │
-└─────────────────────────────────────────────────────┘
+
+> JavaScript
+> JSI
+> (Direct JS ↔ Native Communication)
+> Fabric (UI)          Turbo Modules (Native)
+> Native (iOS/Android)
 ```
 
 ### Enable New Architecture
@@ -297,5 +292,3 @@ const handlePress = useCallback(
 - [ ] Development client for testing
 
 ---
-
-_DOMYH Awesome Code • React Native 0.76+_

@@ -1,7 +1,6 @@
 ---
 name: javascript
 detect: ["*.js", "*.mjs", "*.cjs", ".eslintrc*", "package.json"]
-version: "6.4.5"
 category: web
 tier: 1
 ---
@@ -451,5 +450,3 @@ src/
 - [ ] Caching strategy implemented
 
 ---
-
-_DOMYH Awesome Code • JavaScript Development • 2025-2026_

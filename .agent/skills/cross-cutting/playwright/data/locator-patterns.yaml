@@ -2,7 +2,6 @@
 # locator-patterns.yaml — Priority-Ordered Locator Strategies
 # =============================================================================
 
-version: "6.4.5"
 
 priority_order:
   - priority: 1
@@ -92,5 +91,3 @@ mcp_note: |
   When using Playwright MCP tools, browser_snapshot returns element refs.
   Use these refs directly: browser_click(ref="S3E2") instead of constructing locators.
   The refs are from the accessibility tree — already the best locator strategy.
-
-# _DOMYH Awesome Code • Locator Patterns v1.0.0_

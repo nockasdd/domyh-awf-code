@@ -1,7 +1,6 @@
 ---
 name: php
 detect: ["composer.json", "*.php", "artisan", "symfony.lock"]
-version: "6.4.5"
 category: backend
 tier: 1
 ---
@@ -484,5 +483,3 @@ vendor/bin/phpstan analyse --memory-limit=2G
 - [ ] Test coverage > 80%
 
 ---
-
-_DOMYH Awesome Code • PHP 8.3/8.4_

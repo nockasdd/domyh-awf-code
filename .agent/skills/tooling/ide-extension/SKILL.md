@@ -1,6 +1,5 @@
 ---
 name: ide-extension
-version: "6.4.5"
 category: tooling
 ---
 
@@ -21,19 +20,18 @@ category: tooling
 ## VS Code Extension Architecture
 
 ```
-┌────────────────────────────────────────┐
-│ VS Code (Electron)                     │
-│  ┌──────────────┐  ┌────────────────┐ │
-│  │ Main Process │  │ Extension Host │ │ ← Isolated process
-│  │ (UI, Window) │  │  ┌──────────┐  │ │
-│  │              │  │  │ Your Ext │  │ │
-│  │              │  │  └──────────┘  │ │
-│  └──────────────┘  └────────────────┘ │
-│                    ┌────────────────┐  │
-│                    │   Webview      │  │ ← Sandboxed iframe
-│                    │ (React/Vue)   │  │
-│                    └────────────────┘  │
-└────────────────────────────────────────┘
+
+> VS Code (Electron)
+>   
+   Main Process    Extension Host   ← Isolated process
+>  (UI, Window)       
+>                    Your Ext   
+>                     
+>   
+> 
+                       Webview         ← Sandboxed iframe
+>  (React/Vue)   
+> 
 ```
 
 ### package.json Contribution Points
@@ -110,5 +108,3 @@ connection.listen();
 | Memory leaks        | Dispose subscriptions in `deactivate()` |
 
 ---
-
-_DOMYH Awesome Code • IDE Extension Skill v1.0.0_

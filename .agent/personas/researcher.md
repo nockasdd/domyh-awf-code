@@ -1,6 +1,5 @@
 ---
 name: researcher
-version: "6.4.5"
 persona_id: "res-001"
 
 identity:

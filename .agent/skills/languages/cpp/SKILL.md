@@ -1,7 +1,6 @@
 ---
 name: cpp
 detect: ["CMakeLists.txt", "*.cpp", "*.cxx", "*.cc", "*.hpp", "*.hxx", "*.h"]
-version: "6.4.5"
 category: language
 tier: 1
 ---
@@ -201,5 +200,3 @@ For detailed patterns, see these reference files:
 - [ ] Sanitizers enabled (ASan, UBSan)
 
 ---
-
-_DOMYH Awesome Code • C++ Development (C++20/23/26) • 2025-2026_

@@ -1,7 +1,6 @@
 ---
 name: perl
 detect: ["*.pl", "*.pm", "Makefile.PL", "cpanfile"]
-version: "6.4.5"
 category: scripting
 tier: 3
 ---
@@ -111,5 +110,3 @@ app->start;
 - [ ] perltidy formatting
 
 ---
-
-_DOMYH Awesome Code • Perl 5.40+_

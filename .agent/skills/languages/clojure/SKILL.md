@@ -1,7 +1,6 @@
 ---
 name: clojure
 detect: ["*.clj", "*.cljs", "*.cljc", "deps.edn", "project.clj"]
-version: "6.4.5"
 category: functional
 tier: 3
 ---
@@ -126,5 +125,3 @@ Use for: Data processing, concurrent systems, REPL prototyping.
 - [ ] Spec validations
 
 ---
-
-_DOMYH Awesome Code • Clojure 1.11+_

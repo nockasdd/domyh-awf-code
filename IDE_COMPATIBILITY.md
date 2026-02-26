@@ -1,7 +1,7 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
 > **Version**: 6.4.5 | **Cập nhật**: 2026-02-25 | **Official Docs Verified** | **Extension Storage Forensics**
-> **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 21 MCP Tools
+> **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 20 MCP Tools
 
 ---
 
@@ -217,7 +217,6 @@ root/
 | Strategy                             | Extensions                             | Lưu ở đâu                                             | Shared giữa IDE forks? |
 | ------------------------------------ | -------------------------------------- | ----------------------------------------------------- | ---------------------- |
 | **globalStorage** (per-IDE isolated) | Cline, Roo Code, Tabnine, Copilot Chat | `%APPDATA%\{IDE}\User\globalStorage\{ext-id}\`        | ❌ **KHÔNG**           |
-| **Home Directory** (IDE-shared)      | Continue                               | `~/.continue/config.yaml`                             | ✅ **CÓ**              |
 | **Home Directory** (IDE-shared)      | Continue, Augment                      | `~/.continue/config.yaml`, `~/.augment/settings.json` | ✅ **CÓ**              |
 
 ### AppData Folder Name theo IDE Fork

@@ -16,7 +16,6 @@ They can be overridden ONLY with explicit user approval for specific cases.
 
 ```yaml
 rule: destructive_action_prevention
-version: "6.4.5"
 tier: 1
 category: safety
 
@@ -65,7 +64,6 @@ override:
 
 ```yaml
 rule: scope_containment
-version: "6.4.5"
 tier: 1
 category: safety
 
@@ -110,7 +108,6 @@ override:
 
 ```yaml
 rule: command_execution_safety
-version: "6.4.5"
 tier: 1
 category: safety
 
@@ -162,7 +159,6 @@ verification_format: |
 
 ```yaml
 rule: information_boundaries
-version: "6.4.5"
 tier: 1
 category: safety
 
@@ -201,7 +197,6 @@ cross_boundary_requests:
 
 ```yaml
 rule: error_recovery
-version: "6.4.5"
 tier: 1
 category: safety
 
@@ -268,5 +263,3 @@ override_protocol:
 ```
 
 ---
-
-# DOMYH Awesome Code  • Constitutional Rules Tier 1

@@ -1,6 +1,5 @@
 # C++ — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -453,5 +452,3 @@ Repository<> prodRepo;                    // Without logging
 ```
 
 ---
-
-_DOMYH Awesome Code — C++ Advanced Patterns_

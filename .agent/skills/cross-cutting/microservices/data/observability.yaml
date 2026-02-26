@@ -2,7 +2,6 @@
 # observability.yaml — Distributed Observability Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # THREE PILLARS
@@ -148,5 +147,3 @@ health_checks:
         path: /readyz
         port: 8080
       periodSeconds: 5
-
-# _DOMYH Awesome Code • Observability Patterns_

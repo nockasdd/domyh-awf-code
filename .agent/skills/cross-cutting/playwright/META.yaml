@@ -1,5 +1,4 @@
 name: playwright
-version: "6.4.5"
 display: Playwright
 category: cross-cutting
 tier: 1
@@ -86,5 +85,3 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/cross-cutting/playwright/data"
   preload_data: true
-
-# _DOMYH Awesome Code • Playwright Skill META v1.0.0_

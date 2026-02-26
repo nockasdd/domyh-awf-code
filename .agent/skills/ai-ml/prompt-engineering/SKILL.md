@@ -1,6 +1,5 @@
 ---
 name: prompt-engineering
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -27,15 +26,15 @@ category: ai-ml
 ## Prompting Hierarchy
 
 ```
-┌──────────────────────────────────────────┐
-│  Level 1: Zero-Shot (no examples)        │
-│  Level 2: Few-Shot (1-5 examples)        │
-│  Level 3: Chain-of-Thought (reasoning)   │
-│  Level 4: ReAct (reasoning + tools)      │
-│  Level 5: Tree-of-Thought (exploration)  │
-│  Level 6: Multi-agent (delegation)       │
-│  Level 7: Agentic (Gemini 3 template)    │ ← NEW
-└──────────────────────────────────────────┘
+
+> Level 1: Zero-Shot (no examples)
+> Level 2: Few-Shot (1-5 examples)
+> Level 3: Chain-of-Thought (reasoning)
+> Level 4: ReAct (reasoning + tools)
+> Level 5: Tree-of-Thought (exploration)
+> Level 6: Multi-agent (delegation)
+  Level 7: Agentic (Gemini 3 template)     ← NEW
+
 ```
 
 ---

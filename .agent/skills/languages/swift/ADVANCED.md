@@ -1,6 +1,5 @@
 # Swift — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -227,5 +226,3 @@ struct MyApp: App {
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

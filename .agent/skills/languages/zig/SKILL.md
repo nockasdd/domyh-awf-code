@@ -1,7 +1,6 @@
 ---
 name: zig
 detect: ["*.zig", "build.zig", "build.zig.zon"]
-version: "6.4.5"
 category: systems
 tier: 2
 ---
@@ -350,5 +349,3 @@ zig build test
 - [ ] Null checks on optionals
 
 ---
-
-_DOMYH Awesome Code • Zig 0.13+_

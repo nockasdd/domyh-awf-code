@@ -1,6 +1,5 @@
 ---
 name: aws
-version: "6.4.5"
 category: infrastructure
 ---
 

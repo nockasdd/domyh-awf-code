@@ -76,11 +76,3 @@ success_criteria: "All commands listed with correct descriptions"
 1. `/debug` with error message
 2. `/status` for project health
 3. `/recap` to see context
-
----
-
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

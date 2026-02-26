@@ -6,7 +6,6 @@ triggers:
   - "Before ending a session"
   - "Before responding 'done' to user"
   - "When user cancels mid-work"
-version: "1.0.0"
 ---
 
 # Pre-Stop Checklist

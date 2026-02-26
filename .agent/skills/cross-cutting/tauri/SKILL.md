@@ -1,6 +1,5 @@
 ---
 name: tauri
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -33,17 +32,15 @@ category: cross-cutting
 ## Architecture
 
 ```
-┌──────────────────────────────────────┐
-│         Frontend (WebView)           │
-│    React / Vue / Svelte / Solid      │
-│         @tauri-apps/api              │
-└───────────┬──────────────────────────┘
-            │ IPC (invoke/listen/emit)
-┌───────────▼──────────────────────────┐
-│         Rust Core (src-tauri/)       │
-│    Commands • Plugins • State        │
-│    File System • Shell • HTTP        │
-└──────────────────────────────────────┘
+
+> Frontend (WebView)
+> React / Vue / Svelte / Solid
+> @tauri-apps/api
+             IPC (invoke/listen/emit)
+▼
+> Rust Core (src-tauri/)
+> Commands • Plugins • State
+> File System • Shell • HTTP
 ```
 
 ## Core Patterns
@@ -129,5 +126,3 @@ tauri::Builder::default()
 | Permissions denied  | Check capabilities/\*.json, add required permissions |
 
 ---
-
-_DOMYH Awesome Code • Tauri Skill v1.0.0_

@@ -2,7 +2,6 @@
 # element-discovery.yaml — Element Categorization from Accessibility Tree
 # =============================================================================
 
-version: "6.4.5"
 
 # How to discover and categorize interactive elements from browser_snapshot
 
@@ -204,5 +203,3 @@ workflow:
   - step: "For compound elements (aria-haspopup, aria-expanded), add enhanced tests"
   - step: "Sort by priority: forms > modals > dropdowns > buttons > tooltips"
   - step: "Generate Phase 3 test plan"
-
-# _DOMYH Awesome Code • Element Discovery Patterns v1.0.0_

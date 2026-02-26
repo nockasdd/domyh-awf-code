@@ -1,7 +1,6 @@
-# YAGNI Enforcement Rule v6.4.5
+# YAGNI Enforcement Rule
 ---
 name: yagni
-version: "6.4.5"
 rule_id: "MOD-YAG-001"
 
 description: "You Aren't Gonna Need It — prevent premature abstraction and over-engineering."
@@ -72,6 +71,3 @@ decision:
 integration:
   tier: 2
   related_modules: ["quality", "stop-conditions"]
-
----
-_DOMYH Awesome Code • YAGNI Enforcement Rule_

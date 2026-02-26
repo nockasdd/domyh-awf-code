@@ -446,5 +446,3 @@ class UserRepositoryIntegrationTest {
 ```
 
 ---
-
-_DOMYH Awesome Code — Java Advanced Patterns — 2025-2026_

@@ -1,7 +1,6 @@
 ---
 name: swift
 detect: ["Package.swift", "*.swift", "*.xcodeproj", "*.xcworkspace"]
-version: "6.4.5"
 category: mobile
 tier: 1
 ---
@@ -338,5 +337,3 @@ func fetchUser(id: Int) async throws(NetworkError) -> User {
 - [ ] EquatableView for complex views
 
 ---
-
-_DOMYH Awesome Code • Swift 6/6.1_

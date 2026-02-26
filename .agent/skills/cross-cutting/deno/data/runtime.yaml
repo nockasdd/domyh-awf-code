@@ -6,7 +6,6 @@
 metadata:
   skill: deno
   domain: runtime
-  version: "6.4.5"
   updated: "2026-02-05"
   patterns_count: 12
 

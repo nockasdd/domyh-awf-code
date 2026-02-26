@@ -5,7 +5,6 @@
 # Source: https://ai.google.dev/gemini-api/docs/image-generation
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 8
 
 models:
@@ -108,5 +107,4 @@ batch_generation:
     - "Flash model for batch, Pro for final selection"
 
 # =============================================================================
-# _DOMYH Awesome Code • Image Models v1.0_
 # =============================================================================

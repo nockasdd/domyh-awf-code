@@ -1,6 +1,5 @@
 ---
 name: deploy-plan
-version: "6.4.5"
 type: plan
 triggers: ["/deploy"]
 ---
@@ -50,5 +49,3 @@ triggers: ["/deploy"]
 {NOTES}
 
 ---
-
-\_DOMYH Awesome Code

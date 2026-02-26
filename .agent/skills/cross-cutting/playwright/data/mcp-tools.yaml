@@ -2,7 +2,6 @@
 # mcp-tools.yaml — Playwright MCP Tool Reference (19 tools)
 # =============================================================================
 
-version: "6.4.5"
 
 navigation:
   - name: browser_navigate
@@ -149,5 +148,3 @@ strategy:
   for_interaction: "browser_click → browser_snapshot — verify state change"
   for_debugging: "browser_console_messages + browser_network_requests"
   for_evidence: "browser_take_screenshot — capture visual proof"
-
-# _DOMYH Awesome Code • Playwright MCP Tools Reference v1.0.0_

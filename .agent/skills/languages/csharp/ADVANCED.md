@@ -588,5 +588,3 @@ public class Order : Entity<OrderId>, IAggregateRoot
 ```
 
 ---
-
-_DOMYH Awesome Code — C# Advanced Patterns — 2025-2026_

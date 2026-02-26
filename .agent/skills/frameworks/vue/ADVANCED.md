@@ -1,6 +1,5 @@
 # Vue.js — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -210,5 +209,3 @@ describe("UserList", () => {
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

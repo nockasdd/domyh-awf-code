@@ -1,6 +1,5 @@
 ---
 name: logging
-version: "6.4.5"
 category: core
 ---
 
@@ -172,5 +171,3 @@ fn login(user_id: &str) {
 ```
 
 ---
-
-_DOMYH Awesome Code • Logging Skill v1.0 • 305 Patterns_

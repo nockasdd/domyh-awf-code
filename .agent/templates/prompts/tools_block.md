@@ -133,5 +133,3 @@ tools:
 ```
 
 ---
-
-_DOMYH Awesome Code • Tools Block Template_

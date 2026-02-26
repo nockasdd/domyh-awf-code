@@ -1,7 +1,6 @@
 ---
 name: haskell
 detect: ["*.hs", "*.cabal", "stack.yaml", "cabal.project", "package.yaml"]
-version: "6.4.5"
 category: functional
 tier: 2
 ---
@@ -301,5 +300,3 @@ spec = do
 - [ ] Coverage > 70%
 
 ---
-
-_DOMYH Awesome Code • Haskell GHC 9.8+_

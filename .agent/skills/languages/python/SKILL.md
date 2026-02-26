@@ -1,7 +1,6 @@
 ---
 name: python
 detect: ["pyproject.toml", "requirements.txt", "*.py", "Pipfile", "setup.py"]
-version: "6.4.5"
 category: backend
 tier: 1
 ---
@@ -491,5 +490,3 @@ Handler: TypeAlias = Callable[[Request], Awaitable[Response]]
 - [ ] Dependencies audited
 
 ---
-
-_DOMYH Awesome Code • Python 3.12/3.13_

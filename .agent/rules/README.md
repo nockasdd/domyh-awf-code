@@ -5,7 +5,6 @@ trigger: always_on
 # 📜 Rules System
 
 > Constitutional hierarchy with modular composition  
-> _DOMYH Awesome Code • Agentic Personas_
 
 ---
 
@@ -202,7 +201,6 @@ Each modular rule follows this schema:
 
 ```yaml
 name: rule-name
-version: "6.4.5"
 rule_id: "MOD-XXX-001"
 
 description: |
@@ -253,5 +251,3 @@ Before any action, verify:
 - [ ] Relevant modules applied?
 
 ---
-
-_DOMYH Awesome Code • Constitutional Rules System • Agentic Personas_

@@ -1,7 +1,6 @@
 ---
 name: playwright
 detect: ["playwright.config.*", "*.e2e.*", "tests/e2e/**"]
-version: "1.0.0"
 ---
 
 # Playwright Browser Automation (2026)
@@ -206,5 +205,3 @@ Data powered by HSA BM25 search engine:
 **Data domains**: `mcp-tools`, `interaction-checklist`, `locator-patterns`, `config-templates`, `ai-agents`, `open-source-tools`
 
 ---
-
-_DOMYH Awesome Code — Playwright Browser Automation (Data-Driven + HSA)_

@@ -3,7 +3,6 @@
 # =============================================================================
 
 name: monorepo
-version: "6.4.5"
 category: cross-cutting
 priority: 3
 
@@ -50,5 +49,3 @@ data_files:
   - workspace-patterns.yaml
   - ci-cd-strategies.yaml
   - versioning.yaml
-
-# _DOMYH Awesome Code • Monorepo Skill_

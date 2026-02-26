@@ -5,7 +5,6 @@
 # =============================================================================
 
 name: microservices
-version: "6.4.5"
 category: cross-cutting
 priority: 2
 
@@ -85,6 +84,3 @@ data_files:
   - resilience.yaml # Circuit breaker, bulkhead, retry
   - observability.yaml # Distributed tracing, correlation IDs
   - deployment.yaml # Blue-green, canary, rolling
-
-
-# _DOMYH Awesome Code • Microservices Skill_

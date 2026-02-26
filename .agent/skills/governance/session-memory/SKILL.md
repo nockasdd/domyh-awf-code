@@ -7,7 +7,6 @@ triggers:
   - "When encountering errors that should not be repeated"
   - "At session start — recall prior decisions before re-debating"
   - "Before context compaction — emergency save"
-version: "2.0.0"
 ---
 
 # Session Memory (Persistent Brain Pattern)

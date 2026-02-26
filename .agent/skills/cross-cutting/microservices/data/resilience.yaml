@@ -2,7 +2,6 @@
 # resilience.yaml — Resilience Patterns for Microservices
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # CIRCUIT BREAKER
@@ -185,5 +184,3 @@ fallback:
       description: "Reduced functionality instead of total failure"
     - name: "Queue for Later"
       description: "Accept request, process when service recovers"
-
-# _DOMYH Awesome Code • Resilience Patterns_

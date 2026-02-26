@@ -1,7 +1,6 @@
 ---
 name: elixir
 detect: ["*.ex", "*.exs", "mix.exs", "mix.lock"]
-version: "6.4.5"
 category: functional
 tier: 2
 ---
@@ -364,5 +363,3 @@ end
 - [ ] PubSub for real-time
 
 ---
-
-_DOMYH Awesome Code • Elixir 1.16+ Phoenix 1.7+_

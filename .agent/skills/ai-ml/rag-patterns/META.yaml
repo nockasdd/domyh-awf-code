@@ -3,7 +3,6 @@
 # =============================================================================
 
 name: rag-patterns
-version: "6.4.5"
 category: ai-ml
 priority: 3
 
@@ -55,5 +54,3 @@ data_files:
   - vector-databases.yaml
   - retrieval-patterns.yaml
   - evaluation.yaml
-
-# _DOMYH Awesome Code • RAG Patterns Skill_

@@ -1,6 +1,5 @@
 ---
 name: real-time
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -130,5 +129,3 @@ source.onmessage = (e) => {
 | SSE max connections (browser limit: 6) | Use HTTP/2 or single multiplexed SSE      |
 
 ---
-
-_DOMYH Awesome Code • Real-time Communication Skill v1.0.0_

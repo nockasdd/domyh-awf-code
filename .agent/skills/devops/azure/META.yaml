@@ -1,5 +1,4 @@
 name: azure
-version: "6.4.5"
 display: Microsoft Azure
 category: devops
 tier: 1

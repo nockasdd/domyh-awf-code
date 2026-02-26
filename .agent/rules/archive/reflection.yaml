@@ -16,7 +16,6 @@ enabling learning from both successes and failures.
 
 ```yaml
 name: reflection
-version: "6.4.5"
 category: improvement
 priority: 2
 
@@ -205,5 +204,3 @@ metrics:
 ```
 
 ---
-
-# DOMYH Awesome Code  • Reflection Module

@@ -4,7 +4,6 @@
 # Metadata for skill categories in hierarchical organization
 # =============================================================================
 
-version: "6.4.5"
 
 categories:
   # ==========================================================================
@@ -133,12 +132,12 @@ categories:
       - bun
       - audit-pro
 
-      # P0 Skills (v6.4.5)
+      # P0 Skills
       - tdd-workflow
       - accessibility
       - seo
 
-      # P1 Skills (v6.4.5)
+      # P1 Skills
       - microservices
       - monorepo
 
@@ -198,5 +197,4 @@ stats:
 
 
 # =============================================================================
-# _DOMYH Awesome Code • Category Definitions v6.3_
 # =============================================================================

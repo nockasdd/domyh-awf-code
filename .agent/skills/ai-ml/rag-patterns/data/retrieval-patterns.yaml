@@ -2,7 +2,6 @@
 # retrieval-patterns.yaml — Advanced Retrieval Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 hybrid_search:
   description: "Combine dense (vector) + sparse (keyword) search"
@@ -97,5 +96,3 @@ parent_document:
   pipeline: |
     Document → Split into small chunks (200 tokens) → Index
     Query → Match small chunk → Return parent section (2000 tokens)
-
-# _DOMYH Awesome Code • Retrieval Patterns_

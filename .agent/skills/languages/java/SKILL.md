@@ -2,7 +2,6 @@
 name: java
 detect:
   ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "settings.gradle"]
-version: "6.4.5"
 category: backend
 tier: 1
 ---
@@ -491,5 +490,3 @@ tasks.withType<Test> {
 - [ ] Mock external services
 
 ---
-
-_DOMYH Awesome Code • Java Development • 2025-2026_

@@ -1,6 +1,5 @@
 ---
 name: observability
-version: "6.4.5"
 category: core
 ---
 
@@ -146,5 +145,3 @@ Data powered by HSA BM25 search engine:
 | Traces without context  | Hard debugging   | Add correlation IDs    |
 
 ---
-
-_DOMYH Awesome Code • Observability • OpenTelemetry Standard_

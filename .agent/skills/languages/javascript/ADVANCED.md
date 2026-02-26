@@ -526,5 +526,3 @@ test.describe("Login Flow", () => {
 ```
 
 ---
-
-_DOMYH Awesome Code — JavaScript Advanced Patterns — 2025-2026_

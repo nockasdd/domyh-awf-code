@@ -2,7 +2,6 @@
 name: nextjs
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -589,5 +588,3 @@ export default function Error({
 - [ ] robots.txt configured
 
 ---
-
-_DOMYH Awesome Code • Next.js 16+ • Turbopack Default • Cache Components_

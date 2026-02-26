@@ -98,5 +98,3 @@ guardrails:
 ```
 
 ---
-
-_DOMYH Awesome Code • Guardrails Block Template_

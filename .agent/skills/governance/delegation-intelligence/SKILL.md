@@ -6,7 +6,6 @@ triggers:
   - "When subagent returns results"
   - "When deciding parallel vs sequential execution"
   - "When breaking complex work into subtasks"
-version: "2.0.0"
 ---
 
 # Delegation Intelligence

@@ -1,5 +1,4 @@
 # Azure Compute Patterns — HSA Tier 3 Data
-version: "6.4.5"
 
 patterns:
   - id: AZ-CMP-001

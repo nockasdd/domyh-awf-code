@@ -12,8 +12,7 @@
 # =============================================================================
 
 system:
-  version: "6.4.5"
-  version_short: "v6.4.5" # Dùng cho footer: "_DOMYH Awesome Code "
+  version: "6.4.6"
   codename: "SSoT & Hygiene"
   release_date: "2026-02-25"
 
@@ -64,7 +63,7 @@ components:
   # === SPECIALIZED WORKFLOWS ===
   think_pro: "4.0" # Think Pro - 6 Methods + 5 Tiers + Multi-Mode
   visualize_pro: "4.0" # Visualize Pro - Multi-Platform + Component Mapping
-  sync_version_pro: "1.0" # Sync Version - SSoT Architecture
+
 
   # Default for unlisted
   default_workflow_version: "3.1"
@@ -73,203 +72,9 @@ components:
   ui_ux_pro: "5.0" # UI/UX Pro Max
   web_perf: "5.0" # Web Performance
 
-  # Default for unlisted
-  default_skill_version: "v6.4.5"
 
 # =============================================================================
-# VERSION HISTORY
+# VERSION HISTORY → See core/CHANGELOG.yaml
 # =============================================================================
 
-changelog:
-  # NOTE: Each key MUST be unique per YAML spec. Duplicate keys cause silent data loss.
-  "6.4.5":
-    date: "2026-02-25"
-    codename: "SSoT & Hygiene"
-    changes:
-      - "Version SSoT: sync-version.mjs script for single-source version propagation"
-      - "Personas optimized: 2,397→761 lines (-68%), removed dead banners/backstories"
-      - "Rules optimized: 55KB→17.8KB (-68%), removed decorative banners"
-      - "HSA engine: +7 stacks, SAFETY_MODULES fix, rationale regex"
-      - "Fixed 7 persona dead enforces references"
-      - "Version drift cleanup: 60+ files synced"
-      - "NEW: hsa_search_files tool (21 MCP tools total)"
-      - "Terminal safety: cmd /c conditional based on IDE shell detection (was ALWAYS)"
-      - "SACRED_RULES: MCP_001+MCP_003 updated with hsa_search_files + shell guidance"
-      - "22 IDE configs updated with conditional shell rule"
-      - "Error format standardization: formatToolError utility across 6 handlers"
 
-  "6.4.5-rc1":
-    date: "2026-02-14"
-    codename: "Dashboard Resilience"
-    changes:
-      - "HSA Dashboard: Explorer cache 60s TTL — eliminates 504 timeouts"
-      - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
-      - "Codex IDE: Optimized AGENTS.md with inline rules"
-
-  "6.4.5-beta.2":
-    date: "2026-02-12"
-    codename: "Ecosystem Expansion"
-    changes:
-      - "7 new skills: tdd-workflow, prompt-engineering, accessibility, seo, microservices, monorepo, rag-patterns"
-      - "2 new rules: agent-delegation, performance-optimization"
-      - "3 new workflows: /tdd, /e2e, /verify"
-      - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
-
-  "6.4.5-beta.1":
-    date: "2026-02-05"
-    codename: "Context Mesh"
-    changes:
-      - "HSA v1.0.0: HybridRAG+ with ColBERT reranking"
-      - "Merkle-bound embedding cache (11x speedup)"
-      - "AST-based semantic chunking (tree-sitter)"
-      - "Dynamic Leiden community detection"
-      - "GPU acceleration (cuGraph + embeddings)"
-      - "UI/UX Pro Max HSA adapter integration"
-
-  "6.1.1":
-    date: "2026-02-03"
-    codename: "Agentic Personas"
-    changes:
-      - "11 personas with CrewAI/Anthropic/LangGraph patterns"
-      - "5-tier constitutional rule hierarchy (SACRED_RULES.xml)"
-      - "13 prompt chain templates"
-      - "Deep Interview (PHASE 0) trong /plan"
-      - "Auto Test Loop (3 retries) trong /code"
-
-  "6.1.0":
-    date: "2026-02-02"
-    codename: "Multi-IDE Milestone"
-    changes:
-      - "51 skills milestone achieved"
-      - "14 IDEs supported with verified formats"
-      - "CLI commands: install, validate, doctor"
-      - "Decoupled Adapter Architecture"
-      - "Strategic Profiles system"
-
-  "6.0.0":
-    date: "2026-01-15"
-    codename: "Skills Era"
-    changes:
-      - "21 core skills"
-      - "Progressive Disclosure architecture"
-      - "Semantic skill selection"
-
-  "5.1.0":
-    date: "2026-02-01"
-    codename: "Root Cause"
-    changes:
-      - "Debug Pro với Root Cause Tracing"
-      - "Engineering Iron Laws"
-      - "External Skills Registry"
-
-  "5.0.0":
-    date: "2026-01-28"
-    codename: "Pro Max"
-    changes:
-      - "UI/UX Pro Max skill"
-      - "Web Performance skill"
-      - "Test Pro với AI Testing"
-
-# =============================================================================
-# VERSION REFERENCE PATTERN (VRP) — Auto-Sync Configuration
-# =============================================================================
-# Run: nock awf sync-version [--dry-run] [--validate]
-# =============================================================================
-
-sync:
-  enabled: true
-  version: "1.0.0" # VRP version
-
-  # ==========================================================================
-  # SYNC PATTERNS
-  # ==========================================================================
-  patterns:
-    # Pattern 1: YAML version fields
-    yaml_version:
-      description: "Update version: field in YAML files"
-      regex: 'version: "[0-9]+\\.[0-9]+\\.[0-9]+"'
-      replace: 'version: "{system.version}"'
-      targets:
-        - ".agent/core/*.yaml"
-        - ".agent/skills/**/META.yaml"
-        - ".agent/skills/_router.yaml"
-        - ".agent/templates/tasks/*.yaml"
-        - ".agent/personas/*.md"
-        - ".agent/i18n/*.yaml"
-        - ".agent/rules/**/*.yaml"
-      exclude:
-        - ".agent/core/VERSION.yaml" # SSoT itself
-
-    # Pattern 2: Markdown footers
-    md_footer:
-      description: "Update _DOMYH Awesome Code vX.X.X footers"
-      regex: '_DOMYH Awesome Code v[0-9]+\\.[0-9]+(\\.[0-9]+)?'
-      replace: "_DOMYH Awesome Code v{system.version}"
-      targets:
-        - ".agent/workflows/*.md"
-        - ".agent/templates/**/*.md"
-        - ".agent/skills/**/SKILL.md"
-        - ".agent/rules/**/*.md"
-        - "GEMINI.md"
-
-    # Pattern 3: Markdown headers with version
-    md_header:
-      description: "Update # Title vX.X.X headers"
-      regex: '(# .+DOMYH.+)v[0-9]+\\.[0-9]+(\\.[0-9]+)?'
-      replace: '\\1v{system.version}'
-      targets:
-        - ".agent/templates/README.md"
-        - ".agent/core/README.md"
-
-    # Pattern 4: JSON version fields
-    json_version:
-      description: "Update version in JSON files"
-      regex: '"version": "v?[0-9]+\\.[0-9]+\\.[0-9]+"'
-      replace: '"version": "v{system.version}"'
-      targets:
-        - ".agent/memory/**/*.json"
-        - ".agent/ide/*.json"
-
-  # ==========================================================================
-  # VALIDATION
-  # ==========================================================================
-  validation:
-    pre_check:
-      - "SSoT file exists and valid YAML"
-      - "Version follows semver format"
-
-    post_check:
-      - "All targets updated"
-      - "No orphan version references"
-
-    drift_detection:
-      enabled: true
-      schedule: "on_commit"
-      action: "warn"
-      threshold: 0
-
-  # ==========================================================================
-  # CLI OPTIONS
-  # ==========================================================================
-  cli:
-    command: "nock awf sync-version"
-    options:
-      dry_run: "--dry-run"
-      validate: "--validate"
-      verbose: "--verbose"
-      report: "--report"
-
-# =============================================================================
-# LEGACY SYNC TARGETS (for reference)
-# =============================================================================
-
-sync_targets_legacy:
-  - ".agent/manifest.yaml → version"
-  - ".agent/config.yaml → header comment"
-  - ".agent/memory/state.json → system.version"
-  - ".agent/i18n/vi.yaml → app.version"
-  - ".agent/i18n/en.yaml → app.version"
-  - "GEMINI.md → header + footer"
-  - ".agent/workflows/*.md → footer"
-  - ".agent/skills/*/SKILL.md → footer"
-  - ".agent/templates/*.md → footer"

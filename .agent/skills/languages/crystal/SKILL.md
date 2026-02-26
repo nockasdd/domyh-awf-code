@@ -1,7 +1,6 @@
 ---
 name: crystal
 detect: ["*.cr", "shard.yml", "shard.lock"]
-version: "6.4.5"
 category: language
 tier: 3
 ---
@@ -113,5 +112,3 @@ end
 - [ ] `ameba` linter passing
 
 ---
-
-_DOMYH Awesome Code • Crystal 1.10+_

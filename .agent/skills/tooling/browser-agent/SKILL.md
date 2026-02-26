@@ -1,7 +1,6 @@
 ---
 name: browser-agent
 detect: []
-version: "1.0.0"
 ---
 
 # Browser Agent Verification Patterns (2026)
@@ -160,5 +159,3 @@ Data powered by HSA BM25 search engine:
 **Data domains**: `verification-flow`, `subagent-patterns`, `element-discovery`, `recording-patterns`, `reporting-patterns`
 
 ---
-
-_DOMYH Awesome Code — Browser Agent Verification Patterns (Data-Driven + HSA)_

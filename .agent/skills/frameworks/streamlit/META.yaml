@@ -4,7 +4,6 @@
 # =============================================================================
 
 name: streamlit
-version: "6.4.5"
 category: frameworks
 tier: 2
 description: |
@@ -56,5 +55,3 @@ related_skills:
   - ml-pipelines
   - gemini-live
   - rag-patterns
-
-# _DOMYH Awesome Code • Streamlit Skill • v7.0_

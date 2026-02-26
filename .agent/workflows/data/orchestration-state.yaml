@@ -90,6 +90,3 @@ orchestration:
 #   input_required  — Agent needs user input (A2A pattern)
 #   completed       — Task finished, output stored
 #   failed          — Error occurred (retryable or terminal)
-
----
-_DOMYH Awesome Code • Orchestration State Schema_

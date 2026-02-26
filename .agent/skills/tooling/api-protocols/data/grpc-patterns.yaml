@@ -4,7 +4,6 @@
 metadata:
   skill: api-protocols
   domain: grpc
-  version: "6.4.5"
   updated: "2026-02-12"
   patterns_count: 7
 

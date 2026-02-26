@@ -5,7 +5,6 @@
 # Integrates with HSA v1.3.2 project detector for optimal token usage
 # =============================================================================
 
-version: "6.4.5"
 engine: "hsa"
 schema: "hierarchical"
 
@@ -291,6 +290,4 @@ token_budget:
 
 
 # =============================================================================
-# _DOMYH Awesome Code • Hierarchical Skill Router v6.3_
 # =============================================================================
-

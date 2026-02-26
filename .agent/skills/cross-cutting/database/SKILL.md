@@ -1,6 +1,5 @@
 ---
 name: database
-version: "6.4.5"
 category: infrastructure
 ---
 
@@ -8,7 +7,6 @@ category: infrastructure
 name: database
 detect:
   ["*.sql", "schema.prisma", "drizzle/", "migrations/", "*.db", "*.sqlite"]
-version: "6.4.5"
 category: infrastructure
 tier: 1
 ---
@@ -21,22 +19,22 @@ tier: 1
 
 ```
 Task → What database need?
-  ├─ Structured data with relationships
-  │   ├─ Complex queries → PostgreSQL (JSON + full-text + GIS)
-  │   ├─ Simple reads → MySQL (fast, reliable)
-  │   └─ Global distribution → CockroachDB / TiDB
-  ├─ Flexible schema
-  │   ├─ Document model → MongoDB
-  │   └─ Time-series → InfluxDB / TimescaleDB
-  ├─ Caching / sessions
-  │   └─ Redis (sub-ms, TTL, pub/sub)
-  ├─ Search
-  │   ├─ Full-text → PostgreSQL GIN or Elasticsearch
-  │   └─ Vector → pgvector / Redis VectorSet
-  └─ ORM selection
-      ├─ Type-safe → Prisma (schema-first)
-      ├─ SQL-first → Drizzle (lightweight)
-      └─ Legacy → TypeORM / Sequelize
+   Structured data with relationships
+      Complex queries → PostgreSQL (JSON + full-text + GIS)
+      Simple reads → MySQL (fast, reliable)
+      Global distribution → CockroachDB / TiDB
+   Flexible schema
+      Document model → MongoDB
+      Time-series → InfluxDB / TimescaleDB
+   Caching / sessions
+      Redis (sub-ms, TTL, pub/sub)
+   Search
+      Full-text → PostgreSQL GIN or Elasticsearch
+      Vector → pgvector / Redis VectorSet
+   ORM selection
+       Type-safe → Prisma (schema-first)
+       SQL-first → Drizzle (lightweight)
+       Legacy → TypeORM / Sequelize
 ```
 
 ---
@@ -150,15 +148,13 @@ nosql_indicators:
 ### Polyglot Persistence (Recommended Pattern)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        Application                          │
-├──────────────┬────────────┬───────────┬─────────────────────┤
-│  PostgreSQL  │  MongoDB   │   Redis   │   Elasticsearch     │
-│  (Primary)   │ (Flexible) │ (Cache)   │   (Search)          │
-│  Users       │ Logs       │ Sessions  │   Products          │
-│  Orders      │ Events     │ Rate Limit│   Full-text         │
-│  Payments    │ Analytics  │ Leaderboard│                    │
-└──────────────┴────────────┴───────────┴─────────────────────┘
+
+> Application
+> PostgreSQL    MongoDB      Redis      Elasticsearch
+> (Primary)    (Flexible)  (Cache)      (Search)
+> Users        Logs        Sessions     Products
+> Orders       Events      Rate Limit   Full-text
+> Payments     Analytics   Leaderboard
 ```
 
 ---
@@ -225,5 +221,3 @@ Data powered by HSA BM25 search engine across 6 database domains:
 | Migration  | "connection pooling PgBouncer rolling deploy" |
 
 ---
-
-_DOMYH Awesome Code Database Patterns HSA-Powered 2025-2026_

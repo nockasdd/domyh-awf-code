@@ -118,5 +118,3 @@ Parameterized queries ngăn chặn hoàn toàn SQL injection.
 - https://owasp.org/www-community/attacks/SQL_Injection
 
 ---
-
-\_DOMYH Awesome Code

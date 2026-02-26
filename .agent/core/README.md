@@ -1,4 +1,4 @@
-# ⚙️ DOMYH Awesome Code Core v6.4.5
+# ⚙️ DOMYH Awesome Code Core
 
 Core system files — always loaded or on-demand reference.
 
@@ -26,25 +26,23 @@ Core system files — always loaded or on-demand reference.
 
 ### Reference (on-demand)
 
-| File                  | Purpose                 | Tokens |
-| --------------------- | ----------------------- | ------ |
-| ARCH_REGISTRY.yaml    | Architecture patterns   | ~1,900 |
-| BRANDING.yaml         | Project identity SSoT   | ~600   |
-| CODING_STYLES.yaml    | Language conventions ⚠️ | ~650   |
-| HSA.yaml              | HSA master config       | ~1,100 |
-| LIBRARY_REGISTRY.yaml | Library recommendations | ~650   |
-| MCP_TOOLS.yaml        | MCP tool definitions    | ~1,100 |
-| PATTERNS.yaml         | Shared workflow patterns| ~550   |
-| SKILL_SCHEMA.yaml     | Skill structure schema  | ~400   |
-| TEMPLATES.yaml        | Template registry       | ~300   |
+> ⚠️ Reference files moved to `docs/reference/`. Listed here for context only.
 
-> ⚠️ CODING_STYLES.yaml is deprecated — kept for reference. SSoT is `/code` workflow.
+| File                  | Purpose                 |
+| --------------------- | ----------------------- |
+| ARCH_REGISTRY.yaml    | Architecture patterns   |
+| BRANDING.yaml         | Project identity SSoT   |
+| CODING_STYLES.yaml    | Language conventions    |
+| HSA.yaml              | HSA master config       |
+| LIBRARY_REGISTRY.yaml | Library recommendations |
+| MCP_TOOLS.yaml        | MCP tool definitions    |
+| PATTERNS.yaml         | Shared workflow patterns|
+| SKILL_SCHEMA.yaml     | Skill structure schema  |
+| TEMPLATES.yaml        | Template registry       |
 
 ## Archive
 
-`archive/` contains 25 legacy engine files (ROUTER, TOKEN_BUDGETS, CONTEXT_LOADER, SKILLS_FLOW, MEMORY_ENGINE, etc.). These were consolidated into `AGENT_BEHAVIOR.md` and are kept for historical reference only.
-
-See `archive/README.md` for details.
+> Moved to `docs/archived-specs/`. Contains 25 legacy engine files (ROUTER, TOKEN_BUDGETS, etc.), consolidated into `AGENT_BEHAVIOR.md`.
 
 ## Architecture
 
@@ -64,5 +62,3 @@ Tier 3: ADVANCED.md (~4,000 tokens) → Referenced only
 - Cache: LRU (max 3 active skills)
 
 ---
-
-_DOMYH Awesome Code • Core System v6.3.9_

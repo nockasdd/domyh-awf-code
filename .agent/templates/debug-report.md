@@ -1,6 +1,5 @@
 ---
 name: debug-report
-version: "6.4.5"
 type: report
 triggers: ["/debug"]
 ---
@@ -46,5 +45,3 @@ triggers: ["/debug"]
 - [ ] Docs updated
 
 ---
-
-\_DOMYH Awesome Code

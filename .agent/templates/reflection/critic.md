@@ -106,5 +106,3 @@ If critique reveals issues:
 ```
 
 ---
-
-# DOMYH Awesome Code • Reflection Template

@@ -1,7 +1,6 @@
 ---
 name: svelte
 detect: ["svelte.config.js", "*.svelte", "+page.svelte", "+layout.svelte"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -394,5 +393,3 @@ export default {
 ```
 
 ---
-
-_DOMYH Awesome Code • Svelte 5.x / SvelteKit 2.x • Feb 2026_

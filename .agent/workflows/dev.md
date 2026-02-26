@@ -139,17 +139,17 @@ docker_compose:
 | esbuild   | ⚡⚡ Fastest | Build-only               |
 ---
 
-## 🪞 REFLECTION CHECKPOINT
+## REFLECTION CHECKPOINT
 
-> After VALIDATE step, apply `templates/reflection/critic.md`:
-> 1. Server responding to health checks?
-> 2. All required services running?
-> 3. No error output in console?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

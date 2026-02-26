@@ -29,6 +29,11 @@ MUST execute before writing code:
 - **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
 - **PERF_001**: Use file outlines and grep before full reads; parallel calls for independent ops
 
+## 📝 Session Memory
+
+- **On START**: Read `.agent/memory/CONTEXT_SNAPSHOT.md` for project context continuity
+- **Before END/task complete**: Update `CONTEXT_SNAPSHOT.md` with: changes made, current status, key decisions
+
 ## Terminal Safety (Windows)
 
 NEVER use these on Windows — they hang indefinitely:
@@ -36,11 +41,11 @@ NEVER use these on Windows — they hang indefinitely:
 - ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show`
 - ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
 - ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background
-✅ FIRST call `hsa_detect_environment` to check IDE terminal shell:
-- Shell = `cmd` → wrap with `cmd /c "command"` (prevent stdin race hang)
-- Shell = `bash`/`zsh` → use native syntax (`&&` chaining, NO cmd /c)
+✅ FIRST call `hsa_detect_environment` to check IDE terminal shell. Do NOT run any command before knowing the shell.
+- ❌ Shell = `bash`/`zsh`/MINGW64/Git Bash → **NEVER** use `cmd /c`. Use native `&&` chaining directly
+- Shell = `cmd` → wrap with `cmd /c "command"` (ONLY when `hsa_detect_environment` confirms cmd shell)
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
-- Shell unknown → default to `cmd /c` (safest fallback)
+- Shell unknown → **STOP**. Call `hsa_detect_environment` first. Do NOT assume any shell
 
 ## Skills & Workflows
 

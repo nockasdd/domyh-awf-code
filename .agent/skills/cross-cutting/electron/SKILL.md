@@ -1,6 +1,5 @@
 ---
 name: electron
-version: "6.4.5"
 category: desktop
 ---
 
@@ -13,7 +12,6 @@ detect:
     "preload.ts",
     "forge.config.ts",
   ]
-version: "1.0.0"
 category: desktop
 tier: 1
 ---
@@ -259,5 +257,3 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 | Testing  | "Playwright E2E Vitest unit test"           |
 
 ---
-
-_DOMYH Awesome Code Electron 35-40 HSA v1.0.0 2026_

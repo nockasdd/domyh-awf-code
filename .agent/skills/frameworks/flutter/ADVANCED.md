@@ -487,5 +487,3 @@ class UserViewModel extends StateNotifier<UserState> {
 ```
 
 ---
-
-_DOMYH Awesome Code — Flutter/Dart Advanced Patterns — 2025-2026_

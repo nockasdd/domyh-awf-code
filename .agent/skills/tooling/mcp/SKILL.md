@@ -1,6 +1,5 @@
 ---
 name: mcp
-version: "6.4.5"
 category: tooling
 ---
 
@@ -21,19 +20,18 @@ category: tooling
 ## Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│           HOST APPLICATION              │
-│  (Claude Desktop, VS Code, IDE...)      │
-│                                         │
-│  ┌──────────┐  ┌──────────┐             │
-│  │ Client A │  │ Client B │  ← 1:1 map  │
-│  └────┬─────┘  └────┬─────┘             │
-└───────│──────────────│──────────────────┘
-        │              │
-  ┌─────▼─────┐  ┌─────▼─────┐
-  │ Server A  │  │ Server B  │  ← Bounded context
-  │ (Files)   │  │ (GitHub)  │  ← Single responsibility
-  └───────────┘  └───────────┘
+
+> HOST APPLICATION
+> (Claude Desktop, VS Code, IDE...)
+> 
+>   
+>  Client A    Client B   ← 1:1 map
+>   
+> 
+  ▼  ▼
+   Server A     Server B    ← Bounded context
+   (Files)      (GitHub)    ← Single responsibility
+    
 ```
 
 ## Core Patterns
@@ -116,5 +114,3 @@ server.resourceTemplate("user/{id}", async (uri) => ({
 | Python     | `mcp`                       | modelcontextprotocol.io |
 
 ---
-
-_DOMYH Awesome Code • MCP Skill v1.0.0_

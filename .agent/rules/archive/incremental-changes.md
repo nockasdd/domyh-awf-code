@@ -142,5 +142,3 @@ Step 2: Create User repository
 - [ ] Can rollback if needed?
 
 ---
-
-_DOMYH Awesome Code — Incremental Changes Rule_

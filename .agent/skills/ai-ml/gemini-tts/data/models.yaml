@@ -5,7 +5,6 @@
 # Source: https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 6
 
 models:
@@ -120,5 +119,4 @@ api_usage:
           audio_data = chunk.candidates[0].content.parts[0].inline_data.data
 
 # =============================================================================
-# _DOMYH Awesome Code • TTS Models v1.0_
 # =============================================================================

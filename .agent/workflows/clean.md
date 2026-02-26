@@ -13,56 +13,12 @@ success_criteria: "Dead code removed, imports organized, build passes"
 
 ## 🔄 CLEANUP FLOW
 
-```
-User: /clean [option]
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 1: DETECT (Auto - 5s)            │
-│ ▸ hsa_declare_intent("code cleanup")    │
-│ ▸ Identify tech stack (hsa_detect_stack) │
-│ ▸ Find relevant tools                   │
-│ ▸ Check tool availability               │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 2: SCAN (Auto - 30s)             │
-│ ▸ Run analysis tools                    │
-│ ▸ Collect dead code locations           │
-│ ▸ Identify unused deps/imports          │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 3: PREVIEW                        │
-│ ▸ Show what will be removed             │
-│ ⛔ STOP - WAIT FOR USER CONFIRMATION    │
-└─────────────────────────────────────────┘
-    │ User: "y" or "1,3,5" (selective)
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 4: EXECUTE (With Backup)          │
-│ ▸ Create backup (optional)              │
-│ ▸ Apply selected changes                │
-│ ▸ Run formatters                        │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 5: VERIFY                         │
-│ ▸ Run build to confirm no breaks        │
-│ ▸ Show summary of changes               │
-│ ▸ Offer rollback if issues              │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 6: SYNC                           │
-│ ▸ hsa_check_changes to update index     │
-│ ▸ After file removals/edits             │
-└─────────────────────────────────────────┘
-```
+1. **PHASE 1: DETECT (Auto - 5s)** — `hsa_declare_intent`, `hsa_detect_stack`, identifying tools.
+2. **PHASE 2: SCAN (Auto - 30s)** — Run analysis tools. Collect dead code / unused deps.
+3. **PHASE 3: PREVIEW** — Show proposed removals. ⛔ **STOP - WAIT FOR USER CONFIRMATION**.
+4. **PHASE 4: EXECUTE** — Create backup (optional), apply selected changes, format.
+5. **PHASE 5: VERIFY** — Run build/tests, show summary, offer rollback.
+6. **PHASE 6: SYNC** — `hsa_check_changes` to update index.
 
 ---
 
@@ -94,27 +50,7 @@ User: /clean [option]
 
 ### Output:
 
-```
-🔍 STACK DETECTED
-
-Project: Monorepo (Multi-language)
-├── Backend: ./backend
-│   ├── Go (API Server)
-│   ├── Python (ML Service)
-│   └── Rust (Performance Module)
-├── Frontend: ./frontend
-│   ├── TypeScript (React)
-│   └── Vue (Admin Panel)
-├── Mobile: ./mobile
-│   ├── Swift (iOS)
-│   └── Kotlin (Android)
-└── Infra: ./infra
-    ├── Terraform
-    └── Docker
-
-Tools loaded: 12 languages detected
-Scanning...
-```
+> Output concisely: Project name, Stack, and Tools loaded.
 
 ---
 
@@ -168,49 +104,8 @@ pip-autoremove --list
 
 ### Report Format:
 
-```
-🧹 CLEANUP REPORT
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📁 DEAD CODE (5 items)
-
-| # | File | Line | Type | Code |
-|---|------|------|------|------|
-| 1 | auth/helper.go | 45 | func | `unusedValidator()` |
-| 2 | auth/helper.go | 89 | func | `deprecatedCheck()` |
-| 3 | utils/string.go | 12 | var | `oldPrefix` |
-| 4 | handlers/user.go | 156 | func | `legacyHandler()` |
-| 5 | models/temp.go | 1-50 | file | Entire file unused |
-
-📦 UNUSED DEPENDENCIES (3 items)
-
-| # | Package | Last Imported | Size |
-|---|---------|---------------|------|
-| 6 | github.com/old/lib | Never | 2.1MB |
-| 7 | lodash | Never | 1.5MB |
-| 8 | moment | Never | 0.8MB |
-
-📥 UNUSED IMPORTS (12 files)
-
-| # | File | Count | Imports |
-|---|------|-------|---------|
-| 9 | handlers/order.go | 3 | fmt, strings, time |
-| 10| services/cache.go | 2 | context, sync |
-| ...
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Total: 5 dead code + 3 deps + 12 import files
-
-⛔ SELECT ACTION:
-  [y] Apply all
-  [n] Cancel
-  [1,2,6] Apply selected items only
-  [--backup] Create backup first
-
-Enter choice:
-```
+> Present a concise table of dead code, unused dependencies, and imports. 
+> Then prompt: ⛔ SELECT ACTION: [y] Apply all, [1,2,6] Selective items, [--backup] Backup first, [n] Cancel.
 
 ---
 
@@ -252,30 +147,7 @@ step_4.5:
 
 ### Progress Output:
 
-```
-🔄 APPLYING CHANGES
-
-[1/5] Removing dead code...
-  ✅ auth/helper.go:45 (unusedValidator)
-  ✅ auth/helper.go:89 (deprecatedCheck)
-  ✅ utils/string.go:12 (oldPrefix)
-  ✅ handlers/user.go:156 (legacyHandler)
-  ✅ models/temp.go (deleted file)
-
-[2/5] Removing unused dependencies...
-  ✅ github.com/old/lib (2.1MB freed)
-  ✅ lodash (1.5MB freed)
-  ✅ moment (0.8MB freed)
-
-[3/5] Organizing imports...
-  ✅ 12 files updated
-
-[4/5] Formatting code...
-  ✅ 45 files formatted
-
-[5/5] Running build verification...
-  ⏳ go build ./...
-```
+> Output progress incrementally as steps complete (e.g., `Removing dead code... ✅ auth/helper.go:45`).
 
 ---
 
@@ -304,32 +176,8 @@ verify_steps:
 
 ### Final Report:
 
-```
-✅ CLEANUP COMPLETE
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SUMMARY:
-├── Dead code removed: 5 items
-├── Dependencies removed: 3 packages (4.4MB freed)
-├── Imports organized: 12 files
-├── Files formatted: 45 files
-└── Build status: ✅ SUCCESS
-
-VERIFICATION:
-├── Build: ✅ Passed
-├── Tests: ✅ 156/156 passed
-└── Lint: ✅ No issues
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📋 NEXT STEPS:
-1️⃣ Review changes: git diff
-2️⃣ Commit: git commit -am "chore: code cleanup"
-3️⃣ If issues: git stash pop (restore backup)
-
-Enter number or command:
-```
+> Show a concise summary of freed resources, updated files, and verification results (Build/Tests/Lint).
+> Provide NEXT STEPS (e.g., review git diff, commit).
 
 ---
 
@@ -523,42 +371,7 @@ memory_cleanup:
 
 ### Preview Format:
 
-```
-🧠 MEMORY STATUS
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📁 SESSION FILES (safe to reset)
-├── session.md           1.1 KB
-├── consolidated.md      1.2 KB
-├── insights.md          0.9 KB
-├── active_memories.json 0.9 KB
-└── cleanup_log.json     0.7 KB
-    Subtotal: 4.8 KB
-
-📁 STATE FILES (project context)
-├── state.json           1.4 KB
-├── metrics.json         0.8 KB
-└── decisions.md         1.1 KB
-    Subtotal: 3.3 KB
-
-📁 AUDIT FILES (important records)
-├── audit_summary.json   1.1 KB
-└── archive/             (2 files)
-    Subtotal: 1.5 KB
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Total: 9.6 KB
-
-⛔ SELECT ACTION:
-  [1] Reset session files only (4.8 KB)
-  [2] Reset session + state (8.1 KB)
-  [3] Reset audit logs only (1.5 KB)
-  [4] Reset all (--hard) ⚠️ IRREVERSIBLE
-  [n] Cancel
-
-Enter choice:
-```
+> Show file sizes for Session, State, and Audit files. Prompt for reset level [1-4] or cancel.
 
 ### Reset Templates:
 
@@ -633,17 +446,17 @@ audit_reset:
 
 ---
 
-## 🪞 REFLECTION CHECKPOINT
+## REFLECTION CHECKPOINT
 
-> After VERIFY phase, apply `templates/reflection/critic.md`:
-> 1. No false positives in dead code detection?
-> 2. Build + tests still pass after cleanup?
-> 3. Protected patterns correctly skipped?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

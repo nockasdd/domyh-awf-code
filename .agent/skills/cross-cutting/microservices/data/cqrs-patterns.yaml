@@ -2,7 +2,6 @@
 # cqrs-patterns.yaml — CQRS Implementation Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # CORE CONCEPT
@@ -14,18 +13,16 @@ overview:
     models for optimized performance and scalability.
 
   architecture: |
-    ┌─────────────────────────────────────────────────┐
-    │  Client                                         │
-    │  ├── Commands (Write) → Command Handler         │
-    │  │                       → Domain Model         │
-    │  │                       → Event Store          │
-    │  │                       → Domain Events        │
-    │  │                                ↓             │
-    │  │                       → Projections          │
-    │  │                                ↓             │
-    │  └── Queries (Read) ←── Read Model (Views)      │
-    └─────────────────────────────────────────────────┘
 
+> Client
+>  Commands (Write) → Command Handler
+>                        → Domain Model
+>                        → Event Store
+>                        → Domain Events
+>                                 ↓
+>                        → Projections
+>                                 ↓
+>  Queries (Read) ← Read Model (Views)
 # =============================================================================
 # COMMAND SIDE
 # =============================================================================
@@ -195,5 +192,3 @@ decision_guide:
       impact: "Stale data shown to users"
     - mistake: "Shared database for read/write"
       impact: "Defeats the purpose of separation"
-
-# _DOMYH Awesome Code • CQRS Patterns_

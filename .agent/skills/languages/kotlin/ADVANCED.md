@@ -535,5 +535,3 @@ class FakeUserApi : UserApi {
 ```
 
 ---
-
-_DOMYH Awesome Code — Kotlin Advanced Patterns — 2025-2026_

@@ -1,7 +1,6 @@
 ---
 name: ocaml
 detect: ["*.ml", "*.mli", "dune", "dune-project", "*.opam"]
-version: "6.4.5"
 category: functional
 tier: 3
 ---
@@ -119,5 +118,3 @@ let () = Lwt_main.run (main ())
 - [ ] `.mli` interface files
 
 ---
-
-_DOMYH Awesome Code • OCaml 5.1+_

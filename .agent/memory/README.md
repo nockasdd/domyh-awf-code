@@ -151,5 +151,3 @@ JSON files should maintain schema:
 - `audit_summary.json` — Keep structure intact
 
 ---
-
-_DOMYH Awesome Code — Memory System_

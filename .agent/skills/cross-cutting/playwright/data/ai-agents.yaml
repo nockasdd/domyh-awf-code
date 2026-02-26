@@ -2,7 +2,6 @@
 # ai-agents.yaml — Playwright AI Test Agent Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 agents:
   planner:
@@ -133,5 +132,3 @@ ide_integration:
   vscode:
     tool: "Playwright Test extension"
     usage: "Built-in test runner with UI mode"
-
-# _DOMYH Awesome Code • AI Test Agent Patterns v1.0.0_

@@ -226,5 +226,3 @@ static inline void sleep_ms(unsigned int ms) {
 - [ ] C23 or latest supported standard used
 
 ---
-
-_DOMYH Awesome Code C Language (ISO C23) 2025-2026_

@@ -1,29 +1,13 @@
-# ============================================================================
-# 🖥️ Terminal Hang Prevention for AI Agents on Windows
-# ============================================================================
-#
-# DOMYH Awesome Code · Rule Module
-# Version: 1.0.0
-# Rule ID: MOD-TERM-001
-#
-# PURPOSE: Prevent AI agent terminal commands from hanging indefinitely
-# on Windows MINGW64/Git Bash due to pipe deadlocks, pager waits,
-# interactive prompts, and EOF signal issues.
-#
-# SCOPE: Windows only (MINGW64, Git Bash, PowerShell, CMD)
-# Linux/macOS pipes work correctly — these restrictions do NOT apply.
-#
-# RESEARCH: 50+ sources across StackOverflow, GitHub Issues, Microsoft Docs
-# ============================================================================
-
+# Terminal Hang Prevention for AI Agents on Windows
+# PURPOSE: Prevent AI agent commands from hanging on Windows MINGW64/Git Bash.
+# SCOPE: Windows only. Linux/macOS pipes work correctly.
+---
 name: terminal-antigravity
-version: "1.0.0"
 rule_id: "MOD-TERM-001"
 
 description: |
-  Prevents AI agent terminal commands from hanging infinitely on Windows.
-  Covers pipe deadlocks, pager waits, interactive prompts, EOF issues,
-  and Windows-specific TTY/PTY mismatches across 8 risk categories.
+  Prevents AI agent terminal commands from hanging on Windows.
+  Covers pipe deadlocks, pagers, interactive prompts, EOF, TTY mismatch.
 
 category: "safety"
 
@@ -34,488 +18,113 @@ context:
   workflows: ["all"]
 
 integration:
-  tier: 1  # Safety tier — applied before execution
+  tier: 1
   related_modules: ["terminal-safety", "shell-commands"]
 
-# ============================================================================
-# CORE PRINCIPLE
-# ============================================================================
-#
-# On Windows MINGW64/Git Bash:
-#   1. NEVER use pipe chains ( | grep, | tail, | head, | wc, | sort, | awk, | sed )
-#   2. NEVER invoke pagers ( less, more, man )
-#   3. NEVER start interactive commands without non-interactive flags
-#   4. ALWAYS use tool-native output flags instead of pipe filtering
-#   5. ALWAYS set reasonable WaitMsBeforeAsync for long commands
-#   6. ALWAYS use command_status with limited OutputCharacterCount
-#
-# ============================================================================
+# ═══ CORE PRINCIPLE ═══
+# On Windows MINGW64: NEVER pipe, NEVER pager, NEVER interactive without flags.
+# Use tool-native output flags instead. Always set WaitMsBeforeAsync.
 
-# ============================================================================
-# CATEGORY 1: PIPE CHAIN DEADLOCK (🔴 Critical — Very Common)
-# ============================================================================
-# Root cause: MINGW64 bash pipe buffering is broken.
-# The downstream process (grep/tail/head) never receives EOF signal
-# from the upstream process, causing infinite wait.
-# ============================================================================
+# ═══ BANNED PATTERNS → SAFE ALTERNATIVES ═══
 
 pipes:
   severity: critical
-  detection: "command contains '|' character followed by Unix filter tool"
-
-  banned_patterns:
-    # ── Text filters ──
-    - pattern: "| grep"
-      why: "grep waits for EOF from pipe — never received on MINGW64"
-      fix: "Run command alone, use agent logic to find patterns in output"
-
-    - pattern: "| tail"
-      why: "tail waits for EOF — pipe buffer deadlock on MINGW64"
-      fix: "Use OutputCharacterCount in command_status to limit output size"
-
-    - pattern: "| head"
-      why: "head exits early → SIGPIPE upstream → crash/hang on MINGW"
-      fix: "Run command alone, read only first N lines of output"
-
-    - pattern: "| wc"
-      why: "wc waits for complete input — EOF never arrives"
-      fix: "Run command alone, count output lines in agent logic"
-
-    - pattern: "| sort"
-      why: "sort buffers ALL input before outputting — EOF deadlock"
-      fix: "Use command's native sort flag (e.g., --sort) or sort in agent"
-
-    - pattern: "| uniq"
-      why: "uniq waits for sorted stream input — EOF deadlock"
-      fix: "Run command alone, deduplicate in agent logic"
-
-    - pattern: "| awk"
-      why: "awk processes stream until EOF — never received"
-      fix: "Run command alone, extract fields in agent logic"
-
-    - pattern: "| sed"
-      why: "sed waits for EOF on stream mode — deadlock"
-      fix: "Run command alone, use find-and-replace in agent logic"
-
-    - pattern: "| tee"
-      why: "tee waits for EOF to flush output — pipe stalls"
-      fix: "Use redirect: cmd > file.log 2>&1"
-
-    - pattern: "| xargs"
-      why: "xargs waits for stdin lines — EOF never sent"
-      fix: "Use command's native bulk operation or agent loop"
-
-    # ── Output limiters ──
-    - pattern: "| less"
-      why: "less is a pager — waits for keyboard input"
-      fix: "Use the view_file tool instead"
-
-    - pattern: "| more"
-      why: "more is a pager — waits for keyboard input"
-      fix: "Use the view_file tool instead"
-
-    # ── Redirected stderr pipes ──
-    - pattern: "2>&1 |"
-      why: "stderr→stdout pipe on MINGW causes buffer deadlock between processes"
-      fix: "Use '2>&1' alone without piping (agent reads full output)"
-
-    # ── Multi-stage pipes ──
-    - pattern: "| cmd1 | cmd2"
-      why: "Multi-stage pipes multiply deadlock probability"
-      fix: "Single command only — parse output in agent logic"
-
-  safe_alternatives:
-    # Instead of: npx vitest run 2>&1 | grep "FAIL"
-    # Use:        npx vitest run 2>&1
-    # Then:       Parse output in agent logic for "FAIL" keyword
-
-    # Instead of: git log | head -20
-    # Use:        git log -n 20 --oneline
-
-    # Instead of: npm test 2>&1 | tail -50
-    # Use:        npm test 2>&1  (with OutputCharacterCount: 3000)
-
-    # Instead of: find . -name "*.ts" | wc -l
-    # Use:        find . -name "*.ts"  (count results in agent logic)
-
-    output_strategy: |
-      When pipe filtering is needed, compensate with:
-      1. OutputCharacterCount in command_status (limit raw output)
-      2. Tool-native flags (--format, --reporter, --filter, --only)
-      3. Redirect to temp file, then view_file: cmd > /tmp/out.txt 2>&1
-      4. Agent logic to parse/filter output programmatically
-
-# ============================================================================
-# CATEGORY 2: PAGER COMMANDS (🔴 Critical — Common)
-# ============================================================================
-# Root cause: Pagers (less, more, man) wait for keyboard input (q, space).
-# AI agents cannot send keystrokes to pagers.
-# ============================================================================
+  banned:
+    - { pattern: "| grep",  fix: "Run alone, parse in agent logic" }
+    - { pattern: "| tail",  fix: "Use OutputCharacterCount in command_status" }
+    - { pattern: "| head",  fix: "Run alone, read first N lines" }
+    - { pattern: "| wc",    fix: "Run alone, count in agent logic" }
+    - { pattern: "| sort",  fix: "Use command's --sort flag or sort in agent" }
+    - { pattern: "| uniq",  fix: "Run alone, deduplicate in agent" }
+    - { pattern: "| awk",   fix: "Run alone, extract fields in agent" }
+    - { pattern: "| sed",   fix: "Run alone, find-replace in agent" }
+    - { pattern: "| tee",   fix: "Redirect: cmd > file.log 2>&1" }
+    - { pattern: "| xargs", fix: "Use command's bulk operation or agent loop" }
+    - { pattern: "| less",  fix: "Use view_file tool" }
+    - { pattern: "| more",  fix: "Use view_file tool" }
+    - { pattern: "2>&1 |",  fix: "Use '2>&1' alone without piping" }
 
 pagers:
   severity: critical
-  detection: "command starts with less/more/man or invokes pager implicitly"
-
-  banned_commands:
-    - command: "less"
-      why: "Waits for 'q' key to exit — agent cannot type"
-      fix: "Use cat or view_file tool"
-
-    - command: "more"
-      why: "Waits for spacebar — agent cannot type"
-      fix: "Use cat or view_file tool"
-
-    - command: "man"
-      why: "Opens less pager for manual pages"
-      fix: "Use 'command --help' instead"
-
-    - command: "npm help"
-      why: "Opens browser or pager"
-      fix: "Use 'npm <subcommand> --help' or 'npm help <topic> 2>&1'"
-
-  implicit_pager_triggers:
-    - command: "git log"
-      why: "Activates less pager by default"
-      fix: "git --no-pager log -n N --oneline"
-
-    - command: "git diff"
-      why: "Activates less pager by default"
-      fix: "git --no-pager diff"
-
-    - command: "git show"
-      why: "Activates less pager by default"
-      fix: "git --no-pager show"
-
-    - command: "git blame"
-      why: "Activates less pager by default"
-      fix: "git --no-pager blame file"
-
-    - command: "git stash show -p"
-      why: "Activates less pager by default"
-      fix: "git --no-pager stash show -p"
-
-  environment_fix: |
-    Set PAGER=cat in agent environment to disable all pagers:
-      export PAGER=cat
-      export GIT_PAGER=cat
-    Note: Antigravity already sets PAGER=cat by default.
-
-# ============================================================================
-# CATEGORY 3: INTERACTIVE PROMPTS (🟡 High — Common)
-# ============================================================================
-# Root cause: Commands wait for Y/N input, REPL entry, or interactive selection.
-# AI agents cannot respond to stdin prompts.
-# ============================================================================
+  banned:
+    - { cmd: "less",     fix: "cat or view_file" }
+    - { cmd: "more",     fix: "cat or view_file" }
+    - { cmd: "man",      fix: "command --help" }
+    - { cmd: "npm help", fix: "npm <sub> --help" }
+  implicit:
+    - { cmd: "git log",            fix: "git --no-pager log -n N --oneline" }
+    - { cmd: "git diff",           fix: "git --no-pager diff" }
+    - { cmd: "git show",           fix: "git --no-pager show" }
+    - { cmd: "git blame",          fix: "git --no-pager blame file" }
+    - { cmd: "git stash show -p",  fix: "git --no-pager stash show -p" }
 
 interactive:
   severity: high
-  detection: "command known to require interactive input"
-
-  banned_patterns:
-    # ── Package managers ──
-    - command: "npm init"
-      why: "Asks multiple questions interactively"
-      fix: "npm init -y"
-
-    - command: "npx create-*"
-      why: "Asks framework/template selection"
-      fix: "npx -y create-* --template <name>"
-
-    - command: "pip install (some packages)"
-      why: "May ask for confirmation"
-      fix: "pip install --quiet or pip install --yes where supported"
-
-    - command: "yarn create (no flags)"
-      why: "Interactive prompts for project setup"
-      fix: "yarn create <template> --yes"
-
-    # ── REPLs ──
-    - command: "python (no args)"
-      why: "Opens interactive Python REPL"
-      fix: "python -c 'code' or python script.py"
-
-    - command: "node (no args)"
-      why: "Opens interactive Node.js REPL"
-      fix: "node -e 'code' or node script.js"
-
-    - command: "irb"
-      why: "Opens interactive Ruby REPL"
-      fix: "ruby -e 'code' or ruby script.rb"
-
-    # ── System commands ──
-    - command: "rm -i"
-      why: "Asks per-file confirmation"
-      fix: "rm file (without -i flag)"
-
-    - command: "apt install (no -y)"
-      why: "Asks Y/N confirmation"
-      fix: "apt install -y package"
-
-    - command: "ssh host (no command)"
-      why: "Opens interactive shell session"
-      fix: "ssh host 'command to run'"
-
-    # ── Git interactive ──
-    - command: "git add -p"
-      why: "Interactive patch staging — waits for y/n per hunk"
-      fix: "git add . or git add file"
-
-    - command: "git rebase -i"
-      why: "Opens editor for rebase todo list"
-      fix: "git rebase --autosquash or non-interactive rebase"
-
-    - command: "git clean -i"
-      why: "Interactive clean menu"
-      fix: "git clean -fd"
-
-    - command: "git stash push (no -m)"
-      why: "May open editor for message on some configs"
-      fix: "git stash push -m 'message'"
-
-# ============================================================================
-# CATEGORY 4: EOF SIGNAL ISSUES (🔴 Critical — Windows-specific)
-# ============================================================================
-# Root cause: On Windows, EOF is Ctrl-Z+Enter (not Ctrl-D).
-# MINGW64 pipes sometimes fail to propagate EOF between processes.
-# ============================================================================
+  banned:
+    - { cmd: "npm init",           fix: "npm init -y" }
+    - { cmd: "npx create-*",       fix: "npx -y create-* --template <name>" }
+    - { cmd: "python (no args)",   fix: "python -c 'code' or python script.py" }
+    - { cmd: "node (no args)",     fix: "node -e 'code' or node script.js" }
+    - { cmd: "git add -p",         fix: "git add . or git add file" }
+    - { cmd: "git rebase -i",      fix: "git rebase --autosquash" }
+    - { cmd: "git clean -i",       fix: "git clean -fd" }
+    - { cmd: "ssh host (no cmd)",  fix: "ssh host 'command'" }
+    - { cmd: "apt install (no -y)",fix: "apt install -y package" }
 
 eof:
   severity: critical
-  detection: "command reads from stdin without explicit input source"
-
-  banned_patterns:
-    - command: "cat (no args)"
-      why: "Reads from stdin, waits for EOF (Ctrl-Z on Windows)"
-      fix: "cat file (with explicit file argument)"
-
-    - command: "read (bash builtin)"
-      why: "Waits for stdin input — no way for agent to provide it"
-      fix: "Avoid read in non-interactive scripts"
-
-    - command: "xargs (no input)"
-      why: "Waits for stdin lines"
-      fix: "xargs with < file or pipe with -r flag"
-
-    - command: "cmd 2>&1 | downstream"
-      why: "Stderr→stdout redirect can block pipe buffer on MINGW"
-      fix: "Separate redirects: cmd > out.log 2> err.log, then view_file"
-
-# ============================================================================
-# CATEGORY 5: NODE.JS / NPM / BUILD TOOLS (🟡 High — Common)
-# ============================================================================
-# Root cause: Node.js writes heavily to stderr (progress, warnings).
-# When piped on MINGW64, stderr→stdout buffer fills and deadlocks.
-# Also: dev servers never exit.
-# ============================================================================
+  banned:
+    - { cmd: "cat (no args)",      fix: "cat file (explicit arg)" }
+    - { cmd: "read (bash)",        fix: "Avoid in non-interactive scripts" }
+    - { cmd: "cmd 2>&1 | downstream", fix: "cmd > out.log 2> err.log, then view_file" }
 
 nodejs:
   severity: high
-  detection: "npm/npx/node command piped to filter or dev server started"
-
-  banned_patterns:
-    - pattern: "npx vitest run | grep"
-      why: "Vitest outputs to stderr — pipe deadlock with grep"
-      fix: "npx vitest run --reporter=verbose (no pipe)"
-
-    - pattern: "npx vitest run 2>&1 | grep"
-      why: "stderr→stdout pipe buffer deadlock on MINGW64"
-      fix: "npx vitest run (read full output, parse in agent)"
-
-    - pattern: "npx jest | tail"
-      why: "Jest stderr mixing causes MINGW pipe freeze"
-      fix: "npx jest --verbose (no pipe)"
-
-    - pattern: "npm test | grep FAIL"
-      why: "npm stderr mixing with pipe — deadlock"
-      fix: "npm test (parse output in agent for FAIL)"
-
-    - pattern: "npm run build | tail"
-      why: "Long build output can deadlock pipe buffer"
-      fix: "npm run build (no pipe)"
-
-    - pattern: "npx tsc | grep error"
-      why: "tsc output formatting lost in pipe"
-      fix: "npx tsc --noEmit (read full output)"
-
-  dev_servers:
-    warning: |
-      Dev servers (npm run dev, vite, webpack-dev-server) NEVER EXIT.
-      Always start as background commands:
-        - Set WaitMsBeforeAsync to 3000-5000
-        - Use command_status to monitor output
-        - Terminate when done testing
-
-# ============================================================================
-# CATEGORY 6: TTY/PTY MISMATCH (🟡 High — MINGW-specific)
-# ============================================================================
-# Root cause: MINGW64 uses MinTTY which is NOT a Win32 Console.
-# Commands expecting Windows console (docker, python stdin) hang.
-# ============================================================================
+  banned:
+    - { pattern: "npx vitest run | grep", fix: "npx vitest run --reporter=verbose" }
+    - { pattern: "npx jest | tail",       fix: "npx jest --verbose" }
+    - { pattern: "npm test | grep",       fix: "npm test (parse in agent)" }
+    - { pattern: "npx tsc | grep",        fix: "npx tsc --noEmit (read full output)" }
+  dev_servers: "NEVER EXIT. Start with WaitMsBeforeAsync 3000-5000, use command_status."
 
 tty:
   severity: high
-  detection: "command uses -it flag or expects interactive console"
-
-  banned_patterns:
-    - command: "docker exec -it"
-      why: "MINGW PTY ≠ Windows console — docker hangs"
-      fix: "docker exec (without -it) or winpty docker exec -it"
-
-    - command: "python -c 'input(...)'"
-      why: "stdin hang on MINGW64 when reading input"
-      fix: "python -c 'print(...)' (no stdin reads)"
-
-    - command: "curl (password prompt)"
-      why: "Cannot provide interactive input in MINGW"
-      fix: "curl -u user:pass or curl -H 'Authorization: token'"
-
-# ============================================================================
-# CATEGORY 7: GIT PAGER ACTIVATION (🟠 Medium — Common)
-# ============================================================================
-# Root cause: Git activates 'less' pager by default for long output.
-# The pager waits for keyboard input that agent cannot provide.
-# ============================================================================
-
-git:
-  severity: medium
-  detection: "git command without --no-pager that produces long output"
-
-  safe_patterns:
-    - original: "git log"
-      safe: "git --no-pager log -n 20 --oneline"
-
-    - original: "git log --all"
-      safe: "git --no-pager log --all -n 30 --oneline"
-
-    - original: "git diff"
-      safe: "git --no-pager diff"
-
-    - original: "git diff --staged"
-      safe: "git --no-pager diff --staged"
-
-    - original: "git show HASH"
-      safe: "git --no-pager show HASH"
-
-    - original: "git blame file"
-      safe: "git --no-pager blame file"
-
-    - original: "git stash show -p"
-      safe: "git --no-pager stash show -p"
-
-    - original: "git log -p"
-      safe: "git --no-pager log -p -n 5"
-
-  rule: |
-    ALWAYS prefix git commands that produce multi-line output with --no-pager:
-      git --no-pager <subcommand> [args]
-
-# ============================================================================
-# CATEGORY 8: INFINITE / MONITORING COMMANDS (🟡 High)
-# ============================================================================
-# Root cause: Commands designed to run forever (follow logs, watch, dev servers).
-# They never exit on their own — agent waits indefinitely.
-# ============================================================================
+  banned:
+    - { cmd: "docker exec -it",    fix: "docker exec (no -it) or winpty" }
+    - { cmd: "python -c 'input'",  fix: "python -c 'print(...)' (no stdin)" }
 
 infinite:
   severity: high
-  detection: "command contains -f/--follow flag or is known to be infinite"
+  banned:
+    - { cmd: "tail -f",            fix: "tail -n 50 file" }
+    - { cmd: "watch -n N",         fix: "Run command once" }
+    - { cmd: "docker logs -f",     fix: "docker logs --tail 50 container" }
+    - { cmd: "kubectl logs -f",    fix: "kubectl logs --tail=50 pod" }
+    - { cmd: "npm run dev",        fix: "Background: WaitMsBeforeAsync 3000-5000" }
+    - { cmd: "docker compose up",  fix: "docker compose up -d" }
 
-  banned_patterns:
-    - command: "tail -f"
-      why: "Follows file forever — never exits"
-      fix: "tail -n 50 file (finite output)"
-
-    - command: "watch -n N"
-      why: "Repeats command every N seconds — never exits"
-      fix: "Run command once directly"
-
-    - command: "journalctl -f"
-      why: "Follows system journal forever"
-      fix: "journalctl -n 50 --no-pager"
-
-    - command: "docker logs -f"
-      why: "Follows container logs forever"
-      fix: "docker logs --tail 50 container"
-
-    - command: "kubectl logs -f"
-      why: "Follows pod logs forever"
-      fix: "kubectl logs --tail=50 pod"
-
-    - command: "npm run dev"
-      why: "Dev server runs forever"
-      fix: "Start with WaitMsBeforeAsync: 3000-5000, use command_status"
-
-    - command: "npx vite"
-      why: "Vite dev server runs forever"
-      fix: "Start as background, check with command_status"
-
-    - command: "docker compose up (no -d)"
-      why: "Runs in foreground forever"
-      fix: "docker compose up -d (detached mode)"
-
-# ============================================================================
-# RECOVERY PROCEDURES
-# ============================================================================
-# When a command IS stuck (already hanging), the agent should:
-# ============================================================================
+# ═══ RECOVERY ═══
 
 recovery:
   detection:
-    - "command_status shows 'running' after reasonable wait time"
-    - "No new output for > 30 seconds on a quick command"
-    - "Command has been running > 2x expected duration"
+    - "command_status 'running' after reasonable wait"
+    - "No output for > 30s on a quick command"
+  actions: "check → terminate → retry with safe alternative → log"
+  timeouts: { fast: 30, build: 120, test: 300, index: 600 }
 
-  actions:
-    1_check: "Call command_status to check if output is still being produced"
-    2_terminate: "Send terminate signal via send_command_input(Terminate: true)"
-    3_retry: "Re-run with safe alternative (no pipes, no pager, non-interactive)"
-    4_log: "Log the hang pattern for future reference"
-
-  timeouts:
-    fast_commands: 30  # seconds — ls, cat, echo, git status
-    build_commands: 120  # seconds — npm install, npm run build, tsc
-    test_commands: 300  # seconds — vitest, jest
-    index_commands: 600  # seconds — database migrations, full re-index
-
-# ============================================================================
-# AGENT DECISION FLOW
-# ============================================================================
-
-decision_flow: |
-  Before generating ANY terminal command on Windows:
-
-  1. CHECK: Does the command contain "|" ?
-     → YES: REWRITE without pipe, use tool-native flags
-     → NO: Continue
-
-  2. CHECK: Does the command invoke a pager (less/more/man) or git without --no-pager?
-     → YES: Add --no-pager or replace with cat/--help
-     → NO: Continue
-
-  3. CHECK: Is the command interactive (no -y, REPL, ssh without command)?
-     → YES: Add non-interactive flags (-y, -c, etc.)
-     → NO: Continue
-
-  4. CHECK: Is the command infinite (tail -f, watch, dev server)?
-     → YES: Use finite version or start as background
-     → NO: Continue
-
-  5. SET: Appropriate WaitMsBeforeAsync
-     → Fast commands: 5000-10000
-     → Build/test: 10000 (then background + command_status)
-
-  6. SET: OutputCharacterCount in command_status
-     → Usually 2000-5000 chars is sufficient
-
-# ============================================================================
-# CHECKLIST (Pre-command)
-# ============================================================================
+# ═══ DECISION FLOW ═══
+# Before ANY terminal command:
+# 1. Contains "|"? → REWRITE without pipe
+# 2. Pager (less/more/man/git without --no-pager)? → Add --no-pager or --help
+# 3. Interactive (no -y, REPL)? → Add non-interactive flags
+# 4. Infinite (tail -f, watch, dev server)? → Finite version or background
+# 5. Set WaitMsBeforeAsync (fast: 5000-10000, build: 10000+background)
+# 6. Set OutputCharacterCount 2000-5000
 
 checklist:
-  - "[ ] No pipe chains (|) in command?"
-  - "[ ] No pager invocation (less/more/man)?"
-  - "[ ] No interactive prompts (non-interactive flags added)?"
-  - "[ ] No infinite commands (finite version used)?"
-  - "[ ] Git commands have --no-pager?"
-  - "[ ] WaitMsBeforeAsync set appropriately?"
-  - "[ ] stderr redirect (2>&1) NOT piped to another command?"
+  - "No pipe chains (|)?"
+  - "No pager (less/more/man)?"
+  - "No interactive prompts?"
+  - "No infinite commands?"
+  - "Git has --no-pager?"
+  - "WaitMsBeforeAsync set?"

@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Audit Policy v6.4.5
+# DOMYH Awesome Code Audit Policy
 
 > Logging and accountability based on 2025 AI governance standards
 
@@ -64,5 +64,3 @@
 | ISO 27001   | Access logs       | ✅     |
 
 ---
-
-_DOMYH Awesome Code — Audit Policy_

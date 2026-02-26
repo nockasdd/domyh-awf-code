@@ -2,7 +2,6 @@
 # saga-patterns.yaml — Saga Pattern Implementation
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # ORCHESTRATION SAGA
@@ -157,5 +156,3 @@ decision_guide:
     - name: "Synchronous saga"
       problem: "Blocking calls defeat the purpose"
       fix: "Use async message passing between steps"
-
-# _DOMYH Awesome Code • Saga Patterns_

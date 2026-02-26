@@ -1,6 +1,5 @@
 ---
 name: event-driven
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -34,17 +33,17 @@ category: cross-cutting
 ### Pub/Sub
 
 ```
-Producer ──▶ Topic/Exchange ──▶ Consumer A
-                            ──▶ Consumer B
-                            ──▶ Consumer C
+Producer ▶ Topic/Exchange ▶ Consumer A
+                            ▶ Consumer B
+                            ▶ Consumer C
 ```
 
 ### Event Sourcing + CQRS
 
 ```
-Command ──▶ Event Store ──▶ [OrderCreated, ItemAdded, OrderPaid]
-                                          │
-                      ┌───────────────────┤
+Command ▶ Event Store ▶ [OrderCreated, ItemAdded, OrderPaid]
+
+
                       ▼                   ▼
                Read Model A        Read Model B
               (Order Summary)     (Analytics)
@@ -54,15 +53,15 @@ Command ──▶ Event Store ──▶ [OrderCreated, ItemAdded, OrderPaid]
 
 ```
 Orchestrator Saga:
-  Orchestrator ──▶ Service A (Book Order)
-                   ├── Success ──▶ Service B (Process Payment)
-                   │                ├── Success ──▶ Service C (Ship)
-                   │                └── Failure ──▶ Compensate A
-                   └── Failure ──▶ Done
+  Orchestrator ▶ Service A (Book Order)
+                    Success ▶ Service B (Process Payment)
+                                    Success ▶ Service C (Ship)
+                                    Failure ▶ Compensate A
+                    Failure ▶ Done
 
 Choreography Saga:
-  Service A ──event──▶ Service B ──event──▶ Service C
-       ◀──compensate──      ◀──compensate──
+  Service A event▶ Service B event▶ Service C
+       ◀compensate      ◀compensate
 ```
 
 ## Production Patterns
@@ -125,5 +124,3 @@ async function handleEvent(event: Event) {
 - End-to-end latency (publish → consume)
 
 ---
-
-_DOMYH Awesome Code • Event-Driven Architecture Skill v1.0.0_

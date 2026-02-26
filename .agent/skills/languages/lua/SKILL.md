@@ -1,7 +1,6 @@
 ---
 name: lua
 detect: ["*.lua", ".luarc.json", "init.lua", "conf.lua", "main.lua"]
-version: "6.4.5"
 category: scripting
 tier: 1
 ---
@@ -488,5 +487,3 @@ end)
 - [ ] Document minimum Lua version
 
 ---
-
-_DOMYH Awesome Code • Lua 5.1-5.5, LuaJIT_

@@ -1,6 +1,5 @@
 ---
 name: cli-dev
-version: "6.4.5"
 category: tooling
 ---
 
@@ -85,5 +84,3 @@ try {
 | No completions        | Add shell completion generator              |
 
 ---
-
-_DOMYH Awesome Code • CLI Dev Skill v1.0.0_

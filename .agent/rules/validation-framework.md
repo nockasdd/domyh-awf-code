@@ -3,10 +3,9 @@ name: validation-framework
 priority: 0
 always_apply: true
 category: quality
-version: "4.5"
 ---
 
-# ✅ Validation Framework v6.4.5
+# ✅ Validation Framework
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📝 **Note**: Consolidates `pre-check-validation.md` + `architecture-aware-implementation.md`
@@ -185,5 +184,3 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validati
 - [ ] Sẽ update registry? (Phase 6)
 
 ---
-
-_DOMYH Awesome Code • Consolidated Validation Framework_

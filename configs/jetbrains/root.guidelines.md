@@ -29,6 +29,11 @@ MUST execute before writing code:
 - **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
 - **PERF_001**: Use file outlines and grep before full reads; parallel calls for independent ops
 
+## 📝 Session Memory
+
+- **On START**: Read `.agent/memory/CONTEXT_SNAPSHOT.md` for project context continuity
+- **Before END/task complete**: Update `CONTEXT_SNAPSHOT.md` with: changes made, current status, key decisions
+
 ## Terminal Safety (Windows)
 
 NEVER use these on Windows — they hang indefinitely:
@@ -40,7 +45,7 @@ NEVER use these on Windows — they hang indefinitely:
 - Shell = `cmd` → wrap with `cmd /c "command"` (prevent stdin race hang)
 - Shell = `bash`/`zsh` → use native syntax (`&&` chaining, NO cmd /c)
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
-- Shell unknown → default to `cmd /c` (safest fallback)
+- Shell unknown → FIRST call `hsa_detect_environment` to detect shell. Do NOT assume cmd
 
 ## Skills & Workflows
 

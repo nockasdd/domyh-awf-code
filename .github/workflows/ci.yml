@@ -52,3 +52,17 @@ jobs:
         with:
           args: --no-progress README.md README_VN.md
           fail: true
+
+      - name: Check version consistency
+        run: |
+          version=$(grep -m1 'version:' .agent/core/VERSION.yaml | grep -oP '\d+\.\d+\.\d+')
+          echo "SSoT version: $version"
+          errors=0
+          for f in .agent/manifest.yaml IDE_COMPATIBILITY.md; do
+            if ! grep -q "$version" "$f"; then
+              echo "❌ Version mismatch in $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then exit 1; fi
+          echo "✅ Version consistent across all files"

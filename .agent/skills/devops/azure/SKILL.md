@@ -1,6 +1,5 @@
 ---
 name: azure
-version: "6.4.5"
 category: devops
 ---
 

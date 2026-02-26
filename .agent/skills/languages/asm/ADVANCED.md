@@ -1,6 +1,5 @@
 # Assembly — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -746,5 +745,3 @@ workflow: 1. Initial analysis in Ghidra (free)
 | 19h | Bootstrap         | Reboot system          |
 
 ---
-
-_DOMYH Awesome Code — Advanced Assembly Reference_

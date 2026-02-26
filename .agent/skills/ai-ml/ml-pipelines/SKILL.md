@@ -1,7 +1,6 @@
 ---
 name: ml-pipelines
 detect: ["dvc.yaml", "mlflow", "Artifacts/", "Notebook_Experiments/", "scores.json"]
-version: "6.4.5"
 category: ai-ml
 tier: 2
 ---
@@ -264,5 +263,3 @@ CMD ["python", "app.py"]
 - [ ] README with setup instructions
 
 ---
-
-_DOMYH Awesome Code • ML Pipeline Patterns • v7.0_

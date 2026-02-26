@@ -5,7 +5,6 @@
 # Source: https://ai.google.dev/gemini-api/docs/caching
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 6
 
 implicit_caching:
@@ -92,5 +91,4 @@ cost_analysis:
     - "Break-even: typically 3-5 requests to same content"
 
 # =============================================================================
-# _DOMYH Awesome Code • Context Caching v1.0_
 # =============================================================================

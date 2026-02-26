@@ -1,6 +1,5 @@
 ---
 name: test-report
-version: "6.4.5"
 type: report
 triggers: ["/test"]
 ---
@@ -48,5 +47,3 @@ triggers: ["/test"]
 - [ ] Improve coverage
 
 ---
-
-\_DOMYH Awesome Code

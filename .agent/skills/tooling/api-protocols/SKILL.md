@@ -1,6 +1,5 @@
 ---
 name: api-protocols
-version: "6.4.5"
 category: tooling
 ---
 
@@ -147,5 +146,3 @@ message User {
 | Schema breaking | All      | Versioning (GraphQL deprecation, proto reserved fields) |
 
 ---
-
-_DOMYH Awesome Code • API Protocols Skill v1.0.0_

@@ -1,6 +1,5 @@
 # Security — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 # Load only when explicitly referenced
 
@@ -265,5 +264,3 @@ function decrypt(
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

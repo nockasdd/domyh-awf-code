@@ -3,7 +3,6 @@
 # =============================================================================
 
 name: game-dev-security
-version: "1.0.0"
 rule_id: "MOD-GDS-001"
 description: "Security rules specific to game automation development."
 category: "security"
@@ -62,5 +61,3 @@ rules:
 integration:
   tier: 4
   related_modules: ["quality", "cpp-single-binary-build"]
-
-# _DOMYH Awesome Code • Game Dev Security Rules_

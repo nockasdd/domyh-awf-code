@@ -27,6 +27,7 @@ DOMYH Awesome Code v6.4.5 — AI agent framework for intelligent development ass
 
 ## Recent Changes
 
+<!-- SESSION_005: Prepend new entries here. Keep max 10. Oldest → archive. -->
 1. **[2026-02-17]** Deep Audit Remediation v3 — Fixed 25 findings (P1-P3): i18n keys, manifest routing, 10 persona phantom triggers, rules README 5-tier rewrite, orchestrator routing table, stale comments/status
 2. **[2026-02-17]** Implemented Session Memory System — CONTEXT_SNAPSHOT.md, EXEC_007 save protocol, Cold Start Protocol
 3. **[2026-02-17]** Fixed progressive-escalation activation chain — SACRED_RULES EXEC_006 updated, debugger persona patched, AGENT_BEHAVIOR.md updated (5 files)
@@ -35,6 +36,7 @@ DOMYH Awesome Code v6.4.5 — AI agent framework for intelligent development ass
 
 ## Current Status
 
+<!-- SESSION_005: Overwrite this section with current state -->
 - **Phase**: Deep Audit Remediation Complete
 - **In Progress**: None — all 25 findings resolved
 - **Blockers**: None
@@ -43,6 +45,7 @@ DOMYH Awesome Code v6.4.5 — AI agent framework for intelligent development ass
 
 ## Key Decisions
 
+<!-- SESSION_005: Append new decisions only -->
 1. Progressive escalation activates after **2 retries** (not 3) — EXEC_006
 2. Agent **self-pivots** strategy before asking user (ESCALATE = Level 5 = last resort)
 3. Session memory uses **3-tier** pragmatic approach (CONTEXT_SNAPSHOT + session.md + state.json)
@@ -61,4 +64,4 @@ DOMYH Awesome Code v6.4.5 — AI agent framework for intelligent development ass
 
 ---
 
-_This file is auto-managed by the agent per EXEC_007 (SACRED_RULES.xml). Manual edits are preserved._
+_This file is auto-managed by the agent per SESSION_005 (SACRED_RULES.xml). Manual edits are preserved._

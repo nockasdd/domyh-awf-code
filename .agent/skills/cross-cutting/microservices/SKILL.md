@@ -1,6 +1,5 @@
 ---
 name: microservices
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -48,15 +47,14 @@ Order → Payment → Inventory → Shipping
 ## CQRS
 
 ```
-┌─────────────────────────────────────────────┐
-│  Command Side        │  Query Side          │
-│  ────────────        │  ──────────          │
-│  Write Model         │  Read Model          │
-│  Domain Events       │  Projections         │
-│  Event Store         │  Materialized Views  │
-│  Optimized for       │  Optimized for       │
-│  consistency         │  performance         │
-└─────────────────────────────────────────────┘
+
+> Command Side          Query Side
+>           
+> Write Model           Read Model
+> Domain Events         Projections
+> Event Store           Materialized Views
+> Optimized for         Optimized for
+> consistency           performance
 ```
 
 ---
@@ -122,5 +120,3 @@ Order → Payment → Inventory → Shipping
 | `blue-green canary rolling`         | `deployment.yaml`     |
 
 ---
-
-_DOMYH Awesome Code • Microservices Patterns_

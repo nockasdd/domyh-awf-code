@@ -2,7 +2,6 @@
 # versioning.yaml — Monorepo Versioning Strategies
 # =============================================================================
 
-version: "6.4.5"
 
 changesets:
   description: "Intent-based versioning for monorepos"
@@ -79,5 +78,3 @@ versioning_strategies:
       {
         "linked": [["@org/core", "@org/cli"]]
       }
-
-# _DOMYH Awesome Code • Versioning Patterns_

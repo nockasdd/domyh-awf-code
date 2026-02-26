@@ -1,12 +1,10 @@
 # =============================================================================
-# DOMYH Awesome Code  — Optimized Manifest
 # =============================================================================
 # Token-efficient architecture with Progressive Disclosure
 # Developer: NockDev
 # NOTE: Sync version from core/VERSION.yaml
 # =============================================================================
 
-version: v6.4.5
 name: "DOMYH Awesome Code"
 developer: "NockDev"
 
@@ -45,10 +43,10 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 86 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 93 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
-  # Categories: 28 languages + 8 frameworks + 6 core + 7 devops + 22 cross-cutting + 5 tooling + 7 ai-ml
+  # Categories: 28 languages + 9 frameworks + 6 core + 7 devops + 22 cross-cutting + 5 tooling + 8 ai-ml + 8 governance
 
   loading:
     # NOTE: These defaults can be overridden by config.yaml (project-level)
@@ -156,6 +154,21 @@ skills:
           gemini-media-gen,
           gemini-tts,
           gemini-live,
+          ml-pipelines,
+        ]
+
+    governance:
+      priority: 7
+      skills:
+        [
+          context-first-gatekeeping,
+          context-integrity,
+          debug-orchestration,
+          delegation-intelligence,
+          evidence-discipline,
+          pre-stop-checklist,
+          session-lifecycle,
+          session-memory,
         ]
 
 # =============================================================================
@@ -571,14 +584,6 @@ commands:
     triggers: [suggest, gợi ý]
     skills: { required: [], contextual: [auto] }
 
-  - id: sync-version
-    file: workflows/sync-version.md
-    icon: "🔄"
-    category: utility
-    persona: developer
-    cache: false
-    triggers: [sync-version, sync version, đồng bộ version]
-    skills: { required: [], contextual: [] }
 
 # =============================================================================
 # PERSONAS (On-demand load)
@@ -626,6 +631,6 @@ i18n:
 # =============================================================================
 
 token_budget:
-  idle: 8300 # ~8,300 tokens at rest (83 × META.yaml)
-  single_skill: 9700 # ~9,700 with 1 skill active (+1,500 T2)
-  peak: 12700 # ~12,700 max (3 skills concurrent)
+  idle: 9300 # ~9,300 tokens at rest (93 × META.yaml)
+  single_skill: 10800 # ~10,800 with 1 skill active (+1,500 T2)
+  peak: 13800 # ~13,800 max (3 skills concurrent)

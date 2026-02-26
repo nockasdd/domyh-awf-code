@@ -159,5 +159,3 @@ All 12 data domains are indexed by HSA BM25 engine for semantic search:
 | Directory Trees     | `framework-directories.yaml`  | "nuxt directory structure"  |
 
 ---
-
-_DOMYH Awesome Code • Awesome Coding Rules • 23 Languages • 12 Data Domains_

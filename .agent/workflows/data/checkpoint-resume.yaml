@@ -77,6 +77,3 @@ recovery:
     escalate:
       condition: "All strategies exhausted"
       action: "Set task.status = 'input_required', ask user for guidance"
-
----
-_DOMYH Awesome Code • Checkpoint/Resume Specification_

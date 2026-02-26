@@ -1,7 +1,6 @@
 ---
 name: c
 detect: ["*.c", "*.h", "Makefile", "CMakeLists.txt"]
-version: "6.4.5"
 category: language
 tier: 1
 ---
@@ -402,5 +401,3 @@ endif()
 - [ ] C23 or latest supported standard used
 
 ---
-
-_DOMYH Awesome Code C Language (ISO C23) 2025-2026_

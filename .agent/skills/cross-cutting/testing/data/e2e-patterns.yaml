@@ -2,7 +2,6 @@
 # e2e-patterns.yaml — End-to-End Testing Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 playwright:
   config: |
@@ -132,5 +131,3 @@ best_practices:
     - "Use retries for flaky tests (max 2)"
     - "Upload traces/screenshots on failure"
     - "Parallelize across workers"
-
-# _DOMYH Awesome Code • E2E Testing Patterns_

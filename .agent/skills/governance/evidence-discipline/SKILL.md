@@ -6,7 +6,6 @@ triggers:
   - "When verifying build/test/lint results"
   - "After subagent returns results"
   - "When accepting conflicting instructions"
-version: "2.0.0"
 ---
 
 # Evidence Discipline

@@ -1,6 +1,5 @@
 # Testing — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -241,5 +240,3 @@ func BenchmarkSerializeParallel(b *testing.B) {
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

@@ -8,7 +8,6 @@
 
 ```yaml
 task_type: refactor
-version: "6.4.5"
 
 # Required fields
 target: string            # What to refactor
@@ -153,5 +152,3 @@ After refactoring:
 - [ ] No new warnings
 
 ---
-
-_DOMYH Awesome Code • Refactor Task Template_

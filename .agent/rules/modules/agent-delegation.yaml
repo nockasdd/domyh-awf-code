@@ -2,7 +2,6 @@
 # Enhanced with complexity scoring, state permissions, and checkpoint support
 ---
 name: agent-delegation
-version: "7.1.0"
 rule_id: "MOD-DEL-001"
 
 description: "When and how to delegate tasks to specialized sub-agents."
@@ -83,6 +82,3 @@ spec_template: |
 integration:
   tier: 2
   related_modules: ["quality", "stop-conditions", "complexity-scoring", "agent-communication"]
-
----
-_DOMYH Awesome Code • Agent Delegation Rule_

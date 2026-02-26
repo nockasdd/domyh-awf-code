@@ -2,7 +2,6 @@
 # nx-patterns.yaml — Nx Workspace Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 generators:
   description: "Code scaffolding for consistent structure"
@@ -70,5 +69,3 @@ plugins:
     - "@nx/storybook"
     - "@nx/esbuild"
     - "@nx/vite"
-
-# _DOMYH Awesome Code • Nx Patterns_

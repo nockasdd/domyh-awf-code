@@ -1,7 +1,6 @@
-# Terminal Safety Rule v6.4.5
+# Terminal Safety Rule
 ---
 name: terminal-safety
-version: "6.4.5"
 rule_id: "MOD-TRM-001"
 
 description: "Safe terminal command execution patterns and platform-aware syntax."
@@ -118,6 +117,3 @@ anti_hang:
 
 integration:
   tier: 1
-
----
-_DOMYH Awesome Code • Terminal Safety Rule_

@@ -2,7 +2,6 @@
 # event-sourcing.yaml — Event Sourcing Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # CORE CONCEPT
@@ -227,5 +226,3 @@ anti_patterns:
   - name: "Missing correlation IDs"
     problem: "Cannot trace event chains"
     fix: "Always include correlationId and causationId in metadata"
-
-# _DOMYH Awesome Code • Event Sourcing Patterns_

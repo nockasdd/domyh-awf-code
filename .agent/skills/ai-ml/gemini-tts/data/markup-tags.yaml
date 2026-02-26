@@ -4,7 +4,6 @@
 # 15 patterns for speech control via inline markup tags
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 15
 
 modes:
@@ -91,5 +90,4 @@ combinations:
     [sigh] Anyway, let's get started.
 
 # =============================================================================
-# _DOMYH Awesome Code • Markup Tags v1.0_
 # =============================================================================

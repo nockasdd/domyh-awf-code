@@ -1,7 +1,6 @@
 ---
 name: ruby
 detect: ["Gemfile", "*.rb", "*.gemspec", "Rakefile", "config.ru"]
-version: "6.4.5"
 category: scripting
 tier: 1
 ---
@@ -413,5 +412,3 @@ end
 - [ ] Secrets in credentials
 
 ---
-
-_DOMYH Awesome Code • Ruby 3.3/3.4 + Rails 8_

@@ -2,7 +2,6 @@
 # deployment.yaml — Microservices Deployment Strategies
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # STRATEGIES
@@ -149,5 +148,3 @@ decision_guide:
 
     - scenario: "Business needs instant feature toggle"
       strategy: "Feature Flags"
-
-# _DOMYH Awesome Code • Deployment Strategies_

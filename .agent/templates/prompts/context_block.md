@@ -110,5 +110,3 @@ Implementing VietQR auto-polling for bank transactions
 ```
 
 ---
-
-_DOMYH Awesome Code • Context Block Template_

@@ -1,6 +1,5 @@
 ---
 name: doc-template
-version: "6.4.5"
 type: wizard
 triggers: ["/doc", "/generate"]
 ---
@@ -53,5 +52,3 @@ triggers: ["/doc", "/generate"]
 | {ERR_2} | {MSG_2} | {FIX_2}  |
 
 ---
-
-\_DOMYH Awesome Code

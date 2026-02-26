@@ -1,7 +1,6 @@
-# Online Research Rule v6.4.5
+# Online Research Rule
 ---
 name: online-research
-version: "6.4.5"
 rule_id: "MOD-RES-001"
 
 description: "Guidelines for web research, source verification, and time-aware freshness."
@@ -113,6 +112,3 @@ time_awareness:
 integration:
   tier: 2
   related_modules: ["drift-prevention"]
-
----
-_DOMYH Awesome Code • Online Research Rule (Time-Aware)_

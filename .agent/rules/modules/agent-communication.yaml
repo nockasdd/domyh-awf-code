@@ -3,7 +3,6 @@
 # Source: A2A JSON-RPC, AutoGen messaging, OpenAI Swarm handoffs
 ---
 name: agent-communication
-version: "7.1.0"
 rule_id: "MOD-COM-001"
 
 description: |
@@ -91,6 +90,3 @@ permissions:
 integration:
   tier: 2
   related_modules: ["agent-delegation", "complexity-scoring", "stop-conditions"]
-
----
-_DOMYH Awesome Code • Agent Communication Protocol_

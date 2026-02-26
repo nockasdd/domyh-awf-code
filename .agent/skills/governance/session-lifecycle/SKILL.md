@@ -6,7 +6,6 @@ triggers:
   - "When switching focus or direction"
   - "Before ending session or compacting context"
   - "When resuming after a gap"
-version: "2.0.0"
 ---
 
 # Session Lifecycle

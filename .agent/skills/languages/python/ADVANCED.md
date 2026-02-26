@@ -1,6 +1,5 @@
 # Python — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 ## Table of Contents
 
@@ -203,5 +202,3 @@ class OptimizedUser:
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

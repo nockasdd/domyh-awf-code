@@ -1,7 +1,6 @@
 metadata:
   skill: observability
   domain: core_patterns
-  version: v6.4.5
   updated: "2026-02-05"
   migrated_from: core-patterns.yaml
   patterns_count: 30

@@ -1,6 +1,5 @@
 ---
 name: rag-patterns
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -94,5 +93,3 @@ Query → Embedding → Similarity Search → Retrieved Chunks
 | `ragas faithfulness evaluation`     | `evaluation.yaml`          |
 
 ---
-
-_DOMYH Awesome Code • RAG Patterns_

@@ -1,7 +1,6 @@
 ---
 name: flutter
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
-version: "6.4.5"
 category: mobile
 tier: 1
 ---
@@ -537,5 +536,3 @@ Future<List<ProcessedItem>> processDataInIsolate(List<RawItem> items) async {
 - [ ] Integration tests for flows
 
 ---
-
-_DOMYH Awesome Code • Flutter 3.29+ / Dart 3.7+ • Impeller Default_

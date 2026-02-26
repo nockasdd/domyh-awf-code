@@ -4,7 +4,6 @@
 metadata:
   skill: event-driven
   domain: eda-patterns
-  version: "6.4.5"
   updated: "2026-02-12"
   patterns_count: 8
 

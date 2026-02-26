@@ -1,0 +1,45 @@
+# Template Registry for /init Workflow
+backend:
+  go: "standard*, clean, hexagonal, ddd | go mod init {module} | golangci-lint, air, wire"
+  rust: "cargo*, workspace, binary, library | cargo new {project} | clippy, rustfmt"
+  cpp: "cmake*, single, library, vcpkg | cmake -S . -B build | cmake, clang-format"
+  c: "make*, cmake, single | make init | gcc, clang, valgrind"
+  java: "maven*, gradle, spring, clean | mvn archetype:generate | maven, gradle, spotless"
+  kotlin: "android*, multiplatform, ktor, compose | gradle init | gradle, ktlint, detekt"
+  scala: "sbt*, mill, akka | sbt new scala/scala-seed.g8"
+  csharp: "clean*, mvvm, mvc, minimal, blazor | dotnet new webapi -n {project} | dotnet-format"
+  fsharp: "console*, web, giraffe | dotnet new console -lang F#"
+  python: "src*, flat, django, fastapi, flask | uv init {project} | ruff, mypy, uv"
+  ruby: "rails*, sinatra, gem, cli | rails new {project} | rubocop, bundler"
+  php: "laravel*, symfony, psr4, wordpress | composer create-project laravel/laravel {project} | php-cs-fixer"
+  perl: "module*, script, mojolicious | module-starter --module={project}"
+  lua: "standard*, love2d, neovim | — | luacheck, stylua"
+
+frontend:
+  react: "vite*, remix | npm create vite@latest {project} -- --template react-ts | eslint, vitest"
+  nextjs: "app*, pages, fullstack | npx create-next-app@latest {project} | eslint, turbopack"
+  remix: "indie*, classic | npx create-remix@latest {project}"
+  vue: "vite*, nuxt, pinia | npm create vue@latest {project} | eslint, vitest"
+  nuxt: "default*, layers, minimal | npx nuxi@latest init {project}"
+  svelte: "sveltekit*, vite | npm create svelte@latest {project}"
+  angular: "standalone*, modules | ng new {project}"
+  solid: "vite*, start | npm create solid@latest {project}"
+  astro: "default*, blog, docs | npm create astro@latest {project}"
+
+mobile:
+  swift: "swiftpm*, ios, mvvm, tca | swift package init | swiftformat, swiftlint"
+  kotlin_android: "compose*, xml, multiplatform | Android Studio wizard | ktlint, detekt"
+  dart: "flutter*, console, package | flutter create {project} | dart_format"
+  react_native: "expo*, bare | npx create-expo-app {project}"
+
+infrastructure:
+  docker: "multistage*, single, compose"
+  kubernetes: "helm*, kustomize, manifest | helm create {project}"
+  terraform: "aws*, gcp, azure, multi | terraform init"
+  aws: "cdk*, sam, terraform, serverless | cdk init app --language typescript"
+  github_actions: "node*, go, python, docker → .github/workflows/ci.yml"
+
+monorepo:
+  turborepo: "npx create-turbo@latest | ⭐ recommended | caching, parallel, remote-cache"
+  nx: "npx create-nx-workspace@latest | affected, graph, generators"
+  pnpm: "pnpm init | pnpm-workspace.yaml"

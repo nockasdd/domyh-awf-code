@@ -1,7 +1,6 @@
 ---
 name: react
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -278,5 +277,3 @@ For advanced performance optimization, see [ADVANCED.md](./ADVANCED.md#vercel-pe
 | 8        | Advanced Patterns          | LOW      | `advanced-`    |
 
 ---
-
-_DOMYH Awesome Code • React 19_

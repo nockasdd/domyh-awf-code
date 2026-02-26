@@ -1,0 +1,80 @@
+# W3C DTCG 2025.10 Stable Design Tokens
+formats:
+  w3c_dtcg_example: |
+    {
+      "$name": "color.primary",
+      "$type": "color",
+      "$value": "oklch(60% 0.15 250)",
+      "$description": "Primary brand color",
+      "$deprecated": false,
+      "$extensions": {
+        "com.domyh.platforms": ["web", "ios", "android", "flutter"]
+      }
+    }
+  theming_example: |
+    {
+      "$extends": "./base.tokens.json",
+      "color": {
+        "primary": { "$value": "oklch(75% 0.12 250)" },
+        "surface": { "$value": "oklch(15% 0.01 250)" }
+      }
+    }
+
+mappings:
+  colors:
+    - token: "primary"
+      web_css: "oklch(60% 0.15 250)"
+      tailwind: "bg-blue-600"
+      flutter: "ColorScheme.fromSeed"
+      swiftui: ".blue"
+    - token: "surface"
+      web_css: "oklch(98% 0.01 250)"
+      tailwind: "bg-gray-100"
+      flutter: "Colors.grey[100]"
+      swiftui: ".secondary"
+    - token: "error"
+      web_css: "oklch(55% 0.22 27)"
+      tailwind: "bg-red-500"
+      flutter: "Colors.red"
+      swiftui: ".red"
+    - token: "text"
+      web_css: "oklch(15% 0.01 250)"
+      tailwind: "text-gray-900"
+      flutter: "—"
+      swiftui: ".primary"
+
+  spacing:
+    - token: "xs"
+      web_px: "4px"
+      tailwind: "p-1"
+      flutter_swiftui: "4"
+    - token: "sm"
+      web_px: "8px"
+      tailwind: "p-2"
+      flutter_swiftui: "8"
+    - token: "md"
+      web_px: "16px"
+      tailwind: "p-4"
+      flutter_swiftui: "16"
+    - token: "lg"
+      web_px: "24px"
+      tailwind: "p-6"
+      flutter_swiftui: "24"
+    - token: "xl"
+      web_px: "32px"
+      tailwind: "p-8"
+      flutter_swiftui: "32"
+
+  typography:
+    - token: "heading1"
+      web_css: "clamp(2rem, 4vw, 3.5rem)"
+      flutter: "32sp"
+    - token: "heading2"
+      web_css: "clamp(1.5rem, 3vw, 2.5rem)"
+      flutter: "24sp"
+    - token: "body"
+      web_css: "clamp(1rem, 1.5vw, 1.125rem)"
+      flutter: "16sp"
+    - token: "caption"
+      web_css: "clamp(0.75rem, 1vw, 0.875rem)"
+      flutter: "12sp"

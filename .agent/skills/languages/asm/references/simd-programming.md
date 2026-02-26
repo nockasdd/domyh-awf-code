@@ -89,4 +89,3 @@ float horizontal_sum_neon(float32x4_t v) {
 ```
 
 ---
-

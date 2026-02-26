@@ -8,7 +8,6 @@
 
 ```yaml
 task_type: audit
-version: "6.4.5"
 
 # Required fields
 scope: string              # What to audit
@@ -142,5 +141,3 @@ All experts participate, comprehensive review.
 - Focus: Test coverage, maintainability, code smells
 
 ---
-
-_DOMYH Awesome Code • Audit Task Template_

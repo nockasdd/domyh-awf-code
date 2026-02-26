@@ -156,6 +156,25 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     </priority_order>
   </requirement>
   
+  <!-- ═══ TIER 3.5: SESSION MEMORY (Mandatory) ═══ -->
+  
+  <requirement id="SESSION_005" tier="3" severity="block">
+    <text>Session Memory Protocol — MANDATORY execution:
+(1) On session START: read memory/CONTEXT_SNAPSHOT.md to restore context about this system, recent changes, status, and decisions.
+(2) During work: after completing a task or making a key decision, append to memory/session.md using the APPEND format:
+    ### [ISO-timestamp] Task/Decision
+    - **What**: [1-line summary]
+    - **Files**: [key files touched]
+    - **Status**: done | in-progress | blocked
+(3) Before session END or claiming "done": update memory/CONTEXT_SNAPSHOT.md with:
+    - "Recent Changes": prepend new entry at top (newest first, max 10 entries)
+    - "Current Status": overwrite with current state
+    - "Key Decisions": append new decisions only
+(4) After /ap audit: update memory/audit_summary.json and memory/state.json.
+ENFORCEMENT: If session ends without updating CONTEXT_SNAPSHOT.md, the session is INCOMPLETE.</text>
+    <rationale>Without session persistence, every new conversation starts from zero — losing decisions, progress, and context. This is the #1 cause of "agent amnesia". Block severity ensures execution.</rationale>
+  </requirement>
+  
   <!-- ═══ TIER 4: WORKFLOW & EXECUTION ═══ -->
   
   <requirement id="EXEC_001" tier="4" severity="warn">
@@ -185,10 +204,6 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   <requirement id="EXEC_006" tier="4" severity="warn">
     <text>If stuck after 2 retry attempts, activate Progressive Escalation: REFLECT (analyze why approaches fail, check cognitive biases) → REFRAME (invert hypotheses, change perspective) → WIDEN (expand scope: config, env, deps, logs) → DECOMPOSE (minimal reproduction, binary search) → ESCALATE (full report to user with all evidence). See workflows/debug.md or workflows/fix.md for protocol details. If context exceeds 80% capacity, summarize progress first.</text>
     <rationale>Progressive strategy shifts (Reflexion + Devil's Advocate + Bias Mitigation) resolve 60-80% of stuck states without user intervention. Escalating to user should be the last resort, not the first.</rationale>
-  </requirement>
-  
-  <requirement id="EXEC_007" tier="4" severity="info">
-    <text>Session Memory Protocol: (1) On session START, read memory/CONTEXT_SNAPSHOT.md to restore context about this system, recent changes, status, and decisions. (2) During work, update memory/session.md with active task, errors, and decisions. (3) Before session END or when work is complete, update memory/CONTEXT_SNAPSHOT.md with: what you did (Recent Changes), current status, and any new key decisions. This ensures the next session can resume without context loss.</text>
   </requirement>
   
 </rules>

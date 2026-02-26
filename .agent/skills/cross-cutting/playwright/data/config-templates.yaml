@@ -2,7 +2,6 @@
 # config-templates.yaml — Playwright Configuration Templates
 # =============================================================================
 
-version: "6.4.5"
 
 templates:
   local_development:
@@ -137,5 +136,3 @@ templates:
         await page.getByRole('button', { name: 'Toggle theme' }).click();
         await expect(page).toHaveScreenshot('homepage-dark.png');
       });
-
-# _DOMYH Awesome Code • Playwright Config Templates v1.0.0_

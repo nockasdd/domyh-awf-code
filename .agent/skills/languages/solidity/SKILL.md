@@ -1,7 +1,6 @@
 ---
 name: solidity
 detect: ["*.sol", "hardhat.config.js", "hardhat.config.ts", "foundry.toml"]
-version: "6.4.5"
 category: blockchain
 tier: 2
 ---
@@ -184,5 +183,3 @@ contract MyTokenTest is Test {
 - [ ] Upgrade path planned
 
 ---
-
-_DOMYH Awesome Code • Solidity 0.8.24+_

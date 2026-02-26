@@ -5,7 +5,6 @@
 # Source: https://ai.google.dev/gemini-api/docs/files
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 6
 
 overview:
@@ -92,5 +91,4 @@ best_practices:
   - "Files API works across all Gemini models"
 
 # =============================================================================
-# _DOMYH Awesome Code • Files API v1.0_
 # =============================================================================

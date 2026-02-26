@@ -1,7 +1,6 @@
 # =============================================================================
 # Template Index — HSA Semantic Template Matching
 # =============================================================================
-# DOMYH Awesome Code Agent — Template Registry for HSA
 # version: 6.4.5
 # =============================================================================
 
@@ -158,147 +157,9 @@ templates:
     priority: 100
 
 # =============================================================================
-# Workflow Chains (Multi-Step Prompts)
+# Workflow Chains → Extracted to chains/index.yaml
 # =============================================================================
-
-chains:
-  /review:
-    name: Code Review Chain
-    description: Systematic 4-step code review process
-    steps:
-      - order: 1
-        id: review-1
-        name: Understand Context
-        file: chains/review/step1-understand.md
-        description: Understand code and requirements
-
-      - order: 2
-        id: review-2
-        name: Analyze Issues
-        file: chains/review/step2-analyze.md
-        depends_on: review-1
-        description: Find bugs, security issues, code smells
-
-      - order: 3
-        id: review-3
-        name: Suggest Fixes
-        file: chains/review/step3-fix.md
-        depends_on: review-2
-        description: Propose solutions
-
-      - order: 4
-        id: review-4
-        name: Summarize
-        file: chains/review/step4-summary.md
-        depends_on: review-3
-        description: Final report
-
-  /debug:
-    name: Debug Chain
-    description: Systematic 5-step debugging process
-    steps:
-      - order: 1
-        id: debug-1
-        name: Reproduce
-        file: chains/debug/step1-reproduce.md
-        description: Reproduce the issue
-
-      - order: 2
-        id: debug-2
-        name: Isolate
-        file: chains/debug/step2-isolate.md
-        depends_on: debug-1
-        description: Isolate the root cause
-
-      - order: 3
-        id: debug-3
-        name: Analyze
-        file: chains/debug/step3-analyze.md
-        depends_on: debug-2
-        description: Deep analysis
-
-      - order: 4
-        id: debug-4
-        name: Fix
-        file: chains/debug/step4-fix.md
-        depends_on: debug-3
-        description: Implement fix
-
-      - order: 5
-        id: debug-5
-        name: Verify
-        file: chains/debug/step5-verify.md
-        depends_on: debug-4
-        description: Verify the fix
-
-  /implement:
-    name: Implementation Chain
-    description: Systematic 4-step feature implementation
-    steps:
-      - order: 1
-        id: impl-1
-        name: Plan
-        file: chains/implement/step1-plan.md
-        description: Create implementation plan
-
-      - order: 2
-        id: impl-2
-        name: Code
-        file: chains/implement/step2-code.md
-        depends_on: impl-1
-        description: Write the code
-
-      - order: 3
-        id: impl-3
-        name: Test
-        file: chains/implement/step3-test.md
-        depends_on: impl-2
-        description: Write and run tests
-
-      - order: 4
-        id: impl-4
-        name: Document
-        file: chains/implement/step4-doc.md
-        depends_on: impl-3
-        description: Add documentation
-
-  /feature:
-    name: Feature Lifecycle Chain
-    description: Spec-driven 5-step feature development with phase gates
-    steps:
-      - order: 1
-        id: feat-1
-        name: Requirements
-        file: chains/feature/step1-requirements.md
-        description: Define problem, user stories, acceptance criteria
-
-      - order: 2
-        id: feat-2
-        name: Design
-        file: chains/feature/step2-design.md
-        depends_on: feat-1
-        description: Architecture decisions, data models, API design
-
-      - order: 3
-        id: feat-3
-        name: Planning
-        file: chains/feature/step3-planning.md
-        depends_on: feat-2
-        description: Task breakdown with traceability
-
-      - order: 4
-        id: feat-4
-        name: Implementation
-        file: chains/feature/step4-implementation.md
-        depends_on: feat-3
-        description: Execute tasks per plan with decision logging
-
-      - order: 5
-        id: feat-5
-        name: Testing & Ship
-        file: chains/feature/step5-testing.md
-        depends_on: feat-4
-        description: Verify all ACs met, coverage check, ship
+# See: templates/chains/index.yaml
 
 # =============================================================================
 # Search Configuration
@@ -312,9 +173,5 @@ search:
   bm25_weight: 0.3
   min_score: 0.3
   fallback: "bm25" # Fallback if HSA unavailable
-  # Minimum match score
 
 # =============================================================================
-# Footer
-# =============================================================================
-# _DOMYH Awesome Code • Template Index v6.4.5 • HSA Integration_

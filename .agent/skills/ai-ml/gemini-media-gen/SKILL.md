@@ -1,6 +1,5 @@
 ---
 name: gemini-media-gen
-version: "6.4.5"
 category: ai-ml
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: fsharp
 detect: ["*.fs", "*.fsx", "*.fsproj"]
-version: "6.4.5"
 category: functional
 tier: 3
 ---
@@ -109,5 +108,3 @@ let configureApp (app : IApplicationBuilder) =
 - [ ] Type annotations on public API
 
 ---
-
-_DOMYH Awesome Code • F# 8+_

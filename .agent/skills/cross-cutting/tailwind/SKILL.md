@@ -7,7 +7,6 @@ detect:
     "@tailwind",
     '@import "tailwindcss"',
   ]
-version: "6.4.5"
 category: styling
 tier: 1
 ---
@@ -342,5 +341,3 @@ Data files available in `data/` directory (indexed by HSA engine):
 Agent reads these YAML files directly for pattern lookup.
 
 ---
-
-_DOMYH Awesome Code • Tailwind CSS 4.1 • 2026_

@@ -167,5 +167,3 @@ Stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-n
 - [ ] Design system fragment included if applicable
 
 ---
-
-_DOMYH Awesome Code • UI/UX Pro Max • T2 Skill_

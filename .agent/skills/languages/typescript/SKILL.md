@@ -1,7 +1,6 @@
 ---
 name: typescript
 detect: ["tsconfig.json", "*.ts", "*.tsx", "*.mts", "*.cts"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -324,5 +323,3 @@ const invalidUser: User = { id: "string" };
 - [ ] Incremental builds enabled
 
 ---
-
-_DOMYH Awesome Code • TypeScript 5.5/5.6_

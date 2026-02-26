@@ -1,6 +1,5 @@
 ---
 name: terraform
-version: "6.4.5"
 category: devops
 ---
 
@@ -75,5 +74,3 @@ terraform plan -var-file=envs/prod.tfvars
 | Large state files | Split into modules, use workspaces        |
 
 ---
-
-_DOMYH Awesome Code • Terraform Skill v1.0.0_

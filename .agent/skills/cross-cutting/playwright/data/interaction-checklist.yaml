@@ -5,7 +5,6 @@
 # Each checkpoint maps to specific MCP tools for execution.
 # =============================================================================
 
-version: "6.4.5"
 total_checkpoints: 58
 
 # =============================================================================
@@ -394,5 +393,3 @@ hover:
       mcp_tool: browser_hover
       severity: high
       verify: "Hover → JS-driven content appears"
-
-# _DOMYH Awesome Code • 58-Checkpoint Interaction Checklist v1.0.0_

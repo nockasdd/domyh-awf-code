@@ -40,7 +40,7 @@ NEVER use these on Windows — they hang indefinitely:
 - Shell = `cmd` → wrap with `cmd /c "command"` (prevent stdin race hang)
 - Shell = `bash`/`zsh` → use native syntax (`&&` chaining, NO cmd /c)
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
-- Shell unknown → default to `cmd /c` (safest fallback)
+- Shell unknown → FIRST call `hsa_detect_environment` to detect shell. Do NOT assume cmd
 
 ## Skills & Workflows
 

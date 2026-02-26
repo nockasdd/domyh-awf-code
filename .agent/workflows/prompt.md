@@ -67,176 +67,8 @@ All prompts follow the RCTO structure:
 
 ## PROMPT TYPE TEMPLATES
 
-### 1. Image Prompt Template
-
-```markdown
-# 🖼️ [Title]
-
-## Target
-
-- **Model**: [Midjourney v6 / DALL-E 3 / Flux Pro / Stable Diffusion XL]
-- **Aspect Ratio**: [16:9 / 1:1 / 9:16 / 3:2]
-- **Quality**: [Standard / HD / Ultra]
-
-## Main Prompt
-
-[Subject] in [style]. [Composition] with [lighting].
-[Color palette]. [Atmosphere/mood]. [Details and textures].
-[Camera angle/lens if photographic].
-
-## Style References
-
-- Art style: [e.g., digital art, oil painting, cinematic]
-- Influences: [e.g., Studio Ghibli, Wes Anderson, cyberpunk]
-
-## Negative Prompt
-
-[Elements to avoid — blurry, deformed, text artifacts, etc.]
-
-## Variations
-
-1. **[Variant A]** — [Different style/mood/angle]
-2. **[Variant B]** — [Different color/lighting/composition]
-3. **[Variant C]** — [Different detail level/abstraction]
-
-## Parameters
-
-[Tool-specific parameters: --ar, --v, --s, --q, etc.]
-```
-
-### 2. Project Prompt Template
-
-```markdown
-# 🏗️ [Project Name]
-
-## Context
-
-- **Purpose**: [Why this project exists]
-- **Target users**: [Who will use it]
-- **Domain**: [Industry/area]
-
-## Requirements
-
-### Functional (P0 — Must Have)
-
-1. [Feature — detailed description, acceptance criteria]
-2. [Feature — detailed description, acceptance criteria]
-
-### Functional (P1 — Should Have)
-
-1. [Feature — description]
-
-### Non-Functional
-
-- **Performance**: [Response time, throughput targets]
-- **Security**: [Auth, data protection requirements]
-- **Scalability**: [Expected load, growth projections]
-- **Accessibility**: [WCAG level, platforms]
-
-## Recommended Tech Stack
-
-| Layer    | Technology | Reasoning |
-| -------- | ---------- | --------- |
-| Frontend | [choice]   | [why]     |
-| Backend  | [choice]   | [why]     |
-| Database | [choice]   | [why]     |
-
-## Architecture Overview
-
-[High-level architecture description / diagram]
-
-## Implementation Phases
-
-1. **Phase 1** (MVP): [scope, timeline estimate]
-2. **Phase 2** (v1.0): [scope, timeline estimate]
-3. **Phase 3** (v2.0): [scope, timeline estimate]
-```
-
-### 3. Modification Prompt Template
-
-```markdown
-# 🔧 [Modification Title]
-
-## Current State
-
-- **Project**: [name, tech stack]
-- **What exists**: [current functionality]
-- **Problem**: [why modification is needed]
-
-## Desired Changes
-
-1. [Change 1 — specific, measurable]
-2. [Change 2 — specific, measurable]
-
-## Constraints
-
-- **Must preserve**: [existing functionality not to break]
-- **Compatibility**: [versions, APIs, integrations]
-- **Timeline**: [urgency level]
-
-## Implementation Guide
-
-### Files to Modify
-
-- `[file]` — [what to change, why]
-
-### New Files
-
-- `[file]` — [purpose, contents]
-
-### Testing Requirements
-
-- [ ] [Test case 1]
-- [ ] [Test case 2]
-
-## Rollback Plan
-
-[How to revert if something goes wrong]
-```
-
-### 4. System Prompt Template
-
-```markdown
-# 🤖 [System Name] — System Prompt
-
-## Identity
-
-- **Role**: [Specific persona with expertise]
-- **Name**: [Optional persona name]
-- **Tone**: [Professional / Friendly / Expert / etc.]
-
-## Core Instructions
-
-1. [Primary behavior rule]
-2. [Response format rule]
-3. [Knowledge boundary rule]
-
-## Capabilities
-
-- ✅ [Can do 1]
-- ✅ [Can do 2]
-- ❌ [Cannot/should not do 1]
-- ❌ [Cannot/should not do 2]
-
-## Response Format
-
-[Structured output requirements — JSON schema, markdown sections, etc.]
-
-## Examples
-
-### User Input
-
-> [example input]
-
-### Expected Output
-
-> [example output with correct format]
-
-## Safety Rules
-
-- [Guardrail 1 — what to refuse]
-- [Guardrail 2 — what to escalate]
-```
+> **Template Reference**: Read `templates/prompts/{type}.md` for the correct RCTO template structure.
+> Available templates: `image.md`, `project.md`, `modify.md`, `system.md`.
 
 ---
 
@@ -329,12 +161,15 @@ All generated prompts must meet:
 
 ## REFLECTION CHECKPOINT
 
-> Before saving session, verify: RCTO structure applied? Research cited with sources? Anti-patterns avoided? Prompt tested?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

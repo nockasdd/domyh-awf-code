@@ -41,7 +41,7 @@
 
 ---
 
-## META.yaml Schema (v6.4.5)
+## META.yaml Schema
 
 ```yaml
 name: skill-id          # lowercase, hyphen-separated
@@ -69,5 +69,3 @@ caps: [cap1, cap2]      # Max 3 capabilities
 ```
 
 ---
-
-_DOMYH Awesome Code _

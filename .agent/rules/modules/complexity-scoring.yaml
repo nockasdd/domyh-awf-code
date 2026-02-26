@@ -3,7 +3,6 @@
 # Source: LangGraph conditional routing, CrewAI Flows, Anthropic orchestrator analysis
 ---
 name: complexity-scoring
-version: "7.1.0"
 rule_id: "MOD-CMP-001"
 
 description: |
@@ -150,6 +149,3 @@ integration:
   tier: 2
   related_modules: ["agent-delegation", "agent-communication", "stop-conditions"]
   referenced_by: ["SACRED_RULES.xml MCP_004", "orchestrator.md", "agent-delegation.yaml"]
-
----
-_DOMYH Awesome Code • Complexity Scoring Engine • Auto-Detection_

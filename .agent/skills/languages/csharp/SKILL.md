@@ -1,7 +1,6 @@
 ---
 name: csharp
 detect: ["*.csproj", "*.sln", "*.cs", "global.json"]
-version: "6.4.5"
 category: language
 tier: 1
 ---
@@ -616,5 +615,3 @@ builder.Services.AddHttpClient<IPaymentClient, PaymentClient>(client =>
 - [ ] Metrics exposed
 
 ---
-
-_DOMYH Awesome Code • C# Development (C# 12/13/14 • .NET 9/10) • 2025-2026_

@@ -102,11 +102,3 @@ CI/CD    🟢 Last pass    Git      🟢 Clean
 | `git status --porcelain`                 | Uncommitted changes |
 | `git rev-list --count HEAD ^origin/main` | Ahead of remote     |
 | `git stash list`                         | Stashed changes     |
-
----
-
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

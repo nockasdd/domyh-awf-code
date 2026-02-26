@@ -1,0 +1,91 @@
+# VERSION HISTORY — DOMYH Awesome Code
+# Extracted from VERSION.yaml (SSoT) for token efficiency
+
+changelog:
+  "6.4.5":
+    date: "2026-02-25"
+    codename: "SSoT & Hygiene"
+    changes:
+      - "Version SSoT: sync-version.mjs script for single-source version propagation"
+      - "Personas optimized: 2,397→761 lines (-68%), removed dead banners/backstories"
+      - "Rules optimized: 55KB→17.8KB (-68%), removed decorative banners"
+      - "HSA engine: +7 stacks, SAFETY_MODULES fix, rationale regex"
+      - "Fixed 7 persona dead enforces references"
+      - "Version drift cleanup: 60+ files synced"
+      - "NEW: hsa_search_files tool (21 MCP tools total)"
+      - "Terminal safety: cmd /c conditional based on IDE shell detection (was ALWAYS)"
+      - "SACRED_RULES: MCP_001+MCP_003 updated with hsa_search_files + shell guidance"
+      - "22 IDE configs updated with conditional shell rule"
+      - "Error format standardization: formatToolError utility across 6 handlers"
+
+  "6.4.0-rc1":
+    date: "2026-02-14"
+    codename: "Dashboard Resilience"
+    changes:
+      - "HSA Dashboard: Explorer cache 60s TTL — eliminates 504 timeouts"
+      - "HSA Dashboard: Client exponential backoff (5s→30s) on errors"
+      - "Codex IDE: Optimized AGENTS.md with inline rules"
+
+  "6.3.0-beta.2":
+    date: "2026-02-12"
+    codename: "Ecosystem Expansion"
+    changes:
+      - "7 new skills: tdd-workflow, prompt-engineering, accessibility, seo, microservices, monorepo, rag-patterns"
+      - "2 new rules: agent-delegation, performance-optimization"
+      - "3 new workflows: /tdd, /e2e, /verify"
+      - "79 total skills (was 64), 33 workflows (was 30), 12 rule modules (was 10)"
+
+  "6.2.0-beta.1":
+    date: "2026-02-05"
+    codename: "Context Mesh"
+    changes:
+      - "HSA v1.0.0: HybridRAG+ with ColBERT reranking"
+      - "Merkle-bound embedding cache (11x speedup)"
+      - "AST-based semantic chunking (tree-sitter)"
+      - "Dynamic Leiden community detection"
+      - "GPU acceleration (cuGraph + embeddings)"
+      - "UI/UX Pro Max HSA adapter integration"
+
+  "6.1.1":
+    date: "2026-02-03"
+    codename: "Agentic Personas"
+    changes:
+      - "11 personas with CrewAI/Anthropic/LangGraph patterns"
+      - "5-tier constitutional rule hierarchy (SACRED_RULES.xml)"
+      - "13 prompt chain templates"
+      - "Deep Interview (PHASE 0) trong /plan"
+      - "Auto Test Loop (3 retries) trong /code"
+
+  "6.1.0":
+    date: "2026-02-02"
+    codename: "Multi-IDE Milestone"
+    changes:
+      - "51 skills milestone achieved"
+      - "14 IDEs supported with verified formats"
+      - "CLI commands: install, validate, doctor"
+      - "Decoupled Adapter Architecture"
+      - "Strategic Profiles system"
+
+  "6.0.0":
+    date: "2026-01-15"
+    codename: "Skills Era"
+    changes:
+      - "21 core skills"
+      - "Progressive Disclosure architecture"
+      - "Semantic skill selection"
+
+  "5.1.0":
+    date: "2026-02-01"
+    codename: "Root Cause"
+    changes:
+      - "Debug Pro với Root Cause Tracing"
+      - "Engineering Iron Laws"
+      - "External Skills Registry"
+
+  "5.0.0":
+    date: "2026-01-28"
+    codename: "Pro Max"
+    changes:
+      - "UI/UX Pro Max skill"
+      - "Web Performance skill"
+      - "Test Pro với AI Testing"

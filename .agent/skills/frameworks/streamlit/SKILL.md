@@ -1,7 +1,6 @@
 ---
 name: streamlit
 detect: ["streamlit", "st.title", "st.sidebar", "st.chat_input"]
-version: "6.4.5"
 category: frameworks
 tier: 2
 ---
@@ -256,5 +255,3 @@ CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0
 - [ ] Responsive layout (`st.columns()`)
 
 ---
-
-_DOMYH Awesome Code • Streamlit Patterns • v7.0_

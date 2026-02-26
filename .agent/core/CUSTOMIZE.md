@@ -1,6 +1,5 @@
 # Skills Customization Framework
 
-# DOMYH Awesome Code
 
 ---
 
@@ -194,5 +193,3 @@ python scripts/semantic_selector.py --generate  # NOTE: HSA future — not yet i
 6. **Use private/ for internal skills** — Never commit company-specific patterns to public repo
 
 ---
-
-_DOMYH Awesome Code — Customization Framework_

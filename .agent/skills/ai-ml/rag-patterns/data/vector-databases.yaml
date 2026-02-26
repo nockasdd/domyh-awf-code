@@ -2,7 +2,6 @@
 # vector-databases.yaml — Vector Database Comparison
 # =============================================================================
 
-version: "6.4.5"
 
 databases:
   pgvector:
@@ -99,5 +98,3 @@ selection_guide:
     choice: "Weaviate"
   - scenario: "Billion+ vectors, GPU"
     choice: "Milvus"
-
-# _DOMYH Awesome Code • Vector Databases_

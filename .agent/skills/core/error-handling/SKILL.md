@@ -1,6 +1,5 @@
 ---
 name: error-handling
-version: "6.4.5"
 category: core
 ---
 
@@ -154,5 +153,3 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 | API        | "RFC 9457 error response format" |
 
 ---
-
-_DOMYH Awesome Code • Error Handling • 298 patterns • 12 languages_

@@ -461,5 +461,3 @@ ALTER TABLE orders SET (autovacuum_enabled = false);
 ```
 
 ---
-
-_DOMYH Awesome Code — Database Advanced Patterns — 2025-2026_

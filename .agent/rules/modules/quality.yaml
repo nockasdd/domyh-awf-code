@@ -1,7 +1,6 @@
 # Quality Rule v7.1.0
 ---
 name: quality
-version: "7.1.0"
 rule_id: "MOD-QUA-001"
 
 description: "Code quality standards: SOLID, naming, structure, error handling, documentation, quality gates."
@@ -117,6 +116,3 @@ integration:
   tier: 2
   related_modules: ["edit-verification", "yagni"]
   related_skills: ["coding-rules"]
-
----
-_DOMYH Awesome Code • Quality Rule_

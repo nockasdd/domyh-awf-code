@@ -1,6 +1,5 @@
 ---
 name: tdd-workflow
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -27,12 +26,11 @@ category: cross-cutting
 ## TDD Cycle
 
 ```
-┌─────────────────────────────────────────────┐
-│  1. RED    → Write a failing test           │
-│  2. GREEN  → Write minimal code to pass     │
-│  3. REFACTOR → Improve without breaking     │
-│  4. REPEAT → Next requirement               │
-└─────────────────────────────────────────────┘
+
+> 1. RED    → Write a failing test
+> 2. GREEN  → Write minimal code to pass
+> 3. REFACTOR → Improve without breaking
+> 4. REPEAT → Next requirement
 ```
 
 ### Phase Details

@@ -1,16 +1,13 @@
-# Progressive Escalation Rule v6.4.5
+# Progressive Escalation Rule
 # Perspective Pivot Engine — Detect stuck agents, auto-pivot strategy
 ---
 name: progressive-escalation
-version: "6.4.5"
 rule_id: "MOD-ESC-001"
 
 description: |
-  When an AI agent fails to fix a bug after repeated attempts,
-  detect the stuck state and progressively escalate through
-  6 levels of increasingly different debugging strategies.
-  Based on: Reflexion, Tree-of-Thought, DoVer, Devil's Advocate,
-  Meta-Cognitive Monitoring, and Cognitive Bias Mitigation research.
+  When an agent fails to fix a bug after repeated attempts,
+  detect stuck state and escalate through 6 levels of debugging strategies.
+  Based on: Reflexion, Tree-of-Thought, DoVer, Devil's Advocate.
 
 category: "workflow"
 
@@ -19,56 +16,21 @@ context:
   personas: ["Developer", "Debugger"]
   workflows: ["/debug", "/fix"]
 
-# =============================================================================
-# STUCK DETECTION
-# =============================================================================
+# ═══ STUCK DETECTION ═══
 
 stuck_detection:
-  # 5 Behavioral Signals
   signals:
-    S1_repeat_fix:
-      description: "Agent edits same file, same location, same approach"
-      detection: "Diff similarity > 70% between consecutive fixes"
-      weight: 0.9
+    S1_repeat_fix:  { detection: "Diff similarity > 70% between fixes", weight: 0.9 }
+    S2_oscillation: { detection: "Revert pattern A→B→A within 3 edits", weight: 1.0 }
+    S3_same_error:  { detection: "Error similarity > 85% after 2+ attempts", weight: 0.8 }
+    S4_scope_creep: { detection: "More files changed but error unchanged", weight: 0.7 }
+    S5_circular:    { detection: "Current strategy matches prior failure", weight: 0.85 }
 
-    S2_oscillation:
-      description: "Agent adds code then removes it (A→B→A pattern)"
-      detection: "Revert pattern within 3 consecutive edits"
-      weight: 1.0
-
-    S3_same_error:
-      description: "Same error message persists after each fix attempt"
-      detection: "Error output similarity > 85% after 2+ attempts"
-      weight: 0.8
-
-    S4_scope_creep:
-      description: "More files changed but error unchanged"
-      detection: "Changed file count increases while error persists"
-      weight: 0.7
-
-    S5_circular:
-      description: "Returns to a previously failed approach"
-      detection: "Current strategy matches a prior failed strategy"
-      weight: 0.85
-
-  # 3 Cognitive Bias Detectors
   bias_detectors:
-    B1_confirmation:
-      description: "Only seeking evidence supporting initial hypothesis"
-      detection: "Searching only 1 file/function, ignoring other errors"
-      counter: "Force search ≥3 related files, list counter-evidence"
+    B1_confirmation: { detection: "Searching only 1 file", counter: "Force ≥3 files, list counter-evidence" }
+    B2_anchoring:    { detection: "Same hypothesis after 2+ fails", counter: "Force ≥3 hypotheses ranked" }
+    B3_tunnel_vision: { detection: "Only code modified, no config check", counter: "code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓" }
 
-    B2_anchoring:
-      description: "Clinging to first hypothesis despite weak evidence"
-      detection: "Same hypothesis unchanged after 2+ failed fixes"
-      counter: "Force ≥3 hypotheses ranked by evidence strength"
-
-    B3_tunnel_vision:
-      description: "Only looking at code, ignoring config/env/data"
-      detection: "Only source code modified, no config/env/deps check"
-      counter: "Force checklist: code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓"
-
-  # Stuck Score Thresholds
   thresholds:
     level_2_reflect: 0.6
     level_3_reframe: 0.75
@@ -76,216 +38,62 @@ stuck_detection:
     level_5_decompose: 0.90
     level_6_escalate: 0.95
 
-# =============================================================================
-# 6 ESCALATION LEVELS
-# =============================================================================
+# ═══ 6 ESCALATION LEVELS ═══
 
 levels:
   level_1_retry:
     name: "RETRY"
     max_attempts: 2
-    strategy: "Standard fix — current approach"
     trigger: "Initial fix attempt"
     action: "Apply targeted fix, verify, retry if fail"
 
   level_2_reflect:
     name: "REFLECT"
-    strategies: ["S01_reflexion_analysis", "S02_bias_checkpoint"]
     trigger: "After 2 failed retries OR stuck_score ≥ 0.6"
-    purpose: "Analyze WHY current approach failed"
-    prompt: |
-      🪞 STOP AND ANALYZE.
-
-      1. LIST all attempts tried:
-         | # | Approach | File:Line | Result | Why it failed |
-
-      2. FIND PATTERNS in failures:
-         - All fail at same spot? → Bug is upstream
-         - Different failure each time? → Multiple bugs / race condition
-         - Fixing 1 bug creates another? → Tight coupling issue
-
-      3. CHECK COGNITIVE BIASES:
-         □ Confirmation: "Am I only seeking evidence that supports my hypothesis?"
-           → List 3 pieces of COUNTER-evidence
-         □ Anchoring: "Is my first hypothesis still dominant?"
-           → Generate 2 NEW hypotheses, rank by evidence strength
-         □ Tunnel Vision: "Have I checked beyond the code?"
-           → code ✓ config ✓ env ✓ deps ✓ data ✓ logs ✓
-
-      4. SAVE episodic memory entry
+    prompt_file: "templates/reflection/escalation-L2.md"
 
   level_3_reframe:
     name: "REFRAME"
-    strategies:
-      - "S03_invert"
-      - "S04_rubber_duck"
-      - "S05_devils_advocate"
-      - "S06_fresh_eyes"
     trigger: "Level 2 failed OR stuck_score ≥ 0.75"
-    purpose: "Change perspective COMPLETELY"
-    prompt: |
-      🔄 CHANGE PERSPECTIVE COMPLETELY.
-
-      INVERT — Reverse all hypotheses:
-      - "If ALL the code is CORRECT, where does the bug come from?"
-      - "Is the error message MISLEADING?"
-      - "Am I fixing the SYMPTOM or the ROOT CAUSE?"
-
-      RUBBER DUCK — Explain from scratch:
-      1. What SHOULD the program do? (expected)
-      2. What does it ACTUALLY do? (actual)
-      3. What path does data take input → output? (flow)
-      4. At each step, is the data in correct format? (validate)
-      5. At which step does data START going wrong? (pinpoint)
-
-      DEVIL'S ADVOCATE — Self-contradict:
-      - "What HARM could the proposed fix cause?"
-      - "In what scenario does the fix NOT work?"
-      - "How would an adversary break this fix?"
-
-      FRESH EYES — Forget everything, read code from scratch:
-      - Signature, docstring, line-by-line, boundaries, returns
+    prompt_file: "templates/reflection/escalation-L3.md"
 
   level_4_widen:
     name: "WIDEN"
-    strategies:
-      - "S07_upstream_downstream"
-      - "S08_diff_forensics"
-      - "S09_environmental_audit"
-      - "S10_contract_verification"
     trigger: "Level 3 failed OR stuck_score ≥ 0.85"
-    purpose: "Expand search scope BEYOND current area"
-    prompt: |
-      🔍 EXPAND SCOPE.
-
-      UPSTREAM/DOWNSTREAM:
-      → grep -rn "functionName(" . --include="*.ext"
-      → Trace ALL callers: is the data passed in correct?
-      → Trace ALL callees: are return values handled?
-      → Do middleware/interceptors/hooks affect the flow?
-
-      DIFF FORENSICS:
-      → git log --oneline -20 -- [affected_files]
-      → git diff HEAD~5 -- [affected_files]
-      → When did it last work? Which commit changed it?
-
-      ENVIRONMENTAL AUDIT:
-      → Runtime version, ENV vars, port conflicts
-      → Dependencies compatible? Lock file stale?
-      → Config conflict? Feature flags? API keys?
-      → External services available? Response format changed?
-
-      CONTRACT VERIFICATION:
-      → Function input types match caller output?
-      → API request format match spec?
-      → DB model match actual table schema?
-      → Event payload match subscriber expectation?
+    prompt_file: "templates/reflection/escalation-L4.md"
 
   level_5_decompose:
     name: "DECOMPOSE"
-    strategies:
-      - "S11_minimal_reproduction"
-      - "S12_binary_search_isolation"
     trigger: "Level 4 failed OR stuck_score ≥ 0.90"
-    purpose: "Isolate precisely through systematic elimination"
-    prompt: |
-      🧩 DECOMPOSE AND ISOLATE.
-
-      MINIMAL REPRODUCTION:
-      1. Copy function → separate test file
-      2. Hardcode inputs → run → pass/fail?
-         - PASS → bug is in CONTEXT not logic
-         - FAIL → bug is IN the function
-      3. Add complexity incrementally:
-         +DB → +middleware → +auth → which breaks it?
-      4. DoVer: hypothesis → minimal change → re-verify
-
-      BINARY SEARCH:
-      1. Identify full data path (input → output)
-      2. Add log/breakpoint at MIDPOINT
-      3. Data correct at mid? → bug in second half
-         Data wrong at mid? → bug in first half
-      4. Repeat until narrowed to ≤5 lines
-
-      COMPONENT ISOLATION (parallel):
-      | Component Off | Result | Conclusion |
-      |---------------|--------|------------|
-      | Auth          |        |            |
-      | Cache         |        |            |
-      | Middleware    |        |            |
-      | External APIs |        |            |
-      | Database      |        |            |
+    prompt_file: "templates/reflection/escalation-L5.md"
 
   level_6_escalate:
     name: "ESCALATE"
     trigger: "Level 5 failed OR stuck_score ≥ 0.95"
-    purpose: "Report to user with full investigation evidence"
-    prompt: |
-      👤 ESCALATE — Create full investigation report:
+    prompt_file: "templates/reflection/escalation-L6.md"
 
-      ## Bug Investigation Report
-
-      ### Summary
-      [1-line description]
-
-      ### Attempts (with results)
-      | Level | Strategy | Findings |
-      |-------|----------|----------|
-      | 1 RETRY | [approaches] | [results] |
-      | 2 REFLECT | [analysis] | [findings] |
-      | 3 REFRAME | [perspective shift] | [findings] |
-      | 4 WIDEN | [expanded scope] | [findings] |
-      | 5 DECOMPOSE | [isolation tests] | [findings] |
-
-      ### Key Findings
-      - [Finding + evidence]
-
-      ### Remaining Hypotheses (unverifiable)
-      - [Hypothesis — why can't verify]
-
-      ### Recommended Next Steps
-      1. [Option A — pros/cons]
-      2. [Option B — pros/cons]
-      3. [Option C — external help]
-
-# =============================================================================
-# FAILURE MEMORY (EPISODIC BUFFER)
-# =============================================================================
+# ═══ FAILURE MEMORY ═══
 
 episodic_memory:
   storage: ".domyh/debug/episodic_memory.yaml"
-  purpose: "Prevent repeating failed approaches"
-
   entry_schema:
     id: "EP-{timestamp}"
     bug_signature: "hash(error_message + file + line)"
-    failed_approaches:
-      - approach: "description"
-        reason_failed: "why it didn't work"
+    failed_approaches: [{ approach: "desc", reason_failed: "why" }]
     successful_approach: "what worked (if resolved)"
     lesson: "one-line takeaway"
-
   lookup: |
-    Before EACH fix attempt:
-    1. Hash current error → search episodic_memory
-    2. If match → load failed_approaches → exclude them
-    3. If successful_approach exists → try that first
-
-# =============================================================================
-# INTEGRATION
-# =============================================================================
+    Before EACH fix: hash error → search memory → exclude failed approaches.
 
 integration:
   tier: 2
-  related_modules:
-    - "stop-conditions"
-    - "edit-verification"
-  workflows:
-    - "/debug"
-    - "/fix"
+  related_modules: ["stop-conditions", "edit-verification"]
+  workflows: ["/debug", "/fix"]
   templates:
+    - "reflection/escalation-L2.md"
+    - "reflection/escalation-L3.md"
+    - "reflection/escalation-L4.md"
+    - "reflection/escalation-L5.md"
+    - "reflection/escalation-L6.md"
     - "reflection/pivot_analysis.md"
     - "reflection/error_analysis.md"
-
----
-_DOMYH Awesome Code • Progressive Escalation Rule • Perspective Pivot Engine_

@@ -2,7 +2,6 @@
 # passkey-patterns.yaml — WebAuthn / Passkey Authentication
 # =============================================================================
 
-version: "6.4.5"
 
 overview:
   description: |
@@ -145,5 +144,3 @@ migration_strategy:
     - "Phase 2: Prompt password users to add passkey"
     - "Phase 3: Allow passkey-only accounts"
     - "Phase 4: Deprecate password login (optional)"
-
-# _DOMYH Awesome Code • Passkey Patterns_

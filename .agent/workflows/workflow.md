@@ -34,7 +34,7 @@ success_criteria: "Workflow chain executed, transitions logged"
 | planning    | 📋 Planning & Thinking | `/plan`, `/think`, `/visualize`                                |
 | generation  | 🏗️ Generation          | `/init`, `/scaffold` (= `/generate`), `/doc`, `/prompt`        |
 | operations  | 🚀 Operations          | `/deploy`, `/env`, `/migrate`, `/monitor`, `/revert`           |
-| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`, `/sync-version`                   |
+| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`                                    |
 | utility     | 📊 Utility             | `/status`, `/recap`, `/suggest`, `/help`                       |
 | onboarding  | 📦 Onboarding          | `/onboard`                                                     |
 | diagnosis   | 🩺 Diagnosis           | `/doctor`, `/e2e`                                              |
@@ -88,7 +88,7 @@ graph LR
         upgrade["/upgrade"]
         perf["/perf"]
         git["/git"]
-        syncver["/sync-version"]
+
     end
 
     subgraph utility["📊 Utility"]
@@ -152,7 +152,7 @@ graph LR
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | **Standard** (5-6-step) | `/code`, `/refactor`, `/scaffold`, `/env`, `/migrate`, `/monitor`, `/revert`, `/visualize`, `/doc`, `/prompt`, `/clean`, `/security`, `/e2e` |
 | **Deep** (6-step)     | `/ap`, `/debug`, `/plan`, `/test`, `/perf`, `/review`, `/modify`                                                         |
-| **Quick** (3-4-step)  | `/fix`, `/dev`, `/git`, `/recap`, `/help`, `/generate`, `/sync-version`                                                  |
+| **Quick** (3-4-step)  | `/fix`, `/dev`, `/git`, `/recap`, `/help`, `/generate`                                                                   |
 | **Report** (3-step)   | `/status`, `/doctor`                                                                                                     |
 | **Unique**            | `/think` (decision), `/orchestrate` (DAG), `/init` (interview), `/deploy` (7-step ops), `/tdd` (Red-Green-Refactor), `/upgrade` (6-step safe/major), `/suggest` (context-aware), `/onboard` (discovery) |
 
@@ -238,11 +238,3 @@ Run multiple workflows in sequence with data passing between them.
 | Skip logic     | Skip steps if preconditions already met   |
 | Progress       | Show: `[Chain 2/4] Running /test...`      |
 | Rollback       | Option to undo on chain failure           |
-
----
-
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

@@ -1,15 +1,12 @@
 # =============================================================================
-# DOMYH Awesome Code - English Strings
-# i18n/en.yaml v6.4.5 — Enhanced i18n System
+# i18n/en.yaml — Enhanced i18n System
 # =============================================================================
-# NOTE: Version synced from core/VERSION.yaml
+# Usage: Agent reads language from state.json → loads corresponding i18n file
 # Usage: Agent reads language from state.json → loads corresponding i18n file
 # =============================================================================
 
 app:
   name: "DOMYH Awesome Code"
-  version: "6.4.5" # Sync from VERSION.yaml
-  version_short: v6.4.5
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
   language_name: "English"
@@ -240,11 +237,7 @@ commands:
     short: "Search"
     desc: "Semantic search across memory and audit history"
     help: "Usage: /search [query]"
-  sync_version:
-    name: "Sync Version"
-    short: "Sync"
-    desc: "Sync version from VERSION.yaml SSoT across all files"
-    help: "Usage: /sync-version"
+
 
   # Utility (6)
   status:
@@ -323,7 +316,7 @@ messages:
   progress_complete: "✅ Complete!"
   progress_failed: "❌ Failed"
 
-  # Deep Interview (v6.4.5)
+  # Deep Interview
   interview_start: "🎯 DEEP INTERVIEW"
   interview_question_what: "What exactly does this feature handle/manage?"
   interview_question_who: "Who uses it? □ Solo | □ Team (2-10) | □ Public"
@@ -331,7 +324,7 @@ messages:
   interview_skip: "→ Sufficient context, skipping interview"
   interview_complete: "→ Context gathered, proceeding with planning..."
 
-  # Auto Test Loop (v6.4.5)
+  # Auto Test Loop
   test_loop_start: "🧪 AUTO TEST LOOP"
   test_loop_retry: "🔄 Retry {n}/3 — Trying different approach..."
   test_loop_pass: "✅ Tests passed!"
@@ -344,7 +337,7 @@ messages:
     3️⃣ Run /debug for deep analysis
     4️⃣ Rollback to before the fix
 
-  # Step Confirmation (v6.4.5)
+  # Step Confirmation
   step_done: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ DONE: {task_name}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   step_next: "→ Continue to next task? (y/adjust/stop)"
 

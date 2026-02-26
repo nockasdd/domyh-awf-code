@@ -1,6 +1,5 @@
 ---
 name: gemini-tts
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -24,11 +23,11 @@ category: ai-ml
 ## 3 Levers of Speech Control
 
 ```
-┌──────────────────────────────────────┐
-│  1. Prompt Style Instructions        │  ← Natural language direction
-│  2. Markup Tags in Text              │  ← Fine-grained control
-│  3. Model Selection                  │  ← Quality vs latency
-└──────────────────────────────────────┘
+
+  1. Prompt Style Instructions          ← Natural language direction
+  2. Markup Tags in Text                ← Fine-grained control
+  3. Model Selection                    ← Quality vs latency
+
 ```
 
 ---

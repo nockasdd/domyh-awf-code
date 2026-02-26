@@ -1,7 +1,6 @@
 ---
 name: r
 detect: ["*.R", "*.Rmd", "*.qmd", "DESCRIPTION", ".Rproj", "renv.lock"]
-version: "6.4.5"
 category: data
 tier: 2
 ---
@@ -344,5 +343,3 @@ summarize_data <- function(data, group_var, value_var) {
 - [ ] Integration tests for Shiny
 
 ---
-
-_DOMYH Awesome Code • R 4.4+ Tidyverse_

@@ -206,5 +206,3 @@ Agent PHẢI phát hiện shell TRƯỚC khi tạo bất kỳ lệnh terminal n�
 - [ ] Đã dùng đúng syntax chaining?
 
 ---
-
-_DOMYH Awesome Code • Shell-Aware Commands_

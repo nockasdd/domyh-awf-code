@@ -2,7 +2,6 @@
 # embedding-models.yaml — Embedding Model Selection
 # =============================================================================
 
-version: "6.4.5"
 
 models:
   openai:
@@ -72,5 +71,3 @@ selection_guide:
           input="text",
           dimensions=256  # Matryoshka reduction
       )
-
-# _DOMYH Awesome Code • Embedding Models_

@@ -1,7 +1,6 @@
 ---
 name: julia
 detect: ["*.jl", "Project.toml", "Manifest.toml"]
-version: "6.4.5"
 category: scientific
 tier: 2
 ---
@@ -170,5 +169,3 @@ end
 - [ ] Package documented
 
 ---
-
-_DOMYH Awesome Code • Julia 1.10+_

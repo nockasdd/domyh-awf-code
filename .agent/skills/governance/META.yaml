@@ -3,7 +3,6 @@ description: >
   Session governance & context discipline.
   Prevents drift, preserves memory, enforces evidence-based claims.
   Inspired by HiveMind Context Governance patterns.
-version: "1.0.0"
 
 skills:
   - session-memory

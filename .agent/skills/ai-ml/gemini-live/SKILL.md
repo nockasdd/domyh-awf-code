@@ -1,6 +1,5 @@
 ---
 name: gemini-live
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -25,16 +24,15 @@ category: ai-ml
 ## Live API Overview
 
 ```
-┌──────────────────────────────────────────┐
-│  Client (Audio/Video/Text)               │
-│    ↓ WebSocket                           │
-│  Gemini Live API                         │
-│    ↓ Real-time processing                │
-│  Response (Audio/Text)                   │
-│    + Voice Activity Detection            │
-│    + Tool calling                        │
-│    + Session management                  │
-└──────────────────────────────────────────┘
+
+> Client (Audio/Video/Text)
+> ↓ WebSocket
+> Gemini Live API
+> ↓ Real-time processing
+> Response (Audio/Text)
+> + Voice Activity Detection
+> + Tool calling
+> + Session management
 ```
 
 ### Implementation Approaches

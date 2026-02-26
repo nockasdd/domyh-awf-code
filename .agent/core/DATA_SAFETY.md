@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Data Safety v6.4.5
+# DOMYH Awesome Code Data Safety
 
 > Sensitive data handling based on 2025 AI data hygiene standards
 
@@ -88,5 +88,3 @@ formats:
 - Store credentials in cache
 
 ---
-
-_DOMYH Awesome Code — Data Safety Rules_

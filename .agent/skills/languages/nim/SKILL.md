@@ -1,7 +1,6 @@
 ---
 name: nim
 detect: ["*.nim", "*.nimble", "nim.cfg"]
-version: "6.4.5"
 category: systems
 tier: 3
 ---
@@ -112,5 +111,3 @@ waitFor main()
 - [ ] Cross-compile for targets
 
 ---
-
-_DOMYH Awesome Code • Nim 2.0+_

@@ -1,7 +1,6 @@
 ---
 name: deno
 detect: ["deno.json", "deno.jsonc", "deno.lock", "mod.ts", "deps.ts"]
-version: "6.4.5"
 category: runtime
 tier: 2
 ---
@@ -335,5 +334,3 @@ Data powered by HSA BM25 search engine:
 | CLI         | "dx deno audit security scan" |
 
 ---
-
-_DOMYH Awesome Code • Deno 2.6.8 • 2026_

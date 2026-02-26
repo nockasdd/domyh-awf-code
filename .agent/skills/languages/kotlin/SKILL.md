@@ -1,7 +1,6 @@
 ---
 name: kotlin
 detect: ["build.gradle.kts", "settings.gradle.kts", "*.kt", "*.kts"]
-version: "6.4.5"
 category: mobile
 tier: 1
 ---
@@ -521,5 +520,3 @@ app/
 - [ ] Proper scoping (@Singleton, @ViewModelScoped)
 
 ---
-
-_DOMYH Awesome Code • Kotlin Development • 2025-2026_

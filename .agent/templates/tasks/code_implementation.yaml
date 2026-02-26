@@ -8,7 +8,6 @@
 
 ```yaml
 task_type: code_implementation
-version: "6.4.5"
 
 # Required fields
 description: string       # What to build
@@ -106,5 +105,3 @@ This task type triggers:
 - **Reflection:** Pre-output critic check
 
 ---
-
-_DOMYH Awesome Code • Code Implementation Task Template_

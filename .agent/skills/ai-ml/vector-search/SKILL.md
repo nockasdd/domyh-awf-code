@@ -1,6 +1,5 @@
 ---
 name: vector-search
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -112,5 +111,3 @@ FROM documents ORDER BY embedding <=> query_embedding LIMIT 10;
 | Stale data          | Implement incremental indexing pipeline    |
 
 ---
-
-_DOMYH Awesome Code • Vector Search Skill v1.0.0_

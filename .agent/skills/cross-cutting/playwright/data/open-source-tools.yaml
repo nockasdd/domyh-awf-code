@@ -2,7 +2,6 @@
 # open-source-tools.yaml — Browser Automation Ecosystem Reference
 # =============================================================================
 
-version: "6.4.5"
 
 tools:
   - name: "Playwright MCP"
@@ -91,5 +90,3 @@ accessibility_tools:
     url: "https://github.com/nicholasgasior/mcp-accessibility-scanner"
     purpose: "MCP server for automated accessibility audits"
     integration: "MCP server + axe-core + Playwright"
-
-# _DOMYH Awesome Code • Browser Automation Ecosystem v1.0.0_

@@ -1,4 +1,4 @@
-# Agent Behavior Guide v6.4.5
+# Agent Behavior Guide
 
 > Consolidated from ROUTER, TOKEN_LOADING, TOKEN_BUDGETS, CONTEXT_LOADER, SKILLS_FLOW
 
@@ -60,6 +60,8 @@ ELSE (freeform text — no slash command):
 
 ## Session Save Protocol
 
+
+> **⛔ Enforced by SESSION_005** (Tier 3, severity=block). Agent MUST execute saves.
 Update memory files at these triggers:
 
 | Trigger | Files to Update |

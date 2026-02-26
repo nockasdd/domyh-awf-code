@@ -88,10 +88,6 @@ Single Source of Truth: `.agent/core/VERSION.yaml`
 
 ```yaml
 system:
-  version: "6.4.5"
-  version_short: v6.4.5
 ```
 
 ---
-
-_DOMYH Awesome Code • Versioning Rule v1.0_

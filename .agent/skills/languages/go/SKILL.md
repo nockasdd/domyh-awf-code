@@ -1,7 +1,6 @@
 ---
 name: go
 detect: ["go.mod", "go.sum", "*.go", "go.work"]
-version: "6.4.5"
 category: backend
 tier: 1
 ---
@@ -485,5 +484,3 @@ myapp/
 - [ ] Benchmark critical paths
 
 ---
-
-_DOMYH Awesome Code • Go 1.22/1.23/1.24_

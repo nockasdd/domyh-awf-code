@@ -2,7 +2,6 @@
 # communication.yaml — Inter-Service Communication Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # SYNCHRONOUS PATTERNS
@@ -159,5 +158,3 @@ decision_guide:
     kafka: "Event streaming, high throughput, replay"
     rabbitmq: "Task queues, complex routing"
     nats: "Lightweight pub/sub, edge"
-
-# _DOMYH Awesome Code • Communication Patterns_

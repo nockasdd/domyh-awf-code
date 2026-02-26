@@ -1,0 +1,2 @@
+# Exclude archived specs and reference databases from HSA indexing
+docs/

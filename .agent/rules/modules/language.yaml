@@ -1,7 +1,6 @@
 # Language Rule v8.1.0
 ---
 name: language
-version: "8.1.0"
 rule_id: "MOD-LNG-001"
 
 description: "Language enforcement and i18n rules. Config language takes absolute priority over input language."
@@ -53,6 +52,3 @@ vietnamese:
 
 integration:
   tier: 1
-
----
-_DOMYH Awesome Code • Language Enforcement Rule v8.1_

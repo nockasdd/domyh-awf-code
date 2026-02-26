@@ -2,7 +2,6 @@
 # ci-cd-strategies.yaml — CI/CD for Monorepos
 # =============================================================================
 
-version: "6.4.5"
 
 affected_detection:
   description: "Only build/test packages affected by changes"
@@ -70,5 +69,3 @@ parallelism:
     - name: "Cache-first strategy"
       description: "Skip tasks with cache hits"
       tool: "Remote caching (Nx Cloud / Vercel)"
-
-# _DOMYH Awesome Code • Monorepo CI/CD_

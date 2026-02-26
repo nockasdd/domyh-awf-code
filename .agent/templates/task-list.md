@@ -140,5 +140,3 @@ _Format chuẩn cho danh sách tasks._
 ```
 
 ---
-
-\_DOMYH Awesome Code

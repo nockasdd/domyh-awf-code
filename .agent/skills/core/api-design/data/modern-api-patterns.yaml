@@ -2,7 +2,6 @@
 # modern-api-patterns.yaml — Modern API Patterns (GraphQL, tRPC, gRPC)
 # =============================================================================
 
-version: "6.4.5"
 
 graphql:
   overview:
@@ -156,5 +155,3 @@ decision_guide:
     choice: "gRPC"
   - scenario: "Public API, broad compatibility"
     choice: "REST"
-
-# _DOMYH Awesome Code • Modern API Patterns_

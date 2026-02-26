@@ -1,9 +1,8 @@
-# Context Management Rule v6.4.5
+# Context Management Rule
 # Modular rule for context and token efficiency
 
 ---
 name: context-management
-version: "6.4.5"
 rule_id: "MOD-CTX-001"
 
 # =============================================================================
@@ -153,6 +152,3 @@ integration:
       graceful: true
 
 ---
-
-_DOMYH Awesome Code • Context Management Rule • HSA v1.0.0 Integration_
-

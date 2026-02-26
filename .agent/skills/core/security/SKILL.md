@@ -2,7 +2,6 @@
 name: security
 detect: ["always"]
 priority: 0
-version: "6.4.5"
 ---
 
 # Security Patterns (Enhanced 2026)
@@ -230,5 +229,3 @@ Security Review Checklist:
 ```
 
 ---
-
-_DOMYH Awesome Code • Security Skill Enhanced • 290+ Patterns_

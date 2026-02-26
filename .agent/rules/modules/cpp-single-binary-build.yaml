@@ -3,7 +3,6 @@
 # =============================================================================
 
 name: cpp-single-binary-build
-version: "1.0.0"
 rule_id: "MOD-SBB-001"
 
 description: |
@@ -113,5 +112,3 @@ checklist:
 integration:
   tier: 4
   related_modules: ["game-dev-security", "quality"]
-
-# _DOMYH Awesome Code • Single Binary Build Rules_

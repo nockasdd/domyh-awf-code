@@ -75,5 +75,3 @@
 - Remaining work: {description}
 
 ---
-
-_DOMYH Awesome Code • Orchestration Log_

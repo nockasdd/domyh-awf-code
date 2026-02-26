@@ -6,7 +6,6 @@ triggers:
   - "Before creating new files or functions"
   - "Before modifying unfamiliar code"
   - "At task start — load context first"
-version: "1.0.0"
 ---
 
 # Context-First Gatekeeping

@@ -1,6 +1,6 @@
 # 🔧 IDE Configs — DOMYH Awesome Code
 
-> Root configuration files for 23 supported IDEs/Agents.
+> Root configuration files for 23 configs (22 unique IDEs — copilot merged into vscode).
 > Template version: **v7** (enforced MCP/skills, optimized for IDE size limits)
 
 ## Structure
@@ -44,8 +44,8 @@ All Markdown configs share identical core structure (~58 lines, ~2.8KB):
 - ❌ NEVER list for MCP-connected violations
 - 5 core rules (CORE_001-003, SAFE_001, PERF_001)
 - Terminal safety (Windows pipe/pager/interactive prevention)
-- Skill path + 7 categories (85+ skills)
-- MCP tools reference (7 tools)
+- Skill path + 8 categories (93 skills)
+- MCP tools reference (20 tools)
 - Personas list (11 roles)
 
 JSON/YAML configs use IDE-native formats with equivalent content.

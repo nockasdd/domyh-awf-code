@@ -1,6 +1,5 @@
 ---
 name: monorepo
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -110,5 +109,3 @@ monorepo/
 | `changesets conventional commits`  | `versioning.yaml`         |
 
 ---
-
-_DOMYH Awesome Code • Monorepo Management_

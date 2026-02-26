@@ -2,7 +2,6 @@
 # workspace-patterns.yaml — Package Manager Workspace Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 pnpm:
   config: |
@@ -81,5 +80,3 @@ internal_packages:
         }
       }
     }
-
-# _DOMYH Awesome Code • Workspace Patterns_

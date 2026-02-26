@@ -26,11 +26,3 @@ All `/generate` commands map directly to `/scaffold`:
 | `/generate dto CreateUser`     | `/scaffold dto CreateUser`     |
 
 > 📖 See `/scaffold` for full documentation, framework templates, and convention matching.
-
----
-
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

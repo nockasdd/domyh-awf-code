@@ -8,7 +8,6 @@ detect:
     "vitest.config.*",
     "playwright.config.*",
   ]
-version: "6.4.5"
 ---
 
 # Testing Patterns (2026)
@@ -246,5 +245,3 @@ Data powered by HSA BM25 search engine:
 **Data domains**: `frameworks`, `patterns`, `pyramid`, `mocking`, `coverage`
 
 ---
-
-_DOMYH Awesome Code — Testing Patterns (Data-Driven + HSA)_

@@ -1,6 +1,5 @@
 ---
 name: api-design
-version: "6.4.5"
 category: core
 ---
 
@@ -57,15 +56,13 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 ### Rate Limiting
 
 ```
-┌─────────────────────────────────────────┐
-│ Token Bucket: Handles bursts            │
-│ - Tokens refill at fixed rate           │
-│ - Burst up to bucket capacity           │
-├─────────────────────────────────────────┤
-│ Sliding Window: Smooth rate             │
-│ - Rolling time window                   │
-│ - More precise than fixed window        │
-└─────────────────────────────────────────┘
+
+> Token Bucket: Handles bursts
+> - Tokens refill at fixed rate
+> - Burst up to bucket capacity
+> Sliding Window: Smooth rate
+> - Rolling time window
+> - More precise than fixed window
 ```
 
 ### Error Response (RFC 9457)
@@ -165,5 +162,3 @@ rpc Chat(stream Message) returns (stream Message);
 ```
 
 ---
-
-_DOMYH Awesome Code • API Design Patterns • 202 patterns • HSA Enabled_

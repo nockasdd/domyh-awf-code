@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Permissions v6.4.5
+# DOMYH Awesome Code Permissions
 
 > Access control tiers based on 2025 AI safety best practices
 
@@ -96,5 +96,3 @@ forbidden_paths:
 | api_calls   | 100   | 1min   |
 
 ---
-
-_DOMYH Awesome Code — Permission Framework_

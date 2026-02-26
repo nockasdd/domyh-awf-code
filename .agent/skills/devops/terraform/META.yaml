@@ -1,5 +1,4 @@
 name: terraform
-version: "6.4.5"
 display: Terraform IaC
 category: devops
 tier: 1

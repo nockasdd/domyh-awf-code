@@ -129,20 +129,17 @@ Requirement   Task    Implementation  Test Case
 
 ---
 
-## 🪞 REFLECTION CHECKPOINT
+## REFLECTION CHECKPOINT
 
-> At Phase 6 (Ship), apply `templates/reflection/critic.md`:
-> 1. All ACs verified via traceability matrix?
-> 2. All phase docs complete?
-> 3. On success → `templates/reflection/success_analysis.md` to capture feature patterns
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-_DOMYH Awesome Code • Feature Lifecycle Pro • Spec-Driven Development_
----
-
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

@@ -243,5 +243,3 @@ backgrounds:
 | White background only    | No atmosphere          |
 
 ---
-
-_DOMYH Awesome Code • UI/UX Pro Max • T3 Advanced Reference_

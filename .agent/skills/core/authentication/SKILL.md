@@ -1,6 +1,5 @@
 ---
 name: authentication
-version: "6.4.5"
 category: core
 ---
 
@@ -161,5 +160,3 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 | MD5/SHA1 password hash      | Rainbow tables  | bcrypt/argon2          |
 
 ---
-
-_DOMYH Awesome Code - Authentication Skill v1.0 - OAuth 2.1 + Passkeys_

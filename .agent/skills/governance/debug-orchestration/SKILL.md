@@ -6,7 +6,6 @@ triggers:
   - "When a bug persists after initial fix attempt"
   - "When error root cause is unclear"
   - "When debugging spans multiple files or services"
-version: "1.0.0"
 ---
 
 # Debug Orchestration

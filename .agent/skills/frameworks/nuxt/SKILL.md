@@ -1,7 +1,6 @@
 ---
 name: nuxt
 detect: ["nuxt.config.ts", "nuxt.config.js", ".nuxtrc", "app.vue"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -279,5 +278,3 @@ export default defineNuxtConfig({
 - [ ] Never trust client data
 
 ---
-
-_DOMYH Awesome Code • Nuxt 4_

@@ -67,7 +67,14 @@ function readCurrentVersion() {
 // ── Calculate new version ───────────────────────────────────
 
 function calcNewVersion(current, bump) {
-  if (/^\d+\.\d+\.\d+$/.test(bump)) return bump;
+  if (/^\d+\.\d+\.\d+$/.test(bump)) {
+    const segs = bump.split(".").map(Number);
+    if (segs.some((s) => s > 999)) {
+      console.error(`${c.red}✗ Version segments must be ≤ 999${c.reset}`);
+      process.exit(1);
+    }
+    return bump;
+  }
 
   const [major, minor, patch] = current.split(".").map(Number);
   switch (bump) {
@@ -86,7 +93,7 @@ function collectFiles(rootDir) {
   const results = [];
   const SKIP = new Set([
     "node_modules", ".git", "dist", "build", ".next", "__pycache__",
-    ".turbo", ".cache", "coverage", "archive",
+    ".turbo", ".cache", "coverage", "archive", ".agent",
   ]);
 
   function walk(dir) {

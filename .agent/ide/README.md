@@ -41,5 +41,3 @@ Each IDE config integrates via its native format (JSON, YAML, or Markdown).
 Session rules are auto-loaded from `memory/session_rules.json`.
 
 ---
-
-_DOMYH Awesome Code • IDE Configurations_

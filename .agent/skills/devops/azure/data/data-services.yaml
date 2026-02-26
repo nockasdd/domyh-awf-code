@@ -1,5 +1,4 @@
 # Azure Data Services — HSA Tier 3 Data
-version: "6.4.5"
 
 patterns:
   - id: AZ-DAT-001

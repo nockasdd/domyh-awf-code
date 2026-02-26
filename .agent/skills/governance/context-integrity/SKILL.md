@@ -7,7 +7,6 @@ triggers:
   - "When hierarchy feels wrong"
   - "When resuming work after hours/days"
   - "Every 5+ turns without hierarchy update"
-version: "2.0.0"
 ---
 
 # Context Integrity

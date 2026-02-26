@@ -2,7 +2,6 @@
 # chunking-strategies.yaml — Document Chunking Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 fixed_size:
   description: "Split by character/token count"
@@ -67,5 +66,3 @@ best_practices:
   - "Keep chunks between 100-1000 tokens"
   - "For tables: keep entire table as one chunk"
   - "For code: split at function/class boundaries"
-
-# _DOMYH Awesome Code • Chunking Strategies_

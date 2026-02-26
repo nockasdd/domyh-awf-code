@@ -1,7 +1,6 @@
 ---
 name: scala
 detect: ["*.scala", "*.sc", "build.sbt", "project/*.scala"]
-version: "6.4.5"
 category: functional
 tier: 2
 ---
@@ -198,5 +197,3 @@ object UserRepo:
 - [ ] Scalafmt formatting
 
 ---
-
-_DOMYH Awesome Code • Scala 3.4+_

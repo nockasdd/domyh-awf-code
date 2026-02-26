@@ -2,7 +2,6 @@
 # service-mesh.yaml — Service Mesh Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 # =============================================================================
 # OVERVIEW
@@ -14,14 +13,12 @@ overview:
     Provides mTLS, load balancing, observability, and traffic management.
 
   architecture: |
-    ┌─────────────────────────────────────┐
-    │  Service A    ←→  Sidecar Proxy     │
-    │                      ↕              │
-    │              Control Plane          │
-    │                      ↕              │
-    │  Service B    ←→  Sidecar Proxy     │
-    └─────────────────────────────────────┘
 
+> Service A    ←→  Sidecar Proxy
+> ↕
+> Control Plane
+> ↕
+> Service B    ←→  Sidecar Proxy
 # =============================================================================
 # COMPARISON
 # =============================================================================
@@ -175,5 +172,3 @@ decision_guide:
     - "Monolith or simple architecture"
     - "Team lacks Kubernetes experience"
     - "Can achieve goals with simpler tools"
-
-# _DOMYH Awesome Code • Service Mesh Patterns_

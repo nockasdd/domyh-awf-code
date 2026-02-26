@@ -1,7 +1,6 @@
 ---
 name: web-perf
 detect: ["lighthouse.json", "web-vitals.*", ".lighthouserc.js"]
-version: "6.4.5"
 category: support
 tier: 1
 ---
@@ -168,5 +167,3 @@ Data powered by HSA BM25 search engine:
 **Data domains**: `cwv`, `network`, `framework`, `audit`
 
 ---
-
-_DOMYH Awesome Code • Web-Perf • Core Web Vitals • HSA-Powered_

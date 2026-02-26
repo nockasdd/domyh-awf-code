@@ -151,5 +151,3 @@ This template is composed with:
 - `tools_block.md` → Tool instructions
 
 ---
-
-# DOMYH Awesome Code • Persona Base Template

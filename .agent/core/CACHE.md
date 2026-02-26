@@ -1,4 +1,4 @@
-# Session Cache v6.4.5
+# Session Cache
 
 ## Caching Strategy
 
@@ -59,5 +59,3 @@ Target: < 10,000 tokens peak (agent-side, 3 active skills)
 ```
 
 ---
-
-\_DOMYH Awesome Code

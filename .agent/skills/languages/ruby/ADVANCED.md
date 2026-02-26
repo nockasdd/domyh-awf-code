@@ -377,5 +377,3 @@ end
 ```
 
 ---
-
-_DOMYH Awesome Code • Ruby Advanced Patterns_

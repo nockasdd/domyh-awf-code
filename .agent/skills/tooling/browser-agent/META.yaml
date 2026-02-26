@@ -1,5 +1,4 @@
 name: browser-agent
-version: "6.4.5"
 display: Browser Agent
 category: tooling
 tier: 1
@@ -74,5 +73,3 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/browser-agent/data"
   preload_data: true
-
-# _DOMYH Awesome Code • Browser Agent Skill META v1.0.0_

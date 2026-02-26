@@ -1,6 +1,5 @@
 ---
 name: ai-agents
-version: "6.4.5"
 category: ai-ml
 ---
 
@@ -22,20 +21,19 @@ category: ai-ml
 ## Orchestration Patterns
 
 ```
-┌─────────────────────────────────────────────────────┐
-│ SUPERVISOR (recommended for complex tasks)          │
-│                                                     │
-│  ┌──────────┐                                       │
-│  │Supervisor│──┬──▶ Agent A (Research)               │
-│  │(Router)  │  ├──▶ Agent B (Code)                   │
-│  └──────────┘  └──▶ Agent C (Review)                 │
-│                                                     │
-│ SWARM (for collaborative tasks)                     │
-│  Agent A ◄──▶ Agent B ◄──▶ Agent C                   │
-│                                                     │
-│ SEQUENTIAL (for pipeline tasks)                     │
-│  Agent A ──▶ Agent B ──▶ Agent C                     │
-└─────────────────────────────────────────────────────┘
+
+> SUPERVISOR (recommended for complex tasks)
+> 
+> 
+> Supervisor▶ Agent A (Research)
+> (Router)    ▶ Agent B (Code)
+>   ▶ Agent C (Review)
+> 
+> SWARM (for collaborative tasks)
+> Agent A ◄▶ Agent B ◄▶ Agent C
+> 
+> SEQUENTIAL (for pipeline tasks)
+> Agent A ▶ Agent B ▶ Agent C
 ```
 
 | Pattern          | Use Case                   | Complexity         |
@@ -141,5 +139,3 @@ for await (const chunk of llm.stream(messages)) {
 | Prompt injection        | Input sanitization, system prompt protection   |
 
 ---
-
-_DOMYH Awesome Code • AI Agents Skill v1.0.0_

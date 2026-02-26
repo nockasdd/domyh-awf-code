@@ -1,6 +1,5 @@
 ---
 name: accessibility
-version: "6.4.5"
 category: cross-cutting
 ---
 

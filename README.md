@@ -41,7 +41,14 @@
 
 ```bash
 npm install -g @nockdev/cli   # Install globally
+nock setup                    # One-command zero-config setup
+```
+
+Or step by step:
+
+```bash
 nock awf init              # Initialize in your project
+nock awf install            # Install IDE configs
 nock awf --help            # Show all commands
 ```
 
@@ -133,7 +140,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 **Example flows:**
 
 ```
-/ap                            → 5-expert audit of the entire project
+/ap                            → 12-expert audit of the entire project
 /code Add shopping cart feature → Write code with full types + tests
 /debug API returns 500          → Reproduce → Isolate → Fix → Verify
 /plan Integrate VNPay payment   → Impact analysis + task breakdown
@@ -214,7 +221,6 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | `/recap`     | Session summary: completed tasks, changed files, decisions, next steps      | `/recap` → 5 tasks done, 12 files changed        |
 | `/status`    | Project health: build, tests, coverage, lint metrics, git status            | `/status` → Build ✓ Tests 142/142 ✓ Coverage 87% |
 | `/help`      | Show all commands, usage examples, and language settings                    | `/help`                                          |
-| `/save`      | Save current session state to memory files for future context               | `/save`                                          |
 | `/search`    | Semantic search across memory and audit history                             | `/search payment integration patterns`           |
 | `/suggest`   | Smart suggestions: context-aware next steps based on project state          | `/suggest` → "Run `/test` before deploying"      |
 | `/visualize` | UI/UX Design: mockups, wireframes, design system, component design          | `/visualize system` → Generate design system     |
@@ -229,10 +235,9 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.4.5 across 15 files                |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.4.6 across 15 files                |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
-| `/lang`         | Switch agent language (English ↔ Tiếng Việt)                          | `/lang vi` → Switch to Vietnamese                            |
 | `/workflow`     | Meta-command: workflow discovery, chaining, and aliasing              | `/workflow list` → Show all available workflows              |
 | `/clean`        | Code cleanup: remove dead code, organize imports, unused deps         | `/clean src/utils/` → Removed 12 unused exports              |
 

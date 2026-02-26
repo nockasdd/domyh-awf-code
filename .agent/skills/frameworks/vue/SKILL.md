@@ -1,7 +1,6 @@
 ---
 name: vue
 detect: ["*.vue", "package.json:vue", "vite.config.ts"]
-version: "6.4.5"
 category: frontend
 tier: 1
 ---
@@ -352,5 +351,3 @@ definePageMeta({
 - [ ] `<Suspense>` for async
 
 ---
-
-_DOMYH Awesome Code • Vue 3.5/Nuxt 4_

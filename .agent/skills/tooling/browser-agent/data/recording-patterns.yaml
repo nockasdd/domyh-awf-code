@@ -2,7 +2,6 @@
 # recording-patterns.yaml — WebP Video Recording Best Practices
 # =============================================================================
 
-version: "6.4.5"
 
 # browser_subagent automatically records sessions as WebP videos
 
@@ -70,5 +69,3 @@ storage:
   location: "Artifacts directory (auto-managed by browser_subagent)"
   format: "WebP"
   retention: "Per conversation session"
-
-# _DOMYH Awesome Code • Recording Patterns v1.0.0_

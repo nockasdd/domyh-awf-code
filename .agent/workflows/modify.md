@@ -13,59 +13,12 @@ success_criteria: "issues fixed, lint/type/test pass, debt score improved"
 
 ## 🔄 MODIFICATION FLOW
 
-```
-User: /modify [options]
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 1: DETECT (Auto)                 │
-│ ▸ hsa_declare_intent("modify project")  │
-│ ▸ Detect project stack (hsa_detect_stack)│
-│ ▸ Identify architecture pattern         │
-│ ▸ Map project structure                 │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 2: ANALYZE                        │
-│ ▸ Scan for issues                       │
-│ ▸ Detect technical debt                 │
-│ ▸ Prioritize by severity                │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 3: PLAN                           │
-│ ▸ Generate fix plan                     │
-│ ▸ Estimate effort                       │
-│ ⛔ STOP → Confirm scope                 │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 4: EXECUTE                        │
-│ ▸ Apply fixes                           │
-│ ▸ Document changes                      │
-│ ▸ Update tests                          │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 5: VERIFY                         │
-│ ▸ Run lint/type check                   │
-│ ▸ Run tests                             │
-│ ▸ Verify build                          │
-└─────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│ PHASE 6: REPORT                         │
-│ ▸ Summary of changes                    │
-│ ▸ Technical debt score                  │
-│ ▸ Suggested next steps                  │
-│ ▸ hsa_check_changes → update index      │
-└─────────────────────────────────────────┘
-```
+1. **PHASE 1: DETECT (Auto)** — `hsa_declare_intent`, `hsa_detect_stack`, identify architecture pattern and map structure.
+2. **PHASE 2: ANALYZE** — Scan for issues, detect technical debt, prioritize by severity.
+3. **PHASE 3: PLAN** — Generate fix plan, estimate effort. ⛔ **STOP** → Confirm scope with user.
+4. **PHASE 4: EXECUTE** — Apply fixes, document changes, update tests.
+5. **PHASE 5: VERIFY** — Run lint/type check, tests, verify build.
+6. **PHASE 6: REPORT** — Summary of changes, technical debt score, suggested next steps. `hsa_check_changes` to update index.
 
 ---
 
@@ -479,12 +432,15 @@ token_saving:
 
 ## REFLECTION CHECKPOINT
 
-> Before saving session, verify: all targeted fixes applied? Lint/type/test all pass? Debt score improved? No regressions introduced?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

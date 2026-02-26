@@ -1,6 +1,5 @@
 ---
 name: wasm
-version: "6.4.5"
 category: cross-cutting
 ---
 
@@ -20,18 +19,17 @@ category: cross-cutting
 ## Architecture
 
 ```
-┌─────────────────────────────────┐
-│     Browser / Server Runtime    │
-│  ┌───────────────────────────┐ │
-│  │    WASM Runtime           │ │
-│  │  (V8, wasmtime, wasmer)   │ │
-│  │  ┌─────────────────────┐  │ │
-│  │  │   WASM Module       │  │ │
-│  │  │  (compiled Rust/Go) │  │ │
-│  │  └─────────────────────┘  │ │
-│  └───────────────────────────┘ │
-│        ↕ WASI System Interface │
-└─────────────────────────────────┘
+
+> Browser / Server Runtime
+> 
+>     WASM Runtime           
+>   (V8, wasmtime, wasmer)   
+>     
+>      WASM Module         
+>     (compiled Rust/Go)   
+>     
+> 
+> ↕ WASI System Interface
 ```
 
 ## Browser WASM (wasm-bindgen)
@@ -90,5 +88,3 @@ world calculator {
 | Debugging       | Use DWARF debug info, source maps |
 
 ---
-
-_DOMYH Awesome Code • WebAssembly Skill v1.0.0_

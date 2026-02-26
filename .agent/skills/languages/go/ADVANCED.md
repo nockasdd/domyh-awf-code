@@ -1,6 +1,5 @@
 # Go — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 # Load only when explicitly referenced
 
@@ -256,5 +255,3 @@ func TestWithTimeout(t *testing.T) {
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

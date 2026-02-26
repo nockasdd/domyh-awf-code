@@ -40,5 +40,3 @@ is more useful for semantic routing than the broad "cross-cutting" directory nam
 > The filesystem directory is used for organizational structure and manifest registration.
 
 ---
-
-_DOMYH Awesome Code • Skill Category Taxonomy_

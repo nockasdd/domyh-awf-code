@@ -4,7 +4,6 @@
 # 12 patterns for crafting effective image generation prompts
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 12
 
 golden_rule:
@@ -127,5 +126,4 @@ vietnamese_support:
   tip: "Vietnamese prompts produce culturally accurate imagery"
 
 # =============================================================================
-# _DOMYH Awesome Code • Image Prompt Patterns v1.0_
 # =============================================================================

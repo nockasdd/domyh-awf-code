@@ -1,6 +1,5 @@
 ---
 name: browser-agent-advanced
-version: "1.0.0"
 ---
 
 # Browser Agent Advanced Patterns
@@ -238,5 +237,3 @@ Return: 3 screenshots + pass/fail for each breakpoint"
 - [ ] Multi-agent coordination documented?
 
 ---
-
-_DOMYH Awesome Code — Browser Agent Advanced Patterns (Reference Only)_

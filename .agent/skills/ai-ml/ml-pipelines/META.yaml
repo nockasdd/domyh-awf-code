@@ -4,7 +4,6 @@
 # =============================================================================
 
 name: ml-pipelines
-version: "6.4.5"
 category: ai-ml
 tier: 2
 description: |
@@ -94,5 +93,3 @@ related_skills:
   - ai-agents
   - rag-patterns
   - streamlit
-
-# _DOMYH Awesome Code • ML Pipelines Skill • v7.0_

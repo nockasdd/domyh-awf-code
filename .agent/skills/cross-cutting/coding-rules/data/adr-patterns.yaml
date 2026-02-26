@@ -2,7 +2,6 @@
 # adr-patterns.yaml — Architecture Decision Records
 # =============================================================================
 
-version: "6.4.5"
 
 overview:
   description: |
@@ -98,5 +97,3 @@ when_to_create:
   - "Architecture pattern decisions (monolith vs microservices)"
   - "Security-impacting decisions"
   - "Performance trade-offs"
-
-# _DOMYH Awesome Code • ADR Patterns_

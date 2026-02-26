@@ -4,7 +4,6 @@
 # 8 patterns for controlling TTS output via natural language prompts
 # =============================================================================
 
-version: "6.4.5"
 total_patterns: 8
 
 style_prompts:
@@ -77,5 +76,4 @@ multi_language:
     - "Code-switching (mixed languages) works but quality varies"
 
 # =============================================================================
-# _DOMYH Awesome Code • TTS Prompting Patterns v1.0_
 # =============================================================================

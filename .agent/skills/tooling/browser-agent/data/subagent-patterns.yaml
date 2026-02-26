@@ -2,7 +2,6 @@
 # subagent-patterns.yaml — browser_subagent Task Description Templates
 # =============================================================================
 
-version: "6.4.5"
 
 # These templates are used with the browser_subagent tool in AI IDEs
 # (e.g., Antigravity). The Task argument should be detailed and explicit.
@@ -154,5 +153,3 @@ templates:
 #   Task: templates.test_all_interactions.task_template.replace("{URL}", "http://localhost:3000"),
 #   RecordingName: "comprehensive_test"
 # )
-
-# _DOMYH Awesome Code • Browser Subagent Task Templates v1.0.0_

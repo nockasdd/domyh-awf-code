@@ -64,67 +64,7 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
 ---
 
 ## TEMPLATE REGISTRY
-
-### Backend / Systems
-
-```yaml
-# lang: architectures (default*) | init command | tools
-go: standard*, clean, hexagonal, ddd | go mod init {module} | golangci-lint, air, wire
-rust: cargo*, workspace, binary, library | cargo new {project} | clippy, rustfmt
-cpp: cmake*, single, library, vcpkg | cmake -S . -B build | cmake, clang-format
-c: make*, cmake, single | make init | gcc, clang, valgrind
-java: maven*, gradle, spring, clean | mvn archetype:generate | maven, gradle, spotless
-kotlin: android*, multiplatform, ktor, compose | gradle init | gradle, ktlint, detekt
-scala: sbt*, mill, akka | sbt new scala/scala-seed.g8
-csharp: clean*, mvvm, mvc, minimal, blazor | dotnet new webapi -n {project} | dotnet-format
-fsharp: console*, web, giraffe | dotnet new console -lang F#
-python: src*, flat, django, fastapi, flask | uv init {project} | ruff, mypy, uv
-ruby: rails*, sinatra, gem, cli | rails new {project} | rubocop, bundler
-php: laravel*, symfony, psr4, wordpress | composer create-project laravel/laravel {project} | php-cs-fixer
-perl: module*, script, mojolicious | module-starter --module={project}
-lua: standard*, love2d, neovim | — | luacheck, stylua
-```
-
-### Frontend Frameworks
-
-```yaml
-react: vite*, remix | npm create vite@latest {project} -- --template react-ts | eslint, vitest
-nextjs: app*, pages, fullstack | npx create-next-app@latest {project} | eslint, turbopack
-remix: indie*, classic | npx create-remix@latest {project}
-vue: vite*, nuxt, pinia | npm create vue@latest {project} | eslint, vitest
-nuxt: default*, layers, minimal | npx nuxi@latest init {project}
-svelte: sveltekit*, vite | npm create svelte@latest {project}
-angular: standalone*, modules | ng new {project}
-solid: vite*, start | npm create solid@latest {project}
-astro: default*, blog, docs | npm create astro@latest {project}
-```
-
-### Mobile
-
-```yaml
-swift: swiftpm*, ios, mvvm, tca | swift package init | swiftformat, swiftlint
-kotlin_android: compose*, xml, multiplatform | Android Studio wizard | ktlint, detekt
-dart: flutter*, console, package | flutter create {project} | dart_format
-react_native: expo*, bare | npx create-expo-app {project}
-```
-
-### Infrastructure
-
-```yaml
-docker: multistage*, single, compose
-kubernetes: helm*, kustomize, manifest | helm create {project}
-terraform: aws*, gcp, azure, multi | terraform init
-aws: cdk*, sam, terraform, serverless | cdk init app --language typescript
-github_actions: node*, go, python, docker → .github/workflows/ci.yml
-```
-
-### Monorepo
-
-```yaml
-turborepo: npx create-turbo@latest | ⭐ recommended | caching, parallel, remote-cache
-nx: npx create-nx-workspace@latest | affected, graph, generators
-pnpm: pnpm init | pnpm-workspace.yaml
-```
+> Read `workflows/data/init-frameworks.yaml` for framework mappings, supported architectures, and init commands.
 
 ---
 
@@ -303,13 +243,15 @@ If user requests multiple stacks (e.g., "Go backend + Next.js frontend"):
 
 ## REFLECTION CHECKPOINT
 
-> Before saving session, verify: project builds successfully? All P0-P6 phases addressed? Conventions applied correctly?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`
-3. `hsa_save_anchor` with project stack, architecture, key decisions

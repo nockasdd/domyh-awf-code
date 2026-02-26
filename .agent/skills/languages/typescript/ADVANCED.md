@@ -1,6 +1,5 @@
 # TypeScript — Advanced Patterns
 
-# DOMYH Awesome Code — Tier 3 Reference
 
 # Load only when explicitly referenced
 
@@ -182,5 +181,3 @@ container.register(UserService, () => new UserServiceImpl());
 ```
 
 ---
-
-_DOMYH Awesome Code — Tier 3 Reference_

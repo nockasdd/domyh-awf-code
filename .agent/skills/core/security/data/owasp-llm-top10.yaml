@@ -2,7 +2,6 @@
 # owasp-llm-top10.yaml — OWASP Top 10 for LLM Applications (2025)
 # =============================================================================
 
-version: "6.4.5"
 
 risks:
   LLM01:
@@ -118,5 +117,3 @@ secure_coding_checklist:
   - "[ ] Human approval for destructive operations"
   - "[ ] Audit logging enabled for all LLM interactions"
   - "[ ] Model access controlled and monitored"
-
-# _DOMYH Awesome Code • OWASP LLM Top 10_

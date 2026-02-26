@@ -1,6 +1,5 @@
 ---
 name: playwright-advanced
-version: "1.0.0"
 ---
 
 # Playwright Advanced Patterns
@@ -285,5 +284,3 @@ test("debug with trace", async ({ page, context }) => {
 - [ ] Authentication state managed?
 
 ---
-
-_DOMYH Awesome Code — Playwright Advanced Patterns (Reference Only)_

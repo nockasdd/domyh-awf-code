@@ -57,61 +57,7 @@ success_criteria: "Design assets generated, WCAG compliance verified, tokens exp
 
 > Standard: [W3C Design Tokens Community Group 2025.10 Stable](https://w3.org/groups/cg/design-tokens/)
 
-### Token Format
-
-```json
-{
-  "$name": "color.primary",
-  "$type": "color",
-  "$value": "oklch(60% 0.15 250)",
-  "$description": "Primary brand color",
-  "$deprecated": false,
-  "$extensions": {
-    "com.domyh.platforms": ["web", "ios", "android", "flutter"]
-  }
-}
-```
-
-### Theming via `$extends` (DTCG 2025.10)
-
-```json
-// dark-theme.tokens.json
-{
-  "$extends": "./base.tokens.json",
-  "color": {
-    "primary": { "$value": "oklch(75% 0.12 250)" },
-    "surface": { "$value": "oklch(15% 0.01 250)" }
-  }
-}
-```
-
-### Color System (Modern CSS)
-
-| Token   | Web CSS (OKLCH)       | Tailwind      | Flutter (`fromSeed`)   | SwiftUI    |
-| ------- | --------------------- | ------------- | ---------------------- | ---------- |
-| primary | `oklch(60% 0.15 250)` | bg-blue-600   | `ColorScheme.fromSeed` | .blue      |
-| surface | `oklch(98% 0.01 250)` | bg-gray-100   | `Colors.grey[100]`     | .secondary |
-| error   | `oklch(55% 0.22 27)`  | bg-red-500    | `Colors.red`           | .red       |
-| text    | `oklch(15% 0.01 250)` | text-gray-900 | —                      | .primary   |
-
-### Spacing
-
-| Token | Web  | Tailwind | Flutter | SwiftUI |
-| ----- | ---- | -------- | ------- | ------- |
-| xs    | 4px  | p-1      | 4       | 4       |
-| sm    | 8px  | p-2      | 8       | 8       |
-| md    | 16px | p-4      | 16      | 16      |
-| lg    | 24px | p-6      | 24      | 24      |
-| xl    | 32px | p-8      | 32      | 32      |
-
-### Typography (Fluid via `clamp()`)
-
-| Token    | Web CSS                         | Flutter |
-| -------- | ------------------------------- | ------- |
-| heading1 | `clamp(2rem, 4vw, 3.5rem)`      | 32sp    |
-| heading2 | `clamp(1.5rem, 3vw, 2.5rem)`    | 24sp    |
-| body     | `clamp(1rem, 1.5vw, 1.125rem)`  | 16sp    |
-| caption  | `clamp(0.75rem, 1vw, 0.875rem)` | 12sp    |
+> **Data Reference**: Read `workflows/data/design-tokens.yaml` for complete W3C DTCG token structure, OKLCH color palettes, spacing, and fluid typography.
 
 ---
 
@@ -330,12 +276,15 @@ SKILL_DATA: ".agent/skills/cross-cutting/domyh-design/data"
 
 ## REFLECTION CHECKPOINT
 
-> Before saving session, verify: WCAG compliance checked? Design tokens exported correctly? VRT baseline captured?
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

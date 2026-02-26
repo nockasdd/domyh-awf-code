@@ -1,7 +1,6 @@
 ---
 name: bun
 detect: ["bun.lockb", "bunfig.toml", "bun.lock"]
-version: "6.4.5"
 category: runtime
 tier: 2
 ---
@@ -349,5 +348,3 @@ Data powered by HSA BM25 search engine:
 | Runtime | "Elysia HTTP server validation"      |
 
 ---
-
-_DOMYH Awesome Code • Bun 1.3.7 • 2026_

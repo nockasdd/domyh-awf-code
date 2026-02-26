@@ -4,7 +4,7 @@ version: "4.5"
 data_file: "data/build-systems.yaml"
 ---
 
-# 🔍 Project Detection Rule v6.4.5
+# 🔍 Project Detection Rule
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
 > 📦 **Data**: See `data/build-systems.yaml` for detection patterns
@@ -313,5 +313,3 @@ test_command: "ctest --output-on-failure"
 - Tiết kiệm: 85-90%
 
 ---
-
-_DOMYH Awesome Code • Project Detection (Externalized) • Accuracy 92%+_

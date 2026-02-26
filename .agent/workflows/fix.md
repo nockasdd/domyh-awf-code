@@ -109,16 +109,17 @@ User: "TypeError: Cannot read properties of undefined at auth.ts:42"
 
 ---
 
-## 🪞 REFLECTION CHECKPOINT
+## REFLECTION CHECKPOINT
 
-> After verify step, apply `templates/reflection/critic.md`:
-> 1. Error actually resolved (not just suppressed)?
-> 2. On 2nd retry failure → `templates/reflection/error_analysis.md` before escalation
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
----
+1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
+2. **PERSIST** — Update session memory:
+   - Append task summary to `memory/session.md` (per SESSION_005 format)
+   - If key decision made → append to `memory/decisions.md`
+3. **SNAPSHOT** — If this is the last task in session:
+   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
+4. **ANCHOR** (if HSA available):
+   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 
-## 💾 SESSION SAVE
-
-After completing this workflow:
-1. Update `memory/CONTEXT_SNAPSHOT.md` - what changed, current status
-2. Append summary to `memory/session.md`

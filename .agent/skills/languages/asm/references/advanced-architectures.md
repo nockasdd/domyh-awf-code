@@ -187,5 +187,3 @@ void amx_matmul_bf16(void* c, void* a, void* b) {
 | onlinegdb          | onlinegdb.com/online_asm |
 
 ---
-
-_DOMYH Awesome Code Assembly Language Skill Comprehensive Guide_

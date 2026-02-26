@@ -1,6 +1,5 @@
 ---
 name: devops
-version: "6.4.5"
 persona_id: "ops-001"
 
 identity:

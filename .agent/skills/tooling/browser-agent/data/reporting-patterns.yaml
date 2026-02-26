@@ -2,7 +2,6 @@
 # reporting-patterns.yaml — Evidence-Based Reporting Templates
 # =============================================================================
 
-version: "6.4.5"
 
 templates:
   summary_table:
@@ -93,5 +92,3 @@ templates:
 # 2. Issue reports (for each failure)
 # 3. Interaction log (optional, for debugging)
 # 4. Accessibility scorecard (if a11y testing performed)
-
-# _DOMYH Awesome Code • Reporting Patterns v1.0.0_

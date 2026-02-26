@@ -8,7 +8,6 @@
 
 ```yaml
 task_type: feature_development
-version: "6.4.5"
 
 # Required fields
 feature_name: string        # Feature name
@@ -85,5 +84,3 @@ This task type triggers:
 - **Reflection:** Pre-output critic check at each gate
 
 ---
-
-_DOMYH Awesome Code • Feature Development Task Template_

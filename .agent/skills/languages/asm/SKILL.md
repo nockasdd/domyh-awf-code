@@ -1,7 +1,6 @@
 ---
 name: asm
 detect: ["*.asm", "*.s", "*.S", "__asm", "asm volatile"]
-version: "6.4.5"
 category: language
 tier: 2
 ---

@@ -170,5 +170,3 @@ This entry is used by `rules/modules/progressive-escalation.yaml` to:
 - Accelerate resolution by trying successful patterns first
 
 ---
-
-# DOMYH Awesome Code • Error Analysis Template

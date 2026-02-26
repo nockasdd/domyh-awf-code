@@ -26,5 +26,3 @@ Or switch at runtime: `/lang vi`
 3. Add to `manifest.yaml` i18n section
 
 ---
-
-_DOMYH Awesome Code • NockDev_

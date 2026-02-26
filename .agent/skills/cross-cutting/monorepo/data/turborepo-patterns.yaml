@@ -2,7 +2,6 @@
 # turborepo-patterns.yaml — Turborepo Patterns
 # =============================================================================
 
-version: "6.4.5"
 
 pipeline:
   description: "Define task relationships and caching"
@@ -80,5 +79,3 @@ migration_from_lerna: |
   # 2. Create turbo.json (replaces lerna.json commands)
   # 3. Update package.json scripts
   # 4. Remove lerna.json
-
-# _DOMYH Awesome Code • Turborepo Patterns_

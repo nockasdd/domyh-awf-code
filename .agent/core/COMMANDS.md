@@ -1,6 +1,6 @@
 # DOMYH Awesome Code — Command Registry
 
-> 41 active slash commands • 3-Layer Skill Resolution
+> 40 active slash commands • 3-Layer Skill Resolution
 
 ---
 
@@ -65,7 +65,7 @@
 | `/e2e`    | 🌐 E2E test generation    | testing, tdd-workflow | [auto]            |
 | `/verify` | 🔄 Build-Lint-Test loop   | testing               | [auto]            |
 
-## Utility Commands (10)
+## Utility Commands (9)
 
 | Command        | Description                      | Skills |
 | -------------- | -------------------------------- | ------ |
@@ -78,34 +78,14 @@
 | `/clean`       | 🧹 Remove dead code & imports    | —      |
 | `/suggest`     | ➡️ Context-aware next steps      | —      |
 | `/search`      | 🔍 Semantic search               | —      |
-| `/sync-version`| 🔄 Sync version from SSoT         | —      |
 
 ---
 
 ## Skill Resolution Flow
 
-```text
-User: /command [args]
-    │
-    ▼
-┌─────────────────────────────────┐
-│ L1: Deterministic (0ms)         │
-│ → Load skills.required from     │
-│   manifest/frontmatter          │
-├─────────────────────────────────┤
-│ L2: Contextual (<50ms)          │
-│ → Detect from project files     │
-│ → [auto] = file pattern match   │
-├─────────────────────────────────┤
-│ L3: Semantic (<200ms)           │
-│ → Match user query keywords     │
-│ → to skill META.yaml keywords   │
-└─────────────────────────────────┘
-    │
-    ▼
-  Skill Set (max 5)
-```
+1. **L1: Deterministic (0ms)** — Load `skills.required` from workflow frontmatter
+2. **L2: Contextual (<50ms)** — Detect from project files (`[auto]` = file pattern match)
+3. **L3: Semantic (<200ms)** — Match user query keywords to skill META.yaml keywords
+→ Result: Skill Set (max 5)
 
 ---
-
-_DOMYH Awesome Code • 3-Layer Skill Resolution_

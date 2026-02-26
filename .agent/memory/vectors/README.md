@@ -125,5 +125,3 @@ When semantic search is disabled or unavailable:
 - No warning shown to user
 
 ---
-
-_DOMYH Awesome Code • Semantic Memory (Optional)_
