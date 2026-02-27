@@ -69,11 +69,93 @@ nock awf --help            # Show all commands
 <!-- MCP Requirement Note -->
 <blockquote>
   <p>⚠️ <strong>MCP Server Required</strong></p>
-  <p>DOMYH Awesome Code uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential:</strong></p>
-
-  <pre><code>nock awf mcp install --ide all      # All supported IDEs
-nock awf mcp install --ide cursor   # Specific IDE only</code></pre>
+  <p>DOMYH Awesome Code uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential.</strong></p>
 </blockquote>
+
+### 🔧 MCP Installation
+
+**Method 1: Via nock-cli (recommended)**
+
+```bash
+npm install -g @nockdev/cli               # Install CLI globally
+nock awf mcp install --ide all             # Configure MCP for all IDEs
+nock awf mcp install --ide cursor          # Or configure for specific IDE
+```
+
+**Method 2: Manual IDE Configuration**
+
+<details>
+<summary><b>📋 Per-IDE MCP Config (click to expand)</b></summary>
+<br>
+
+**Cursor** — `.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": { "HSA_MAX_TOKENS": "8000" }
+    }
+  }
+}
+```
+
+**Claude Code** — run:
+```bash
+claude mcp add domyh-hsa npx -y @nockdev/hsa@latest nock-hsa
+```
+
+**VS Code (GitHub Copilot)** — `.vscode/mcp.json`:
+```json
+{
+  "servers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": { "HSA_MAX_TOKENS": "8000" }
+    }
+  }
+}
+```
+
+**Antigravity (Gemini)** — `.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": { "HSA_MAX_TOKENS": "8000" }
+    }
+  }
+}
+```
+
+**Windsurf** — `.windsurfrules` or MCP settings:
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "npx",
+      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"]
+    }
+  }
+}
+```
+
+</details>
+
+### ⚙️ Environment Variables
+
+| Variable             | Default | Description                     |
+| :------------------- | :------ | :------------------------------ |
+| `HSA_MAX_TOKENS`     | `8000`  | Maximum token budget per query  |
+| `HSA_DASHBOARD`      | `true`  | Enable/disable web dashboard    |
+| `HSA_DASHBOARD_PORT` | `13100` | Dashboard port                  |
+| `HSA_LOG_LEVEL`      | `info`  | Log level: debug/info/warn/error|
+
+---
 
 ## 🖥️ Web Dashboard & Logs
 

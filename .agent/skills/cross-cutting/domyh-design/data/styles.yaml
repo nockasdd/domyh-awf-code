@@ -1470,3 +1470,33 @@ patterns:
     framework_compatibility: Canvas 10/10, WebGL 10/10
     era_origin: 2024+ Generative
     complexity: High
+# Dark Mode 2026 Best Practices
+dark_mode_2026:
+  surface_elevation:
+    base: "#121212"
+    surface_1: "#1E1E1E"
+    surface_2: "#232323"
+    surface_3: "#2C2C2C"
+    surface_4: "#333333"
+  text:
+    primary: "#E0E0E0"
+    secondary: "#A0A0A0"
+    disabled: "#6B6B6B"
+  rules:
+    - "NEVER use pure #000000 as background — use #121212"
+    - "NEVER use pure #FFFFFF as text — use #E0E0E0"
+    - "Express depth via lighter surfaces, NOT shadows"
+    - "Desaturate brand colors 20-30% for dark backgrounds"
+    - "Increase font-weight +100 in dark mode (400 to 500)"
+    - "Use CSS light-dark() for automatic theme tokens"
+    - "Always provide manual toggle + prefers-color-scheme"
+  css_implementation: |
+    color-scheme: light dark;
+    --bg: light-dark(#FFFFFF, #121212);
+    --surface: light-dark(#F5F5F5, #1E1E1E);
+    --text: light-dark(#1A1A1A, #E0E0E0);
+    --border: light-dark(#E5E7EB, #2C2C2C);
+  contrast_rules:
+    min_ratio: 4.5
+    text_on_dark: "#E0E0E0"
+    avoid: "#FFFFFF on #000000 (too harsh)"

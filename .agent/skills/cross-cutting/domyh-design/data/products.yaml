@@ -4,6 +4,13 @@ metadata:
   updated: "2026-02-05"
   migrated_from: products.yaml
   patterns_count: 96
+  anti_patterns:
+    - "Do NOT default to blue+white if user did not explicitly request it"
+    - "VARY heading fonts across projects — avoid Inter/Roboto for every project"
+    - "Try unexpected color combos: teal+coral, indigo+amber, emerald+rose, slate+cyan"
+    - "Pick from style_alternatives based on mood keywords, NOT always primary_style"
+    - "Select random color_palette_variant — NEVER default to first variant every time"
+    - "For same product_type across projects, MUST use different palette variant each time"
   columns:
     - "No"
     - Product Type
@@ -27,9 +34,39 @@ patterns:
       - subscription
     primary_style_recommendation: Glassmorphism + Flat Design
     secondary_styles: Soft UI Evolution, Minimalism
+    style_alternatives:
+      - style: "Glassmorphism + Flat Design"
+        mood: [professional, corporate, enterprise]
+      - style: "Aurora UI + Minimalism"
+        mood: [modern, innovative, startup]
+      - style: "Vibrant & Block-based + Motion-Driven"
+        mood: [energetic, bold, disruptive]
+      - style: "Soft UI Evolution + Micro-interactions"
+        mood: [friendly, approachable, consumer]
     landing_page_pattern: Hero + Features + CTA
     dashboard_style_if_applicable: Data-Dense + Real-Time Monitoring
     color_palette_focus: Trust blue + accent contrast
+    color_palette_variants:
+      - name: "Ocean Trust"
+        primary: "#0F766E"
+        accent: "#F59E0B"
+        bg: "#F0FDFA"
+        dark_bg: "#042F2E"
+      - name: "Indigo Depth"
+        primary: "#4338CA"
+        accent: "#EC4899"
+        bg: "#EEF2FF"
+        dark_bg: "#1E1B4B"
+      - name: "Slate Professional"
+        primary: "#334155"
+        accent: "#06B6D4"
+        bg: "#F8FAFC"
+        dark_bg: "#0F172A"
+      - name: "Emerald Fresh"
+        primary: "#059669"
+        accent: "#8B5CF6"
+        bg: "#ECFDF5"
+        dark_bg: "#022C22"
     key_considerations: Balance modern feel with clarity. Focus on CTAs.
   - id: "2"
     product_type: Micro SaaS
@@ -66,9 +103,32 @@ patterns:
       - store
     primary_style_recommendation: Vibrant & Block-based
     secondary_styles: Aurora UI, Motion-Driven
+    style_alternatives:
+      - style: "Vibrant & Block-based + Motion-Driven"
+        mood: [energetic, bold, mass-market]
+      - style: "Minimalism + Micro-interactions"
+        mood: [premium, curated, boutique]
+      - style: "Aurora UI + Glassmorphism"
+        mood: [modern, luxury, trendy]
     landing_page_pattern: Feature-Rich Showcase
     dashboard_style_if_applicable: Sales Intelligence Dashboard
     color_palette_focus: Brand primary + success green
+    color_palette_variants:
+      - name: "Sunset Commerce"
+        primary: "#EA580C"
+        accent: "#0369A1"
+        bg: "#FFF7ED"
+        dark_bg: "#1C1917"
+      - name: "Berry Shopping"
+        primary: "#BE185D"
+        accent: "#059669"
+        bg: "#FDF2F8"
+        dark_bg: "#1A0B13"
+      - name: "Teal Fresh"
+        primary: "#0D9488"
+        accent: "#DC2626"
+        bg: "#F0FDFA"
+        dark_bg: "#042F2E"
     key_considerations: Engagement & conversions. High visual hierarchy.
   - id: "4"
     product_type: E-commerce Luxury
@@ -139,9 +199,32 @@ patterns:
       - panel
     primary_style_recommendation: Dark Mode (OLED) + Data-Dense
     secondary_styles: Minimalism, Accessible & Ethical
+    style_alternatives:
+      - style: "Dark Mode (OLED) + Data-Dense"
+        mood: [professional, trader, power-user]
+      - style: "Minimalism + Real-Time Monitoring"
+        mood: [clean, modern, executive]
+      - style: "Glassmorphism + Dark Mode (OLED)"
+        mood: [premium, fintech, innovative]
     landing_page_pattern: N/A - Dashboard focused
     dashboard_style_if_applicable: Financial Dashboard
     color_palette_focus: Dark bg + red/green alerts + trust blue
+    color_palette_variants:
+      - name: "Midnight Finance"
+        primary: "#0F172A"
+        accent: "#38BDF8"
+        success: "#22C55E"
+        danger: "#EF4444"
+      - name: "Carbon Trading"
+        primary: "#18181B"
+        accent: "#A78BFA"
+        success: "#34D399"
+        danger: "#FB7185"
+      - name: "Navy Bloomberg"
+        primary: "#0A1628"
+        accent: "#F59E0B"
+        success: "#4ADE80"
+        danger: "#F87171"
     key_considerations: High contrast, real-time updates, accuracy paramount.
   - id: "8"
     product_type: Analytics Dashboard
@@ -168,9 +251,32 @@ patterns:
       - patient
     primary_style_recommendation: Neumorphism + Accessible & Ethical
     secondary_styles: Soft UI Evolution, Claymorphism (for patients)
+    style_alternatives:
+      - style: "Neumorphism + Accessible & Ethical"
+        mood: [calming, medical, clinical]
+      - style: "Soft UI Evolution + Minimalism"
+        mood: [modern, wellness, friendly]
+      - style: "Claymorphism + Micro-interactions"
+        mood: [approachable, patient-facing, warm]
     landing_page_pattern: Social Proof-Focused
     dashboard_style_if_applicable: User Behavior Analytics
     color_palette_focus: Calm blue + health green + trust
+    color_palette_variants:
+      - name: "Ocean Calm"
+        primary: "#0E7490"
+        accent: "#059669"
+        bg: "#F0F9FF"
+        dark_bg: "#0C1929"
+      - name: "Sage Wellness"
+        primary: "#4D7C0F"
+        accent: "#7C3AED"
+        bg: "#F7FEE7"
+        dark_bg: "#1A2E05"
+      - name: "Lavender Care"
+        primary: "#7E22CE"
+        accent: "#14B8A6"
+        bg: "#FAF5FF"
+        dark_bg: "#2E1065"
     key_considerations: Accessibility mandatory. Calming aesthetic.
   - id: "10"
     product_type: Educational App

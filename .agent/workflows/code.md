@@ -15,12 +15,19 @@ success_criteria: "Feature implemented, build passes, tests written"
 
 1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect_stack`), load language skill via HSA (`hsa_get_context`, `hsa_search_skills`)
    - **UI INTENT CHECK**: Classify intent:
-     T1 (Create new UI, no existing ref) → Load `domyh-design` skill → design tokens + accessibility guidelines
-     T2 (Modify existing UI) → Analyze existing components + design tokens → apply via `domyh-design` patterns
+     T1 (Create new UI, no existing ref) → Load `domyh-design` skill → `hsa_design_analyze({scope: "full"})` → design tokens + accessibility guidelines
+     T2 (Modify existing UI) → `hsa_design_analyze({scope: "full"})` → analyze existing components + design tokens → apply via `domyh-design` patterns
      T3 (Design-only, no code) → Route to `/visualize`
      Auto-load: `domyh-design` + `tailwind` skills
-     Auto-run: design system search → inject design tokens + platform guidelines
+     Auto-run: `hsa_design_analyze` → design system search → inject design tokens + platform guidelines
 2. **PLAN** — Break down into steps, identify dependencies → `hsa_prefetch` planned files → ⛔ STOP if major change (>50 lines). Show step count: `Plan: 4 steps, ~85 lines`
+   **VARIATION CHECK** (if T1 or T2): Read `products.yaml` `style_alternatives` + `color_palette_variants`. Pick specific hex palette matching mood. NEVER default to generic blue.
+   **UI PREVIEW** (if T1 or T2 detected):
+   - Generate `{project}/.preview/{component}.html` — standalone HTML+CSS with design tokens as `:root` vars
+   - Include: responsive breakpoints, dark mode toggle, focus-visible, hover/active states
+   - Open via `browser_subagent` → take screenshot → show to user
+   - → ⛔ **STOP: "Preview ready. Approve to implement in {framework}?"**
+   - If user iterates → update preview HTML only (fast, no build)
 3. **EXECUTE** — Write code following skill patterns, error handling + types, add tests (auto test loop). Show progress: `[Step 2/4] Creating auth middleware...`
 4. **VERIFY** — Run tests → Fix → Repeat (max 3), lint check. Agent re-reads ALL generated code:
    - [ ] Matches original intent?
@@ -37,6 +44,7 @@ success_criteria: "Feature implemented, build passes, tests written"
      L3. Responsiveness (20pts): 375px / 768px / 1024px / 1440px breakpoints pass
      L4. Interaction Quality (15pts): hover/focus/active states, loading/error states
      L5. Performance (10pts): CLS < 0.1, images optimized, CSS < 50KB
+     L6. **Design Health** (bonus): `hsa_design_health()` → show Grade (A-F) + top issues + score /100
      Apply Nielsen Heuristic Check (§18.2 A10): 10 items, score ≥8/10
      Result: ≥90/100 → SHIP ✅ | 70-89 → FIX MINOR ⚠️ | <70 → REDESIGN ❌
      - [ ] Design tokens used (no magic color/spacing values)

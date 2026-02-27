@@ -3,7 +3,7 @@ metadata:
   domain: typography
   updated: "2026-02-05"
   migrated_from: typography.yaml
-  patterns_count: 57
+  patterns_count: 68
   columns:
     - STT
     - Font Pairing Name
@@ -644,3 +644,152 @@ patterns:
     css_import: "@import url('https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&display=swap');"
     tailwind_config: "fontFamily: { display: ['Anton', 'sans-serif'], body: ['Epilogue', 'sans-serif'] }"
     notes: Anton is impactful and condensed. Good for stickers/badges.
+  - id: "58"
+    font_pairing_name: Fintech Leader 2026
+    category: Sans + Sans
+    heading_font: Plus Jakarta Sans
+    body_font: Inter
+    mood_style_keywords: precision, trust, fintech, modern, variable, 2026
+    best_for: Financial apps, banking dashboards, analytics, fintech startups
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700|Plus+Jakarta+Sans:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Plus Jakarta Sans', 'sans-serif'], body: ['Inter', 'sans-serif'] }"
+    notes: "2026 trend: Variable fonts. Plus Jakarta for friendly precision. Inter for data-rich body."
+    variable_font: true
+  - id: "59"
+    font_pairing_name: Boutique Luxury 2026
+    category: Serif + Sans
+    heading_font: Fraunces
+    body_font: DM Sans
+    mood_style_keywords: luxury, warm, elegant, soft-serif, premium, 2026
+    best_for: Luxury brands, boutique hotels, premium e-commerce, fashion
+    google_fonts_url: https://fonts.google.com/share?selection.family=DM+Sans:wght@400;500;700|Fraunces:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Fraunces', 'serif'], sans: ['DM Sans', 'sans-serif'] }"
+    notes: "2026 trend: Soft serifs replacing sharp serifs. Fraunces for warmth + DM Sans for clarity."
+    variable_font: true
+  - id: "60"
+    font_pairing_name: Cyber Tech 2026
+    category: Sans + Mono
+    heading_font: Space Grotesk
+    body_font: JetBrains Mono
+    mood_style_keywords: innovation, technical, developer, AI, cybersecurity, 2026
+    best_for: AI platforms, developer ecosystems, cybersecurity, tech innovation
+    google_fonts_url: https://fonts.google.com/share?selection.family=JetBrains+Mono:wght@400;500;600;700|Space+Grotesk:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Space Grotesk', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }"
+    notes: "2026 trend: Radical innovation aesthetic. Technical transparency with mono body."
+    variable_font: true
+  - id: "61"
+    font_pairing_name: Friendly Interface 2026
+    category: Sans + Sans
+    heading_font: Outfit
+    body_font: Lexend
+    mood_style_keywords: accessible, friendly, intuitive, readability, inclusive, 2026
+    best_for: Education, consumer apps, accessibility-first products, e-learning
+    google_fonts_url: https://fonts.google.com/share?selection.family=Lexend:wght@300;400;500;600;700|Outfit:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Outfit', 'sans-serif'], body: ['Lexend', 'sans-serif'] }"
+    notes: "2026 trend: Lexend proven to improve reading speed and reduce cognitive load."
+    variable_font: true
+  - id: "62"
+    font_pairing_name: Variable Giant 2026
+    category: Sans + Sans
+    heading_font: Bricolage Grotesque
+    body_font: Inter
+    mood_style_keywords: dynamic, motion, creative, variable, expressive, 2026
+    best_for: Creative agencies, motion-heavy sites, portfolios, experimental
+    google_fonts_url: https://fonts.google.com/share?selection.family=Bricolage+Grotesque:wght@200;400;600;800|Inter:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@200;400;600;800&family=Inter:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Bricolage Grotesque', 'sans-serif'], body: ['Inter', 'sans-serif'] }"
+    notes: "2026 trend: Variable font technology for high-motion environments. Wide weight range 200-800."
+    variable_font: true
+  - id: "63"
+    font_pairing_name: Silent Luxury 2026
+    category: Serif + Sans
+    heading_font: Instrument Serif
+    body_font: Inter
+    mood_style_keywords: minimal, Apple-inspired, refined, elegant, understated, 2026
+    best_for: Premium SaaS, luxury tech, minimal portfolios, Apple-like aesthetics
+    google_fonts_url: https://fonts.google.com/share?selection.family=Instrument+Serif|Inter:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Instrument Serif', 'serif'], sans: ['Inter', 'sans-serif'] }"
+    notes: "2026 trend: Understated elegance. Instrument Serif has Apple HIG-inspired refinement."
+  - id: "64"
+    font_pairing_name: Humanist Tech 2026
+    category: Sans + Sans
+    heading_font: Lexend
+    body_font: Inter
+    mood_style_keywords: readability, educational, inclusive, humanist, 2026
+    best_for: E-learning platforms, reading-heavy apps, educational content
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700|Lexend:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Lexend', 'sans-serif'], body: ['Inter', 'sans-serif'] }"
+    notes: "2026 trend: Proven readability improvement. Reduces cognitive load for long reading."
+    variable_font: true
+  - id: "65"
+    font_pairing_name: Bold Agency 2026
+    category: Sans + Sans
+    heading_font: Montserrat
+    body_font: DM Sans
+    mood_style_keywords: bold, strong, agency, energetic, confident, 2026
+    best_for: Agencies, marketing, bold brands, startup pitches
+    google_fonts_url: https://fonts.google.com/share?selection.family=DM+Sans:wght@400;500;700|Montserrat:wght@400;500;600;700;800
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Montserrat:wght@400;500;600;700;800&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Montserrat', 'sans-serif'], body: ['DM Sans', 'sans-serif'] }"
+    notes: "2026 trend: Strong visual presence with geometric precision."
+  - id: "66"
+    font_pairing_name: Neo Grotesque 2026
+    category: Sans + Mono
+    heading_font: Inter
+    body_font: Geist Mono
+    mood_style_keywords: modern, pragmatic, versatile, developer, Vercel, 2026
+    best_for: Developer tools, SaaS, tech companies, Vercel-inspired aesthetics
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); /* Geist from vercel/geist-font */"
+    tailwind_config: "fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Geist Mono', 'monospace'] }"
+    notes: "2026 trend: Geist is Vercel's neo-grotesque variable font. Install via npm @vercel/geist-font."
+    variable_font: true
+  - id: "67"
+    font_pairing_name: Soft Approachable 2026
+    category: Sans + Sans
+    heading_font: Nunito
+    body_font: Source Sans 3
+    mood_style_keywords: rounded, warm, friendly, consumer, soft, 2026
+    best_for: Health apps, children, consumer products, wellness, friendly brands
+    google_fonts_url: https://fonts.google.com/share?selection.family=Nunito:wght@300;400;500;600;700|Source+Sans+3:wght@300;400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { heading: ['Nunito', 'sans-serif'], body: ['Source Sans 3', 'sans-serif'] }"
+    notes: "2026 trend: Soft rounded styles for welcoming digital products."
+    variable_font: true
+  - id: "68"
+    font_pairing_name: Editorial Authority 2026
+    category: Serif + Sans
+    heading_font: Playfair Display
+    body_font: Inter
+    mood_style_keywords: classic, journalism, authoritative, editorial, 2026
+    best_for: News platforms, editorial sites, media, digital publishing
+    google_fonts_url: https://fonts.google.com/share?selection.family=Inter:wght@300;400;500;600;700|Playfair+Display:wght@400;500;600;700
+    css_import: "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');"
+    tailwind_config: "fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] }"
+    notes: "2026 trend: Classic journalism adapted to digital. High contrast serif + clean sans."
+
+# Fluid Type Scale (2026 Best Practice)
+fluid_type_scale:
+  method: "CSS clamp()"
+  base: 16px
+  ratio: 1.25
+  scale:
+    xs: "clamp(0.75rem, 0.65rem + 0.5vw, 0.875rem)"
+    sm: "clamp(0.875rem, 0.8rem + 0.4vw, 1rem)"
+    base: "clamp(1rem, 0.9rem + 0.5vw, 1.125rem)"
+    lg: "clamp(1.125rem, 1rem + 0.7vw, 1.5rem)"
+    xl: "clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem)"
+    2xl: "clamp(2rem, 1.5rem + 2.5vw, 3rem)"
+    3xl: "clamp(2.5rem, 1.8rem + 3.5vw, 4rem)"
+  rules:
+    - "Body text MUST be >= 16px (accessibility)"
+    - "Line-height: 1.5 body, 1.1-1.2 headings"
+    - "Max reading width: 60-75ch"
+    - "Dark mode: increase font-weight by 1 level (e.g. 400 to 500)"
+    - "Use rem units, never px for accessibility (user zoom)"

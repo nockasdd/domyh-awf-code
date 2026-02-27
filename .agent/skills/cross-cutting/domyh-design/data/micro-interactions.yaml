@@ -525,3 +525,29 @@ interactions:
     duration_ms: 0
     performance: none
     accessibility: wcag-2.4.7
+# Animation Performance (2026)
+animation_performance:
+  loading_patterns:
+    skeleton:
+      use_when: "Lists, cards, images, text blocks with >200ms load time"
+      impact: "Reduces perceived loading time by 25-30%"
+      css: "background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"
+    spinner:
+      use_when: "Indeterminate actions under 3 seconds only"
+    progress_bar:
+      use_when: "Determinate actions (upload, install, download)"
+  timing_rules:
+    instant: "0-100ms — button press, toggle, checkbox"
+    fast: "100-300ms — tooltip, dropdown, hover state"
+    normal: "300-500ms — modal open, page transition"
+    slow: "500-1000ms — complex animation, first load"
+    max_total: "3 seconds total animation per page/task"
+  easing_presets:
+    standard: "cubic-bezier(0.4, 0, 0.2, 1)"
+    decelerate: "cubic-bezier(0, 0, 0.2, 1)"
+    accelerate: "cubic-bezier(0.4, 0, 1, 1)"
+    spring: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+  accessibility:
+    required: "@media (prefers-reduced-motion: reduce)"
+    behavior: "Remove all non-essential motion, keep opacity transitions"
+    css: "@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }"

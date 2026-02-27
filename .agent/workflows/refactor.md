@@ -1,6 +1,6 @@
 ---
 description: "🔧 Code refactoring & cleanup: identify smells, clean dead code, organize imports, restructure — verify tests pass"
-skills: { required: [coding-rules], contextual: [auto] }
+skills: { required: [coding-rules], contextual: [auto, domyh-design] }
 success_criteria: "Code improved, all tests pass, no behavior change"
 ---
 
@@ -61,12 +61,12 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 > Extends standard 6-step flow with screenshot comparison
 
-1. **DETECT** — Stack + scan UI component structure
+1. **DETECT** — Stack + scan UI component structure + `hsa_design_analyze({scope: "full"})` → read Design DNA
 2. **BASELINE** — Run tests + capture current screenshot (Playwright `toHaveScreenshot()`)
-3. **PLAN** — Define UI changes → ⛔ **STOP — confirm before executing**
+3. **PLAN** — Define UI changes using DNA insights (identify hardcoded values, low token adoption, missing a11y). For `/refactor design-system`: `hsa_design_tokens({format: "css"})` → get migration plan. → ⛔ **STOP — confirm before executing**
 4. **EXECUTE** — Apply refactoring (one commit per change)
 5. **COMPARE** — Screenshot after → pixelmatch diff → show visual delta
-6. **VERIFY** — Tests pass + a11y check (axe-core) + responsive check
+6. **VERIFY** — Tests pass + `hsa_design_health({strict: true})` → compare score before/after + a11y check + responsive check
 7. **SYNC** — `hsa_check_changes` to update index
 
 ---

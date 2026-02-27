@@ -77,14 +77,23 @@ description: "UI/UX design intelligence. 50+ styles, 130+ palettes, 57 fonts, 9 
 
 Extract: **product type**, **style keywords**, **industry**, **stack** (default: html-tailwind)
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (REQUIRED + VARIED)
 
 Read data files directly for recommendations:
 
-- **Product type** → `data/products.yaml` (50+ product types with style/font/palette mappings)
+- **Product type** → `data/products.yaml` (96 product types with style/font/palette mappings)
+  - ⚠️ Read `style_alternatives` — pick based on user mood keywords, NOT always `primary_style`
+  - ⚠️ Read `color_palette_variants` — select specific hex palette, NEVER use generic descriptions
+  - ⚠️ Read `anti_patterns` in metadata — follow these rules to avoid cookie-cutter designs
 - **Color palette** → `data/colors.yaml` (130+ palettes by industry)
 - **Typography** → `data/typography.yaml` (57 font pairings)
-- **Style pattern** → `data/styles.yaml` (50+ UI styles)
+- **Style pattern** → `data/styles.yaml` (58 UI styles)
+
+**Variation Rules** (MANDATORY):
+1. If user specified mood/keywords → match to `style_alternatives` mood tags
+2. If no mood specified → randomly select from alternatives (NOT always primary)
+3. ALWAYS use specific hex from `color_palette_variants` — never resolve "trust blue" generically
+4. For same product type across projects, MUST use different palette variant each time
 
 ### Step 3: Supplement with Domain Data
 

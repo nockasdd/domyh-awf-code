@@ -344,3 +344,32 @@ patterns:
     code_example_good: new Intl.DateTimeFormat('en').format(date)
     code_example_bad: date.toLocaleDateString() // or manual format
     severity: Medium
+# Modern CSS 2026
+modern_css_2026:
+  container_queries:
+    support: "95%+ global"
+    syntax: ".container { container-type: inline-size; } @container (min-width: 400px) { ... }"
+    use_when: "Component-level responsive: cards, sidebars, widgets"
+    replaces: "Many viewport-based media queries"
+  subgrid:
+    support: "100% global"
+    syntax: "display: grid; grid-template-columns: subgrid; grid-column: span 3;"
+    use_when: "Aligned card headers/footers, dashboard grids, form layouts"
+  has_selector:
+    support: "95%+ global"
+    syntax: "form:has(:invalid) { border-color: var(--danger); } .card:has(img) { ... }"
+    use_when: "Parent styling based on child state, conditional layouts"
+    replaces: "JavaScript toggling parent classes"
+  anchor_positioning:
+    support: "All major browsers 2026"
+    syntax: "position: fixed; position-anchor: --trigger; bottom: anchor(top); position-try-fallbacks: flip-block;"
+    use_when: "Tooltips, popovers, dropdowns"
+    replaces: "Popper.js / Floating UI for basic positioning"
+  css_nesting:
+    support: "All evergreen browsers"
+    syntax: ".card { color: black; & .title { font-weight: bold; } &:hover { opacity: 0.8; } }"
+    use_when: "Always — reduces preprocessor dependency"
+  light_dark_function:
+    support: "All major browsers 2026"
+    syntax: "color-scheme: light dark; --bg: light-dark(#fff, #121212);"
+    use_when: "Automatic dark mode token switching without JS"

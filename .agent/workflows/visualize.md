@@ -13,13 +13,21 @@ success_criteria: "Design assets generated, WCAG compliance verified, tokens exp
 
 ## VISUALIZE FLOW
 
-1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), load UI context (`hsa_get_context`), search existing components FIRST (70-90% token savings). Show: `[Step 1/8] Found 12 reusable components`
-2. **PLAN** — Generate props/layout, not full code. Choose wireframe template, define a11y requirements. Show: `[Step 2/8] Designing Dashboard layout...`
-3. **TOKENS** — Generate/load design tokens (W3C DTCG 2025.10 format). Apply platform-specific tokens (M3/HIG/Web). Show: `[Step 3/8] Loading design tokens...`
-4. **PREVIEW** — Show wireframe/mockup → ⛔ **STOP — confirm before building**
-5. **EXECUTE** — Build using mapped components + new ones, apply design system
+1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), load UI context (`hsa_get_context`), analyze existing design DNA (`hsa_design_analyze`), search existing components FIRST (70-90% token savings). Show: `[Step 1/8] Found 12 reusable components, Design Health: 72/100 Grade C`
+2. **PLAN** — Generate props/layout, not full code. Choose wireframe template, define a11y requirements. Use DNA insights for consistency. Show: `[Step 2/8] Designing Dashboard layout...`
+3. **TOKENS** — Generate/load design tokens via `hsa_design_tokens(format: "dtcg")` or from W3C DTCG 2025.10 data. Apply platform-specific tokens (M3/HIG/Web). Show: `[Step 3/8] Loading design tokens...`
+   **VARIATION CHECK**: Read `products.yaml` `style_alternatives` + `color_palette_variants`. Select palette variant matching mood (NOT primary default). Avoid reusing same style+colors.
+4. **PREVIEW** — Generate standalone HTML+CSS preview before building:
+   - Create `{project}/.preview/{name}.html` — single file, no build required
+   - Inject design tokens from `hsa_design_tokens({format: "css"})` as `:root` CSS variables
+   - Include: semantic HTML5, responsive breakpoints (375/768/1024/1440px), dark mode toggle, focus-visible, reduced-motion
+   - Open in browser via `browser_subagent` → take screenshot → show to user
+   - Auto-check: ✅ tokens used | ✅ semantic HTML | ✅ responsive | ✅ dark mode | ✅ focus visible | ✅ touch targets ≥44px
+   - → ⛔ **STOP — "Preview ready. Approve to build with {framework}?"**
+   - If user requests changes → iterate on preview HTML (fast cycle, no framework overhead)
+5. **EXECUTE** — Convert approved preview → framework components, apply design system
 6. **RESPONSIVE** — Container query verification + fluid typography check + breakpoint validation
-7. **VERIFY** — A11y audit (axe-core) + contrast ratio + Lighthouse score + VRT baseline
+7. **VERIFY** — Run `hsa_design_health(strict: true)` for WCAG + a11y audit + Lighthouse score + VRT baseline
 8. **SYNC** — `hsa_check_changes` to update index, save design decisions to memory
 
 ---
@@ -50,6 +58,34 @@ success_criteria: "Design assets generated, WCAG compliance verified, tokens exp
 1. **Index** — Scan `src/components`, `components`, `src/ui`
 2. **Match** — Request → existing components (70-90% reuse)
 3. **Gap** — Only generate missing components
+
+---
+
+## 🧬 HSA DESIGN INTELLIGENCE TOOLS
+
+> 3 MCP tools for AI-powered design analysis — call automatically in DETECT/TOKENS/VERIFY steps
+
+| Tool | When | Input | Output |
+|------|------|-------|--------|
+| `hsa_design_analyze` | DETECT step | `{scope?, paths?}` | Design DNA: colors, spacing, typography, borders, animations, dark mode, framework |
+| `hsa_design_health` | VERIFY step | `{strict?}` | Score 0-100, Grade A-F, 5 categories, WCAG contrast violations, improvements |
+| `hsa_design_tokens` | TOKENS step | `{format: "dtcg"\|"css"}` | W3C DTCG 2025.10 JSON/CSS + migration plan |
+
+### Usage Flow
+
+```
+# Step 1: Analyze existing design patterns
+hsa_design_analyze({scope: "full"})
+→ DNA report: 15 colors, 4px grid, 2 fonts, 42% token adoption
+
+# Step 3: Generate tokens from what exists
+hsa_design_tokens({format: "css"})
+→ CSS variables + migration plan for 23 hardcoded values
+
+# Step 7: Health check after changes
+hsa_design_health({strict: true})
+→ Score: 85/100 Grade B, 2 contrast violations, 3 improvements
+```
 
 ---
 
