@@ -1,0 +1,70 @@
+name: payment-integration
+description: >
+  Payment gateway & bank monitoring integration patterns for Vietnam and global providers.
+  Covers 10 providers: VNPay, MoMo, ZaloPay, Pay2S, payOS, SePay, Casso, Stripe, PayPal, Razorpay.
+  Includes API specs, webhook/IPN handling, signature verification, and security patterns.
+version: "1.0.0"
+category: cross-cutting
+author: NockDev
+
+triggers:
+  keywords:
+    # General
+    - payment
+    - thanh toán
+    - checkout
+    - cổng thanh toán
+    - webhook
+    - IPN
+    - chuyển khoản
+    - QR code
+    - VietQR
+    - payment gateway
+    - payment link
+    - link thanh toán
+    # Vietnam providers
+    - vnpay
+    - momo
+    - zalopay
+    - pay2s
+    - payos
+    - sepay
+    - casso
+    - napas
+    # Global providers
+    - stripe
+    - paypal
+    - razorpay
+    # Technical
+    - payment intent
+    - payment method
+    - refund
+    - subscription
+    - recurring payment
+
+  file_patterns:
+    - "*payment*"
+    - "*checkout*"
+    - "*webhook*"
+    - "*ipn*"
+    - "*billing*"
+    - "*invoice*"
+    - "*transaction*"
+
+  intents:
+    - integrate_payment_gateway
+    - handle_payment_webhook
+    - verify_payment_signature
+    - setup_checkout_flow
+    - implement_refund
+    - handle_subscription
+
+related_skills:
+  - api-design
+  - security
+
+data_files:
+  - data/providers.yaml
+  - data/webhooks.yaml
+  - data/security.yaml
+  - data/common-patterns.yaml

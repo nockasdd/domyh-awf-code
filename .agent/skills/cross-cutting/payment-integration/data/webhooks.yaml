@@ -1,0 +1,362 @@
+metadata:
+  skill: payment-integration
+  domain: webhooks
+  updated: "2026-02-27"
+
+# ============================================================
+# WEBHOOK / IPN PATTERNS PER PROVIDER
+# ============================================================
+
+webhooks:
+
+  # ----------------------------------------------------------
+  # VNPay IPN
+  # ----------------------------------------------------------
+  vnpay:
+    type: IPN
+    direction: "VNPay server → Merchant server"
+    method: GET
+    ssl_required: true
+    description: "Server-to-server callback with payment result"
+    received_params:
+      - {name: vnp_TmnCode, type: string}
+      - {name: vnp_Amount, type: integer, description: "Amount × 100"}
+      - {name: vnp_BankCode, type: string, description: "Bank code (e.g. NCB)"}
+      - {name: vnp_BankTranNo, type: string, description: "Bank transaction number"}
+      - {name: vnp_CardType, type: string, values: ["ATM", "QRCODE"]}
+      - {name: vnp_PayDate, type: string, format: "YmdHis"}
+      - {name: vnp_OrderInfo, type: string}
+      - {name: vnp_TransactionNo, type: string}
+      - {name: vnp_ResponseCode, type: string, description: "00=success"}
+      - {name: vnp_TransactionStatus, type: string, description: "00=success"}
+      - {name: vnp_TxnRef, type: string, description: "Your order reference"}
+      - {name: vnp_SecureHash, type: string}
+    verify: "HMAC-SHA512 of sorted query params (exclude vnp_SecureHash)"
+    merchant_response:
+      format: JSON
+      success: '{"RspCode":"00","Message":"Confirm Success"}'
+      order_not_found: '{"RspCode":"01","Message":"Order Not Found"}'
+      already_confirmed: '{"RspCode":"02","Message":"Order Already Confirmed"}'
+      invalid_amount: '{"RspCode":"04","Message":"Invalid Amount"}'
+      invalid_signature: '{"RspCode":"97","Message":"Invalid Checksum"}'
+      unknown_error: '{"RspCode":"99","Message":"Unknown Error"}'
+    retry:
+      max_attempts: 10
+      interval_seconds: 300
+      stop_on_codes: ["00", "02"]
+      retry_on_codes: ["01", "04", "97", "99", "timeout"]
+    processing_steps:
+      - "1. Verify vnp_SecureHash (HMAC-SHA512)"
+      - "2. Find order by vnp_TxnRef"
+      - "3. Check vnp_Amount matches order amount × 100"
+      - "4. Check order status (skip if already processed)"
+      - "5. If vnp_ResponseCode=00 → update order to PAID"
+      - "6. Return RspCode JSON"
+
+  # VNPay Return URL (client-side)
+  vnpay_return:
+    type: return_url
+    direction: "Client browser redirect"
+    method: GET
+    description: "Display-only — DO NOT use for order updates"
+    params: "Same as IPN params via query string"
+    warning: "NEVER rely on return URL for status update. Use IPN only."
+
+  # ----------------------------------------------------------
+  # MoMo IPN
+  # ----------------------------------------------------------
+  momo:
+    type: IPN
+    direction: "MoMo server → Merchant server"
+    method: POST
+    content_type: "application/json"
+    received_params:
+      - {name: partnerCode, type: string}
+      - {name: orderId, type: string}
+      - {name: requestId, type: string}
+      - {name: amount, type: long}
+      - {name: orderInfo, type: string}
+      - {name: orderType, type: string}
+      - {name: transId, type: long, description: "MoMo transaction ID"}
+      - {name: resultCode, type: integer, description: "0=success"}
+      - {name: message, type: string}
+      - {name: payType, type: string, values: ["qr", "webApp", "credit", "napas"]}
+      - {name: responseTime, type: long}
+      - {name: extraData, type: string}
+      - {name: signature, type: string}
+    verify: "HMAC-SHA256 of sorted params with secretKey"
+    result_codes:
+      0: "Thành công"
+      9000: "Giao dịch đã được xác nhận (authorization)"
+      other: "Thất bại — check MoMo result code table"
+    merchant_response:
+      status: 204
+      description: "No content — just HTTP status"
+
+  # ----------------------------------------------------------
+  # ZaloPay Callback
+  # ----------------------------------------------------------
+  zalopay:
+    type: callback
+    direction: "ZaloPay server → Merchant server"
+    method: POST
+    content_type: "application/json"
+    received_params:
+      - {name: data, type: string, description: "JSON string with payment info"}
+      - {name: mac, type: string, description: "HMAC-SHA256 of data with key2"}
+      - {name: type, type: integer, description: "1=order, 2=agreement"}
+    data_content:
+      - {name: app_id, type: integer}
+      - {name: app_trans_id, type: string}
+      - {name: app_time, type: long}
+      - {name: app_user, type: string}
+      - {name: amount, type: long}
+      - {name: embed_data, type: string}
+      - {name: item, type: string}
+      - {name: zp_trans_id, type: long}
+      - {name: server_time, type: long}
+      - {name: channel, type: integer}
+      - {name: merchant_user_id, type: string}
+    verify: "HMAC-SHA256(data_string, key2) — compare with mac"
+    merchant_response:
+      format: JSON
+      success: '{"return_code":1,"return_message":"success"}'
+      failure: '{"return_code":2,"return_message":"failure"}'
+
+  # ----------------------------------------------------------
+  # Pay2S Webhook (bank transactions)
+  # ----------------------------------------------------------
+  pay2s_webhook:
+    type: webhook
+    direction: "Pay2S → Merchant server"
+    method: POST
+    content_type: "application/json"
+    auth_header: "Authorization: Bearer {JWT_TOKEN}"
+    received_body:
+      transactions:
+        - id: "1788052"
+          gateway: "ACB"
+          transactionDate: "2025-04-01 00:02:18"
+          transactionNumber: "10418"
+          accountNumber: "12805521"
+          content: "SHOPVPS12537 GD 789604"
+          transferType: "IN"
+          transferAmount: 50000
+          checksum: "7e2b3bbc03d1..."
+    merchant_response:
+      status: 200
+      body: '{"success":true}'
+    retry:
+      max_attempts: 6
+      interval_seconds: 60
+      stop_condition: "HTTP 200 + body {success: true}"
+
+  # Pay2S IPN (payment notification)
+  pay2s_ipn:
+    type: IPN
+    direction: "Pay2S → Merchant server"
+    method: POST
+    content_type: "application/json"
+    received_body:
+      partnerCode: "PAY2S"
+      orderId: "01234567890123451633504872421"
+      requestId: "01234567890123451633504872421"
+      amount: 1000
+      orderInfo: "Test Thue 1234556"
+      orderType: "Pay2S_wallet"
+      transId: 2588659987
+      resultCode: 0
+      message: "Giao dịch thành công."
+      payType: "qr"
+      m2signature: "90482b3881bdf863..."
+    verify: "HMAC-SHA256 — compare m2signature"
+    result_codes:
+      0: "Thành công"
+      9000: "Authorization thành công"
+      other: "Thất bại"
+    merchant_response:
+      status: 200
+      body: '{"success":true}'
+      timeout: 30
+    retry:
+      max_attempts: 5
+
+  # ----------------------------------------------------------
+  # payOS Webhook
+  # ----------------------------------------------------------
+  payos:
+    type: webhook
+    direction: "payOS → Merchant server"
+    method: POST
+    content_type: "application/json"
+    configure_at: "https://my.payos.vn"
+    received_body:
+      code: "00"
+      desc: "success"
+      success: true
+      data:
+        orderCode: 123
+        amount: 3000
+        description: "VQRIO123"
+        accountNumber: "12345678"
+        reference: "TF230204212323"
+        transactionDateTime: "2023-02-04 18:25:00"
+        currency: "VND"
+        paymentLinkId: "124c33293c43417ab7879e14c8d9eb18"
+        code: "00"
+        desc: "Thành công"
+        counterAccountBankId: ""
+        counterAccountBankName: ""
+        counterAccountName: ""
+        counterAccountNumber: ""
+        virtualAccountName: ""
+        virtualAccountNumber: ""
+      signature: "412e915d2871504ed31be..."
+    verify:
+      algorithm: HMAC-SHA256
+      data_format: "key1=value1&key2=value2 (sorted alphabetically by key)"
+      key: checksumKey
+      compare_with: "signature field in body"
+      steps:
+        - "Extract data object from webhook body"
+        - "Sort data keys alphabetically"
+        - "Build key=value string joined by &"
+        - "HMAC-SHA256(data_string, checksumKey)"
+        - "Compare with signature field"
+
+  # ----------------------------------------------------------
+  # SePay Webhook
+  # ----------------------------------------------------------
+  sepay:
+    type: webhook
+    direction: "SePay → Merchant server"
+    method: POST
+    content_type: "application/json"
+    description: "Bank transaction notification"
+    received_body:
+      id: 123456
+      gateway: "MBBank"
+      transactionDate: "2025-01-15 10:30:00"
+      accountNumber: "0123456789"
+      code: null
+      content: "DH12345 thanh toan don hang"
+      transferType: "in"
+      transferAmount: 150000
+      accumulated: 1500000
+      subAccount: null
+      referenceCode: "FT25015..."
+      description: "Transfer from..."
+    verify: "API key in header + checksum in body"
+
+  # ----------------------------------------------------------
+  # Casso Webhook
+  # ----------------------------------------------------------
+  casso:
+    type: webhook
+    direction: "Casso → Merchant server"
+    method: POST
+    content_type: "application/json"
+    description: "Bank transaction notification"
+    received_body:
+      error: 0
+      data:
+        - id: 123
+          tid: "FT123456"
+          description: "Payment for order 789"
+          amount: 100000
+          cusum_balance: 5000000
+          when: "2025-01-15 10:30:00"
+          bank_sub_acc_id: "0123456789"
+          subAccId: ""
+          bankName: "MB"
+          bankAbbreviation: "MBBank"
+          corresponsiveAccount: "9876543210"
+          corresponsiveName: "Nguyen Van A"
+          corresponsiveBankId: "970422"
+          corresponsiveBankName: "MB"
+
+  # ----------------------------------------------------------
+  # Stripe Webhook
+  # ----------------------------------------------------------
+  stripe:
+    type: webhook
+    direction: "Stripe → Merchant server"
+    method: POST
+    content_type: "application/json"
+    description: "Event-based webhook with rich event objects"
+    verify:
+      header: "Stripe-Signature"
+      format: "t=timestamp,v1=signature"
+      algorithm: "HMAC-SHA256(timestamp.payload, whsec_xxx)"
+      steps:
+        - "Extract timestamp (t=) and signature (v1=) from Stripe-Signature header"
+        - "Build signed_payload: {timestamp}.{raw_body}"
+        - "HMAC-SHA256(signed_payload, webhook_secret)"
+        - "Compare computed signature with v1 value"
+        - "Check timestamp is within 5 minutes (prevent replay)"
+    key_events:
+      - {event: "payment_intent.succeeded", description: "Payment completed"}
+      - {event: "payment_intent.payment_failed", description: "Payment failed"}
+      - {event: "checkout.session.completed", description: "Checkout session done"}
+      - {event: "charge.refunded", description: "Refund processed"}
+      - {event: "customer.subscription.created", description: "New subscription"}
+      - {event: "invoice.paid", description: "Invoice payment received"}
+      - {event: "invoice.payment_failed", description: "Invoice payment failed"}
+    merchant_response:
+      status: "2xx (return FAST before complex logic)"
+    retry:
+      live_mode: "Up to 3 days with exponential backoff"
+      test_mode: "3 retries over few hours"
+    ordering: "NOT guaranteed — handle out-of-order"
+    best_practices:
+      - "Return 200 BEFORE complex logic"
+      - "Handle duplicate events (idempotency keys)"
+      - "Only listen to needed event types"
+      - "Process webhooks async"
+      - "Exempt webhook route from CSRF"
+      - "HTTPS required"
+      - "Roll signing secrets periodically"
+
+  # ----------------------------------------------------------
+  # PayPal Webhook
+  # ----------------------------------------------------------
+  paypal:
+    type: webhook
+    direction: "PayPal → Merchant server"
+    method: POST
+    content_type: "application/json"
+    verify:
+      method: "API verification call"
+      endpoint: "POST /v1/notifications/verify-webhook-signature"
+      body_fields: [auth_algo, cert_url, transmission_id, transmission_sig, transmission_time, webhook_id, webhook_event]
+      response: '{"verification_status":"SUCCESS"}'
+    key_events:
+      - {event: "PAYMENT.CAPTURE.COMPLETED", description: "Payment captured"}
+      - {event: "PAYMENT.CAPTURE.DENIED", description: "Capture denied"}
+      - {event: "CHECKOUT.ORDER.APPROVED", description: "Order approved by buyer"}
+      - {event: "PAYMENT.CAPTURE.REFUNDED", description: "Refund processed"}
+    merchant_response:
+      status: 200
+
+  # ----------------------------------------------------------
+  # Razorpay Webhook
+  # ----------------------------------------------------------
+  razorpay:
+    type: webhook
+    direction: "Razorpay → Merchant server"
+    method: POST
+    content_type: "application/json"
+    verify:
+      header: "X-Razorpay-Signature"
+      algorithm: "HMAC-SHA256(raw_body, webhook_secret)"
+      steps:
+        - "Get X-Razorpay-Signature header"
+        - "HMAC-SHA256(raw_request_body, webhook_secret)"
+        - "Compare with header value"
+    key_events:
+      - {event: "payment.authorized", description: "Payment authorized"}
+      - {event: "payment.captured", description: "Payment captured"}
+      - {event: "payment.failed", description: "Payment failed"}
+      - {event: "refund.processed", description: "Refund processed"}
+    merchant_response:
+      status: 200

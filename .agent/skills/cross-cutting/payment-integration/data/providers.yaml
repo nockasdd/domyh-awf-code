@@ -1,0 +1,481 @@
+metadata:
+  skill: payment-integration
+  domain: providers
+  updated: "2026-02-27"
+  providers_count: 10
+
+# ============================================================
+# VIETNAM PAYMENT GATEWAYS
+# ============================================================
+
+providers:
+  # ----------------------------------------------------------
+  # VNPay — Vietnam's largest payment gateway
+  # ----------------------------------------------------------
+  - id: vnpay
+    name: VNPay
+    region: Vietnam
+    type: payment_gateway
+    website: "https://vnpay.vn"
+    docs: "https://sandbox.vnpayment.vn/apis/docs/thanh-toan-pay/pay.html"
+    sandbox_url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+    production_url: "https://pay.vnpay.vn/vpcpay.html"
+    api_version: "2.1.0"
+    payment_methods: [ATM, credit_card, QR_code, bank_transfer]
+    currency: VND
+    auth:
+      type: hmac
+      algorithm: SHA512
+      keys:
+        - name: vnp_TmnCode
+          description: "Merchant terminal code (provided by VNPay)"
+        - name: vnp_HashSecret
+          description: "Secret key for HMAC signature"
+    create_payment:
+      method: GET
+      description: "Build URL with query params, redirect user"
+      amount_unit: "VND × 100 (no decimals)"
+      amount_example: "18060 VND → vnp_Amount=1806000"
+      required_params:
+        - {name: vnp_Version, value: "2.1.0", type: string}
+        - {name: vnp_Command, value: "pay", type: string}
+        - {name: vnp_TmnCode, type: string, description: "Merchant code"}
+        - {name: vnp_Amount, type: integer, description: "Amount × 100"}
+        - {name: vnp_CreateDate, type: string, format: "YmdHis", description: "Timestamp"}
+        - {name: vnp_CurrCode, value: "VND", type: string}
+        - {name: vnp_IpAddr, type: string, description: "Client IP"}
+        - {name: vnp_Locale, type: string, values: ["vn", "en"]}
+        - {name: vnp_OrderInfo, type: string, description: "No diacritics, no special chars"}
+        - {name: vnp_OrderType, type: string, description: "Order category"}
+        - {name: vnp_ReturnUrl, type: string, description: "Client redirect URL"}
+        - {name: vnp_TxnRef, type: string, description: "Unique order reference"}
+        - {name: vnp_SecureHash, type: string, description: "HMAC-SHA512 hash"}
+      optional_params:
+        - {name: vnp_BankCode, type: string, values: ["VNPAYQR", "VNBANK", "INTCARD"], description: "Skip to let user choose at VNPay"}
+        - {name: vnp_ExpireDate, type: string, format: "YmdHis"}
+        - {name: vnp_Bill_Mobile, type: string}
+        - {name: vnp_Bill_Email, type: string}
+      hash_steps:
+        - "Sort all params by key name (ascending)"
+        - "URL-encode keys and values"
+        - "Join with & separator"
+        - "HMAC-SHA512(joined_string, vnp_HashSecret)"
+        - "Append vnp_SecureHash to query string"
+    get_bank_list:
+      endpoint: "https://sandbox.vnpayment.vn/qrpayauth/api/merchant/get_bank_list"
+      method: POST
+      content_type: "application/x-www-form-urlencoded"
+      params: [{name: tmn_code, description: "vnp_TmnCode value"}]
+    env_vars:
+      - VNPAY_TMN_CODE
+      - VNPAY_HASH_SECRET
+      - VNPAY_URL
+      - VNPAY_RETURN_URL
+    sandbox:
+      url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+      test_card: "9704198526191432198"
+      test_card_name: "NGUYEN VAN A"
+      test_card_date: "07/15"
+      test_otp: "123456"
+
+  # ----------------------------------------------------------
+  # MoMo — Vietnam's largest e-wallet
+  # ----------------------------------------------------------
+  - id: momo
+    name: MoMo
+    region: Vietnam
+    type: ewallet
+    website: "https://momo.vn"
+    docs: "https://developers.momo.vn/v3/docs/payment/api/payment-api/create"
+    sandbox_url: "https://test-payment.momo.vn/v2/gateway/api/create"
+    production_url: "https://payment.momo.vn/v2/gateway/api/create"
+    api_version: "v2"
+    payment_methods: [momo_wallet, ATM, credit_card, QR_code]
+    currency: VND
+    auth:
+      type: hmac
+      algorithm: SHA256
+      keys:
+        - {name: partnerCode, description: "Partner identifier"}
+        - {name: accessKey, description: "API access key"}
+        - {name: secretKey, description: "Secret for HMAC signature"}
+    create_payment:
+      method: POST
+      content_type: "application/json"
+      description: "POST JSON → receive payUrl → redirect user"
+      amount_unit: "VND (integer, no multiply)"
+      required_params:
+        - {name: partnerCode, type: string}
+        - {name: accessKey, type: string}
+        - {name: requestId, type: string, description: "Unique per request"}
+        - {name: amount, type: long, description: "Amount in VND"}
+        - {name: orderId, type: string, description: "Unique order ID"}
+        - {name: orderInfo, type: string}
+        - {name: redirectUrl, type: string, description: "Client return URL"}
+        - {name: ipnUrl, type: string, description: "Server IPN callback URL"}
+        - {name: requestType, type: string, values: ["payWithATM", "payWithCC", "captureWallet"]}
+        - {name: extraData, type: string, description: "Base64 encoded JSON"}
+        - {name: lang, type: string, values: ["vi", "en"]}
+        - {name: signature, type: string, description: "HMAC-SHA256"}
+      response_fields:
+        - {name: payUrl, description: "Redirect URL for payment"}
+        - {name: deeplink, description: "MoMo app deeplink"}
+        - {name: qrCodeUrl, description: "QR code image URL"}
+      hash_data: "accessKey={}&amount={}&extraData={}&ipnUrl={}&orderId={}&orderInfo={}&partnerCode={}&redirectUrl={}&requestId={}&requestType={}"
+      hash_steps:
+        - "Format hash_data string with values"
+        - "HMAC-SHA256(hash_data, secretKey)"
+    env_vars:
+      - MOMO_PARTNER_CODE
+      - MOMO_ACCESS_KEY
+      - MOMO_SECRET_KEY
+      - MOMO_API_URL
+    sandbox:
+      url: "https://test-payment.momo.vn/v2/gateway/api/create"
+      note: "Register at https://business.momo.vn for sandbox credentials"
+
+  # ----------------------------------------------------------
+  # ZaloPay — Zalo ecosystem e-wallet
+  # ----------------------------------------------------------
+  - id: zalopay
+    name: ZaloPay
+    region: Vietnam
+    type: ewallet
+    website: "https://zalopay.vn"
+    docs: "https://docs.zalopay.vn/v2/general/overview.html"
+    sandbox_url: "https://sb-openapi.zalopay.vn/v2/create"
+    production_url: "https://openapi.zalopay.vn/v2/create"
+    api_version: "v2"
+    payment_methods: [zalopay_wallet, ATM, credit_card, QR_code]
+    currency: VND
+    auth:
+      type: hmac
+      algorithm: SHA256
+      keys:
+        - {name: app_id, description: "Application ID"}
+        - {name: key1, description: "Key for create order MAC"}
+        - {name: key2, description: "Key for callback verification"}
+    create_payment:
+      method: POST
+      content_type: "application/x-www-form-urlencoded"
+      description: "POST → receive order_url → redirect user"
+      amount_unit: "VND (integer)"
+      required_params:
+        - {name: app_id, type: integer}
+        - {name: app_user, type: string, description: "User identifier"}
+        - {name: app_trans_id, type: string, format: "yyMMdd_xxxxxx", description: "Unique trans ID"}
+        - {name: app_time, type: long, description: "Unix timestamp ms"}
+        - {name: amount, type: long, description: "Amount in VND"}
+        - {name: item, type: string, description: "JSON array of items"}
+        - {name: description, type: string}
+        - {name: embed_data, type: string, description: "JSON with redirecturl, promotioninfo"}
+        - {name: bank_code, type: string, description: "Empty for ZaloPay gateway selection"}
+        - {name: mac, type: string, description: "HMAC-SHA256 with key1"}
+        - {name: callback_url, type: string, description: "Server callback URL"}
+      hash_data: "app_id|app_trans_id|app_user|amount|app_time|embed_data|item"
+      hash_steps:
+        - "Concatenate fields with | separator"
+        - "HMAC-SHA256(concatenated, key1)"
+    query_order:
+      endpoint_sandbox: "https://sb-openapi.zalopay.vn/v2/query"
+      endpoint_production: "https://openapi.zalopay.vn/v2/query"
+      method: POST
+    env_vars:
+      - ZALOPAY_APP_ID
+      - ZALOPAY_KEY1
+      - ZALOPAY_KEY2
+      - ZALOPAY_API_URL
+    sandbox:
+      url: "https://sb-openapi.zalopay.vn/v2/create"
+      github_samples: "https://github.com/zalopay-samples"
+
+  # ----------------------------------------------------------
+  # Pay2S — Bank monitoring + Napas 247
+  # ----------------------------------------------------------
+  - id: pay2s
+    name: Pay2S
+    region: Vietnam
+    type: bank_monitoring
+    website: "https://pay2s.vn"
+    docs: "https://docs.pay2s.vn"
+    sandbox_url: "https://sandbox-payment.pay2s.vn"
+    production_url: "https://payment.pay2s.vn"
+    payment_methods: [bank_transfer, VietQR, napas_247]
+    currency: VND
+    auth:
+      type: hmac
+      algorithm: SHA256
+      keys:
+        - {name: partnerCode, description: "Partner identifier"}
+        - {name: accessKey, description: "API access key"}
+        - {name: secretKey, description: "Secret for digital signature"}
+    create_payment:
+      method: POST
+      content_type: "application/json; charset=UTF-8"
+      description: "Create Collection Link → user scans VietQR"
+      api_url: "https://docs.pay2s.vn/api/collection-link.html"
+      flow:
+        - "Create Collection Link via API"
+        - "Redirect user to checkout page"
+        - "User scans VietQR with banking app"
+        - "Pay2S sends IPN + redirectUrl"
+      required_params:
+        - {name: partnerCode, type: string}
+        - {name: orderId, type: string, max_bytes: 64}
+        - {name: orderInfo, type: string, description: "No special bank chars"}
+        - {name: amount, type: long}
+        - {name: redirectUrl, type: string}
+        - {name: ipnUrl, type: string}
+        - {name: requestId, type: string}
+        - {name: signature, type: string, description: "HMAC-SHA256"}
+    env_vars:
+      - PAY2S_PARTNER_CODE
+      - PAY2S_ACCESS_KEY
+      - PAY2S_SECRET_KEY
+      - PAY2S_API_URL
+    sandbox:
+      url: "https://sandbox-payment.pay2s.vn"
+      dashboard: "https://sandbox.pay2s.vn"
+      transfer_demo: "https://sandbox.pay2s.vn/demo/transfer_demo.html"
+      ipn_demo: "https://sandbox.pay2s.vn/demo/ipn_demo.html"
+
+  # ----------------------------------------------------------
+  # payOS — VietQR Napas 247
+  # ----------------------------------------------------------
+  - id: payos
+    name: payOS
+    region: Vietnam
+    type: bank_monitoring
+    website: "https://payos.vn"
+    docs: "https://payos.vn/docs"
+    payment_methods: [VietQR, napas_247, bank_transfer]
+    currency: VND
+    auth:
+      type: hmac
+      algorithm: SHA256
+      keys:
+        - {name: clientId, description: "Client identifier"}
+        - {name: apiKey, description: "API key for requests"}
+        - {name: checksumKey, description: "Key for HMAC signature"}
+    create_payment:
+      method: POST
+      description: "Create payment link → user scans VietQR"
+      api_docs: "https://payos.vn/docs/api/#tag/payment-request/operation/payment-request"
+      flow:
+        - "Create payment link via API"
+        - "Redirect user to payOS checkout"
+        - "User scans VietQR with banking app"
+        - "payOS sends webhook + returnUrl redirect"
+      sdks:
+        node: "@payos-sdk/node"
+        java: "payos-java-spring"
+        react: "payos-demo-reactJS"
+      github: "https://github.com/payOSHQ"
+      rate_limit: "HTTP 429 Too Many Requests"
+    env_vars:
+      - PAYOS_CLIENT_ID
+      - PAYOS_API_KEY
+      - PAYOS_CHECKSUM_KEY
+    sandbox:
+      dashboard: "https://my.payos.vn (sandbox mode)"
+
+  # ----------------------------------------------------------
+  # SePay — Bank monitoring (free)
+  # ----------------------------------------------------------
+  - id: sepay
+    name: SePay
+    region: Vietnam
+    type: bank_monitoring
+    website: "https://sepay.vn"
+    docs: "https://docs.sepay.vn"
+    payment_methods: [bank_transfer]
+    currency: VND
+    features:
+      - "Free — no gateway fees"
+      - "Auto verify bank transfers"
+      - "Share bank balance changes"
+      - "Supports all major VN banks"
+    auth:
+      type: api_key
+      keys:
+        - {name: api_key, description: "Bearer token for API auth"}
+    create_payment:
+      description: "SePay monitors bank account — no payment link needed. Generate QR with bank details + order code in transfer content."
+      flow:
+        - "Generate VietQR with bank account + amount + order code"
+        - "User transfers via banking app"
+        - "SePay detects transaction via bank API"
+        - "SePay sends webhook to your server"
+    env_vars:
+      - SEPAY_API_KEY
+    sandbox:
+      dashboard: "https://my.sepay.vn"
+
+  # ----------------------------------------------------------
+  # Casso — Bank API automation
+  # ----------------------------------------------------------
+  - id: casso
+    name: Casso
+    region: Vietnam
+    type: bank_monitoring
+    website: "https://casso.vn"
+    docs: "https://docs.casso.vn"
+    payment_methods: [bank_transfer]
+    currency: VND
+    features:
+      - "Bank API connection"
+      - "Auto payment confirmation"
+      - "Webhook notifications"
+      - "Plugin integrations: WooCommerce, Sapo, Haravan"
+    auth:
+      type: api_key
+      keys:
+        - {name: api_key, description: "API key from Casso dashboard"}
+    create_payment:
+      description: "Like SePay — monitors bank. No payment link. Generate QR with bank details."
+      flow:
+        - "Generate VietQR with bank info + order code"
+        - "User transfers via banking app"
+        - "Casso detects via bank API"
+        - "Casso sends webhook"
+    integrations: [WooCommerce, Sapo, Haravan, HostBill]
+    env_vars:
+      - CASSO_API_KEY
+
+  # ----------------------------------------------------------
+  # Stripe — Global payment platform
+  # ----------------------------------------------------------
+  - id: stripe
+    name: Stripe
+    region: Global
+    type: payment_platform
+    website: "https://stripe.com"
+    docs: "https://docs.stripe.com/api"
+    payment_methods: [credit_card, debit_card, apple_pay, google_pay, bank_transfer, buy_now_pay_later]
+    currencies: [USD, EUR, GBP, JPY, "135+ currencies"]
+    auth:
+      type: bearer
+      keys:
+        - {name: secret_key, description: "sk_test_xxx / sk_live_xxx"}
+        - {name: publishable_key, description: "pk_test_xxx / pk_live_xxx"}
+        - {name: webhook_secret, description: "whsec_xxx for signature verification"}
+    create_payment:
+      method: POST
+      endpoint: "/v1/payment_intents"
+      content_type: "application/x-www-form-urlencoded"
+      description: "Create PaymentIntent → confirm → handle result"
+      amount_unit: "Smallest currency unit (cents for USD)"
+      amount_example: "$10.00 → amount=1000"
+      required_params:
+        - {name: amount, type: integer, description: "Smallest currency unit"}
+        - {name: currency, type: string, description: "3-letter ISO lowercase"}
+      optional_params:
+        - {name: confirm, type: boolean, description: "Create + confirm in one call"}
+        - {name: customer, type: string, description: "Customer ID"}
+        - {name: description, type: string}
+        - {name: metadata, type: object, description: "Key-value pairs"}
+        - {name: payment_method, type: string}
+        - {name: automatic_payment_methods, type: object}
+        - {name: setup_future_usage, type: string, values: ["on_session", "off_session"]}
+    checkout_session:
+      endpoint: "/v1/checkout/sessions"
+      description: "Hosted checkout page (easiest integration)"
+      mode_values: ["payment", "subscription", "setup"]
+    env_vars:
+      - STRIPE_SECRET_KEY
+      - STRIPE_PUBLISHABLE_KEY
+      - STRIPE_WEBHOOK_SECRET
+    sandbox:
+      key_prefix: "sk_test_"
+      test_cards:
+        success: "4242424242424242"
+        decline: "4000000000000002"
+        auth_required: "4000002500003155"
+      test_card_exp: "Any future date"
+      test_card_cvc: "Any 3 digits"
+
+  # ----------------------------------------------------------
+  # PayPal — Global payments
+  # ----------------------------------------------------------
+  - id: paypal
+    name: PayPal
+    region: Global
+    type: payment_platform
+    website: "https://paypal.com"
+    docs: "https://developer.paypal.com/docs/api/overview/"
+    sandbox_url: "https://api-m.sandbox.paypal.com"
+    production_url: "https://api-m.paypal.com"
+    api_version: "v2"
+    payment_methods: [paypal_balance, credit_card, debit_card, bank_transfer]
+    currencies: [USD, EUR, GBP, "25+ currencies"]
+    auth:
+      type: oauth2
+      token_endpoint: "/v1/oauth2/token"
+      grant_type: "client_credentials"
+      keys:
+        - {name: client_id, description: "OAuth2 client ID"}
+        - {name: client_secret, description: "OAuth2 client secret"}
+    create_payment:
+      method: POST
+      endpoint: "/v2/checkout/orders"
+      content_type: "application/json"
+      description: "Create Order → redirect to PayPal → capture after approval"
+      required_body:
+        intent: "CAPTURE"
+        purchase_units:
+          - amount:
+              currency_code: "USD"
+              value: "10.00"
+      response_fields:
+        - {name: id, description: "Order ID"}
+        - {name: links, description: "Includes approve URL for redirect"}
+    capture_payment:
+      method: POST
+      endpoint: "/v2/checkout/orders/{order_id}/capture"
+      description: "Capture after user approves on PayPal"
+    env_vars:
+      - PAYPAL_CLIENT_ID
+      - PAYPAL_CLIENT_SECRET
+      - PAYPAL_API_URL
+    sandbox:
+      url: "https://api-m.sandbox.paypal.com"
+      dashboard: "https://developer.paypal.com/dashboard/"
+      test_accounts: "Create via PayPal Developer Dashboard"
+
+  # ----------------------------------------------------------
+  # Razorpay — India-focused payments
+  # ----------------------------------------------------------
+  - id: razorpay
+    name: Razorpay
+    region: India
+    type: payment_platform
+    website: "https://razorpay.com"
+    docs: "https://razorpay.com/docs/api/"
+    payment_methods: [credit_card, debit_card, UPI, netbanking, wallets]
+    currencies: [INR]
+    auth:
+      type: basic
+      keys:
+        - {name: key_id, description: "API key ID"}
+        - {name: key_secret, description: "API key secret"}
+    create_payment:
+      method: POST
+      endpoint: "/v1/orders"
+      content_type: "application/json"
+      description: "Create Order → open Razorpay checkout → verify signature"
+      amount_unit: "Paise (INR × 100)"
+      required_body:
+        amount: 50000
+        currency: "INR"
+        receipt: "receipt_order_123"
+    verify_payment:
+      description: "Verify razorpay_signature after payment"
+      hash_data: "order_id|razorpay_payment_id"
+      algorithm: "HMAC-SHA256 with key_secret"
+    env_vars:
+      - RAZORPAY_KEY_ID
+      - RAZORPAY_KEY_SECRET
+    sandbox:
+      key_prefix: "rzp_test_"
+      test_cards:
+        success: "4111111111111111"

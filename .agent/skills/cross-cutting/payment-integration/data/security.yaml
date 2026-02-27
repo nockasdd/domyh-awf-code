@@ -1,0 +1,189 @@
+metadata:
+  skill: payment-integration
+  domain: security
+  updated: "2026-02-27"
+
+# ============================================================
+# SIGNATURE VERIFICATION PATTERNS
+# ============================================================
+
+signature_verification:
+
+  vnpay:
+    algorithm: HMAC-SHA512
+    steps:
+      - "Collect all vnp_* params from query string (EXCLUDE vnp_SecureHash, vnp_SecureHashType)"
+      - "Sort params alphabetically by key name"
+      - "URL-encode keys and values"
+      - "Join with & separator: key1=value1&key2=value2"
+      - "Compute: HMAC-SHA512(joined_string, vnp_HashSecret)"
+      - "Compare computed hash with received vnp_SecureHash"
+    code_node:
+      lang: node
+      snippet: |
+        const crypto = require('crypto');
+        function verifyVnpay(query, hashSecret) {
+          const secureHash = query.vnp_SecureHash;
+          delete query.vnp_SecureHash;
+          delete query.vnp_SecureHashType;
+          const sorted = Object.keys(query).sort();
+          const signData = sorted.map(k => `${k}=${query[k]}`).join('&');
+          const hmac = crypto.createHmac('sha512', hashSecret)
+            .update(Buffer.from(signData, 'utf-8'))
+            .digest('hex');
+          return hmac === secureHash;
+        }
+
+  momo:
+    algorithm: HMAC-SHA256
+    hash_data_template: "accessKey={accessKey}&amount={amount}&extraData={extraData}&message={message}&orderId={orderId}&orderInfo={orderInfo}&orderType={orderType}&partnerCode={partnerCode}&payType={payType}&requestId={requestId}&responseTime={responseTime}&resultCode={resultCode}&transId={transId}"
+    steps:
+      - "Build raw signature string from template with actual values"
+      - "HMAC-SHA256(rawSignature, secretKey)"
+      - "Compare with received signature"
+
+  zalopay:
+    algorithm: HMAC-SHA256
+    steps:
+      - "Receive data (JSON string) and mac from callback"
+      - "HMAC-SHA256(data, key2)"
+      - "Compare computed MAC with received mac"
+    code_node:
+      lang: node
+      snippet: |
+        const crypto = require('crypto');
+        function verifyZalopay(dataStr, mac, key2) {
+          const computed = crypto.createHmac('sha256', key2)
+            .update(dataStr).digest('hex');
+          return computed === mac;
+        }
+
+  pay2s:
+    algorithm: HMAC-SHA256
+    field: m2signature
+    steps:
+      - "Construct message from IPN body fields"
+      - "HMAC-SHA256(message, secretKey)"
+      - "Compare with m2signature field"
+
+  payos:
+    algorithm: HMAC-SHA256
+    steps:
+      - "Extract data object from webhook body"
+      - "Sort data keys alphabetically"
+      - "Build string: key1=value1&key2=value2 (sorted)"
+      - "Handle null/undefined as empty string"
+      - "Handle array values as JSON string"
+      - "HMAC-SHA256(data_string, checksumKey)"
+      - "Compare with signature field"
+    code_node:
+      lang: node
+      snippet: |
+        const crypto = require('crypto');
+        function verifyPayOS(data, signature, checksumKey) {
+          const sorted = Object.keys(data).sort();
+          const dataStr = sorted.map(k => {
+            let v = data[k];
+            if (v === null || v === undefined) v = '';
+            if (Array.isArray(v)) v = JSON.stringify(v);
+            return `${k}=${v}`;
+          }).join('&');
+          const computed = crypto.createHmac('sha256', checksumKey)
+            .update(dataStr).digest('hex');
+          return computed === signature;
+        }
+
+  stripe:
+    algorithm: HMAC-SHA256
+    header: Stripe-Signature
+    steps:
+      - "Parse Stripe-Signature header: t={timestamp},v1={signature}"
+      - "Build signed_payload: {timestamp}.{raw_request_body}"
+      - "HMAC-SHA256(signed_payload, whsec_xxx)"
+      - "Compare with v1 signature"
+      - "Check timestamp within 300 seconds (prevent replay attack)"
+    code_node:
+      lang: node
+      snippet: |
+        // USE OFFICIAL SDK — never implement manually in production
+        const stripe = require('stripe')('sk_xxx');
+        const event = stripe.webhooks.constructEvent(
+          rawBody, sig, webhookSecret
+        );
+    warning: "Always use official Stripe SDK for signature verification"
+
+  paypal:
+    method: "API verification (not HMAC)"
+    steps:
+      - "Extract headers: PAYPAL-TRANSMISSION-ID, PAYPAL-TRANSMISSION-TIME, PAYPAL-TRANSMISSION-SIG, PAYPAL-CERT-URL, PAYPAL-AUTH-ALGO"
+      - "POST /v1/notifications/verify-webhook-signature with event body + headers"
+      - "Check response: verification_status === 'SUCCESS'"
+    warning: "PayPal verification requires API call, not local HMAC"
+
+  razorpay:
+    algorithm: HMAC-SHA256
+    header: X-Razorpay-Signature
+    steps:
+      - "Get raw request body"
+      - "HMAC-SHA256(raw_body, webhook_secret)"
+      - "Compare with X-Razorpay-Signature header"
+
+# ============================================================
+# IDEMPOTENCY PATTERNS
+# ============================================================
+
+idempotency:
+  description: "Payment webhooks may be sent multiple times. Handle duplicates gracefully."
+  rules:
+    - id: IDEM-001
+      rule: "Store transaction/payment ID in database"
+      detail: "On webhook receipt, check if transaction ID already exists before processing"
+    - id: IDEM-002
+      rule: "Check order status before updating"
+      detail: "If order is already PAID/COMPLETED, return success without re-processing"
+    - id: IDEM-003
+      rule: "Use database transactions"
+      detail: "Atomic update: check status + update order + insert payment record in one transaction"
+    - id: IDEM-004
+      rule: "Return success for already-processed"
+      detail: "VNPay: return RspCode 02. Others: return 200 OK / {success: true}"
+    - id: IDEM-005
+      rule: "Log all webhook calls"
+      detail: "Even duplicates — for audit trail and debugging"
+
+# ============================================================
+# ANTI-FRAUD & VERIFICATION
+# ============================================================
+
+anti_fraud:
+  rules:
+    - id: FRAUD-001
+      rule: "Verify amount matches order"
+      detail: "Compare webhook amount with order amount in YOUR database. Never trust client-side amount."
+    - id: FRAUD-002
+      rule: "Verify currency"
+      detail: "Check currency code matches expected currency for the order"
+    - id: FRAUD-003
+      rule: "Verify merchant/partner code"
+      detail: "Confirm the merchant code in webhook matches your configured code"
+    - id: FRAUD-004
+      rule: "Verify order exists"
+      detail: "Order referenced in webhook must exist in your database"
+    - id: FRAUD-005
+      rule: "HTTPS only for webhooks"
+      detail: "All webhook endpoints MUST use HTTPS (SSL/TLS)"
+    - id: FRAUD-006
+      rule: "IP whitelist (optional)"
+      detail: "Some providers publish IP ranges. Whitelist for extra security."
+    - id: FRAUD-007
+      rule: "Secret management"
+      detail: "Store all keys in environment variables. NEVER commit to source code."
+    - id: FRAUD-008
+      rule: "Audit logging"
+      detail: "Log: timestamp, provider, transaction_id, amount, status, raw_body (sanitized)"
+    - id: FRAUD-009
+      rule: "Rate limiting"
+      detail: "Rate limit webhook endpoints to prevent abuse"
+    - id: FRAUD-010
+      rule: "Replay attack prevention"
+      detail: "Check timestamp in webhook (Stripe: 5 min window). Reject old events."

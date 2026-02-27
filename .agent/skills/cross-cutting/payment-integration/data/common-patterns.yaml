@@ -1,0 +1,193 @@
+metadata:
+  skill: payment-integration
+  domain: common-patterns
+  updated: "2026-02-27"
+
+# ============================================================
+# UNIVERSAL INTEGRATION FLOW
+# ============================================================
+
+integration_flow:
+  description: "Standard payment integration flow (applies to all providers)"
+  steps:
+    step_1_create_order:
+      action: "Save order to database"
+      status: "PENDING"
+      fields: [order_id, amount, currency, items, user_id, created_at]
+      note: "Generate unique order_id/txn_ref BEFORE calling provider"
+
+    step_2_create_payment:
+      action: "Call provider API to create payment"
+      providers:
+        vnpay: "Build GET URL with params → redirect"
+        momo: "POST → receive payUrl → redirect"
+        zalopay: "POST → receive order_url → redirect"
+        pay2s: "POST → receive Collection Link → redirect"
+        payos: "POST → receive payment link → redirect"
+        sepay: "Generate VietQR → display to user"
+        casso: "Generate VietQR → display to user"
+        stripe: "POST PaymentIntent → use client-side JS"
+        paypal: "POST Create Order → redirect to PayPal"
+        razorpay: "POST Create Order → open Razorpay modal"
+
+    step_3_user_pays:
+      action: "User completes payment on provider's page"
+      note: "Your server waits for callback (DO NOT poll)"
+
+    step_4_webhook_callback:
+      action: "Receive webhook/IPN from provider (server-to-server)"
+      critical_steps:
+        - "Verify signature/HMAC FIRST"
+        - "Find order by reference ID"
+        - "Verify amount matches"
+        - "Check order not already processed (idempotency)"
+        - "Update order status atomically"
+        - "Return success response FAST"
+
+    step_5_return_url:
+      action: "Handle client redirect (display only)"
+      warning: "NEVER update order status from return URL"
+      note: "Show 'Thank you' or 'Payment processing' page"
+
+# ============================================================
+# ERROR HANDLING
+# ============================================================
+
+error_handling:
+  api_calls:
+    timeout: "30 seconds max for provider API calls"
+    retry: "Exponential backoff: 1s, 2s, 4s (max 3 retries)"
+    circuit_breaker: "After 5 consecutive failures, pause 60s"
+
+  webhook_processing:
+    fast_response: "Return 200/success within 5 seconds"
+    async_processing: "Queue complex logic (email, inventory) for background processing"
+    error_logging: "Log full webhook body + error for debugging"
+    dead_letter: "Move permanently failed webhooks to dead letter queue for manual review"
+
+  user_facing:
+    payment_pending: "Show 'Payment is being processed' if webhook delayed"
+    payment_timeout: "After 15 minutes pending, offer retry or cancel"
+    payment_failed: "Show clear error message + retry option"
+    cancel: "Handle provider cancel URL gracefully"
+
+# ============================================================
+# DATABASE SCHEMA PATTERN
+# ============================================================
+
+database_schema:
+  orders:
+    fields:
+      - {name: id, type: "UUID/BIGINT", pk: true}
+      - {name: order_code, type: "VARCHAR(64)", unique: true, description: "Your reference, sent to provider"}
+      - {name: user_id, type: "BIGINT", fk: users}
+      - {name: amount, type: "DECIMAL(15,2)"}
+      - {name: currency, type: "VARCHAR(3)", default: "VND"}
+      - {name: status, type: "ENUM", values: ["pending", "paid", "failed", "cancelled", "refunded"]}
+      - {name: provider, type: "VARCHAR(20)", description: "vnpay/momo/stripe/etc."}
+      - {name: provider_transaction_id, type: "VARCHAR(100)", nullable: true}
+      - {name: paid_at, type: TIMESTAMP, nullable: true}
+      - {name: created_at, type: TIMESTAMP}
+      - {name: updated_at, type: TIMESTAMP}
+
+  payment_logs:
+    description: "Audit trail — log ALL webhook/IPN calls"
+    fields:
+      - {name: id, type: "BIGINT", pk: true}
+      - {name: order_id, type: "BIGINT", fk: orders}
+      - {name: provider, type: "VARCHAR(20)"}
+      - {name: event_type, type: "VARCHAR(50)", description: "IPN/webhook/return"}
+      - {name: raw_body, type: TEXT, description: "Full request body (sanitized)"}
+      - {name: signature_valid, type: BOOLEAN}
+      - {name: result_code, type: "VARCHAR(10)"}
+      - {name: processed, type: BOOLEAN, default: false}
+      - {name: created_at, type: TIMESTAMP}
+
+# ============================================================
+# SANDBOX / TESTING
+# ============================================================
+
+sandbox_configs:
+  vnpay:
+    url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+    test_card: "9704198526191432198"
+    card_name: "NGUYEN VAN A"
+    card_date: "07/15"
+    otp: "123456"
+    bank: "NCB"
+
+  momo:
+    url: "https://test-payment.momo.vn/v2/gateway/api/create"
+    note: "Register at https://business.momo.vn for credentials"
+    test_phone: "Use MoMo test app"
+
+  zalopay:
+    url: "https://sb-openapi.zalopay.vn/v2/create"
+    github: "https://github.com/zalopay-samples"
+
+  pay2s:
+    dashboard: "https://sandbox.pay2s.vn"
+    payment_url: "https://sandbox-payment.pay2s.vn"
+    demo_transfer: "https://sandbox.pay2s.vn/demo/transfer_demo.html"
+    demo_ipn: "https://sandbox.pay2s.vn/demo/ipn_demo.html"
+
+  payos:
+    dashboard: "https://my.payos.vn (toggle sandbox)"
+    github: "https://github.com/payOSHQ"
+    sdks: ["@payos/node", "payos-java-spring"]
+
+  stripe:
+    key_prefix: "sk_test_ / pk_test_"
+    cards:
+      success: "4242 4242 4242 4242"
+      decline: "4000 0000 0000 0002"
+      auth_3ds: "4000 0025 0000 3155"
+      insufficient: "4000 0000 0000 9995"
+    exp_date: "Any future date"
+    cvc: "Any 3 digits"
+    cli: "stripe listen --forward-to localhost:3000/webhook"
+
+  paypal:
+    url: "https://api-m.sandbox.paypal.com"
+    dashboard: "https://developer.paypal.com/dashboard/"
+    note: "Create sandbox accounts via PayPal Developer Dashboard"
+
+  razorpay:
+    key_prefix: "rzp_test_"
+    cards:
+      success: "4111 1111 1111 1111"
+    upi: "success@razorpay"
+
+# ============================================================
+# PROVIDER COMPARISON
+# ============================================================
+
+comparison:
+  decision_matrix:
+    - scenario: "Vietnam e-commerce, no gateway fee"
+      recommended: [sepay, casso, payos]
+      reason: "Bank monitoring — free, VietQR support"
+
+    - scenario: "Vietnam e-commerce, official gateway"
+      recommended: [vnpay]
+      reason: "Largest VN gateway, bank + card + QR support"
+
+    - scenario: "Vietnam, mobile-first users"
+      recommended: [momo, zalopay]
+      reason: "E-wallet with large user base"
+
+    - scenario: "Vietnam, need both QR and official gateway"
+      recommended: [pay2s, payos]
+      reason: "Napas 247 + VietQR + Collection Link"
+
+    - scenario: "Global SaaS, card payments"
+      recommended: [stripe]
+      reason: "Best DX, 135+ currencies, subscriptions"
+
+    - scenario: "Global marketplace"
+      recommended: [stripe, paypal]
+      reason: "Stripe Connect + PayPal multi-party"
+
+    - scenario: "India market"
+      recommended: [razorpay]
+      reason: "UPI + netbanking + local cards"
