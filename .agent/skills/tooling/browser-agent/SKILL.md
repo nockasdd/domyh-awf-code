@@ -1,5 +1,6 @@
 ---
 name: browser-agent
+description: "Browser automation agent patterns. Use when implementing headless browser control or web scraping."
 detect: []
 ---
 

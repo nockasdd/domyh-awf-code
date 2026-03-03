@@ -1,5 +1,6 @@
 ---
 name: ocaml
+description: "OCaml functional programming patterns. Use when working with .ml/.mli files."
 detect: ["*.ml", "*.mli", "dune", "dune-project", "*.opam"]
 category: functional
 tier: 3

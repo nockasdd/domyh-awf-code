@@ -1,6 +1,6 @@
 ---
+description: "Use when writing tests, setting up test infrastructure, or reviewing test coverage."
 applyTo: "**/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/tests/**/*,**/__tests__/**/*"
-excludeAgent: ""
 ---
 
 # Testing Guidelines

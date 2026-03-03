@@ -1,5 +1,6 @@
 ---
 name: observability
+description: "Observability patterns for monitoring, tracing, and alerting. Use when implementing OpenTelemetry, metrics, or distributed tracing."
 category: core
 ---
 

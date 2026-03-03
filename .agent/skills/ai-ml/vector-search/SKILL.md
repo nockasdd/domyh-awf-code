@@ -1,5 +1,6 @@
 ---
 name: vector-search
+description: "Vector search and embedding patterns. Use when implementing similarity search, embeddings, or vector databases."
 category: ai-ml
 ---
 

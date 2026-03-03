@@ -1,5 +1,6 @@
 ---
 name: csharp
+description: "C# development patterns for .NET, ASP.NET, and cross-platform apps. Use when working with .cs files or .csproj projects."
 detect: ["*.csproj", "*.sln", "*.cs", "global.json"]
 category: language
 tier: 1

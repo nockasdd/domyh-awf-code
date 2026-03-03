@@ -1,5 +1,6 @@
 ---
 name: cpp
+description: "C++ development patterns for performance-critical and systems code. Use when working with .cpp/.hpp files or CMake projects."
 detect: ["CMakeLists.txt", "*.cpp", "*.cxx", "*.cc", "*.hpp", "*.hxx", "*.h"]
 category: language
 tier: 1

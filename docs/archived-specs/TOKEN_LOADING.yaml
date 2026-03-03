@@ -1,11 +1,11 @@
-# DOMYH Awesome Code — Token Loading Strategy v6.4.5
+# DOMYH Awesome Code — Token Loading Strategy v6.4.10
 # status: archived — Design spec, not runtime config
 
 # =============================================================================
 # LOADING CONFIGURATION
 # =============================================================================
 
-version: "6.4.5"
+version: "6.4.10"
 strategy: lazy_sections
 
 # Section-based lazy loading

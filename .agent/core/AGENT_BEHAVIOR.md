@@ -18,9 +18,9 @@ On new session or context reset:
 ```
 IF HSA MCP server is available:
   → hsa_get_agent_config("bootstrap") → loads Tier 0-2 rules + intent mapping
-  → hsa_detect_stack → auto-detect project language/framework
-  → hsa_declare_intent → set session governance context
-  → Skills: loaded via hsa_search_skills (MCP-managed)
+  → hsa_detect → auto-detect project language/framework
+  → hsa_session → set session governance context
+  → Skills: loaded via hsa_search (MCP-managed)
 
 ELSE (no HSA MCP — standalone mode):
   → Read rules/SACRED_RULES.xml manually (Tier 0-2)
@@ -50,8 +50,8 @@ ELSE (freeform text — no slash command):
 
 | # | HSA | Slash | Rules Source | Skill Loading | Routing | Context Retrieval |
 |---|-----|-------|-------------|---------------|---------|-------------------|
-| 1 | ✅ | ✅ | `hsa_get_agent_config("bootstrap")` | `hsa_search_skills` + required | manifest persona + workflow | `hsa_get_context` |
-| 2 | ✅ | ❌ | `hsa_get_agent_config("bootstrap")` | `hsa_search_skills` by intent | intent keyword matching | `hsa_get_context` |
+| 1 | ✅ | ✅ | `hsa_get_agent_config("bootstrap")` | `hsa_search` + required | manifest persona + workflow | `hsa_search` |
+| 2 | ✅ | ❌ | `hsa_get_agent_config("bootstrap")` | `hsa_search` by intent | intent keyword matching | `hsa_search` |
 | 3 | ❌ | ✅ | Direct read `SACRED_RULES.xml` | Direct read `META.yaml` | manifest persona + workflow | Manual file read |
 | 4 | ❌ | ❌ | Direct read `SACRED_RULES.xml` | Stack-based file read | Default developer persona | Manual file read |
 
@@ -62,7 +62,20 @@ ELSE (freeform text — no slash command):
 
 
 > **⛔ Enforced by SESSION_005** (Tier 3, severity=block). Agent MUST execute saves.
-Update memory files at these triggers:
+
+### Preferred (HSA available — 1 tool call):
+
+| Trigger | Tool Call |
+|---------|-----------|
+| After completing a task | `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})` |
+| After making a key decision | `hsa_session({action:'anchor', content:'[decision]', category:'decision'})` |
+| After resolving an error | `hsa_session({action:'persist', task_summary:'Error fix: [summary]'})` |
+| Before ending session | `hsa_session({action:'persist', snapshot:{recent_changes, current_status, key_decisions, next_steps}, auto_notify:true})` |
+| After workflow completes | `hsa_session({action:'track', status:'completed'})` |
+
+> `auto_notify` sends Telegram notification IF `HSA_TELEGRAM_TOKEN` env var is set; silently skips if not configured.
+
+### Fallback (no HSA — manual file writes):
 
 | Trigger | Files to Update |
 |---------|----------------|
@@ -71,8 +84,6 @@ Update memory files at these triggers:
 | After resolving an error | `session.md` (append error + solution) |
 | Before ending session | `CONTEXT_SNAPSHOT.md` (full update: changes, status, decisions) |
 | After workflow completes | `state.json` (update current_phase, last_workflow) |
-| On session start/intent change | `hsa_declare_intent` → `.agent/hsa/session-state.json` |
-| On milestone completion | `hsa_track_progress`, `hsa_save_anchor` → session-state.json |
 
 ## Skill Loading (Progressive Disclosure)
 

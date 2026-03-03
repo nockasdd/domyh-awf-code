@@ -1,0 +1,36 @@
+{
+    "hooks": {
+        "SessionStart": [
+            {
+                "type": "command",
+                "command": "echo '[DOMYH AWF] Session started'",
+                "windows": "echo [DOMYH AWF] Session started",
+                "timeout": 5
+            }
+        ],
+        "PreToolUse": [
+            {
+                "type": "command",
+                "command": ".github/hooks/scripts/safe-guard.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .github/hooks/scripts/safe-guard.ps1",
+                "timeout": 10
+            }
+        ],
+        "PostToolUse": [
+            {
+                "type": "command",
+                "command": "echo '[DOMYH AWF] Tool completed'",
+                "windows": "echo [DOMYH AWF] Tool completed",
+                "timeout": 5
+            }
+        ],
+        "Stop": [
+            {
+                "type": "command",
+                "command": "echo '[DOMYH AWF] Session ended'",
+                "windows": "echo [DOMYH AWF] Session ended",
+                "timeout": 5
+            }
+        ]
+    }
+}

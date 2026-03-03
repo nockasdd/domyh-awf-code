@@ -122,11 +122,11 @@ integration:
     description: "Hierarchical Semantic Architecture for intelligent context"
     
     mcp_tools:
-      hsa_get_context:
+      hsa_search:
         description: "Get optimized context for complex analysis"
         when: "Before analyzing multiple related files"
         
-      hsa_detect_stack:
+      hsa_detect:
         description: "Detect project tech stack"
         when: "At session start"
         
@@ -143,8 +143,8 @@ integration:
         when: "Debug or troubleshooting"
     
     auto_workflow:
-      session_start: "hsa_detect_stack"
-      before_analysis: "hsa_get_context"
+      session_start: "hsa_detect"
+      before_analysis: "hsa_search"
       after_file_edit: "hsa_check_changes"
       
     fallback:

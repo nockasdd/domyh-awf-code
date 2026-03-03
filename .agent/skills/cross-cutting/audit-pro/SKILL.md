@@ -1,5 +1,6 @@
 ---
 name: audit-pro
+description: "Professional code audit patterns with 12-expert panel system. Use when performing comprehensive project audits."
 category: cross-cutting
 ---
 

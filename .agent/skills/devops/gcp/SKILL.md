@@ -1,5 +1,6 @@
 ---
 name: gcp
+description: "Google Cloud Platform patterns. Use when working with GCP services like Cloud Run, GKE, BigQuery, or Firebase."
 category: devops
 ---
 

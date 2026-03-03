@@ -1,5 +1,6 @@
 ---
 name: skill-creator
+description: "SKILL.md creation patterns for the agentskills.io standard. Use when creating new agent skills."
 category: cross-cutting
 ---
 

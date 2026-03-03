@@ -1,5 +1,6 @@
 ---
 name: flutter
+description: "Flutter and Dart patterns for cross-platform mobile/web/desktop. Use when working with .dart files or pubspec.yaml."
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
 category: mobile
 tier: 1

@@ -114,6 +114,6 @@ constraints:
     - Provide clear context and acceptance criteria to receiving persona
     - Checkpoint after each task completion for recovery
     - Synthesize results from multiple personas into unified output
-    - Use hsa_prepare_handoff for context injection to specialists
-    - Use hsa_filter_tools for tool permission per specialist
+    - Use hsa_delegate for context injection to specialists
+    - Use hsa_delegate for tool permission per specialist
 ---

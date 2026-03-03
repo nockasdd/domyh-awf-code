@@ -1,5 +1,6 @@
 ---
 name: zig
+description: "Zig systems programming patterns for safety and performance. Use when working with .zig files."
 detect: ["*.zig", "build.zig", "build.zig.zon"]
 category: systems
 tier: 2

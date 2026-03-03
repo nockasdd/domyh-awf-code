@@ -1,5 +1,6 @@
 ---
 name: mcp
+description: "Model Context Protocol patterns for AI-tool integration. Use when implementing MCP servers, tools, or resources."
 category: tooling
 ---
 

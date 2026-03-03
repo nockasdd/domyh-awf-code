@@ -13,7 +13,7 @@ success_criteria: "migrations applied successfully, schema validated, data integ
 
 ## MIGRATION FLOW
 
-1. **DETECT** (Auto) — `hsa_declare_intent("migration: {operation}")`, detect stack via HSA (`hsa_detect_stack`), load DB context (`hsa_get_context`), find migration tool, check pending
+1. **DETECT** (Auto) — `hsa_session("migration: {operation}")`, detect stack via HSA (`hsa_detect`), load DB context (`hsa_search`), find migration tool, check pending
 2. **VALIDATE** — Check migration syntax, detect breaking changes, verify rollback exists → ⛔ STOP if destructive
 3. **BACKUP** — Create backup (required for production), snapshot schema, log attempt
 4. **EXECUTE** — Run migrations in transaction, apply changes, update version table
@@ -141,12 +141,10 @@ django: manage.py loaddata fixtures.json
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

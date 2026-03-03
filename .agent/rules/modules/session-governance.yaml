@@ -26,7 +26,7 @@ rules:
     severity: warning
     when: "Starting any significant task (feature, bugfix, refactor)"
     action: |
-      Call hsa_declare_intent with:
+      Call hsa_session with:
         - focus: what you're working on
         - mode: plan_driven | exploration | bugfix | refactor
         - goals: concrete deliverables (array of strings)
@@ -37,7 +37,7 @@ rules:
     severity: info
     when: "Completing a milestone or starting a new sub-task"
     action: |
-      Call hsa_track_progress with:
+      Call hsa_session with:
         - level: trajectory (top goal) | tactic (sub-task) | action (leaf step)
         - label: what this step is about
         - status: active | completed | blocked | cancelled
@@ -49,7 +49,7 @@ rules:
     severity: info
     when: "Discovering project conventions, making architectural decisions"
     action: |
-      Call hsa_save_anchor with:
+      Call hsa_session with:
         - content: the fact to remember
         - category: stack | convention | decision | constraint | context
       Anchors are immutable — they survive context compaction and session resets.
@@ -61,12 +61,12 @@ rules:
     severity: warning
     when: "Before starting unplanned work or changing scope"
     action: |
-      Call hsa_check_drift with:
+      Call hsa_session with:
         - current_action: what you're about to do
         - include_anchors: true (for full context)
       If drift detected:
         1. Evaluate: is this deviation necessary?
-        2. If yes: call hsa_declare_intent to update intent
+        2. If yes: call hsa_session to update intent
         3. If no: return to declared focus
 
   - id: GOV-005
@@ -77,11 +77,11 @@ rules:
       Before ANY stop, verify 5 points:
         1. BUILD passes (run build command)
         2. TESTS pass (run test suite)
-        3. HIERARCHY updated (hsa_track_progress status: completed)
-        4. SESSION archived (hsa_save_anchor category: context)
-        5. USER notified (report what's done, what's pending)
+        3. HIERARCHY updated (hsa_session({action:'track', status:'completed'}))
+        4. SESSION persisted: hsa_session({action:'persist', task_summary:'...', snapshot:{...}, auto_notify:true})
+           ↳ auto_notify sends notification IF HSA_TELEGRAM_TOKEN is set; silently skips if not.
+        5. If HSA unavailable: manually update memory/session.md + CONTEXT_SNAPSHOT.md
       Never stop without checking. Incomplete stops compound into lost work.
-      See skill: governance/pre-stop-checklist for full protocol.
 
   - id: GOV-006
     name: "Session Handoff Format"
@@ -91,7 +91,7 @@ rules:
       Use structured format for session anchors:
         [SESSION-END] Topic: {what}. Done: {completed}. Pending: {remaining}.
         Files: {key files}. Build: pass/fail. Tests: X/Y pass.
-      This enables clean resume in next session via hsa_check_drift(include_anchors: true).
+      This enables clean resume in next session via hsa_session(include_anchors: true).
 
 integration:
   tier: 2

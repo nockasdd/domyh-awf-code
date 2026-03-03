@@ -127,7 +127,7 @@ Composable rule modules for specific use cases:
 ├── data/                        # Supporting data files
 │   └── build-systems.yaml       # Build system detection data
 ├── archive/                     # Merged/legacy rules
-│   ├── constitutional/          # v6.4.5 Constitutional YAML tiers
+│   ├── constitutional/          # v6.4.10 Constitutional YAML tiers
 │   │   ├── tier-0-core.yaml     # Immutable principles
 │   │   ├── tier-1-safety.yaml   # Safety rules
 │   │   └── tier-2-execution.yaml # Quality guidelines

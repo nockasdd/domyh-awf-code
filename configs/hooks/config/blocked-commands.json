@@ -1,0 +1,156 @@
+[
+    {
+        "pattern": "rm\\s+-rf\\s+/",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Root filesystem deletion blocked",
+        "risk_level": "critical",
+        "category": "filesystem"
+    },
+    {
+        "pattern": "rm\\s+-rf\\s+~",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Home directory deletion blocked",
+        "risk_level": "critical",
+        "category": "filesystem"
+    },
+    {
+        "pattern": "rm\\s+-rf",
+        "safe_patterns": [
+            "rm -rf .next",
+            "rm -rf node_modules",
+            "rm -rf dist",
+            "rm -rf build",
+            "rm -rf coverage",
+            "rm -rf .turbo",
+            "rm -rf .cache",
+            "rm -rf tmp",
+            "rm -rf __pycache__"
+        ],
+        "action": "ask",
+        "reason": "Recursive deletion — confirm target",
+        "risk_level": "high",
+        "category": "filesystem"
+    },
+    {
+        "pattern": "DROP\\s+(TABLE|DATABASE|INDEX|VIEW)",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "SQL DROP blocked",
+        "risk_level": "critical",
+        "category": "database"
+    },
+    {
+        "pattern": "TRUNCATE\\s+TABLE",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "SQL TRUNCATE blocked",
+        "risk_level": "critical",
+        "category": "database"
+    },
+    {
+        "pattern": "DELETE\\s+FROM\\s+\\S+\\s*;?$",
+        "safe_patterns": [
+            "WHERE"
+        ],
+        "action": "ask",
+        "reason": "DELETE without WHERE clause requires confirmation",
+        "risk_level": "high",
+        "category": "database"
+    },
+    {
+        "pattern": "git\\s+push\\s+--force(?!-with-lease)",
+        "safe_patterns": [
+            "--force-with-lease"
+        ],
+        "action": "ask",
+        "reason": "Force push — use --force-with-lease instead",
+        "risk_level": "high",
+        "category": "git"
+    },
+    {
+        "pattern": "git\\s+reset\\s+--hard",
+        "safe_patterns": [],
+        "action": "ask",
+        "reason": "Hard reset requires confirmation",
+        "risk_level": "high",
+        "category": "git"
+    },
+    {
+        "pattern": "git\\s+clean\\s+-fd",
+        "safe_patterns": [],
+        "action": "ask",
+        "reason": "Git clean removes untracked files — confirm",
+        "risk_level": "medium",
+        "category": "git"
+    },
+    {
+        "pattern": "npm\\s+publish",
+        "safe_patterns": [
+            "--dry-run"
+        ],
+        "action": "ask",
+        "reason": "Publishing to npm requires confirmation",
+        "risk_level": "high",
+        "category": "deploy"
+    },
+    {
+        "pattern": "npx\\s+wrangler\\s+deploy",
+        "safe_patterns": [
+            "--dry-run"
+        ],
+        "action": "ask",
+        "reason": "Cloudflare deploy requires confirmation",
+        "risk_level": "high",
+        "category": "deploy"
+    },
+    {
+        "pattern": "FORMAT\\s+[A-Z]:",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Drive formatting blocked",
+        "risk_level": "critical",
+        "category": "system"
+    },
+    {
+        "pattern": "curl.*\\|.*(?:bash|sh|zsh)",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Pipe to shell blocked — download and review first",
+        "risk_level": "critical",
+        "category": "network"
+    },
+    {
+        "pattern": "wget.*\\|.*(?:bash|sh|zsh)",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Pipe to shell blocked — download and review first",
+        "risk_level": "critical",
+        "category": "network"
+    },
+    {
+        "pattern": "chmod\\s+777",
+        "safe_patterns": [],
+        "action": "ask",
+        "reason": "World-writable permissions require confirmation",
+        "risk_level": "medium",
+        "category": "security"
+    },
+    {
+        "pattern": "sudo\\s+rm",
+        "safe_patterns": [],
+        "action": "deny",
+        "reason": "Root deletion blocked",
+        "risk_level": "critical",
+        "category": "system"
+    },
+    {
+        "pattern": "eval\\s*\\(",
+        "safe_patterns": [],
+        "action": "ask",
+        "reason": "eval() detected — potential code injection risk",
+        "risk_level": "high",
+        "category": "security"
+    }
+]

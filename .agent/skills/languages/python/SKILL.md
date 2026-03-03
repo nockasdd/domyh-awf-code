@@ -1,5 +1,6 @@
 ---
 name: python
+description: "Python development patterns for web, data science, and automation. Use when working with .py files, pip, poetry, or Python projects."
 detect: ["pyproject.toml", "requirements.txt", "*.py", "Pipfile", "setup.py"]
 category: backend
 tier: 1

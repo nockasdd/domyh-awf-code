@@ -1,5 +1,6 @@
 ---
 name: swift
+description: "Swift development patterns for iOS, macOS, and server-side. Use when working with .swift files or Package.swift projects."
 detect: ["Package.swift", "*.swift", "*.xcodeproj", "*.xcworkspace"]
 category: mobile
 tier: 1

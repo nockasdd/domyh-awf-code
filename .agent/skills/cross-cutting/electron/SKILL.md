@@ -1,5 +1,6 @@
 ---
 name: electron
+description: "Electron desktop app patterns. Use when building cross-platform desktop apps with web technologies."
 category: desktop
 ---
 

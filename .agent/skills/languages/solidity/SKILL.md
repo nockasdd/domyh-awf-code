@@ -1,5 +1,6 @@
 ---
 name: solidity
+description: "Solidity smart contract patterns for Ethereum/EVM. Use when working with .sol files or Hardhat/Foundry projects."
 detect: ["*.sol", "hardhat.config.js", "hardhat.config.ts", "foundry.toml"]
 category: blockchain
 tier: 2

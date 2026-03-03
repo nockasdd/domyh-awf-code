@@ -20,34 +20,34 @@ Before ANY implementation, pass through this gate:
 Ready to write code?
     │
     ├── 1. ANCHORS — Check prior decisions
-    │   hsa_check_drift(include_anchors: true)
+    │   hsa_session(include_anchors: true)
     │   Found relevant decisions? → Follow them
     │   ↓
     │
     ├── 2. FILES — Read the code you'll modify
-    │   hsa_get_context(query: "relevant topic")
+    │   hsa_search(query: "relevant topic")
     │   Understand existing patterns? → Match them
     │   ↓
     │
     ├── 3. DRY — Does similar code already exist?
-    │   hsa_get_context(query: "function/pattern name")
+    │   hsa_search(query: "function/pattern name")
     │   Found existing? → Reuse, don't recreate
     │   ↓
     │
     ├── 4. SKILLS — Load relevant skill patterns
-    │   hsa_search_skills(query: "relevant skill")
+    │   hsa_search(query: "relevant skill")
     │   Patterns loaded? → Follow them
     │   ↓
     │
     └── 5. INTENT — Is intent declared?
-        hsa_declare_intent declared? → Proceed
+        hsa_session declared? → Proceed
         NOT declared? → Declare NOW, then proceed
 ```
 
 ## Step 1: Check Anchors (Prior Decisions)
 
 ```
-hsa_check_drift(
+hsa_session(
   current_action: "About to implement {feature}",
   include_anchors: true
 )
@@ -66,13 +66,13 @@ hsa_check_drift(
 
 ```
 # 1. Get overview of relevant code
-hsa_get_context(
+hsa_search(
   query: "feature area you're working on",
   output_mode: "skeleton"    # Signatures only, ~1000 tokens
 )
 
 # 2. Read specific files you'll modify
-hsa_get_context(
+hsa_search(
   query: "specific function or file",
   output_mode: "full",
   max_tokens: 4000
@@ -101,7 +101,7 @@ Before creating ANY new function, component, or utility:
 
 ```
 # Search for existing implementations
-hsa_get_context(
+hsa_search(
   query: "{what you're about to create}",
   output_mode: "references"    # File list only
 )
@@ -129,12 +129,12 @@ hsa_get_context(
 
 ```
 # Auto-detect stack
-hsa_detect_stack()
+hsa_detect()
 
 # Search for relevant skills
-hsa_search_skills(query: "TypeScript error handling")
+hsa_search(query: "TypeScript error handling")
 # or
-hsa_search_skills(query: "React component patterns")
+hsa_search(query: "React component patterns")
 ```
 
 ### Auto-Load Skills by Stack
@@ -152,7 +152,7 @@ hsa_search_skills(query: "React component patterns")
 ```
 # Check if intent is declared
 # If not:
-hsa_declare_intent(
+hsa_session(
   focus: "Implementing {feature}",
   mode: "plan_driven",
   goals: ["Goal 1", "Goal 2"]

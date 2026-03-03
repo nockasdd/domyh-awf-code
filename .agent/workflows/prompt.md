@@ -13,7 +13,7 @@ success_criteria: "Prompt generated, research cited, RCTO structure applied"
 
 ## PROMPT FLOW
 
-1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_get_context`). Extract: purpose, target tool/model, language, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
+1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_search`). Extract: purpose, target tool/model, language, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
 2. **RESEARCH** — Online research on domain, best practices, reference examples. Search: optimal prompt structure for target tool, industry standards, trending patterns. Show: `[Step 2/5] Researching: "midjourney v6 architecture prompts"...`
 3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → appropriate sections. Choose template by prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
 4. **GENERATE** — Create structured markdown prompt. Write in the language requested by user. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`
@@ -164,12 +164,10 @@ All generated prompts must meet:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

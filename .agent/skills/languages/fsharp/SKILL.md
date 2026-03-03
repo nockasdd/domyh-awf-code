@@ -1,5 +1,6 @@
 ---
 name: fsharp
+description: "F# functional programming patterns for .NET. Use when working with .fs/.fsx files."
 detect: ["*.fs", "*.fsx", "*.fsproj"]
 category: functional
 tier: 3

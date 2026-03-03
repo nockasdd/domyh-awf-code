@@ -1,5 +1,6 @@
 ---
 name: kotlin
+description: "Kotlin development patterns for Android, JVM, and multiplatform. Use when working with .kt/.kts files."
 detect: ["build.gradle.kts", "settings.gradle.kts", "*.kt", "*.kts"]
 category: mobile
 tier: 1

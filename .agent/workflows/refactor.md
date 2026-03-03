@@ -13,7 +13,7 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ## REFACTOR FLOW
 
-1. **DETECT** — `hsa_declare_intent("refactor: {target}")`, identify stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate tests
+1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests
 2. **BASELINE** — Run tests, record passing state
 3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
 4. **EXECUTE** — Apply refactoring (one commit per change) → ⛔ STOP if tests fail at any point
@@ -174,6 +174,6 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 3. **SNAPSHOT** — If this is the last task in session:
    - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
 4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 

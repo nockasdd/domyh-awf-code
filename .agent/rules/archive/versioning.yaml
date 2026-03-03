@@ -19,8 +19,8 @@ Prevent agent from suggesting large version jumps. Follow semantic versioning wi
 | Component | When to Increment | Example |
 |:----------|:------------------|:--------|
 | **PATCH** | Bug fixes, small improvements | `6.1.2` → `6.1.3` |
-| **MINOR** | New features (backward compatible) | `6.1.2` → `6.4.5` |
-| **MAJOR** | Breaking changes only | `6.1.2` → `6.4.5` |
+| **MINOR** | New features (backward compatible) | `6.1.2` → `6.4.10` |
+| **MAJOR** | Breaking changes only | `6.1.2` → `6.4.10` |
 
 ---
 
@@ -59,16 +59,16 @@ Prevent agent from suggesting large version jumps. Follow semantic versioning wi
 
 ```yaml
 # Check current version
-current: "6.4.5"
+current: "6.4.10"
 
 # For bug fixes
 suggest: "6.1.3"  # ✅ Correct
 
 # For new features  
-suggest: "6.4.5"  # ✅ Correct
+suggest: "6.4.10"  # ✅ Correct
 
 # WRONG suggestions
-wrong: "6.4.5"    # ❌ Only for breaking changes
+wrong: "6.4.10"    # ❌ Only for breaking changes
 wrong: "6.5.0"    # ❌ Too big jump
 ```
 

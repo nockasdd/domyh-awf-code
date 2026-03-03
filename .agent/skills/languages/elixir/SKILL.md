@@ -1,5 +1,6 @@
 ---
 name: elixir
+description: "Elixir development patterns for concurrent and distributed systems. Use when working with .ex/.exs files or Mix projects."
 detect: ["*.ex", "*.exs", "mix.exs", "mix.lock"]
 category: functional
 tier: 2

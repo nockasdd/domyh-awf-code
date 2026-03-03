@@ -20,7 +20,7 @@ Requirements approved. Now design the solution architecture.
 ### 1. Architecture Overview
 
 - How does this feature fit into existing architecture?
-- What patterns to follow? (check existing code via `hsa_get_context`)
+- What patterns to follow? (check existing code via `hsa_search`)
 - Any new components or modules needed?
 
 ### 2. Data Models

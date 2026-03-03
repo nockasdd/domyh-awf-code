@@ -1,22 +1,22 @@
 # =============================================================================
 # ⚠️ STATUS: ASPIRATIONAL DESIGN SPEC — NOT RUNTIME
 # The tool schemas below (memory_*, graph_*, reflect, etc.) are NOT implemented
-# in the current HSA engine. The actual HSA engine (v1.3.18) provides 19 tools:
+# in the current HSA engine. The actual HSA engine (v1.5.3) provides 19 tools:
 #
 # REAL HSA TOOLS (from hsa-engine-ts/src/server/tool-definitions.ts):
-#   Retrieval: hsa_get_context, hsa_get_snapshot, hsa_get_repo_map, hsa_trace_flow
-#   Detection: hsa_detect_stack, hsa_detect_environment
+#   Retrieval: hsa_search, hsa_explore, hsa_explore, hsa_trace_flow
+#   Detection: hsa_detect, hsa_detect
 #   Indexing:  hsa_check_changes, hsa_prefetch
-#   Config:    hsa_get_agent_config, hsa_search_skills
-#   Delegation: hsa_prepare_handoff, hsa_filter_tools
+#   Config:    hsa_get_agent_config, hsa_search
+#   Delegation: hsa_delegate, hsa_delegate
 #   Observability: hsa_status, hsa_export
 #   Learning:  hsa_feedback
-#   Governance: hsa_declare_intent, hsa_track_progress, hsa_save_anchor, hsa_check_drift
+#   Governance: hsa_session, hsa_session, hsa_session, hsa_session
 #
 # This file is kept as a DESIGN REFERENCE for future MCP expansion.
 # =============================================================================
 
-version: "6.4.5"
+version: "6.5.0"
 status: aspirational  # NOT runtime — see header
 
 # =============================================================================
@@ -45,7 +45,7 @@ description: |
 
 server:
   name: "domyh-agent"
-  version: "6.4.5"
+  version: "6.5.0"
 
   transport:
     - "stdio"

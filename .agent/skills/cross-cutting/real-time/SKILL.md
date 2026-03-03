@@ -1,5 +1,6 @@
 ---
 name: real-time
+description: "Real-time communication patterns for WebSocket, SSE, and Socket.io. Use when implementing live updates or streaming."
 category: cross-cutting
 ---
 

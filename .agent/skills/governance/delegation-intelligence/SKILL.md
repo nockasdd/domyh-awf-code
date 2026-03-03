@@ -44,7 +44,7 @@ Delegate with proper handoff packet ✅
 ### Handoff Packet (Required)
 
 ```
-hsa_prepare_handoff(
+hsa_delegate(
   task_type: "code",
   task_description: "Implement JWT middleware with validation and error handling",
   focus_files: ["src/auth/middleware.ts", "tests/auth.test.ts"],
@@ -69,7 +69,7 @@ Every delegation MUST specify:
 ### Tool Filtering (Reduce Bloat)
 
 ```
-hsa_filter_tools(task_type: "code")
+hsa_delegate(task_type: "code")
 # Returns recommended tool include/exclude lists
 # → 93-97% token savings in subagent prompt
 ```
@@ -127,20 +127,20 @@ Subagent returns result
     │   ↓
     │
     ├── 5. Capture intelligence
-    │   hsa_save_anchor(
+    │   hsa_session(
     │     content: "[SUBAGENT] Task: {what}. Result: {outcome}. Files: {changed}. Tests: {pass/fail}",
     │     category: "context"
     │   )
     │   ↓
     │
     └── 6. Update hierarchy
-        hsa_track_progress(level: "action", label: "{task}", status: "completed")
+        hsa_session(level: "action", label: "{task}", status: "completed")
 ```
 
 ### Intelligence Capture Format
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[SUBAGENT] JWT middleware delegation.
     Task: Implement token validation + error handling.
     Result: 2 files created, 12 tests pass.
@@ -159,7 +159,7 @@ hsa_save_anchor(
 Subagent reports failure
     │
     ├── 1. Save failure intelligence
-    │   hsa_save_anchor(
+    │   hsa_session(
     │     content: "[FAIL] Task: {what}. Error: {error}. Attempted: {what subagent tried}",
     │     category: "context"
     │   )
@@ -184,7 +184,7 @@ Subagent reports failure
 
 ```
 # Modified retry with more context
-hsa_prepare_handoff(
+hsa_delegate(
   task_type: "code",
   task_description: "RETRY: Implement JWT middleware. Previous attempt failed because: {reason}. Additional context: {what to do differently}.",
   focus_files: ["src/auth/middleware.ts"],
@@ -210,7 +210,7 @@ dispatch(Task C → Subagent 3)
 # Individual successes ≠ combined success
 
 # 4. Save combined intelligence
-hsa_save_anchor(
+hsa_session(
   content: "[DELEGATION] 3 tasks parallel. A: done. B: done. C: partial. Integration: pass.",
   category: "context"
 )

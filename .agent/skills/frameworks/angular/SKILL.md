@@ -1,5 +1,6 @@
 ---
 name: angular
+description: "Angular development patterns for enterprise SPAs. Use when working with Angular CLI projects or .component.ts files."
 detect: ["angular.json", "*.component.ts", "@angular/core"]
 category: frontend
 tier: 1

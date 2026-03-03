@@ -1,5 +1,6 @@
 ---
 name: testing
+description: "Testing patterns for unit, integration, and E2E tests. Use when implementing test strategies, mocks, or coverage."
 detect:
   [
     "*.test.*",

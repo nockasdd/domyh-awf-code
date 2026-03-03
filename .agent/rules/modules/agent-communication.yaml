@@ -31,7 +31,7 @@ channels:
 
   # Channel 2: Handoff Packet (one-time injection)
   handoff:
-    description: "Orchestrator → Specialist via hsa_prepare_handoff"
+    description: "Orchestrator → Specialist via hsa_delegate"
     when: "Task assignment in EXECUTE step"
     includes:
       - "Project snapshot (stack, structure)"
@@ -60,7 +60,7 @@ flow:
   steps:
     1: "Orchestrator creates state → writes dag.tasks[]"
     2: "For each task assignment:"
-    3: "  a. Orchestrator prepares handoff packet (hsa_prepare_handoff)"
+    3: "  a. Orchestrator prepares handoff packet (hsa_delegate)"
     4: "  b. Orchestrator updates task.status = 'running'"
     5: "  c. Specialist reads: handoff packet + shared_context"
     6: "  d. Specialist executes task using assigned workflow"

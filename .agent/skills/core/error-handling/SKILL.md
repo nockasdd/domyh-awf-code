@@ -1,5 +1,6 @@
 ---
 name: error-handling
+description: "Error handling patterns for robust applications. Use when implementing error boundaries, recovery strategies, or structured logging."
 category: core
 ---
 

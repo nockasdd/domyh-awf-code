@@ -1,5 +1,6 @@
 ---
 name: php
+description: "PHP development patterns for web applications and Laravel. Use when working with .php files or composer.json projects."
 detect: ["composer.json", "*.php", "artisan", "symfony.lock"]
 category: backend
 tier: 1

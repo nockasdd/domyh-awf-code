@@ -1,5 +1,6 @@
 ---
 name: haskell
+description: "Haskell functional programming patterns. Use when working with .hs files or Cabal/Stack projects."
 detect: ["*.hs", "*.cabal", "stack.yaml", "cabal.project", "package.yaml"]
 category: functional
 tier: 2

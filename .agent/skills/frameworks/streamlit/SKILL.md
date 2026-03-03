@@ -1,5 +1,6 @@
 ---
 name: streamlit
+description: "Streamlit patterns for data apps and dashboards. Use when building Python data visualization apps."
 detect: ["streamlit", "st.title", "st.sidebar", "st.chat_input"]
 category: frameworks
 tier: 2

@@ -1,5 +1,6 @@
 ---
 name: java
+description: "Java development patterns for enterprise apps and Spring Boot. Use when working with .java files, Maven, or Gradle projects."
 detect:
   ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "settings.gradle"]
 category: backend

@@ -13,7 +13,7 @@ success_criteria: "Documentation generated, links validated, examples compile"
 
 ## DOCUMENTATION FLOW
 
-1. **ANALYZE** (Auto) — `hsa_declare_intent("generate documentation")`, detect stack via HSA (`hsa_detect_stack`), load code context (`hsa_get_context`), scan codebase, identify undocumented items
+1. **ANALYZE** (Auto) — `hsa_session("generate documentation")`, detect stack via HSA (`hsa_detect`), load code context (`hsa_search`), scan codebase, identify undocumented items
 2. **PLAN** — Show documentation gaps, estimate scope → ⛔ STOP if large: confirm scope
 3. **GENERATE** — Create doc content, use language-specific format, add examples & diagrams
 4. **VALIDATE** — Check links/references, verify code examples compile, lint docs
@@ -143,12 +143,10 @@ safety:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

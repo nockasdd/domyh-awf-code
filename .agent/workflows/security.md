@@ -14,7 +14,7 @@ success_criteria: "Scan complete, findings documented with CWE references"
 
 ## SECURITY FLOW
 
-1. **DETECT** — Identify stack via HSA (`hsa_detect_stack`), discover available security tools, load security context (`hsa_get_context`). Show: `[Step 1/6] Detecting: Node.js + Go monorepo`
+1. **DETECT** — Identify stack via HSA (`hsa_detect`), discover available security tools, load security context (`hsa_search`). Show: `[Step 1/6] Detecting: Node.js + Go monorepo`
 2. **SCAN** — Execute selected scan type(s), collect findings in structured format. Show: `[Step 2/6] Running SAST scan... 47 files analyzed`
 3. **ANALYZE** — Deduplicate, correlate findings, assign severity (Critical/High/Medium/Low), filter false positives. Show: `[Step 3/6] Found: 2 critical, 5 high, 12 medium`
 4. **REPORT** — Structured report with evidence, CWE/CVE references, fix suggestions. Show severity summary
@@ -192,12 +192,10 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -14,7 +14,7 @@ success_criteria: "All checks reported with fix recommendations"
 
 ## DOCTOR FLOW
 
-1. **SCAN** — `hsa_declare_intent("environment diagnostics")`, detect environment via HSA (`hsa_detect_environment`), identify OS, shell, runtimes, package managers. Show: `[Step 1/4] Scanning environment...`
+1. **SCAN** — `hsa_session("environment diagnostics")`, detect environment via HSA (`hsa_detect`), identify OS, shell, runtimes, package managers. Show: `[Step 1/4] Scanning environment...`
 2. **VALIDATE** — Check runtime versions, required tools, config files, permissions. Show: `[Step 2/4] Validating 12 checks...`
 3. **DIAGNOSE** — Identify issues, classify severity (🔴 Critical / 🟡 Warning / 🟢 OK). Show: `[Step 3/4] Found 2 issues`
 4. **PRESCRIBE** — Generate fix commands, link docs, offer auto-fix for safe items. Show: `[Step 4/5] Generating prescriptions...`
@@ -130,12 +130,10 @@ Quick fix: `/doctor fix` (2 auto-fixable issues)
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

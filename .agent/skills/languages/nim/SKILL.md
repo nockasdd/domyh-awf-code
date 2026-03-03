@@ -1,5 +1,6 @@
 ---
 name: nim
+description: "Nim systems programming patterns. Use when working with .nim files."
 detect: ["*.nim", "*.nimble", "nim.cfg"]
 category: systems
 tier: 3

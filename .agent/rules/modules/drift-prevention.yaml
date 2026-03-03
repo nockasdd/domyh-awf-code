@@ -23,7 +23,7 @@ rules:
     severity: warning
     description: |
       Before editing files outside the declared scope:
-      1. Call hsa_check_drift with current_action describing the edit
+      1. Call hsa_session with current_action describing the edit
       2. If drift detected, evaluate necessity
       3. Either update intent or refocus on declared goals
 
@@ -56,7 +56,7 @@ rules:
         20-30 min: REFRAME — try completely different hypothesis
         30-45 min: WIDEN — search docs, issues, external resources
         45+ min: ESCALATE — save progress as anchor, ask user for help
-      At 30 min, MUST save: hsa_save_anchor({
+      At 30 min, MUST save: hsa_session({
         content: "[DEBUG-STUCK] Bug: X. Tried: Y. Rejected: Z. Current theory: W.",
         category: "context"
       })

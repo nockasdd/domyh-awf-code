@@ -13,7 +13,7 @@ success_criteria: "Feature implemented, build passes, tests written"
 
 ## CODE FLOW
 
-1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect_stack`), load language skill via HSA (`hsa_get_context`, `hsa_search_skills`)
+1. **DETECT** (Auto) — Parse intent (feature/bugfix/refactor), detect stack via HSA (`hsa_detect`), load language skill via HSA (`hsa_search`, `hsa_search`)
    - **UI INTENT CHECK**: Classify intent:
      T1 (Create new UI, no existing ref) → Load `domyh-design` skill → `hsa_design_analyze({scope: "full"})` → design tokens + accessibility guidelines
      T2 (Modify existing UI) → `hsa_design_analyze({scope: "full"})` → analyze existing components + design tokens → apply via `domyh-design` patterns
@@ -25,9 +25,14 @@ success_criteria: "Feature implemented, build passes, tests written"
    **UI PREVIEW** (if T1 or T2 detected):
    - Generate `{project}/.preview/{component}.html` — standalone HTML+CSS with design tokens as `:root` vars
    - Include: responsive breakpoints, dark mode toggle, focus-visible, hover/active states
-   - Open via `browser_subagent` → take screenshot → show to user
+   - `hsa_canvas({action:"open"})` → start LiveCanvas session for preview
+   - `hsa_canvas({action:"capture"})` → screenshot + health score + CDP diagnostics
+   - Show to user with Grade (A-F) and score (/100)
+   - Iterate with `hsa_canvas({action:"update",  css_edits })` for instant CSS tweaks (no reload)
    - → ⛔ **STOP: "Preview ready. Approve to implement in {framework}?"**
-   - If user iterates → update preview HTML only (fast, no build)
+   - If user iterates → update via `css_edits` (instant) or file writes (HMR reload)
+   - `hsa_canvas({action:"close"})` when approved
+   - **Fallback**: If Canvas unavailable, use `browser_subagent` directly
 3. **EXECUTE** — Write code following skill patterns, error handling + types, add tests (auto test loop). Show progress: `[Step 2/4] Creating auth middleware...`
 4. **VERIFY** — Run tests → Fix → Repeat (max 3), lint check. Agent re-reads ALL generated code:
    - [ ] Matches original intent?
@@ -44,7 +49,8 @@ success_criteria: "Feature implemented, build passes, tests written"
      L3. Responsiveness (20pts): 375px / 768px / 1024px / 1440px breakpoints pass
      L4. Interaction Quality (15pts): hover/focus/active states, loading/error states
      L5. Performance (10pts): CLS < 0.1, images optimized, CSS < 50KB
-     L6. **Design Health** (bonus): `hsa_design_health()` → show Grade (A-F) + top issues + score /100
+     L6. **Design Health** (bonus): `hsa_design_health()` → show Grade (A-F) + top issues + score /100
+      L7. **Live Diagnostics** (bonus): `hsa_canvas({action:"capture"})` → CLS, AX tree, click issues, console errors. `hsa_canvas({action:"inspect", selector)` → verify CSS cascade on critical elements
      Apply Nielsen Heuristic Check (§18.2 A10): 10 items, score ≥8/10
      Result: ≥90/100 → SHIP ✅ | 70-89 → FIX MINOR ⚠️ | <70 → REDESIGN ❌
      - [ ] Design tokens used (no magic color/spacing values)
@@ -171,6 +177,6 @@ self_review:
 3. **SNAPSHOT** — If this is the last task in session:
    - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
 4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 

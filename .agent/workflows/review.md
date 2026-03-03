@@ -13,7 +13,7 @@ success_criteria: "All findings documented with file:line evidence"
 
 ## REVIEW FLOW
 
-1. **CONTEXT** — Detect stack via HSA (`hsa_detect_stack`), load review context (`hsa_get_context`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR
+1. **CONTEXT** — Detect stack via HSA (`hsa_detect`), load review context (`hsa_search`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR
 2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Use `hsa_trace_flow` to trace impact of changed functions. Show: `[Analyzing] 12 files changed, 3 high-risk`
 3. **REVIEW** — Apply 5-category checklist on changed code, inline comments with severity
 4. **SELF-REVIEW** — Agent re-reads own findings, removes false positives, verifies evidence accuracy
@@ -114,12 +114,10 @@ pre_review_tools:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

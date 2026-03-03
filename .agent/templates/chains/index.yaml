@@ -2,7 +2,7 @@
 # Workflow Chains (Multi-Step Prompts)
 # =============================================================================
 # Extracted from templates/index.yaml for token efficiency
-# version: 6.4.5
+# version: 6.4.10
 # =============================================================================
 
 chains:

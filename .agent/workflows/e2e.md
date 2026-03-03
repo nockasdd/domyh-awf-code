@@ -13,7 +13,7 @@ success_criteria: "E2E tests generated and passing for critical user flows"
 
 ## E2E FLOW
 
-1. **DETECT** — `hsa_declare_intent("generate E2E tests")`, detect stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), identify frontend framework, existing E2E setup, test runner. Show: `[Step 1/6] Detecting E2E framework...`
+1. **DETECT** — `hsa_session("generate E2E tests")`, detect stack via HSA (`hsa_detect`), verify environment (`hsa_detect`), identify frontend framework, existing E2E setup, test runner. Show: `[Step 1/6] Detecting E2E framework...`
 2. **MAP** — Identify critical user flows from routes/pages. Show: `[Step 2/6] Mapping 8 critical user flows...`
 3. **GENERATE** — Write E2E tests for critical paths. Show: `[Step 3/6] Generating tests for Login → Dashboard → Checkout`
 4. **RUN** — Execute E2E tests, capture screenshots on failure. Show: `[Step 4/6] Running 12 E2E tests...`
@@ -120,12 +120,10 @@ test.describe("User Login Flow", () => {
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

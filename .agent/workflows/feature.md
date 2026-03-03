@@ -14,7 +14,7 @@ success_criteria: "All ACs verified via traceability matrix, phase docs complete
 
 ## FEATURE FLOW
 
-1. **PHASE 0: CONTEXT** — `hsa_declare_intent("implement feature: {name}")`, detect stack via HSA (`hsa_detect_stack`), gather codebase context (`hsa_get_context`), repo map (`hsa_get_repo_map`), understand existing patterns
+1. **PHASE 0: CONTEXT** — `hsa_session("implement feature: {name}")`, detect stack via HSA (`hsa_detect`), gather codebase context (`hsa_search`), repo map (`hsa_explore`), understand existing patterns
 2. **PHASE 1: REQUIREMENTS** — Define problem, user stories (INVEST), acceptance criteria (AC-xxx), constraints, out-of-scope → Scaffold `docs/features/{slug}/requirements.md` → ⛔ STOP for user approval
 3. **PHASE 2: DESIGN** — Architecture decisions (ADR-xxx format), data models, API contracts, risk matrix → Create `design.md` with decision records → ⛔ STOP if breaking changes
 4. **PHASE 3: PLANNING** — Task breakdown with traceability (T-xxx → AC-xxx), effort estimation (XS-XXL), dependency graph, RICE scoring → Create `planning.md` → ⛔ STOP for user approval
@@ -134,12 +134,10 @@ Requirement   Task    Implementation  Test Case
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -13,7 +13,7 @@ success_criteria: "issues fixed, lint/type/test pass, debt score improved"
 
 ## 🔄 MODIFICATION FLOW
 
-1. **PHASE 1: DETECT (Auto)** — `hsa_declare_intent`, `hsa_detect_stack`, identify architecture pattern and map structure.
+1. **PHASE 1: DETECT (Auto)** — `hsa_session`, `hsa_detect`, identify architecture pattern and map structure.
 2. **PHASE 2: ANALYZE** — Scan for issues, detect technical debt, prioritize by severity.
 3. **PHASE 3: PLAN** — Generate fix plan, estimate effort. ⛔ **STOP** → Confirm scope with user.
 4. **PHASE 4: EXECUTE** — Apply fixes, document changes, update tests.
@@ -40,7 +40,7 @@ success_criteria: "issues fixed, lint/type/test pass, debt score improved"
 
 ### Stack Detection
 
-> Detect stack automatically using `hsa_detect_stack` or `_router.yaml` patterns.
+> Detect stack automatically using `hsa_detect` or `_router.yaml` patterns.
 > Agent selects fix strategy based on detected language and framework.
 
 ### Detection Output
@@ -435,12 +435,10 @@ token_saving:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

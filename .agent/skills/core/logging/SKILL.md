@@ -1,5 +1,6 @@
 ---
 name: logging
+description: "Logging patterns and structured log management. Use when implementing log levels, formatters, transports, or log aggregation."
 category: core
 ---
 

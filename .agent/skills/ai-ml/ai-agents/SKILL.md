@@ -1,5 +1,6 @@
 ---
 name: ai-agents
+description: "AI agent design patterns for autonomous systems. Use when building AI agents, tool-calling, or agent orchestration."
 category: ai-ml
 ---
 

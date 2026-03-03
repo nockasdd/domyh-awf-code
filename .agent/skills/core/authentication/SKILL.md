@@ -1,5 +1,6 @@
 ---
 name: authentication
+description: "Authentication and authorization patterns. Use when implementing OAuth, JWT, MFA, session management, or access control."
 category: core
 ---
 

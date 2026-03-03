@@ -13,7 +13,7 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
 
 ## DEBUG FLOW
 
-1. **CAPTURE** (Auto) — `hsa_declare_intent("debug: {error_summary}")`, check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs FIRST. Auto-detect language via HSA (`hsa_detect_stack`), load skill via HSA (`hsa_get_context`, `hsa_search_skills`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/8] Capturing error context...`
+1. **CAPTURE** (Auto) — `hsa_session("debug: {error_summary}")`, check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs FIRST. Auto-detect language via HSA (`hsa_detect`), load skill via HSA (`hsa_search`, `hsa_search`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/8] Capturing error context...`
 2. **TIMELINE** — Reconstruct event timeline: `git log --oneline -10`, check recent changes to affected files, correlate with error timestamps. Answer: "When did this start?"
 3. **REPRODUCE** — Create minimal reproduction, confirm error occurs consistently → ⛔ STOP if cannot reproduce: ask user 5 questions
 4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location. Use `hsa_trace_flow` to trace call chains upstream/downstream
@@ -256,12 +256,10 @@ Level 6 ESCALATE  → Full report to user with all evidence
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

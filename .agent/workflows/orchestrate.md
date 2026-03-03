@@ -14,12 +14,12 @@ success_criteria: "all sub-tasks completed, outputs synthesized, conflicts resol
 ## 🔄 ORCHESTRATE FLOW (8 Steps)
 
 1. **STEP 0: SCORE (Auto-Detection)** — Evaluate H1-H5 (`complexity-scoring`). Score < 5 → route to single persona (EXIT). Score 5-7 → suggest orchestration. Score ≥ 8 or `/orchestrate` → proceed.
-2. **STEP 1: INIT STATE** — `hsa_detect_stack` (context), `hsa_declare_intent` (governance). Create `orchestration-state.yaml`. 
-3. **STEP 2: DECOMPOSE** — Break into sub-tasks (DAG). `hsa_get_context` + `hsa_get_repo_map` for structure. Identify parallel groups.
-4. **STEP 3: ASSIGN (Speaker Selection)** — Match tasks to specialist personas. `hsa_prepare_handoff` (context packet) + `hsa_filter_tools` per specialist. Define scope, constraints, deliverables.
-5. **STEP 4: PLAN** — ⛔ **STOP & WAIT** for user approval before execution. Show complete DAG, assignments, and token budget. `hsa_track_progress` (trajectory).
+2. **STEP 1: INIT STATE** — `hsa_detect` (context), `hsa_session` (governance). Create `orchestration-state.yaml`. 
+3. **STEP 2: DECOMPOSE** — Break into sub-tasks (DAG). `hsa_search` + `hsa_explore` for structure. Identify parallel groups.
+4. **STEP 3: ASSIGN (Speaker Selection)** — Match tasks to specialist personas. `hsa_delegate` (context packet) + `hsa_delegate` per specialist. Define scope, constraints, deliverables.
+5. **STEP 4: PLAN** — ⛔ **STOP & WAIT** for user approval before execution. Show complete DAG, assignments, and token budget. `hsa_session` (trajectory).
 6. **STEP 5: EXECUTE** — Run tasks per DAG order (deps first) or parallel (independent). Checkpoint after each task completion. 
-7. **STEP 6: MONITOR** — Track task lifecycle. `hsa_check_drift` (scope drift). Handle failures (retry/reassign). Auto-save checkpoints.
+7. **STEP 6: MONITOR** — Track task lifecycle. `hsa_session` (scope drift). Handle failures (retry/reassign). Auto-save checkpoints.
 8. **STEP 7: SYNTHESIZE** — Merge outputs, resolve conflicts. `hsa_check_changes` to verify integration. Cross-task validation (imports, types, deps).
 9. **STEP 8: REPORT + SYNC** — Generate `orchestration-log.md`. `hsa_feedback` (rate relevance). Update `CONTEXT_SNAPSHOT.md`. Show summary to user.
 
@@ -125,12 +125,10 @@ success_criteria: "all sub-tasks completed, outputs synthesized, conflicts resol
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -43,6 +43,9 @@ domyh-awf-cli/
 
 # ── HSA runtime cache ────────────────────────────────────────
 .hsa_cache/
+.agent/hsa/observations.json
+.agent/hsa/engine-state.json
+.agent/hsa/session-feedback.json
 
 # ── Environment ──────────────────────────────────────────────
 .env

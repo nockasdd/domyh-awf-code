@@ -1,5 +1,6 @@
 ---
 name: rust
+description: "Rust development patterns for systems programming and safety-critical code. Use when working with .rs files or Cargo.toml projects."
 detect: ["Cargo.toml", "*.rs", "Cargo.lock"]
 category: systems
 tier: 1

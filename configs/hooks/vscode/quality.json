@@ -1,0 +1,13 @@
+{
+    "hooks": {
+        "PostToolUse": [
+            {
+                "type": "command",
+                "matcher": "editFiles|createFile|Write|Edit|MultiEdit|write_to_file|replace_file_content|multi_replace_file_content",
+                "command": ".github/hooks/scripts/quality-check.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\quality-check.ps1",
+                "timeout": 15
+            }
+        ]
+    }
+}

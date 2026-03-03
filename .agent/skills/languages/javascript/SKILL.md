@@ -1,5 +1,6 @@
 ---
 name: javascript
+description: "JavaScript patterns for modern ES2024+ development. Use when working with .js/.mjs/.cjs files, browser or Node.js projects."
 detect: ["*.js", "*.mjs", "*.cjs", ".eslintrc*", "package.json"]
 category: web
 tier: 1

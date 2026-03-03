@@ -1,5 +1,6 @@
 ---
 name: database
+description: "Database design patterns for SQL and NoSQL. Use when designing schemas, queries, indexes, or migrations."
 category: infrastructure
 ---
 

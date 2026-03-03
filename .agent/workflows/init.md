@@ -14,9 +14,9 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
 ## INITIALIZATION FLOW
 
 1. **DETECT + CLASSIFY** (Auto)
-   - Parse user intent, detect existing project via HSA (`hsa_detect_stack`), check installed tools (`hsa_detect_environment`)
+   - Parse user intent, detect existing project via HSA (`hsa_detect`), check installed tools (`hsa_detect`)
    - **Existing Project Guard**:
-     - IF `hsa_detect_stack` finds existing project (package.json, go.mod, Cargo.toml, etc.):
+     - IF `hsa_detect` finds existing project (package.json, go.mod, Cargo.toml, etc.):
        → ⛔ WARN: "Dự án đã tồn tại tại thư mục này."
        → Offer: (1) Reinitialize (overwrite), (2) Switch to `/modify`, (3) Cancel
      - IF empty directory → proceed normally
@@ -26,10 +26,10 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
      - Score 5-7 → Suggest orchestration to user
      - Score ≥ 8 (multi-stack/system) → Auto-activate Orchestrator persona
    - **Runtime Validation** — Verify minimum versions (Node ≥ 20, Go ≥ 1.22, Python ≥ 3.12, Rust ≥ 1.80, etc.)
-   - **MCP**: `hsa_detect_stack`, `hsa_detect_environment`, `hsa_declare_intent("init project {name}")`
+   - **MCP**: `hsa_detect`, `hsa_detect`, `hsa_session("init project {name}")`
 
 2. **ARCHITECTURE SELECTION** (Gate ⛔)
-   - **Load architecture data**: `hsa_search_skills("architecture patterns {stack}")`
+   - **Load architecture data**: `hsa_search("architecture patterns {stack}")`
    - **Present 2-3 options** with trade-offs (ADR format → Architect persona behavior):
      - Architecture name + description
      - Best for (use case match)
@@ -38,28 +38,28 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
    - **SOLID compliance** per language from `solid-principles.yaml`:
      - Show which SOLID principles the architecture enforces
      - Highlight DI mechanism for selected stack
-   - **MCP**: `hsa_search_skills("framework directories {stack}")`, `hsa_get_context("solid principles {language}")`
+   - **MCP**: `hsa_search("framework directories {stack}")`, `hsa_search("solid principles {language}")`
    - → ⛔ STOP: User confirms architecture + directory structure before scaffold
 
 3. **SCAFFOLD** — Run init commands, create folder structure, generate base files
    - Apply architecture-specific structure from Step 2
    - Generate ADR-001: `docs/adr/001-architecture-decision.md` (chosen pattern + reasoning)
-   - **MCP**: `hsa_track_progress("scaffold completed")`
+   - **MCP**: `hsa_session("scaffold completed")`
 
 4. **SETUP** — Setup linting/formatting, git hooks, create .env.example
-   - Load naming conventions: `hsa_search_skills("naming conventions {language}")`
+   - Load naming conventions: `hsa_search("naming conventions {language}")`
    - Setup language-specific linter + formatter from CROSS-CUTTING table
    - Setup DI tool matching architecture choice
-   - **MCP**: `hsa_search_skills("naming conventions {lang}")`
+   - **MCP**: `hsa_search("naming conventions {lang}")`
 
 5. **SYNC** — `hsa_check_changes` to update index after project creation
-   - **MCP**: `hsa_check_changes`, `hsa_feedback` on key files, `hsa_save_anchor("project: {name}, stack: {stack}, arch: {pattern}")`
+   - **MCP**: `hsa_check_changes`, `hsa_feedback` on key files, `hsa_session("project: {name}, stack: {stack}, arch: {pattern}")`
 
 6. **PLAN + UAT** — Generate P0-P6 implementation plan with acceptance criteria
    - Map each phase to workflow command (see LIFECYCLE HANDOFF)
    - Generate quality checklist (SOLID/DRY/KISS/YAGNI/12-Factor)
    - Show next recommended command
-   - **MCP**: `hsa_track_progress("P0-P6 plan generated")`
+   - **MCP**: `hsa_session("P0-P6 plan generated")`
 
 ---
 
@@ -172,7 +172,7 @@ P6_production:
 
 | Principle | Description | Enforcement |
 |-----------|-------------|-------------|
-| **DRY** | No duplicated logic | `hsa_get_context` to find existing code first |
+| **DRY** | No duplicated logic | `hsa_search` to find existing code first |
 | **KISS** | Simple over clever | Architecture complexity ≤ project needs |
 | **YAGNI** | No premature features | P0-P6 scope gate |
 | **12-Factor** | Cloud-native config, deps, processes | .env + Dockerfile + CI |
@@ -246,12 +246,10 @@ If user requests multiple stacks (e.g., "Go backend + Next.js frontend"):
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

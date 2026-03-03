@@ -13,21 +13,28 @@ success_criteria: "Design assets generated, WCAG compliance verified, tokens exp
 
 ## VISUALIZE FLOW
 
-1. **DETECT** — Detect stack via HSA (`hsa_detect_stack`), load UI context (`hsa_get_context`), analyze existing design DNA (`hsa_design_analyze`), search existing components FIRST (70-90% token savings). Show: `[Step 1/8] Found 12 reusable components, Design Health: 72/100 Grade C`
+1. **DETECT** — Detect stack via HSA (`hsa_detect`), load UI context (`hsa_search`), analyze existing design DNA (`hsa_design_analyze`), search existing components FIRST (70-90% token savings). Show: `[Step 1/8] Found 12 reusable components, Design Health: 72/100 Grade C`
 2. **PLAN** — Generate props/layout, not full code. Choose wireframe template, define a11y requirements. Use DNA insights for consistency. Show: `[Step 2/8] Designing Dashboard layout...`
 3. **TOKENS** — Generate/load design tokens via `hsa_design_tokens(format: "dtcg")` or from W3C DTCG 2025.10 data. Apply platform-specific tokens (M3/HIG/Web). Show: `[Step 3/8] Loading design tokens...`
    **VARIATION CHECK**: Read `products.yaml` `style_alternatives` + `color_palette_variants`. Select palette variant matching mood (NOT primary default). Avoid reusing same style+colors.
-4. **PREVIEW** — Generate standalone HTML+CSS preview before building:
-   - Create `{project}/.preview/{name}.html` — single file, no build required
-   - Inject design tokens from `hsa_design_tokens({format: "css"})` as `:root` CSS variables
-   - Include: semantic HTML5, responsive breakpoints (375/768/1024/1440px), dark mode toggle, focus-visible, reduced-motion
-   - Open in browser via `browser_subagent` → take screenshot → show to user
-   - Auto-check: ✅ tokens used | ✅ semantic HTML | ✅ responsive | ✅ dark mode | ✅ focus visible | ✅ touch targets ≥44px
+4. **PREVIEW** — LiveCanvas iteration loop (zero-config visual feedback):
+   - `hsa_canvas({action:"open"})` → start dev server, auto-detect framework/port/entry
+   - `hsa_canvas({action:"capture"})` → screenshot + CDP diagnostics (health score, AX tree, CLS, click reachability)
+   - Show capture results to user with Grade (A-F) and score (/100)
+   - **Iterate** with `hsa_canvas({action:"update",  css_edits: [{selector, property, value}] })` → live CSS tweaks (no reload)
+   - `hsa_canvas({action:"capture"})` → re-capture after changes
+   - `hsa_canvas({action:"diff",  before, after })` → 3-tier visual regression diff (pHash → LooksSame → pixelmatch)
+   - Repeat iterate→capture→diff until approved
    - → ⛔ **STOP — "Preview ready. Approve to build with {framework}?"**
-   - If user requests changes → iterate on preview HTML (fast cycle, no framework overhead)
+   - If user requests changes → iterate via `css_edits` (instant) or file writes (HMR reload)
+   - `hsa_canvas({action:"close"})` → cleanup when done
+   - **Fallback**: If Canvas unavailable, use `browser_subagent` to open preview HTML directly
 5. **EXECUTE** — Convert approved preview → framework components, apply design system
 6. **RESPONSIVE** — Container query verification + fluid typography check + breakpoint validation
-7. **VERIFY** — Run `hsa_design_health(strict: true)` for WCAG + a11y audit + Lighthouse score + VRT baseline
+7. **VERIFY** — Run `hsa_design_health(strict: true)` for WCAG + a11y audit + Lighthouse score + VRT:
+   - `hsa_canvas({action:"capture",  baseline: true })` → save as VRT baseline
+   - `hsa_canvas({action:"inspect", selector)` → verify CSS cascade, box model, AX role on critical elements
+   - `hsa_canvas({action:"diff",  before: "baseline", after: "latest" })` → visual regression check
 8. **SYNC** — `hsa_check_changes` to update index, save design decisions to memory
 
 ---
@@ -63,13 +70,19 @@ success_criteria: "Design assets generated, WCAG compliance verified, tokens exp
 
 ## 🧬 HSA DESIGN INTELLIGENCE TOOLS
 
-> 3 MCP tools for AI-powered design analysis — call automatically in DETECT/TOKENS/VERIFY steps
+> 3 design analysis tools + 6 canvas tools for AI-powered design workflow
 
 | Tool | When | Input | Output |
 |------|------|-------|--------|
 | `hsa_design_analyze` | DETECT step | `{scope?, paths?}` | Design DNA: colors, spacing, typography, borders, animations, dark mode, framework |
 | `hsa_design_health` | VERIFY step | `{strict?}` | Score 0-100, Grade A-F, 5 categories, WCAG contrast violations, improvements |
 | `hsa_design_tokens` | TOKENS step | `{format: "dtcg"\|"css"}` | W3C DTCG 2025.10 JSON/CSS + migration plan |
+| `hsa_canvas({action:"open"})` | PREVIEW step | `{port?, command?, viewport?}` | Start LiveCanvas session — auto-detect framework, entry file, project name |
+| `hsa_canvas({action:"capture"})` | PREVIEW/VERIFY | `{analyze?, health?, baseline?}` | Screenshot + CDP diagnostics (health score, AX tree, CLS, click issues) |
+| `hsa_canvas({action:"update"})` | PREVIEW step | `{files?, css_edits?}` | Write files + HMR reload, OR live CSS edits via CDP (instant, no reload) |
+| `hsa_canvas({action:"diff"})` | VERIFY step | `{before, after}` | 3-tier visual regression: pHash → LooksSame → pixelmatch |
+| `hsa_canvas({action:"inspect"})` | VERIFY step | `{selector}` | CSS cascade, box model, AX node, framework detection (React/Vue/Angular/Svelte) |
+| `hsa_canvas({action:"extract"})` | TOKENS step | `{format?, categories?}` | Extract design tokens from live DOM (W3C DTCG, CSS vars, or Tailwind format) |
 
 ### Usage Flow
 
@@ -82,9 +95,18 @@ hsa_design_analyze({scope: "full"})
 hsa_design_tokens({format: "css"})
 → CSS variables + migration plan for 23 hardcoded values
 
-# Step 7: Health check after changes
+# Step 4: Preview with LiveCanvas
+hsa_canvas({action:"open"}) → Session started, http://localhost:3000
+hsa_canvas({action:"capture"}) → Score: 85/100 Grade B, CLS 0.000
+hsa_canvas({action:"update",  css_edits: [{selector: "body", property: "background", value: "#1a1a2e"}] })
+→ Applied 1/1 (instant, no reload)
+hsa_canvas({action:"diff",  before: "cap_1", after: "cap_2" }) → 3.2% change, PASS
+
+# Step 7: Verify + VRT baseline
 hsa_design_health({strict: true})
 → Score: 85/100 Grade B, 2 contrast violations, 3 improvements
+hsa_canvas({action:"inspect", selector: "h1"}) → CSS cascade, AX role=heading
+hsa_canvas({action:"capture",  baseline: true }) → Saved as VRT baseline
 ```
 
 ---
@@ -256,6 +278,17 @@ await expect(page).toHaveScreenshot("dashboard.png");
 // On failure: generates actual, expected, diff images
 ```
 
+### HSA Canvas VRT (built-in — zero config)
+
+```
+hsa_canvas({action:"capture",  baseline: true })   # Save baseline
+# ... make design changes ...
+hsa_canvas({action:"capture"})                      # New capture
+hsa_canvas({action:"diff",  before: "baseline_id", after: "latest" })
+# Returns: 3-tier diff (pHash → LooksSame → pixelmatch)
+# Threshold: 0.95 (configurable)
+```
+
 ---
 
 ## 🖼️ AI IMAGE GENERATION
@@ -321,6 +354,6 @@ SKILL_DATA: ".agent/skills/cross-cutting/domyh-design/data"
 3. **SNAPSHOT** — If this is the last task in session:
    - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
 4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 

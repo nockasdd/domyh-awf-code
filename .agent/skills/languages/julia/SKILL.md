@@ -1,5 +1,6 @@
 ---
 name: julia
+description: "Julia scientific computing and performance patterns. Use when working with .jl files."
 detect: ["*.jl", "Project.toml", "Manifest.toml"]
 category: scientific
 tier: 2

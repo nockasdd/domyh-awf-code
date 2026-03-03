@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+23+IDEs+•+41+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+26+IDEs+•+41+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
   <img src="https://img.shields.io/badge/skills-93-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
-  <img src="https://img.shields.io/badge/IDEs-23-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
+  <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
@@ -40,29 +40,31 @@
 ## ⚡ Quick Start
 
 ```bash
-npm install -g @nockdev/cli   # Install globally
-nock setup                    # One-command zero-config setup
+npm install -g @nockdev/cli   # Install CLI globally (one-time)
+nock awf init                 # Initialize & install for your project
 ```
 
-Or step by step:
-
-```bash
-nock awf init              # Initialize in your project
-nock awf install            # Install IDE configs
-nock awf --help            # Show all commands
-```
+> 💡 **`init` vs `install`**: `nock awf init` detects your IDEs, lets you choose which to configure, and installs everything. Use `nock awf install` only if you want to reinstall or add a specific IDE later.
 
 <details>
 <summary><b>📦 More Installation Options</b></summary>
 <br>
 
-| Method  | Command                                                    |
-| :------ | :--------------------------------------------------------- |
-| **npm** | `npm install -g @nockdev/cli`                              |
-| **npx** | `npx @nockdev/awf init`                                    |
-| **git** | `git clone https://github.com/nockasdd/domyh-awf-code.git` |
+| Method      | Command                                                    | Note                      |
+| :---------- | :--------------------------------------------------------- | :------------------------ |
+| **npm**     | `npm install -g @nockdev/cli`                              | Recommended (global)      |
+| **npx**     | `npx -y @nockdev/cli awf init`                             | No install needed         |
+| **git**     | `git clone https://github.com/nockasdd/domyh-awf-code.git` | Manual setup              |
 
 </details>
+
+### 🔄 Updating
+
+```bash
+nock awf update --check       # Check for available updates
+nock upgrade                  # Update CLI + all plugins
+nock awf mcp update           # Update MCP server (HSA)
+```
 
 ---
 
@@ -70,6 +72,7 @@ nock awf --help            # Show all commands
 <blockquote>
   <p>⚠️ <strong>MCP Server Required</strong></p>
   <p>DOMYH Awesome Code uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential.</strong></p>
+  <p>💡 <code>nock awf mcp install</code> automatically downloads HSA and uses <code>node</code> for direct execution (faster, lower memory than <code>npx</code>). Falls back to <code>npx</code> on first run.</p>
 </blockquote>
 
 ### 🔧 MCP Installation
@@ -88,14 +91,21 @@ nock awf mcp install --ide cursor          # Or configure for specific IDE
 <summary><b>📋 Per-IDE MCP Config (click to expand)</b></summary>
 <br>
 
-**Cursor** — `.cursor/mcp.json`:
+**Step 1: Install HSA locally** (one-time)
+```bash
+npm install -g @nockdev/hsa          # or: nock awf mcp install
+```
+
+> After install, HSA lives at `~/.nockdev/hsa/hsa-cli.bundle.js`. The configs below use **`node`** for direct execution (1 process, ~40MB less than `npx`).
+
+**Cursor** — `~/.cursor/mcp.json` (global):
 ```json
 {
   "mcpServers": {
     "domyh-hsa": {
-      "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
-      "env": { "HSA_MAX_TOKENS": "8000" }
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": { "HSA_MAX_TOKENS": "8000", "HSA_DASHBOARD": "false" }
     }
   }
 }
@@ -103,46 +113,67 @@ nock awf mcp install --ide cursor          # Or configure for specific IDE
 
 **Claude Code** — run:
 ```bash
-claude mcp add domyh-hsa npx -y @nockdev/hsa@latest nock-hsa
+claude mcp add domyh-hsa -- node ~/.nockdev/hsa/hsa-cli.bundle.js
 ```
 
-**VS Code (GitHub Copilot)** — `.vscode/mcp.json`:
+**VS Code (GitHub Copilot)** — `.vscode/mcp.json` (project-local):
 ```json
 {
   "servers": {
     "domyh-hsa": {
-      "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
-      "env": { "HSA_MAX_TOKENS": "8000" }
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": { "HSA_MAX_TOKENS": "8000", "HSA_DASHBOARD": "false" }
     }
   }
 }
 ```
 
-**Antigravity (Gemini)** — `.gemini/settings.json`:
+**Antigravity (Gemini)** — `~/.gemini/settings.json` (global):
 ```json
 {
   "mcpServers": {
     "domyh-hsa": {
-      "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"],
-      "env": { "HSA_MAX_TOKENS": "8000" }
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": { "HSA_MAX_TOKENS": "8000", "HSA_DASHBOARD": "false" }
     }
   }
 }
 ```
 
-**Windsurf** — `.windsurfrules` or MCP settings:
+**Windsurf** — `~/.codeium/windsurf/mcp_config.json` (global):
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": { "HSA_MAX_TOKENS": "8000", "HSA_DASHBOARD": "false" }
+    }
+  }
+}
+```
+
+<details>
+<summary><b>⚡ Quick-start with npx (no install)</b></summary>
+<br>
+
+> If you don't want to install HSA locally, use `npx` — it downloads on first run but uses ~40MB more memory (2 processes).
+
 ```json
 {
   "mcpServers": {
     "domyh-hsa": {
       "command": "npx",
-      "args": ["-y", "@nockdev/hsa@latest", "nock-hsa"]
+      "args": ["-y", "-p", "@nockdev/hsa@latest", "nock-hsa"],
+      "env": { "HSA_MAX_TOKENS": "8000", "HSA_DASHBOARD": "false" }
     }
   }
 }
 ```
+
+</details>
 
 </details>
 
@@ -151,15 +182,63 @@ claude mcp add domyh-hsa npx -y @nockdev/hsa@latest nock-hsa
 | Variable             | Default | Description                     |
 | :------------------- | :------ | :------------------------------ |
 | `HSA_MAX_TOKENS`     | `8000`  | Maximum token budget per query  |
-| `HSA_DASHBOARD`      | `true`  | Enable/disable web dashboard    |
+| `HSA_DASHBOARD`      | `false` | Enable/disable web dashboard    |
 | `HSA_DASHBOARD_PORT` | `13100` | Dashboard port                  |
 | `HSA_LOG_LEVEL`      | `info`  | Log level: debug/info/warn/error|
+| `HSA_TELEGRAM_TOKEN` | —       | Telegram Bot token for notifications |
+| `HSA_TELEGRAM_CHAT_ID`| —      | Telegram Chat ID to send to     |
+| `HSA_DISCORD_WEBHOOK_URL`| —   | Discord Webhook URL (optional)  |
+
+### 📲 Telegram Notifications (Optional)
+
+Get notified on Telegram when AI agent completes tasks or persists sessions.
+
+<details>
+<summary><b>🔧 Setup Guide</b></summary>
+<br>
+
+**Step 1: Create a Telegram Bot**
+1. Open Telegram → search `@BotFather`
+2. Send `/newbot` → follow prompts → copy the **Bot Token**
+
+**Step 2: Get your Chat ID**
+1. Send any message to your new bot
+2. Open `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates`
+3. Find `"chat":{"id":123456789}` → that's your **Chat ID**
+
+**Step 3: Add to MCP config**
+
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": {
+        "HSA_MAX_TOKENS": "8000",
+        "HSA_TELEGRAM_TOKEN": "your-bot-token",
+        "HSA_TELEGRAM_CHAT_ID": "your-chat-id"
+      }
+    }
+  }
+}
+```
+
+**Usage:** Notifications are sent automatically when agent calls:
+- `hsa_session({action: 'persist', auto_notify: true})` — session saved
+- `hsa_report({action: 'notify', title: '...', summary: '...'})` — custom notification
+
+> 💡 Notification language matches your configured preference. Vietnamese users (`/lang vi`) see "✅ Phiên làm việc đã lưu" instead of English.
+
+> ⚠️ If `HSA_TELEGRAM_TOKEN` is not set, all notification features are **silently skipped** — no errors, no token waste.
+
+</details>
 
 ---
 
 ## 🖥️ Web Dashboard & Logs
 
-HSA includes a built-in web dashboard for real-time monitoring — **enabled by default**.
+HSA includes a built-in web dashboard for real-time monitoring — **disabled by default** to save memory. Enable with `HSA_DASHBOARD=true`.
 
 | URL                                | Description                                                  |
 | :--------------------------------- | :----------------------------------------------------------- |
@@ -171,16 +250,16 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 <summary><b>⚙️ Dashboard Configuration</b></summary>
 <br>
 
-**Disable dashboard** — set `HSA_DASHBOARD` to `false` in your IDE's MCP config:
+**Enable dashboard** — set `HSA_DASHBOARD` to `true` in your IDE's MCP config:
 
 ```json
 {
   "mcpServers": {
     "domyh-hsa": {
-      "command": "npx",
-      "args": ["-y", "-p", "@nockdev/hsa@latest", "nock-hsa"],
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
       "env": {
-        "HSA_DASHBOARD": "false",
+        "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }
     }
@@ -303,6 +382,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | `/recap`     | Session summary: completed tasks, changed files, decisions, next steps      | `/recap` → 5 tasks done, 12 files changed        |
 | `/status`    | Project health: build, tests, coverage, lint metrics, git status            | `/status` → Build ✓ Tests 142/142 ✓ Coverage 87% |
 | `/help`      | Show all commands, usage examples, and language settings                    | `/help`                                          |
+| `/save`      | Save session state to memory files for later context                        | `/save`                                          |
 | `/search`    | Semantic search across memory and audit history                             | `/search payment integration patterns`           |
 | `/suggest`   | Smart suggestions: context-aware next steps based on project state          | `/suggest` → "Run `/test` before deploying"      |
 | `/visualize` | UI/UX Design: mockups, wireframes, design system, component design          | `/visualize system` → Generate design system     |
@@ -317,9 +397,10 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.4.10 across 15 files               |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.5.0 across 15 files               |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
+| `/lang`         | Switch agent language (English ↔ Vietnamese)                          | `/lang vi` → Switch to Vietnamese                            |
 | `/workflow`     | Meta-command: workflow discovery, chaining, and aliasing              | `/workflow list` → Show all available workflows              |
 | `/clean`        | Code cleanup: remove dead code, organize imports, unused deps         | `/clean src/utils/` → Removed 12 unused exports              |
 
@@ -442,7 +523,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 
 ---
 
-## 💻 IDE Support (23)
+## 💻 IDE Support (26)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude-6366F1?style=for-the-badge&logo=anthropic&logoColor=white" />
@@ -463,7 +544,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 </p>
 
 <details>
-<summary><b>📋 All 23 IDEs & Configuration Files</b></summary>
+<summary><b>📋 All 26 IDEs & Configuration Files</b></summary>
 <br>
 
 | IDE              | Config File                       | Type            |
@@ -490,6 +571,10 @@ HSA includes a built-in web dashboard for real-time monitoring — **enabled by 
 | VS Code          | `.vscode/`                        | IDE             |
 | Kiro             | `.kiro/`                          | AI IDE          |
 | Zed AI           | `.zed/`                           | AI IDE          |
+| Qodo             | `.qodo/`                          | AI Testing      |
+| Void             | `.void/`                          | AI IDE          |
+| Trae             | `.trae/`                          | AI IDE          |
+| PearAI           | `.pearai/`                        | AI IDE          |
 
 </details>
 

@@ -32,8 +32,8 @@ Thank you for your interest in contributing! 🎉
 Use the version bump script (SSoT: `.agent/core/VERSION.yaml`):
 
 ```bash
-node scripts/bump-version.mjs patch          # 6.4.5 → 6.4.6
-node scripts/bump-version.mjs minor          # 6.4.5 → 6.5.0
+node scripts/bump-version.mjs patch          # x.y.z → x.y.(z+1)
+node scripts/bump-version.mjs minor          # x.y.z → x.(y+1).0
 node scripts/bump-version.mjs patch --dry-run  # Preview only
 ```
 

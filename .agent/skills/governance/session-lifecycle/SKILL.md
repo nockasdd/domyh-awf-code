@@ -25,7 +25,7 @@ Skip any phase and you lose governance: no drift detection, no progress tracking
 **ALWAYS declare before writing code.**
 
 ```
-hsa_declare_intent(
+hsa_session(
   focus: "Build authentication system with JWT",
   mode: "plan_driven",
   goals: ["JWT middleware", "Login endpoint", "Integration tests"]
@@ -74,14 +74,14 @@ Is this fixing a known bug?
 
 ```
 # Starting major goal
-hsa_track_progress(
+hsa_session(
   level: "trajectory",
   label: "Authentication system with JWT"
 )
 # Returns: t1
 
 # Starting sub-task
-hsa_track_progress(
+hsa_session(
   level: "tactic",
   label: "JWT validation middleware",
   parent_id: "t1"
@@ -89,7 +89,7 @@ hsa_track_progress(
 # Returns: t1.1
 
 # Completing leaf step
-hsa_track_progress(
+hsa_session(
   level: "action",
   label: "Created auth.middleware.ts with token validation",
   parent_id: "t1.1",
@@ -97,7 +97,7 @@ hsa_track_progress(
 )
 
 # Completing sub-task
-hsa_track_progress(
+hsa_session(
   level: "tactic",
   label: "JWT validation middleware",
   parent_id: "t1",
@@ -120,7 +120,7 @@ hsa_track_progress(
 ### Before Concluding Any Task
 
 ```
-hsa_check_drift(
+hsa_session(
   current_action: "About to mark JWT middleware complete"
 )
 ```
@@ -138,14 +138,14 @@ The drift report contains:
 # Drift report shows misalignment
 # 1. Check if drift is intentional (scope change)
 # 2. If intentional → re-declare intent
-hsa_declare_intent(
+hsa_session(
   focus: "Changed scope: now adding OAuth alongside JWT",
   mode: "plan_driven",
   goals: ["JWT middleware", "OAuth provider", "Login endpoint"]
 )
 
 # 3. If unintentional → re-align
-hsa_track_progress(
+hsa_session(
   level: "action",
   label: "Re-aligning: returning to JWT middleware (drifted to UI work)"
 )
@@ -158,7 +158,7 @@ hsa_track_progress(
 Save session state for next session pickup:
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[SESSION] Auth system. Done: JWT middleware + 12 tests pass. Pending: Login endpoint, OAuth. Key files: src/auth/middleware.ts, tests/auth.test.ts. Blockers: none.",
   category: "context"
 )
@@ -181,19 +181,19 @@ Decisions: {key decisions made}.
 
 ```
 # Session 1 end: Save state
-hsa_save_anchor(
+hsa_session(
   content: "[SESSION] Auth system week 1. Done: JWT + tests. Pending: OAuth, Login UI. Decision: jose library for JWT.",
   category: "context"
 )
 
 # Session 2 start: Resume
-hsa_check_drift(
+hsa_session(
   current_action: "Resuming auth system work",
   include_anchors: true
 )
 
 # Read context anchors → declare intent
-hsa_declare_intent(
+hsa_session(
   focus: "Continuing auth system: OAuth + Login UI (JWT done in prior session)",
   mode: "plan_driven",
   goals: ["OAuth provider integration", "Login UI", "E2E tests"]
@@ -202,10 +202,10 @@ hsa_declare_intent(
 
 ## Resume Protocol (After Gap)
 
-1. `hsa_check_drift(include_anchors: true)` — retrieve prior state
+1. `hsa_session(include_anchors: true)` — retrieve prior state
 2. Read `[SESSION]` anchors from output — understand where you left off
 3. Read `[DECISION]` anchors — don't re-debate
-4. `hsa_declare_intent` with focus referencing prior work
+4. `hsa_session` with focus referencing prior work
 5. Continue from where you left off — not from scratch
 
 ## Red Flags

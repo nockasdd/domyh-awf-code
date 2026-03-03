@@ -1,5 +1,6 @@
 ---
 name: ci-cd
+description: "CI/CD pipeline patterns for GitHub Actions, GitLab CI, and Jenkins. Use when implementing automated workflows."
 category: infrastructure
 ---
 

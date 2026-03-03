@@ -13,7 +13,7 @@ success_criteria: "Tests written, all pass, coverage meets target"
 
 ## TEST FLOW
 
-1. **DETECT** — `hsa_declare_intent("testing: {scope}")`, identify stack via HSA (`hsa_detect_stack`), load test context (`hsa_get_context`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`
+1. **DETECT** — `hsa_session("testing: {scope}")`, identify stack via HSA (`hsa_detect`), load test context (`hsa_search`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`
 2. **RUN** — Execute tests, collect coverage. Show: `[Step 2/6] Running 42 tests... ✅ 40 passed, ❌ 2 failed`
 3. **ANALYZE** — Identify failures, coverage gaps, suggest missing test categories
 4. **WRITE** — Generate missing tests (TDD cycle). Show progress: `[Step 4/6] Writing tests for UserService (3/5 cases)`
@@ -163,12 +163,10 @@ score_target: "> 70% mutation score (killed / total mutations)"
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -1,5 +1,6 @@
 ---
 name: docker
+description: "Docker containerization patterns for builds, security, and deployment. Use when working with Dockerfiles or docker-compose.yml."
 category: infrastructure
 ---
 

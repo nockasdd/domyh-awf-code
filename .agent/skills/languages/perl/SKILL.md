@@ -1,5 +1,6 @@
 ---
 name: perl
+description: "Perl development patterns for text processing and systems. Use when working with .pl/.pm files."
 detect: ["*.pl", "*.pm", "Makefile.PL", "cpanfile"]
 category: scripting
 tier: 3

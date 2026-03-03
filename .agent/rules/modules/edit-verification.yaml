@@ -15,7 +15,7 @@ context:
 principles:
   verify_after_edit:
     - "Display diff evidence (file path, lines added/removed, status)"
-    - "Run syntax check after editing (use hsa_detect_stack for correct command)"
+    - "Run syntax check after editing (use hsa_detect for correct command)"
     - "Run related tests if they exist"
 
   scope_containment:

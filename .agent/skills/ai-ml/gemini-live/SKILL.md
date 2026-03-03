@@ -1,5 +1,6 @@
 ---
 name: gemini-live
+description: "Gemini Live API patterns for real-time multimodal AI. Use when implementing live audio/video AI interactions."
 category: ai-ml
 ---
 

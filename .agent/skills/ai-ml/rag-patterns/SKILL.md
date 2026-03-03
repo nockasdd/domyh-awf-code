@@ -1,5 +1,6 @@
 ---
 name: rag-patterns
+description: "Retrieval-Augmented Generation patterns. Use when implementing RAG with vector databases or semantic search."
 category: ai-ml
 ---
 

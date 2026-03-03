@@ -1,5 +1,6 @@
 ---
 name: tauri
+description: "Tauri desktop app patterns for Rust + Web hybrid apps. Use when building lightweight desktop applications."
 category: cross-cutting
 ---
 

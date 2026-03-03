@@ -1,5 +1,6 @@
 ---
 name: api-protocols
+description: "API protocol patterns for HTTP/2, gRPC, WebSocket, and GraphQL transport. Use when choosing or implementing API protocols."
 category: tooling
 ---
 

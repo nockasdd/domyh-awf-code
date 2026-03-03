@@ -6,20 +6,20 @@
 
 BEFORE any response, MUST call MCP tools in this order:
 1. `hsa_get_agent_config("bootstrap")` — Load ALL rules, commands, skills
-2. `hsa_declare_intent(focus, mode)` — Declare session intent
+2. `hsa_session(focus, mode)` — Declare session intent
 
 ## ⛔ BEFORE ANY Code Implementation
 
 MUST execute before writing code:
-1. `hsa_search_skills(relevant_query)` — Find matching skill patterns
-2. `hsa_get_context(query)` — Search codebase (NEVER use grep when MCP available)
-3. `hsa_detect_stack()` — On first code task per project
+1. `hsa_search(relevant_query)` — Find matching skill patterns
+2. `hsa_search(query)` — Search codebase (NEVER use grep when MCP available)
+3. `hsa_detect()` — On first code task per project
 
 ## ❌ NEVER (When MCP Connected)
 
-- `grep_search` for code → use `hsa_get_context` instead
-- Skip skills search → ALWAYS `hsa_search_skills` first
-- Start coding without `hsa_declare_intent`
+- `grep_search` for code → use `hsa_search` instead
+- Skip skills search → ALWAYS `hsa_search` first
+- Start coding without `hsa_session`
 
 ## Core Rules (ALWAYS APPLY)
 
@@ -41,16 +41,16 @@ NEVER use these on Windows — they hang indefinitely:
 - ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show`
 - ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
 - ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background
-✅ FIRST call `hsa_detect_environment` to check IDE terminal shell. Do NOT run any command before knowing the shell.
+✅ FIRST call `hsa_detect` to check IDE terminal shell. Do NOT run any command before knowing the shell.
 - ❌ Shell = `bash`/`zsh`/MINGW64/Git Bash → **NEVER** use `cmd /c`. Use native `&&` chaining directly
-- Shell = `cmd` → wrap with `cmd /c "command"` (ONLY when `hsa_detect_environment` confirms cmd shell)
+- Shell = `cmd` → wrap with `cmd /c "command"` (ONLY when `hsa_detect` confirms cmd shell)
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
-- Shell unknown → **STOP**. Call `hsa_detect_environment` first. Do NOT assume any shell
+- Shell unknown → **STOP**. Call `hsa_detect` first. Do NOT assume any shell
 
 ## Skills & Workflows
 
 **Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
-**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (85+ skills)
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (93 skills)
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.

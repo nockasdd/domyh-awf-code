@@ -1,6 +1,6 @@
 ---
+description: "Use when writing React components, hooks, or frontend UI code with JSX/TSX."
 applyTo: "src/**/*.tsx,src/**/*.jsx,components/**/*.tsx,components/**/*.jsx"
-excludeAgent: ""
 ---
 
 # Frontend Component Guidelines

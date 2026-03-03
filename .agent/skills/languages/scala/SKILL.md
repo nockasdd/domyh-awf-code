@@ -1,5 +1,6 @@
 ---
 name: scala
+description: "Scala development patterns for JVM and functional programming. Use when working with .scala files or sbt projects."
 detect: ["*.scala", "*.sc", "build.sbt", "project/*.scala"]
 category: functional
 tier: 2

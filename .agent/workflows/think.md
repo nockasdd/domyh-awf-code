@@ -13,7 +13,7 @@ success_criteria: "Analysis complete, evidence cited, recommendation actionable"
 
 ## THINK FLOW
 
-1. **CONTEXT** — Detect project, review constraints via HSA (`hsa_get_context`). Show: `[Step 1/5] Gathering context...`
+1. **CONTEXT** — Detect project, review constraints via HSA (`hsa_search`). Show: `[Step 1/5] Gathering context...`
 2. **BRAINSTORM** — Apply selected method, generate options
 3. **EVALUATE** — Score and compare ideas with evidence. Show: `[Step 3/5] Evaluating 4 options...`
 4. **DECIDE** — Recommend with rationale and confidence score

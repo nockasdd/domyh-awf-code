@@ -1,5 +1,6 @@
 ---
 name: playwright
+description: "Playwright E2E testing patterns. Use when writing browser automation or end-to-end tests."
 detect: ["playwright.config.*", "*.e2e.*", "tests/e2e/**"]
 ---
 

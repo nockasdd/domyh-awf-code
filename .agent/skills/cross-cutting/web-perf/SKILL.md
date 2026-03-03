@@ -1,5 +1,6 @@
 ---
 name: web-perf
+description: "Web performance optimization patterns. Use when improving Core Web Vitals, bundle size, or load times."
 detect: ["lighthouse.json", "web-vitals.*", ".lighthouserc.js"]
 category: support
 tier: 1

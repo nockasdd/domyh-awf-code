@@ -1,5 +1,6 @@
 ---
 name: r
+description: "R statistical computing and data analysis patterns. Use when working with .R/.Rmd files."
 detect: ["*.R", "*.Rmd", "*.qmd", "DESCRIPTION", ".Rproj", "renv.lock"]
 category: data
 tier: 2

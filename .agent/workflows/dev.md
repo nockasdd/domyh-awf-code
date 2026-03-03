@@ -13,7 +13,7 @@ success_criteria: "Dev server running, health check passes"
 
 ## DEV FLOW
 
-1. **DETECT** — `hsa_declare_intent("start dev server")`, identify stack via HSA (`hsa_detect_stack`), verify environment (`hsa_detect_environment`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
+1. **DETECT** — `hsa_session("start dev server")`, identify stack via HSA (`hsa_detect`), verify environment (`hsa_detect`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`
 2. **DEPS CHECK** — Verify dependencies installed:
    - Node.js: `node_modules/` exists? → If not: auto-run `npm install` (or yarn/pnpm/bun)
    - Go: `go.sum` exists? → If not: `go mod download`
@@ -33,10 +33,12 @@ success_criteria: "Dev server running, health check passes"
 5. **START** — Run dev command, watch output:
    - On crash/error: show error + common fixes + offer auto-restart
    - On monorepo: offer parallel start for multiple packages
+   - **Canvas Alternative** (UI projects): `hsa_canvas({action:"open"})` auto-detects framework, port, entry file, shows project info + server status
      → Show: `[Step 5/6] Starting server...`
 6. **VALIDATE** — Confirm server running, show access URL:
    - Check health endpoint responds
    - Show URL for browser access
+   - If Canvas session active: `hsa_canvas({action:"capture"})` → visual confirmation + health score + AX tree
       → Show: `[Step 6/7] ✅ Server running at http://localhost:3000`
 7. **SYNC** — `hsa_check_changes` to update index after dependency installs or config changes
 
@@ -150,6 +152,6 @@ docker_compose:
 3. **SNAPSHOT** — If this is the last task in session:
    - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
 4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 

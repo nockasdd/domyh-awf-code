@@ -2,7 +2,7 @@
 name: "context-integrity"
 description: "Detects and repairs context drift. Monitors hierarchy staleness, chain breaks, and context decay. Recovery playbooks for 4 common scenarios."
 triggers:
-  - "When drift score is low (hsa_check_drift warns)"
+  - "When drift score is low (hsa_session warns)"
   - "After context compaction or session gap"
   - "When hierarchy feels wrong"
   - "When resuming work after hours/days"
@@ -18,7 +18,7 @@ triggers:
 ### Automatic Detection (via HSA)
 
 ```
-hsa_check_drift(current_action: "What I'm about to do")
+hsa_session(current_action: "What I'm about to do")
 ```
 
 Output contains:
@@ -39,12 +39,12 @@ Output contains:
 
 | Situation | Action | Priority |
 |-----------|--------|----------|
-| 5+ turns without updating hierarchy | `hsa_check_drift` | 🟠 High |
-| Resuming after a gap (hours/days) | `hsa_check_drift(include_anchors: true)` | 🔴 Critical |
-| "What was I doing?" moment | `hsa_check_drift` + read anchors | 🔴 Critical |
-| After subagent delegation | `hsa_check_drift` to verify alignment | 🟡 Medium |
-| Before concluding any task | `hsa_check_drift` | 🟡 Medium |
-| Topic or scope changed | `hsa_check_drift` + possibly re-declare | 🟠 High |
+| 5+ turns without updating hierarchy | `hsa_session` | 🟠 High |
+| Resuming after a gap (hours/days) | `hsa_session(include_anchors: true)` | 🔴 Critical |
+| "What was I doing?" moment | `hsa_session` + read anchors | 🔴 Critical |
+| After subagent delegation | `hsa_session` to verify alignment | 🟡 Medium |
+| Before concluding any task | `hsa_session` | 🟡 Medium |
+| Topic or scope changed | `hsa_session` + possibly re-declare | 🟠 High |
 
 ## Repair — Fix Broken Context
 
@@ -54,18 +54,18 @@ Output contains:
 
 ```
 # 1. Check current alignment
-hsa_check_drift(current_action: "Checking alignment after drift warning")
+hsa_session(current_action: "Checking alignment after drift warning")
 
 # 2. Read the drift report — understand what drifted
 
 # 3. Re-align hierarchy
-hsa_track_progress(
+hsa_session(
   level: "action",
   label: "Re-aligned: {what I'm actually doing now}"
 )
 
 # 4. If scope changed significantly → re-declare
-hsa_declare_intent(
+hsa_session(
   focus: "Updated scope: {new focus}",
   mode: "plan_driven",
   goals: ["Updated goal 1", "Updated goal 2"]
@@ -78,7 +78,7 @@ Signs: earlier conversation details seem fuzzy, code references lost.
 
 ```
 # 1. Retrieve saved state
-hsa_check_drift(
+hsa_session(
   current_action: "Recovering from context compaction",
   include_anchors: true
 )
@@ -90,17 +90,17 @@ hsa_check_drift(
 #    - [CONSTRAINT] anchors → what limits exist
 
 # 3. Re-read key files mentioned in anchors
-# Use hsa_get_context to retrieve relevant code
+# Use hsa_search to retrieve relevant code
 
 # 4. Declare fresh intent
-hsa_declare_intent(
+hsa_session(
   focus: "Continuing after compaction: {summary from anchors}",
   mode: "plan_driven",
   goals: ["Remaining goals from anchors"]
 )
 
 # 5. Save recovery note
-hsa_save_anchor(
+hsa_session(
   content: "[RECOVERY] Recovered from compaction. Prior state restored from anchors.",
   category: "context"
 )
@@ -110,7 +110,7 @@ hsa_save_anchor(
 
 ```
 # 1. Full anchor retrieval
-hsa_check_drift(
+hsa_session(
   current_action: "Resuming after gap",
   include_anchors: true
 )
@@ -122,7 +122,7 @@ hsa_check_changes()  # Re-index for any file changes
 # Run build/test to check nothing broke
 
 # 4. Declare intent for new session
-hsa_declare_intent(
+hsa_session(
   focus: "Resuming: {focus from anchors}",
   mode: "plan_driven"
 )
@@ -134,22 +134,22 @@ When you realize you've been working on the wrong thing:
 
 ```
 # 1. Check where drift started
-hsa_check_drift(current_action: "Checking: am I on the right track?")
+hsa_session(current_action: "Checking: am I on the right track?")
 
 # 2. If off-track: save current work state
-hsa_save_anchor(
+hsa_session(
   content: "[DRIFT] Was working on {wrong thing}. Correct focus: {right thing}.",
   category: "context"
 )
 
 # 3. Re-declare with correct focus
-hsa_declare_intent(
+hsa_session(
   focus: "Corrected: {right focus}",
   mode: "plan_driven"
 )
 
 # 4. Re-align hierarchy
-hsa_track_progress(
+hsa_session(
   level: "action",
   label: "Topic correction: returning to {right thing}"
 )
@@ -161,7 +161,7 @@ hsa_track_progress(
 
 Before any significant decision:
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[DECISION] Chose X over Y because: {reasons}. Trade-off: {what}",
   category: "decision"
 )
@@ -171,7 +171,7 @@ hsa_save_anchor(
 
 Every 3-5 meaningful actions:
 ```
-hsa_track_progress(
+hsa_session(
   level: "action",
   label: "Done: A, B, C. Next: D."
 )
@@ -181,7 +181,7 @@ hsa_track_progress(
 
 At session boundaries:
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[SESSION] Topic: {X}. Done: {list}. Pending: {list}. Files: {key files}",
   category: "context"
 )
@@ -196,7 +196,7 @@ Before continuing complex work, verify your logic chain:
 3. **What am I about to do?** (Check it aligns)
 4. **What prior decisions affect this?** (Check anchors)
 
-If any answer is unclear → run `hsa_check_drift` before proceeding.
+If any answer is unclear → run `hsa_session` before proceeding.
 
 ## Red Flags
 

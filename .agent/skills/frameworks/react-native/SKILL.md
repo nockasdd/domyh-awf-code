@@ -1,5 +1,6 @@
 ---
 name: react-native
+description: "React Native patterns for cross-platform mobile apps. Use when working with React Native or Expo projects."
 detect: ["metro.config.js", "app.json:expo", "react-native.config.js"]
 category: mobile
 tier: 1

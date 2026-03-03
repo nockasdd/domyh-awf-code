@@ -14,7 +14,7 @@ success_criteria: "Files generated matching project conventions, build passes"
 
 ## SCAFFOLD FLOW
 
-1. **DETECT** (Auto) — Identify framework via HSA (`hsa_detect_stack`), load patterns via HSA (`hsa_get_context`), scan existing components. Show: `[Step 1/6] Detecting React + TypeScript...`
+1. **DETECT** (Auto) — Identify framework via HSA (`hsa_detect`), load patterns via HSA (`hsa_search`), scan existing components. Show: `[Step 1/6] Detecting React + TypeScript...`
 2. **MATCH** — Analyze existing code patterns: naming (camelCase/snake_case/PascalCase), file organization (flat/nested), imports (absolute/relative/barrel), exports, test location. Show: `[Step 2/6] Found: camelCase, barrel exports, co-located tests`
 3. **PREVIEW** — Show all files to be created with content preview → ⛔ STOP: confirm before generate
 4. **GENERATE** — Create files from template, wire up imports/routes, add boilerplate tests. Show: `[Step 4/6] Creating UserCard (3 files)...`
@@ -139,12 +139,10 @@ When scaffolding UI components:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

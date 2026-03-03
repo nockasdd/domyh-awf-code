@@ -13,7 +13,7 @@ success_criteria: "Dead code removed, imports organized, build passes"
 
 ## 🔄 CLEANUP FLOW
 
-1. **PHASE 1: DETECT (Auto - 5s)** — `hsa_declare_intent`, `hsa_detect_stack`, identifying tools.
+1. **PHASE 1: DETECT (Auto - 5s)** — `hsa_session`, `hsa_detect`, identifying tools.
 2. **PHASE 2: SCAN (Auto - 30s)** — Run analysis tools. Collect dead code / unused deps.
 3. **PHASE 3: PREVIEW** — Show proposed removals. ⛔ **STOP - WAIT FOR USER CONFIRMATION**.
 4. **PHASE 4: EXECUTE** — Create backup (optional), apply selected changes, format.
@@ -45,7 +45,7 @@ success_criteria: "Dead code removed, imports organized, build passes"
 ### Stack Detection (30+ Languages)
 
 > Tool configs loaded from `workflows/data/clean-tools.yaml`
-> Agent selects cleanup tools based on `hsa_detect_stack` result
+> Agent selects cleanup tools based on `hsa_detect` result
 > Schema per language: `markers`, `dead_code`, `imports`, `deps`, `format`, `lint`
 
 ### Output:
@@ -451,12 +451,10 @@ audit_reset:
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -1,7 +1,7 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
-> **Version**: 6.4.5 | **Cập nhật**: 2026-02-25 | **Official Docs Verified** | **Extension Storage Forensics**
-> **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 20 MCP Tools
+> **Version**: 6.5.0 | **Cập nhật**: 2026-03-02 | **Official Docs Verified** | **Extension Storage Forensics**
+> **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 20 MCP Tools | 5 Custom Agents
 
 ---
 
@@ -95,8 +95,10 @@ root/
 │
 ├── .github/                        # [5] VS Code + Copilot
 │   ├── copilot-instructions.md     #   ✅ Project guidelines
-│   ├── instructions/               #   ✅ Modular instructions
-│   ├── agents/                     #   ✅ Custom Agents (.agent.md)
+│   ├── instructions/               #   ✅ Modular instructions (.instructions.md)
+│   ├── skills/                     #   ✅ SKILL.md (v1.108+, Insider verified)
+│   ├── agents/                     #   ✅ Custom Agents (.agent.md, v1.108+)
+│   ├── hooks/                      #   ✅ Agent Hooks (hooks.json, v1.109 Preview)
 │   └── prompts/                    #   ✅ Prompt Files (.prompt.md)
 │
 ├── .windsurf/                      # [6] Windsurf
@@ -259,16 +261,17 @@ root/
 
 ## 🎯 Skills Support Chi Tiết (16 IDEs)
 
-| #   | IDE             | Skills Path                            |  Format  |      Activation      | Note                                            |
-| --- | --------------- | -------------------------------------- | :------: | :------------------: | ----------------------------------------------- |
+| #   | IDE         | Skills Path                            |  Format  |      Activation      | Note                                            |
+| --- | ----------- | -------------------------------------- | :------: | :------------------: | ----------------------------------------------- |
 | 1   | **Codex**       | `.agents/skills/`                      | SKILL.md | `$skill-name` / auto | 6-tier Progressive Discovery                    |
 | 2   | **Cursor**      | `.cursor/skills/`                      | SKILL.md |    Semantic match    | Auto-loaded by AI                               |
 | 3   | **Claude**      | `.claude/skills/`                      | SKILL.md |    Semantic match    | Open Standard format                            |
 | 4   | **Gemini**      | `.gemini/skills/`                      | SKILL.md |    Semantic match    | Via GEMINI.md                                   |
-| 6   | **Windsurf**    | `.windsurf/skills/`                    | SKILL.md |    Auto / manual     | ✨ NEW: Global `~/.codeium/windsurf/skills/`    |
+| 5   | **VS Code**     | `.github/skills/`                      | SKILL.md |    Semantic match    | ✨ v1.108+ Insider, `name`+`description` req    |
+| 6   | **Windsurf**    | `.windsurf/skills/`                    | SKILL.md |    Auto / manual     | ✨ Global `~/.codeium/windsurf/skills/`          |
 | 7   | **Antigravity** | `.agent/skills/`                       | SKILL.md |    Semantic match    | Full Skills+Workflows+Rules                     |
 | 8   | **Cline**       | `.cline/skills/`                       | SKILL.md |      On-demand       | v3.48.0 (Jan 10, 2026)                          |
-| 10  | **Roo Code**    | `.roo/skills/` + `.roo/skills-{mode}/` | SKILL.md |   Semantic + mode    | ✨ NEW: 4-level override, mode-specific         |
+| 10  | **Roo Code**    | `.roo/skills/` + `.roo/skills-{mode}/` | SKILL.md |   Semantic + mode    | ✨ 4-level override, mode-specific              |
 | 11  | **JetBrains**   | `.junie/skills/`                       | SKILL.md |      Via Codex       | Codex integration                               |
 | 13  | **Kiro**        | `.kiro/skills/`                        | SKILL.md |      Via specs       | Steering files                                  |
 | 20  | **Amp**         | `.agents/skills/`                      | SKILL.md |      Auto-match      | AGENTS.md standard                              |
@@ -285,19 +288,34 @@ root/
 
 ### ⚠️ Special Cases
 
-| #   | IDE         | Status | Note                                     |
-| --- | ----------- | :----: | ---------------------------------------- |
-| 5   | **VS Code** | ⚠️ GUI | `.agent.md` Custom Agents (not SKILL.md) |
+| #   | IDE         | Status | Note                                                                 |
+| --- | ----------- | :----: | -------------------------------------------------------------------- |
+| 5   | **VS Code** |   ✅   | `.github/skills/` (v1.108+ Insider) + `.agent.md` Custom Agents      |
 
 ---
 
-## 🪝 Hooks Support (3 IDEs)
+## 🪝 Hooks Support (5 IDEs)
 
-| #   | IDE         |    Hook Types    | Note                                                                                                                                                   |
-| --- | ----------- | :--------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2   | **Cursor**  | ✅ Project hooks | `.cursor/hooks/`                                                                                                                                       |
-| 5   | **VS Code** |  ✅ Task hooks   | tasks.json integration                                                                                                                                 |
-| 13  | **Kiro**    |  ✅ **8 types**  | `on_file_create`, `on_file_save`, `on_file_delete`, `on_prompt_submit`, `on_agent_stop`, `manual_trigger`, `pre_tool_use` (NEW), `post_tool_use` (NEW) |
+| #   | IDE         |    Hook Types        | Config Path                   | Note                                                                                                                                                   |
+| --- | ----------- | :------------------: | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2   | **Cursor**  | ✅ **5+ events**     | `.cursor/hooks.json`          | `sessionStart`, `preToolUse`, `postToolUse`, `beforeShellExecution`, `beforeReadFile`                                                                  |
+| 5   | **VS Code** | ✅ **8 events**      | `.github/hooks/*.json`        | `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `PreCompact`, `SubagentStart`, `SubagentStop`, `Stop`                                 |
+| 13  | **Kiro**    | ✅ **8 types**       | `.kiro/specs/`                | `on_file_create`, `on_file_save`, `on_file_delete`, `on_prompt_submit`, `on_agent_stop`, `manual_trigger`, `pre_tool_use`, `post_tool_use`             |
+| 3   | **Claude**  | ✅ PreTool/Post      | `.claude/settings.json`       | PreToolUse / PostToolUse hooks (VS Code reads this natively)                                                                                           |
+| 20  | **Amp**     | ✅ Hooks-compatible  | `.vscode/mcp.json`            | Via VS Code hook system (shared .github/hooks/)                                                                                                        |
+
+> [⚠️ WARNING]
+> VS Code uses **PascalCase** (SessionStart) while Cursor/Claude use **lowerCamelCase** (sessionStart). VS Code auto-converts between formats.
+> Hook format: `{"hooks": {"EventName": [{"type": "command", "command": "..."}]}}`
+
+---
+
+## 🤖 Custom Agents Support (2 IDEs)
+
+| #   | IDE         | Format           | Path                 | Features                                                              |
+| --- | ----------- | ---------------- | -------------------- | --------------------------------------------------------------------- |
+| 5   | **VS Code** | `.agent.md`      | `.github/agents/`    | `name`, `description`, `tools[]`, `agents[]`, `model`, `handoffs[]`, `mcp-servers`, `target` |
+| 21  | **OpenCode**| `.md` agents     | `.opencode/agents/`  | Markdown agent definitions                                            |
 
 ---
 
@@ -364,16 +382,17 @@ root/
 
 > Features riêng của IDE, **không có source trong `.agent/`**. CLI inject config files nếu khả thi.
 
-| #   | IDE        | Hooks | Mechanism                  | Config File             |
-| --- | ---------- | :---: | -------------------------- | ----------------------- |
-| 2   | Cursor     |  ✅   | `hooks.json` events        | `.cursor/hooks.json`    |
-| 3   | Claude     |  ✅   | PreToolUse / PostToolUse   | `.claude/settings.json` |
-| 5   | VS Code    |  🔄   | Limited via settings.json  | `.vscode/settings.json` |
-| 13  | Kiro       |  ⚡   | Spec-driven events         | `.kiro/specs/`          |
-| 14  | Zed        |  ⚡   | MCP context_servers        | `settings.json`         |
-| 16  | CodeRabbit |  ⚡   | YAML hook config           | `.coderabbit.yaml`      |
-| 19  | Trae       |  ⚡   | Agent events via SOLO mode | `.trae/.rules`          |
-| —   | Others     |  ❌   | Không hỗ trợ hooks         | —                       |
+| #   | IDE        | Hooks | Agents | Mechanism                  | Config File                |
+| --- | ---------- | :---: | :----: | -------------------------- | -------------------------- |
+| 2   | Cursor     |  ✅   |   ❌   | `hooks.json` events        | `.cursor/hooks.json`       |
+| 3   | Claude     |  ✅   |   ❌   | PreToolUse / PostToolUse   | `.claude/settings.json`    |
+| 5   | VS Code    |  ✅   |   ✅   | **6 hook events + .agent.md** | `.github/hooks/hooks.json` + `.github/agents/` |
+| 13  | Kiro       |  ⚡   |   ❌   | Spec-driven events         | `.kiro/specs/`             |
+| 14  | Zed        |  ⚡   |   ❌   | MCP context_servers        | `settings.json`            |
+| 16  | CodeRabbit |  ⚡   |   ❌   | YAML hook config           | `.coderabbit.yaml`         |
+| 19  | Trae       |  ⚡   |   ❌   | Agent events via SOLO mode | `.trae/.rules`             |
+| 21  | OpenCode   |  ❌   |   ✅   | Markdown agents            | `.opencode/agents/`        |
+| —   | Others     |  ❌   |   ❌   | Không hỗ trợ               | —                          |
 
 ### Thống kê — AWF Content
 
@@ -388,9 +407,87 @@ root/
 
 ### Thống kê — IDE-Native
 
-| Feature   | ✅ File-based | 🔄 Partial | ⚡ Runtime | ❌ None | Total hỗ trợ |
-| --------- | :-----------: | :--------: | :--------: | :-----: | :----------: |
-| **Hooks** |       2       |     1      |     4      |   15    |      7       |
+| Feature    | ✅ File-based | 🔄 Partial | ⚡ Runtime | ❌ None | Total hỗ trợ |
+| ---------- | :-----------: | :--------: | :--------: | :-----: | :----------: |
+| **Hooks**  |       3       |     0      |     4      |   15    |      7       |
+| **Agents** |       2       |     0      |     0      |   20    |      2       |
+
+---
+
+## 🪝 Hook Examples (Documented)
+
+### Hook Là Gì?
+
+Hooks = **shell commands tự động chạy** tại lifecycle points trong agent session. Khác với rules (instructions cho AI), hooks là **deterministic code** — guaranteed execution.
+
+### VS Code Format (PascalCase, `.github/hooks/*.json`)
+
+```jsonc
+{
+  "hooks": {
+    // 🔒 Security: Block dangerous commands
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "./scripts/validate-tool.sh",
+        "timeout": 15
+      }
+    ],
+    // 🎨 Auto-format after file changes
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "npx prettier --write \"$TOOL_INPUT_FILE_PATH\""
+      }
+    ],
+    // 📊 Session logging
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo \"Session started: $(date)\" >> .agent/memory/session.log"
+      }
+    ],
+    // 🔄 Git checkpoint on session end
+    "Stop": [
+      {
+        "type": "command",
+        "command": "git add -A && git commit -m 'checkpoint: agent session' --no-verify",
+        "timeout": 30
+      }
+    ]
+  }
+}
+```
+
+### Cursor Format (lowerCamelCase, `.cursor/hooks.json`)
+
+```jsonc
+{
+  "hooks": {
+    "preToolUse": [
+      { "type": "command", "command": "./scripts/validate-tool.sh" }
+    ],
+    "postToolUse": [
+      { "type": "command", "command": "npx prettier --write \"$TOOL_INPUT_FILE_PATH\"" }
+    ]
+  }
+}
+```
+
+### 8 Events của VS Code (đầy đủ nhất)
+
+| Event | Khi Nào | Có Thể Làm Gì |
+|-------|---------|---------------|
+| `SessionStart` | Session bắt đầu | Inject context, log, setup env |
+| `UserPromptSubmit` | User gửi prompt | Validate input, add metadata |
+| `PreToolUse` | Trước tool chạy | **BLOCK** nguy hiểm, validate params |
+| `PostToolUse` | Sau tool chạy | Format, lint, test, log |
+| `PreCompact` | Trước context compact | Save important context |
+| `SubagentStart` | Subagent bắt đầu | Log, inject sub-context |
+| `SubagentStop` | Subagent kết thúc | Validate sub-output |
+| `Stop` | Session kết thúc | Git checkpoint, cleanup, report |
+
+> ⚠️ VS Code auto-converts lowerCamelCase ↔ PascalCase. Đọc được cả Claude Code hook format (`.claude/settings.json`).
 
 ---
 
@@ -413,4 +510,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code v6.4.5 • 22 IDEs • Extension Storage Forensics • Platform Verified • Feb 25, 2026_
+_DOMYH Awesome Code v6.5.0 • 22 IDEs • Extension Storage Forensics • Platform Verified • Mar 02, 2026_

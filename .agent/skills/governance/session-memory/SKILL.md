@@ -1,6 +1,6 @@
 ---
 name: "session-memory"
-description: "Persistent memory pattern using hsa_save_anchor with structured shelves. Decisions, patterns, errors survive across sessions and context compaction."
+description: "Persistent memory pattern using hsa_session with structured shelves. Decisions, patterns, errors survive across sessions and context compaction."
 triggers:
   - "When making architectural or design decisions"
   - "When discovering patterns or solutions worth remembering"
@@ -17,7 +17,7 @@ Without persistent memory, each session starts from zero. Agent re-debates decis
 
 ## Solution: Structured Anchors as Memory Shelves
 
-Use `hsa_save_anchor` with structured categories to create searchable, persistent memory that survives across sessions and compaction events.
+Use `hsa_session` with structured categories to create searchable, persistent memory that survives across sessions and compaction events.
 
 ### Memory Shelf Architecture
 
@@ -34,7 +34,7 @@ Use `hsa_save_anchor` with structured categories to create searchable, persisten
 ### Decision Anchor Template
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[DECISION] Chose {X} over {Y}. Reason: {why}. Trade-off: {what we lose}. Date: {today}",
   category: "decision"
 )
@@ -42,7 +42,7 @@ hsa_save_anchor(
 
 **Example:**
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[DECISION] Chose Drizzle ORM over Prisma. Reason: lighter, SQL-first, better edge support. Trade-off: less mature ecosystem. 2026-02-20",
   category: "decision"
 )
@@ -51,7 +51,7 @@ hsa_save_anchor(
 ### Convention Anchor Template
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[CONVENTION] {pattern name}: {description}. Files: {where applied}",
   category: "convention"
 )
@@ -59,7 +59,7 @@ hsa_save_anchor(
 
 **Example:**
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[CONVENTION] API Response Envelope: All endpoints return { data, error, meta }. Files: src/utils/response.ts",
   category: "convention"
 )
@@ -68,7 +68,7 @@ hsa_save_anchor(
 ### Error Anchor Template
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[ERROR] {symptom} → Root cause: {cause} → Fix: {solution}. Files: {affected}",
   category: "context"
 )
@@ -77,7 +77,7 @@ hsa_save_anchor(
 ### Constraint Anchor Template
 
 ```
-hsa_save_anchor(
+hsa_session(
   content: "[CONSTRAINT] {what}: {limit}. Source: {where documented}",
   category: "constraint"
 )
@@ -108,7 +108,7 @@ hsa_save_anchor(
 ### Step 1: Retrieve Prior State
 
 ```
-hsa_check_drift(
+hsa_session(
   current_action: "Starting new session — retrieving prior anchors",
   include_anchors: true
 )
@@ -125,7 +125,7 @@ Read the drift report output. Look for:
 ### Step 3: Declare Intent Referencing Prior Work
 
 ```
-hsa_declare_intent(
+hsa_session(
   focus: "Continuing: {summary from anchors}",
   mode: "plan_driven",
   goals: ["Goal from prior session anchors"]
@@ -148,19 +148,19 @@ When compaction risk detected:
 
 ```
 # 1. Save current progress
-hsa_save_anchor(
+hsa_session(
   content: "[SESSION] Progress: {done list}. Pending: {todo list}. Key files: {files}",
   category: "context"
 )
 
 # 2. Save any unsaved decisions
-hsa_save_anchor(
+hsa_session(
   content: "[DECISION] {any decision made but not yet saved}",
   category: "decision"
 )
 
 # 3. Update hierarchy
-hsa_track_progress(level: "action", label: "Emergency save before compaction", status: "completed")
+hsa_session(level: "action", label: "Emergency save before compaction", status: "completed")
 ```
 
 ## Memory Hygiene

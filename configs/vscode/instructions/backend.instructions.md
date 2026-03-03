@@ -1,6 +1,6 @@
 ---
+description: "Use when writing backend API code, Go handlers, services, or repository patterns."
 applyTo: "src/**/*.go,api/**/*,handlers/**/*,services/**/*,pkg/**/*"
-excludeAgent: ""
 ---
 
 # Backend API Guidelines

@@ -1,5 +1,6 @@
 ---
 name: clojure
+description: "Clojure functional patterns for JVM. Use when working with .clj/.cljs files or Leiningen projects."
 detect: ["*.clj", "*.cljs", "*.cljc", "deps.edn", "project.clj"]
 category: functional
 tier: 3

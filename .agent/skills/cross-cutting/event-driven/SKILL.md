@@ -1,5 +1,6 @@
 ---
 name: event-driven
+description: "Event-driven architecture patterns. Use when implementing pub/sub, event sourcing, CQRS, or message queues."
 category: cross-cutting
 ---
 

@@ -76,33 +76,36 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   
   <requirement id="MCP_001" tier="2" severity="block">
     <text>When domyh-hsa MCP server is available, use HSA tools for intelligent code operations:
-    - hsa_detect_stack at task start for code generation/debugging/testing
-    - hsa_get_context instead of manual file scanning
+    - hsa_detect at task start for code generation/debugging/testing
+    - hsa_search instead of manual file scanning
     - hsa_search_files to find files by name/pattern (instead of grep for filenames)
     - hsa_check_changes after file modifications to keep indexes current
     - hsa_prefetch for files planned to be read/modified
     - hsa_feedback after task completion to improve future search rankings
-    - hsa_detect_environment BEFORE running terminal commands to identify IDE shell (bash/cmd/powershell)</text>
-    <rationale>HSA tools provide hybrid search and context optimization — 70-90% more token-efficient than manual file scanning.</rationale>
+    - hsa_detect BEFORE running terminal commands to identify IDE shell (bash/cmd/powershell)
+    - hsa_session for session governance: intent, track progress, anchor facts, drift check, persist (with auto_notify)
+    - hsa_report for engine health (status/export) and notifications (only when HSA_TELEGRAM_TOKEN env var is set)
+    - hsa_design for design system analysis (CSS/components/screenshots — skip for backend-only projects)
+    - hsa_canvas for visual UI feedback: open, capture, diff, update (CSS edits), extract (design tokens), inspect, close</text>
+    <rationale>HSA tools provide hybrid search and context optimization — 70-90% more token-efficient than manual file scanning. Canvas tools provide systematic visual feedback loop for UI development.</rationale>
   </requirement>
   
   <requirement id="MCP_002" tier="2" severity="warn">
     <text>Use HSA delegation tools for sub-agent workflows:
-    - hsa_prepare_handoff before delegating sub-agent tasks
-    - hsa_filter_tools to reduce prompt bloat when spawning sub-agents (93-97% token savings)
-    - hsa_get_snapshot for project overview injection</text>
+    - hsa_delegate before delegating sub-agent tasks
+    - hsa_delegate to reduce prompt bloat when spawning sub-agents (93-97% token savings)
+    - hsa_explore for project overview injection</text>
   </requirement>
   
   <requirement id="MCP_003" tier="2" severity="warn">
     <text>Use HSA observability tools as needed:
-    - hsa_get_repo_map for codebase structure before large changes
-    - hsa_detect_environment to verify runtimes and identify IDE terminal shell before commands
-    - hsa_search_skills to find coding patterns before implementing
-    - hsa_search_files to find files by name or glob pattern (complementary to hsa_get_context)
+    - hsa_explore for codebase structure before large changes
+    - hsa_detect to verify runtimes and identify IDE terminal shell before commands
+    - hsa_search for code patterns (action:'context') and file search (action:'files')
     - hsa_get_agent_config for commands/personas/rules when asked about capabilities
-    - hsa_status for engine health when troubleshooting tool failures
+    - hsa_report for engine health (action:'status'), state export (action:'export'), notifications (action:'notify')
     - hsa_trace_flow for tracing call chains and understanding code flow
-    - hsa_export for dashboard data and structured engine state
+    - hsa_canvas for full visual feedback: diff (VRT), extract (design tokens), inspect (CSS/AX), close (cleanup)
     Do not assume specific MCP tools exist — check available servers at task start.</text>
   </requirement>
   
@@ -160,19 +163,21 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   
   <requirement id="SESSION_005" tier="3" severity="block">
     <text>Session Memory Protocol — MANDATORY execution:
-(1) On session START: read memory/CONTEXT_SNAPSHOT.md to restore context about this system, recent changes, status, and decisions.
-(2) During work: after completing a task or making a key decision, append to memory/session.md using the APPEND format:
+(1) On session START: read memory/CONTEXT_SNAPSHOT.md (if HSA: auto-loaded by hsa_get_agent_config bootstrap).
+(2) During work — PREFERRED (if HSA available):
+    hsa_session({action:'persist', task_summary:'[summary]', files_touched:['file1','file2']})
+    FALLBACK (if HSA unavailable): manually append to memory/session.md:
     ### [ISO-timestamp] Task/Decision
     - **What**: [1-line summary]
     - **Files**: [key files touched]
     - **Status**: done | in-progress | blocked
-(3) Before session END or claiming "done": update memory/CONTEXT_SNAPSHOT.md with:
-    - "Recent Changes": prepend new entry at top (newest first, max 10 entries)
-    - "Current Status": overwrite with current state
-    - "Key Decisions": append new decisions only
+(3) Before session END — PREFERRED:
+    hsa_session({action:'persist', snapshot:{recent_changes:'...', current_status:'...', key_decisions:'...', next_steps:'...'}, auto_notify:true})
+    ↳ auto_notify sends Telegram IF HSA_TELEGRAM_TOKEN is configured; silently skips if not.
+    FALLBACK: manually update memory/CONTEXT_SNAPSHOT.md.
 (4) After /ap audit: update memory/audit_summary.json and memory/state.json.
-ENFORCEMENT: If session ends without updating CONTEXT_SNAPSHOT.md, the session is INCOMPLETE.</text>
-    <rationale>Without session persistence, every new conversation starts from zero — losing decisions, progress, and context. This is the #1 cause of "agent amnesia". Block severity ensures execution.</rationale>
+ENFORCEMENT: If session ends without persist or snapshot update, the session is INCOMPLETE.</text>
+    <rationale>hsa_session(persist) does the same work as manual file writes in 1 tool call — saving 200+ tokens. auto_notify eliminates a separate hsa_report(notify) call. Without session persistence, every new conversation starts from zero.</rationale>
   </requirement>
   
   <!-- ═══ TIER 4: WORKFLOW & EXECUTION ═══ -->
@@ -186,7 +191,7 @@ ENFORCEMENT: If session ends without updating CONTEXT_SNAPSHOT.md, the session i
   </requirement>
   
   <requirement id="EXEC_003" tier="4" severity="warn">
-    <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect_stack when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive only).</text>
+    <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive only).</text>
     <config>
       <router>.agent/skills/_router.yaml</router>
       <categories>.agent/skills/_categories.yaml</categories>

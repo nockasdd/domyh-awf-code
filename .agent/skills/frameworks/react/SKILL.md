@@ -1,5 +1,6 @@
 ---
 name: react
+description: "React development patterns for components, hooks, and state management. Use when working with React/JSX/TSX projects."
 detect: ["package.json:react", "*.jsx", "*.tsx", "vite.config.ts"]
 category: frontend
 tier: 1

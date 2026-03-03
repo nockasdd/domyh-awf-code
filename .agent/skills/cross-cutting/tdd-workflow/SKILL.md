@@ -1,5 +1,6 @@
 ---
 name: tdd-workflow
+description: "Test-Driven Development workflow patterns. Use when practicing Red-Green-Refactor methodology."
 category: cross-cutting
 ---
 

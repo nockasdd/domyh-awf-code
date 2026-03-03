@@ -83,7 +83,7 @@ anti_hang:
     Ref: https://github.com/microsoft/vscode/issues/215402
 
   rule: |
-    On Windows, MUST call hsa_detect_environment FIRST to identify IDE terminal shell:
+    On Windows, MUST call hsa_detect FIRST to identify IDE terminal shell:
     - If shell = cmd → wrap with cmd /c "command" (prevents stdin race hang)
     - If shell = bash/zsh → use native syntax (&& chaining, NO cmd /c wrapper)
     - If shell = powershell → use PS syntax (; for PS5, && for PS7+)

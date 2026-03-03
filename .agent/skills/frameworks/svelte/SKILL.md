@@ -1,5 +1,6 @@
 ---
 name: svelte
+description: "Svelte and SvelteKit patterns for reactive UI. Use when working with .svelte files."
 detect: ["svelte.config.js", "*.svelte", "+page.svelte", "+layout.svelte"]
 category: frontend
 tier: 1

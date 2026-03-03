@@ -1,5 +1,6 @@
 ---
 name: ml-pipelines
+description: "Machine learning pipeline patterns. Use when building ML training, evaluation, or deployment workflows."
 detect: ["dvc.yaml", "mlflow", "Artifacts/", "Notebook_Experiments/", "scores.json"]
 category: ai-ml
 tier: 2

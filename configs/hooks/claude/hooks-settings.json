@@ -1,0 +1,44 @@
+{
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "runTerminalCommand|Bash|execute|run_command",
+                "type": "command",
+                "command": ".claude/hooks/scripts/safe-guard.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\safe-guard.ps1",
+                "timeout": 10
+            },
+            {
+                "matcher": "Edit|Write|MultiEdit|editFiles|createFile|write_to_file|replace_file_content|multi_replace_file_content",
+                "type": "command",
+                "command": ".claude/hooks/scripts/path-guard.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\path-guard.ps1",
+                "timeout": 5
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write|MultiEdit|editFiles|createFile|write_to_file|replace_file_content|multi_replace_file_content",
+                "type": "command",
+                "command": ".claude/hooks/scripts/quality-check.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\quality-check.ps1",
+                "timeout": 15
+            },
+            {
+                "matcher": "Edit|Write|MultiEdit|editFiles|createFile|write_to_file|replace_file_content|multi_replace_file_content",
+                "type": "command",
+                "command": ".claude/hooks/scripts/format-changed.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\format-changed.ps1",
+                "timeout": 30
+            }
+        ],
+        "SessionStart": [
+            {
+                "type": "command",
+                "command": ".claude/hooks/scripts/inject-context.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\inject-context.ps1",
+                "timeout": 10
+            }
+        ]
+    }
+}

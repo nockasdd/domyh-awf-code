@@ -1,5 +1,6 @@
 ---
 name: aws
+description: "AWS cloud service patterns. Use when working with EC2, S3, Lambda, ECS, RDS, or other AWS services."
 category: infrastructure
 ---
 

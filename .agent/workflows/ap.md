@@ -14,7 +14,7 @@ success_criteria: "Audit report generated with score and P0-P3 findings"
 
 ## AUDIT FLOW
 
-1. **DISCOVERY** (Auto 30s) — `hsa_declare_intent("audit project")`, detect stack (`hsa_detect_stack`), project snapshot (`hsa_get_snapshot`), count files, load audit-pro checklists via HSA (`hsa_get_context`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
+1. **DISCOVERY** (Auto 30s) — `hsa_session("audit project")`, detect stack (`hsa_detect`), project snapshot (`hsa_explore`), count files, load audit-pro checklists via HSA (`hsa_search`), check audit history, **diff-aware**: if recent commits, focus on `git diff --name-only HEAD~5..HEAD`, **auto-activate** conditional experts based on detected project type
 2. **SCOPE CONTRACT** — Display scope options (from scoring.yaml) → ⛔ STOP wait for user selection (1-5). Show **previous audit score** if available for delta comparison. Show **active experts** based on detection
 3. **EXECUTE** — Run active Expert Panels sequentially, collect findings with evidence. Show **progress**: `[Panel 2/8] Architecture — Checkpoint 12/20`
 4. **SELF-REVIEW** — Agent re-reads findings, removes duplicates, verifies evidence accuracy, assigns confidence (1-10) per finding
@@ -140,12 +140,10 @@ scoring: .agent/skills/cross-cutting/audit-pro/data/scoring.yaml # 6 weight prof
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -13,7 +13,7 @@ success_criteria: "All tests pass green, coverage meets target, refactor clean"
 
 ## TDD FLOW
 
-1. **SETUP** — Detect stack via HSA (`hsa_detect_stack`), load TDD skill, load test context (`hsa_get_context`), identify test framework. Show: `[Step 1/6] Detecting stack and test framework...`
+1. **SETUP** — Detect stack via HSA (`hsa_detect`), load TDD skill, load test context (`hsa_search`), identify test framework. Show: `[Step 1/6] Detecting stack and test framework...`
 2. **RED** — Write a failing test that defines the expected behavior. Run tests to confirm it fails. Show: `[Step 2/6] 🔴 RED — Writing failing test: test_[feature]`
 3. **GREEN** — Write the SIMPLEST production code that makes the test pass. Show: `[Step 3/6] 🟢 GREEN — Implementing minimal code to pass`
 4. **REFACTOR** — Clean up code and tests without changing behavior. Re-run tests. Show: `[Step 4/6] 🔵 REFACTOR — Cleaning up (all tests still green)`
@@ -115,12 +115,10 @@ success_criteria: "All tests pass green, coverage meets target, refactor clean"
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

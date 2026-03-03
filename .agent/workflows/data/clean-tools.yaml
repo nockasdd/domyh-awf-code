@@ -1,5 +1,5 @@
 # Clean Tools Registry — 30+ Languages
-# Used by /clean workflow • Auto-selected via hsa_detect_stack
+# Used by /clean workflow • Auto-selected via hsa_detect
 # Schema: markers, dead_code, imports, deps, format, lint
 
 # ═══════════════════════════════════════════════════════════════

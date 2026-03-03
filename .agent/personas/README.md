@@ -34,7 +34,7 @@ Personas define specialized agent roles with distinct:
 
 ---
 
-## v6.4.5 Schema
+## v6.4.10 Schema
 
 All personas follow the enhanced schema:
 

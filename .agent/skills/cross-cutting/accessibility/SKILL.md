@@ -1,5 +1,6 @@
 ---
 name: accessibility
+description: "Web accessibility patterns for WCAG compliance. Use when implementing ARIA, keyboard navigation, screen reader support."
 category: cross-cutting
 ---
 

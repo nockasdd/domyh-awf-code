@@ -40,7 +40,7 @@ Claiming "done"?
     │   YES ↓
     │
     └── Update hierarchy:
-        hsa_track_progress(status: "completed")
+        hsa_session(status: "completed")
         ✅ NOW you can claim done.
 ```
 
@@ -152,14 +152,14 @@ Subagent says "Done"
     │   ↓
     │
     ├── 4. Save intelligence
-    │   hsa_save_anchor(
+    │   hsa_session(
     │     content: "Subagent: {what done}. Verified: {how}. Result: {pass/fail}",
     │     category: "context"
     │   )
     │   ↓
     │
     └── 5. Update hierarchy
-        hsa_track_progress(status: "completed")
+        hsa_session(status: "completed")
 ```
 
 ## Partial Success Handling
@@ -175,7 +175,7 @@ When verification shows partial results (e.g., 18/20 tests pass):
 
 ```
 # Partial success anchor
-hsa_save_anchor(
+hsa_session(
   content: "[PARTIAL] Auth tests: 18/20 pass. Failing: edge case token expiry, concurrent refresh. Priority: P2.",
   category: "context"
 )
@@ -186,7 +186,7 @@ hsa_save_anchor(
 When user's request conflicts with prior decisions:
 
 ```
-hsa_check_drift(
+hsa_session(
   current_action: "User wants to change architecture from X to Y",
   include_anchors: true
 )

@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+23+IDEs+•+41+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+26+IDEs+•+41+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
   <img src="https://img.shields.io/badge/skills-93-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
-  <img src="https://img.shields.io/badge/IDEs-23-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
+  <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
@@ -40,37 +40,44 @@
 ## ⚡ Bắt đầu nhanh
 
 ```bash
-npm install -g @nockdev/cli   # Cài đặt toàn cục
-nock awf init              # Khởi tạo trong project
-nock awf --help            # Xem tất cả commands
+npm install -g @nockdev/cli   # Cài đặt CLI toàn cục (1 lần)
+nock awf init                 # Khởi tạo và cài đặt cho project
 ```
+
+> 💡 **`init` vs `install`**: `nock awf init` phát hiện IDE của bạn, cho chọn IDE nào cần cấu hình và cài đặt tất cả. Dùng `nock awf install` khi cần cài lại hoặc thêm IDE mới.
 
 <details>
 <summary><b>📦 Các cách cài đặt khác</b></summary>
 <br>
 
-| Cách    | Lệnh                                                       |
-| :------ | :--------------------------------------------------------- |
-| **npm** | `npm install -g @nockdev/cli`                              |
-| **npx** | `npx @nockdev/awf init`                                    |
-| **git** | `git clone https://github.com/nockasdd/domyh-awf-code.git` |
+| Cách        | Lệnh                                                       | Ghi chú                  |
+| :---------- | :--------------------------------------------------------- | :----------------------- |
+| **npm**     | `npm install -g @nockdev/cli`                              | Khuyến nghị (global)     |
+| **npx**     | `npx -y @nockdev/cli awf init`                             | Không cần cài           |
+| **git**     | `git clone https://github.com/nockasdd/domyh-awf-code.git` | Cài đặt thủ công       |
 
 </details>
+
+### 🔄 Cập Nhật
+
+```bash
+nock awf update --check       # Kiểm tra phiên bản mới
+nock upgrade                  # Cập nhật CLI + tất cả plugins
+nock awf mcp update           # Cập nhật MCP server (HSA)
+```
 
 ---
 
 <!-- MCP Requirement Note -->
 <blockquote>
   <p>⚠️ <strong>Yêu cầu MCP Server</strong></p>
-  <p>DOMYH Awesome Code sử dụng <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> để cung cấp context thông minh — tìm kiếm code, phân tích ngữ nghĩa, và hiểu project. <strong>Cài MCP cho IDE của bạn để mở khóa toàn bộ tiềm năng:</strong></p>
-
-  <pre><code>nock awf mcp install --ide all      # Tất cả IDE hỗ trợ
-nock awf mcp install --ide cursor   # Chỉ IDE cụ thể</code></pre>
+  <p>DOMYH Awesome Code sử dụng <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> để cung cấp context thông minh — tìm kiếm code, phân tích ngữ nghĩa, và hiểu project. <strong>Cài MCP cho IDE của bạn để mở khóa toàn bộ tiềm năng.</strong></p>
+  <p>💡 <code>nock awf mcp install</code> tự động tải HSA và dùng <code>node</code> để chạy trực tiếp (nhanh hơn, tốn ít bộ nhớ hơn <code>npx</code>). Fallback về <code>npx</code> khi chưa cài.</p>
 </blockquote>
 
 ## 🖥️ Web Dashboard & Logs
 
-HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc định đã bật**.
+HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc định tắt** để tiết kiệm bộ nhớ. Bật với `HSA_DASHBOARD=true`.
 
 | URL                                | Mô tả                                                       |
 | :--------------------------------- | :----------------------------------------------------------- |
@@ -82,7 +89,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 <summary><b>⚙️ Cấu hình Dashboard</b></summary>
 <br>
 
-**Tắt dashboard** — đặt `HSA_DASHBOARD` là `false` trong MCP config của IDE:
+**Bật dashboard** — đặt `HSA_DASHBOARD` là `true` trong MCP config của IDE:
 
 ```json
 {
@@ -91,7 +98,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
       "command": "npx",
       "args": ["-y", "-p", "@nockdev/hsa@latest", "nock-hsa"],
       "env": {
-        "HSA_DASHBOARD": "false",
+        "HSA_DASHBOARD": "true",
         "HSA_MAX_TOKENS": "8000"
       }
     }
@@ -108,6 +115,51 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
   "HSA_MAX_TOKENS": "8000"
 }
 ```
+
+</details>
+
+### 📲 Thông Báo Telegram (Tùy Chọn)
+
+Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu session.
+
+<details>
+<summary><b>🔧 Hướng Dẫn Cài Đặt</b></summary>
+<br>
+
+**Bước 1: Tạo Telegram Bot**
+1. Mở Telegram → tìm `@BotFather`
+2. Gửi `/newbot` → làm theo hướng dẫn → copy **Bot Token**
+
+**Bước 2: Lấy Chat ID**
+1. Gửi tin nhắn bất kỳ cho bot mới tạo
+2. Truy cập `https://api.telegram.org/bot<TOKEN_CỦA_BẠN>/getUpdates`
+3. Tìm `"chat":{"id":123456789}` → đó là **Chat ID** của bạn
+
+**Bước 3: Thêm vào MCP config**
+
+```json
+{
+  "mcpServers": {
+    "domyh-hsa": {
+      "command": "node",
+      "args": ["~/.nockdev/hsa/hsa-cli.bundle.js"],
+      "env": {
+        "HSA_MAX_TOKENS": "8000",
+        "HSA_TELEGRAM_TOKEN": "bot-token-của-bạn",
+        "HSA_TELEGRAM_CHAT_ID": "chat-id-của-bạn"
+      }
+    }
+  }
+}
+```
+
+**Sử dụng:** Thông báo được gửi tự động khi agent gọi:
+- `hsa_session({action: 'persist', auto_notify: true})` — session đã lưu
+- `hsa_report({action: 'notify', title: '...', summary: '...'})` — thông báo tùy chỉnh
+
+> 💡 Ngôn ngữ thông báo tự động theo cài đặt người dùng. Nếu bạn dùng tiếng Việt (`/lang vi`), thông báo sẽ hiển thị "✅ Phiên làm việc đã lưu" thay vì tiếng Anh.
+
+> ⚠️ Nếu `HSA_TELEGRAM_TOKEN` chưa được cài, tất cả tính năng thông báo sẽ **tự động bỏ qua** — không có lỗi, không tốn token.
 
 </details>
 
@@ -133,7 +185,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 **Ví dụ sử dụng:**
 
 ```
-/ap                            → 5-expert audit toàn bộ project
+/ap                            → 12-expert audit toàn bộ project
 /code Thêm tính năng giỏ hàng → Viết code với đầy đủ types + tests
 /debug API trả về 500          → Reproduce → Isolate → Fix → Verify
 /plan Tích hợp thanh toán VNPay → Phân tích impact + breakdown tasks
@@ -229,7 +281,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 | `/orchestrate`  | Multi-Agent: điều phối parallel tasks, delegate cho specialists       | `/orchestrate Refactor + Test + Deploy module auth`       |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo 2 commits gần nhất`                         |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Kiến trúc microservices cho 10K concurrent users` |
-| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.4.5 across 15 files             |
+| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.5.0 across 15 files             |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |
@@ -355,7 +407,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 
 ---
 
-## 💻 Hỗ trợ IDE (23)
+## 💻 Hỗ trợ IDE (26)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude-6366F1?style=for-the-badge&logo=anthropic&logoColor=white" />
@@ -376,7 +428,7 @@ HSA tích hợp sẵn web dashboard để giám sát real-time — **mặc đị
 </p>
 
 <details>
-<summary><b>📋 Tất cả 23 IDEs & File cấu hình</b></summary>
+<summary><b>📋 Tất cả 26 IDEs & File cấu hình</b></summary>
 <br>
 
 | IDE              | File cấu hình                     | Loại            |

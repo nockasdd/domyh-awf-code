@@ -1,5 +1,6 @@
 ---
 name: nextjs
+description: "Next.js patterns for SSR, ISR, App Router, and full-stack React. Use when working with Next.js projects."
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
 category: frontend

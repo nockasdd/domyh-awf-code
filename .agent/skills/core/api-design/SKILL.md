@@ -1,5 +1,6 @@
 ---
 name: api-design
+description: "API design patterns for REST, GraphQL, and gRPC. Use when designing endpoints, versioning, pagination, rate limiting, or error responses."
 category: core
 ---
 

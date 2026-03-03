@@ -13,7 +13,7 @@ success_criteria: "Error resolved, build passes, no regressions"
 
 ## FIX FLOW
 
-1. **DETECT** (5s) — `hsa_declare_intent("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect_stack`), load context (`hsa_get_context`), locate file + line, read surrounding code, classify fix category
+1. **DETECT** (5s) — `hsa_session("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect`), load context (`hsa_search`), locate file + line, read surrounding code, classify fix category
    - **UI FIX DETECTED?** → `hsa_design_analyze({scope: "component", paths: [affected_file]})` → understand design context before fixing
    - **VISUAL FIX?** (layout/color/style changes) → generate before/after `.preview/{fix}.html` → open with `browser_subagent` → screenshot comparison → confirm with user
 2. **EXECUTE** (30s) — Apply targeted fix, minimal changes only, preserve existing behavior
@@ -122,6 +122,6 @@ User: "TypeError: Cannot read properties of undefined at auth.ts:42"
 3. **SNAPSHOT** — If this is the last task in session:
    - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
 4. **ANCHOR** (if HSA available):
-   - `hsa_track_progress(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_save_anchor(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
+   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
 

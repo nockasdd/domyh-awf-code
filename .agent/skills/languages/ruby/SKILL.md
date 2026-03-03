@@ -1,5 +1,6 @@
 ---
 name: ruby
+description: "Ruby development patterns for Rails and scripting. Use when working with .rb files, Gemfile, or Ruby projects."
 detect: ["Gemfile", "*.rb", "*.gemspec", "Rakefile", "config.ru"]
 category: scripting
 tier: 1

@@ -1,5 +1,6 @@
 ---
 name: tailwind
+description: "Tailwind CSS patterns for utility-first styling. Use when working with Tailwind configuration or utility classes."
 detect:
   [
     "tailwind.config.js",
