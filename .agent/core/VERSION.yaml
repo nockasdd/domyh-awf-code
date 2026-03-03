@@ -12,9 +12,9 @@
 # =============================================================================
 
 system:
-  version: "6.4.10"
+  version: "6.4.12"
   codename: "SSoT & Hygiene"
-  release_date: "2026-02-28"
+  release_date: "2026-03-03"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"
