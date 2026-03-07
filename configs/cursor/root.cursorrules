@@ -30,6 +30,11 @@ MUST execute before writing code:
 - **SAFE_001**: Confirm with user before ANY destructive action (delete, drop, deploy)
 - **PERF_001**: Use file outlines and grep before full reads; parallel calls for independent ops
 
+## 📝 Session Memory
+
+- **On START**: Read `.agent/memory/CONTEXT_SNAPSHOT.md` for project context continuity
+- **Before END/task complete**: Update `CONTEXT_SNAPSHOT.md` with: changes made, current status, key decisions
+
 ## Terminal Safety (Windows)
 
 NEVER use these on Windows — they hang indefinitely:
@@ -46,7 +51,7 @@ NEVER use these on Windows — they hang indefinitely:
 ## Skills & Workflows
 
 **Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
-**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (94 skills)
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` · `governance/` (96 skills)
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.

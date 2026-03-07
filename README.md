@@ -245,7 +245,7 @@ Get notified on Telegram when AI agent completes tasks or persists sessions.
 | **Session Monitoring** | Track AI agent activity, detect completion, extract response previews |
 | **Context Injection** | Automatically append `[HSA Context]` to chat messages for MCP guidance |
 
-**Install:** [HSA Companion](https://marketplace.visualstudio.com/items?itemName=nockasdd.nock-hsa-ext) *(link will be updated)*
+**Install:** [HSA Companion](https://open-vsx.org/extension/Nockasdd/nock-hsa-ext)
 
 ---
 

@@ -58,12 +58,12 @@ chat:
 # ⛔ MANDATORY: MUST call hsa_get_agent_config('bootstrap') FIRST.
 # MUST call hsa_search(query) before implementing code.
 # Use hsa_search(action:'docs', doc_libraries:['lib']) for external library docs (24+ built-in).
-# MUST call hsa_session(focus, mode) for session governance.
+# MUST call hsa_session(action:'intent', focus, mode) for session governance.
 #
 # ❌ NEVER: grep_search for code (use hsa_search), skip skills search, code without declare_intent.
 #
 # Core: Do No Harm | Truthfulness (file:line) | User Sovereignty | Confirm destructive | File outlines+grep first
 # Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. FIRST call hsa_detect to check IDE shell: cmd → cmd /c, bash → native syntax, powershell → PS syntax. Default fallback: cmd /c.
 #
-# Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (94 skills)
+# Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (96 skills, 8 categories incl. governance)
 # Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (41 commands)

@@ -43,10 +43,10 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 87 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 96 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
-  # Categories: 28 languages + 9 frameworks + 6 core + 7 devops + 23 cross-cutting + 5 tooling + 8 ai-ml + 1 agentic = 87
+  # Categories: 8 core + 28 languages + 9 frameworks + 7 devops + 22 cross-cutting + 5 tooling + 9 ai-ml + 8 governance = 96
 
   loading:
     # SSoT: config.yaml → skills section

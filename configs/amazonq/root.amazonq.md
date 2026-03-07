@@ -6,21 +6,21 @@
 
 BEFORE any response, MUST call MCP tools in this order:
 1. `hsa_get_agent_config("bootstrap")` — Load ALL rules, commands, skills
-2. `hsa_session(focus, mode)` — Declare session intent
+2. `hsa_session(action="intent", focus, mode)` — Declare session intent
 
 ## ⛔ BEFORE ANY Code Implementation
 
 MUST execute before writing code:
-1. `hsa_search(relevant_query)` — Find matching skill patterns
+1. `hsa_search(query, action="skills")` — Find matching skill patterns
 2. `hsa_search(query)` — Search codebase (NEVER use grep when MCP available)
-3. `hsa_detect()` — On first code task per project
+3. `hsa_detect(action="stack")` — On first code task per project
 4. `hsa_search(action:"docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)
 
 ## ❌ NEVER (When MCP Connected)
 
 - `grep_search` for code → use `hsa_search` instead
-- Skip skills search → ALWAYS `hsa_search` first
-- Start coding without `hsa_session`
+- Skip skills search → ALWAYS `hsa_search(action="skills")` first
+- Start coding without `hsa_session(action="intent")`
 
 ## Core Rules (ALWAYS APPLY)
 
@@ -42,16 +42,16 @@ NEVER use these on Windows — they hang indefinitely:
 - ❌ Pagers: `less`, `more`, `man` — use `git --no-pager log/diff/show`
 - ❌ Interactive without flags: `npm init` → add `-y`, `python`/`node` → add `-c`/`-e`
 - ❌ Infinite: `tail -f`, `watch`, `docker logs -f` — run as background
-✅ FIRST call `hsa_detect` to check IDE terminal shell:
+✅ FIRST call `hsa_detect(action="environment")` to check IDE terminal shell:
 - Shell = `cmd` → wrap with `cmd /c "command"` (prevent stdin race hang)
 - Shell = `bash`/`zsh` → use native syntax (`&&` chaining, NO cmd /c)
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
-- Shell unknown → FIRST call `hsa_detect` to detect shell. Do NOT assume cmd
+- Shell unknown → FIRST call `hsa_detect(action="environment")` to detect shell. Do NOT assume cmd
 
 ## Skills & Workflows
 
 **Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
-**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (88 skills)
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` · `governance/` (96 skills)
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.
