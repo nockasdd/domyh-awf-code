@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Token Optimization Summary v6.4.10
+# DOMYH Awesome Code — Token Optimization Summary v6.5.0
 # status: archived — Design spec, not runtime config
 # This file provides quick reference for token-optimized usage
 
@@ -81,7 +81,7 @@ optimization_files:
   - memory/active_memories.json # Active memory storage
   - memory/insights.md # Memory reflection insights
   - memory/consolidated.md # Consolidated memory view
-  # Phase 5: Cleanup & SSoT (v6.4.10)
+  # Phase 5: Cleanup & SSoT (v6.5.0)
   - core/SCORING_FORMULA.yaml # SSoT for priority scoring
   - core/MEMORY_PATHS.yaml # SSoT for memory paths
   - core/TOKEN_BUDGETS.yaml # SSoT for all token limits

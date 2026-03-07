@@ -1,9 +1,9 @@
-# DOMYH Awesome Code — Templates Registry v6.4.10
+# DOMYH Awesome Code — Templates Registry v6.5.0
 # version: 6.4.10
 # Purpose: Comprehensive template system for prompts, tasks, outputs, and infrastructure
 
 # =============================================================================
-# SYSTEM PROMPT TEMPLATES (NEW in v6.4.10)
+# SYSTEM PROMPT TEMPLATES (NEW in v6.5.0)
 # =============================================================================
 
 prompts:
@@ -50,7 +50,7 @@ prompts:
     description: "Tool usage instructions"
 
 # =============================================================================
-# REFLECTION TEMPLATES (NEW in v6.4.10)
+# REFLECTION TEMPLATES (NEW in v6.5.0)
 # =============================================================================
 
 reflection:
@@ -75,7 +75,7 @@ reflection:
     storage: ".agent/memory/patterns/successes.json"
 
 # =============================================================================
-# TASK TEMPLATES (NEW in v6.4.10)
+# TASK TEMPLATES (NEW in v6.5.0)
 # =============================================================================
 
 tasks:
@@ -119,7 +119,7 @@ tasks:
       constraints: list
 
 # =============================================================================
-# OUTPUT TEMPLATES (ENHANCED in v6.4.10)
+# OUTPUT TEMPLATES (ENHANCED in v6.5.0)
 # =============================================================================
 
 output:
@@ -165,7 +165,7 @@ output:
     validate_schema: true
 
 # =============================================================================
-# PROMPT CHAINS (NEW in v6.4.10)
+# PROMPT CHAINS (NEW in v6.5.0)
 # =============================================================================
 
 chains:

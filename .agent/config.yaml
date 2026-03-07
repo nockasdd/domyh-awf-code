@@ -15,7 +15,7 @@ project:
 # =============================================================================
 
 i18n:
-  default: "vi" # Vietnamese — synced from state.json
+  default: "vi" # Fallback only. SSoT: memory/state.json → preferences.language
   fallback: "en" # Fallback if key missing
   strings_path: "./i18n/" # Translation files location
 
@@ -44,7 +44,7 @@ skills:
   priority_override:
     # my-skill: 0
 
-  # v6.4.10: Auto-suggest configuration
+  # v6.5.0: Auto-suggest configuration
   auto_suggest:
     enabled: true
     display_top: 3
@@ -88,16 +88,14 @@ detection:
 # CONTEXT SETTINGS
 # =============================================================================
 
-context:
-  # Total budget for ALL T1 META.yaml files (86 skills × ~100 tokens each)
-  # Not to be confused with IDE baseline (runtime prompt overhead in ide/*.json)
-  t1_budget: 8600
+  # SSoT for token budgets (87 skills × ~100 tok = 8700 T1)
+  t1_budget: 8700
 
   # Maximum tokens per T2 skill
   t2_budget: 1500
 
-  # Maximum total context (T1 + 3 active skills)
-  max_context: 12700
+  # Maximum total context (T1 + 3 active skills = 8700 + 4500)
+  max_context: 13200
 
   # Include project README in context
   include_readme: false

@@ -1,0 +1,60 @@
+# Skills Category Index
+# For standalone mode (no HSA MCP) — provides fast skill lookup
+# Version: 2026-03
+
+categories:
+  core:
+    path: skills/core/
+    skills:
+      - { name: security, patterns: 400+, detect: ["*.env", "auth*", "jwt*"] }
+      - { name: authentication, patterns: 260+, detect: ["login*", "oauth*", "passport*"] }
+      - { name: error-handling, patterns: 180+, detect: ["*error*", "*exception*"] }
+      - { name: api-design, patterns: 200+, detect: ["routes/*", "controllers/*", "api/*"] }
+      - { name: logging, patterns: 120+, detect: ["logger*", "winston*", "pino*"] }
+      - { name: observability, patterns: 150+, detect: ["metrics*", "tracing*", "opentelemetry*"] }
+
+  cross-cutting:
+    path: skills/cross-cutting/
+    skills:
+      - { name: audit-pro, patterns: 277, detect: [] }  # Triggered by /ap command only
+      - { name: testing, patterns: 200+, detect: ["*.test.*", "*.spec.*", "jest*", "vitest*"] }
+      - { name: coding-rules, patterns: 300+, detect: [] }  # Always relevant
+      - { name: database, patterns: 150+, detect: ["*.sql", "migrations/*", "prisma/*", "drizzle*"] }
+      - { name: web-perf, patterns: 100+, detect: ["lighthouse*", "*.perf.*"] }
+      - { name: domyh-design, patterns: 80+, detect: ["*.css", "*.scss", "tailwind*"] }
+
+  languages:
+    path: skills/languages/
+    skills:
+      - { name: typescript, detect: ["tsconfig.json", "*.ts", "*.tsx"] }
+      - { name: python, detect: ["*.py", "pyproject.toml", "requirements.txt"] }
+      - { name: go, detect: ["go.mod", "*.go"] }
+      - { name: rust, detect: ["Cargo.toml", "*.rs"] }
+      - { name: csharp, detect: ["*.csproj", "*.cs", "*.sln"] }
+      - { name: java, detect: ["pom.xml", "build.gradle", "*.java"] }
+
+  frameworks:
+    path: skills/frameworks/
+    skills:
+      - { name: nextjs, detect: ["next.config.*"] }
+      - { name: nuxt, detect: ["nuxt.config.*"] }
+      - { name: express, detect: ["express"] }  # package.json dep
+      - { name: fastapi, detect: ["fastapi"] }   # pyproject dep
+
+  devops:
+    path: skills/devops/
+    skills:
+      - { name: docker, detect: ["Dockerfile", "docker-compose*"] }
+      - { name: ci-cd, detect: [".github/workflows/*", ".gitlab-ci.yml", "Jenkinsfile"] }
+      - { name: kubernetes, detect: ["k8s/*", "*.k8s.yaml", "helm/*"] }
+
+  ai-ml:
+    path: skills/ai-ml/
+    skills:
+      - { name: prompt-engineering, detect: ["prompts/*", "*.prompt"] }
+
+# Usage (standalone mode):
+# 1. Read this file
+# 2. Match project files against detect patterns
+# 3. Load matching skills' META.yaml
+# 4. On user request, load SKILL.md

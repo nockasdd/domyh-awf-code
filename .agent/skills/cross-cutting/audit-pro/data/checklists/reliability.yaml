@@ -1,0 +1,42 @@
+# Reliability Expert — 15 Checkpoints
+# Staff Site Reliability Engineer — William Brown / Phong — 12yr
+# Standards: Google SRE Book, Chaos Engineering Principles
+# Activation: conditional (is_production)
+
+expert:
+  id: reliability
+  activation:
+    mode: conditional
+    rule: is_production
+    detect_files: ["Dockerfile", "docker-compose.*", "*.tf", "Procfile", "fly.toml", "vercel.json"]
+    detect_dirs: ["deploy/", "infra/", ".github/workflows/"]
+
+checklists:
+  slo:
+    label: "📏 Service Level Objectives"
+    items:
+      - SRE-001 | SLI defined (latency p50/p95/p99, error rate) | P1
+      - SRE-002 | SLO targets documented | P1
+      - SRE-003 | Error budget policy exists and tracked | P2
+      - SRE-004 | SLO dashboard accessible to team | P2
+  incident:
+    label: "🚨 Incident Management"
+    items:
+      - SRE-005 | On-call rotation defined and documented | P1
+      - SRE-006 | Escalation paths documented | P0
+      - SRE-007 | Runbooks for top 5 failure modes | P1
+      - SRE-008 | Blameless postmortem template and process | P1
+      - SRE-009 | Incident communication channels | P1
+  resilience:
+    label: "🛡️ Resilience & Chaos"
+    items:
+      - SRE-010 | Circuit breakers for external deps | P1
+      - SRE-011 | Graceful degradation tested | P1
+      - SRE-012 | Chaos experiments planned | P2
+      - SRE-013 | Disaster recovery plan tested (RTO/RPO) | P1
+      - SRE-014 | Capacity planning documented | P2
+      - SRE-015 | Production readiness checklist passed | P0
+
+stats:
+  total: 15
+  by_severity: { P0: 2, P1: 9, P2: 4, P3: 0 }

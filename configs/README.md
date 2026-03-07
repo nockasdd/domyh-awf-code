@@ -44,7 +44,7 @@ All Markdown configs share identical core structure (~58 lines, ~2.8KB):
 - ❌ NEVER list for MCP-connected violations
 - 5 core rules (CORE_001-003, SAFE_001, PERF_001)
 - Terminal safety (Windows pipe/pager/interactive prevention)
-- Skill path + 8 categories (93 skills)
+- Skill path + 8 categories (97 skills)
 - MCP tools reference (20 tools)
 - Personas list (11 roles)
 

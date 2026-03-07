@@ -108,13 +108,12 @@ ELSE (freeform text — no slash command):
 | State             | Max Tokens | Includes                  |
 | ----------------- | ---------- | ------------------------- |
 | Boot              | 2,500      | core rules + router only  |
-| Idle              | 8,600      | boot + all 86 skill METAs |
-| Single workflow   | 9,700      | idle + 1 skill T2 active  |
-| Workflow + skills | 11,000     | idle + up to 3 skills     |
-| Peak              | 12,700     | max concurrent, warn@10K  |
+| Idle              | 8,700      | boot + all 87 skill METAs |
+| Single workflow   | 10,200     | idle + 1 skill T2 active  |
+| Workflow + skills | 12,200     | idle + up to 3 skills     |
+| Peak              | 13,200     | max concurrent, warn@10K  |
 
-> **HSA Engine Budget**: Separate system — `constants.ts` uses proportional allocation
-> (50% context, 10% skills, 10% repo map) × `HSA_MAX_TOKENS` (default: 8000).
+> **SSoT**: Exact values in `config.yaml` → `context` section.
 
 > **Token Tip**: When loading workflow files, strip YAML frontmatter comments,
 > ASCII box-drawing decorations (`━`, `═`), and inline data blocks that have
@@ -132,22 +131,82 @@ ELSE (freeform text — no slash command):
 
 ## Persona Routing
 
-| Command     | Persona   | Skills Auto-loaded            |
-| ----------- | --------- | ----------------------------- |
-| `/code`     | Developer    | language + framework detected |
-| `/debug`    | Debugger     | language + testing            |
-| `/ap`       | Auditor      | security + quality            |
-| `/test`     | Tester       | testing + language            |
-| `/deploy`   | DevOps       | docker + ci-cd + aws          |
-| `/plan`     | Architect    | (none specific)               |
-| `/review`   | Developer    | coding-rules + language       |
-| `/refactor` | Developer    | coding-rules + language       |
-| `/orchestrate` | Orchestrator | (none specific)            |
-| `/feature`  | Planner      | (none specific)               |
+### Core Commands
+| Command     | Persona      | Skills Auto-loaded                          |
+| ----------- | ------------ | ------------------------------------------- |
+| `/code`     | Developer    | language + framework detected               |
+| `/debug`    | Debugger     | language + testing                          |
+| `/ap`       | Auditor      | audit-pro (auto-loads 14 skills per expert) |
+| `/test`     | Tester       | testing + language                          |
+| `/deploy`   | DevOps       | ci-cd + docker + kubernetes                 |
+| `/review`   | Developer    | coding-rules + language                     |
+| `/refactor` | Developer    | coding-rules + language                     |
+| `/modify`   | Developer    | coding-rules + language                     |
+| `/init`     | Developer    | [auto]                                      |
+
+### Git & Fix
+| Command   | Persona   | Skills         |
+| --------- | --------- | -------------- |
+| `/git`    | Developer | —              |
+| `/fix`    | Debugger  | error-handling |
+| `/revert` | DevOps    | ci-cd          |
+
+### Generation
+| Command     | Persona   | Skills            |
+| ----------- | --------- | ----------------- |
+| `/generate` | Developer | [auto]            |
+| `/scaffold` | Developer | coding-rules      |
+| `/doc`      | Documenter| [auto]            |
+
+### Planning & Design
+| Command      | Persona    | Skills              |
+| ------------ | ---------- | ------------------- |
+| `/plan`      | Architect  | —                   |
+| `/feature`   | Planner    | —                   |
+| `/think`     | Architect  | —                   |
+| `/prompt`    | Researcher | prompt-engineering  |
+| `/visualize` | Developer  | domyh-design        |
+| `/perf`      | Developer  | web-perf + observability |
+
+### DevOps
+| Command      | Persona   | Skills                |
+| ------------ | --------- | --------------------- |
+| `/migrate`   | DevOps    | database              |
+| `/monitor`   | DevOps    | observability + logging |
+| `/env`       | DevOps    | security              |
+| `/upgrade`   | Developer | —                     |
+| `/dev`       | Developer | —                     |
+| `/doctor`    | DevOps    | —                     |
+| `/security`  | Security  | security + authentication |
+
+### Testing & Verification
+| Command   | Persona | Skills          |
+| --------- | ------- | --------------- |
+| `/tdd`    | Tester  | testing         |
+| `/e2e`    | Tester  | testing         |
+| `/verify` | Tester  | testing         |
+
+### Utility
+| Command        | Persona      | Skills |
+| -------------- | ------------ | ------ |
+| `/recap`       | Documenter   | —      |
+| `/status`      | DevOps       | —      |
+| `/help`        | Developer    | —      |
+| `/workflow`    | Developer    | —      |
+| `/orchestrate` | Orchestrator | —      |
+| `/onboard`     | Researcher   | —      |
+| `/clean`       | Developer    | coding-rules |
+| `/suggest`     | Architect    | —      |
+| `/search`      | Researcher   | —      |
+| `/save`        | Developer    | —      |
+| `/lang`        | Developer    | —      |
+| `/sync-version`| DevOps       | —      |
 
 **Loading**: On /command → load `.agent/personas/{name}.md` (max ~1,500 tokens)
 
-> Complete routing for all 41 commands: see `manifest.yaml` → `commands` section.
+> **Workflow-Internal Skill Loading**: Some workflows (e.g., `/ap`) manage their
+> own skill loading via META.yaml `auto_load_skills`. During execution, the workflow
+> loads additional skills per-phase, extending beyond the initial 5-skill cap from L1-L3.
 
 ## Workflow Loading
 
@@ -155,6 +214,29 @@ ELSE (freeform text — no slash command):
 - **Medium/Small (<20KB)**: Full load OK
 - **On workflow switch**: Unload previous, unload unused skills, summarize history
 - **At 10,000 tokens**: Aggressive summarization, unload all deferred
+
+## manifest.yaml Section Loading (20KB total)
+
+For standalone mode, load ONLY what's needed:
+
+| Section | Lines | ~Tokens | When to Load |
+|:--------|:------|:--------|:-------------|
+| `commands:` | L200-616 | ~3000 | Always (routing table) |
+| `skills.categories:` | L58-175 | ~800 | On first stack detect |
+| `personas:` | L618-647 | ~200 | After routing |
+| `defaults:` | L17-23 | ~50 | Once per session |
+| Everything else | — | — | SKIP (duplicated in config.yaml, INDEX.yaml) |
+
+## Long Workflow Optimization
+
+For workflows exceeding 10,000 tokens (e.g., `/ap` full audit, `/feature` lifecycle):
+
+1. **Chunked Execution**: Process one expert/phase at a time, never all simultaneously
+2. **Intermediate Summaries**: After each phase, compress results to 1-line format:
+   `[Expert] Score: X | P0:N | P1:N | Key: [most critical finding]`
+3. **Token Ceiling**: At 5000 tokens of accumulated findings, compress older to summaries
+4. **Position Strategy**: Current phase checklist in TAIL (high attention), older summaries in HEAD
+5. **Unload Pattern**: After summarizing a phase, release its checklist/skill data from context
 
 ## Memory Paths
 

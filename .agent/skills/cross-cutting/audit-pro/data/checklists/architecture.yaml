@@ -1,0 +1,65 @@
+# Architecture Expert — 26 Checkpoints
+# Staff Software Architect — Sarah Kim / Linh — 12yr
+# Standards: Clean Architecture, SOLID, DDD, Hexagonal
+# Activation: always
+# Skills: coding-rules, api-design
+
+expert:
+  id: architecture
+  activation: always
+  skills_required: [coding-rules, api-design]
+  reasoning_style: "Trace dependency flow. Where does coupling break isolation?"
+  reasoning_mandate: "Draw mental component diagram, check module boundaries, verify patterns"
+  counter_argument_guide: "Consider: Is this a prototype/MVP? Is the team size too small for full patterns? Is simplicity more valuable than abstraction here?"
+
+checklists:
+  solid:
+    label: "🏗️ SOLID Principles"
+    context: { min_project_size: "medium" }
+    items:
+      - ARCH-001 | Single Responsibility (1 class = 1 job) | P2
+      - ARCH-002 | Open/Closed (extensible, not modifiable) | P2
+      - ARCH-003 | Liskov Substitution (subtypes replaceable) | P3
+      - ARCH-004 | Interface Segregation (small interfaces) | P2
+      - ARCH-005 | Dependency Inversion (abstractions) | P2
+  patterns:
+    label: "📐 Design Patterns"
+    items:
+      - ARCH-006 | Repository/data access pattern | P1
+      - ARCH-007 | Factory pattern usage | P3
+      - ARCH-008 | Strategy pattern for algorithms | P3
+      - ARCH-009 | Observer/event pattern | P3
+      - ARCH-010 | Dependency Injection setup | P1
+  coupling:
+    label: "🔗 Coupling & Cohesion"
+    items:
+      - ARCH-011 | Low coupling between modules | P1
+      - ARCH-012 | High cohesion within modules | P2
+      - ARCH-013 | Clear module boundaries | P1
+      - ARCH-014 | Circular dependency detection | P1
+  structure:
+    label: "📁 Project Structure"
+    items:
+      - ARCH-015 | Follows expected project conventions | P2
+      - ARCH-016 | Clear separation of concerns | P1
+      - ARCH-017 | Consistent file/folder naming | P3
+      - ARCH-018 | Proper layering appropriate to project type | P1
+  api:
+    label: "📋 API Design"
+    context: { requires: "has_api" }
+    items:
+      - ARCH-019 | API conventions followed (REST/gRPC/GraphQL) | P2
+      - ARCH-020 | Consistent error responses | P1
+      - ARCH-021 | Proper status codes / error codes | P2
+      - ARCH-022 | API versioning strategy | P2
+  advanced:
+    label: "🔬 Advanced Architecture"
+    items:
+      - ARCH-023 | Event-driven patterns (if applicable) | P2
+      - ARCH-024 | CQRS separation (if applicable) | P3
+      - ARCH-025 | Saga/compensation patterns (if distributed) | P3
+      - ARCH-026 | Hexagonal/ports-adapters boundaries | P2
+
+stats:
+  total: 26
+  by_severity: { P0: 0, P1: 8, P2: 12, P3: 6 }

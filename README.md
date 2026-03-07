@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=93+Skills+•+26+IDEs+•+41+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=97+Skills+•+26+IDEs+•+43+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,9 +15,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-93-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-97-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-41-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-43-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -234,6 +234,19 @@ Get notified on Telegram when AI agent completes tasks or persists sessions.
 
 </details>
 
+### 🧩 HSA Companion Extension (Optional)
+
+> Enhance your workflow with the **HSA Companion** IDE extension — real-time monitoring, remote control, and automation.
+
+| Feature | Description |
+| :------ | :---------- |
+| **Auto-Accept** | Automatically accept AI agent steps, file edits, terminal commands (with safety filters) |
+| **Telegram Remote Control** | Send `/ask` messages, receive completion notifications via Telegram |
+| **Session Monitoring** | Track AI agent activity, detect completion, extract response previews |
+| **Context Injection** | Automatically append `[HSA Context]` to chat messages for MCP guidance |
+
+**Install:** [HSA Companion](https://marketplace.visualstudio.com/items?itemName=nockasdd.nock-hsa-ext) *(link will be updated)*
+
 ---
 
 ## 🖥️ Web Dashboard & Logs
@@ -339,7 +352,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 </table>
 
 <details>
-<summary><b>📋 All 41 Commands — Details & Example Flows</b></summary>
+<summary><b>📋 All 43 Commands — Details & Example Flows</b></summary>
 <br>
 
 ### 🔥 Core (9 commands)
@@ -437,11 +450,11 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 
 ---
 
-## 🧠 Skills (93 total)
+## 🧠 Skills (97 total)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;6+Core+•+7+DevOps;22+Cross-cutting+•+5+Tooling+•+8+AI-ML;8+Governance+•+93+Total+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;23+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+97+Total+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -463,7 +476,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 </td>
 <td width="50%" valign="top">
 
-### 🖼️ Frameworks (9)
+### 🖼️ Frameworks (10)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=react,vue,nextjs,angular,nuxt,svelte,flutter,tailwind&theme=dark" />
@@ -475,16 +488,16 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (28) + Governance (8)
+### 🔧 Core & Cross-cutting (30) + Governance (8)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
 </p>
 
 <p align="center">
-  <sub><b>Core (6):</b> Security, API Design, Error Handling, Logging, Observability, Auth</sub>
+  <sub><b>Core (7):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering</sub>
   <br>
-  <sub><b>Cross-cutting (22):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator</sub>
+  <sub><b>Cross-cutting (23):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration</sub>
 </p>
 
 ### 🛠️ Tooling (5)
@@ -493,10 +506,10 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent</sub>
 </p>
 
-### 🤖 AI-ML (8)
+### 🤖 AI-ML (9)
 
 <p align="center">
-  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live</sub>
+  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration</sub>
 </p>
 
 </td>
@@ -510,14 +523,14 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 | Category          | Count  | Skills                                                                                                                                                                                                              |
 | :---------------- | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Languages**     | 28     | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal                             |
-| **Frameworks**    | 9      | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
-| **Core**          | 6      | Security, API Design, Error Handling, Logging, Observability, Authentication                                                                                                                                        |
+| **Frameworks**    | 10     | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
+| **Core**          | 7      | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering                                                                                                                   |
 | **DevOps**        | 7      | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 22     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator |
+| **Cross-cutting** | 23     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration |
 | **Tooling**       | 5      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
-| **AI-ML**         | 8      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live                                                                                                 |
+| **AI-ML**         | 9      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 8      | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation                                                     |
-| **Total**         | **93** |                                                                                                                                                                                                                     |
+| **Total**         | **97** |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -585,7 +598,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Agent configuration
-├── 🧠 skills/                # 93 specialized skills
+├── 🧠 skills/                # 97 specialized skills
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (6)     # Security, API Design, Auth...

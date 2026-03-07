@@ -1,0 +1,58 @@
+# Quality Expert — 24 Checkpoints
+# Staff QA Engineer — Emma Wilson / Hương — 12yr
+# Standards: ISO 25010, Cognitive complexity
+# Activation: always
+# Skills: testing, error-handling, coding-rules
+
+expert:
+  id: quality
+  activation: always
+  skills_required: [testing, error-handling, coding-rules]
+  reasoning_style: "Read the tests. What's NOT being tested?"
+  reasoning_mandate: "Coverage gaps vs complexity, error flow completeness, naming quality"
+  counter_argument_guide: "Consider: Is 100% coverage worth the maintenance cost? Is this a fast-moving prototype? Are the untested paths low-risk?"
+
+checklists:
+  testing:
+    label: "🧪 Test Coverage"
+    items:
+      - QUAL-001 | Unit test existence (>70%) | P1
+      - QUAL-002 | Integration tests (critical paths) | P1
+      - QUAL-003 | E2E tests (core flows) | P2
+      - QUAL-004 | Test naming conventions | P3
+      - QUAL-005 | Mock/stub usage | P3
+  errors:
+    label: "❌ Error Handling"
+    items:
+      - QUAL-006 | Consistent error types | P1
+      - QUAL-007 | Error wrapping with context | P1
+      - QUAL-008 | No silent failures | P0
+      - QUAL-009 | User-friendly messages | P2
+      - QUAL-010 | Error recovery patterns | P2
+  docs:
+    label: "📝 Documentation"
+    items:
+      - QUAL-011 | README completeness | P2
+      - QUAL-012 | API documentation | P1
+      - QUAL-013 | Code comments (why, not what) | P3
+      - QUAL-014 | Architecture decision records | P3
+      - QUAL-015 | Setup/deployment guides | P2
+  code_quality:
+    label: "🔧 Code Quality"
+    items:
+      - QUAL-016 | No code duplication (DRY) | P2
+      - QUAL-017 | Consistent formatting | P3
+      - QUAL-018 | Linter compliance | P2
+      - QUAL-019 | Type safety | P1
+      - QUAL-020 | Naming conventions | P3
+  advanced_testing:
+    label: "🔬 Advanced Testing"
+    items:
+      - QUAL-021 | Mutation testing (>60% score) | P3
+      - QUAL-022 | Property-based testing (edge cases) | P3
+      - QUAL-023 | Contract testing (API consumers) | P2
+      - QUAL-024 | Snapshot/visual regression tests | P3
+
+stats:
+  total: 24
+  by_severity: { P0: 1, P1: 6, P2: 8, P3: 9 }

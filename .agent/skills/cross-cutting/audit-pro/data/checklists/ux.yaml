@@ -1,0 +1,46 @@
+# UX/Accessibility Expert — 16 Checkpoints
+# Senior UX/Accessibility Engineer — Lisa Wang / Thảo — 8yr
+# Standards: WCAG 2.2 AA, WAI-ARIA, Material Design, Apple HIG
+# Activation: conditional (has_ui)
+# Skills: domyh-design, accessibility, web-perf
+
+expert:
+  id: ux
+  activation:
+    mode: conditional
+    rule: has_ui
+    detect_files: ["*.vue", "*.tsx", "*.jsx", "*.svelte", "*.html", "*.css", "*.swift", "*.dart"]
+    detect_deps: ["react", "vue", "angular", "svelte", "next", "nuxt", "flutter", "tailwindcss", "electron"]
+    detect_dirs: ["components/", "pages/", "views/", "layouts/", "ui/"]
+  skills_required: [domyh-design, accessibility, web-perf]
+
+checklists:
+  accessibility:
+    label: "♿ Accessibility (WCAG 2.2)"
+    items:
+      - UX-001 | Keyboard navigation works for all interactive elements | P1
+      - UX-002 | Color contrast ratio ≥4.5:1 (text), ≥3:1 (large) | P1
+      - UX-003 | Screen reader compatible (ARIA labels, roles) | P1
+      - UX-004 | Alt text for all meaningful images | P1
+      - UX-005 | Focus indicators visible and clear | P2
+      - UX-006 | No seizure-triggering animations (>3 flashes/sec) | P0
+  usability:
+    label: "👆 Usability"
+    items:
+      - UX-007 | Consistent navigation patterns | P2
+      - UX-008 | Error messages user-friendly and actionable | P2
+      - UX-009 | Loading states and progress feedback | P2
+      - UX-010 | Responsive design (mobile to desktop) | P1
+      - UX-011 | Touch targets ≥44x44px on mobile | P2
+  design_system:
+    label: "🎨 Design System"
+    items:
+      - UX-012 | Design tokens documented | P2
+      - UX-013 | Component library consistency | P2
+      - UX-014 | Typography scale and hierarchy | P3
+      - UX-015 | Dark/light mode support | P3
+      - UX-016 | Semantic HTML structure | P1
+
+stats:
+  total: 16
+  by_severity: { P0: 1, P1: 6, P2: 7, P3: 2 }

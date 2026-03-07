@@ -1,0 +1,43 @@
+# Compliance Expert — 15 Checkpoints
+# Distinguished Compliance Engineer — Jennifer Anderson / Hà — 18yr
+# Standards: GDPR, SOC2 TSC, HIPAA, ISO 27001, PCI-DSS
+# Activation: conditional (is_regulated)
+
+expert:
+  id: compliance
+  activation:
+    mode: conditional
+    rule: is_regulated
+    detect_files: ["HIPAA*", "GDPR*", "privacy-policy*", "compliance*"]
+    detect_code: ["consent", "data_subject", "right_to_delete", "audit_log", "pii"]
+    user_input: true
+
+checklists:
+  data_privacy:
+    label: "🔏 Data Privacy & GDPR"
+    items:
+      - COMP-001 | Consent management implemented and auditable | P0
+      - COMP-002 | Data subject rights (access, rectify, delete, port) | P0
+      - COMP-003 | Privacy policy current and accessible | P1
+      - COMP-004 | Data Processing Agreements with third parties | P1
+      - COMP-005 | PII data inventory documented | P1
+  audit_trail:
+    label: "📋 Audit Trail"
+    items:
+      - COMP-006 | All sensitive operations logged immutably | P0
+      - COMP-007 | Audit logs tamper-proof and time-stamped | P1
+      - COMP-008 | Log retention period compliant with regulations | P1
+      - COMP-009 | Breach notification process documented (<72hr GDPR) | P0
+  security_compliance:
+    label: "🔐 Security Compliance"
+    items:
+      - COMP-010 | Encryption at rest and in transit (TLS 1.3+) | P0
+      - COMP-011 | MFA enforced for admin/elevated access | P0
+      - COMP-012 | Vulnerability scanning on regular schedule | P1
+      - COMP-013 | Third-party vendor risk assessment done | P1
+      - COMP-014 | Employee security training documented | P2
+      - COMP-015 | Data classification policy | P1
+
+stats:
+  total: 15
+  by_severity: { P0: 6, P1: 7, P2: 1, P3: 0 }

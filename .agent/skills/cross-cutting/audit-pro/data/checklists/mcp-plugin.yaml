@@ -1,0 +1,41 @@
+# MCP Plugin Checklist — 14 Checkpoints
+# For: Model Context Protocol servers/plugins, AI tool integrations
+# Activation: detect MCP patterns
+
+type: supplementary
+activation:
+  detect_files: ["mcp.json", "mcp-config.*", "tools/", "server.ts", "server.js"]
+  detect_deps: ["@modelcontextprotocol/sdk", "mcp-server-*", "fastmcp"]
+  detect_code: ["McpServer", "server.tool(", "server.resource(", "CallToolRequest", "ListToolsRequest"]
+
+checklists:
+  prompt_security:
+    label: "💬 Prompt & Input Security"
+    items:
+      - MCP-001 | All tool inputs validated against JSON schema | P0
+      - MCP-002 | Prompt injection patterns detected and blocked | P0
+      - MCP-003 | System prompts not leakable via tool responses | P1
+      - MCP-004 | Indirect injection via tool output sanitized | P0
+  tool_safety:
+    label: "🔧 Tool Sandboxing"
+    items:
+      - MCP-005 | Tool execution has resource limits (time, memory) | P0
+      - MCP-006 | File system access scoped (no path traversal) | P0
+      - MCP-007 | Network access restricted (allowlist) | P1
+      - MCP-008 | No arbitrary code execution via tools | P0
+  credentials:
+    label: "🔑 Credential Management"
+    items:
+      - MCP-009 | OAuth preferred over static API keys | P1
+      - MCP-010 | Credentials rotated programmatically | P1
+      - MCP-011 | No secrets in tool descriptions or responses | P0
+  auditability:
+    label: "📋 Audit & Monitoring"
+    items:
+      - MCP-012 | All tool invocations logged with parameters | P1
+      - MCP-013 | Anomaly detection on usage patterns | P2
+      - MCP-014 | Rate limiting per client/tool | P1
+
+stats:
+  total: 14
+  by_severity: { P0: 7, P1: 5, P2: 1, P3: 0 }

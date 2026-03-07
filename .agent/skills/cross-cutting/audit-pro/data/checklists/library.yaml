@@ -1,0 +1,43 @@
+# Library/SDK Checklist — 14 Checkpoints
+# For: Published packages, shared libraries, SDKs consumed by other projects
+# Activation: detect patterns
+
+type: supplementary
+activation:
+  detect_files: ["index.d.ts", "lib/", "pkg/", "src/index.*", "types/"]
+  detect_package_json: |
+    Has "main", "module", "types", "exports" fields without "private: true".
+    Has "peerDependencies". Has "publishConfig".
+  detect_files_negative: ["Dockerfile", "server.*", "app.*"]
+
+checklists:
+  api_surface:
+    label: "📐 API Surface"
+    items:
+      - LIB-001 | Public API is minimal (no internal exports leaking) | P0
+      - LIB-002 | Breaking changes follow semver (MAJOR bump) | P0
+      - LIB-003 | TypeScript types exported and accurate | P1
+      - LIB-004 | JSDoc/docstrings on all public functions | P1
+  compatibility:
+    label: "🔄 Compatibility"
+    items:
+      - LIB-005 | Backward compatibility tested against previous versions | P0
+      - LIB-006 | Peer dependency ranges correct and tested | P1
+      - LIB-007 | Tree-shaking friendly (ESM exports, sideEffects: false) | P2
+      - LIB-008 | Bundle size tracked and budgeted | P2
+  supply_chain:
+    label: "📦 Supply Chain"
+    items:
+      - LIB-009 | SBOM generated with each release | P1
+      - LIB-010 | Dependencies minimal (no unnecessary transitive deps) | P1
+      - LIB-011 | Provenance attestation on publish | P2
+      - LIB-012 | Lock file committed and audited | P1
+  quality:
+    label: "✅ Library Quality"
+    items:
+      - LIB-013 | CHANGELOG.md follows Keep a Changelog format | P2
+      - LIB-014 | README has install, usage, API reference sections | P1
+
+stats:
+  total: 14
+  by_severity: { P0: 3, P1: 7, P2: 4, P3: 0 }

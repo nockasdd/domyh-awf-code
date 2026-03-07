@@ -143,3 +143,56 @@ chains:
         file: chains/feature/step5-testing.md
         depends_on: feat-4
         description: Verify all ACs met, coverage check, ship
+
+  /ap:
+    name: Audit Pro Chain
+    description: "10-step audit with SCoT reasoning, cross-expert critique, holistic synthesis"
+    steps:
+      - order: 1
+        id: audit-1
+        name: Discovery
+        file: chains/audit/step1-discover.md
+        description: Detect stack, project type, auto-activate experts
+
+      - order: 2
+        id: audit-2
+        name: Scope Contract
+        file: chains/audit/step2-scope.md
+        depends_on: audit-1
+        description: Display options (1-10), STOP for user
+
+      - order: 3
+        id: audit-3
+        name: Execute (SCoT)
+        file: chains/audit/step3-execute.md
+        depends_on: audit-2
+        description: SCoT 7-step per checkpoint, chunked execution
+
+      - order: 4
+        id: audit-4
+        name: Critique Round
+        file: chains/audit/step4-critique.md
+        depends_on: audit-3
+        description: Cross-expert challenge on P0/P1
+
+      - order: 5
+        id: audit-5
+        name: Holistic Synthesis
+        file: chains/audit/step5-holistic.md
+        depends_on: audit-4
+        description: 5 project-level questions beyond checklists
+
+      - order: 6
+        id: audit-6
+        name: Debate Round
+        file: chains/audit/step6-debate.md
+        depends_on: audit-5
+        description: Expert panel discussion IF systemic issues found
+
+      - order: 7
+        id: audit-7
+        name: Report
+        file: chains/audit/step7-report.md
+        depends_on: audit-6
+        description: Score, findings, holistic assessment, save
+

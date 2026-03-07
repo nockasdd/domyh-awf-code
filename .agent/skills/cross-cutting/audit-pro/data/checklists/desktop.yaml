@@ -1,0 +1,43 @@
+# Desktop App Checklist — 15 Checkpoints
+# For: Electron, Tauri, native desktop applications
+# Activation: detect_files + detect_deps
+# This is a SUPPLEMENTARY checklist loaded ALONGSIDE expert checklists
+
+type: supplementary
+activation:
+  detect_files: ["electron-builder.json", "electron-builder.yml", "tauri.conf.json", "forge.config.*", "Info.plist", "*.desktop"]
+  detect_deps: ["electron", "@electron-forge/*", "tauri", "electron-builder", "nw.js", "neutralinojs"]
+  detect_dirs: ["src-tauri/", "electron/", "public/electron/"]
+
+checklists:
+  ipc_security:
+    label: "🔌 IPC & Process Security"
+    items:
+      - DESK-001 | Main ↔ Renderer IPC sanitized (no nodeIntegration in renderer) | P0
+      - DESK-002 | contextBridge used for safe API exposure | P0 
+      - DESK-003 | Preload scripts minimize exposed surface | P1
+      - DESK-004 | No direct file system access from renderer | P1
+  binary:
+    label: "🔒 Binary Protection"
+    items:
+      - DESK-005 | Code signing configured for distribution | P0
+      - DESK-006 | Auto-update mechanism uses signed updates | P0
+      - DESK-007 | ASAR integrity / archive protection | P1
+      - DESK-008 | Obfuscation for sensitive business logic | P2
+  local_data:
+    label: "💾 Local Data Security"
+    items:
+      - DESK-009 | Sensitive data stored in OS Keychain/Credential Manager | P0
+      - DESK-010 | Local database encrypted (SQLCipher / encrypted-store) | P1
+      - DESK-011 | No sensitive data in localStorage/sessionStorage | P1
+      - DESK-012 | Temp files securely cleaned on exit | P2
+  platform:
+    label: "🖥️ Platform Integration"
+    items:
+      - DESK-013 | Deep links validated and sanitized | P1
+      - DESK-014 | File type associations don't enable code execution | P1
+      - DESK-015 | Native module versions match Electron ABI | P2
+
+stats:
+  total: 15
+  by_severity: { P0: 5, P1: 7, P2: 3, P3: 0 }

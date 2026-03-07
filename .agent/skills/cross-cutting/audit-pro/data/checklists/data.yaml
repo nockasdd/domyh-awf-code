@@ -1,0 +1,45 @@
+# Data Expert — 15 Checkpoints
+# Principal Data Architect — Robert Martinez / Tuấn — 15yr
+# Standards: Database normalization, ETL best practices, ACID
+# Activation: conditional (has_database)
+# Skills: database, sql
+
+expert:
+  id: data
+  activation:
+    mode: conditional
+    rule: has_database
+    detect_files: ["*.sql", "*.prisma", "schema.prisma", "drizzle.config.*", "knexfile.*"]
+    detect_deps: ["prisma", "drizzle", "typeorm", "sequelize", "mongoose", "gorm", "sqlalchemy", "diesel"]
+    detect_dirs: ["migrations/", "seeds/", "models/", "entities/"]
+  skills_required: [database, sql]
+
+checklists:
+  schema:
+    label: "🗄️ Schema Design"
+    items:
+      - DATA-001 | Database normalization (3NF minimum) | P1
+      - DATA-002 | Index strategy documented and optimized | P1
+      - DATA-003 | Foreign key constraints enforced | P1
+      - DATA-004 | Schema versioning via migrations | P1
+      - DATA-005 | Naming conventions consistent | P2
+  data_quality:
+    label: "✅ Data Quality"
+    items:
+      - DATA-006 | Input validation at database level | P1
+      - DATA-007 | Data type correctness and sizing | P1
+      - DATA-008 | NULL handling strategy documented | P2
+      - DATA-009 | Unique constraints where required | P1
+  operations:
+    label: "⚙️ Data Operations"
+    items:
+      - DATA-010 | Backup strategy documented and tested | P0
+      - DATA-011 | Point-in-time recovery capability | P1
+      - DATA-012 | Zero-downtime migration plan | P1
+      - DATA-013 | Data retention/archival policy | P2
+      - DATA-014 | Seed data for dev/test environments | P3
+      - DATA-015 | Connection pool sizing appropriate | P1
+
+stats:
+  total: 15
+  by_severity: { P0: 1, P1: 10, P2: 3, P3: 1 }

@@ -12,7 +12,7 @@ developer: "NockDev"
 # LANGUAGE & DEFAULTS
 # =============================================================================
 
-lang: vi # Default: en | vi — Currently: Tiếng Việt
+# lang: SSoT is memory/state.json → preferences.language
 
 defaults:
   evidence_required: true
@@ -43,16 +43,14 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 93 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 87 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
-  # Categories: 28 languages + 9 frameworks + 6 core + 7 devops + 22 cross-cutting + 5 tooling + 8 ai-ml + 8 governance
+  # Categories: 28 languages + 9 frameworks + 6 core + 7 devops + 23 cross-cutting + 5 tooling + 8 ai-ml + 1 agentic = 87
 
   loading:
-    # NOTE: These defaults can be overridden by config.yaml (project-level)
-    strategy: progressive # progressive | eager | lazy (override: config.yaml)
-    max_active: 3 # Max skills in context at once (override: config.yaml)
-    cache_ttl: 3600 # 1 hour cache (override: config.yaml)
+    # SSoT: config.yaml → skills section
+    # Defaults: progressive, max_active=3, cache_ttl=3600
 
   # Categories with priority (lower = higher priority)
   categories:
@@ -64,6 +62,7 @@ skills:
           security,
           api-design,
           authentication,
+          context-engineering,
           error-handling,
           logging,
           observability,
@@ -105,7 +104,7 @@ skills:
 
     framework:
       priority: 2
-      skills: [react, vue, nextjs, angular, nuxt, svelte, flutter, react-native]
+      skills: [react, vue, nextjs, angular, nuxt, svelte, flutter, react-native, streamlit]
 
     devops:
       priority: 3
@@ -137,6 +136,7 @@ skills:
           wasm,
           playwright,
           skill-creator,
+          payment-integration,
         ]
 
     tooling:
@@ -155,6 +155,7 @@ skills:
           gemini-tts,
           gemini-live,
           ml-pipelines,
+          agentic-orchestration,
         ]
 
     governance:
@@ -190,7 +191,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (41 workflows) — Complete Command Set
+# COMMANDS (43 workflows) — Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
@@ -280,7 +281,7 @@ commands:
     file: workflows/prompt.md
     icon: "✍️"
     category: planning
-    persona: architect
+    persona: researcher
     cache: true
     triggers: [prompt, tạo prompt, viết prompt]
     skills: { required: [prompt-engineering], contextual: [domyh-design] }
@@ -365,7 +366,7 @@ commands:
     file: workflows/migrate.md
     icon: "🗃️"
     category: deployment
-    persona: developer
+    persona: devops
     cache: true
     triggers: [migrate, migration, di chuyển]
     skills: { required: [database], contextual: [auto] }
@@ -381,13 +382,13 @@ commands:
     persona: auditor
     cache: true
     triggers: [ap, audit, kiểm toán]
-    skills: { required: [security, audit-pro], contextual: [auto] }
+    skills: { required: [audit-pro], contextual: [security, coding-rules, testing, observability, authentication] }
 
   - id: review
     file: workflows/review.md
     icon: "👀"
     category: quality
-    persona: auditor
+    persona: developer
     cache: true
     triggers: [review, pr, xem xét]
     skills: { required: [security], contextual: [auto] }
@@ -445,7 +446,7 @@ commands:
     file: workflows/status.md
     icon: "📊"
     category: utility
-    persona: developer
+    persona: devops
     cache: false
     triggers: [status, health, sức khỏe]
     skills: { required: [], contextual: [auto] }
@@ -584,6 +585,33 @@ commands:
     triggers: [suggest, gợi ý]
     skills: { required: [], contextual: [auto] }
 
+  - id: sync-version
+    file: workflows/sync-version.md
+    icon: "🔄"
+    category: utility
+    persona: developer
+    cache: false
+    triggers: [sync-version, bump, nâng version]
+    skills: { required: [], contextual: [] }
+
+  - id: lang
+    file: workflows/lang.md
+    icon: "🌐"
+    category: utility
+    persona: developer
+    cache: false
+    triggers: [lang, language, ngôn ngữ]
+    skills: { required: [], contextual: [] }
+
+  - id: save
+    file: workflows/save.md
+    icon: "💾"
+    category: utility
+    persona: developer
+    cache: false
+    triggers: [save, lưu]
+    skills: { required: [], contextual: [] }
+
 
 # =============================================================================
 # PERSONAS (On-demand load)
@@ -630,7 +658,5 @@ i18n:
 # TOKEN BUDGET (Target metrics)
 # =============================================================================
 
-token_budget:
-  idle: 9300 # ~9,300 tokens at rest (93 × META.yaml)
-  single_skill: 10800 # ~10,800 with 1 skill active (+1,500 T2)
-  peak: 13800 # ~13,800 max (3 skills concurrent)
+# Token budget SSoT: config.yaml → context section
+# idle=8700 (87 META), single=10200, peak=13200

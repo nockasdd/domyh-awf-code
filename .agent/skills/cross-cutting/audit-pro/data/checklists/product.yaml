@@ -1,0 +1,40 @@
+# Product Expert — 13 Checkpoints
+# Tech Lead (Product Engineering) — Daniel Lee / Lan — 10yr
+# Standards: INVEST, Given-When-Then (BDD), Scrum Guide
+# Activation: conditional (scope_full)
+
+expert:
+  id: product
+  activation:
+    mode: conditional
+    rule: scope_full
+    trigger: "scope_option IN [FULL_AUDIT, 1]"
+    user_input: true
+
+checklists:
+  acceptance:
+    label: "📋 Acceptance & Readiness"
+    items:
+      - PROD-001 | Acceptance criteria defined | P1
+      - PROD-002 | Definition of Ready checklist met | P1
+      - PROD-003 | Definition of Done checklist verified | P1
+      - PROD-004 | User stories follow INVEST criteria | P2
+  uat:
+    label: "🧑‍💼 User Acceptance Testing"
+    items:
+      - PROD-005 | UAT test scenarios documented | P1
+      - PROD-006 | UAT environment mirrors production | P1
+      - PROD-007 | End-user testers identified and briefed | P2
+      - PROD-008 | UAT sign-off obtained | P0
+  release:
+    label: "🚀 Release Management"
+    items:
+      - PROD-009 | Feature flags for gradual rollout | P2
+      - PROD-010 | Release notes prepared | P2
+      - PROD-011 | Stakeholder communication plan | P2
+      - PROD-012 | Rollback criteria clearly defined | P1
+      - PROD-013 | A/B test metrics defined (if applicable) | P3
+
+stats:
+  total: 13
+  by_severity: { P0: 1, P1: 6, P2: 5, P3: 1 }

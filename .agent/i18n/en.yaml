@@ -43,7 +43,7 @@ commands:
   ap:
     name: "Full Audit"
     short: "Audit"
-    desc: "Comprehensive code audit with 5-expert panel"
+    desc: "Comprehensive code audit with 12-expert panel"
     help: "Usage: /ap [scope] — scope: full | quick | security"
   code:
     name: "Write & Fix Code"
@@ -263,7 +263,7 @@ commands:
 personas:
   auditor:
     name: "Audit Committee"
-    desc: "5-expert panel for comprehensive review"
+    desc: "12-expert panel for comprehensive review"
   developer:
     name: "Senior Developer"
     desc: "Quality-focused code implementation"

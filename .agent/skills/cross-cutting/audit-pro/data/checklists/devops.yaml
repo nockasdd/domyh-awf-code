@@ -1,0 +1,60 @@
+# DevOps Expert — 24 Checkpoints
+# Senior DevOps Engineer — Michael Torres / Đức — 10yr
+# Standards: SRE principles, 12-factor app, GitOps
+# Activation: always
+# Skills: logging, observability
+
+expert:
+  id: devops
+  activation: always
+  skills_required: [logging, observability]
+  reasoning_style: "Imagine 3AM outage. Can the team recover?"
+  reasoning_mandate: "CI/CD coverage, rollback capability, alerting/runbooks, secrets rotation"
+  counter_argument_guide: "Consider: Is this a personal/hobby project? Is the team size 1? Is the cost of infra overhead justified at this scale?"
+
+checklists:
+  cicd:
+    label: "🚀 CI/CD Pipeline"
+    items:
+      - OPS-001 | Automated testing in CI | P1
+      - OPS-002 | Linting/formatting checks | P2
+      - OPS-003 | Build verification | P1
+      - OPS-004 | Deployment automation | P1
+      - OPS-005 | Rollback capability | P1
+  logging:
+    label: "📊 Logging & Monitoring"
+    items:
+      - OPS-006 | Structured logging | P1
+      - OPS-007 | Log levels (debug/info/error) | P2
+      - OPS-008 | Centralized log collection | P2
+      - OPS-009 | Alerting configuration | P2
+      - OPS-010 | Dashboard existence | P3
+  containers:
+    label: "🐳 Containerization"
+    context: { requires: "has_containers" }
+    items:
+      - OPS-011 | Dockerfile optimization | P2
+      - OPS-012 | Multi-stage builds | P2
+      - OPS-013 | .dockerignore completeness | P3
+      - OPS-014 | Docker Compose for dev | P3
+      - OPS-015 | Security scanning | P1
+  config:
+    label: "⚙️ Configuration"
+    items:
+      - OPS-016 | Environment separation | P1
+      - OPS-017 | Secrets management | P0
+      - OPS-018 | Feature flags | P3
+      - OPS-019 | Health check endpoints | P1
+      - OPS-020 | Graceful shutdown | P1
+  gitops:
+    label: "🔀 GitOps & IaC"
+    context: { requires: "has_infra" }
+    items:
+      - OPS-021 | Infrastructure as Code | P2
+      - OPS-022 | GitOps workflow | P3
+      - OPS-023 | Blue-green/canary deployment ready | P2
+      - OPS-024 | Environment parity | P2
+
+stats:
+  total: 24
+  by_severity: { P0: 1, P1: 9, P2: 10, P3: 4 }

@@ -1,0 +1,43 @@
+# Cloud Expert — 12 Checkpoints
+# Senior Cloud Infrastructure Architect — Alexander White / Bảo — 10yr
+# Standards: 12-Factor App, AWS/Azure/GCP Well-Architected Framework
+# Activation: conditional (has_infra)
+
+expert:
+  id: cloud
+  activation:
+    mode: conditional
+    rule: has_infra
+    detect_files: ["*.tf", "*.tfvars", "pulumi.*", "cloudformation.*", "*.bicep"]
+    detect_deps: ["@aws-sdk/*", "@azure/*", "@google-cloud/*"]
+    detect_dirs: ["terraform/", "infra/", "cdk/", "pulumi/"]
+
+checklists:
+  infrastructure:
+    label: "🏗️ Infrastructure"
+    items:
+      - CLOUD-001 | Infrastructure as Code | P1
+      - CLOUD-002 | Environment parity (dev ≈ staging ≈ prod) | P1
+      - CLOUD-003 | Auto-scaling configured | P1
+      - CLOUD-004 | CDN configured for static assets | P2
+  cost:
+    label: "💰 Cost Optimization"
+    items:
+      - CLOUD-005 | Cost alerts and budget thresholds | P2
+      - CLOUD-006 | Right-sizing review completed | P2
+      - CLOUD-007 | Reserved/spot instances evaluated | P3
+  network_security:
+    label: "🔒 Network & Security"
+    items:
+      - CLOUD-008 | Network segmentation (VPC/subnets) | P1
+      - CLOUD-009 | WAF/DDoS protection enabled | P1
+      - CLOUD-010 | SSL/TLS certificates auto-renewed | P0
+  operations:
+    label: "⚙️ Cloud Operations"
+    items:
+      - CLOUD-011 | Multi-region DR strategy documented | P2
+      - CLOUD-012 | Managed services preferred over self-hosted | P3
+
+stats:
+  total: 12
+  by_severity: { P0: 1, P1: 5, P2: 4, P3: 2 }

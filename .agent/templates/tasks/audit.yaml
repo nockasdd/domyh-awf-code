@@ -114,7 +114,7 @@ task:
 ## Workflow Integration
 
 This task type triggers:
-- **Persona:** Auditor (5-expert panel)
+- **Persona:** Auditor (12-expert panel with SCoT reasoning)
 - **Workflow:** /ap workflow
 - **Output:** Finding report with P0-P3 prioritization
 

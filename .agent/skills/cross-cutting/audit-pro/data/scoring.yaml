@@ -1,5 +1,6 @@
-# Audit Pro — Scoring & Grading System
-# Supports 12-Expert Panel with conditional activation
+# Audit Pro — Scoring & Grading System v2
+# Supports 12-Expert Panel + supplementary checklists
+# 11 weight profiles (6 original + 5 new for non-web projects)
 
 scoring:
   scale: 10
@@ -66,6 +67,40 @@ scoring:
       reliability: 0.15
       performance: 0.15
       quality: 0.10
+    # NEW v2 profiles — non-web project types
+    desktop_app:
+      security: 0.20
+      architecture: 0.25
+      performance: 0.20
+      quality: 0.15
+      devops: 0.10
+      ux: 0.10
+    cli_tool:
+      security: 0.15
+      architecture: 0.25
+      quality: 0.25
+      performance: 0.15
+      devops: 0.10
+      product: 0.10
+    library_sdk:
+      architecture: 0.30
+      quality: 0.25
+      security: 0.20
+      performance: 0.15
+      devops: 0.10
+    mobile_app:
+      ux: 0.20
+      security: 0.25
+      performance: 0.20
+      quality: 0.15
+      architecture: 0.10
+      devops: 0.10
+    mcp_plugin:
+      security: 0.25
+      architecture: 0.25
+      quality: 0.20
+      performance: 0.15
+      devops: 0.15
 
   redistribution:
     method: proportional
@@ -86,13 +121,18 @@ scoring:
     - 3.0-4.9 | 🚫 Not ready | Significant remediation needed
     - 0.0-2.9 | ❌ Critical issues | Do not deploy, major rework
 
-  # id | label | estimate | coverage | use_case | experts
+  # id | label | estimate | coverage | use_case
   scope_options:
-    - 1 | 🔴 FULL AUDIT | ~2h | All 12 experts | Pre-production, Major releases
+    - 1 | 🔴 FULL AUDIT | ~2h | All 12 experts + supplementary | Pre-production, Major releases
     - 2 | 🟠 BACKEND | ~1h | Core 5 + Data + Reliability | Backend changes, API updates
     - 3 | 🟡 FRONTEND | ~30m | Security + Quality + UX + Perf | UI changes, UX updates
     - 4 | 🟢 SECURITY ONLY | ~1h | Security + Compliance | Security review, Compliance
-    - 5 | 🔵 CUSTOM | ? | User-defined | Specific areas of concern
+    - 5 | 🔵 DESKTOP APP | ~1h | Core 5 + Desktop supplement | Electron/Tauri apps
+    - 6 | 🟣 CLI TOOL | ~30m | Core 5 + CLI supplement | Command-line tools
+    - 7 | ⚪ LIBRARY/SDK | ~45m | Core 5 + Library supplement | Published packages
+    - 8 | 📱 MOBILE APP | ~1h | Core 5 + UX + Mobile security | iOS/Android apps
+    - 9 | 🔌 MCP PLUGIN | ~45m | Core 5 + MCP supplement | MCP servers/plugins
+    - 10 | 🔵 CUSTOM | ? | User-defined | Specific areas of concern
 
   consensus:
     voting: Weighted average by severity

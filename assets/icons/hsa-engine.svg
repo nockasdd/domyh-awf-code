@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#064E3B"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34D399"/>
+      <stop offset="100%" style="stop-color:#6EE7B7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded background -->
+  <rect x="4" y="4" width="120" height="120" rx="24" ry="24" fill="url(#bg)"/>
+
+  <!-- Hierarchy tree structure (semantic analysis) -->
+  <!-- Root node -->
+  <circle cx="64" cy="30" r="6" fill="#FFFFFF"/>
+  
+  <!-- Level 1 connections -->
+  <line x1="64" y1="36" x2="40" y2="56" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+  <line x1="64" y1="36" x2="64" y2="56" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+  <line x1="64" y1="36" x2="88" y2="56" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+
+  <!-- Level 1 nodes -->
+  <circle cx="40" cy="58" r="5" fill="url(#node)"/>
+  <circle cx="64" cy="58" r="5" fill="url(#node)"/>
+  <circle cx="88" cy="58" r="5" fill="url(#node)"/>
+
+  <!-- Level 2 connections -->
+  <line x1="40" y1="63" x2="30" y2="80" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+  <line x1="40" y1="63" x2="50" y2="80" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+  <line x1="64" y1="63" x2="64" y2="80" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+  <line x1="88" y1="63" x2="78" y2="80" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+  <line x1="88" y1="63" x2="98" y2="80" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Level 2 nodes (leaf) -->
+  <circle cx="30" cy="82" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="50" cy="82" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="64" cy="82" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="78" cy="82" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="98" cy="82" r="4" fill="#FFFFFF" opacity="0.8"/>
+
+  <!-- Search/magnifier overlay (bottom-right) — BM25 search -->
+  <circle cx="90" cy="98" r="10" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+  <line x1="97" y1="105" x2="104" y2="112" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- MCP text label -->
+  <text x="30" y="106" font-family="system-ui, sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF" opacity="0.9">MCP</text>
+</svg>

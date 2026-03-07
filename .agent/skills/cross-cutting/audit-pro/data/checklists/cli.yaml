@@ -1,0 +1,39 @@
+# CLI Tool Checklist — 12 Checkpoints
+# For: Command-line tools, CLI utilities, terminal applications
+# Activation: detect_files + detect_deps
+
+type: supplementary
+activation:
+  detect_files: ["bin/*", "cli.*", "cli/", "*.sh"]
+  detect_deps: ["commander", "yargs", "inquirer", "chalk", "ora", "meow", "clap", "cobra", "urfave/cli", "click", "typer", "argparse"]
+  detect_code: ["process.argv", "os.Args", "sys.argv", "ARGV", "args.parse"]
+
+checklists:
+  input_safety:
+    label: "⌨️ Input Safety"
+    items:
+      - CLI-001 | All arguments validated (type, range, format) | P0
+      - CLI-002 | Shell injection prevention (no unsanitized exec) | P0
+      - CLI-003 | Path traversal prevention in file arguments | P0
+      - CLI-004 | Stdin input bounded (max size, timeout) | P1
+  secrets:
+    label: "🔐 Credential Handling"
+    items:
+      - CLI-005 | No secrets in command-line arguments (visible in ps) | P0
+      - CLI-006 | Credential storage uses OS keyring/vault | P1
+      - CLI-007 | Config files have restricted permissions (600/700) | P1
+  ux:
+    label: "📟 CLI UX"
+    items:
+      - CLI-008 | --help output comprehensive and accurate | P2
+      - CLI-009 | Exit codes meaningful (0=success, 1=error, 2=usage) | P1
+      - CLI-010 | stderr for errors, stdout for data (piping support) | P1
+  operations:
+    label: "⚙️ Operations"
+    items:
+      - CLI-011 | Version flag (--version) matches package version | P3
+      - CLI-012 | Graceful SIGINT/SIGTERM handling | P1
+
+stats:
+  total: 12
+  by_severity: { P0: 4, P1: 5, P2: 1, P3: 1 }

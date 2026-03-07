@@ -54,7 +54,7 @@ patterns:
     mocking: vi.fn(), vi.mock()
     coverage: --coverage
     docs_url: https://vitest.dev
-    # v6.4.10: Version-specific info
+    # v6.5.0: Version-specific info
     version_info:
       current: "4.0.0"
       min_supported: "2.0.0"

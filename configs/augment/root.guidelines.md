@@ -14,6 +14,7 @@ MUST execute before writing code:
 1. `hsa_search(relevant_query)` — Find matching skill patterns
 2. `hsa_search(query)` — Search codebase (NEVER use grep when MCP available)
 3. `hsa_detect()` — On first code task per project
+4. `hsa_search(action:"docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)
 
 ## ❌ NEVER (When MCP Connected)
 
@@ -50,7 +51,7 @@ NEVER use these on Windows — they hang indefinitely:
 ## Skills & Workflows
 
 **Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
-**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (93 skills)
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` (88 skills)
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.

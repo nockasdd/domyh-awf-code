@@ -1,10 +1,10 @@
 name: audit-pro
-display: Audit Pro System
+display: Audit Pro System v2
 category: cross-cutting
 tier: 1
 priority: 1
 
-desc: "12-Expert Panel audit (5 core + 7 conditional) with 222 checkpoints and bilingual EN/VN personas. Conditional activation auto-detects project type (UI, DB, regulated, AI, cloud). ISO 25010, CWE Top 25, OWASP Top 10, WCAG 2.2, GDPR, SRE. HSA-queryable."
+desc: "12-Expert Panel audit (5 core + 7 conditional) with 277 checkpoints across 16 files. Includes SCoT reasoning protocol, cross-expert critique round, and supplementary checklists for desktop/CLI/library/MCP/mobile. Conditional activation auto-detects project type. ISO 25010, CWE Top 25, OWASP Top 10, WCAG 2.2, GDPR, SRE. HSA-queryable."
 
 triggers:
   file_patterns: []
@@ -38,9 +38,43 @@ caps:
   - Code quality assessment
   - DevOps readiness check
   - Accessibility audit (WCAG 2.2)
+  - Desktop app security (Electron/Tauri)
+  - CLI tool safety
+  - Library/SDK publishing audit
+  - MCP plugin security
+
+# v2: Skills auto-loaded per expert during audit
+auto_load_skills:
+  security: [security, authentication]
+  architecture: [coding-rules, api-design]
+  performance: [observability, web-perf]
+  quality: [testing, error-handling, coding-rules]
+  devops: [logging, observability]
+  ux: [domyh-design, web-perf]  # accessibility patterns embedded in domyh-design
+  data: [database, sql]
+  compliance: [security]  # uses auth-patterns + audit logging
+  reliability: [observability]  # uses alerting + SLO patterns
+  cloud: [security]  # uses cloud-security.yaml subset
+  ai_safety: [security]  # uses ai-ml-security.yaml subset
+  product: []  # no skill data needed, uses project docs
 
 data_files:
-  - data/checklists.yaml
+  - data/checklists/security.yaml
+  - data/checklists/architecture.yaml
+  - data/checklists/performance.yaml
+  - data/checklists/quality.yaml
+  - data/checklists/devops.yaml
+  - data/checklists/ux.yaml
+  - data/checklists/data.yaml
+  - data/checklists/compliance.yaml
+  - data/checklists/product.yaml
+  - data/checklists/reliability.yaml
+  - data/checklists/cloud.yaml
+  - data/checklists/ai-safety.yaml
+  - data/checklists/desktop.yaml
+  - data/checklists/cli.yaml
+  - data/checklists/library.yaml
+  - data/checklists/mcp-plugin.yaml
   - data/scoring.yaml
 
-related_skills: [security, testing]
+related_skills: [security, authentication, coding-rules, api-design, testing, error-handling, logging, observability, database, sql, web-perf, domyh-design]

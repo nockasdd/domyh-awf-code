@@ -15,7 +15,7 @@
 | `/deploy`   | 🚀 Deploy to production  | ci-cd               | docker, kubernetes, aws        |
 | `/refactor` | 🔧 Refactor & cleanup    | coding-rules        | [auto]                         |
 | `/review`   | 👀 Code review           | security            | [auto]                         |
-| `/ap`       | 🔬 Full audit (5-expert) | security, audit-pro | [auto]                         |
+| `/ap`       | 🔬 Full audit (12-expert) | audit-pro           | [security, coding-rules, testing, observability, authentication] |
 | `/modify`   | 🔧 Fix existing project  | coding-rules        | [auto]                         |
 
 ## Git & Fix Commands (3)
@@ -86,6 +86,11 @@
 1. **L1: Deterministic (0ms)** — Load `skills.required` from workflow frontmatter
 2. **L2: Contextual (<50ms)** — Detect from project files (`[auto]` = file pattern match)
 3. **L3: Semantic (<200ms)** — Match user query keywords to skill META.yaml keywords
-→ Result: Skill Set (max 5)
+4. **L4: Skill-Internal (workflow-managed)** — Some skills (e.g. `audit-pro`) define
+   `auto_load_skills` in META.yaml, mapping sub-skills per expert/phase.
+   These are loaded during workflow execution, NOT at initial routing.
+   → Result: Extended Skill Set (up to 14 for audit)
+
+→ Final Result: Skill Set (max 5 from L1-L3, extended by L4 during execution)
 
 ---

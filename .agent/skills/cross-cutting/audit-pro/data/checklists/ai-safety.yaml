@@ -1,0 +1,38 @@
+# AI Safety Expert — 10 Checkpoints
+# Distinguished AI Safety Researcher — Dr. Sophia Nguyen / Vy — 20yr
+# Standards: OpenAI Model Spec, ISO 42001, EU AI Act
+# Activation: conditional (has_ai)
+
+expert:
+  id: ai_safety
+  activation:
+    mode: conditional
+    rule: has_ai
+    detect_deps: ["openai", "langchain", "llama-index", "transformers", "torch", "tensorflow", "anthropic"]
+    detect_code: ["system_prompt", "ChatCompletion", "llm.", "model.generate", "embeddings"]
+    detect_files: ["*.prompt", "prompts/", "model_card*"]
+
+checklists:
+  prompts:
+    label: "💬 System Prompt Engineering"
+    items:
+      - AI-001 | System prompt has clear behavioral guardrails | P0
+      - AI-002 | Input validation and sanitization before LLM | P0
+      - AI-003 | Output format enforcement (structured, schema) | P1
+      - AI-004 | Prompt injection protection tested | P0
+  safety:
+    label: "🛡️ AI Safety"
+    items:
+      - AI-005 | Hallucination detection/mitigation mechanism | P1
+      - AI-006 | Bias audit documented | P1
+      - AI-007 | Human oversight for critical decisions | P0
+      - AI-008 | Model card documented | P2
+  operations:
+    label: "⚙️ AI Operations"
+    items:
+      - AI-009 | Model drift monitoring in production | P2
+      - AI-010 | Data privacy in training and inference (no PII leak) | P0
+
+stats:
+  total: 10
+  by_severity: { P0: 5, P1: 3, P2: 2, P3: 0 }

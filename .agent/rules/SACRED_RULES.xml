@@ -193,8 +193,7 @@ ENFORCEMENT: If session ends without persist or snapshot update, the session is 
   <requirement id="EXEC_003" tier="4" severity="warn">
     <text>At task start, detect project tech stack and load matching skills. Prefer hsa_detect when available. Fallback: check root for package.json/go.mod/Cargo.toml/*.sln. Loading: META.yaml (always) → SKILL.md (on-demand) → ADVANCED.md (deep dive only).</text>
     <config>
-      <router>.agent/skills/_router.yaml</router>
-      <categories>.agent/skills/_categories.yaml</categories>
+      <index>.agent/skills/INDEX.yaml</index>
     </config>
   </requirement>
   

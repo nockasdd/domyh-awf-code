@@ -1,0 +1,62 @@
+# Performance Expert — 24 Checkpoints
+# Senior Performance Engineer — James Park / Khoa — 10yr
+# Standards: Core Web Vitals, N+1 detection, SLO/SLI
+# Activation: always
+# Skills: observability, web-perf
+
+expert:
+  id: performance
+  activation: always
+  skills_required: [observability, web-perf]
+  reasoning_style: "Follow the hot path. Where will it break under load?"
+  reasoning_mandate: "Identify critical paths, check caching/indexing, verify monitoring exists"
+  counter_argument_guide: "Consider: Is this path actually hot (user traffic)? Is premature optimization worse than the issue? Are SLOs met without this?"
+
+checklists:
+  database:
+    label: "🗃️ Database Performance"
+    context: { requires: "has_database" }
+    items:
+      - PERF-001 | N+1 query detection | P0
+      - PERF-002 | Index usage verification | P1
+      - PERF-003 | Connection pooling | P1
+      - PERF-004 | Query optimization | P1
+      - PERF-005 | Proper pagination | P2
+  memory:
+    label: "💾 Memory Management"
+    items:
+      - PERF-006 | Memory leak patterns | P1
+      - PERF-007 | Large object handling | P2
+      - PERF-008 | Buffer management | P2
+      - PERF-009 | Garbage collection friendly | P3
+  caching:
+    label: "⚡ Caching Strategy"
+    items:
+      - PERF-010 | Cache layer exists | P1
+      - PERF-011 | Cache invalidation logic | P1
+      - PERF-012 | Cache implementation appropriate to stack | P2
+      - PERF-013 | Response/output caching | P2
+  async:
+    label: "🔄 Async & Concurrency"
+    items:
+      - PERF-014 | Proper async/concurrent patterns | P1
+      - PERF-015 | Context/cancellation handling | P1
+      - PERF-016 | Rate limiting | P1
+      - PERF-017 | Queue/worker implementation | P2
+  monitoring:
+    label: "📊 Monitoring Ready"
+    items:
+      - PERF-018 | Response time / latency tracking | P2
+      - PERF-019 | Resource usage metrics | P2
+      - PERF-020 | Error rate monitoring | P1
+  load:
+    label: "🏋️ Load & Stress"
+    items:
+      - PERF-021 | Load test scenarios documented | P2
+      - PERF-022 | Baseline performance benchmarks | P2
+      - PERF-023 | SLO targets defined | P2
+      - PERF-024 | Graceful degradation under load | P1
+
+stats:
+  total: 24
+  by_severity: { P0: 1, P1: 11, P2: 11, P3: 1 }
