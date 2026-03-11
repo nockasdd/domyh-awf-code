@@ -74,6 +74,77 @@ hsa_delegate(task_type: "code")
 # → 93-97% token savings in subagent prompt
 ```
 
+## Cross-Model Cascade
+
+When the primary model isn't optimal for a sub-task, delegate to a specialized model:
+
+```
+# 1. List available models
+hsa_delegate({action: 'cascade_models'})
+
+# 2. Send cascade
+hsa_delegate({
+  action: 'cascade',
+  cascade_text: '[detailed prompt with all context]',
+  task_type: 'code',           # enables dashboard model routing
+  cascade_model: 'model-id'    # optional — override dashboard routing
+})
+# → returns cascade_id
+
+# 3. Poll for response (3-5s intervals, max 10 polls)
+hsa_delegate({action: 'cascade_read', cascade_id: '...'})
+# → status: pending | complete | error
+
+# 4. Cancel if needed
+hsa_delegate({action: 'cascade_cancel', cascade_id: '...'})
+```
+
+### When to Cascade vs Do Yourself
+
+| Scenario | Action |
+|----------|--------|
+| Task within current model's strength | Do yourself |
+| Need stronger reasoning (Opus/Pro) | Cascade with task_type:'review' or 'debug' |
+| Need fast cheap output (Flash) | Cascade with task_type:'code' |
+| Research needing web access | Cascade with task_type:'research' |
+| User configured specific model | Cascade — auto-routes via dashboard |
+
+### Mandatory Cascade Evaluation
+
+Before executing any workflow's main logic, run this quick check:
+
+```
+Is cascade enabled in user Dashboard?
+  NO → Skip cascade, proceed normally
+  YES ↓
+
+Complexity score (H1-H5) ≥ 8?
+  YES → AUTO-cascade with matched task_type ✅
+  NO ↓
+
+Complexity score 5-7?
+  YES → SUGGEST cascade to user ↗️
+  NO ↓
+
+Workflow-specific trigger? (security=always, debug L3=auto)
+  YES → Follow trigger rule ✅
+  NO ↓
+
+Scope trigger? (>100 LOC, >5 files, multi-lang)
+  YES → SUGGEST cascade ↗️
+  NO → Proceed without cascade ✅
+```
+
+Key: Agent ALWAYS has final decision. "AUTO" = strong recommendation. "SUGGEST" = informational.
+
+### Cascade Prompt Guidelines
+
+Include in `cascade_text`:
+- **Goal**: What exactly the sub-agent must produce
+- **Context**: Relevant code snippets, file paths, error messages
+- **Constraints**: Language, framework, style conventions
+- **Return format**: Expected output structure
+
 ## Parallel vs Sequential
 
 | Pattern | When | How | Risk |

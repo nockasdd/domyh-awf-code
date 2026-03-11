@@ -6,7 +6,7 @@ rule_id: "MOD-ESC-001"
 
 description: |
   When an agent fails to fix a bug after repeated attempts,
-  detect stuck state and escalate through 6 levels of debugging strategies.
+  detect stuck state and escalate through 7 levels of debugging strategies.
   Based on: Reflexion, Tree-of-Thought, DoVer, Devil's Advocate.
 
 category: "workflow"
@@ -34,11 +34,12 @@ stuck_detection:
   thresholds:
     level_2_reflect: 0.6
     level_3_reframe: 0.75
+    level_3_5_cascade: 0.80
     level_4_widen: 0.85
     level_5_decompose: 0.90
     level_6_escalate: 0.95
 
-# ═══ 6 ESCALATION LEVELS ═══
+# ═══ 7 ESCALATION LEVELS ═══
 
 levels:
   level_1_retry:
@@ -57,9 +58,22 @@ levels:
     trigger: "Level 2 failed OR stuck_score ≥ 0.75"
     prompt_file: "templates/reflection/escalation-L3.md"
 
+  level_3_5_cascade:
+    name: "CASCADE"
+    trigger: "Level 3 failed OR stuck_score ≥ 0.80"
+    condition: "Only when cascade enabled in user Dashboard"
+    action: |
+      Delegate current bug context to stronger model via cascade:
+      1. Prepare cascade prompt with: error details, failed approaches (L1-L3), relevant code
+      2. hsa_delegate({action:'cascade', cascade_text:'[full debug context]', task_type:'debug'})
+      3. Wait for cascade response (3-5s intervals, max 10 polls)
+      4. If cascade provides actionable fix → apply and verify
+      5. If cascade fails or unavailable → continue to Level 4 (WIDEN)
+    rationale: "Try specialized model before widening scope or escalating to user"
+
   level_4_widen:
     name: "WIDEN"
-    trigger: "Level 3 failed OR stuck_score ≥ 0.85"
+    trigger: "Level 3.5 failed OR stuck_score ≥ 0.85"
     prompt_file: "templates/reflection/escalation-L4.md"
 
   level_5_decompose:
@@ -87,7 +101,7 @@ episodic_memory:
 
 integration:
   tier: 2
-  related_modules: ["stop-conditions", "edit-verification"]
+  related_modules: ["stop-conditions", "edit-verification", "complexity-scoring"]
   workflows: ["/debug", "/fix"]
   templates:
     - "reflection/escalation-L2.md"

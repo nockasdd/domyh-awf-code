@@ -49,7 +49,8 @@ success_criteria: "Feature implemented, build passes, tests written"
      L3. Responsiveness (20pts): 375px / 768px / 1024px / 1440px breakpoints pass
      L4. Interaction Quality (15pts): hover/focus/active states, loading/error states
      L5. Performance (10pts): CLS < 0.1, images optimized, CSS < 50KB
-     L6. **Design Health** (bonus): `hsa_design_health()` → show Grade (A-F) + top issues + score /100
+     L6. **Design Health** (bonus): `hsa_design_health()` → show Grade (A-F) + top issues + score /100
+
       L7. **Live Diagnostics** (bonus): `hsa_canvas({action:"capture"})` → CLS, AX tree, click issues, console errors. `hsa_canvas({action:"inspect", selector)` → verify CSS cascade on critical elements
      Apply Nielsen Heuristic Check (§18.2 A10): 10 items, score ≥8/10
      Result: ≥90/100 → SHIP ✅ | 70-89 → FIX MINOR ⚠️ | <70 → REDESIGN ❌
@@ -166,17 +167,30 @@ self_review:
 
 ---
 
+## 🔄 CASCADE DELEGATION (Optional — MCP)
+
+For complex implementation sub-tasks, delegate to specialized model via cascade:
+```
+hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'code'})
+→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+→ repeat cascade_read (3-5s intervals, max 10 polls)
+```
+Model auto-selected from user's dashboard routing. Use when:
+- Implementation >100 lines or multi-file feature
+- Need specialized model for complex algorithm/architecture
+- User has configured stronger model for `code` task_type
+
+---
+
 ## REFLECTION CHECKPOINT
 
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 

@@ -92,9 +92,15 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   
   <requirement id="MCP_002" tier="2" severity="warn">
     <text>Use HSA delegation tools for sub-agent workflows:
-    - hsa_delegate before delegating sub-agent tasks
-    - hsa_delegate to reduce prompt bloat when spawning sub-agents (93-97% token savings)
-    - hsa_explore for project overview injection</text>
+    - hsa_delegate(action:"prepare") before delegating sub-agent tasks (93-97% token savings)
+    - hsa_delegate(action:"filter") for tool permission per specialist
+    - hsa_delegate(action:"cascade") for cross-model delegation:
+      Required: cascade_text (max 16000 chars). Optional: task_type, cascade_model
+      task_type mapping: code|test|review|debug|browser|research → auto-routes to model from user dashboard
+      Lifecycle: cascade → wait 5s → cascade_read (3-5s intervals, max 10 polls) → use response or cascade_cancel
+      List available models: hsa_delegate(action:"cascade_models")
+    - hsa_explore(action:"repo_map") for project overview injection</text>
+    <rationale>Cascade enables per-workflow model routing from user dashboard settings. Without cascade awareness, agents never delegate complex tasks to specialized models (e.g., Opus for review, Flash for quick code).</rationale>
   </requirement>
   
   <requirement id="MCP_003" tier="2" severity="warn">
@@ -121,6 +127,24 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
       <scoring_engine>rules/modules/complexity-scoring.yaml</scoring_engine>
       <state_schema>workflows/data/orchestration-state.yaml</state_schema>
       <communication>rules/modules/agent-communication.yaml</communication>
+    </config>
+  </requirement>
+  
+  <requirement id="MCP_005" tier="2" severity="warn">
+    <text>Cascade evaluation checkpoint (when user has cascade enabled in Dashboard):
+    Before executing workflow main logic, evaluate cascade suitability:
+    1. Check complexity score (rules/modules/complexity-scoring.yaml cascade_triggers)
+    2. Check workflow-specific triggers (security→always suggest, debug L3→auto)
+    3. Check scope triggers (>100 LOC, >5 files, multi-language)
+    If ANY trigger condition met AND cascade enabled:
+    - Score 5-7: SUGGEST cascade to user with matched task_type
+    - Score 8+: AUTO-cascade primary sub-task
+    - Workflow-specific: Follow workflow cascade_triggers rules
+    Agent retains final decision — cascade is SUGGESTED not FORCED.</text>
+    <rationale>Without evaluation checkpoint, agents never proactively consider cascade even when user has configured specialized models. This bridges the gap between "cascade available" and "cascade actually used".</rationale>
+    <config>
+      <scoring_engine>rules/modules/complexity-scoring.yaml#cascade_triggers</scoring_engine>
+      <mapping>rules/modules/agent-delegation.yaml#cascade_delegation.workflow_to_task_type</mapping>
     </config>
   </requirement>
   

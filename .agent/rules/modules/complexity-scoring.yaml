@@ -111,6 +111,52 @@ thresholds:
       2. Execute orchestrate.md workflow (INIT → DECOMPOSE → ASSIGN → PLAN ⛔)
       3. Show DAG to user for approval before execution
 
+# ═══ CASCADE TRIGGERS ═══
+
+cascade_triggers:
+  description: |
+    Cascade evaluation runs ALONGSIDE orchestration thresholds.
+    Orchestration = multi-persona coordination. Cascade = cross-model delegation.
+    Both can be active: orchestrator can cascade sub-tasks to specialized models.
+  
+  conditions:
+    # Gate: User must have cascade enabled in Dashboard
+    user_enabled:
+      check: "Dashboard cascade toggle = ON"
+      weight: "mandatory gate — cascade ONLY when user has enabled it"
+    
+    # Condition 1: Complexity-based (uses existing H1-H5 scores)
+    by_complexity:
+      score_below_5:
+        action: "No cascade — handle directly"
+      score_5_7:
+        action: |
+          SUGGEST cascade to user: "Task này có thể benefit từ model chuyên biệt.
+          Dùng cascade để delegate? (task_type: [matched_type])"
+      score_8_plus:
+        action: |
+          AUTO-cascade for primary task_type if user has cascade enabled.
+          Use workflow_to_task_type mapping from agent-delegation.yaml.
+    
+    # Condition 2: Workflow-specific (independent of complexity score)
+    by_workflow:
+      security_review: "ALWAYS suggest cascade with task_type:'review' — security needs deep analysis"
+      ap_audit: "SUGGEST cascade for individual expert panels"
+      debug_level_3_5: "Auto-cascade after progressive-escalation Level 3 (REFRAME) fails"
+    
+    # Condition 3: Scope-based (independent of complexity score)
+    by_scope:
+      lines_100_plus: "SUGGEST cascade for implementations >100 LOC"
+      files_5_plus: "SUGGEST cascade for changes spanning >5 files"
+      multi_language: "SUGGEST cascade for cross-language changes"
+  
+  evaluation_flow:
+    1: "Check: Is cascade enabled in user Dashboard?"
+    2: "If NO → skip cascade evaluation entirely"
+    3: "If YES → evaluate conditions 1-3"
+    4: "If any SUGGEST/AUTO condition met → include cascade hint in workflow response"
+    5: "Agent decides: execute cascade or proceed directly"
+
 # ═══ EVALUATION FLOW ═══
 
 evaluation_flow:
@@ -123,6 +169,7 @@ evaluation_flow:
     6: "Score H5 (complexity_keywords) — check explicit keywords"
     7: "Sum total = H1 + H2 + H3 + H4 + H5"
     8: "Apply threshold → single_agent | consider | auto_orchestrate"
+    9: "Apply cascade_triggers → no_cascade | suggest | auto_cascade"
 
 # ═══ EXAMPLES ═══
 
@@ -132,20 +179,23 @@ examples:
     scores: { H1: 0, H2: 0, H3: 0, H4: 0, H5: 0 }
     total: 0
     decision: "single_agent → developer persona → /code workflow"
+    cascade: "no_cascade"
 
   score_medium:
     message: "Build auth module and write tests for it"
     scores: { H1: 2, H2: 1, H3: 2, H4: 3, H5: 0 }
     total: 8
     decision: "auto_orchestrate → Orchestrator persona"
+    cascade: "auto_cascade → task_type:'code'"
 
   score_high:
     message: "Build complete auth system: API endpoints, database models, frontend UI, tests, and deploy"
     scores: { H1: 8, H2: 6, H3: 5, H4: 6, H5: 5 }
     total: 30
     decision: "auto_orchestrate → Orchestrator persona → full DAG"
+    cascade: "auto_cascade → task_type:'code' for each sub-task"
 
 integration:
   tier: 2
   related_modules: ["agent-delegation", "agent-communication", "stop-conditions"]
-  referenced_by: ["SACRED_RULES.xml MCP_004", "orchestrator.md", "agent-delegation.yaml"]
+  referenced_by: ["SACRED_RULES.xml MCP_004", "SACRED_RULES.xml MCP_005", "orchestrator.md", "agent-delegation.yaml"]

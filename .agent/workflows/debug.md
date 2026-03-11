@@ -251,6 +251,21 @@ Level 6 ESCALATE  → Full report to user with all evidence
 
 ---
 
+## 🔄 CASCADE DELEGATION (Optional — MCP)
+
+For complex debugging sub-tasks, delegate to specialized reasoning model via cascade:
+```
+hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'debug'})
+→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+→ repeat cascade_read (3-5s intervals, max 10 polls)
+```
+Model auto-selected from user's dashboard routing. Use when:
+- Bug requires multi-step reasoning after Level 3 escalation
+- Race condition or concurrency debugging
+- Need stronger model for root cause analysis
+
+---
+
 ## REFLECTION CHECKPOINT
 
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):

@@ -54,6 +54,19 @@ channels:
       - "decision: Agent made architectural/technical decision"
       - "blocker: Agent cannot proceed, needs input"
 
+  # Channel 4: Cascade (cross-model delegation)
+  cascade:
+    description: "Cross-model delegation via hsa_delegate cascade"
+    when: "Complex sub-task needs specialized model (e.g., Opus for review, Flash for quick code)"
+    task_types: [code, test, review, debug, browser, research]
+    lifecycle:
+      1: "hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'[type]'})"
+      2: "Wait 5 seconds for model to process"
+      3: "hsa_delegate({action:'cascade_read', cascade_id:'[id]'})"
+      4: "Repeat step 3 (3-5s intervals, max 10 polls)"
+      5: "Use response or hsa_delegate({action:'cascade_cancel', cascade_id:'[id]'})"
+    model_selection: "Auto from user dashboard routing | cascade_model param override | cascade_models to list available"
+
 # ═══ COMMUNICATION FLOW ═══
 
 flow:

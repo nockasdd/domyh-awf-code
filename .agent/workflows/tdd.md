@@ -110,6 +110,21 @@ success_criteria: "All tests pass green, coverage meets target, refactor clean"
 ```
 ---
 
+## 🔄 CASCADE DELEGATION (Optional — MCP)
+
+For complex TDD feature cycles, delegate to specialized model via cascade:
+```
+hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'test'})
+→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+→ repeat cascade_read (3-5s intervals, max 10 polls)
+```
+Model auto-selected from user's dashboard routing. Use when:
+- Complex feature requiring >3 TDD cycles
+- Domain-specific testing needing specialized model
+- User has configured stronger model for `test` task_type
+
+---
+
 ## REFLECTION CHECKPOINT
 
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):

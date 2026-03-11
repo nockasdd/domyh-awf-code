@@ -163,17 +163,30 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ---
 
+## 🔄 CASCADE DELEGATION (Optional — MCP)
+
+For large-scale refactoring, delegate to specialized model via cascade:
+```
+hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'code'})
+→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+→ repeat cascade_read (3-5s intervals, max 10 polls)
+```
+Model auto-selected from user's dashboard routing. Use when:
+- Refactoring >5 files or >200 lines of changes
+- Pattern migration (e.g., class → functional, callbacks → async/await)
+- Design system migration requiring specialized analysis
+
+---
+
 ## REFLECTION CHECKPOINT
 
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** — Update session memory:
-   - Append task summary to `memory/session.md` (per SESSION_005 format)
-   - If key decision made → append to `memory/decisions.md`
-3. **SNAPSHOT** — If this is the last task in session:
-   - Update `memory/CONTEXT_SNAPSHOT.md` (Recent Changes, Status, Decisions)
-4. **ANCHOR** (if HSA available):
-   - `hsa_session(level: "action", label: "[workflow] completed", status: "completed")`
-   - `hsa_session(content: "[SESSION] Done: [summary]. Files: [list].", category: "context")`
+2. **PERSIST** (if HSA available — preferred, 1 tool call):
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
+3. **PERSIST** (if HSA unavailable — manual fallback):
+   - Append task summary to `memory/session.md`
+   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
 
