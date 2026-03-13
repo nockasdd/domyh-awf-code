@@ -66,6 +66,14 @@ channels:
       4: "Repeat step 3 (3-5s intervals, max 10 polls)"
       5: "Use response or hsa_delegate({action:'cascade_cancel', cascade_id:'[id]'})"
     model_selection: "Auto from user dashboard routing | cascade_model param override | cascade_models to list available"
+    # ⚠️ MANDATORY: Agent MUST evaluate cascade before EXECUTE step
+    mandatory_evaluation:
+      trigger: "Before EXECUTE step in any workflow"
+      check: "Is hsa_delegate MCP tool available?"
+      scoring: "See delegation-intelligence skill Quick Complexity Score (H1-H10)"
+      auto_cascade: "Complexity ≥ 8 (>200 LOC, multi-file, complex algorithm)"
+      suggest_cascade: "Complexity 5-7 (>100 LOC, moderate changes)"
+      skip: "Complexity < 5 or hsa_delegate unavailable"
 
 # ═══ COMMUNICATION FLOW ═══
 

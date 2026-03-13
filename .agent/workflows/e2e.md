@@ -115,7 +115,9 @@ test.describe("User Login Flow", () => {
 
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For E2E test generation, delegate to specialized model via cascade:
 ```
@@ -123,10 +125,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'tes
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Multi-page flow testing (checkout, onboarding)
-- Generating comprehensive E2E suite >10 test cases
-- User has configured stronger model for `test` task_type
+**Auto-cascade** (complexity ≥8): Multi-page flow (checkout, onboarding), >10 E2E tests
+**Suggest cascade** (complexity 5-7): Comprehensive E2E suite, cross-browser testing
 
 ---
 

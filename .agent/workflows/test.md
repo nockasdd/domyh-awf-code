@@ -158,7 +158,9 @@ score_target: "> 70% mutation score (killed / total mutations)"
 | Performance | 10%    | Fast execution?       |
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For comprehensive test generation, delegate to specialized model via cascade:
 ```
@@ -166,10 +168,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'tes
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Generating comprehensive test suite >10 test cases
-- Property-based or mutation testing requires specialized reasoning
-- User has configured stronger model for `test` task_type
+**Auto-cascade** (complexity ≥8): >10 test cases, property-based/mutation testing
+**Suggest cascade** (complexity 5-7): Comprehensive test suite, multi-module coverage
 
 ---
 

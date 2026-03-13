@@ -187,7 +187,9 @@ Scan Types: SAST ✅ | SCA ✅ | Secrets ✅ | Container ⏭️ | License ✅
 - Output findings to `.domyh/security/` (gitignored) for sensitive content
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For deep security analysis, delegate to specialized reasoning model via cascade:
 ```
@@ -195,10 +197,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'rev
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- OWASP Top 10 analysis requiring deep reasoning
-- Complex auth/crypto vulnerability assessment
-- User has configured stronger model for `review` task_type
+**Auto-cascade** (complexity ≥8): OWASP Top 10, crypto vulnerability assessment
+**Suggest cascade** (complexity 5-7): Auth review, data handling patterns
 
 ---
 

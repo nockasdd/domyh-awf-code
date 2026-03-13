@@ -109,7 +109,9 @@ pre_review_tools:
 
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For deep code review, delegate to specialized reasoning model via cascade:
 ```
@@ -117,10 +119,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'rev
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Security-critical review (auth, payments, data handling)
-- Architecture review requiring deep reasoning (Opus/Pro)
-- Large PR with >20 files changed
+**Auto-cascade** (complexity ≥8): Security-critical (auth, payments), >20 files PR
+**Suggest cascade** (complexity 5-7): Architecture review, cross-cutting changes
 
 ---
 

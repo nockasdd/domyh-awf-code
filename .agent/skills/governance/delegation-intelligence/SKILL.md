@@ -111,14 +111,14 @@ hsa_delegate({action: 'cascade_cancel', cascade_id: '...'})
 
 ### Mandatory Cascade Evaluation
 
-Before executing any workflow's main logic, run this quick check:
+⚠️ **MUST evaluate before EXECUTE step** in any workflow:
 
 ```
-Is cascade enabled in user Dashboard?
+Is hsa_delegate MCP tool available?
   NO → Skip cascade, proceed normally
   YES ↓
 
-Complexity score (H1-H5) ≥ 8?
+Quick Complexity Score ≥ 8?
   YES → AUTO-cascade with matched task_type ✅
   NO ↓
 
@@ -136,6 +136,26 @@ Scope trigger? (>100 LOC, >5 files, multi-lang)
 ```
 
 Key: Agent ALWAYS has final decision. "AUTO" = strong recommendation. "SUGGEST" = informational.
+
+### Quick Complexity Score (H1-H10)
+
+| Score | Criteria | Cascade |
+|:------|:---------|:--------|
+| 1-3 | Single file, <30 LOC, clear pattern | Skip |
+| 4-5 | Single file, 30-100 LOC, moderate logic | Skip |
+| 6-7 | Multi-file, 100-200 LOC, moderate complexity | SUGGEST |
+| 8-9 | Multi-file, >200 LOC, complex algorithm/architecture | AUTO |
+| 10 | Cross-cutting change, >5 files, breaking change risk | AUTO |
+
+### IDE Cascade Support
+
+| IDE | Supported | Method |
+|:----|:----------|:-------|
+| Antigravity | ✅ Full | LS RPC (session-managed cascade) |
+| VS Code + Copilot | ✅ | vscode.lm API (direct model call) |
+| VS Code Insiders | ✅ | vscode.lm API |
+| Cursor | ⚠️ Unverified | vscode.lm (may work) |
+| Windsurf | ❌ | No extension API available |
 
 ### Cascade Prompt Guidelines
 

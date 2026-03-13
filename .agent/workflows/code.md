@@ -167,7 +167,9 @@ self_review:
 
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For complex implementation sub-tasks, delegate to specialized model via cascade:
 ```
@@ -175,10 +177,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'cod
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Implementation >100 lines or multi-file feature
-- Need specialized model for complex algorithm/architecture
-- User has configured stronger model for `code` task_type
+**Auto-cascade** (complexity ≥8): >200 LOC, multi-file feature, complex algorithm
+**Suggest cascade** (complexity 5-7): >100 LOC, moderate multi-file changes
 
 ---
 

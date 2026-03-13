@@ -343,7 +343,9 @@ SKILL_DATA: ".agent/skills/cross-cutting/domyh-design/data"
 | `/visualize dark-mode`  | `data/ux-guidelines.yaml`       | Dark mode contrast rules  |
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For complex design and multi-platform mockup generation, delegate to specialized model:
 ```
@@ -351,10 +353,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'bro
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Multi-platform design (web + mobile + desktop simultaneously)
-- Complex design system migration requiring deep analysis
-- VRT baseline generation for >10 components
+**Auto-cascade** (complexity ≥8): Multi-platform (web+mobile+desktop), design system migration
+**Suggest cascade** (complexity 5-7): VRT for >10 components, complex layout
 
 ---
 

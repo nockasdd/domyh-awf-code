@@ -111,7 +111,9 @@ User: "TypeError: Cannot read properties of undefined at auth.ts:42"
 
 ---
 
-## 🔄 CASCADE DELEGATION (Optional — MCP)
+## 🔄 CASCADE EVALUATION (Recommended — MCP)
+
+⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
 For complex fix patterns, delegate to specialized model via cascade:
 ```
@@ -119,10 +121,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'deb
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-Model auto-selected from user's dashboard routing. Use when:
-- Fix requires deep analysis after 2 retry failures
-- Multi-file fix pattern affecting >3 files
-- User has configured stronger model for `debug` task_type
+**Auto-cascade** (complexity ≥8): Fix after 2 retry failures, multi-file fix >3 files
+**Suggest cascade** (complexity 5-7): Deep analysis needed, cross-module fix
 
 ---
 
