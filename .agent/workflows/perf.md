@@ -114,7 +114,7 @@ success_criteria: "baseline recorded, hotspots identified, optimizations applied
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
 3. **PERSIST** (if HSA unavailable — manual fallback):
    - Append task summary to `memory/session.md`

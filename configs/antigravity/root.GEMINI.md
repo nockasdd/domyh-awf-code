@@ -63,7 +63,7 @@ NEVER use these on Windows — they hang indefinitely:
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.
-41 commands available — browse `.agent/workflows/` for full list.
+44 commands available — browse `.agent/workflows/` for full list.
 
 ## Personas
 

@@ -154,8 +154,9 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 
 **Sử dụng:** Thông báo được gửi tự động khi agent gọi:
-- `hsa_session({action: 'persist', auto_notify: true})` — session đã lưu
-- `hsa_report({action: 'notify', title: '...', summary: '...'})` — thông báo tùy chỉnh
+- `hsa_session({action: 'persist'})` — session đã lưu
+
+> 💡 Thông báo tùy chỉnh được xử lý bởi HSA Companion extension.
 
 > 💡 Ngôn ngữ thông báo tự động theo cài đặt người dùng. Nếu bạn dùng tiếng Việt (`/lang vi`), thông báo sẽ hiển thị "✅ Phiên làm việc đã lưu" thay vì tiếng Anh.
 
@@ -491,7 +492,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
 │   ├── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (8)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (41)    # 41 command handlers
+├── 🔄 workflows/     (44)    # 44 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Cấu hình engine

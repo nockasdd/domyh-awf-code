@@ -14,10 +14,10 @@ success_criteria: "Error resolved, build passes, no regressions"
 ## FIX FLOW
 
 1. **DETECT** (5s) — `hsa_session("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect`), load context (`hsa_search`), locate file + line, read surrounding code, classify fix category
-   - **UI FIX DETECTED?** → `hsa_design_analyze({scope: "component", paths: [affected_file]})` → understand design context before fixing
+   - **UI FIX DETECTED?** → `hsa_design({action:'analyze', scope:'component', paths:[affected_file]})` → understand design context before fixing
    - **VISUAL FIX?** (layout/color/style changes) → generate before/after `.preview/{fix}.html` → open with `browser_subagent` → screenshot comparison → confirm with user
 2. **EXECUTE** (30s) — Apply targeted fix, minimal changes only, preserve existing behavior
-3. **VERIFY** (15s) — Build/syntax check, run affected tests. **If UI fix**: `hsa_design_health()` → verify design Grade stable. → If FAIL: retry (max 2) → If still FAIL: escalate to `/debug`
+3. **VERIFY** (15s) — Build/syntax check, run affected tests. **If UI fix**: `hsa_design({action:'health'})` → verify design Grade stable. → If FAIL: retry (max 2) → If still FAIL: escalate to `/debug`
 4. **SYNC** — `hsa_check_changes` to update index after edits
 
 ---
@@ -73,7 +73,7 @@ success_criteria: "Error resolved, build passes, no regressions"
 | Animation | transition, transform, keyframes              | Check prefers-reduced-motion          |
 | Dark Mode | dark: prefix, color-scheme, theme toggle      | Test both modes after fix             |
 
-When UI fix detected → auto-load `domyh-design` skill, run `hsa_design_analyze({scope: "component"})`, apply UI quality checks. After fix → `hsa_design_health()` to verify no design regression.
+When UI fix detected → auto-load `domyh-design` skill, run `hsa_design({action:'analyze', scope:'component'})`, apply UI quality checks. After fix → `hsa_design({action:'health'})` to verify no design regression.
 
 ---
 
@@ -132,7 +132,7 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'deb
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
 3. **PERSIST** (if HSA unavailable — manual fallback):
    - Append task summary to `memory/session.md`

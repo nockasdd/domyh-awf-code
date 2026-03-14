@@ -73,7 +73,7 @@ nock-hsa
 | `hsa_session` | `persist` `track` `anchor` `drift` `intent` | Session governance: context snapshots, progress tracking, drift detection |
 | `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration, rules, skills |
 | `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
-| `hsa_delegate` | `prepare` `filter` | Sub-agent delegation with context packets |
+| `hsa_delegate` | `prepare` `filter` `cascade` `cascade_read` `cascade_models` `cascade_cancel` | Sub-agent delegation, cross-model cascade |
 | `hsa_guide` | — | HSA optimal workflow guide |
 
 ### Visual & Design

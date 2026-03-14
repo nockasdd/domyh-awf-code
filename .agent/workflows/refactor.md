@@ -13,12 +13,12 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ## REFACTOR FLOW
 
-1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests
+1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests, trace dependencies via `hsa_trace_flow(entry_point, direction:'both')` for impact analysis
 2. **BASELINE** — Run tests, record passing state
 3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
 4. **EXECUTE** — Apply refactoring (one commit per change) → ⛔ STOP if tests fail at any point
 5. **VERIFY** — Re-run tests, validate behavior unchanged
-6. **SYNC** — `hsa_check_changes` to update index after edits
+6. **SYNC** — `hsa_check_changes` to update index, `hsa_feedback` on key refactored files
 
 ---
 
@@ -61,12 +61,12 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 > Extends standard 6-step flow with screenshot comparison
 
-1. **DETECT** — Stack + scan UI component structure + `hsa_design_analyze({scope: "full"})` → read Design DNA
+1. **DETECT** — Stack + scan UI component structure + `hsa_design({action:'analyze', scope:'full'})` → read Design DNA
 2. **BASELINE** — Run tests + capture current screenshot (Playwright `toHaveScreenshot()`)
-3. **PLAN** — Define UI changes using DNA insights (identify hardcoded values, low token adoption, missing a11y). For `/refactor design-system`: `hsa_design_tokens({format: "css"})` → get migration plan. → ⛔ **STOP — confirm before executing**
+3. **PLAN** — Define UI changes using DNA insights (identify hardcoded values, low token adoption, missing a11y). For `/refactor design-system`: `hsa_design({action:'tokens', format:'css'})` → get migration plan. → ⛔ **STOP — confirm before executing**
 4. **EXECUTE** — Apply refactoring (one commit per change)
 5. **COMPARE** — Screenshot after → pixelmatch diff → show visual delta
-6. **VERIFY** — Tests pass + `hsa_design_health({strict: true})` → compare score before/after + a11y check + responsive check
+6. **VERIFY** — Tests pass + `hsa_design({action:'health', strict:true})` → compare score before/after + a11y check + responsive check
 7. **SYNC** — `hsa_check_changes` to update index
 
 ---
@@ -184,7 +184,7 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'cod
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
 3. **PERSIST** (if HSA unavailable — manual fallback):
    - Append task summary to `memory/session.md`

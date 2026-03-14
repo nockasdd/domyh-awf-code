@@ -25,7 +25,7 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
    ```
 6. **ANALYZE** — 5 Whys on CONFIRMED root cause (not assumptions)
 7. **FIX** — Create FAILING test first, implement single fix → if 2 fixes fail → trigger **Progressive Escalation** (`rules/modules/progressive-escalation.yaml`): REFLECT → REFRAME → WIDEN → DECOMPOSE → ESCALATE. Add **prevention guard** to block similar bugs
-8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. Persist pattern to `.domyh/debug/failures.yaml` if novel bug pattern discovered
+8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. `hsa_feedback(file, useful:true)` on root cause file. Persist pattern to `.domyh/debug/failures.yaml` if novel bug pattern discovered
 
 ---
 
@@ -272,7 +272,7 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'deb
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...], auto_notify:true})`
+   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
 3. **PERSIST** (if HSA unavailable — manual fallback):
    - Append task summary to `memory/session.md`

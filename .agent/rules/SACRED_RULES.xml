@@ -78,7 +78,7 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     <text>When domyh-hsa MCP server is available, use HSA tools for intelligent code operations:
     - hsa_detect at task start for code generation/debugging/testing
     - hsa_search instead of manual file scanning
-    - hsa_search_files to find files by name/pattern (instead of grep for filenames)
+    - hsa_search({action:'files'}) to find files by name/pattern (instead of grep for filenames)
     - hsa_check_changes after file modifications to keep indexes current
     - hsa_prefetch for files planned to be read/modified
     - hsa_feedback after task completion to improve future search rankings

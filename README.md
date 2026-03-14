@@ -225,8 +225,9 @@ Get notified on Telegram when AI agent completes tasks or persists sessions.
 ```
 
 **Usage:** Notifications are sent automatically when agent calls:
-- `hsa_session({action: 'persist', auto_notify: true})` — session saved
-- `hsa_report({action: 'notify', title: '...', summary: '...'})` — custom notification
+- `hsa_session({action: 'persist'})` — session saved
+
+> 💡 Custom notifications are handled by the HSA Companion extension independently.
 
 > 💡 Notification language matches your configured preference. Vietnamese users (`/lang vi`) see "✅ Phiên làm việc đã lưu" instead of English.
 
@@ -607,7 +608,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
 │   ├── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (8)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (41)    # 41 command handlers
+├── 🔄 workflows/     (44)    # 44 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Engine configurations
