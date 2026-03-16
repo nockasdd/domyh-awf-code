@@ -1,0 +1,37 @@
+name: receiving-code-review
+display: Receiving Code Review
+category: cross-cutting
+tier: 2
+priority: 4
+
+desc: "Use when receiving code review feedback — requires technical verification before implementing, no performative agreement, structured push-back protocol, YAGNI check."
+
+trigger_desc: |
+  Activate when processing code review feedback, handling PR comments,
+  responding to reviewer suggestions, or when needing to push back
+  on review items with technical reasoning.
+
+triggers:
+  file_patterns: []
+  keywords:
+    - review feedback
+    - code review
+    - PR comment
+    - reviewer suggestion
+    - feedback received
+    - push back
+    - performative
+    - review response
+  intents:
+    - handle review feedback
+    - process code review
+    - respond to reviewer
+    - push back on suggestion
+
+caps:
+  - No performative agreement protocol
+  - Technical verification before implementing
+  - Structured push-back with reasoning
+  - YAGNI check for reviewer suggestions
+  - Implementation ordering (blocking → simple → complex)
+  - Source-specific handling (user vs external)

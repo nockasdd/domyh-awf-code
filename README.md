@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=97+Skills+•+26+IDEs+•+43+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=98+Skills+•+26+IDEs+•+44+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,9 +15,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-97-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-98-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-43-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-44-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -353,7 +353,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 </table>
 
 <details>
-<summary><b>📋 All 43 Commands — Details & Example Flows</b></summary>
+<summary><b>📋 All 44 Commands — Details & Example Flows</b></summary>
 <br>
 
 ### 🔥 Core (9 commands)
@@ -451,11 +451,11 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 
 ---
 
-## 🧠 Skills (97 total)
+## 🧠 Skills (98 total)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;23+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+97+Total+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;24+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+98+Total+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -489,7 +489,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (30) + Governance (8)
+### 🔧 Core & Cross-cutting (31) + Governance (8)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -498,7 +498,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 <p align="center">
   <sub><b>Core (7):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering</sub>
   <br>
-  <sub><b>Cross-cutting (23):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration</sub>
+  <sub><b>Cross-cutting (24):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration, Cascade Review</sub>
 </p>
 
 ### 🛠️ Tooling (5)
@@ -527,11 +527,11 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 | **Frameworks**    | 10     | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 7      | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering                                                                                                                   |
 | **DevOps**        | 7      | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 23     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration |
+| **Cross-cutting** | 24     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration, Cascade Review |
 | **Tooling**       | 5      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
 | **AI-ML**         | 9      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 8      | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation                                                     |
-| **Total**         | **97** |                                                                                                                                                                                                                     |
+| **Total**         | **98** |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -599,16 +599,16 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Agent configuration
-├── 🧠 skills/                # 97 specialized skills
+├── 🧠 skills/                # 98 specialized skills
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (6)     # Security, API Design, Auth...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (22)   # Testing, Database, Playwright...
+│   ├── cross-cutting/ (24)   # Testing, Database, Playwright, Cascade Review...
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
 │   ├── ai-ml/        (8)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (8)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (44)    # 44 command handlers
+├── 🔄 workflows/     (44)    # 44 command handlers (including /skill-create)
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Engine configurations

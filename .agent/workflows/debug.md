@@ -29,6 +29,16 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
 
 ---
 
+## ⛔ THE IRON LAW
+
+```
+NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
+```
+
+**Violating the letter of this process is violating the spirit of debugging.**
+
+---
+
 ## DEBUG MINDSET
 
 ```
@@ -39,6 +49,52 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
 - "It must be a library bug"       → It's almost never the library
 - "One fix should do it"           → Form hypotheses first, test each
 ```
+
+---
+
+## ⛔ 3-FIX ESCALATION RULE
+
+<HARD-GATE>
+Count your fix attempts:
+- Fix attempt #1 fails → Return to root cause investigation
+- Fix attempt #2 fails → Return to root cause, re-analyze with new info
+- Fix attempt #3 fails → **STOP. Question the architecture.**
+
+**If 3+ fixes failed → Do NOT attempt fix #4.**
+
+Signs of an architectural problem (not a bug):
+- Each fix reveals new shared state/coupling issues
+- Fixes require "massive refactoring"
+- Each fix creates new symptoms elsewhere
+
+**Action**: Discuss with user before continuing. This is a wrong architecture, not a failed hypothesis.
+</HARD-GATE>
+
+---
+
+## RATIONALIZATION PREVENTION
+
+| Excuse | Reality |
+|--------|--------|
+| "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
+| "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check thrashing. |
+| "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
+| "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
+| "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Stop fixing. |
+| "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
+
+## RED FLAGS — STOP AND FOLLOW PROCESS
+
+If you catch yourself thinking:
+- "Quick fix for now, investigate later"
+- "Just try changing X and see if it works"
+- "Add multiple changes, run tests"
+- "I don't fully understand but this might work"
+- "Pattern says X but I'll adapt it differently"
+- "Here are the main problems:" (listing fixes without investigation)
+- Proposing solutions before tracing data flow
+
+**ALL of these mean: STOP. Return to Phase 1 (CAPTURE).**
 
 ---
 

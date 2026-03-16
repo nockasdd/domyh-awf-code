@@ -1,0 +1,39 @@
+name: cascade-review
+display: Cascade Review Pipeline
+category: cross-cutting
+tier: 2
+priority: 3
+
+desc: "Use when dispatching cascade tasks via hsa_delegate — provides 2-stage review pipeline (spec compliance then code quality) with implementer 4-status protocol and subagent prompt templates."
+
+trigger_desc: |
+  Activate when reviewing cascade output, dispatching subagents for
+  implementation review, verifying spec compliance of delegated work,
+  or quality-checking code produced by cascade models.
+
+triggers:
+  file_patterns: []
+  keywords:
+    - cascade
+    - delegate
+    - subagent
+    - cascade review
+    - spec compliance
+    - code quality review
+    - implementation review
+    - 4-status
+    - dispatch
+    - review pipeline
+  intents:
+    - review cascade output
+    - verify implementation quality
+    - dispatch subagent for review
+    - check spec compliance
+
+caps:
+  - 2-stage review pipeline (spec then quality)
+  - 4-status implementer protocol (DONE/DONE_WITH_CONCERNS/BLOCKED/NEEDS_CONTEXT)
+  - Spec compliance reviewer prompt template
+  - Code quality reviewer prompt template
+  - Implementer prompt template with self-review checklist
+  - Escalation guidelines

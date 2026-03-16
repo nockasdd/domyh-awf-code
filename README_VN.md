@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=97+Skills+•+26+IDEs+•+43+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=98+Skills+•+26+IDEs+•+44+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,9 +15,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-97-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-98-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-43-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-44-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -237,7 +237,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 </table>
 
 <details>
-<summary><b>📋 Tất cả 43 Commands — Chi tiết & Ví dụ</b></summary>
+<summary><b>📋 Tất cả 44 Commands — Chi tiết & Ví dụ</b></summary>
 <br>
 
 ### 🔥 Chính (9 commands)
@@ -335,11 +335,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-## 🧠 Skills (97 tổng)
+## 🧠 Skills (98 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;23+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+97+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;24+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+98+Tổng+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -415,7 +415,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | **Tooling**       | 5        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
 | **AI-ML**         | 9        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 8        | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation                                                     |
-| **Tổng**          | **97**   |                                                                                                                                                                                                                     |
+| **Tổng**          | **98**   |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -483,7 +483,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 97 skills chuyên biệt
+├── 🧠 skills/                # 98 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (6)     # Security, API Design, Auth...

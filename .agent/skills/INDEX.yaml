@@ -22,6 +22,9 @@ categories:
       - { name: database, patterns: 150+, detect: ["*.sql", "migrations/*", "prisma/*", "drizzle*"] }
       - { name: web-perf, patterns: 100+, detect: ["lighthouse*", "*.perf.*"] }
       - { name: domyh-design, patterns: 80+, detect: ["*.css", "*.scss", "tailwind*"] }
+      - { name: cascade-review, patterns: 50+, detect: [] }      # Cascade review pipeline
+      - { name: receiving-code-review, patterns: 30+, detect: [] } # Review feedback handling
+      - { name: tdd-workflow, patterns: 180+, detect: ["*.test.*", "*.spec.*"] }
 
   languages:
     path: skills/languages/

@@ -1,7 +1,7 @@
 # cross-cutting/_index.yaml — Cross-cutting Skills Index
 category: cross-cutting
 description: "Cross-cutting concerns and utilities"
-count: 12
+count: 24
 skills:
   - { id: testing, has_advanced: true }
   - { id: database, has_advanced: true }
@@ -15,3 +15,15 @@ skills:
   - { id: bun, has_advanced: false }
   - { id: audit-pro, has_advanced: true }
   - { id: playwright, has_advanced: true }
+  - { id: cascade-review, has_advanced: true }
+  - { id: receiving-code-review, has_advanced: false }
+  - { id: accessibility, has_advanced: false }
+  - { id: event-driven, has_advanced: false }
+  - { id: microservices, has_advanced: false }
+  - { id: monorepo, has_advanced: false }
+  - { id: payment-integration, has_advanced: false }
+  - { id: real-time, has_advanced: false }
+  - { id: seo, has_advanced: false }
+  - { id: tauri, has_advanced: false }
+  - { id: tdd-workflow, has_advanced: true }
+  - { id: wasm, has_advanced: false }

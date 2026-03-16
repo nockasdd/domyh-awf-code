@@ -37,12 +37,51 @@ success_criteria: "All tests pass green, coverage meets target, refactor clean"
 ## THE IRON LAWS
 
 ```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+**Violating the letter of these rules is violating the spirit of TDD.**
+
 1. NEVER write production code without a failing test
 2. Write ONLY enough test to fail (one assertion)
 3. Write ONLY enough code to pass (no more)
 4. Refactor ONLY when green (all tests pass)
 5. Commit after EVERY green phase
-```
+
+<HARD-GATE>
+Write code before test? Delete it. Start over.
+
+**No exceptions:**
+- Don't keep it as "reference"
+- Don't "adapt" it while writing tests
+- Don't look at it
+- Delete means delete
+</HARD-GATE>
+
+---
+
+## RATIONALIZATION PREVENTION
+
+| Excuse | Reality |
+|--------|--------|
+| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
+| "I'll test after" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
+| "Emergency, no time" | TDD is FASTER than guess-debug-fix-debug. |
+| "It's just a refactor" | Refactors break things. Test first. |
+| "I already manually tested it" | Manual tests don't persist. Automated tests do. |
+| "Tests after achieve same goals" | Tests-after prove code works. Tests-first prove design works. |
+| "This is different because..." | It's never different. Write the test. |
+
+## RED FLAGS — STOP AND START OVER
+
+If you catch yourself thinking:
+- "I'll just write the function first, then test"
+- "This is obvious, doesn't need a test"
+- "Let me get the code working, then I'll add tests"
+- "The test would just be testing the implementation"
+- "It's about the spirit of TDD, not the ritual"
+
+**ALL of these mean: STOP. Delete code. Write test first.**
 
 ---
 

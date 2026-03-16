@@ -13,13 +13,14 @@ success_criteria: "plan approved by user, tasks broken down, saved to .domyh/pla
 
 ## PLAN FLOW
 
-1. **PHASE 0: DEEP INTERVIEW** — Gather context (skip if clear) → ⛔ STOP if info missing
+1. **PHASE 0: DEEP INTERVIEW** — Gather context (skip if clear) → ⛔ STOP if info missing. **ONE question per message** — don't overwhelm user.
 2. **PHASE 1: UNDERSTAND** — `hsa_session("plan feature: {name}")`, parse request, detect stack via HSA (`hsa_detect`), load context (`hsa_search` with `output_mode='references'` for quick overview), use `hsa_explore` for codebase overview, clarify scope
 3. **PHASE 2: ANALYZE** — Impact assessment, risk analysis, dependencies. `hsa_prefetch` target files for deep analysis
-4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts
-5. **PHASE 4: BREAKDOWN** — Task decomposition, effort estimation → ⛔ STOP for user approval
-6. **PHASE 5: VALIDATE** — Review with user, finalize plan
-7. **PHASE 6: PERSIST** — Save to `.domyh/plans/YYYY-MM-DD_{feature-slug}/plan.md`. If scope ≥ L, also save `impact.md` and `tasks.md`. Update `.agent/memory/state.json` → `phase_progress.active_plan`. Show: `📁 Saved: .domyh/plans/2026-02-12_payment-gateway/`
+4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts. Propose 2-3 approaches → get user approval on direction
+5. **PHASE 4: BREAKDOWN** — Task decomposition using **bite-sized granularity** (see below), effort estimation → ⛔ STOP for user approval
+6. **PHASE 5: REVIEW** — Dispatch cascade reviewer for plan quality check (see `cascade-review` skill)
+7. **PHASE 6: VALIDATE** — Review with user, finalize plan
+8. **PHASE 7: PERSIST** — Save to `.domyh/plans/YYYY-MM-DD_{feature-slug}/plan.md`. If scope ≥ L, also save `impact.md` and `tasks.md`. Update `.agent/memory/state.json` → `phase_progress.active_plan`. Show: `📁 Saved: .domyh/plans/2026-02-12_payment-gateway/`
 
 ---
 
@@ -57,6 +58,67 @@ output:
   active_ref: "Update .agent/memory/state.json → phase_progress.active_plan"
   memory_sync: "Update .agent/memory/state.json with plan metadata"
 ```
+
+---
+
+## 📐 PLAN DOCUMENT HEADER (MANDATORY)
+
+Every plan MUST start with this standardized header:
+
+```markdown
+# [Feature Name] Implementation Plan
+
+> **For agentic workers:** Use cascade-review skill for quality assurance.
+> Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** [One sentence describing what this builds]
+
+**Architecture:** [2-3 sentences about approach]
+
+**Tech Stack:** [Key technologies/libraries]
+
+---
+```
+
+---
+
+## 🎯 BITE-SIZED TASK GRANULARITY
+
+**Each step = ONE action (2-5 minutes):**
+
+```markdown
+### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.ts`
+- Modify: `exact/path/to/existing.ts:123-145`
+- Test: `tests/exact/path/to/test.ts`
+
+- [ ] **Step 1: Write the failing test**
+- [ ] **Step 2: Run test → verify it fails**
+- [ ] **Step 3: Write minimal implementation**
+- [ ] **Step 4: Run test → verify it passes**
+- [ ] **Step 5: Commit**
+```
+
+**Rules:** Exact file paths • Complete code (not "add validation") • Exact commands with expected output • DRY, YAGNI, TDD
+
+---
+
+## 💬 ONE QUESTION PER MESSAGE
+
+<HARD-GATE>
+During PHASE 0 (Interview) and PHASE 3 (Design):
+- Ask exactly ONE question per message
+- Wait for answer before next question
+- Present 2-3 options with tradeoffs for design decisions → wait
+</HARD-GATE>
+
+---
+
+## SCOPE CHECK
+
+If the spec covers multiple independent subsystems → suggest breaking into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
 ---
 

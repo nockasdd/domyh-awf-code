@@ -11,6 +11,62 @@ success_criteria: "All pipeline stages pass (type check, lint, build, test)"
 
 ---
 
+## ⛔ THE IRON LAW
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+**Claiming work is complete without verification is dishonesty, not efficiency.**
+
+---
+
+## VERIFICATION GATE FUNCTION (MANDATORY)
+
+<HARD-GATE>
+BEFORE claiming ANY status or expressing satisfaction:
+
+1. **IDENTIFY**: What command proves this claim?
+2. **RUN**: Execute the FULL command (fresh, complete run)
+3. **READ**: Full output — check exit code, count failures
+4. **VERIFY**: Does output ACTUALLY confirm the claim?
+   - If NO → State actual status with evidence
+   - If YES → State claim WITH evidence
+5. **ONLY THEN**: Make the claim
+
+Skip any step = lying, not verifying.
+</HARD-GATE>
+
+### Common Failures
+
+| Claim | Requires | NOT Sufficient |
+|-------|----------|-----------|
+| "Tests pass" | Test command output: 0 failures | Previous run, "should pass" |
+| "Build succeeds" | Build command: exit 0 | Linter passing, extrapolation |
+| "Bug fixed" | Test original symptom passes | "Code changed, assumed fixed" |
+| "Lint clean" | Linter output: 0 errors | Partial check |
+| "Requirements met" | Line-by-line checklist verified | "Tests passing" |
+
+### Red Flags — STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Done!")
+- About to commit/push without verification
+- Relying on partial verification
+- ANY wording implying success without running commands
+
+### Rationalization Prevention
+
+| Excuse | Reality |
+|--------|--------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Linter passed" | Linter ≠ compiler ≠ runtime |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+
+---
+
 ## VERIFY FLOW
 
 1. **DETECT** — Detect stack via HSA (`hsa_detect`), identify build system, linter, test runner. Show: `[Step 1/5] Detecting verification pipeline...`
