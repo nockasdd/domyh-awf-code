@@ -2,6 +2,19 @@
 # Extracted from VERSION.yaml (SSoT) for token efficiency
 
 changelog:
+  "6.5.8":
+    date: "2026-03-17"
+    codename: "Workflow Enforcement"
+    changes:
+      - "HSA v1.6.5: Workflow State Machine — server-side enforcement that survives context truncation"
+      - "In-memory _workflowCache (Map) + debounced 2s flush — 0ms latency per tool call (was 5-20ms disk I/O)"
+      - "updateWorkflowState() + getWorkflowHint() now SYNCHRONOUS — no async overhead"
+      - "4 enforcement layers: LANG-REINFORCE, RULES-REINFORCE, WORKFLOW-STATE, COMPACTION-CHECKPOINT"
+      - "Workflow hints auto-transition: bootstrap → intent → skills⛔ → docs📚 → persist💾 → empty (0 tok)"
+      - "lightTimeoutMs increased 10s → 20s — prevents cold-start bootstrap timeout"
+      - "Full AWF config audit: SACRED_RULES (20 rules, 5 tiers), 23 IDE configs, 19 rule modules verified"
+      - "All 15 MCP tools tested with 25 actions — 100% pass rate"
+
   "6.4.10":
     date: "2026-02-25"
     codename: "SSoT & Hygiene"

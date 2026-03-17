@@ -79,9 +79,11 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     - hsa_detect at task start for code generation/debugging/testing
     - hsa_search instead of manual file scanning
     - hsa_search({action:'files'}) to find files by name/pattern (instead of grep for filenames)
+    - hsa_search({action:'docs', doc_libraries:['lib']}) for external library documentation (24+ built-in, auto-fetches via llms.txt)
     - hsa_check_changes after file modifications to keep indexes current
-    - hsa_prefetch for files planned to be read/modified
+    - hsa_prefetch for files planned to be read/modified. Use hsa_prefetch({auto:true}) on first task to warm docs from package.json
     - hsa_feedback after task completion to improve future search rankings
+    - hsa_research for external Git repository investigation (index, overview, search, compare, pkg, releases, file)
     - hsa_detect BEFORE running terminal commands to identify IDE shell (bash/cmd/powershell)
     - hsa_session for session governance: intent, track progress, anchor facts, drift check, persist (with auto_notify)
     - hsa_report for engine health (status/export) and notifications (only when HSA_TELEGRAM_TOKEN env var is set)
@@ -108,9 +110,12 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     - hsa_explore for codebase structure before large changes
     - hsa_detect to verify runtimes and identify IDE terminal shell before commands
     - hsa_search for code patterns (action:'context') and file search (action:'files')
+    - hsa_search({action:'docs'}) for external library docs when working with 3rd-party libraries
     - hsa_get_agent_config for commands/personas/rules when asked about capabilities
     - hsa_report for engine health (action:'status'), state export (action:'export'), notifications (action:'notify')
     - hsa_trace_flow for tracing call chains and understanding code flow
+    - hsa_research for external repo analysis (index → overview → read → search), package metadata (pkg), releases, compare repos
+    - hsa_prefetch({auto:true}) to auto-warm library docs from package.json dependencies (first task per session)
     - hsa_canvas for full visual feedback: diff (VRT), extract (design tokens), inspect (CSS/AX), close (cleanup)
     Do not assume specific MCP tools exist — check available servers at task start.</text>
   </requirement>

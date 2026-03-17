@@ -12,9 +12,9 @@
 # =============================================================================
 
 system:
-  version: "6.5.7"
-  codename: "Audit & Sync"
-  release_date: "2026-03-14"
+  version: "6.5.9"
+  codename: "Workflow Enforcement"
+  release_date: "2026-03-17"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"
