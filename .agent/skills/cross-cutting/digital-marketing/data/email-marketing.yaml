@@ -1,0 +1,364 @@
+# email-marketing.yaml — Email Marketing API Patterns
+# Resend, React Email, SendGrid, Postmark, authentication, deliverability
+# Sources: resend.com, react.email, sendgrid.com, postmarkapp.com (2025-2026)
+metadata:
+  skill: digital-marketing
+  domain: email-marketing
+  updated: "2026-03"
+  patterns_count: 30
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  # === Resend ===
+  - id: resend_setup
+    pattern_name: "Resend API Setup"
+    keywords: [resend, setup, api_key, init, modern]
+    code_example: |
+      npm install resend
+      
+      import { Resend } from 'resend';
+      const resend = new Resend(process.env.RESEND_API_KEY);
+    notes: "Modern, developer-first. Created by React Email team"
+
+  - id: resend_send
+    pattern_name: "Resend Send Email"
+    keywords: [resend, send, email, from, to, subject]
+    code_example: |
+      const { data, error } = await resend.emails.send({
+        from: 'Your App <hello@yourdomain.com>',
+        to: ['user@example.com'],
+        subject: 'Welcome to Our App',
+        html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>'
+      });
+      if (error) console.error(error);
+    notes: "Returns { id } on success. Rate limit: 10 emails/sec (free)"
+
+  - id: resend_react_email
+    pattern_name: "Resend + React Email Template"
+    keywords: [resend, react_email, component, template, tsx]
+    code_example: |
+      // emails/welcome.tsx
+      import { Html, Head, Body, Container, Text, Button, Img } from '@react-email/components';
+      
+      export function WelcomeEmail({ name, loginUrl }: { name: string; loginUrl: string }) {
+        return (
+          <Html>
+            <Head />
+            <Body style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f4f4f5' }}>
+              <Container style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+                <Img src="https://yourdomain.com/logo.png" width="120" />
+                <Text style={{ fontSize: '24px', fontWeight: 'bold' }}>Welcome, {name}!</Text>
+                <Text>We're excited to have you on board.</Text>
+                <Button href={loginUrl} style={{
+                  backgroundColor: '#5F51E8', color: '#fff',
+                  padding: '12px 20px', borderRadius: '6px',
+                  textDecoration: 'none', display: 'inline-block'
+                }}>
+                  Get Started →
+                </Button>
+              </Container>
+            </Body>
+          </Html>
+        );
+      }
+      
+      // API route
+      await resend.emails.send({
+        from: 'hello@yourdomain.com',
+        to: 'user@example.com',
+        subject: 'Welcome!',
+        react: WelcomeEmail({ name: 'Alice', loginUrl: 'https://app.example.com' })
+      });
+    notes: "React Email renders to cross-client HTML. Preview: npx react-email dev"
+
+  - id: resend_batch
+    pattern_name: "Resend Batch Sending"
+    keywords: [resend, batch, bulk, multiple, send_batch]
+    code_example: |
+      await resend.batch.send([
+        { from: 'noreply@app.com', to: 'user1@example.com', subject: 'Update', html: '...' },
+        { from: 'noreply@app.com', to: 'user2@example.com', subject: 'Update', html: '...' },
+      ]);
+    notes: "Send up to 100 emails per batch call"
+
+  - id: resend_webhook
+    pattern_name: "Resend Webhook Events"
+    keywords: [resend, webhook, delivered, opened, clicked, bounced]
+    code_example: |
+      Events:
+        - email.sent → Email accepted by Resend
+        - email.delivered → Delivered to recipient
+        - email.opened → Recipient opened (tracking pixel)
+        - email.clicked → Link clicked
+        - email.bounced → Hard bounce
+        - email.complained → Marked as spam
+    notes: "Configure webhooks in Resend dashboard"
+
+  # === SendGrid ===
+  - id: sendgrid_setup
+    pattern_name: "SendGrid API Setup"
+    keywords: [sendgrid, twilio, setup, api_key, sgMail]
+    code_example: |
+      npm install @sendgrid/mail
+      
+      import sgMail from '@sendgrid/mail';
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    notes: "Owned by Twilio. Market leader for scale"
+
+  - id: sendgrid_send
+    pattern_name: "SendGrid Send Email"
+    keywords: [sendgrid, send, msg, template, dynamic]
+    code_example: |
+      await sgMail.send({
+        to: 'user@example.com',
+        from: 'hello@yourdomain.com',
+        subject: 'Order Confirmed',
+        text: 'Your order #123 is confirmed.',
+        html: '<strong>Your order #123 is confirmed.</strong>'
+      });
+      
+      // With dynamic template
+      await sgMail.send({
+        to: 'user@example.com',
+        from: 'hello@yourdomain.com',
+        templateId: 'd-xxxxx',
+        dynamicTemplateData: { name: 'Alice', order_id: '123' }
+      });
+    notes: "Dynamic templates managed in SendGrid UI"
+
+  - id: sendgrid_python
+    pattern_name: "SendGrid Python SDK"
+    keywords: [sendgrid, python, helper, mail]
+    code_example: |
+      from sendgrid import SendGridAPIClient
+      from sendgrid.helpers.mail import Mail
+      
+      message = Mail(
+          from_email='hello@yourdomain.com',
+          to_emails='user@example.com',
+          subject='Welcome',
+          html_content='<h1>Welcome!</h1>'
+      )
+      sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+      response = sg.send(message)
+    notes: "SDKs: Python, Node.js, Ruby, PHP, Java, C#, Go"
+
+  # === Postmark ===
+  - id: postmark_setup
+    pattern_name: "Postmark API Setup"
+    keywords: [postmark, setup, server_token, transactional]
+    code_example: |
+      npm install postmark
+      
+      import { ServerClient } from 'postmark';
+      const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
+    notes: "Focused on transactional. Separate message streams"
+
+  - id: postmark_send
+    pattern_name: "Postmark Send Email"
+    keywords: [postmark, send, transactional, template]
+    code_example: |
+      await client.sendEmail({
+        From: 'hello@yourdomain.com',
+        To: 'user@example.com',
+        Subject: 'Password Reset',
+        HtmlBody: '<h1>Reset your password</h1><a href="https://...">Click here</a>',
+        MessageStream: 'outbound'  // or 'broadcast' for marketing
+      });
+    notes: "Separate streams for transactional vs marketing"
+
+  - id: postmark_template
+    pattern_name: "Postmark Templates"
+    keywords: [postmark, template, mustache, sendEmailWithTemplate]
+    code_example: |
+      await client.sendEmailWithTemplate({
+        From: 'hello@yourdomain.com',
+        To: 'user@example.com',
+        TemplateAlias: 'welcome',
+        TemplateModel: { name: 'Alice', action_url: 'https://...' },
+        MessageStream: 'outbound'
+      });
+    notes: "Templates use Mustache syntax: {{name}}"
+
+  # === React Email ===
+  - id: react_email_setup
+    pattern_name: "React Email Project Setup"
+    keywords: [react_email, setup, init, components, dev]
+    code_example: |
+      npm install @react-email/components react-email
+      npx react-email dev  # Preview at localhost:3000
+      
+      Project structure:
+        emails/
+          welcome.tsx
+          reset-password.tsx
+          order-confirmation.tsx
+    notes: "Open-source. Works with ANY email provider"
+
+  - id: react_email_components
+    pattern_name: "React Email Component Library"
+    keywords: [react_email, components, Html, Body, Button, Img, Section]
+    code_example: |
+      Available components:
+        Layout: <Html>, <Head>, <Body>, <Container>, <Section>, <Row>, <Column>
+        Content: <Text>, <Heading>, <Link>, <Button>, <Img>
+        Styling: <Font>, <Preview> (preview text in inbox)
+        Utility: <Hr>, <Tailwind> (Tailwind CSS in emails!)
+    notes: "Components handle cross-client rendering quirks"
+
+  - id: react_email_tailwind
+    pattern_name: "Tailwind CSS in React Email"
+    keywords: [react_email, tailwind, css, styling]
+    code_example: |
+      import { Tailwind } from '@react-email/tailwind';
+      
+      export function StyledEmail() {
+        return (
+          <Tailwind>
+            <Button className="bg-blue-600 text-white px-6 py-3 rounded-lg">
+              Get Started
+            </Button>
+          </Tailwind>
+        );
+      }
+    notes: "Tailwind converts to inline styles for email compatibility"
+
+  # === Authentication ===
+  - id: spf_record
+    pattern_name: "SPF Record Setup"
+    keywords: [spf, dns, txt, sender_policy, authorize]
+    code_example: |
+      DNS TXT record for yourdomain.com:
+        v=spf1 include:_spf.google.com include:amazonses.com include:sendgrid.net ~all
+      
+      Mechanisms:
+        include: → authorize sender's servers
+        ~all → soft fail (recommended)
+        -all → hard fail (strict)
+    notes: "Max 10 DNS lookups per SPF record"
+
+  - id: dkim_record
+    pattern_name: "DKIM Record Setup"
+    keywords: [dkim, dns, signature, cryptographic, verify]
+    code_example: |
+      DNS CNAME (provider-specific):
+        resend._domainkey.yourdomain.com → CNAME → resend.domainkey.resend.dev
+      
+      Or TXT record with public key:
+        v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBA...
+    notes: "Provider generates key pair. You add DNS record"
+
+  - id: dmarc_record
+    pattern_name: "DMARC Record Setup"
+    keywords: [dmarc, dns, policy, quarantine, reject, report]
+    code_example: |
+      DNS TXT record for _dmarc.yourdomain.com:
+        v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com; pct=100
+      
+      Policies:
+        p=none       → monitor only (start here)
+        p=quarantine → suspicious to spam folder
+        p=reject     → reject entirely (goal)
+    notes: "Start with p=none, graduate to quarantine → reject"
+
+  - id: auth_verification
+    pattern_name: "Email Auth Verification"
+    keywords: [verify, check, mxtoolbox, authentication, deliverability]
+    code_example: |
+      Verification tools:
+        - MXToolbox (mxtoolbox.com/SuperTool.aspx)
+        - mail-tester.com (send test email, get score)
+        - Google Postmaster Tools
+        - dmarcian.com (DMARC reports)
+    notes: "Goal: SPF pass + DKIM pass + DMARC pass = 10/10 score"
+
+  # === Best Practices ===
+  - id: transactional_vs_marketing
+    pattern_name: "Transactional vs Marketing Email"
+    keywords: [transactional, marketing, broadcast, stream, separate]
+    code_example: |
+      Transactional (no unsubscribe needed):
+        - Password reset
+        - Order confirmation
+        - Account verification
+        - Payment receipt
+      
+      Marketing (unsubscribe required):
+        - Newsletter
+        - Promotions
+        - Product updates
+        - Re-engagement
+    notes: "ALWAYS separate streams. Mixing hurts deliverability"
+
+  - id: sender_reputation
+    pattern_name: "Sender Reputation Management"
+    keywords: [reputation, warmup, bounce, complaint, deliverability]
+    code_example: |
+      IP/Domain warmup schedule:
+        Week 1: 50-100 emails/day
+        Week 2: 200-500/day
+        Week 3: 1,000-2,000/day
+        Week 4: 5,000-10,000/day
+      
+      Monitor: bounce rate < 2%, complaint rate < 0.1%
+    notes: "New domains/IPs must warm up gradually"
+
+  - id: email_design_rules
+    pattern_name: "Email Design Best Practices"
+    keywords: [design, responsive, width, preheader, alt_text]
+    code_example: |
+      Rules:
+        - Max width: 600px
+        - Single-column for mobile
+        - Inline CSS (no external stylesheets)
+        - Alt text on all images
+        - Preheader text (preview in inbox)
+        - Dark mode support: media query (prefers-color-scheme)
+        - CTA button: min 44×44px touch target
+    notes: "Test with Litmus, Email on Acid, or react-email dev"
+
+  - id: unsubscribe_compliance
+    pattern_name: "One-Click Unsubscribe (RFC 8058)"
+    keywords: [unsubscribe, one_click, list_unsubscribe, rfc8058, gmail]
+    code_example: |
+      Required headers (Gmail/Yahoo requirement 2024+):
+        List-Unsubscribe: <https://yourdomain.com/unsubscribe?id=xxx>
+        List-Unsubscribe-Post: List-Unsubscribe=One-Click
+    notes: "Gmail requires one-click unsubscribe for bulk senders (>5K/day)"
+
+  # === Anti-Patterns ===
+  - id: anti_free_domain
+    pattern_name: "Anti-Pattern: Sending from Free Email"
+    keywords: [anti_pattern, gmail, yahoo, free_email, from]
+    code_example: |
+      ❌ From: myapp@gmail.com → fails DMARC, goes to spam
+      ✅ From: hello@yourdomain.com → proper SPF/DKIM/DMARC
+    notes: "Gmail/Yahoo DMARC policies reject third-party senders"
+
+  - id: anti_no_tracking
+    pattern_name: "Anti-Pattern: No Delivery Monitoring"
+    keywords: [anti_pattern, no_monitoring, delivery, bounce]
+    code_example: |
+      ❌ Send and forget — no bounce/complaint monitoring
+      ✅ Set up webhooks for: bounced, complained, delivered
+      ✅ Auto-suppress hard bounces from future sends
+    notes: "Ignoring bounces destroys sender reputation"
+
+  - id: anti_html_only
+    pattern_name: "Anti-Pattern: HTML-Only Email"
+    keywords: [anti_pattern, html_only, text_version, multipart]
+    code_example: |
+      ❌ Only HTML body — some clients show blank
+      ✅ Always include both text and html versions
+    notes: "Multipart emails have better deliverability scores"
+
+  - id: email_testing_flow
+    pattern_name: "Email Testing Workflow"
+    keywords: [testing, preview, litmus, mailtrap, staging]
+    code_example: |
+      1. react-email dev → local preview
+      2. Mailtrap/Ethereal → staging (catch all emails)
+      3. mail-tester.com → deliverability score
+      4. Litmus/Email on Acid → cross-client rendering
+      5. Real inbox test → Gmail, Outlook, Apple Mail
+    notes: "Never test with production API keys"

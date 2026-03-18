@@ -4,6 +4,8 @@ description: "Use when receiving code review feedback — requires technical ver
 triggers:
   keywords: [review, feedback, code review, PR comment, suggestion, reviewer]
 tier: 2
+detect: []
+category: cross-cutting
 ---
 
 # Receiving Code Review

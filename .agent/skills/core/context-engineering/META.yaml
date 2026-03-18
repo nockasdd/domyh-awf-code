@@ -1,0 +1,34 @@
+name: context-engineering
+display: "Context Engineering"
+category: core
+tier: 1
+priority: 3
+
+desc: "Context window management, token budget optimization, and compaction strategies. Context Engineering supersedes Prompt Engineering — it's about managing everything the model knows when processing."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - context engineering
+    - context window
+    - token budget
+    - compaction
+    - context management
+    - token optimization
+    - context overflow
+    - context limit
+    - working memory
+    - lazy loading
+  intents:
+    - manage context window
+    - optimize token usage
+    - handle context compaction
+    - design context strategy
+
+caps:
+  - Context window budget analysis
+  - Compaction timing signals
+  - Fork decision (when to sub-agent)
+  - Token budget rules for skills, memory, tool results
+  - HSA tools for context management
+  - Anti-patterns detection

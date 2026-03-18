@@ -1,9 +1,12 @@
 # devops/_index.yaml — DevOps Skills Index
 category: devops
-description: "Infrastructure and deployment"
-count: 4
+description: "Infrastructure and deployment — Docker, K8s, AWS, Azure, GCP, Terraform, CI/CD"
+count: 7
 skills:
   - { id: docker, has_advanced: true }
   - { id: kubernetes, has_advanced: true }
   - { id: aws, has_advanced: true }
   - { id: ci-cd, has_advanced: true }
+  - { id: azure, has_advanced: false }
+  - { id: gcp, has_advanced: false }
+  - { id: terraform, has_advanced: true }

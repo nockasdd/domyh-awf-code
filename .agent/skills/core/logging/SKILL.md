@@ -1,7 +1,9 @@
 ---
 name: logging
 description: "Logging patterns and structured log management. Use when implementing log levels, formatters, transports, or log aggregation."
+detect: ["logger*", "winston*", "pino*", "slog*", "log4*"]
 category: core
+tier: 1
 ---
 
 # 📝 Logging Best Practices Skill

@@ -2,6 +2,8 @@
 name: ide-extension
 description: "IDE extension development patterns for VS Code and JetBrains. Use when building editor plugins or extensions."
 category: tooling
+detect: ["package.json:vscode", "*.vsix", "extension.*"]
+tier: 2
 ---
 
 # IDE Extension Development — VS Code • JetBrains • Neovim

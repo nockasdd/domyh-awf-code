@@ -1,6 +1,9 @@
 ---
 name: agentic-orchestration
 description: Multi-agent task delegation and orchestration patterns for AI coding assistants
+detect: []
+category: ai-ml
+tier: 1
 ---
 
 # Agentic Orchestration Patterns

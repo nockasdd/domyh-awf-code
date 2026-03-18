@@ -2,6 +2,8 @@
 name: tauri
 description: "Tauri desktop app patterns for Rust + Web hybrid apps. Use when building lightweight desktop applications."
 category: cross-cutting
+detect: ["tauri.conf*", "src-tauri/*"]
+tier: 1
 ---
 
 # Tauri 2.0 — Desktop & Mobile Apps

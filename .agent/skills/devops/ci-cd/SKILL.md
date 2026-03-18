@@ -1,7 +1,9 @@
 ---
 name: ci-cd
 description: "CI/CD pipeline patterns for GitHub Actions, GitLab CI, and Jenkins. Use when implementing automated workflows."
-category: infrastructure
+detect: [".github/workflows/", ".gitlab-ci.yml", "Jenkinsfile"]
+category: devops
+tier: 1
 ---
 
 # CI/CD Pipelines

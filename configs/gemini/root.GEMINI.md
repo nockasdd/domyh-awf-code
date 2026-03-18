@@ -56,14 +56,14 @@ NEVER use these on Windows — they hang indefinitely:
 - Shell = `powershell` → use `;` chaining (PS5) or `&&` (PS7+)
 - Shell unknown → **STOP**. Call `hsa_detect` first. Do NOT assume any shell
 
-## Skills & Workflows
-
-**Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
-**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` · `governance/` (96 skills)
-
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.
 44 commands available — browse `.agent/workflows/` for full list.
+
+## Skills & Workflows
+
+**Skill path**: `.agent/skills/{category}/{name}/SKILL.md`
+**Categories**: `core/` · `languages/` · `frameworks/` · `devops/` · `cross-cutting/` · `tooling/` · `ai-ml/` · `governance/` 
 
 ## Personas
 

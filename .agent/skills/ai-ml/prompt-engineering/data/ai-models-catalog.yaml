@@ -1,0 +1,410 @@
+# =============================================================================
+# ai-models-catalog.yaml — AI Generation Model Specs
+# =============================================================================
+# 14 models (image/video/audio) with prompt syntax, capabilities, and auto-selection
+# Updated: 2026-03-17
+# =============================================================================
+
+total_models: 14
+
+# =============================================================================
+# AUTO-SELECTION LOGIC
+# =============================================================================
+
+auto_selection:
+  image:
+    artistic_quality: "midjourney_v7"
+    text_in_image: "ideogram_3"
+    fast_iteration: "flux_1_1_pro"
+    editing_refinement: "gpt_image_1_5"
+    open_source_local: "sd4_ultra"
+    vector_design: "recraft"
+    default: "midjourney_v7"
+  video:
+    cinematic_storytelling: "sora_2"
+    reliable_consistent: "veo_3_1"
+    professional_control: "runway_gen_4_5"
+    long_form_2_min: "kling_2_6"
+    quick_social_clip: "hailuo_2_3"
+    default: "veo_3_1"
+  audio:
+    vocals_songs: "suno_v5"
+    instrumental_hifi: "udio_v4"
+    ambient_enterprise: "stable_audio"
+    voice_cloning: "elevenlabs"
+    default: "suno_v5"
+
+# =============================================================================
+# IMAGE MODELS
+# =============================================================================
+
+image_models:
+  - id: midjourney_v7
+    name: "Midjourney v7"
+    released: "2025-01"
+    best_for: "Artistic quality, aesthetic, photorealism, hands/anatomy"
+    prompt_syntax: "natural language + parameters"
+    parameters:
+      - "--ar [W:H]  → aspect ratio (any ratio)"
+      - "--v 7       → model version"
+      - "--s [0-1000] → stylize (default 100, higher = more artistic)"
+      - "--c [0-100]  → chaos (variation between results)"
+      - "--w [0-3000] → weird (experimental aesthetics)"
+      - "--q [0.25-2] → quality (render time)"
+      - "--no [text]  → negative prompt"
+      - "--tile       → seamless pattern"
+      - "--style raw  → less MJ aesthetic, more literal"
+    max_resolution: "2048x2048"
+    text_rendering: "medium"
+    special_features:
+      - "Draft Mode (10x faster, half cost)"
+      - "NeRF-like 3D modeling"
+      - "Text-to-video (60s from 6 images)"
+    strengths: ["artistic quality", "hands/anatomy", "aesthetic", "consistency"]
+    weaknesses: ["text rendering", "specific text placement"]
+
+  - id: gpt_image_1_5
+    name: "GPT Image 1.5 (OpenAI)"
+    released: "2025-12"
+    best_for: "Versatility, text rendering, conversational editing, image-to-image"
+    prompt_syntax: "natural language (ChatGPT context-aware, multi-turn editing)"
+    max_resolution: "2048x2048"
+    text_rendering: "excellent"
+    special_features:
+      - "4x faster editing than GPT Image 1.0"
+      - "Ghibli-style viral capability"
+      - "Image-to-image editing with conversation context"
+      - "Consistent edits across consecutive modifications"
+    strengths: ["text in images", "prompt adherence", "editing", "versatility"]
+    weaknesses: ["less artistic than MJ", "slower than Flux"]
+
+  - id: flux_1_1_pro
+    name: "Flux 1.1 Pro (Black Forest Labs)"
+    released: "2025-06"
+    best_for: "Speed + quality balance, rapid prototyping"
+    prompt_syntax: "natural language"
+    max_resolution: "2048x2048"
+    text_rendering: "good"
+    architecture: "12B parameter flow transformer"
+    variants:
+      - "Flux 1.1 Pro → highest quality"
+      - "Flux 1.1 Dev → balanced speed/quality for integrations"
+      - "Flux 1.1 Schnell → fastest for rapid prototyping"
+    special_features:
+      - "6x faster generation than Flux 1.0"
+      - "Highest overall Elo score on Artificial Analysis arena"
+      - "Wide range: photorealistic to abstract"
+    strengths: ["speed", "quality", "prompt adherence", "text integration"]
+    weaknesses: ["less artistic fine-tuning than MJ"]
+
+  - id: ideogram_3
+    name: "Ideogram 3"
+    released: "2025-01"
+    best_for: "Text rendering, photorealism, layout control, design"
+    prompt_syntax: "natural language + style presets"
+    max_resolution: "2048x2048"
+    text_rendering: "best-in-class"
+    special_features:
+      - "4.3B predefined style presets"
+      - "Up to 3 reference images for consistency"
+      - "Magic Fill (inpainting), Extend (outpainting)"
+      - "Background Replacement"
+      - "Long, stylized text blocks within images"
+    strengths: ["text rendering", "layout control", "photorealism", "design"]
+    weaknesses: ["less artistic range than MJ"]
+
+  - id: sd4_ultra
+    name: "Stable Diffusion 4 Ultra (Stability AI)"
+    released: "2026-03"
+    best_for: "Open-source, local deployment, full control"
+    prompt_syntax: "weighted keywords + negative prompt"
+    parameters:
+      - "(keyword:1.5) → emphasis weight"
+      - "negative_prompt: [comma-separated unwanted elements]"
+      - "steps, cfg_scale, sampler, seed"
+    architecture: "Diffusion Transformer (DiT) backbone"
+    text_rendering: "good (improved from SD3)"
+    special_features:
+      - "Open weights (contrast with closed-source)"
+      - "Cinema-grade lighting simulation"
+      - "Native video generation + 3D understanding"
+      - "SD4 Base → optimized for consumer hardware"
+    strengths: ["open-source", "customizable", "local control", "community"]
+    weaknesses: ["requires technical setup", "quality gap vs closed models"]
+
+  - id: recraft
+    name: "Recraft"
+    released: "2025-06"
+    best_for: "Vector design, logos, icons, branding"
+    prompt_syntax: "natural language + style selection"
+    text_rendering: "excellent"
+    special_features:
+      - "Vector SVG output"
+      - "Style consistency across designs"
+      - "Brand kit integration"
+    strengths: ["vector output", "design consistency", "text", "branding"]
+    weaknesses: ["less photorealistic than MJ/Flux"]
+
+# =============================================================================
+# VIDEO MODELS
+# =============================================================================
+
+video_models:
+  - id: sora_2
+    name: "Sora 2 (OpenAI)"
+    released: "2025-09"
+    best_for: "Cinematic quality, realism, storytelling"
+    prompt_syntax: "natural language + timestamp prompting"
+    prompt_format: |
+      [scene description]. [camera movement]. [lighting]. [mood].
+      Timestamp: 0s-3s: [scene A], 3s-6s: [scene B], 6s-10s: [scene C]
+    max_duration: "20-25s (Pro plan)"
+    resolution: "1080p (higher for Pro)"
+    native_audio: "Yes (dialogue, SFX, soundscapes)"
+    special_features:
+      - "Advanced world simulation, physical accuracy"
+      - "Characters feature (insert self into scenes)"
+      - "Timestamp prompting for scene control"
+      - "Integration with ChatGPT planned"
+    camera_tips:
+      - "Separate camera behavior from subject description"
+      - "One primary camera movement per segment"
+      - "Simple prompts (5-10 words per segment) work best"
+    strengths: ["cinematic quality", "realism", "prompt adherence"]
+    weaknesses: ["shorter duration", "slower generation"]
+
+  - id: veo_3_1
+    name: "Veo 3.1 (Google DeepMind)"
+    released: "2025-08"
+    best_for: "Reliable, consistent results, native audio, 4K"
+    prompt_syntax: "checklist format or natural language"
+    prompt_format: |
+      Subject: [description]
+      Camera: [movement and angle]
+      Lighting: [type]
+      Duration: [seconds]
+      Style: [visual style]
+      Audio: [dialogue/SFX/music description]
+    max_duration: "8-60s (with Extend)"
+    resolution: "1080p + 4K upscaling"
+    native_audio: "Yes (dialogue + lip sync + SFX + ambient)"
+    special_features:
+      - "Best native audio/lip sync in industry"
+      - "Multi-shot storytelling"
+      - "Vertical video for social media"
+      - "Fast/Turbo modes for reduced cost"
+      - "Integrated into Gemini, YouTube Shorts, Google Vids"
+    strengths: ["audio sync", "consistency", "4K", "API flexibility"]
+    weaknesses: ["less cinematic feel than Sora"]
+
+  - id: runway_gen_4_5
+    name: "Runway Gen-4.5"
+    released: "2025-10"
+    best_for: "Physical accuracy, professional control, filmmaking"
+    prompt_syntax: "structured format"
+    prompt_format: "[camera details]: [scene description]. [additional details]."
+    max_duration: "4-20s (extendable)"
+    resolution: "1080p + 4K upscaling"
+    native_audio: "No (as of Gen-4.5)"
+    special_features:
+      - "Best physical accuracy (weight, momentum, force)"
+      - "Reference-based generation (image → consistent character)"
+      - "Generative Visual Effects (GVFX) — mix AI + real footage"
+      - "Gen-4 Turbo → fastest AI video model"
+      - "Integrates Veo 3.1 on platform"
+    strengths: ["physical accuracy", "consistency", "prompt adherence", "speed"]
+    weaknesses: ["no native audio", "shorter clips"]
+
+  - id: kling_2_6
+    name: "Kling 2.6 / O1 (Kuaishou)"
+    released: "2025-12"
+    best_for: "Long-form video, motion mastery, budget-friendly"
+    prompt_syntax: "natural language + motion brush controls"
+    max_duration: "2-3 minutes (longest in industry)"
+    resolution: "1080p + HDR"
+    native_audio: "Yes (dialogue, SFX, background music)"
+    special_features:
+      - "Unified 18+ video tasks in one model"
+      - "3D Spacetime Joint Attention for physics"
+      - "Professional HDR workflow (16-bit)"
+      - "Motion brush for precise control"
+      - "Best image-to-video animation"
+    strengths: ["long duration", "motion mastery", "HDR", "budget-friendly"]
+    weaknesses: ["less cinematic than Sora", "Chinese company concerns"]
+
+  - id: hailuo_2_3
+    name: "Hailuo 2.3 (MiniMax)"
+    released: "2025-11"
+    best_for: "Quick social clips, cinematic value, budget"
+    prompt_syntax: "natural language"
+    max_duration: "6s"
+    resolution: "1080p at 25-30 FPS"
+    native_audio: "Yes (voiceover in 12 languages)"
+    special_features:
+      - "Director Mode for multi-scene"
+      - "Start/End frame control"
+      - "AI avatars and preset characters"
+      - "Best prompt precision/instruction following"
+      - "Multilingual support"
+    strengths: ["fast rendering", "prompt precision", "physics", "value"]
+    weaknesses: ["shortest duration (6s)", "less control than Runway"]
+
+# =============================================================================
+# CAMERA MOVEMENT VOCABULARY (for video prompts)
+# =============================================================================
+
+camera_movements:
+  - id: dolly
+    name: "Dolly in/out"
+    effect: "Intimacy / reveal"
+    prompt_terms: ["slow dolly in", "push in", "pull back", "dolly out"]
+  - id: crane
+    name: "Crane up/down"
+    effect: "Drama / scale"
+    prompt_terms: ["crane up revealing cityscape", "crane down to subject"]
+  - id: orbit
+    name: "Orbit / Arc"
+    effect: "Dynamic exploration"
+    prompt_terms: ["360° orbit around subject", "arc shot", "circling"]
+  - id: track
+    name: "Track / Truck"
+    effect: "Following action"
+    prompt_terms: ["tracking shot following runner", "side track"]
+  - id: tilt
+    name: "Tilt up/down"
+    effect: "Power / vulnerability"
+    prompt_terms: ["low angle tilt up", "high angle tilt down"]
+  - id: pan
+    name: "Pan left/right"
+    effect: "Scene survey"
+    prompt_terms: ["slow pan across landscape", "whip pan"]
+  - id: rack_focus
+    name: "Rack focus"
+    effect: "Attention shift"
+    prompt_terms: ["rack focus foreground to background", "shift focus"]
+  - id: pov
+    name: "POV / FPV"
+    effect: "Immersion"
+    prompt_terms: ["first-person POV", "FPV drone aggressive", "POV walking"]
+  - id: vertigo
+    name: "Vertigo / Dolly zoom"
+    effect: "Disorientation"
+    prompt_terms: ["vertigo effect", "dolly out zooming in", "Hitchcock zoom"]
+  - id: static
+    name: "Static"
+    effect: "Stability / tension"
+    prompt_terms: ["locked tripod", "static wide shot", "fixed camera"]
+  - id: handheld
+    name: "Handheld"
+    effect: "Urgency / documentary"
+    prompt_terms: ["handheld", "slight shake", "documentary style"]
+  - id: zoom
+    name: "Zoom"
+    effect: "Emphasis"
+    prompt_terms: ["slow digital zoom into eyes", "crash zoom"]
+
+# =============================================================================
+# AUDIO MODELS
+# =============================================================================
+
+audio_models:
+  - id: suno_v5
+    name: "Suno V5"
+    released: "2025-10"
+    type: "music"
+    best_for: "Vocal songs, full tracks, rapid prototyping"
+    prompt_formula: "genre + tempo-feel + instrumentation + vocal intent + mix intent + mood"
+    prompt_example: "Uplifting indie folk about overcoming anxiety, acoustic guitar, gentle female vocals, hopeful chorus, warm mix"
+    gen_speed: "~30s per track"
+    output: "44.1kHz stereo"
+    max_duration: "4 minutes"
+    special_features:
+      - "Hyper-realistic vocals with natural vibrato"
+      - "50+ genres supported"
+      - "Stem separation (Vocals, Drums, Bass, Melody)"
+      - "Hum-to-Song feature"
+      - "In-platform DAW editing"
+      - "Warner Music Group licensed data"
+    strengths: ["vocal quality", "speed", "genre range", "accessibility"]
+
+  - id: udio_v4
+    name: "Udio V4"
+    released: "2026-01"
+    type: "music"
+    best_for: "Instrumental quality, professional mixing, long tracks"
+    prompt_formula: "genre + vibe/mood + instrumentation + production style + BPM/key"
+    prompt_example: "Lo-fi hip hop, chill study beats, jazz piano, vinyl crackle, 85 BPM, Dm"
+    gen_speed: "~90s per track"
+    output: "48kHz stereo"
+    max_duration: "10 minutes (no hallucination drift)"
+    special_features:
+      - "Magic Edit (regenerate specific sections)"
+      - "Stem Separation 2.0 (Vocals, Bass, Drums, Other)"
+      - "Voice Cloning from uploaded audio"
+      - "Universal Music Group licensed data"
+    strengths: ["instrumental separation", "audio fidelity", "editing control"]
+
+  - id: stable_audio
+    name: "Stable Audio (Stability AI)"
+    type: "music"
+    best_for: "Ambient, electronic, enterprise, sound design"
+    prompt_formula: "genre + mood + texture + tempo + duration"
+    prompt_example: "Ambient electronic, dreamy, synthesizer pads, slow 70 BPM, 45 seconds"
+    gen_speed: "~45s"
+    output: "44.1kHz stereo"
+    special_features:
+      - "Precise timing control (down to the second)"
+      - "Batch generation for enterprise"
+      - "Consistent textures for backgrounds"
+    strengths: ["consistency", "timing precision", "enterprise", "ambient"]
+
+  - id: elevenlabs
+    name: "ElevenLabs"
+    type: "voice/tts"
+    best_for: "Voice cloning, realistic TTS, multilingual"
+    prompt_params:
+      voice_type: ["male", "female", "child", "elderly"]
+      pace: ["slow", "medium", "fast"]
+      emotion: ["calm", "excited", "serious", "warm", "confident"]
+      accent: ["neutral", "british", "southern", "australian"]
+      style: ["narration", "conversational", "presentational"]
+    special_features:
+      - "Voice cloning from 30s sample"
+      - "29+ languages"
+      - "Real-time streaming"
+      - "Sound effects generation"
+    strengths: ["voice quality", "cloning", "multilingual"]
+
+# =============================================================================
+# NEGATIVE PROMPT PATTERNS (per model)
+# =============================================================================
+
+negative_prompt_patterns:
+  midjourney:
+    syntax: "--no [unwanted elements]"
+    common: "--no text, watermark, blurry, low quality, cropped"
+    tips:
+      - "Keep --no list short (3-5 items)"
+      - "Use --style raw for more literal interpretation"
+  stable_diffusion:
+    syntax: "negative_prompt: [comma-separated]"
+    common: "blurry, low quality, bad anatomy, extra fingers, watermark, text, deformed, ugly, duplicate"
+    tips:
+      - "Negative prompt is as important as positive"
+      - "Use embedding-based negatives for SD (EasyNegative)"
+  flux:
+    syntax: "Natural language negation within prompt"
+    common: "Avoid text overlays. Without watermark. No blurry elements."
+    tips:
+      - "Flux handles negation in natural language better than SD"
+  gpt_image:
+    syntax: "Conversational corrections in follow-up"
+    common: "Remove the text. Make it cleaner. Without the watermark."
+    tips:
+      - "Best handled via multi-turn editing"
+      - "Be specific about what to remove"
+  ideogram:
+    syntax: "Natural language + Magic Fill for refinement"
+    tips:
+      - "Use Magic Fill to remove unwanted elements after generation"
+      - "Specify clearly what NOT to include in initial prompt"

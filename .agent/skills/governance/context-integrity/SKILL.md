@@ -1,12 +1,9 @@
 ---
-name: "context-integrity"
+name: context-integrity
 description: "Detects and repairs context drift. Monitors hierarchy staleness, chain breaks, and context decay. Recovery playbooks for 4 common scenarios."
-triggers:
-  - "When drift score is low (hsa_session warns)"
-  - "After context compaction or session gap"
-  - "When hierarchy feels wrong"
-  - "When resuming work after hours/days"
-  - "Every 5+ turns without hierarchy update"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Context Integrity

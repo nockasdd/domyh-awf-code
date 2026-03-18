@@ -2,6 +2,8 @@
 name: terraform
 description: "Terraform IaC patterns for cloud infrastructure. Use when working with .tf files or managing cloud resources."
 category: devops
+detect: ["*.tf", "*.tfvars", "terraform*"]
+tier: 1
 ---
 
 # Terraform IaC

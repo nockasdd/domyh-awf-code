@@ -8,7 +8,7 @@ detect:
     "@tailwind",
     '@import "tailwindcss"',
   ]
-category: styling
+category: cross-cutting
 tier: 1
 ---
 

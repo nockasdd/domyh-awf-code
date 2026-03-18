@@ -2,6 +2,8 @@
 name: gemini-media-gen
 description: "Gemini media generation patterns. Use when generating images, audio, or video with Gemini."
 category: ai-ml
+detect: ["*gemini*", "imagen*"]
+tier: 2
 ---
 
 # Gemini Media Generation

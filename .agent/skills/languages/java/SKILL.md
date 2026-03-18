@@ -3,7 +3,7 @@ name: java
 description: "Java development patterns for enterprise apps and Spring Boot. Use when working with .java files, Maven, or Gradle projects."
 detect:
   ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "settings.gradle"]
-category: backend
+category: languages
 tier: 1
 ---
 
@@ -120,139 +120,25 @@ List<Integer> result = numbers.stream()
 
 ---
 
-## 🛠️ IDE & Toolchain Support
+## 🛠️ IDE & Toolchain
 
-### IntelliJ IDEA (Recommended)
+> See `data/core.yaml` for IDE comparison details (IntelliJ, Eclipse, VS Code).
 
-```yaml
-version: 2025.x+
-features:
-  - Full Java 21/22/23/25 support from release day
-  - AI-assisted code completion
-  - Advanced refactoring
-  - Built-in profiler
-  - Maven/Gradle integration
-  - Spring Boot support
-plugins:
-  - "Spring Boot Assistant"
-  - "Lombok"
-  - "JPA Buddy"
-  - "SonarLint"
-notes:
-  - Community Edition free
-  - Ultimate for enterprise features
-```
-
-### Eclipse IDE
-
-```yaml
-version: 2025-03+
-features:
-  - Java 25 support via Eclipse JDT
-  - JUnit 6.0.1 support
-  - Multi-Release JAR support
-  - Maven/Gradle integration
-plugins:
-  - "Spring Tools 4"
-  - "Eclipse Wild Web Developer"
-notes:
-  - Open source
-  - Lighter than IntelliJ
-```
-
-### VS Code
-
-```yaml
-extensions:
-  - "Extension Pack for Java" (Microsoft)
-  - "Spring Boot Extension Pack"
-  - "Debugger for Java"
-features:
-  - Lightweight option
-  - Good for microservices
-  - Cross-platform
-```
+**Recommended**: IntelliJ IDEA (Community free, Ultimate for Spring) · Java 21 LTS toolchain · Gradle Kotlin DSL
 
 ---
 
-## 📦 Frameworks & Libraries (2025)
+## 📦 Frameworks & Libraries
 
-### Frameworks Comparison
+> See `data/core.yaml` for full library catalog.
 
-| Framework            | Use Case        | Startup | Memory |
-| -------------------- | --------------- | ------- | ------ |
-| **Spring Boot 3.3+** | Enterprise 🏆   | 1-3s    | 200MB+ |
-| **Quarkus 3.x**      | Cloud-native    | 0.1s    | 50MB   |
-| **Micronaut 4.x**    | Compile-time DI | 0.2s    | 60MB   |
-| **Jakarta EE 11**    | Standards-based | 2-5s    | 300MB+ |
+| Framework | Use Case | Startup |
+| --- | --- | --- |
+| **Spring Boot 3.3+** | Enterprise 🏆 | 1-3s |
+| **Quarkus 3.x** | Cloud-native | 0.1s |
+| **Micronaut 4.x** | Compile-time DI | 0.2s |
 
-### Spring Boot 3.3+ (Most Common)
-
-```java
-// ✅ Modern Spring Boot with Virtual Threads
-@SpringBootApplication
-public class Application {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-}
-
-// application.yml - Enable Virtual Threads
-spring:
-  threads:
-    virtual:
-      enabled: true
-
-// ✅ REST Controller
-@RestController
-@RequestMapping("/api/users")
-public class UserController {
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping
-    public List<User> findAll() {
-        return userService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        return userService.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public User create(@Valid @RequestBody UserCreateRequest request) {
-        return userService.create(request);
-    }
-}
-```
-
-### Database Libraries
-
-| Library              | Use Case           |
-| -------------------- | ------------------ |
-| **Hibernate 6.x**    | JPA implementation |
-| **Spring Data JPA**  | Repository pattern |
-| **jOOQ**             | Type-safe SQL      |
-| **Flyway/Liquibase** | Migrations         |
-| **HikariCP**         | Connection pooling |
-
-### Utilities
-
-| Library               | Use Case           |
-| --------------------- | ------------------ |
-| **Jackson**           | JSON processing    |
-| **Lombok**            | Reduce boilerplate |
-| **MapStruct**         | Object mapping     |
-| **JUnit 5 + Mockito** | Testing            |
-| **Testcontainers**    | Integration tests  |
-| **Guava**             | Google utilities   |
-| **LangChain4j**       | AI/LLM integration |
+**Key picks**: Jackson (JSON) · JUnit 5 + Mockito (testing) · Testcontainers · HikariCP (pool) · Flyway (migrations) · LangChain4j (AI)
 
 ---
 

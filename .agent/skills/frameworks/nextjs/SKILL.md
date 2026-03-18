@@ -3,7 +3,7 @@ name: nextjs
 description: "Next.js patterns for SSR, ISR, App Router, and full-stack React. Use when working with Next.js projects."
 detect:
   ["next.config.js", "next.config.mjs", "next.config.ts", "app/layout.tsx"]
-category: frontend
+category: frameworks
 tier: 1
 ---
 
@@ -22,47 +22,13 @@ Use for: React SSR/SSG apps, Server Components, App Router, API routes, Turbopac
 
 ---
 
-## 📦 Recommended Stack (2025-2026)
+## 📦 Recommended Stack
 
-### Core
+> See `data/core.yaml` for full library comparison tables.
 
-| Library             | Use Case                  | Version  |
-| ------------------- | ------------------------- | -------- |
-| **Next.js 15/16**   | App Router 🏆             | ^15.0    |
-| **React 19**        | Server Components         | ^19.0    |
-| **TypeScript 5.5+** | Type safety               | ^5.5     |
-| **Turbopack**       | Fast bundler (default 16) | Built-in |
-
-### UI & Styling
-
-| Library            | Use Case            | Install                  |
-| ------------------ | ------------------- | ------------------------ |
-| **shadcn/ui**      | Radix + Tailwind 🏆 | `npx shadcn@latest init` |
-| **Tailwind CSS 4** | Utility CSS         | `npm i tailwindcss@next` |
-| **Framer Motion**  | Animations          | `npm i framer-motion`    |
-
-### Data & State
-
-| Library            | Use Case        | Install                       |
-| ------------------ | --------------- | ----------------------------- |
-| **TanStack Query** | Server state 🏆 | `npm i @tanstack/react-query` |
-| **Zustand**        | Client state    | `npm i zustand`               |
-| **Prisma**         | Database ORM    | `npm i prisma @prisma/client` |
-| **Drizzle**        | Lightweight ORM | `npm i drizzle-orm`           |
-
-### Auth
-
-| Library            | Use Case           | Install                |
-| ------------------ | ------------------ | ---------------------- |
-| **NextAuth.js v5** | Full-featured auth | `npm i next-auth@beta` |
-| **Clerk**          | Auth-as-a-service  | `npm i @clerk/nextjs`  |
-
-### IDE Support
-
-| IDE          | Extension                         | Features                      |
-| ------------ | --------------------------------- | ----------------------------- |
-| **VS Code**  | ESLint, Tailwind CSS IntelliSense | Auto-format, class sorting 🏆 |
-| **WebStorm** | Built-in                          | Full Next.js support          |
+**Core**: Next.js 16 + React 19 + TypeScript 5.5+ + Turbopack (default)
+**UI**: shadcn/ui + Tailwind CSS 4 · **State**: TanStack Query + Zustand
+**Data**: Prisma/Drizzle · **Auth**: NextAuth v5/Clerk · **IDE**: VS Code + ESLint
 
 ---
 

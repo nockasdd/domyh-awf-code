@@ -2,7 +2,7 @@
 name: javascript
 description: "JavaScript patterns for modern ES2024+ development. Use when working with .js/.mjs/.cjs files, browser or Node.js projects."
 detect: ["*.js", "*.mjs", "*.cjs", ".eslintrc*", "package.json"]
-category: web
+category: languages
 tier: 1
 ---
 
@@ -98,142 +98,20 @@ Error.isError({ message: "fake" }); // false
 
 ## 🛠️ Runtimes & Toolchain
 
-### Node.js 22 LTS (Recommended)
+> See `data/core.yaml` for full runtime comparison (Node.js, Bun, Deno).
 
-```yaml
-version: 22.x (LTS)
-key_features:
-  - V8 12.4 engine with Maglev compiler
-  - Native ESM support
-  - Permission model (--permission flag)
-  - Stable fs.cp and fs.mv
-  - require() for ES modules (transition aid)
-  - Improved diagnostics and heap snapshots
-package_managers:
-  - npm 10.x (default)
-  - pnpm 9.x (faster, space-efficient)
-  - yarn 4.x (Plug'n'Play)
-```
-
-### Bun (Alternative)
-
-```yaml
-version: 1.x
-key_features:
-  - 3-4x faster than Node.js
-  - Built-in bundler, transpiler
-  - Native TypeScript support
-  - Drop-in Node.js replacement
-  - bun.lockb binary lockfile
-use_cases:
-  - Fast development
-  - Scripts and CLI tools
-  - Performance-critical servers
-caveats:
-  - Some npm packages may need adjustment
-  - Rapid development (check compatibility)
-```
-
-### Deno
-
-```yaml
-version: 2.x
-key_features:
-  - Secure by default (permissions)
-  - Native TypeScript
-  - No node_modules (URL imports)
-  - Built-in formatter and linter
-  - Fresh framework for web apps
-use_cases:
-  - Security-focused apps
-  - Edge/serverless
-  - TypeScript-first projects
-```
+**Recommended**: Node.js 22 LTS (V8 12.4) · pnpm 9.x · Vite · ESLint + Prettier
+**Alternatives**: Bun 1.x (3-4x faster dev) · Deno 2.x (secure by default)
 
 ---
 
-## 🛠️ IDE Support
+## 🛠️ IDE & Libraries
 
-### VS Code (Recommended)
+> See `data/core.yaml` for IDE details and full library catalog.
 
-```yaml
-extensions:
-  - "ESLint" (dbaeumer.vscode-eslint)
-  - "Prettier" (esbenp.prettier-vscode)
-  - "JavaScript (ES6) code snippets"
-  - "Path Intellisense"
-  - "Live Server"
-  - "Debugger for Chrome/Edge"
-features:
-  - IntelliSense
-  - Integrated debugging
-  - Terminal integration
-  - Git integration
-settings:
-  editor.formatOnSave: true
-  editor.defaultFormatter: "esbenp.prettier-vscode"
-```
-
-### WebStorm
-
-```yaml
-version: 2025.x
-features:
-  - Deep JavaScript understanding
-  - Smart refactoring
-  - Built-in debugger (no source maps needed)
-  - Framework-specific intelligence
-  - Code analysis and suggestions
-use_cases:
-  - Large JavaScript projects
-  - Angular/React/Vue development
-notes:
-  - Paid IDE
-  - Most comprehensive JS tooling
-```
-
----
-
-## 📦 Recommended Libraries
-
-### Runtime & Build
-
-| Tool               | Use Case             |
-| ------------------ | -------------------- |
-| **Node.js 22 LTS** | Production runtime   |
-| **Bun**            | Fast dev, scripts    |
-| **Vite**           | Dev server & bundler |
-| **esbuild**        | Ultra-fast bundler   |
-| **Rollup**         | Library bundling     |
-
-### Backend Frameworks
-
-| Framework   | Use Case           | Performance |
-| ----------- | ------------------ | ----------- |
-| **Express** | Minimal, mature    | Good        |
-| **Fastify** | Fast, JSON-focused | Excellent   |
-| **Hono**    | Edge-first         | Excellent   |
-| **Koa**     | Middleware-focused | Good        |
-| **NestJS**  | Enterprise, DI     | Good        |
-
-### Frontend Frameworks
-
-| Framework    | Use Case                |
-| ------------ | ----------------------- |
-| **React 19** | UI components           |
-| **Vue 3**    | Progressive framework   |
-| **Svelte 5** | Compiled, lightweight   |
-| **Solid**    | Fine-grained reactivity |
-
-### Utilities
-
-| Library       | Use Case              |
-| ------------- | --------------------- |
-| **lodash-es** | Utility functions     |
-| **date-fns**  | Date manipulation     |
-| **zod**       | Runtime validation    |
-| **axios**     | HTTP client           |
-| **dotenv**    | Environment variables |
+**IDE**: VS Code + ESLint + Prettier (format on save) · WebStorm (paid, deep JS)
+**Backend**: Express/Fastify/Hono/NestJS · **Frontend**: React 19/Vue 3/Svelte 5
+**Utilities**: zod (validation) · date-fns · axios · lodash-es
 
 ---
 

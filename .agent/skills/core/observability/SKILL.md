@@ -1,7 +1,9 @@
 ---
 name: observability
 description: "Observability patterns for monitoring, tracing, and alerting. Use when implementing OpenTelemetry, metrics, or distributed tracing."
+detect: ["metrics*", "tracing*", "opentelemetry*", "prometheus*"]
 category: core
+tier: 1
 ---
 
 # 🔭 Observability Skill v1.0

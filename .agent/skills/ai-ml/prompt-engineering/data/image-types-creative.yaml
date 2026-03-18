@@ -1,0 +1,60 @@
+# image-types-creative.yaml — Creative Image Types (6 categories)
+# Concept art, illustrations, book covers, album art, game assets
+# Lazy-loaded when: concept/illustration/pattern/album/game/book detected
+
+creative:
+  - id: concept_art
+    name: "Concept Art"
+    sub_types: ["character", "environment", "weapon", "vehicle", "creature"]
+    recommended_models: ["midjourney_v7", "flux_1_1_pro"]
+    prompt_hints:
+      - "concept art, [subject], [style], detailed, artstation quality"
+      - "character concept sheet, [character], front/side/back views, annotations"
+      - "environment concept art, [location], atmospheric, cinematic lighting, epic"
+      - "creature design, [description], anatomical detail, multiple angles"
+    aspect_ratio: "16:9 (environment) or 3:4 (character)"
+
+  - id: illustration
+    name: "Illustration"
+    styles: ["digital painting", "watercolor", "ink", "vector", "editorial", "children's book", "comic", "manga"]
+    prompt_hints:
+      - "[subject], digital illustration, [style], vibrant colors, professional"
+      - "watercolor illustration of [scene], soft edges, loose brushwork, dreamy"
+      - "editorial illustration for [topic], metaphorical, New Yorker style"
+      - "children's book illustration, [scene], whimsical, colorful, friendly"
+    aspect_ratio: "varies"
+
+  - id: book_cover
+    name: "Book Cover"
+    sub_types: ["fiction", "non_fiction", "manga", "children", "thriller", "romance", "sci_fi", "fantasy"]
+    recommended_models: ["midjourney_v7", "ideogram_3"]
+    prompt_hints:
+      - "book cover for '[TITLE]' by [Author], [genre], compelling, title prominent"
+      - "fantasy book cover, [scene], epic, dramatic lighting, space for title"
+      - "thriller book cover, dark mood, silhouette, noir, bold red title"
+    aspect_ratio: "2:3 or 1:1.6"
+
+  - id: album_art
+    name: "Album Cover Art"
+    prompt_hints:
+      - "album cover for [genre] album '[TITLE]', [mood], artistic, bold"
+      - "lo-fi album cover, anime girl at desk, rainy window, warm, nostalgic"
+      - "dark electronic album art, abstract, glitch art, neon, minimal"
+    aspect_ratio: "1:1"
+    size: "3000x3000"
+
+  - id: game_asset
+    name: "Game Asset"
+    sub_types: ["sprite sheet", "tileset", "UI element", "background", "icon", "item"]
+    prompt_hints:
+      - "pixel art sprite sheet, [character], 4 directions, idle/walk/attack, 32x32"
+      - "game UI icon set, [theme], flat, consistent style, transparent bg"
+      - "game background, [environment], parallax layers, side-scroller"
+    aspect_ratio: "varies"
+
+  - id: pattern_texture
+    name: "Seamless Pattern / Texture"
+    prompt_hints:
+      - "seamless pattern, [theme], tileable, repeating, [color palette]"
+      - "fabric texture pattern, [style], high resolution, seamless tile"
+    aspect_ratio: "1:1"

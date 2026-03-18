@@ -1,29 +1,31 @@
 # cross-cutting/_index.yaml — Cross-cutting Skills Index
 category: cross-cutting
 description: "Cross-cutting concerns and utilities"
-count: 24
+count: 26
 skills:
   - { id: testing, has_advanced: true }
   - { id: database, has_advanced: true }
-  - { id: sql, has_advanced: false }
-  - { id: tailwind, has_advanced: false }
+  - { id: sql, has_advanced: true }
+  - { id: tailwind, has_advanced: true }
   - { id: electron, has_advanced: false }
-  - { id: coding-rules, has_advanced: true }
+  - { id: coding-rules, has_advanced: false }
   - { id: domyh-design, has_advanced: true }
   - { id: web-perf, has_advanced: false }
   - { id: deno, has_advanced: false }
   - { id: bun, has_advanced: false }
-  - { id: audit-pro, has_advanced: true }
+  - { id: audit-pro, has_advanced: false }
   - { id: playwright, has_advanced: true }
-  - { id: cascade-review, has_advanced: true }
+  - { id: cascade-review, has_advanced: false }
   - { id: receiving-code-review, has_advanced: false }
   - { id: accessibility, has_advanced: false }
   - { id: event-driven, has_advanced: false }
-  - { id: microservices, has_advanced: false }
+  - { id: microservices, has_advanced: true }
   - { id: monorepo, has_advanced: false }
   - { id: payment-integration, has_advanced: false }
   - { id: real-time, has_advanced: false }
   - { id: seo, has_advanced: false }
   - { id: tauri, has_advanced: false }
-  - { id: tdd-workflow, has_advanced: true }
+  - { id: tdd-workflow, has_advanced: false }
   - { id: wasm, has_advanced: false }
+  - { id: output-enforcement, has_advanced: false }
+  - { id: digital-marketing, has_advanced: false }

@@ -1,0 +1,204 @@
+# =============================================================================
+# prompt-frameworks.yaml — Framework Templates & Platform Constraints
+# =============================================================================
+# 5 frameworks (RCTO, CO-STAR, SVCLMA, AIDA, PAS) + 8 platform constraints
+# Flow control (interview Qs, lazy load, variants) is in prompt.md
+# Updated: 2026-03-18 v2
+# =============================================================================
+
+total_frameworks: 5
+
+# =============================================================================
+# FRAMEWORK DEFINITIONS
+# =============================================================================
+
+frameworks:
+  - id: rcto
+    name: "RCTO"
+    full_name: "Role → Context → Task → Output"
+    best_for: ["system", "project", "modify", "code", "general"]
+    when: "System prompts, code specs, project briefs, general AI prompts"
+    template: |
+      ## Role
+      You are [role with expertise level and specific domain].
+      
+      ## Context
+      [Background information, current state, constraints, tech stack]
+      
+      ## Task
+      [Specific deliverables with clear requirements, step-by-step if complex]
+      
+      ## Output
+      [Format specification, structure, length limit, quality criteria, examples]
+    tips:
+      - "Role should be specific: 'senior TypeScript architect with 10y experience' > 'developer'"
+      - "Context should include what exists already, not just what's needed"
+      - "Task should be SMART: Specific, Measurable, Achievable, Relevant, Time-bound"
+      - "Output format examples dramatically improve result quality"
+
+  - id: co_star
+    name: "CO-STAR"
+    full_name: "Context → Objective → Style → Tone → Audience → Response"
+    best_for: ["marketing", "social", "copywriting", "brand_content"]
+    when: "Ad copy, social media posts, landing pages, brand messaging"
+    template: |
+      ## Context
+      [Product/service description, market position, competitive landscape]
+      
+      ## Objective
+      [Primary goal: Awareness / Conversion / Retention / Engagement]
+      [Secondary goal if any, KPI to optimize]
+      
+      ## Style
+      [Professional / Casual / Humorous / Urgent / Poetic / Minimalist]
+      
+      ## Tone
+      [Confident / Empathetic / Authoritative / Playful / Provocative]
+      
+      ## Audience
+      [Demographics: age, gender, income, location]
+      [Psychographics: pain points, desires, objections, values]
+      
+      ## Response
+      [Format, word count, CTA type, number of variants]
+    tips:
+      - "Always specify the primary emotion you want to evoke"
+      - "Include competitor context for differentiation"
+      - "Audience pain points > demographics for copy quality"
+      - "Ask for 3 variants: Direct, Emotional, Data-driven"
+
+  - id: svclma
+    name: "SVCLMA"
+    full_name: "Subject → Visual → Camera → Lighting → Mood → Aesthetic"
+    best_for: ["video"]
+    when: "AI video generation prompts for Sora, Veo, Runway, Kling, Hailuo"
+    template: |
+      ## Subject & Action
+      [What/who is doing what. Describe motion clearly.]
+      
+      ## Visual Style
+      [Cinematic / Documentary / Anime / Vintage / Noir / Music video]
+      
+      ## Camera
+      [Primary movement + angle + lens. ONE camera behavior per segment.]
+      [Reference: dolly, crane, orbit, track, tilt, pan, rack focus, POV, vertigo, static, handheld, zoom]
+      
+      ## Lighting
+      [Natural / Studio / Neon / Golden hour / Volumetric / Silhouette / Rim light]
+      
+      ## Mood
+      [Tension / Joy / Mystery / Energy / Melancholy / Wonder / Serenity]
+      
+      ## Aesthetic
+      [Color grading, film grain, aspect ratio, FPS, duration]
+      [Model-specific params if known]
+    tips:
+      - "ONE primary camera movement per segment (don't mix dolly + pan + tilt)"
+      - "Short prompts (10-20 words per segment) work better than long descriptions"
+      - "Use timestamp prompting for Sora: '0s-3s: [A], 3s-6s: [B]'"
+      - "Use checklist format for Veo, structured format for Runway"
+
+  - id: aida
+    name: "AIDA"
+    full_name: "Attention → Interest → Desire → Action"
+    best_for: ["email", "sales_copy", "cold_outreach"]
+    when: "Email campaigns, newsletters, cold outreach, sales pages"
+    template: |
+      ## Attention
+      [Subject line / first sentence hook — must stop the scroll]
+      [Curiosity gap, bold claim, or personalization]
+      
+      ## Interest
+      [Problem recognition — make reader nod 'that's me']
+      [Show you understand their specific situation]
+      
+      ## Desire
+      [Solution presentation with proof]
+      [Social proof, transformation story, concrete benefits]
+      
+      ## Action
+      [Single clear CTA — one action per email]
+      [Urgency element if appropriate, next step crystal clear]
+    tips:
+      - "Subject line determines 80% of open rate"
+      - "One CTA per email — never two competing actions"
+      - "Use PS: line for second hook (highest readership after subject)"
+      - "Cold email: 3-5 sentences max, no attachments"
+    email_types:
+      cold_outreach: { subject: "Name + specific result", length: "3-5 sentences" }
+      newsletter: { subject: "Curiosity gap or number", length: "300-500 words" }
+      product_launch: { subject: "Announcement + benefit", length: "200-400 words" }
+      follow_up: { subject: "Reference previous context", length: "2-3 sentences" }
+      drip_sequence: { subject: "Progressive value", length: "150-300 words each" }
+
+  - id: pas
+    name: "PAS"
+    full_name: "Problem → Agitate → Solve"
+    best_for: ["ads", "landing_pages", "problem_content", "short_form"]
+    when: "Short ad copy, landing page above-fold, pain-point content"
+    template: |
+      ## Problem
+      [Identify the specific pain point clearly and specifically]
+      [Use reader's own words if possible]
+      
+      ## Agitate
+      [Amplify consequences of NOT solving it]
+      [Make the pain vivid, specific, and urgent]
+      
+      ## Solve
+      [Present your solution with proof/CTA]
+      [Transition from pain to relief, end with clear action]
+    tips:
+      - "Best for short-form copy (< 200 words)"
+      - "Agitate is the key section — make the problem feel urgent"
+      - "Solve should feel like relief, not a hard sell"
+      - "Works great for Google Ads, Facebook primary text, landing page heroes"
+
+# =============================================================================
+# PLATFORM CONSTRAINTS
+# =============================================================================
+
+platform_constraints:
+  google_ads:
+    headline_max_chars: 30
+    headlines_count: 3
+    description_max_chars: 90
+    descriptions_count: 2
+    tips: "Short, action verb, include keyword, use all 3 headlines"
+
+  facebook_ads:
+    primary_text_max: 125
+    headline_max: 40
+    link_description_max: 30
+    tips: "Hook in first line (before 'See more'), emotion-driven, question or stat"
+
+  email_subject:
+    max_chars: 50
+    preview_text_max: 90
+    tips: "Personalization (+26% open rate), curiosity gap, avoid spam words"
+
+  twitter_x:
+    max_chars: 280
+    thread_tweets: "5-7 tweets"
+    tips: "Hook tweet is everything, each tweet should stand alone, use line breaks"
+
+  linkedin:
+    max_chars: 3000
+    hook_lines: 2
+    tips: "First 2 lines appear before 'see more', professional tone, personal stories"
+
+  instagram:
+    caption_max: 2200
+    hashtags_max: 30
+    tips: "First line = hook, use 5-10 relevant hashtags (not 30), emoji sparingly"
+
+  tiktok:
+    caption_max: 300
+    hook_seconds: 3
+    tips: "Casual, trend-aware, hook in 0-3 seconds, controversial/surprising angle"
+
+  youtube:
+    title_max_chars: 60
+    description_visible: 150
+    tags_max: 500
+    tips: "Numbers + brackets in title, keyword in first 150 chars of desc"

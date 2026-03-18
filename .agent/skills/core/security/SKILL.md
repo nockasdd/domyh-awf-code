@@ -2,7 +2,8 @@
 name: security
 description: "Security patterns for application hardening. Use when implementing input validation, OWASP protections, secrets management, or CSP."
 detect: ["always"]
-priority: 0
+category: core
+tier: 1
 ---
 
 # Security Patterns (Enhanced 2026)

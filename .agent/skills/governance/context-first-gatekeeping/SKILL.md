@@ -1,11 +1,9 @@
 ---
-name: "context-first-gatekeeping"
+name: context-first-gatekeeping
 description: "Enforces 'understand before modify' principle. Context gate before any implementation. DRY check, stack-aware skill loading, and file reading protocol."
-triggers:
-  - "Before starting any implementation"
-  - "Before creating new files or functions"
-  - "Before modifying unfamiliar code"
-  - "At task start — load context first"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Context-First Gatekeeping

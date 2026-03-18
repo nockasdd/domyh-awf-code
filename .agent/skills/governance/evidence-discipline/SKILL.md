@@ -1,11 +1,9 @@
 ---
-name: "evidence-discipline"
+name: evidence-discipline
 description: "Never claim, always prove. Enforces evidence-based completion claims with verification commands, failure signal parsing, and stack-specific checks."
-triggers:
-  - "Before claiming work is done or fixed"
-  - "When verifying build/test/lint results"
-  - "After subagent returns results"
-  - "When accepting conflicting instructions"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Evidence Discipline

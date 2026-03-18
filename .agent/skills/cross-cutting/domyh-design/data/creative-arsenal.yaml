@@ -1,0 +1,293 @@
+metadata:
+  skill: domyh-design
+  domain: creative_arsenal
+  updated: "2026-03-17"
+  description: "33 advanced UI concepts for anti-generic design inspiration. Use when DESIGN_VARIANCE ≥ 5."
+  patterns_count: 33
+  columns:
+    - id
+    - category
+    - name
+    - description
+    - complexity
+    - motion_intensity_min
+    - implementation_hint
+
+patterns:
+  # ── Navigation (7 concepts) ──────────────────────────────────
+
+  - id: arsenal_001
+    category: navigation
+    name: "Mac OS Dock Magnification"
+    description: "Nav-bar at screen edge; icons scale fluidly on hover proximity"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "useMotionValue for cursor distance, spring transform scale"
+
+  - id: arsenal_002
+    category: navigation
+    name: "Magnetic Button"
+    description: "Buttons pull toward cursor within proximity radius"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "useMotionValue + useTransform outside React render cycle. NEVER useState for continuous animation"
+
+  - id: arsenal_003
+    category: navigation
+    name: "Gooey Menu"
+    description: "Sub-items detach from main button like viscous liquid with SVG filter"
+    complexity: high
+    motion_intensity_min: 7
+    implementation_hint: "SVG feGaussianBlur + feColorMatrix gooey filter technique"
+
+  - id: arsenal_004
+    category: navigation
+    name: "Dynamic Island"
+    description: "Pill-shaped component that morphs to show status/alerts/media controls"
+    complexity: high
+    motion_intensity_min: 6
+    implementation_hint: "Framer Motion layoutId for shared element transitions"
+
+  - id: arsenal_005
+    category: navigation
+    name: "Contextual Radial Menu"
+    description: "Circular menu expanding at exact click coordinates"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "CSS clip-path circle animation from click point"
+
+  - id: arsenal_006
+    category: navigation
+    name: "Floating Speed Dial"
+    description: "FAB that springs out into curved line of secondary actions"
+    complexity: low
+    motion_intensity_min: 4
+    implementation_hint: "staggerChildren with arc positioning via transform rotate"
+
+  - id: arsenal_007
+    category: navigation
+    name: "Mega Menu Reveal"
+    description: "Full-screen dropdown with stagger-fade complex content panels"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "AnimatePresence + staggered reveal per column"
+
+  # ── Layout & Grids (5 concepts) ──────────────────────────────
+
+  - id: arsenal_008
+    category: layout
+    name: "Bento Grid"
+    description: "Asymmetric tile-based grouping inspired by Apple Control Center"
+    complexity: low
+    motion_intensity_min: 3
+    implementation_hint: "CSS Grid with fractional units: grid-template-columns: 2fr 1fr 1fr"
+
+  - id: arsenal_009
+    category: layout
+    name: "Chroma Grid"
+    description: "Grid borders or tiles showing subtle continuously animating color gradients"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "CSS @property for animated gradient hue rotation"
+
+  - id: arsenal_010
+    category: layout
+    name: "Split Screen Scroll"
+    description: "Two screen halves sliding in opposite directions on scroll"
+    complexity: high
+    motion_intensity_min: 7
+    implementation_hint: "GSAP ScrollTrigger with inversed translateY on each half"
+
+  - id: arsenal_011
+    category: layout
+    name: "Curtain Reveal"
+    description: "Hero section parting in the middle like a curtain on scroll"
+    complexity: high
+    motion_intensity_min: 7
+    implementation_hint: "Two clip-path inset animations tied to scroll progress"
+
+  - id: arsenal_012
+    category: layout
+    name: "Editorial Split"
+    description: "Massive typography left half, interactive scrollable cards right half"
+    complexity: medium
+    motion_intensity_min: 4
+    implementation_hint: "CSS Grid 50/50 split. Left sticky, right scrollable. Mobile: stack vertically"
+
+  # ── Cards & Containers (5 concepts) ──────────────────────────
+
+  - id: arsenal_013
+    category: cards
+    name: "Holographic Foil Card"
+    description: "Iridescent rainbow light reflections shifting on hover via CSS"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "CSS background conic-gradient + mix-blend-mode overlay, animated by mouse position"
+
+  - id: arsenal_014
+    category: cards
+    name: "Tinder Swipe Stack"
+    description: "Physical stack of cards user can swipe away with spring physics"
+    complexity: high
+    motion_intensity_min: 6
+    implementation_hint: "Framer Motion drag + useMotionValue for position, AnimatePresence for removal"
+
+  - id: arsenal_015
+    category: cards
+    name: "Morphing Modal"
+    description: "Button seamlessly expands into its own full-screen dialog container"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "Framer Motion layoutId shared between button and expanded modal"
+
+  - id: arsenal_016
+    category: cards
+    name: "Double-Bezel Card"
+    description: "Nested outer shell + inner core with concentric radii for machined hardware feel"
+    complexity: low
+    motion_intensity_min: 1
+    implementation_hint: "Outer: ring-1 ring-black/5 p-1.5 rounded-[2rem]. Inner: rounded-[calc(2rem-0.375rem)]"
+
+  - id: arsenal_017
+    category: cards
+    name: "Spotlight Border Card"
+    description: "Card borders illuminate dynamically following cursor position"
+    complexity: medium
+    motion_intensity_min: 4
+    implementation_hint: "CSS radial-gradient on pseudo-element, position updated via JS mousemove"
+
+  # ── Scroll Animations (5 concepts) ───────────────────────────
+
+  - id: arsenal_018
+    category: scroll
+    name: "Sticky Scroll Stack"
+    description: "Cards stick to top and physically stack over each other during scroll"
+    complexity: medium
+    motion_intensity_min: 6
+    implementation_hint: "position: sticky with incremental top values and scale-down transforms"
+
+  - id: arsenal_019
+    category: scroll
+    name: "Horizontal Scroll Hijack"
+    description: "Vertical scroll translates into smooth horizontal gallery pan"
+    complexity: high
+    motion_intensity_min: 7
+    implementation_hint: "GSAP ScrollTrigger horizontal scroll, or CSS scroll-snap with transform"
+
+  - id: arsenal_020
+    category: scroll
+    name: "Zoom Parallax"
+    description: "Central background image zooming in/out seamlessly as user scrolls"
+    complexity: medium
+    motion_intensity_min: 6
+    implementation_hint: "transform: scale() tied to scroll progress via IntersectionObserver"
+
+  - id: arsenal_021
+    category: scroll
+    name: "Scroll Progress SVG Path"
+    description: "SVG vector lines that draw themselves as user scrolls down page"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "stroke-dashoffset animated by scroll progress via CSS scroll-timeline or JS"
+
+  - id: arsenal_022
+    category: scroll
+    name: "Liquid Swipe Transition"
+    description: "Page transitions that wipe screen like viscous liquid"
+    complexity: high
+    motion_intensity_min: 8
+    implementation_hint: "SVG clipPath with cubic-bezier curve animated via GSAP"
+
+  # ── Gallery & Media (5 concepts) ─────────────────────────────
+
+  - id: arsenal_023
+    category: gallery
+    name: "Coverflow Carousel"
+    description: "3D carousel with center focused and edges angled back in perspective"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "CSS perspective + rotateY transforms, center item scale(1.1)"
+
+  - id: arsenal_024
+    category: gallery
+    name: "Accordion Image Slider"
+    description: "Narrow vertical image strips that expand fully on hover"
+    complexity: low
+    motion_intensity_min: 4
+    implementation_hint: "CSS flex with transition on flex-grow. Active item flex:5, others flex:1"
+
+  - id: arsenal_025
+    category: gallery
+    name: "Hover Image Trail"
+    description: "Mouse leaves trail of popping/fading images behind cursor"
+    complexity: high
+    motion_intensity_min: 7
+    implementation_hint: "Array of positioned images, spawn on mousemove with staggered fadeOut"
+
+  - id: arsenal_026
+    category: gallery
+    name: "Glitch Effect Image"
+    description: "Brief RGB-channel shifting digital distortion on hover"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "CSS clip-path slicing + translateX on R/G/B layers via animation"
+
+  - id: arsenal_027
+    category: gallery
+    name: "Drag-to-Pan Grid"
+    description: "Boundless grid user can freely drag in any direction"
+    complexity: medium
+    motion_intensity_min: 4
+    implementation_hint: "CSS transform translate2d updated via drag events with momentum"
+
+  # ── Typography & Text (3 concepts) ───────────────────────────
+
+  - id: arsenal_028
+    category: typography
+    name: "Text Mask Reveal"
+    description: "Massive typography acting as transparent window to video background"
+    complexity: medium
+    motion_intensity_min: 4
+    implementation_hint: "background-clip: text with video or gradient background"
+
+  - id: arsenal_029
+    category: typography
+    name: "Text Scramble Effect"
+    description: "Matrix-style character decoding animation on load or hover"
+    complexity: low
+    motion_intensity_min: 4
+    implementation_hint: "JS random character cycling converging to final text, 30ms interval"
+
+  - id: arsenal_030
+    category: typography
+    name: "Kinetic Marquee"
+    description: "Endless text bands that reverse direction or speed up on scroll"
+    complexity: low
+    motion_intensity_min: 3
+    implementation_hint: "CSS animation translateX loop. Speed change via scroll event"
+
+  # ── Micro-Interactions & Effects (3 concepts) ────────────────
+
+  - id: arsenal_031
+    category: effects
+    name: "Particle Explosion Button"
+    description: "CTAs shatter into particles upon success click"
+    complexity: medium
+    motion_intensity_min: 6
+    implementation_hint: "canvas-confetti library (6KB) or manual Canvas particles"
+
+  - id: arsenal_032
+    category: effects
+    name: "Directional Hover Aware"
+    description: "Hover fill entering from exact side mouse entered element"
+    complexity: medium
+    motion_intensity_min: 5
+    implementation_hint: "Detect entry side via event coordinates, set CSS gradient origin"
+
+  - id: arsenal_033
+    category: effects
+    name: "Mesh Gradient Background"
+    description: "Organic lava-lamp animated color blobs drifting in background"
+    complexity: low
+    motion_intensity_min: 3
+    implementation_hint: "CSS radial-gradients with slow animation-duration: 20s+, on fixed pointer-events-none layer"

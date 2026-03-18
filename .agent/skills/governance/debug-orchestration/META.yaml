@@ -1,0 +1,33 @@
+name: debug-orchestration
+display: "Debug Orchestration"
+category: governance
+tier: 1
+priority: 2
+
+desc: "Systematic debugging with root cause tracing. Orchestrates debug sessions with hypothesis testing, evidence collection, and systematic elimination."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - debug
+    - debugging
+    - root cause
+    - trace
+    - breakpoint
+    - error trace
+    - stack trace
+    - reproduce
+    - hypothesis
+    - bisect
+  intents:
+    - debug systematically
+    - find root cause
+    - trace error
+    - orchestrate debug session
+
+caps:
+  - Systematic hypothesis testing
+  - Root cause tracing with evidence
+  - Debug session orchestration
+  - Stack trace analysis
+  - Bisect-style elimination

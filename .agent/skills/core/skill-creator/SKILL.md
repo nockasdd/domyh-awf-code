@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: "Create, improve, and validate DOMYH skills. Use when user wants to create a new skill, improve an existing skill, scaffold a skill template, or optimize skill descriptions for better trigger accuracy. Activate for any request about skill development, skill writing, or skill quality."
+description: "Create, improve, and validate DOMYH skills. Use when creating new skills, improving existing ones, or optimizing skill descriptions for better trigger accuracy."
 detect: ["SKILL.md", "META.yaml", "ADVANCED.md"]
 category: core
 tier: 1

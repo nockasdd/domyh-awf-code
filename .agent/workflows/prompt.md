@@ -1,173 +1,205 @@
 ---
-description: "✍️ AI Prompt Generator: research, analyze, and create structured markdown prompts"
-skills: { required: [prompt-engineering], contextual: [domyh-design] }
-success_criteria: "Prompt generated, research cited, RCTO structure applied"
+description: "✍️ AI Prompt Generator Pro: detect, interview, lazy-load, generate optimized prompts for 10+ content types"
+skills: { required: [prompt-engineering], contextual: [domyh-design, gemini-media-gen] }
+success_criteria: "Prompt generated, framework applied, model-optimized, ready for copy-paste"
 ---
 
 # ✍️ /prompt — Prompt Generator Pro
 
-> Research → Analyze → Structure → Generate → Refine
-> 📚 RCTO Framework • Online Research • Multi-format Output
+> DETECT → INTERVIEW → LOAD → GENERATE → REFINE
+> 📚 5 Frameworks • 10 Types • Lazy Loading • Token Optimized
 
 ---
 
-## PROMPT FLOW
+## PROMPT FLOW (5 Steps)
 
-1. **ANALYZE** — Parse user request, detect prompt type (image/project/modify/system/general). If project-related: load context via HSA (`hsa_search`). Extract: purpose, target tool/model, language, constraints. Show: `[Step 1/5] Analyzing: "{request}" → Type: image`
-2. **RESEARCH** — Online research on domain, best practices, reference examples. Search: optimal prompt structure for target tool, industry standards, trending patterns. Show: `[Step 2/5] Researching: "midjourney v6 architecture prompts"...`
-3. **STRUCTURE** — Apply RCTO Framework (Role-Context-Task-Output). Map research → appropriate sections. Choose template by prompt type. Show: `[Step 3/5] Structuring prompt with 6 sections...`
-4. **GENERATE** — Create structured markdown prompt. Write in the language requested by user. Apply prompt-engineering patterns (CoT, few-shot, role-play). Show: `[Step 4/5] Generating prompt...`
-5. **REFINE** — Present output → ⛔ **STOP — user review**. Iterate if needed: add details, change style, adjust parameters.
-6. **SAVE** (Optional) — If user confirms, save to `.domyh/prompts/prompt_YYYY-MM-DD_{type}.md`
+1. **DETECT** — Parse request → auto-detect type (see AUTO-DETECT below). Auto-recommend model from `ai-models-catalog.yaml` → auto_selection. Show: `[1/5] Type: IMAGE/anime_avatar → Model: Midjourney v7`
+2. **INTERVIEW** — Ask 2-3 Qs from INTERVIEW MAP below. **Skip if user already provided** (model, style, platform in desc/flags). Show: `[2/5] Quick questions...`
+3. **LOAD** — Lazy load ONLY needed data per LAZY LOAD MAP below. **Never load all files.** Show: `[3/5] Loading image-types-personal...`
+4. **GENERATE** — Apply framework template from loaded data. Write prompt in user's language. If `--variants` → generate N variants with different angles (see VARIANT ANGLES). If complex/niche → online research. Show: `[4/5] Generating with SVCLMA framework...`
+5. **REFINE** — Present prompt → ⛔ **STOP for user review**. Iterate if needed. Optional: save to `.domyh/prompts/prompt_YYYY-MM-DD_{type}.md`
 
 ---
 
 ## COMMANDS
 
-| Command                  | Type        | Description                      | Output              |
-| ------------------------ | ----------- | -------------------------------- | ------------------- |
-| `/prompt [anything]`     | auto-detect | Auto-analyze and select type     | Markdown prompt     |
-| `/prompt image [desc]`   | image       | AI image generation prompt       | Image gen prompt    |
-| `/prompt project [desc]` | project     | New project specification prompt | Project spec prompt |
-| `/prompt modify [desc]`  | modify      | Project modification prompt      | Modification prompt |
-| `/prompt system [desc]`  | system      | System prompt for AI             | System prompt       |
+| Command                    | Type        | Framework  |
+| -------------------------- | ----------- | ---------- |
+| `/prompt [anything]`       | auto-detect | Auto       |
+| `/prompt image [desc]`     | image       | RCTO+PRISM |
+| `/prompt video [desc]`     | video       | SVCLMA     |
+| `/prompt marketing [desc]` | marketing   | CO-STAR    |
+| `/prompt email [desc]`     | email       | AIDA       |
+| `/prompt social [desc]`    | social      | CO-STAR    |
+| `/prompt audio [desc]`     | audio       | RCTO+Audio |
+| `/prompt data [desc]`      | data        | RCTO       |
+| `/prompt project [desc]`   | project     | RCTO       |
+| `/prompt modify [desc]`    | modify      | RCTO       |
+| `/prompt system [desc]`    | system      | RCTO       |
 
 ### Flags
 
-| Flag                                      | Description                         |
-| ----------------------------------------- | ----------------------------------- |
-| `--lang vi/en`                            | Output language (default: user lang)|
-| `--tool midjourney/dalle/flux/claude/gpt` | Target AI tool                      |
-| `--detail minimal/standard/detailed`      | Detail level (default: detailed)    |
-| `--format markdown/yaml/json`             | Output format (default: markdown)   |
-
----
-
-## RCTO FRAMEWORK
-
-All prompts follow the RCTO structure:
-
-```
-┌─────────────────────────────────────────┐
-│  R — ROLE                               │
-│  Who will execute? Persona, expertise   │
-├─────────────────────────────────────────┤
-│  C — CONTEXT                            │
-│  Background, constraints, domain info   │
-├─────────────────────────────────────────┤
-│  T — TASK                               │
-│  Specific requirements, step-by-step    │
-├─────────────────────────────────────────┤
-│  O — OUTPUT                             │
-│  Format, structure, quality criteria    │
-└─────────────────────────────────────────┘
-```
-
----
-
-## PROMPT TYPE TEMPLATES
-
-> **Template Reference**: Read `templates/prompts/{type}.md` for the correct RCTO template structure.
-> Available templates: `image.md`, `project.md`, `modify.md`, `system.md`.
+| Flag | Description |
+| ---- | ----------- |
+| `--lang vi/en` | Output language |
+| `--tool midjourney/dalle/flux/ideogram` | Image model |
+| `--model sora/veo/runway/kling/hailuo` | Video model |
+| `--platform instagram/youtube/linkedin/twitter/google-ads` | Platform |
+| `--variants N` | N variants (default: 1) |
+| `--detail minimal/standard/detailed` | Detail level |
 
 ---
 
 ## AUTO-DETECT LOGIC
 
 ```
-User Input → Keyword Analysis:
-│
-├─ Contains: "image", "photo", "illustration",
-│  "midjourney", "dall-e", "flux", "wallpaper", "poster"
-│  → Type: IMAGE
-│
-├─ Contains: "project", "build", "website",
-│  "application", "startup", "SaaS", "platform"
-│  → Type: PROJECT
-│
-├─ Contains: "modify", "fix", "add", "change",
-│  "refactor", "improve", "upgrade", "migrate"
-│  → Type: MODIFY
-│
-├─ Contains: "system prompt", "persona", "bot", "agent",
-│  "assistant", "chatbot", "instruction"
-│  → Type: SYSTEM
-│
-└─ Default → Type: GENERAL (apply RCTO)
+User Input → Keyword Match:
+├─ video/clip/animation/sora/veo/runway/cinematic/trailer  → VIDEO   → SVCLMA
+├─ ad/campaign/copy/headline/slogan/CTA/tagline            → MARKETING → CO-STAR
+├─ email/newsletter/outreach/cold email/drip/subject        → EMAIL   → AIDA
+├─ tweet/post/linkedin/instagram/tiktok/thread/hashtag      → SOCIAL  → CO-STAR
+├─ voice/narration/podcast/music/tts/suno/udio              → AUDIO   → RCTO+Audio
+├─ analyze/chart/report/dashboard/SQL/metrics/KPI           → DATA    → RCTO
+├─ image/photo/avatar/logo/banner/poster/wallpaper/midjourney → IMAGE → RCTO+PRISM
+├─ project/build/website/application/startup/SaaS           → PROJECT → RCTO
+├─ modify/fix/add/refactor/improve/upgrade/migrate          → MODIFY  → RCTO
+├─ system prompt/persona/bot/agent/assistant/chatbot        → SYSTEM  → RCTO
+└─ Default                                                  → GENERAL → RCTO
 ```
 
 ---
 
-## RESEARCH STRATEGY
+## INTERVIEW MAP (inline — flow control)
 
-Before generating a prompt, agent MUST research online:
+Ask 2-3 Qs per type. **Skip entirely if user provided all info.**
 
-| Prompt Type | Research Targets                                                  |
-| ----------- | ----------------------------------------------------------------- |
-| Image       | Tool-specific syntax, trending styles, composition techniques     |
-| Project     | Industry best practices, similar projects, tech stack comparisons |
-| Modify      | Framework docs, migration guides, breaking changes                |
-| System      | Latest prompting patterns, model capabilities, safety guidelines  |
+| Type | always_ask | ask_if_missing | skip_if |
+|------|-----------|----------------|---------|
+| **image** | Loại ảnh? (avatar/logo/banner/poster...) • Aspect ratio? | Model? • Style? (photorealistic/anime/minimalist) | type+style in desc, `--tool` |
+| **video** | Target model? (Sora/Veo/Runway/Kling/Hailuo) • Duration? | Audio needed? • Camera movement? | `--model`, duration in desc |
+| **marketing** | Platform? (Google Ads/Facebook/Instagram...) • Target audience? | Tone? • Multiple variants? | `--platform`, audience in desc |
+| **email** | Type? (cold/newsletter/launch/follow-up/drip) • CTA? | Tone? | type in desc |
+| **social** | Platform? (Twitter/IG/LinkedIn/TikTok) | Hashtag research? • Tone? | `--platform` |
+| **audio** | Type? (music/voiceover/podcast/SFX) • Model? | Genre/mood/BPM? or Voice details? | type+model in desc |
+| **data** | Analysis type? (report/dashboard/chart/SQL) • Data source? | Audience? | — |
+| **system** | Agent purpose? (chatbot/assistant/analyst) • Constraints? | Tool calling? • Thinking level? | — |
+| **project** | Tech stack? • Scope? (MVP/full/prototype) | — | — |
+| **modify** | What to change? (feature/bugfix/refactor) • Breaking OK? | — | — |
 
-### Research Quality Gates
+---
 
-- ✅ At least 2-3 trustworthy sources
-- ✅ Cross-reference information across sources
-- ✅ Prioritize official docs and recent articles (< 6 months)
-- ✅ Include citations in the "References" section of output
+## LAZY LOAD MAP (inline — flow control)
+
+Load ONLY what's needed. `?` = optional. Data path: `prompt-engineering/data/`
+
+| Type | Load (required) | Load (optional) | Skip |
+|------|----------------|-----------------|------|
+| **image** | `image-types-{sub}.yaml` | `ai-models-catalog.yaml` | prompt-frameworks |
+| **video** | `ai-models-catalog.yaml` | `prompt-frameworks.yaml` | image-types |
+| **marketing** | `prompt-frameworks.yaml` | — | image-types, ai-models |
+| **email** | `prompt-frameworks.yaml` | — | image-types, ai-models |
+| **social** | `prompt-frameworks.yaml` | — | image-types, ai-models |
+| **audio** | `ai-models-catalog.yaml` | — | image-types, prompt-frameworks |
+| **data** | — | `reasoning-patterns.yaml` | image-types, ai-models |
+| **system** | `gemini3-patterns.yaml` | `safety-patterns.yaml` | image-types, ai-models |
+| **project** | — | `reasoning-patterns.yaml` | all data files |
+| **modify** | — | `reasoning-patterns.yaml` | all data files |
+
+### Image Sub-file Routing
+
+```
+avatar/pet/wallpaper/sticker/emoji/meme/profile  → image-types-personal.yaml
+logo/banner/poster/mockup/thumbnail/card/slides   → image-types-business.yaml
+concept/illustration/pattern/album/game/book       → image-types-creative.yaml
+ad/hero/email-header/social-post/testimonial       → image-types-marketing.yaml
+food/architecture/fashion/landscape/street/macro   → image-types-photography.yaml
+```
+
+---
+
+## VARIANT ANGLES
+
+When `--variants N`, use distinct angles:
+
+| Angle | Strategy |
+|-------|----------|
+| **Direct** | Clear, benefit-focused, no metaphor |
+| **Emotional** | Story-driven, pain/aspiration hook |
+| **Data-driven** | Statistics, social proof, numbers |
+| **Urgency** | Scarcity, time-limit, FOMO |
+| **Curiosity** | Question hook, cliffhanger |
+
+---
+
+## FRAMEWORK SELECTION
+
+| Framework | Best For | Loaded From |
+|-----------|----------|-------------|
+| **RCTO** | System, project, modify, code, general | `prompt-frameworks.yaml` |
+| **CO-STAR** | Marketing, social, copywriting | `prompt-frameworks.yaml` |
+| **SVCLMA** | Video generation | `prompt-frameworks.yaml` |
+| **AIDA** | Email, sales copy | `prompt-frameworks.yaml` |
+| **PAS** | Ads, landing pages | `prompt-frameworks.yaml` |
+
+---
+
+## RESEARCH RULES
+
+```yaml
+always_research: "Model syntax updates, niche domains (medical/legal), platform policy changes"
+skip_research:   "Simple image prompts, standard marketing copy, common system prompts"
+conditional:     "Video/audio → only if specific model or niche technique"
+```
 
 ---
 
 ## QUALITY CRITERIA
 
-All generated prompts must meet:
+| Criteria | Description |
+| -------- | ----------- |
+| **Specific** | No ambiguity, concrete details |
+| **Structured** | Framework sections clearly separated |
+| **Actionable** | Copy-paste ready for target tool |
+| **Complete** | All context present, no [PLACEHOLDER] |
+| **Optimized** | Model-specific syntax (--ar, --no, etc.) |
 
-| Criteria       | Description                                     |
-| -------------- | ----------------------------------------------- |
-| **Specific**   | No ambiguity, includes concrete details         |
-| **Structured** | Clear sections, good hierarchy                  |
-| **Actionable** | Can be copy-pasted directly into the target tool|
-| **Complete**   | Sufficient context, no missing critical info    |
-| **Tested**     | Format validated for target tool                |
+---
+
+## ANTI-PATTERNS
+
+| Don't | Do Instead |
+| ----- | ---------- |
+| Load all data files upfront | Lazy load per LAZY LOAD MAP |
+| Skip interview | Ask Qs if info missing |
+| Same variant, different words | Each variant: distinct angle |
+| Mix camera directions in 1 shot | One camera per video segment |
+| Ignore platform char limits | Check platform_constraints |
+| Always force online research | Skip for simple types |
+| Generic model recommendation | Use auto_selection from catalog |
 
 ---
 
 ## INTEGRATION
 
-### With prompt-engineering skill
+### Data Files (in `prompt-engineering/data/`)
+- `ai-models-catalog.yaml` → 14 models, camera vocab, auto-selection, negative prompts
+- `image-types-{personal,business,creative,marketing,photography}.yaml` → 5 sub-catalogs
+- `prompt-frameworks.yaml` → 5 framework templates + 8 platform constraints
 
-- Load reasoning patterns from `reasoning-patterns.yaml`
-- Apply output formatting from `output-patterns.yaml`
-- Check safety guardrails from `safety-patterns.yaml`
+### Contextual Skills
+- `domyh-design` → style/color data for image/UI prompts
+- `gemini-media-gen` → Gemini-specific patterns
+- `gemini3-patterns.yaml` → agentic templates for system prompts
 
-### With domyh-design skill (contextual)
-
-- Load style/color data for image prompts
-- Apply typography/layout knowledge for UI prompts
-- Use image-gen-prompts.yaml templates when relevant
-
----
-
-## ⚠️ ANTI-PATTERNS
-
-| Don't                               | Do Instead                                |
-| ----------------------------------- | ----------------------------------------- |
-| Prompt too short, missing context   | Always include all RCTO sections          |
-| Copy-paste template without custom  | Customize every section for the use case  |
-| Skip research                       | Always research before generating         |
-| Mixed languages                     | Keep consistent 1 language throughout     |
-| Too much jargon                     | Write clearly for target audience         |
 ---
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing (SESSION_005):
 
-1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
+1. **VERIFY** — Output meets success_criteria?
+2. **PERSIST** (HSA):
    - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
-   - Append task summary to `memory/session.md`
-   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
-
+3. **PERSIST** (manual fallback):
+   - Append to `memory/session.md` → Update `memory/CONTEXT_SNAPSHOT.md`

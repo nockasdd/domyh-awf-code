@@ -2,7 +2,7 @@
 name: typescript
 description: "TypeScript development patterns for type-safe web apps, Node.js, and ESM-native projects. Use when working with .ts/.tsx files or tsconfig.json."
 detect: ["tsconfig.json", "*.ts", "*.tsx", "*.mts", "*.cts"]
-category: frontend
+category: languages
 tier: 1
 ---
 

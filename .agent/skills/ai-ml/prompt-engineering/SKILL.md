@@ -2,6 +2,8 @@
 name: prompt-engineering
 description: "Prompt engineering patterns for LLMs. Use when crafting system prompts, few-shot examples, or chain-of-thought."
 category: ai-ml
+detect: ["prompts/*", "*.prompt", "system-prompt*"]
+tier: 1
 ---
 
 # Prompt Engineering Patterns v2.0

@@ -1,14 +1,8 @@
 ---
 name: database
 description: "Database design patterns for SQL and NoSQL. Use when designing schemas, queries, indexes, or migrations."
-category: infrastructure
----
-
-﻿---
-name: database
-detect:
-  ["*.sql", "schema.prisma", "drizzle/", "migrations/", "*.db", "*.sqlite"]
-category: infrastructure
+detect: ["*.sql", "schema.prisma", "drizzle/", "migrations/", "*.db", "*.sqlite"]
+category: cross-cutting
 tier: 1
 ---
 

@@ -2,7 +2,7 @@
 name: lua
 description: "Lua scripting patterns for game dev and embedded. Use when working with .lua files."
 detect: ["*.lua", ".luarc.json", "init.lua", "conf.lua", "main.lua"]
-category: scripting
+category: languages
 tier: 1
 ---
 

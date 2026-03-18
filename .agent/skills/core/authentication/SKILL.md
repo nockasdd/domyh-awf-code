@@ -1,7 +1,9 @@
 ---
 name: authentication
 description: "Authentication and authorization patterns. Use when implementing OAuth, JWT, MFA, session management, or access control."
+detect: ["login*", "oauth*", "passport*", "jwt*", "auth*"]
 category: core
+tier: 1
 ---
 
 # Authentication Skill v1.0

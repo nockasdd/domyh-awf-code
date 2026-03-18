@@ -1,0 +1,31 @@
+name: pre-stop-checklist
+display: "Pre-Stop Checklist"
+category: governance
+tier: 1
+priority: 1
+
+desc: "Mandatory checklist before ending a session. Ensures all work is persisted, decisions saved, context snapshot updated, and nothing is lost to context compaction."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - pre-stop
+    - before stop
+    - session end
+    - checklist
+    - persist before end
+    - save state
+    - final check
+    - wrap up
+  intents:
+    - end session safely
+    - persist before stopping
+    - final verification
+    - save all work
+
+caps:
+  - Pre-stop verification checklist
+  - Ensure all decisions anchored
+  - CONTEXT_SNAPSHOT.md update
+  - session.md append
+  - Unsaved work detection

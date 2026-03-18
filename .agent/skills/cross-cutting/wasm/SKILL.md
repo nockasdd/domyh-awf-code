@@ -2,6 +2,8 @@
 name: wasm
 description: "WebAssembly patterns for performance-critical web modules. Use when compiling to Wasm or using Wasm runtimes."
 category: cross-cutting
+detect: ["*.wasm", "*.wat", "wasm-pack*"]
+tier: 1
 ---
 
 # WebAssembly — WASM • WASI • Component Model

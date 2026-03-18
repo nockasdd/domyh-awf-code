@@ -2,7 +2,7 @@
 name: go
 description: "Go development patterns for services, CLIs, and cloud-native apps. Use when working with .go files or go.mod projects."
 detect: ["go.mod", "go.sum", "*.go", "go.work"]
-category: backend
+category: languages
 tier: 1
 ---
 

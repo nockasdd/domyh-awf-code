@@ -2,7 +2,7 @@
 name: deno
 description: "Deno runtime patterns for secure TypeScript. Use when working with deno.json or Deno projects."
 detect: ["deno.json", "deno.jsonc", "deno.lock", "mod.ts", "deps.ts"]
-category: runtime
+category: cross-cutting
 tier: 2
 ---
 

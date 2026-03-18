@@ -2,7 +2,7 @@
 name: asm
 description: "Assembly language patterns for x86/ARM systems. Use when working with .asm/.s files."
 detect: ["*.asm", "*.s", "*.S", "__asm", "asm volatile"]
-category: language
+category: languages
 tier: 2
 ---
 

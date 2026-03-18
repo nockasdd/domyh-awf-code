@@ -1,0 +1,34 @@
+name: session-memory
+display: "Session Memory"
+category: governance
+tier: 1
+priority: 2
+
+desc: "Persistent memory pattern using hsa_session with structured shelves. Decisions, patterns, errors survive across sessions and context compaction. Save anchors by category: decision, convention, context, constraint, stack."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - session memory
+    - memory
+    - anchor
+    - save decision
+    - persist
+    - compaction
+    - context snapshot
+    - remember
+    - recall
+    - decision log
+    - convention
+  intents:
+    - save session state
+    - persist decisions
+    - recall prior work
+    - memory management
+
+caps:
+  - Structured anchor shelves (decision, convention, context, constraint, stack)
+  - Compaction survival protocol
+  - Cross-session memory persistence
+  - Decision recall at session start
+  - Emergency save sequence

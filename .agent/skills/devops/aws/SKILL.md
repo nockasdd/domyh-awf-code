@@ -1,7 +1,9 @@
 ---
 name: aws
 description: "AWS cloud service patterns. Use when working with EC2, S3, Lambda, ECS, RDS, or other AWS services."
-category: infrastructure
+detect: ["template.yaml:AWS::Serverless", "samconfig.toml", "cdk.json", "*.tf:aws_"]
+category: devops
+tier: 1
 ---
 
 # AWS Cloud Services

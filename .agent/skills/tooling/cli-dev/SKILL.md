@@ -2,6 +2,8 @@
 name: cli-dev
 description: "CLI development patterns for Node.js command-line tools. Use when building CLIs with oclif, commander, or yargs."
 category: tooling
+detect: ["*commander*", "*yargs*", "*cli*", "bin/*"]
+tier: 1
 ---
 
 # CLI Tool Development

@@ -2,6 +2,8 @@
 name: gemini-tts
 description: "Gemini Text-to-Speech patterns. Use when implementing AI voice synthesis with Gemini."
 category: ai-ml
+detect: ["*gemini*", "*tts*"]
+tier: 2
 ---
 
 # Gemini Text-to-Speech

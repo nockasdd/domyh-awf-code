@@ -1,6 +1,9 @@
 ---
 name: context-engineering
 description: Context window management, token budget optimization, and compaction strategies
+detect: []
+category: core
+tier: 1
 ---
 
 # Context Engineering

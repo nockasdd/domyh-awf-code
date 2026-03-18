@@ -2,6 +2,8 @@
 name: monorepo
 description: "Monorepo management patterns for Nx, Turborepo, or Lerna. Use when organizing multi-package projects."
 category: cross-cutting
+detect: ["pnpm-workspace.yaml", "lerna.json", "nx.json", "turbo.json"]
+tier: 1
 ---
 
 # 📦 Monorepo Management

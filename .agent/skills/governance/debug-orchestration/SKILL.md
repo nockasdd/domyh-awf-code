@@ -1,11 +1,9 @@
 ---
-name: "debug-orchestration"
+name: debug-orchestration
 description: "Systematic 5-phase debug process: Reproduce → Isolate → Analyze → Fix → Verify. Hypothesis tracking, evidence journal, escalation timeout."
-triggers:
-  - "When debugging complex or multi-component issues"
-  - "When a bug persists after initial fix attempt"
-  - "When error root cause is unclear"
-  - "When debugging spans multiple files or services"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Debug Orchestration

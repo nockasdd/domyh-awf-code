@@ -2,7 +2,7 @@
 name: c
 description: "C development patterns for systems, embedded, and low-level programming. Use when working with .c/.h files or Makefiles."
 detect: ["*.c", "*.h", "Makefile", "CMakeLists.txt"]
-category: language
+category: languages
 tier: 1
 ---
 

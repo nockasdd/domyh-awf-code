@@ -4,7 +4,7 @@ category: ai-ml
 tier: 1
 priority: 1
 
-desc: "Prompt engineering for LLMs: chain-of-thought, few-shot, ReAct, tree-of-thought, structured output, system prompts, guardrails. Gemini 3 agentic 9-rule template, thinking controls, function calling, MCP. Multi-provider patterns (OpenAI, Anthropic, Google). 155+ patterns."
+desc: "Prompt engineering for LLMs: chain-of-thought, few-shot, ReAct, tree-of-thought, structured output, system prompts, guardrails. Gemini 3 agentic 9-rule template, thinking controls, function calling, MCP. Multi-provider patterns (OpenAI, Anthropic, Google). AI content generation (image, video, audio, marketing). 155+ patterns."
 
 triggers:
   file_patterns: []
@@ -34,12 +34,24 @@ triggers:
     - MCP function calling
     - grounding
     - context caching
+    # v3.0 — Content generation
+    - image prompt
+    - video prompt
+    - marketing prompt
+    - audio prompt
+    - midjourney
+    - sora
+    - dalle
+    - stable diffusion
   intents:
     - write prompts
     - prompt design
     - LLM integration
     - AI instruction
     - agentic system design
+    - generate image prompt
+    - generate video prompt
+    - create marketing copy
 
 caps:
   - Chain-of-thought (CoT) prompting
@@ -60,11 +72,18 @@ caps:
   - Function calling (parallel, compositional, MCP)
   - Context caching strategies
   - Grounding with Google Search
+  # v3.0 — Content generation
+  - AI image generation prompts (14 models, 42 image types)
+  - AI video generation prompts (Sora, Veo, Runway, Kling, Hailuo)
+  - AI audio/music generation prompts (Suno, Udio, Stable Audio)
+  - Marketing/email/social prompt frameworks (CO-STAR, AIDA, PAS)
+  - Platform-specific prompt constraints (8 platforms)
 
 related_skills:
   - ai-agents
   - gemini-live
   - gemini-media-gen
+  - domyh-design
 
 data_files:
   - data/reasoning-patterns.yaml
@@ -74,3 +93,12 @@ data_files:
   # v2.0
   - data/gemini3-patterns.yaml
   - data/tool-patterns.yaml
+  # v3.0 — Prompt workflow data
+  - data/ai-models-catalog.yaml
+  - data/prompt-frameworks.yaml
+  # v3.1 — Split image types (lazy-loaded per sub-category)
+  - data/image-types-personal.yaml
+  - data/image-types-business.yaml
+  - data/image-types-creative.yaml
+  - data/image-types-marketing.yaml
+  - data/image-types-photography.yaml

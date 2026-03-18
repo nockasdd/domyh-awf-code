@@ -2,7 +2,7 @@
 name: csharp
 description: "C# development patterns for .NET, ASP.NET, and cross-platform apps. Use when working with .cs files or .csproj projects."
 detect: ["*.csproj", "*.sln", "*.cs", "global.json"]
-category: language
+category: languages
 tier: 1
 ---
 
@@ -33,70 +33,15 @@ not_csharp:  # Other languages
 
 ---
 
-## 📊 C# Standards Comparison (2025-2026)
+## 📊 C# Standards & Toolchain
 
-| C# Version | .NET Version | Year | Key Features                                                     |
-| ---------- | ------------ | ---- | ---------------------------------------------------------------- |
-| **C# 11**  | .NET 7       | 2022 | raw strings, list patterns, required members                     |
-| **C# 12**  | .NET 8 LTS   | 2023 | primary constructors, collection expressions, alias any type     |
-| **C# 13**  | .NET 9       | 2024 | params collections, Lock type, field keyword, partial properties |
-| **C# 14**  | .NET 10 LTS  | 2025 | extension members, null-conditional assignment, implicit span    |
+> See `data/toolchain.yaml` for IDE comparisons (VS 2026, Rider, VS Code) and version history.
 
----
-
-## 🛠️ IDE & Toolchain Support (2025-2026)
-
-### Visual Studio 2026
-
-```yaml
-version: VS 2026
-features:
-  - C# 14 / .NET 10 LTS full support
-  - GitHub Copilot built-in (AI code generation)
-  - Third-party AI assistants support
-  - Enhanced debugging with AI insights
-  - Faster startup, improved responsiveness
-  - ASP.NET Core / Blazor / MAUI tooling
-  - Azure integration
-notes:
-  - Windows primary (limited macOS via VS for Mac)
-  - Resource intensive
-```
-
-### JetBrains Rider 2025.3+
-
-```yaml
-version: Rider 2025.3
-features:
-  - Day-one .NET 10 / C# 14 support
-  - Extension members and operators
-  - Cross-platform (Windows, macOS, Linux)
-  - Unity, Unreal, Godot game dev support
-  - AI Agent Protocol (ACP) integration
-  - Fast startup, solution loading
-notes:
-  - Paid (free for students/educators)
-  - IntelliJ-based refactoring
-```
-
-### VS Code + C# Dev Kit
-
-```yaml
-extensions_required:
-  - "C# Dev Kit" (Microsoft)
-  - "C#" (OmniSharp/Roslyn)
-  - "NuGet Package Manager"
-features:
-  - Project/solution management
-  - Roslyn-powered IntelliSense
-  - Integrated testing (xUnit, NUnit, MSTest)
-  - Debugging, refactoring
-  - Cross-platform
-notes:
-  - Free, lightweight
-  - Requires extension setup
-  - Less integrated than full IDEs
-```
+| C# Version | .NET Version | Key Features |
+| ---------- | ------------ | ------------ |
+| **C# 12** | .NET 8 LTS | primary constructors, collection expressions |
+| **C# 13** | .NET 9 | params collections, Lock type, field keyword |
+| **C# 14** | .NET 10 LTS | extension members, null-conditional assignment |
 
 ---
 
@@ -498,72 +443,11 @@ builder.Services.AddHttpClient<IPaymentClient, PaymentClient>(client =>
 
 ---
 
-## 📦 Essential Libraries (2025-2026)
+## 📦 Essential Libraries
 
-### Core Frameworks
+> See `data/libraries.yaml` for full catalog (30+ libraries across 7 categories).
 
-| Library          | Purpose                       | NuGet      |
-| ---------------- | ----------------------------- | ---------- |
-| **ASP.NET Core** | Web APIs, MVC, Razor          | Built-in   |
-| **Blazor**       | Full-stack C# web             | Built-in   |
-| **MAUI**         | Cross-platform mobile/desktop | Built-in   |
-| **.NET Aspire**  | Cloud-native orchestration    | `Aspire.*` |
-
-### Database & ORM
-
-| Library            | Purpose           | When to Use            |
-| ------------------ | ----------------- | ---------------------- |
-| **EF Core 10**     | Full ORM          | Complex domain models  |
-| **Dapper**         | Micro-ORM         | Raw SQL, performance   |
-| **Npgsql**         | PostgreSQL driver | Direct Postgres access |
-| **MongoDB.Driver** | MongoDB           | Document databases     |
-
-### Logging & Diagnostics
-
-| Library                  | Purpose             |
-| ------------------------ | ------------------- |
-| **Serilog**              | Structured logging  |
-| **OpenTelemetry**        | Distributed tracing |
-| **Application Insights** | Azure monitoring    |
-
-### Communication
-
-| Library         | Purpose                          |
-| --------------- | -------------------------------- |
-| **MassTransit** | Message bus (RabbitMQ, Azure SB) |
-| **gRPC**        | High-performance RPC             |
-| **SignalR**     | Real-time WebSocket              |
-
-### Utilities
-
-| Library              | Purpose                             |
-| -------------------- | ----------------------------------- |
-| **FluentValidation** | Validation rules                    |
-| **AutoMapper**       | Object mapping                      |
-| **MediatR**          | CQRS/Mediator pattern               |
-| **Polly**            | Resilience (retry, circuit breaker) |
-| **Hangfire**         | Background jobs                     |
-| **Quartz.NET**       | Job scheduling                      |
-
-### Testing
-
-| Library              | Purpose                         |
-| -------------------- | ------------------------------- |
-| **xUnit**            | Testing framework (recommended) |
-| **NUnit**            | Testing framework               |
-| **Moq**              | Mocking framework               |
-| **NSubstitute**      | Mocking framework               |
-| **FluentAssertions** | Assertion library               |
-| **Testcontainers**   | Integration testing             |
-
-### Blazor UI
-
-| Library               | Purpose                    |
-| --------------------- | -------------------------- |
-| **MudBlazor**         | Material Design components |
-| **Blazorise**         | Multi-framework components |
-| **Radzen**            | Business components        |
-| **Syncfusion Blazor** | Enterprise components      |
+**Key picks:** EF Core 10 (ORM) · Serilog (logging) · xUnit + FluentAssertions (testing) · Polly (resilience) · MediatR (CQRS) · MudBlazor (UI)
 
 ---
 

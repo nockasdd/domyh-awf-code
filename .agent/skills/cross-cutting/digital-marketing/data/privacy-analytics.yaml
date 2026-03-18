@@ -1,0 +1,282 @@
+# privacy-analytics.yaml — Privacy-First Analytics Patterns
+# Plausible, Umami, Fathom, Pirsch, cookieless tracking, GDPR
+# Sources: plausible.io, umami.is, usefathom.com, pirsch.io (2025-2026)
+metadata:
+  skill: digital-marketing
+  domain: privacy-analytics
+  updated: "2026-03"
+  patterns_count: 20
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  - id: plausible_setup
+    pattern_name: "Plausible Analytics Setup"
+    keywords: [plausible, setup, lightweight, privacy, no_cookies]
+    code_example: |
+      <!-- <1KB script, no cookies, GDPR-compliant by default -->
+      <script defer data-domain="yourdomain.com"
+        src="https://plausible.io/js/script.js"></script>
+    notes: "Open-source CE. Cloud or self-host via Docker"
+
+  - id: plausible_custom_event
+    pattern_name: "Plausible Custom Event"
+    keywords: [plausible, custom_event, goal, conversion]
+    code_example: |
+      // Track custom event
+      plausible('Signup', { props: { plan: 'pro', source: 'homepage' } });
+      
+      // Track outbound link
+      plausible('Outbound Link: Click', { props: { url: 'https://...' } });
+      
+      // Track file download
+      plausible('File Download', { props: { file: 'whitepaper.pdf' } });
+    notes: "Events appear as Goals in dashboard. Props = custom dimensions"
+
+  - id: plausible_self_host
+    pattern_name: "Plausible Self-Hosted (Docker)"
+    keywords: [plausible, self_host, docker, compose, community]
+    code_example: |
+      # docker-compose.yml
+      services:
+        plausible:
+          image: ghcr.io/plausible/community-edition:v2.1
+          ports: ["8000:8000"]
+          environment:
+            BASE_URL: https://analytics.yourdomain.com
+            SECRET_KEY_BASE: <generate-64-char-secret>
+            DATABASE_URL: postgres://plausible:pass@db:5432/plausible
+          depends_on: [db, clickhouse]
+        db:
+          image: postgres:16-alpine
+        clickhouse:
+          image: clickhouse/clickhouse-server:24.3
+    notes: "CE = Community Edition (free, self-hosted)"
+
+  - id: plausible_proxy
+    pattern_name: "Plausible Proxy (Bypass Ad Blockers)"
+    keywords: [plausible, proxy, adblocker, nginx, nextjs]
+    code_example: |
+      // Next.js: next.config.js proxy
+      module.exports = {
+        rewrites: () => [
+          { source: '/js/script.js', destination: 'https://plausible.io/js/script.js' },
+          { source: '/api/event', destination: 'https://plausible.io/api/event' }
+        ]
+      };
+      // Then use: <script src="/js/script.js" data-api="/api/event" ...>
+    notes: "Proxy through your domain to avoid ad blocker false positives"
+
+  - id: umami_setup
+    pattern_name: "Umami Analytics Setup"
+    keywords: [umami, setup, open_source, privacy, no_cookies]
+    code_example: |
+      <!-- <2KB script, no cookies, GDPR-compliant -->
+      <script async src="https://analytics.yourdomain.com/script.js"
+        data-website-id="your-website-id"></script>
+    notes: "Open-source. Self-host with Docker + PostgreSQL/MySQL"
+
+  - id: umami_self_host
+    pattern_name: "Umami Self-Hosted Setup"
+    keywords: [umami, docker, self_host, postgresql]
+    code_example: |
+      # docker-compose.yml
+      services:
+        umami:
+          image: ghcr.io/umami-software/umami:postgresql-latest
+          ports: ["3000:3000"]
+          environment:
+            DATABASE_URL: postgresql://umami:pass@db:5432/umami
+          depends_on: [db]
+        db:
+          image: postgres:16-alpine
+          environment:
+            POSTGRES_DB: umami
+            POSTGRES_USER: umami
+            POSTGRES_PASSWORD: <strong-password>
+    notes: "Supports multi-site from single dashboard"
+
+  - id: umami_custom_event
+    pattern_name: "Umami Custom Event Tracking"
+    keywords: [umami, track, custom_event, data_attributes]
+    code_example: |
+      // JavaScript API
+      umami.track('signup', { plan: 'pro', source: 'landing' });
+      
+      // HTML data attributes (no JS needed)
+      <button data-umami-event="signup" data-umami-event-plan="pro">
+        Sign Up
+      </button>
+    notes: "data-umami-event-* attributes auto-track without JS"
+
+  - id: fathom_setup
+    pattern_name: "Fathom Analytics Setup"
+    keywords: [fathom, setup, privacy, paid, managed]
+    code_example: |
+      <script src="https://cdn.usefathom.com/script.js"
+        data-site="ABCDEFG" defer></script>
+    notes: "Privacy-focused, paid managed service. Fathom Lite = free self-hosted"
+
+  - id: fathom_event
+    pattern_name: "Fathom Goal Tracking"
+    keywords: [fathom, goal, event, conversion, value]
+    code_example: |
+      // Track goal with monetary value
+      fathom.trackGoal('GOAL_ID', 4999);  // value in cents
+      
+      // Track click event
+      fathom.trackEvent('CTA Clicked');
+    notes: "Goals defined in Fathom dashboard first"
+
+  - id: pirsch_setup
+    pattern_name: "Pirsch Analytics Setup"
+    keywords: [pirsch, setup, germany, privacy, cookieless]
+    code_example: |
+      <script defer type="text/javascript"
+        src="https://api.pirsch.io/pirsch-extended.js"
+        id="pirschextendedjs"
+        data-code="YOUR_CODE"></script>
+    notes: "German-made, GDPR-compliant, cookieless"
+
+  - id: pirsch_event
+    pattern_name: "Pirsch Custom Event"
+    keywords: [pirsch, event, hit, custom, tracking]
+    code_example: |
+      pirsch('Signup', { meta: { plan: 'enterprise', source: 'ads' } });
+    notes: "Events via JS or server-side API"
+
+  - id: matomo_setup
+    pattern_name: "Matomo (Self-Hosted GA Alternative)"
+    keywords: [matomo, piwik, self_host, full_featured, heatmap]
+    code_example: |
+      <!-- Matomo tracking code -->
+      <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u = "https://analytics.yourdomain.com/";
+          _paq.push(['setTrackerUrl', u+'matomo.php']);
+          _paq.push(['setSiteId', '1']);
+          var d=document, g=d.createElement('script');
+          g.src=u+'matomo.js'; g.async=true;
+          d.head.appendChild(g);
+        })();
+      </script>
+    notes: "Most feature-rich GA alternative. Heatmaps, A/B, e-commerce"
+
+  # === Comparison ===
+  - id: tool_comparison
+    pattern_name: "Privacy Analytics Comparison Matrix"
+    keywords: [comparison, matrix, choose, versus, which]
+    code_example: |
+      | Tool     | OSS | Self-Host | Script | Cookie-Free | Price (cloud)  |
+      |----------|-----|-----------|--------|-------------|----------------|
+      | Plausible| CE  | Docker    | <1KB   | ✅          | $9/mo          |
+      | Umami    | ✅  | Docker    | <2KB   | ✅          | Free tier      |
+      | Fathom   | Lite| Yes       | ~1KB   | ✅          | $14/mo         |
+      | Pirsch   | ❌  | Yes       | ~1KB   | ✅          | €4/mo          |
+      | Matomo   | ✅  | PHP+MySQL | ~22KB  | Optional    | Free self-host |
+    notes: "For minimal impact: Plausible. For features: Matomo. For free: Umami"
+
+  - id: no_consent_banner
+    pattern_name: "No Cookie Banner Needed"
+    keywords: [no_cookies, no_banner, consent_free, gdpr]
+    code_example: |
+      Privacy-first analytics = no cookies = no consent banner
+      
+      How they track without cookies:
+        - Hash of: IP + User-Agent + date (daily rotation)
+        - No cross-site tracking possible
+        - No PII stored
+        - Compliant with: GDPR, CCPA, PECR, ePrivacy
+    notes: "Confirmed by multiple EU DPAs"
+
+  - id: migration_ga4
+    pattern_name: "Migrate from GA4 to Privacy Analytics"
+    keywords: [migrate, migration, ga4, switch, import]
+    code_example: |
+      Steps:
+        1. Keep GA4 running (parallel tracking)
+        2. Add Plausible/Umami script (both can run simultaneously)
+        3. Compare data for 2-4 weeks (expect 10-30% difference)
+        4. Differences are normal: ad blockers block GA4, not privacy tools
+        5. When confident, remove GA4 (or keep both)
+    notes: "Privacy tools often show 20-40% MORE traffic than GA4"
+
+  # === Integration with frameworks ===
+  - id: nextjs_plausible
+    pattern_name: "Next.js + Plausible Integration"
+    keywords: [nextjs, plausible, next_plausible, app_router]
+    code_example: |
+      npm install next-plausible
+      
+      // app/layout.tsx
+      import PlausibleProvider from 'next-plausible';
+      export default function RootLayout({ children }) {
+        return (
+          <html><body>
+            <PlausibleProvider domain="yourdomain.com">
+              {children}
+            </PlausibleProvider>
+          </body></html>
+        );
+      }
+      
+      // Track event in component
+      import { usePlausible } from 'next-plausible';
+      const plausible = usePlausible();
+      plausible('signup', { props: { plan: 'pro' } });
+    notes: "next-plausible handles script injection and proxy setup"
+
+  - id: nuxt_umami
+    pattern_name: "Nuxt 3 + Umami Integration"
+    keywords: [nuxt, umami, nuxt_module, vue]
+    code_example: |
+      npm install nuxt-umami
+      
+      // nuxt.config.ts
+      export default defineNuxtConfig({
+        modules: ['nuxt-umami'],
+        umami: {
+          id: 'your-website-id',
+          host: 'https://analytics.yourdomain.com'
+        }
+      });
+      
+      // Track event in component
+      const { trackEvent } = useUmami();
+      trackEvent('signup', { plan: 'pro' });
+    notes: "Nuxt module handles auto page tracking"
+
+  - id: api_tracking
+    pattern_name: "Server-Side API Tracking"
+    keywords: [api, server_side, backend, node, python]
+    code_example: |
+      // Plausible Events API (server-side)
+      await fetch('https://plausible.io/api/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'User-Agent': ua },
+        body: JSON.stringify({
+          domain: 'yourdomain.com',
+          name: 'Signup',
+          url: 'https://yourdomain.com/signup',
+          props: { plan: 'pro' }
+        })
+      });
+    notes: "All privacy tools offer server-side APIs"
+
+  - id: self_host_considerations
+    pattern_name: "Self-Hosting Decision Matrix"
+    keywords: [self_host, decision, when, cost, maintenance]
+    code_example: |
+      Self-host when:
+        ✅ Data sovereignty required (EU regulations)
+        ✅ High traffic (>1M views/mo — cloud gets expensive)
+        ✅ Custom integrations needed
+        ✅ You have DevOps capacity
+      
+      Use cloud when:
+        ✅ Small team, no DevOps
+        ✅ <100K views/mo (cheap cloud plans)
+        ✅ Want managed updates and backups
+    notes: "Self-hosting saves money at scale but costs maintenance time"

@@ -1,6 +1,9 @@
 ---
 name: coding-rules
-description: "Awesome Coding Rules - Multi-language naming conventions, architecture patterns, design patterns, and coding standards. 23 languages, 10 architecture patterns, 20 design patterns, 70 coding rules. Verified from Google Style Guides, Microsoft Conventions, PEP 8, Effective Go, Rust API Guidelines, Swift API Design, Kotlin Conventions, PHP PSR-12, Ruby Style Guide, Zig Documentation, Nim NEP-1."
+description: "Multi-language coding rules: naming conventions, architecture patterns, design patterns, coding standards. 23 languages, SOLID, GoF. Use when enforcing code style or standards."
+detect: []
+category: cross-cutting
+tier: 1
 ---
 
 # 🏗️ Awesome Coding Rules

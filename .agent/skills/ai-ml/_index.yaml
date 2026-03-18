@@ -1,0 +1,14 @@
+# ai-ml/_index.yaml — AI/ML Skills Index
+category: ai-ml
+description: "AI/ML patterns — prompts, agents, RAG, vector, Gemini, media gen"
+count: 9
+skills:
+  - { id: prompt-engineering, has_advanced: true }
+  - { id: ai-agents, has_advanced: false }
+  - { id: agentic-orchestration, has_advanced: false }
+  - { id: gemini-live, has_advanced: false }
+  - { id: gemini-media-gen, has_advanced: false }
+  - { id: gemini-tts, has_advanced: false }
+  - { id: ml-pipelines, has_advanced: false }
+  - { id: rag-patterns, has_advanced: false }
+  - { id: vector-search, has_advanced: false }

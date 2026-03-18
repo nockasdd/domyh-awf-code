@@ -2,7 +2,7 @@
 name: flutter
 description: "Flutter and Dart patterns for cross-platform mobile/web/desktop. Use when working with .dart files or pubspec.yaml."
 detect: ["pubspec.yaml", "*.dart", "lib/main.dart", "analysis_options.yaml"]
-category: mobile
+category: frameworks
 tier: 1
 ---
 
@@ -104,47 +104,11 @@ MaterialApp(
 
 ---
 
-## 🛠️ IDE & Toolchain Support
+## 🛠️ IDE & Toolchain
 
-### VS Code (Recommended)
+> See `data/core.yaml` for IDE comparison details (VS Code, Android Studio).
 
-```yaml
-extensions_required:
-  - "Dart" (dart-code.dart-code)
-  - "Flutter" (dart-code.flutter)
-optional:
-  - "Flutter Widget Snippets"
-  - "Awesome Flutter Snippets"
-  - "Dart Data Class Generator"
-features:
-  - Hot Reload (ctrl+s)
-  - Widget Inspector
-  - Dart DevTools integration
-  - Debugging with breakpoints
-  - Code formatting (dart format)
-notes:
-  - Lightweight, fast startup
-  - Cross-platform (Windows, macOS, Linux)
-  - Best for most developers
-```
-
-### Android Studio / IntelliJ IDEA
-
-```yaml
-plugins_required:
-  - "Flutter" plugin
-  - "Dart" plugin
-features:
-  - Full IDE features
-  - Integrated emulator
-  - Flutter Inspector
-  - Performance profiler
-  - Built-in device manager
-notes:
-  - Heavier resource usage
-  - Better for Android-focused development
-  - Excellent refactoring tools
-```
+**Recommended**: VS Code + Dart/Flutter extensions · Hot Reload (ctrl+s) · Dart DevTools
 
 ---
 
@@ -279,43 +243,21 @@ BlocBuilder<AuthBloc, AuthState>(
 
 ---
 
-## 📦 Essential Packages (2025)
+## 📦 Essential Packages
 
-### Networking & Data
+> See `data/core.yaml` for full package catalog.
 
-| Package               | Version | Use Case                      |
-| --------------------- | ------- | ----------------------------- |
-| **dio**               | 5.x     | HTTP client with interceptors |
-| **retrofit**          | 4.x     | Type-safe REST client         |
-| **freezed**           | 2.x     | Immutable data classes        |
-| **json_serializable** | 6.x     | JSON parsing                  |
-| **isar**              | 3.x     | Local NoSQL database          |
-| **drift**             | 2.x     | Local SQL database            |
-
-### UI & Design
-
-| Package                  | Use Case             |
-| ------------------------ | -------------------- |
-| **flutter_hooks**        | React-style hooks    |
-| **auto_route**           | Type-safe navigation |
-| **go_router**            | Official navigation  |
-| **flutter_screenutil**   | Responsive sizing    |
-| **cached_network_image** | Image caching        |
-| **shimmer**              | Loading effects      |
-
-### Code Generation
+**Key picks**: dio (HTTP) · freezed (models) · riverpod (state) · go_router (nav) · cached_network_image
 
 ```yaml
-# pubspec.yaml
+# pubspec.yaml - Code Generation
 dev_dependencies:
   build_runner: ^2.4.0
   freezed: ^2.5.0
   json_serializable: ^6.8.0
-  retrofit_generator: ^8.0.0
 ```
 
 ```bash
-# Run code generation
 dart run build_runner build --delete-conflicting-outputs
 ```
 

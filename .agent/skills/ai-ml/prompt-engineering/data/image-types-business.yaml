@@ -1,0 +1,77 @@
+# image-types-business.yaml — Business Image Types (8 categories)
+# Logos, banners, mockups, thumbnails, infographics
+# Lazy-loaded when: logo/banner/poster/mockup/thumbnail/card/slides detected
+
+business:
+  - id: logo
+    name: "Logo Design"
+    sub_types: ["wordmark", "lettermark", "icon/symbol", "combination", "emblem", "mascot"]
+    recommended_models: ["ideogram_3", "recraft"]
+    prompt_hints:
+      - "minimalist logo for [brand], [industry], flat design, vector, white bg, clean"
+      - "mascot logo of [character], friendly, modern, flat illustration, [brand color]"
+      - "lettermark logo '[INITIALS]', geometric, bold, simple, scalable"
+      - "emblem logo for [brand], badge style, vintage, detailed, circular"
+    aspect_ratio: "1:1"
+    negative_hints: "photorealistic, gradient, complex textures"
+
+  - id: banner_social
+    name: "Social Media Banner"
+    sizes: { facebook: "820x312", youtube: "2560x1440", linkedin: "1584x396", twitter: "1500x500" }
+    prompt_hints:
+      - "[platform] banner for [brand], [theme], professional, [brand colors]"
+      - "YouTube channel banner, [topic], dynamic composition, bold text area"
+      - "LinkedIn cover, [profession], minimal, abstract, professional blue tones"
+
+  - id: poster
+    name: "Poster Design"
+    sub_types: ["event", "movie", "product_launch", "motivational", "concert"]
+    recommended_models: ["ideogram_3", "gpt_image_1_5"]
+    prompt_hints:
+      - "movie poster for '[TITLE]', [genre], dramatic, title text prominent"
+      - "event poster, [event], [date], modern design, bold typography"
+      - "motivational poster, '[QUOTE]', [visual metaphor], inspirational"
+    aspect_ratio: "2:3 or 3:4"
+
+  - id: product_mockup
+    name: "Product Mockup"
+    sub_types: ["on_white", "lifestyle", "flat_lay", "packaging", "device_screen"]
+    prompt_hints:
+      - "[product] on white background, studio lighting, e-commerce style"
+      - "[product] in lifestyle setting, natural lighting, warm, inviting"
+      - "flat lay of [products], marble surface, aesthetic, top-down"
+      - "[product] on [device], screen mockup, realistic, clean desk"
+    aspect_ratio: "1:1 or 4:3"
+
+  - id: thumbnail_youtube
+    name: "YouTube Thumbnail"
+    recommended_models: ["ideogram_3", "gpt_image_1_5"]
+    prompt_hints:
+      - "youtube thumbnail, [subject], bold text '[TITLE]', bright colors, high contrast"
+      - "thumbnail for [topic] video, split comparison, before/after, bold arrow"
+      - "educational thumbnail, [topic], clean, professional, blue/orange contrast"
+    aspect_ratio: "16:9"
+    size: "1280x720"
+
+  - id: infographic
+    name: "Infographic"
+    recommended_models: ["ideogram_3", "gpt_image_1_5"]
+    prompt_hints:
+      - "infographic about [topic], [N] steps, icons, clean layout, [brand colors]"
+      - "data visualization, statistics, charts, modern flat design"
+    aspect_ratio: "2:5 or 1:2"
+
+  - id: business_card
+    name: "Business Card"
+    recommended_models: ["ideogram_3", "recraft"]
+    prompt_hints:
+      - "business card for [name], [title], [company], minimal, [color scheme]"
+      - "creative business card, [industry], unique shape, modern typography"
+    size: "3.5x2 inches"
+
+  - id: presentation_slide
+    name: "Presentation Slide Background"
+    prompt_hints:
+      - "slide background, [theme], subtle, professional, text-friendly"
+      - "modern slide bg, gradient, [colors], minimal, clean, wide"
+    aspect_ratio: "16:9"

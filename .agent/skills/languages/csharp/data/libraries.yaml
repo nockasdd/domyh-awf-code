@@ -1,0 +1,46 @@
+# C# Essential Libraries (2025-2026)
+# Moved from SKILL.md to reduce T2 loading size
+
+core_frameworks:
+  - { name: "ASP.NET Core", purpose: "Web APIs, MVC, Razor", nuget: "Built-in" }
+  - { name: "Blazor", purpose: "Full-stack C# web", nuget: "Built-in" }
+  - { name: "MAUI", purpose: "Cross-platform mobile/desktop", nuget: "Built-in" }
+  - { name: ".NET Aspire", purpose: "Cloud-native orchestration", nuget: "Aspire.*" }
+
+database_orm:
+  - { name: "EF Core 10", purpose: "Full ORM", when: "Complex domain models" }
+  - { name: "Dapper", purpose: "Micro-ORM", when: "Raw SQL, performance" }
+  - { name: "Npgsql", purpose: "PostgreSQL driver", when: "Direct Postgres access" }
+  - { name: "MongoDB.Driver", purpose: "MongoDB", when: "Document databases" }
+
+logging_diagnostics:
+  - { name: "Serilog", purpose: "Structured logging" }
+  - { name: "OpenTelemetry", purpose: "Distributed tracing" }
+  - { name: "Application Insights", purpose: "Azure monitoring" }
+
+communication:
+  - { name: "MassTransit", purpose: "Message bus (RabbitMQ, Azure SB)" }
+  - { name: "gRPC", purpose: "High-performance RPC" }
+  - { name: "SignalR", purpose: "Real-time WebSocket" }
+
+utilities:
+  - { name: "FluentValidation", purpose: "Validation rules" }
+  - { name: "AutoMapper", purpose: "Object mapping" }
+  - { name: "MediatR", purpose: "CQRS/Mediator pattern" }
+  - { name: "Polly", purpose: "Resilience (retry, circuit breaker)" }
+  - { name: "Hangfire", purpose: "Background jobs" }
+  - { name: "Quartz.NET", purpose: "Job scheduling" }
+
+testing:
+  - { name: "xUnit", purpose: "Testing framework (recommended)" }
+  - { name: "NUnit", purpose: "Testing framework" }
+  - { name: "Moq", purpose: "Mocking framework" }
+  - { name: "NSubstitute", purpose: "Mocking framework" }
+  - { name: "FluentAssertions", purpose: "Assertion library" }
+  - { name: "Testcontainers", purpose: "Integration testing" }
+
+blazor_ui:
+  - { name: "MudBlazor", purpose: "Material Design components" }
+  - { name: "Blazorise", purpose: "Multi-framework components" }
+  - { name: "Radzen", purpose: "Business components" }
+  - { name: "Syncfusion Blazor", purpose: "Enterprise components" }

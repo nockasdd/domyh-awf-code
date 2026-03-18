@@ -2,6 +2,8 @@
 name: accessibility
 description: "Web accessibility patterns for WCAG compliance. Use when implementing ARIA, keyboard navigation, screen reader support."
 category: cross-cutting
+detect: ["aria-*", "a11y*", "*.a11y.*"]
+tier: 1
 ---
 
 # Accessibility (WCAG 2.2)

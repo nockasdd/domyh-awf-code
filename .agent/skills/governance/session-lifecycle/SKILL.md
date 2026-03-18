@@ -1,11 +1,9 @@
 ---
-name: "session-lifecycle"
+name: session-lifecycle
 description: "Session backbone: declare → track → [work] → archive. Full lifecycle using HSA governance tools with concrete examples."
-triggers:
-  - "At session start (no intent declared)"
-  - "When switching focus or direction"
-  - "Before ending session or compacting context"
-  - "When resuming after a gap"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Session Lifecycle

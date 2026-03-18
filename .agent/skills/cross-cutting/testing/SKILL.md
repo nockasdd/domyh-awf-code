@@ -9,6 +9,8 @@ detect:
     "vitest.config.*",
     "playwright.config.*",
   ]
+category: cross-cutting
+tier: 1
 ---
 
 # Testing Patterns (2026)

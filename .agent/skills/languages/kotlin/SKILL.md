@@ -2,7 +2,7 @@
 name: kotlin
 description: "Kotlin development patterns for Android, JVM, and multiplatform. Use when working with .kt/.kts files."
 detect: ["build.gradle.kts", "settings.gradle.kts", "*.kt", "*.kts"]
-category: mobile
+category: languages
 tier: 1
 ---
 
@@ -62,103 +62,22 @@ Color.entries.forEach { println(it) }
 
 ---
 
-## 🛠️ IDE & Toolchain Support
+## 🛠️ IDE & Toolchain
 
-### IntelliJ IDEA (Recommended for Desktop/Server)
+> See `data/core.yaml` for IDE comparison details (IntelliJ, Android Studio, Fleet/VS Code).
 
-```yaml
-version: 2025.x+
-features:
-  - Full K2 compiler support
-  - Kotlin Multiplatform plugin
-  - Cross-language navigation (Kotlin ↔ Swift)
-  - AI-assisted completion
-  - Advanced refactoring
-  - Built-in profiler
-plugins:
-  - "Kotlin" (bundled)
-  - "Kotlin Multiplatform Mobile" (KMM)
-notes:
-  - Community Edition supports Kotlin
-  - Ultimate for full KMP support
-```
-
-### Android Studio (Recommended for Android)
-
-```yaml
-version: Ladybug (2024.2)+
-features:
-  - Jetpack Compose Live Edit
-  - Layout Inspector for Compose
-  - Kotlin 2.0/2.1 support
-  - KMP plugin
-  - Device Manager
-  - App Quality Insights
-plugins:
-  - "Kotlin" (bundled)
-  - "Compose Preview"
-notes:
-  - Based on IntelliJ
-  - Best for Android-first development
-```
-
-### Fleet / VS Code
-
-```yaml
-jetbrains_fleet:
-  - Lightweight alternative
-  - Kotlin-first design
-  - Smart mode for full IDE features
-vscode:
-  extensions:
-    - "Kotlin Language" (mathiasfrohlich.kotlin)
-    - "Kotlin Extension Pack"
-  notes:
-    - Limited compared to IntelliJ
-    - Good for small projects
-```
+**Recommended**: IntelliJ IDEA (server/desktop) · Android Studio (mobile) · Both support K2 compiler + KMP
 
 ---
 
 ## 📦 Kotlin Ecosystem
 
-### Android Jetpack
+> See `data/android.yaml` for full Jetpack library catalog and `data/core.yaml` for networking/testing.
 
-| Library             | Use Case             | Version |
-| ------------------- | -------------------- | ------- |
-| **Jetpack Compose** | Declarative UI 🏆    | 1.7+    |
-| **Room**            | SQLite database      | 2.6+    |
-| **Hilt**            | Dependency injection | 2.51+   |
-| **DataStore**       | Preferences          | 1.1+    |
-| **WorkManager**     | Background tasks     | 2.9+    |
-| **Navigation**      | App navigation       | 2.8+    |
-
-### Networking
-
-| Library                   | Use Case           |
-| ------------------------- | ------------------ |
-| **Ktor Client**           | Kotlin-native HTTP |
-| **Retrofit + OkHttp**     | Android standard   |
-| **kotlinx.serialization** | JSON parsing       |
-
-### Async & State
-
-| Library        | Use Case               |
-| -------------- | ---------------------- |
-| **Coroutines** | Structured concurrency |
-| **Flow**       | Reactive streams       |
-| **StateFlow**  | UI state               |
-| **SharedFlow** | Events                 |
-
-### Testing
-
-| Library             | Use Case         |
-| ------------------- | ---------------- |
-| **JUnit 5**         | Unit testing     |
-| **MockK**           | Kotlin mocking   |
-| **Turbine**         | Flow testing     |
-| **Kotest**          | Property testing |
-| **Compose Testing** | UI tests         |
+**Android Jetpack**: Compose 1.7+ · Room 2.6+ · Hilt 2.51+ · Navigation 2.8+
+**Networking**: Ktor Client · kotlinx.serialization
+**Async**: Coroutines + Flow + StateFlow
+**Testing**: JUnit 5 · MockK · Turbine · Kotest
 
 ---
 

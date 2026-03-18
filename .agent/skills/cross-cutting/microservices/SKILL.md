@@ -2,6 +2,8 @@
 name: microservices
 description: "Microservice architecture patterns. Use when designing service boundaries, communication, or resilience."
 category: cross-cutting
+detect: ["docker-compose*", "*gateway*"]
+tier: 1
 ---
 
 # 🏗️ Microservices Patterns

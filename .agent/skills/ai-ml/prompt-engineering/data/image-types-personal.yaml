@@ -1,0 +1,96 @@
+# image-types-personal.yaml — Personal Image Types (9 categories)
+# Avatars, wallpapers, stickers, fun content
+# Lazy-loaded when: avatar/pet/wallpaper/sticker/emoji/meme/profile detected
+
+personal:
+  - id: avatar_anime
+    name: "Anime Avatar"
+    description: "Stylized anime character portrait"
+    popular_styles: ["chibi", "shoujo", "seinen", "Studio Ghibli", "pixel art anime", "mecha"]
+    recommended_models: ["midjourney_v7", "gpt_image_1_5"]
+    prompt_hints:
+      - "anime style portrait of [description], [sub-style], detailed eyes, vibrant colors"
+      - "chibi [character], cute proportions, pastel colors, simple background, kawaii"
+      - "Studio Ghibli style portrait, soft watercolor, warm lighting, dreamy atmosphere"
+      - "dark anime character, seinen style, dramatic lighting, detailed shading"
+    aspect_ratio: "1:1"
+    negative_hints: "realistic photo, 3D render, blurry, low quality"
+
+  - id: avatar_realistic
+    name: "Realistic Portrait Avatar"
+    description: "Professional or artistic portrait photo"
+    sub_types: ["linkedin_headshot", "artistic_portrait", "fantasy_portrait", "3d_avatar"]
+    recommended_models: ["midjourney_v7", "flux_1_1_pro"]
+    prompt_hints:
+      - "professional headshot, studio lighting, neutral background, confident expression"
+      - "editorial portrait, dramatic side lighting, shallow DOF, moody"
+      - "fantasy portrait, [character] with magical aura, glowing effects, ethereal"
+      - "3D stylized avatar, Pixar style, clean render, vibrant"
+    aspect_ratio: "1:1 or 3:4"
+
+  - id: pet_portrait
+    name: "Pet Portrait"
+    description: "Artistic pet photos and illustrations"
+    sub_types: ["realistic", "cartoon", "royal_portrait", "fantasy", "watercolor"]
+    prompt_hints:
+      - "[pet type] portrait, professional pet photography, studio lighting, eye contact"
+      - "royal pet portrait, [pet] wearing crown, oil painting style, Renaissance"
+      - "cartoon [pet], cute, big eyes, simple lines, bright colors, sticker style"
+      - "[pet] as a wizard, fantasy setting, magical sparkles, whimsical"
+    aspect_ratio: "1:1 or 4:5"
+
+  - id: wallpaper_phone
+    name: "Phone Wallpaper"
+    description: "Custom phone lock/home screen backgrounds"
+    popular_themes: ["nature", "abstract", "anime", "minimal", "space", "gradient", "dark mode"]
+    prompt_hints:
+      - "[theme], phone wallpaper, vertical, vibrant colors, high resolution"
+      - "minimal dark mode wallpaper, subtle gradient, geometric, AMOLED black"
+      - "anime landscape, cherry blossoms, sunset, vertical, Studio Ghibli"
+      - "abstract fluid art, neon purple and blue, dark background, glossy, 4K"
+    aspect_ratio: "9:16 or 9:19.5"
+
+  - id: wallpaper_desktop
+    name: "Desktop Wallpaper"
+    description: "Custom desktop/laptop backgrounds"
+    popular_themes: ["nature panorama", "space", "cyberpunk city", "minimal", "abstract"]
+    prompt_hints:
+      - "ultrawide desktop wallpaper, [theme], panoramic, cinematic"
+      - "minimal desktop background, single object, clean negative space"
+      - "cyberpunk cityscape, neon lights, rain, reflections, 4K ultrawide"
+    aspect_ratio: "16:9 or 21:9"
+
+  - id: sticker
+    name: "Custom Sticker"
+    description: "Die-cut stickers for messaging, printing"
+    prompt_hints:
+      - "[subject], sticker design, white outline, transparent bg, cute, bold"
+      - "die-cut sticker of [character], flat illustration, vibrant"
+      - "kawaii sticker set, [theme], 4 variations, clean vector, pastel"
+    aspect_ratio: "1:1"
+
+  - id: emoji
+    name: "Custom Emoji"
+    description: "Personalized emoji for Discord, Slack"
+    prompt_hints:
+      - "[expression] emoji, simple, round face, bold, 128x128 style"
+      - "custom emoji of [character], [emotion], minimal detail, clear at small size"
+    aspect_ratio: "1:1"
+
+  - id: meme
+    name: "Meme Template"
+    description: "Custom meme images"
+    prompt_hints:
+      - "[scene], meme format, exaggerated expression, dramatic lighting"
+      - "[character] looking confused at [object], reaction image, clean"
+    aspect_ratio: "1:1 or 4:3"
+
+  - id: profile_picture
+    name: "Social Media Profile Picture"
+    description: "Eye-catching profile pic"
+    sub_types: ["professional", "creative", "gaming", "brand"]
+    prompt_hints:
+      - "professional profile picture, warm smile, clean background"
+      - "creative profile, artistic double exposure, colorful"
+      - "gaming avatar, neon glow, dark background, username-ready"
+    aspect_ratio: "1:1"

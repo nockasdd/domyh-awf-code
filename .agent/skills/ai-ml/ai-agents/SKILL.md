@@ -1,7 +1,9 @@
 ---
 name: ai-agents
 description: "AI agent design patterns for autonomous systems. Use when building AI agents, tool-calling, or agent orchestration."
+detect: []
 category: ai-ml
+tier: 1
 ---
 
 # AI Agent Orchestration — LangChain • CrewAI • AutoGen

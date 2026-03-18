@@ -1,0 +1,84 @@
+name: digital-marketing
+display: Digital Marketing Engineering
+category: cross-cutting
+tier: 1
+priority: 1
+
+desc: "Digital marketing integration: GA4 analytics (gtag.js, Measurement Protocol), GTM (dataLayer, Consent Mode v2, server-side tagging), A/B testing (PostHog, LaunchDarkly, Statsig), email marketing (Resend, React Email, SendGrid, Postmark, SPF/DKIM/DMARC), privacy-first analytics (Plausible, Umami, Fathom), conversion tracking (UTM, attribution, funnels). 160+ patterns."
+
+triggers:
+  file_patterns:
+    - "gtag*"
+    - "*analytics*"
+    - "*gtm*"
+    - "dataLayer*"
+    - "*resend*"
+    - "*sendgrid*"
+    - "*postmark*"
+  keywords:
+    - analytics
+    - ga4
+    - google analytics
+    - gtag
+    - measurement protocol
+    - gtm
+    - google tag manager
+    - dataLayer
+    - consent mode
+    - server-side tagging
+    - a/b testing
+    - ab test
+    - feature flag
+    - posthog
+    - launchdarkly
+    - statsig
+    - optimizely
+    - email marketing
+    - resend
+    - react email
+    - sendgrid
+    - postmark
+    - transactional email
+    - spf
+    - dkim
+    - dmarc
+    - plausible
+    - umami
+    - fathom
+    - pirsch
+    - privacy analytics
+    - cookieless
+    - utm
+    - conversion tracking
+    - attribution
+    - funnel
+    - meta pixel
+    - facebook pixel
+  intents:
+    - tracking analytics
+    - implement GA4
+    - setup GTM
+    - email integration
+    - A/B test feature
+    - privacy-first analytics
+    - conversion tracking
+
+caps:
+  - GA4 Analytics (gtag.js, events, Measurement Protocol)
+  - GTM Tag Management (dataLayer, Consent Mode v2, server-side)
+  - A/B Testing (PostHog, LaunchDarkly, Statsig, Optimizely)
+  - Email Marketing APIs (Resend, React Email, SendGrid, Postmark)
+  - Email Authentication (SPF, DKIM, DMARC)
+  - Privacy-First Analytics (Plausible, Umami, Fathom, Pirsch)
+  - Conversion Tracking (UTM, attribution models, funnels)
+  - Meta Pixel & Conversions API
+  - Google Ads Enhanced Conversions
+  - BigQuery Export & Data API
+
+data_files:
+  - data/analytics-ga4.yaml
+  - data/tag-management.yaml
+  - data/ab-testing.yaml
+  - data/email-marketing.yaml
+  - data/privacy-analytics.yaml
+  - data/conversion-tracking.yaml

@@ -1,6 +1,9 @@
 ---
 name: payment-integration
 description: Payment gateway & bank monitoring integration for 10 providers (VN + Global)
+detect: ["*stripe*", "*paypal*", "*payment*"]
+category: cross-cutting
+tier: 1
 ---
 
 # 💳 Payment Integration Skill

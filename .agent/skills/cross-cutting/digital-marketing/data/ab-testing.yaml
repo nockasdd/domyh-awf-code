@@ -1,0 +1,334 @@
+# ab-testing.yaml — A/B Testing & Feature Flag Patterns
+# PostHog, LaunchDarkly, Statsig, Optimizely, statistical methods
+# Sources: Official docs (posthog.com, launchdarkly.com, statsig.com, optimizely.com)
+metadata:
+  skill: digital-marketing
+  domain: ab-testing
+  updated: "2026-03"
+  patterns_count: 30
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  # === PostHog ===
+  - id: posthog_init
+    pattern_name: "PostHog Initialization"
+    keywords: [posthog, init, setup, open_source, all_in_one]
+    code_example: |
+      import posthog from 'posthog-js';
+      posthog.init('phc_YOUR_PROJECT_KEY', {
+        api_host: 'https://app.posthog.com',
+        autocapture: true,
+        capture_pageview: true,
+        persistence: 'localStorage'
+      });
+    notes: "Open-source. Self-host or cloud. Includes analytics + flags + replay"
+
+  - id: posthog_feature_flag
+    pattern_name: "PostHog Feature Flag"
+    keywords: [posthog, feature_flag, flag, toggle, isFeatureEnabled]
+    code_example: |
+      // Boolean flag
+      if (posthog.isFeatureEnabled('new-checkout')) {
+        renderNewCheckout();
+      }
+      // Multivariate flag
+      const variant = posthog.getFeatureFlag('pricing-page');
+      if (variant === 'annual-first') showAnnualFirst();
+    notes: "Flags evaluated client-side. Cache for offline support"
+
+  - id: posthog_experiment
+    pattern_name: "PostHog A/B Experiment"
+    keywords: [posthog, experiment, ab_test, capture, variant]
+    code_example: |
+      // Track experiment conversion
+      posthog.capture('checkout_completed', {
+        $experiment: 'new-checkout-flow',
+        variant: posthog.getFeatureFlag('new-checkout'),
+        revenue: 49.99
+      });
+    notes: "PostHog auto-calculates significance with Bayesian stats"
+
+  - id: posthog_server
+    pattern_name: "PostHog Server-Side (Node.js)"
+    keywords: [posthog, server, node, backend, python, go]
+    code_example: |
+      import { PostHog } from 'posthog-node';
+      const posthog = new PostHog('phc_KEY', { host: 'https://app.posthog.com' });
+      
+      const flag = await posthog.isFeatureEnabled('new-api', 'user-123');
+      posthog.capture({ distinctId: 'user-123', event: 'api_called', properties: { version: flag ? 'v2' : 'v1' } });
+    notes: "SDKs: Node, Python, Go, Ruby, PHP, Java"
+
+  # === LaunchDarkly ===
+  - id: ld_client_init
+    pattern_name: "LaunchDarkly Client Setup"
+    keywords: [launchdarkly, ld, client, initialize, sdk]
+    code_example: |
+      import * as ld from 'launchdarkly-js-client-sdk';
+      const client = ld.initialize('client-side-id-xxx', {
+        key: 'user-123',
+        email: 'user@example.com',
+        custom: { plan: 'pro' }
+      });
+      await client.waitForInitialization();
+    notes: "Enterprise-grade. Supports 25+ SDKs"
+
+  - id: ld_variation
+    pattern_name: "LaunchDarkly Flag Variation"
+    keywords: [launchdarkly, variation, flag, default_value]
+    code_example: |
+      // Boolean flag with default
+      const showBanner = client.variation('holiday-banner', false);
+      // Multivariate (string)
+      const theme = client.variation('theme-experiment', 'default');
+    notes: "Always provide default value for fallback"
+
+  - id: ld_targeting
+    pattern_name: "LaunchDarkly Targeting Rules"
+    keywords: [launchdarkly, targeting, rule, segment, percentage]
+    code_example: |
+      Targeting rules:
+        1. Individual users: [user-123, user-456] → variant A
+        2. Rule: plan = 'enterprise' → variant B
+        3. Percentage rollout: 50% A / 50% B
+        4. Default: variant A
+    notes: "Rules evaluated top-down, first match wins"
+
+  - id: ld_server
+    pattern_name: "LaunchDarkly Server-Side"
+    keywords: [launchdarkly, server, node, go, python, java]
+    code_example: |
+      // Node.js server SDK
+      import LaunchDarkly from '@launchdarkly/node-server-sdk';
+      const client = LaunchDarkly.init('sdk-key-xxx');
+      await client.waitForInitialization();
+      
+      const user = { key: 'user-123', email: 'user@example.com' };
+      const value = await client.variation('feature-x', user, false);
+    notes: "Server SDKs use streaming connection for instant flag updates"
+
+  # === Statsig ===
+  - id: statsig_init
+    pattern_name: "Statsig Setup"
+    keywords: [statsig, init, setup, enterprise, experimentation]
+    code_example: |
+      import statsig from 'statsig-js';
+      await statsig.initialize('client-key', {
+        userID: 'user-123',
+        email: 'user@example.com',
+        custom: { plan: 'pro' }
+      });
+    notes: "Enterprise experimentation. Auto-calculates impact"
+
+  - id: statsig_gate
+    pattern_name: "Statsig Feature Gate"
+    keywords: [statsig, gate, check_gate, feature_gate]
+    code_example: |
+      if (statsig.checkGate('new_onboarding')) {
+        showNewOnboarding();
+      }
+    notes: "Gates = boolean feature flags"
+
+  - id: statsig_experiment
+    pattern_name: "Statsig Experiment"
+    keywords: [statsig, experiment, get_experiment, variant, group]
+    code_example: |
+      const experiment = statsig.getExperiment('checkout_flow');
+      const variant = experiment.get('variant', 'control');
+      const buttonColor = experiment.get('cta_color', '#007bff');
+    notes: "Experiments can return multi-param configs"
+
+  - id: statsig_auto_metrics
+    pattern_name: "Statsig Automatic Metrics"
+    keywords: [statsig, metrics, auto, impact, significance]
+    code_example: |
+      // Just log events — Statsig auto-correlates with experiments
+      statsig.logEvent('purchase', 49.99, { plan: 'pro' });
+      statsig.logEvent('page_load_time', 1.2);
+    notes: "No manual metric config needed. CUPED variance reduction"
+
+  # === Optimizely ===
+  - id: optimizely_init
+    pattern_name: "Optimizely Feature Experimentation"
+    keywords: [optimizely, init, feature_experimentation, full_stack]
+    code_example: |
+      import optimizely from '@optimizely/optimizely-sdk';
+      const client = optimizely.createInstance({
+        sdkKey: 'YOUR_SDK_KEY'
+      });
+      await client.onReady();
+    notes: "Enterprise platform. Web + Mobile + Server SDKs"
+
+  - id: optimizely_decide
+    pattern_name: "Optimizely Feature Decision"
+    keywords: [optimizely, decide, feature, variation]
+    code_example: |
+      const user = client.createUserContext('user-123', { plan: 'enterprise' });
+      const decision = user.decide('checkout_redesign');
+      
+      if (decision.enabled) {
+        const layout = decision.variables['layout'];  // 'single-page' or 'multi-step'
+      }
+      user.trackEvent('purchase', { revenue: 99.99 });
+    notes: "SDK v4+ uses decide() API"
+
+  # === Statistical Methods ===
+  - id: sample_size
+    pattern_name: "Sample Size Calculator"
+    keywords: [sample_size, calculator, mde, power, significance]
+    code_example: |
+      Inputs:
+        - Baseline conversion rate: 5%
+        - MDE (Minimum Detectable Effect): 10% relative (5% → 5.5%)
+        - Significance level (α): 5% (95% confidence)
+        - Statistical power (1-β): 80%
+      
+      Result: ~31,000 users per variant
+      
+      Formula: n = (Zα + Zβ)² × p(1-p) × 2 / (p₁ - p₀)²
+    notes: "Use online calculators: Evan Miller, Optimizely, ABTestGuide"
+
+  - id: frequentist_vs_bayesian
+    pattern_name: "Frequentist vs Bayesian Testing"
+    keywords: [frequentist, bayesian, p_value, posterior, sequential]
+    code_example: |
+      Frequentist (traditional):
+        - Fixed sample size required
+        - p-value < 0.05 = significant
+        - Can't peek at results early
+        - Used by: Optimizely, VWO
+      
+      Bayesian:
+        - Can check results anytime
+        - Probability of being best
+        - More intuitive for stakeholders
+        - Used by: PostHog, Google Optimize (legacy)
+    notes: "Bayesian better for startups (flexible). Frequentist for enterprise (rigorous)"
+
+  - id: sequential_testing
+    pattern_name: "Sequential Testing (Always-Valid)"
+    keywords: [sequential, always_valid, peek, early_stopping]
+    code_example: |
+      Sequential testing allows:
+        - Check results at any time
+        - Stop early if significant
+        - No peeking penalty
+      
+      Tools supporting sequential:
+        - Statsig (default)
+        - PostHog (optional)
+        - Eppo
+    notes: "Solves the 'peeking problem' in traditional A/B tests"
+
+  - id: cuped
+    pattern_name: "CUPED Variance Reduction"
+    keywords: [cuped, variance_reduction, faster, sensitivity]
+    code_example: |
+      CUPED (Controlled-experiment Using Pre-Experiment Data):
+        - Uses pre-experiment behavior as covariate
+        - Reduces variance by 20-50%
+        - Same results with 2-3x fewer users
+        - Supported by: Statsig, Spotify, LinkedIn
+    notes: "Speeds up experiments significantly"
+
+  # === Best Practices ===
+  - id: experiment_design
+    pattern_name: "Experiment Design Checklist"
+    keywords: [experiment, design, checklist, hypothesis, metric]
+    code_example: |
+      1. Define hypothesis: "Changing CTA color to green will increase clicks by 10%"
+      2. Choose primary metric: CTA click-through rate
+      3. Define guardrail metrics: bounce rate, page load time
+      4. Calculate sample size
+      5. Set experiment duration (min 1 business week)
+      6. Randomize correctly (user-level, not session)
+      7. Run until significance, not until you like results
+    notes: "Never stop early based on desired outcome"
+
+  - id: aa_test
+    pattern_name: "A/A Test (Validation)"
+    keywords: [aa_test, validation, sanity_check, baseline]
+    code_example: |
+      A/A test: Both variants get identical experience
+      Purpose: Validate instrumentation is correct
+      Expected: No significant difference (p > 0.05)
+      When: Before first real experiment, after SDK changes
+    notes: "Run for at least 1 week before first real experiment"
+
+  - id: multi_variate
+    pattern_name: "Multi-Variate Testing (MVT)"
+    keywords: [multivariate, mvt, factorial, combinations]
+    code_example: |
+      Example: Test 2 factors × 3 levels each
+        Button color: [red, green, blue]
+        Button text: [Buy Now, Get Started, Try Free]
+        → 9 combinations
+      
+      Requires: 9× sample size of A/B test
+      Use when: Interactions between variables matter
+    notes: "Only use when traffic > 100K/month per variant"
+
+  - id: server_side_test
+    pattern_name: "Server-Side A/B Testing"
+    keywords: [server_side, backend, api, no_flicker]
+    code_example: |
+      // Server-side: no UI flicker, works for API/backend
+      app.get('/api/pricing', async (req, res) => {
+        const variant = await flagService.getVariant('pricing-test', req.userId);
+        const prices = variant === 'annual-discount'
+          ? { monthly: 29, annual: 199 }
+          : { monthly: 29, annual: 249 };
+        res.json(prices);
+      });
+    notes: "Preferred for pricing, algorithm, UX experiments"
+
+  # === Anti-Patterns ===
+  - id: anti_no_hypothesis
+    pattern_name: "Anti-Pattern: Testing Without Hypothesis"
+    keywords: [anti_pattern, no_hypothesis, random_testing]
+    code_example: |
+      ❌ "Let's try a green button and see what happens"
+      ✅ "H: Changing CTA to green will increase CTR by 5% because green = positive action"
+    notes: "Without hypothesis, you learn nothing from results"
+
+  - id: anti_peeking
+    pattern_name: "Anti-Pattern: Early Peeking"
+    keywords: [anti_pattern, peeking, early_stop, false_positive]
+    code_example: |
+      ❌ Day 2: "p=0.03! Variant B wins, ship it!"
+         (False positive rate: up to 30%)
+      ✅ Wait for calculated sample size OR use sequential testing
+    notes: "Peeking inflates false positive rate dramatically"
+
+  - id: anti_too_many
+    pattern_name: "Anti-Pattern: Too Many Variants"
+    keywords: [anti_pattern, many_variants, diluted, power]
+    code_example: |
+      ❌ 10 variants with 1000 users each → no significance
+      ✅ Max 3-4 variants with proper sample size
+    notes: "Each variant needs independent sample size"
+
+  - id: feature_flag_lifecycle
+    pattern_name: "Feature Flag Lifecycle"
+    keywords: [lifecycle, cleanup, tech_debt, stale_flags]
+    code_example: |
+      1. Create flag → document purpose + owner
+      2. Roll out gradually: 5% → 25% → 50% → 100%
+      3. After full rollout: CLEAN UP flag code
+      4. Archive flag in dashboard
+      
+      Stale flag = tech debt
+    notes: "Set calendar reminders to clean up flags after 30 days"
+
+  - id: rollout_strategy
+    pattern_name: "Progressive Rollout Strategy"
+    keywords: [rollout, canary, progressive, percentage, ring]
+    code_example: |
+      Ring-based rollout:
+        Ring 0: Internal team (1%) → validate
+        Ring 1: Beta users (5%) → catch bugs
+        Ring 2: General (25%) → monitor metrics
+        Ring 3: Full rollout (100%) → ship
+      
+      Kill switch: auto-disable if error rate > threshold
+    notes: "Each ring should run for minimum 24 hours"

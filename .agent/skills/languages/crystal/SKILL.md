@@ -2,7 +2,7 @@
 name: crystal
 description: "Crystal type-safe Ruby-like language patterns. Use when working with .cr files."
 detect: ["*.cr", "shard.yml", "shard.lock"]
-category: language
+category: languages
 tier: 3
 ---
 

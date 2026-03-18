@@ -1,12 +1,9 @@
 ---
-name: "session-memory"
+name: session-memory
 description: "Persistent memory pattern using hsa_session with structured shelves. Decisions, patterns, errors survive across sessions and context compaction."
-triggers:
-  - "When making architectural or design decisions"
-  - "When discovering patterns or solutions worth remembering"
-  - "When encountering errors that should not be repeated"
-  - "At session start — recall prior decisions before re-debating"
-  - "Before context compaction — emergency save"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Session Memory (Persistent Brain Pattern)

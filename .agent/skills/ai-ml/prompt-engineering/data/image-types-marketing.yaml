@@ -1,0 +1,42 @@
+# image-types-marketing.yaml — Marketing Image Types (5 categories)
+# Ad creatives, hero images, email headers, social posts
+# Lazy-loaded when: ad/hero/email-header/social-post/testimonial detected
+
+marketing:
+  - id: ad_creative
+    name: "Ad Creative"
+    platforms: { google_display: "300x250, 728x90, 160x600", facebook_feed: "1200x628", instagram_story: "1080x1920", linkedin: "1200x627" }
+    prompt_hints:
+      - "[product] ad creative for [platform], eye-catching, [brand colors], CTA area"
+      - "Instagram story ad, [product], vertical, bold headline, swipe up CTA"
+      - "Facebook ad image, [product] with happy user, lifestyle, warm, engaging"
+
+  - id: hero_image
+    name: "Landing Page Hero"
+    prompt_hints:
+      - "landing page hero, [topic], modern, gradient overlay area for text"
+      - "SaaS hero illustration, [concept], isometric, clean, blue/purple palette"
+      - "hero banner, [product], lifestyle photography, warm, text-safe area"
+    aspect_ratio: "16:9 or 3:2"
+
+  - id: email_header
+    name: "Email Header Image"
+    prompt_hints:
+      - "email header, [topic/brand], 600px wide, clean, [brand colors]"
+      - "newsletter header, [seasonal theme], festive, warm, professional"
+    size: "600x200"
+
+  - id: social_post_image
+    name: "Social Media Post Image"
+    prompt_hints:
+      - "[platform] post image, [topic], engaging, shareable, [brand colors]"
+      - "Instagram carousel image, [topic], clean, informative, slide [N of N]"
+      - "LinkedIn thought leadership, [topic], professional, data visualization"
+    aspect_ratio: "1:1 or 4:5"
+
+  - id: testimonial_card
+    name: "Testimonial / Review Card"
+    recommended_models: ["ideogram_3", "gpt_image_1_5"]
+    prompt_hints:
+      - "testimonial card, quote '[QUOTE]', [person], star rating, clean design"
+    aspect_ratio: "1:1 or 16:9"

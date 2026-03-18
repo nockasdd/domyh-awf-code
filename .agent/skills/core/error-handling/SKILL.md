@@ -1,7 +1,9 @@
 ---
 name: error-handling
 description: "Error handling patterns for robust applications. Use when implementing error boundaries, recovery strategies, or structured logging."
+detect: ["*error*", "*exception*", "*Error*"]
 category: core
+tier: 1
 ---
 
 # Error Handling Skill

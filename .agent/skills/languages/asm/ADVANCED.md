@@ -672,76 +672,18 @@ loop:
 
 ---
 
-## Ghidra & IDA Pro (2025 Updates)
+## Ghidra & IDA Pro
 
-### Ghidra 11+
+> See `data/core.yaml` for detailed Ghidra 11+, IDA Pro 9.0 features, and AI-assisted RE workflow.
 
-```yaml
-features:
-  - Multi-binary analysis (parallel)
-  - Python 3 + Java scripting
-  - Decompiler improvements
-  - AI-assisted analysis (plugins)
-
-scripting:
-  language: Python (Jython) or Java
-  location: Window → Script Manager
-```
-
-### IDA Pro 9.0
-
-```yaml
-features:
-  - Unified 32/64-bit support
-  - Improved decompiler accuracy
-  - Headless IDAPython
-  - Cloud-based collaboration
-
-new_in_9:
-  - Faster analysis engine
-  - Enhanced type recovery
-  - Better C++ vtable handling
-```
-
-### AI-Assisted Reverse Engineering
-
-```yaml
-tools:
-  DecompAI: "LLM-based function naming/commenting"
-  MCP Plugins: "Model Context Protocol for IDA/Ghidra"
-  BinDiff: "Binary comparison and diffing"
-
-workflow: 1. Initial analysis in Ghidra (free)
-  2. Complex binaries in IDA Pro
-  3. AI plugins for naming/documentation
-  4. Cross-reference with debug symbols
-```
+**Tools**: Ghidra (free, multi-binary) · IDA Pro 9.0 (paid, enhanced decompiler) · DecompAI · BinDiff
 
 ---
 
-## DOS Interrupt Reference
+## DOS & BIOS Interrupts
 
-### Common DOS Interrupts (INT 21h)
+> See `data/core.yaml` for full DOS INT 21h and BIOS interrupt reference tables.
 
-| AH  | Function      | Input         | Output    |
-| --- | ------------- | ------------- | --------- |
-| 01h | Char input    | -             | AL=char   |
-| 02h | Char output   | DL=char       | -         |
-| 09h | String output | DX=addr$      | -         |
-| 3Ch | Create file   | CX=attr,DX=fn | AX=handle |
-| 3Dh | Open file     | AL=mode,DX=fn | AX=handle |
-| 3Eh | Close file    | BX=handle     | -         |
-| 3Fh | Read file     | BX,CX,DX      | AX=bytes  |
-| 40h | Write file    | BX,CX,DX      | AX=bytes  |
-| 4Ch | Exit program  | AL=code       | -         |
-
-### BIOS Interrupts
-
-| Int | Function          | Example                |
-| --- | ----------------- | ---------------------- |
-| 10h | Video services    | Set mode, write char   |
-| 13h | Disk services     | Read/write sectors     |
-| 16h | Keyboard services | Read key, check status |
-| 19h | Bootstrap         | Reboot system          |
+**Key**: INT 21h (DOS file/char I/O) · INT 10h (video) · INT 13h (disk) · INT 16h (keyboard)
 
 ---

@@ -1,7 +1,9 @@
 ---
 name: kubernetes
 description: "Kubernetes orchestration patterns for deployments, services, and scaling. Use when working with k8s manifests or Helm charts."
-category: infrastructure
+detect: ["*.yaml:kind: Deployment", "k8s/", "kustomization.yaml", "Chart.yaml"]
+category: devops
+tier: 1
 ---
 
 # Kubernetes Orchestration

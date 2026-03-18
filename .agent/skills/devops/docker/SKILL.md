@@ -1,7 +1,9 @@
 ---
 name: docker
 description: "Docker containerization patterns for builds, security, and deployment. Use when working with Dockerfiles or docker-compose.yml."
-category: infrastructure
+detect: ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", ".dockerignore"]
+category: devops
+tier: 1
 ---
 
 # Docker Containerization

@@ -2,6 +2,8 @@
 name: azure
 description: "Azure cloud service patterns. Use when working with Azure Functions, AKS, Cosmos DB, or other Azure services."
 category: devops
+detect: ["azure-*", "*.azure*", "azure-pipelines.yml"]
+tier: 1
 ---
 
 # Azure Cloud Services

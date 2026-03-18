@@ -1,0 +1,30 @@
+name: output-enforcement
+display: "Output Enforcement"
+category: cross-cutting
+tier: 1
+priority: 1
+
+desc: "Anti-truncation enforcement. Bans placeholder comments, forces complete code generation, handles token-limit splits cleanly. Prevents lazy output patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - output enforcement
+    - truncation
+    - placeholder
+    - full output
+    - complete code
+    - no shortcuts
+    - banned patterns
+    - anti-truncation
+    - paused marker
+  intents:
+    - enforce complete output
+    - prevent code truncation
+    - ban placeholder comments
+
+caps:
+  - Banned output pattern detection (code + prose)
+  - Token-limit split handling with PAUSED marker
+  - Structural shortcut detection
+  - Pre-output cross-check

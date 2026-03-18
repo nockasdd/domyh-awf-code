@@ -1,0 +1,32 @@
+name: delegation-intelligence
+display: "Delegation Intelligence"
+category: governance
+tier: 1
+priority: 2
+
+desc: "Smart sub-agent delegation and cascade routing. Evaluates task complexity, selects optimal model, prepares minimal context packets, and validates sub-agent results."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - delegation
+    - delegate
+    - sub-agent
+    - subagent
+    - cascade
+    - handoff
+    - task routing
+    - model selection
+    - context packet
+  intents:
+    - delegate task
+    - evaluate cascade need
+    - prepare handoff
+    - select model for task
+
+caps:
+  - Complexity scoring for cascade evaluation
+  - Context packet preparation (800-1500 tokens)
+  - Tool filtering for sub-agent types
+  - Cross-model cascade routing
+  - Sub-agent result validation

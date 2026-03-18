@@ -1,19 +1,8 @@
 ---
 name: electron
 description: "Electron desktop app patterns. Use when building cross-platform desktop apps with web technologies."
-category: desktop
----
-
-﻿---
-name: electron
-detect:
-  [
-    "electron.vite.config.ts",
-    "main.ts:electron",
-    "preload.ts",
-    "forge.config.ts",
-  ]
-category: desktop
+detect: ["electron.vite.config.ts", "main.ts:electron", "preload.ts", "forge.config.ts"]
+category: cross-cutting
 tier: 1
 ---
 

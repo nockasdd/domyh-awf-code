@@ -2,6 +2,8 @@
 name: event-driven
 description: "Event-driven architecture patterns. Use when implementing pub/sub, event sourcing, CQRS, or message queues."
 category: cross-cutting
+detect: ["*event*", "*queue*", "*pubsub*"]
+tier: 1
 ---
 
 # Event-Driven Architecture — Kafka • RabbitMQ • NATS

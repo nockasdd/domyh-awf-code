@@ -1,11 +1,9 @@
 ---
-name: "delegation-intelligence"
+name: delegation-intelligence
 description: "Subagent delegation patterns: task decomposition, handoff preparation, result validation, intelligence capture, and error recovery."
-triggers:
-  - "When dispatching subagents or parallel tasks"
-  - "When subagent returns results"
-  - "When deciding parallel vs sequential execution"
-  - "When breaking complex work into subtasks"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Delegation Intelligence

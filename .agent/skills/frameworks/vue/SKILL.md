@@ -2,7 +2,7 @@
 name: vue
 description: "Vue.js development patterns for Composition API and SFCs. Use when working with .vue files or Vue projects."
 detect: ["*.vue", "package.json:vue", "vite.config.ts"]
-category: frontend
+category: frameworks
 tier: 1
 ---
 

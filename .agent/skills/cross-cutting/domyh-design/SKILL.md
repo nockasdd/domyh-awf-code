@@ -1,6 +1,9 @@
 ---
 name: domyh-design
 description: "UI/UX design intelligence. 50+ styles, 130+ palettes, 57 fonts, 9 stacks. React, Next.js, Vue, Svelte, SwiftUI, RN, Flutter, Tailwind, shadcn/ui."
+detect: ["*.css", "*.scss", "tailwind*", "design-tokens*"]
+category: cross-cutting
+tier: 1
 ---
 
 # UI/UX Pro Max - Design Intelligence
@@ -15,6 +18,25 @@ description: "UI/UX design intelligence. 50+ styles, 130+ palettes, 57 fonts, 9 
 - Reviewing code for UX issues
 - Building landing pages or dashboards
 - Implementing accessibility requirements
+
+## Design Dials (Dynamic Tuning)
+
+AI adjusts these parameters per-project based on user request or product type:
+
+| Dial | Default | Range | Description |
+|------|---------|-------|-------------|
+| `DESIGN_VARIANCE` | 5 | 1-10 | 1=Symmetric grids • 5=Standard • 10=Asymmetric/Artsy |
+| `MOTION_INTENSITY` | 4 | 1-10 | 1=Static • 4=Smooth CSS • 10=Advanced choreography |
+| `VISUAL_DENSITY` | 5 | 1-10 | 1=Airy/Gallery • 5=Normal app • 10=Dense dashboard |
+
+**How dials map to rules:**
+- `DESIGN_VARIANCE ≥ 6`: Avoid centered hero. Use split-screen, asymmetric grid, or offset layouts
+- `MOTION_INTENSITY ≥ 5`: Add stagger reveals, spring physics, scroll-triggered entry
+- `MOTION_INTENSITY ≤ 3`: CSS `:hover` and `:active` only, no JS animation
+- `VISUAL_DENSITY ≥ 8`: No card containers — use `border-t`, `divide-y`, spacing. Monospace for numbers
+- `VISUAL_DENSITY ≤ 3`: Section gaps `py-24`+, massive whitespace, one element at a time
+
+AI reads `data/products.yaml` to auto-set dials based on product type (e.g. Dashboard → DENSITY=8, Portfolio → VARIANCE=8).
 
 ## Rule Categories by Priority
 

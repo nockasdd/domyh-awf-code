@@ -1,0 +1,318 @@
+# conversion-tracking.yaml — Conversion Tracking & Attribution Patterns
+# UTM params, attribution models, funnels, goals, event-based tracking
+# Sources: Google docs, marketing best practices (2025-2026)
+metadata:
+  skill: digital-marketing
+  domain: conversion-tracking
+  updated: "2026-03"
+  patterns_count: 25
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  # === UTM Parameters ===
+  - id: utm_basics
+    pattern_name: "UTM Parameter Standard"
+    keywords: [utm, parameter, source, medium, campaign, tracking]
+    code_example: |
+      https://yourdomain.com/pricing?utm_source=google&utm_medium=cpc&utm_campaign=spring_sale&utm_term=running+shoes&utm_content=hero_v2
+      
+      Required:
+        utm_source  → Where traffic comes from (google, newsletter, twitter)
+        utm_medium  → Marketing medium (cpc, email, social, organic)
+        utm_campaign → Campaign name (spring_sale_2025)
+      
+      Optional:
+        utm_term    → Paid keyword (running+shoes)
+        utm_content → A/B variant or creative (hero_v2, blue_cta)
+    notes: "Use lowercase, hyphens/underscores only. Be consistent"
+
+  - id: utm_naming
+    pattern_name: "UTM Naming Convention"
+    keywords: [utm, naming, convention, consistency, taxonomy]
+    code_example: |
+      Template: utm_source={platform}&utm_medium={type}&utm_campaign={yyyy-mm}_{name}
+      
+      Examples:
+        Email newsletter:  ?utm_source=newsletter&utm_medium=email&utm_campaign=2025-03_spring-tips
+        Google Ads:         ?utm_source=google&utm_medium=cpc&utm_campaign=2025-q1_brand
+        Twitter organic:    ?utm_source=twitter&utm_medium=social&utm_campaign=2025-03_launch
+        Partner referral:   ?utm_source=partner-name&utm_medium=referral&utm_campaign=collab-2025
+    notes: "Document UTM taxonomy in shared spreadsheet for team consistency"
+
+  - id: utm_builder
+    pattern_name: "UTM URL Builder"
+    keywords: [utm, builder, generator, url, tool]
+    code_example: |
+      Tools:
+        - Google Campaign URL Builder (ga-dev-tools.google/ga4/campaign-url-builder)
+        - UTM.io (paid, team management)
+        - Bitly (shortener + UTM)
+      
+      Best practice: Shorten URLs for social media
+        Long: https://yourdomain.com/pricing?utm_source=twitter&utm_medium=social&utm_campaign=2025-launch
+        Short: https://bit.ly/3xABCde (or custom domain)
+    notes: "Never use UTMs for internal links — pollutes analytics"
+
+  - id: utm_parsing
+    pattern_name: "UTM Parsing in Code"
+    keywords: [utm, parse, javascript, nextjs, nuxt, url_params]
+    code_example: |
+      // Parse UTM from URL
+      function getUTMParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          utm_source: params.get('utm_source'),
+          utm_medium: params.get('utm_medium'),
+          utm_campaign: params.get('utm_campaign'),
+          utm_term: params.get('utm_term'),
+          utm_content: params.get('utm_content')
+        };
+      }
+      
+      // Persist in session/localStorage for SPA navigation
+      const utm = getUTMParams();
+      if (utm.utm_source) sessionStorage.setItem('utm', JSON.stringify(utm));
+    notes: "SPAs lose UTM on navigation — persist on first page load"
+
+  # === Attribution Models ===
+  - id: attr_last_click
+    pattern_name: "Last-Click Attribution"
+    keywords: [attribution, last_click, last_touch, default]
+    code_example: |
+      Journey: Newsletter → Google Ads → Direct → Purchase
+      Credit: 100% to Direct (last touchpoint)
+      
+      Pros: Simple, clear
+      Cons: Ignores discovery channels (newsletter)
+    notes: "GA4 default for most reports. Biases toward bottom-funnel"
+
+  - id: attr_first_click
+    pattern_name: "First-Click Attribution"
+    keywords: [attribution, first_click, first_touch, awareness]
+    code_example: |
+      Journey: Newsletter → Google Ads → Direct → Purchase
+      Credit: 100% to Newsletter (first touchpoint)
+      
+      Pros: Values discovery/awareness
+      Cons: Ignores conversion channels
+    notes: "Good for brand awareness campaigns"
+
+  - id: attr_linear
+    pattern_name: "Linear Attribution"
+    keywords: [attribution, linear, equal, distributed]
+    code_example: |
+      Journey: Newsletter → Google Ads → Direct → Purchase
+      Credit: 33.3% each
+      
+      Pros: Fair across all touchpoints
+      Cons: Doesn't reflect actual influence
+    notes: "Good for multi-channel marketing"
+
+  - id: attr_time_decay
+    pattern_name: "Time-Decay Attribution"
+    keywords: [attribution, time_decay, recency, weighted]
+    code_example: |
+      Journey: Newsletter (day 1) → Google Ads (day 5) → Direct (day 7) → Purchase
+      Credit: ~10% Newsletter, ~30% Google Ads, ~60% Direct
+      
+      Half-life: 7 days (default in most tools)
+    notes: "Best for long sales cycles (B2B, enterprise)"
+
+  - id: attr_data_driven
+    pattern_name: "Data-Driven Attribution (GA4)"
+    keywords: [attribution, data_driven, ml, machine_learning, ga4_default]
+    code_example: |
+      How it works:
+        - ML model analyzes all conversion paths
+        - Compares converting vs non-converting users
+        - Assigns credit based on actual influence
+      
+      Requirements:
+        - GA4 property with sufficient data
+        - Min 300 conversions in 30 days (for custom models)
+    notes: "GA4 default attribution model since Nov 2023"
+
+  # === Conversion Goals ===
+  - id: goal_types
+    pattern_name: "Conversion Goal Types"
+    keywords: [goal, conversion, macro, micro, kpi]
+    code_example: |
+      Macro conversions (primary business goals):
+        - Purchase completed
+        - Subscription started
+        - Demo booked
+        - Contact form submitted
+      
+      Micro conversions (engagement signals):
+        - Newsletter signup
+        - PDF downloaded
+        - Video watched >50%
+        - Added to cart
+        - Account created
+    notes: "Track both macro AND micro. Micro signals predict macro"
+
+  - id: ga4_conversions
+    pattern_name: "GA4 Key Event Setup"
+    keywords: [ga4, key_event, conversion, mark, toggle]
+    code_example: |
+      Steps in GA4:
+        1. Admin → Events → find your event
+        2. Toggle "Mark as key event" (formerly conversion)
+        3. Event now appears in conversion reports
+      
+      Or via gtag:
+        gtag('event', 'purchase', { ... });
+        // Mark 'purchase' as key event in GA4 UI
+    notes: "Renamed from 'conversions' to 'key events' in GA4 (2024)"
+
+  # === Funnels ===
+  - id: funnel_design
+    pattern_name: "Conversion Funnel Design"
+    keywords: [funnel, steps, drop_off, visualization, flow]
+    code_example: |
+      E-commerce funnel:
+        1. Landing Page (100%) → view_item_list
+        2. Product View (40%) → view_item
+        3. Add to Cart (15%) → add_to_cart
+        4. Checkout (8%) → begin_checkout
+        5. Purchase (4%) → purchase
+      
+      SaaS funnel:
+        1. Landing (100%) → page_view
+        2. Signup (10%) → sign_up
+        3. Onboarding (7%) → tutorial_complete
+        4. Activation (4%) → first_value_action
+        5. Paid (1.5%) → purchase
+    notes: "Measure drop-off at each step. Optimize worst step first"
+
+  - id: funnel_ga4
+    pattern_name: "GA4 Funnel Exploration"
+    keywords: [ga4, funnel, exploration, report, steps]
+    code_example: |
+      GA4 → Explore → Funnel exploration:
+        Steps:
+          1. Event: page_view (path = /pricing)
+          2. Event: sign_up
+          3. Event: purchase
+        
+        Options:
+          - Open/Closed funnel (can users skip steps?)
+          - Breakdown by: device, source/medium, country
+          - Elapsed time between steps
+    notes: "Funnel Exploration is the most powerful GA4 report"
+
+  # === Pixel & Facebook ===
+  - id: meta_pixel
+    pattern_name: "Meta (Facebook) Pixel Setup"
+    keywords: [meta, facebook, pixel, fbq, conversion_api]
+    code_example: |
+      // Meta Pixel base code
+      fbq('init', 'YOUR_PIXEL_ID');
+      fbq('track', 'PageView');
+      
+      // Standard events
+      fbq('track', 'Purchase', { value: 49.99, currency: 'USD' });
+      fbq('track', 'Lead', { content_name: 'demo_request' });
+      fbq('track', 'AddToCart', { content_ids: ['SKU_1'], value: 29.99 });
+    notes: "Use Conversions API (CAPI) for server-side as backup"
+
+  - id: meta_capi
+    pattern_name: "Meta Conversions API (Server-Side)"
+    keywords: [meta, conversions_api, capi, server, facebook]
+    code_example: |
+      // Server-side event (Node.js)
+      await fetch(`https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${TOKEN}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          data: [{
+            event_name: 'Purchase',
+            event_time: Math.floor(Date.now() / 1000),
+            user_data: { em: sha256('user@example.com'), ph: sha256('+1234567890') },
+            custom_data: { value: 49.99, currency: 'USD' },
+            action_source: 'website'
+          }]
+        })
+      });
+    notes: "CAPI + Pixel = deduplication via event_id"
+
+  # === Google Ads ===
+  - id: gads_conversion
+    pattern_name: "Google Ads Conversion Tracking"
+    keywords: [google_ads, conversion, gads, tag, gtag]
+    code_example: |
+      // Track Google Ads conversion
+      gtag('event', 'conversion', {
+        send_to: 'AW-XXXXXXXXX/AbC-123_4',
+        value: 49.99,
+        currency: 'USD',
+        transaction_id: 'T_123'
+      });
+    notes: "Use transaction_id for deduplication"
+
+  - id: gads_enhanced
+    pattern_name: "Google Ads Enhanced Conversions"
+    keywords: [enhanced_conversions, google_ads, first_party, hashed]
+    code_example: |
+      // Send hashed user data for offline matching
+      gtag('set', 'user_data', {
+        sha256_email_address: hashSHA256('user@example.com'),
+        sha256_phone_number: hashSHA256('+1234567890'),
+        address: { first_name: 'Alice', postal_code: '10001' }
+      });
+    notes: "Improves conversion matching by 5-15%"
+
+  # === Tools & Debugging ===
+  - id: debug_tools
+    pattern_name: "Conversion Debug Tools"
+    keywords: [debug, tools, tag_assistant, pixel_helper, test]
+    code_example: |
+      Chrome Extensions:
+        - Google Tag Assistant → GA4/GTM debugging
+        - Meta Pixel Helper → Facebook Pixel events
+        - Adswerve dataLayer Inspector → dataLayer viewer
+        - Omnibug → multi-platform tag debugger
+      
+      Browser DevTools:
+        - Network tab → filter "collect" or "pixel" requests
+        - Console → dataLayer (type: window.dataLayer)
+    notes: "Always debug before launching campaigns"
+
+  # === Anti-Patterns ===
+  - id: anti_internal_utm
+    pattern_name: "Anti-Pattern: UTM on Internal Links"
+    keywords: [anti_pattern, internal_utm, self_referral, session_break]
+    code_example: |
+      ❌ <a href="/pricing?utm_source=homepage">Pricing</a>
+         Problem: Creates new session, inflates source data
+      
+      ✅ Use UTM only for EXTERNAL links (emails, ads, social)
+      ✅ For internal tracking: use event parameters instead
+    notes: "Internal UTMs = most common analytics mistake"
+
+  - id: anti_no_goals
+    pattern_name: "Anti-Pattern: Tracking Without Goals"
+    keywords: [anti_pattern, no_goals, vanity_metrics, pageviews_only]
+    code_example: |
+      ❌ "We have 10,000 pageviews!" (so what?)
+      ✅ "We have 150 signups at 1.5% conversion rate from Google Ads"
+      
+      Always define: What is a conversion for YOUR business?
+    notes: "Pageviews without goals = vanity metrics"
+
+  - id: anti_no_dedup
+    pattern_name: "Anti-Pattern: No Conversion Deduplication"
+    keywords: [anti_pattern, deduplication, double_counting, transaction_id]
+    code_example: |
+      ❌ Counting same purchase twice (page reload, back button)
+      ✅ Use transaction_id in purchase events
+      ✅ Google/Meta auto-deduplicate by transaction_id
+    notes: "Without dedup, conversion data is inflated"
+
+  - id: anti_attribution_single
+    pattern_name: "Anti-Pattern: Single-Model Attribution"
+    keywords: [anti_pattern, single_attribution, bias, last_click_only]
+    code_example: |
+      ❌ Using only last-click → undervalues awareness channels
+      ✅ Compare multiple models (GA4: Model comparison report)
+      ✅ Use data-driven attribution when sufficient data
+    notes: "No single model is 'correct'. Compare for insights"

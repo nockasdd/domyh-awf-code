@@ -4,6 +4,8 @@ description: "Use when dispatching cascade tasks via hsa_delegate — provides 2
 triggers:
   keywords: [cascade, delegate, subagent, review, dispatch, implementation, task]
 tier: 2
+detect: []
+category: cross-cutting
 ---
 
 # Cascade Review Pipeline

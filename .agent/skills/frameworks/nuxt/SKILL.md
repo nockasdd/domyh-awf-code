@@ -2,7 +2,7 @@
 name: nuxt
 description: "Nuxt.js patterns for Vue SSR and full-stack development. Use when working with Nuxt projects."
 detect: ["nuxt.config.ts", "nuxt.config.js", ".nuxtrc", "app.vue"]
-category: frontend
+category: frameworks
 tier: 1
 ---
 

@@ -1,0 +1,10 @@
+# tooling/_index.yaml — Dev Tooling Skills Index
+category: tooling
+description: "Dev tools — API protocols, browser agents, CLI, IDE extensions, MCP"
+count: 5
+skills:
+  - { id: api-protocols, has_advanced: false }
+  - { id: browser-agent, has_advanced: true }
+  - { id: cli-dev, has_advanced: false }
+  - { id: ide-extension, has_advanced: false }
+  - { id: mcp, has_advanced: false }

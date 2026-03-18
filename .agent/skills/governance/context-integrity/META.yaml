@@ -1,0 +1,30 @@
+name: context-integrity
+display: "Context Integrity"
+category: governance
+tier: 1
+priority: 2
+
+desc: "Prevents context drift and alignment loss. Monitors declared intent vs actual actions, detects scope creep, enforces focus alignment throughout session."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - context drift
+    - scope creep
+    - alignment
+    - focus check
+    - drift detection
+    - intent alignment
+    - off-topic
+    - stay focused
+  intents:
+    - check drift
+    - verify alignment
+    - prevent scope creep
+    - maintain focus
+
+caps:
+  - Drift detection and scoring
+  - Intent vs action alignment check
+  - Scope creep prevention
+  - Focus realignment recommendations

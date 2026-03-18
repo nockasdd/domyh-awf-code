@@ -1,0 +1,52 @@
+# C# IDE & Toolchain Support (2025-2026)
+# Moved from SKILL.md to reduce T2 loading size
+
+visual_studio_2026:
+  version: "VS 2026"
+  features:
+    - "C# 14 / .NET 10 LTS full support"
+    - "GitHub Copilot built-in (AI code generation)"
+    - "Third-party AI assistants support"
+    - "Enhanced debugging with AI insights"
+    - "Faster startup, improved responsiveness"
+    - "ASP.NET Core / Blazor / MAUI tooling"
+    - "Azure integration"
+  notes:
+    - "Windows primary (limited macOS via VS for Mac)"
+    - "Resource intensive"
+
+jetbrains_rider:
+  version: "Rider 2025.3"
+  features:
+    - "Day-one .NET 10 / C# 14 support"
+    - "Extension members and operators"
+    - "Cross-platform (Windows, macOS, Linux)"
+    - "Unity, Unreal, Godot game dev support"
+    - "AI Agent Protocol (ACP) integration"
+    - "Fast startup, solution loading"
+  notes:
+    - "Paid (free for students/educators)"
+    - "IntelliJ-based refactoring"
+
+vscode_devkit:
+  extensions_required:
+    - "C# Dev Kit (Microsoft)"
+    - "C# (OmniSharp/Roslyn)"
+    - "NuGet Package Manager"
+  features:
+    - "Project/solution management"
+    - "Roslyn-powered IntelliSense"
+    - "Integrated testing (xUnit, NUnit, MSTest)"
+    - "Debugging, refactoring"
+    - "Cross-platform"
+  notes:
+    - "Free, lightweight"
+    - "Requires extension setup"
+    - "Less integrated than full IDEs"
+
+# C# Standards Comparison
+versions:
+  - { version: "C# 11", dotnet: ".NET 7", year: 2022, features: "raw strings, list patterns, required members" }
+  - { version: "C# 12", dotnet: ".NET 8 LTS", year: 2023, features: "primary constructors, collection expressions, alias any type" }
+  - { version: "C# 13", dotnet: ".NET 9", year: 2024, features: "params collections, Lock type, field keyword, partial properties" }
+  - { version: "C# 14", dotnet: ".NET 10 LTS", year: 2025, features: "extension members, null-conditional assignment, implicit span" }

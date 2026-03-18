@@ -3,6 +3,8 @@ name: audit-pro
 description: "12-Expert Panel audit with SCoT reasoning, cross-expert critique, and smart skill loading. v2: 277 checkpoints, 16 per-expert files, 11 weight profiles."
 detect: []
 priority: 1
+category: cross-cutting
+tier: 1
 ---
 
 # Audit Pro v2 — 12-Expert Panel System

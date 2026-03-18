@@ -1,0 +1,299 @@
+# analytics-ga4.yaml — GA4 Analytics Patterns
+# Google Analytics 4: event model, gtag.js, Measurement Protocol, e-commerce
+# Source: Google Developers docs (2025-2026)
+metadata:
+  skill: digital-marketing
+  domain: analytics-ga4
+  updated: "2026-03"
+  patterns_count: 30
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  # === Event Types ===
+  - id: auto_page_view
+    pattern_name: "Automatic page_view Event"
+    keywords: [page_view, auto, pageview, enhanced]
+    code_example: "// Collected automatically by gtag — no code needed"
+    notes: "Fires on every page load when enhanced measurement is on"
+
+  - id: auto_first_visit
+    pattern_name: "first_visit Event"
+    keywords: [first_visit, new_user, acquisition]
+    code_example: "// Automatic — tracks first visit via _ga cookie"
+    notes: "Sets _ga cookie with 2-year expiry"
+
+  - id: enhanced_scroll
+    pattern_name: "Enhanced scroll Tracking"
+    keywords: [scroll, depth, enhanced_measurement, 90_percent]
+    code_example: "// Toggle in GA4: Admin → Data Streams → Enhanced Measurement"
+    notes: "Fires at 90% scroll depth by default"
+
+  - id: enhanced_outbound_click
+    pattern_name: "Outbound Click Tracking"
+    keywords: [outbound, click, external_link, enhanced]
+    code_example: "// Auto-tracked when enhanced measurement enabled"
+    notes: "Tracks clicks leaving your domain"
+
+  - id: enhanced_video
+    pattern_name: "Video Engagement Tracking"
+    keywords: [video, youtube, video_start, video_progress, video_complete]
+    code_example: "// Auto-tracks embedded YouTube: start, 10/25/50/75%, complete"
+    notes: "Requires JS API support in YouTube embed"
+
+  # === Recommended Events ===
+  - id: rec_sign_up
+    pattern_name: "sign_up Event"
+    keywords: [sign_up, register, registration, method]
+    code_example: "gtag('event', 'sign_up', { method: 'Google' });"
+    notes: "Google recommended event — use exactly this name"
+
+  - id: rec_login
+    pattern_name: "login Event"
+    keywords: [login, sign_in, authentication]
+    code_example: "gtag('event', 'login', { method: 'Email' });"
+    notes: "Track auth method for conversion analysis"
+
+  - id: rec_purchase
+    pattern_name: "purchase Event (E-commerce)"
+    keywords: [purchase, transaction, ecommerce, revenue, items]
+    code_example: |
+      gtag('event', 'purchase', {
+        transaction_id: 'T_12345',
+        value: 25.42,
+        currency: 'USD',
+        items: [{ item_id: 'SKU_1', item_name: 'Shirt', price: 25.42, quantity: 1 }]
+      });
+    notes: "Required params: transaction_id, value, currency, items"
+
+  - id: rec_add_to_cart
+    pattern_name: "add_to_cart Event"
+    keywords: [add_to_cart, cart, ecommerce, shopping]
+    code_example: |
+      gtag('event', 'add_to_cart', {
+        currency: 'USD', value: 29.99,
+        items: [{ item_id: 'SKU_1', item_name: 'Product', price: 29.99 }]
+      });
+    notes: "Part of e-commerce recommended events flow"
+
+  - id: rec_view_item
+    pattern_name: "view_item Event"
+    keywords: [view_item, product_view, pdp, ecommerce]
+    code_example: |
+      gtag('event', 'view_item', {
+        currency: 'USD', value: 49.99,
+        items: [{ item_id: 'SKU_1', item_name: 'Shoes' }]
+      });
+    notes: "Fire on product detail page load"
+
+  - id: rec_begin_checkout
+    pattern_name: "begin_checkout Event"
+    keywords: [begin_checkout, checkout, ecommerce]
+    code_example: "gtag('event', 'begin_checkout', { currency: 'USD', value: 79.98, items: [...] });"
+    notes: "Track checkout funnel entry"
+
+  - id: rec_generate_lead
+    pattern_name: "generate_lead Event"
+    keywords: [generate_lead, lead, form_submit, contact]
+    code_example: "gtag('event', 'generate_lead', { currency: 'USD', value: 100 });"
+    notes: "For lead gen forms, newsletter signups"
+
+  # === Custom Events ===
+  - id: custom_event
+    pattern_name: "Custom Event Pattern"
+    keywords: [custom_event, gtag_event, track, custom]
+    code_example: |
+      gtag('event', 'feature_used', {
+        feature_name: 'dark_mode',
+        user_plan: 'pro'
+      });
+    notes: "Use snake_case naming. Max 500 distinct event names per property"
+
+  - id: custom_user_properties
+    pattern_name: "User Properties"
+    keywords: [user_properties, user_id, set, audience]
+    code_example: |
+      gtag('set', 'user_properties', {
+        plan_type: 'enterprise',
+        signup_date: '2025-01-15'
+      });
+    notes: "Max 25 custom user properties per property"
+
+  # === Configuration ===
+  - id: gtag_config
+    pattern_name: "gtag.js Configuration"
+    keywords: [gtag, config, measurement_id, setup, install]
+    code_example: |
+      gtag('config', 'G-XXXXXXXXXX', {
+        send_page_view: true,
+        cookie_domain: 'auto',
+        cookie_flags: 'SameSite=None;Secure'
+      });
+    notes: "Place in <head>. G-XXXXXXXXXX from Data Streams"
+
+  - id: gtag_nextjs
+    pattern_name: "Next.js GA4 Integration"
+    keywords: [nextjs, next, app_router, script, ga4]
+    code_example: |
+      // app/layout.tsx
+      import Script from 'next/script';
+      export default function RootLayout({ children }) {
+        return (
+          <html>
+            <head>
+              <Script src="https://www.googletagmanager.com/gtag/js?id=G-XXX" strategy="afterInteractive" />
+              <Script id="gtag-init" strategy="afterInteractive">
+                {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+                  gtag('js',new Date());gtag('config','G-XXX');`}
+              </Script>
+            </head>
+            <body>{children}</body>
+          </html>
+        );
+      }
+    notes: "Use next/script with afterInteractive strategy"
+
+  - id: gtag_nuxt
+    pattern_name: "Nuxt 3 GA4 Integration"
+    keywords: [nuxt, nuxt3, vue, ga4, plugin]
+    code_example: |
+      // plugins/gtag.client.ts
+      export default defineNuxtPlugin(() => {
+        const { gtagId } = useRuntimeConfig().public;
+        useHead({
+          script: [
+            { src: `https://www.googletagmanager.com/gtag/js?id=${gtagId}`, async: true },
+            { children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gtagId}');` }
+          ]
+        });
+      });
+    notes: "Use useRuntimeConfig for env-safe Measurement ID"
+
+  # === Measurement Protocol ===
+  - id: mp_server_event
+    pattern_name: "Measurement Protocol Server Event"
+    keywords: [measurement_protocol, server_side, api, mp_collect]
+    code_example: |
+      // Node.js / Go / Python — server-to-GA4
+      fetch('https://www.google-analytics.com/mp/collect?measurement_id=G-XXX&api_secret=SECRET', {
+        method: 'POST',
+        body: JSON.stringify({
+          client_id: 'server_client_123',
+          events: [{ name: 'server_purchase', params: { value: 99.99, currency: 'USD' } }]
+        })
+      });
+    notes: "For offline conversions, CRM events, backend tracking"
+
+  - id: mp_validation
+    pattern_name: "MP Debug/Validation Endpoint"
+    keywords: [debug, validate, measurement_protocol, test]
+    code_example: "POST https://www.google-analytics.com/debug/mp/collect?measurement_id=G-XXX&api_secret=SECRET"
+    notes: "Returns validation messages instead of collecting data"
+
+  # === E-commerce Flow ===
+  - id: ecom_funnel
+    pattern_name: "E-commerce Event Funnel"
+    keywords: [ecommerce, funnel, shopping, checkout_flow]
+    code_example: "view_item_list → select_item → view_item → add_to_cart → begin_checkout → add_shipping_info → add_payment_info → purchase"
+    notes: "Full GA4 recommended e-commerce funnel flow"
+
+  # === Debug ===
+  - id: debug_mode
+    pattern_name: "GA4 Debug Mode"
+    keywords: [debug, debugview, realtime, testing]
+    code_example: "gtag('config', 'G-XXX', { debug_mode: true });"
+    notes: "See events in GA4 DebugView in real-time"
+
+  # === Consent Integration ===
+  - id: consent_default
+    pattern_name: "Default Consent State"
+    keywords: [consent, gdpr, ccpa, default, denied]
+    code_example: |
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+    notes: "Must fire BEFORE gtag config. Consent Mode v2 requirement"
+
+  - id: consent_update
+    pattern_name: "Consent Update (User Grants)"
+    keywords: [consent, update, granted, cmp, cookie_banner]
+    code_example: |
+      // After CMP callback
+      gtag('consent', 'update', {
+        analytics_storage: 'granted',
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted'
+      });
+    notes: "Called when user accepts cookies via CMP"
+
+  # === Cross-Domain ===
+  - id: cross_domain
+    pattern_name: "Cross-Domain Tracking"
+    keywords: [cross_domain, linker, subdomain, multi_domain]
+    code_example: |
+      gtag('config', 'G-XXX', {
+        linker: { domains: ['shop.example.com', 'blog.example.com'] }
+      });
+    notes: "Enables user identity across different domains"
+
+  # === Audiences ===
+  - id: user_id_tracking
+    pattern_name: "User ID for Cross-Device"
+    keywords: [user_id, cross_device, logged_in]
+    code_example: "gtag('config', 'G-XXX', { user_id: 'USER_123' });"
+    notes: "Set when user logs in. Enables cross-device reporting"
+
+  # === Data Limits ===
+  - id: ga4_limits
+    pattern_name: "GA4 Data Limits"
+    keywords: [limits, quotas, max_events, parameters]
+    code_example: |
+      Limits:
+        - 500 distinct event names per property
+        - 25 custom user properties
+        - 50 custom event parameters (25 text + 25 numeric)
+        - Event param name: max 40 chars
+        - Event param value: max 100 chars
+    notes: "Plan event taxonomy within these limits"
+
+  # === Reporting ===
+  - id: ga4_api
+    pattern_name: "GA4 Data API (Reporting)"
+    keywords: [data_api, reporting, api, export, bigquery]
+    code_example: |
+      // GA4 Data API v1 (Node.js)
+      const { BetaAnalyticsDataClient } = require('@google-analytics/data');
+      const client = new BetaAnalyticsDataClient();
+      const [response] = await client.runReport({
+        property: 'properties/123456',
+        dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
+        dimensions: [{ name: 'city' }],
+        metrics: [{ name: 'activeUsers' }]
+      });
+    notes: "For custom dashboards and automated reporting"
+
+  - id: bigquery_export
+    pattern_name: "BigQuery Export"
+    keywords: [bigquery, export, raw_data, sql, warehouse]
+    code_example: |
+      -- BigQuery: daily active users by country
+      SELECT country, COUNT(DISTINCT user_pseudo_id) as dau
+      FROM `project.analytics_123456.events_*`
+      WHERE event_name = 'page_view'
+        AND _TABLE_SUFFIX BETWEEN '20250101' AND '20250131'
+      GROUP BY country ORDER BY dau DESC;
+    notes: "Free daily export to BigQuery for raw event data"
+
+  - id: ga4_audiences
+    pattern_name: "GA4 Audience Builder"
+    keywords: [audiences, segments, remarketing, targeting]
+    code_example: |
+      Audience conditions:
+        - event: purchase (last 30 days)
+        - user_property: plan_type = 'free'
+        - Static: country = 'US'
+        → Name: "US Free Users Who Purchased"
+    notes: "Use for Google Ads remarketing and personalized content"

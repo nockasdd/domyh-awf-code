@@ -2,7 +2,7 @@
 name: sql
 description: "SQL patterns for queries, optimization, and database operations. Use when writing SQL or working with relational databases."
 detect: ["*.sql", "migrations/*.sql", "*.pgsql"]
-category: database
+category: cross-cutting
 tier: 1
 ---
 

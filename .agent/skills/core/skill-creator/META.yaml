@@ -1,0 +1,37 @@
+name: skill-creator
+display: "Skill Creator"
+category: core
+tier: 1
+priority: 3
+
+desc: "Meta-skill for creating, improving, and validating DOMYH skills. Scaffolds skill templates, enforces frontmatter schema, validates BM25 trigger accuracy, and guides skill development."
+
+triggers:
+  file_patterns:
+    - "SKILL.md"
+    - "META.yaml"
+    - "ADVANCED.md"
+  keywords:
+    - create skill
+    - skill creator
+    - new skill
+    - skill development
+    - skill template
+    - improve skill
+    - validate skill
+    - skill quality
+    - frontmatter
+    - skill writing
+  intents:
+    - create a new skill
+    - improve existing skill
+    - validate skill quality
+    - optimize skill description
+
+caps:
+  - Skill scaffolding (simple, standard, complex)
+  - Frontmatter schema validation
+  - Description optimization for BM25 ranking
+  - Skill quality checklist
+  - Search ranking verification
+  - Content splitting guidance (>500 lines)

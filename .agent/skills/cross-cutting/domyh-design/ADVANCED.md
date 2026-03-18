@@ -243,3 +243,76 @@ backgrounds:
 | White background only    | No atmosphere          |
 
 ---
+
+### 🎯 AI Tells — Concrete Ban List
+
+Patterns that reveal AI-generated code. MUST avoid:
+
+**Visual & CSS:**
+- ❌ `#000000` pure black → Use off-black (`#0a0a0a`, Zinc-950)
+- ❌ Neon/outer glows → Use inner borders or tinted shadows
+- ❌ Oversaturated accents (saturation >80%) → Desaturate to blend with neutrals
+- ❌ Generic 3-card equal-column feature row → Use zig-zag, asymmetric grid, or masonry
+- ❌ `box-shadow` with pure black → Tint shadows to match background hue
+- ❌ `h-screen` for full-height → Use `min-h-[100dvh]` (iOS Safari viewport bug)
+- ❌ Flexbox percentage math (`w-[calc(33%-1rem)]`) → Use CSS Grid
+
+**Typography:**
+- ❌ Inter for "premium" or "creative" projects → Use Geist, Outfit, Satoshi, Cabinet Grotesk
+- ❌ Only Regular/Bold weights → Introduce Medium (500) / SemiBold (600)
+- ❌ Missing letter-spacing on large headings → Use negative tracking (`tracking-tighter`)
+- ❌ Orphaned words on last line → Use `text-wrap: balance` or `text-wrap: pretty`
+- ❌ Serif fonts on dashboards/software UI → Sans-serif only for data interfaces
+
+**Content (the "Jane Doe" effect):**
+- ❌ "John Doe", "Jane Smith", "Acme Corp" → Diverse, realistic names
+- ❌ Round numbers: `99.99%`, `50%`, `$100.00` → Organic data: `47.2%`, `$99.00`
+- ❌ AI copywriting clichés: "Elevate", "Seamless", "Unleash", "Next-Gen" → Plain verbs
+- ❌ Broken Unsplash links → Use `picsum.photos/seed/{name}/800/600`
+- ❌ Lorem ipsum → Write real draft copy
+- ❌ Exclamation marks in success messages → Be confident, not loud
+
+**Component:**
+- ❌ Default shadcn/ui without customization → Must customize radii, colors, shadows
+- ❌ Sun/moon toggle for dark mode → Use dropdown or system preference detection
+- ❌ Identical avatars for different users → Unique assets per person
+- ❌ Accordion FAQ sections → Side-by-side list or progressive disclosure
+- ❌ Standard centered hero when `DESIGN_VARIANCE > 4` → Split-screen or asymmetric
+
+**Code Quality:**
+- ❌ `<div>` soup → Semantic HTML: `<nav>`, `<main>`, `<article>`, `<section>`
+- ❌ Commented-out dead code → Remove all debug artifacts
+- ❌ Import hallucinations → Verify every import exists in `package.json`
+- ❌ Missing `<title>`, `description`, `og:image` meta tags
+
+---
+
+## Redesign Audit Workflow
+
+When upgrading an existing project, follow this priority sequence for maximum visual impact with minimum risk:
+
+### Step 1: Scan
+Read the codebase. Identify framework, styling method (Tailwind, vanilla CSS, styled-components), and current design patterns.
+
+### Step 2: Diagnose
+Run through the AI Tells Ban List above. List every generic pattern, weak point, and missing state.
+
+### Step 3: Fix (Priority Order)
+
+| Priority | Action | Impact | Risk |
+|----------|--------|--------|------|
+| 1 | **Font swap** | ⭐⭐⭐ Instant improvement | Low |
+| 2 | **Color palette cleanup** | ⭐⭐⭐ Remove clashing colors | Low |
+| 3 | **Hover + active states** | ⭐⭐ Interface feels alive | Low |
+| 4 | **Layout + spacing** | ⭐⭐ Grid, max-width, padding | Medium |
+| 5 | **Replace generic components** | ⭐⭐ Modern alternatives | Medium |
+| 6 | **Add loading/empty/error states** | ⭐ Feels finished | Medium |
+| 7 | **Polish typography scale** | ⭐ Premium final touch | Low |
+
+### Rules
+- Work with existing tech stack. Do not migrate frameworks
+- Do not break existing functionality. Test after every change
+- Before importing any new library, check `package.json` first
+- Keep changes reviewable and focused. Small, targeted improvements over big rewrites
+
+---

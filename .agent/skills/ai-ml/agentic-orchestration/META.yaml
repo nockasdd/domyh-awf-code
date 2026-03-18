@@ -1,0 +1,34 @@
+name: agentic-orchestration
+display: "Agentic Orchestration"
+category: ai-ml
+tier: 1
+priority: 3
+
+desc: "Multi-agent task delegation and orchestration patterns. Covers Anthropic's 5 agentic patterns (chaining, routing, parallelization, orchestrator-worker, evaluator-optimizer), HSA delegation tools, and context isolation."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - agentic orchestration
+    - multi-agent
+    - delegation
+    - orchestration
+    - sub-agent
+    - cascade
+    - fan-out
+    - fan-in
+    - prompt chaining
+    - routing pattern
+    - agent pattern
+  intents:
+    - design multi-agent system
+    - orchestrate agents
+    - delegate to sub-agents
+    - implement agentic patterns
+
+caps:
+  - Anthropic's 5 agentic patterns
+  - HSA delegation tools integration
+  - Context isolation rules
+  - Sub-agent handoff flow
+  - Task decomposition strategies

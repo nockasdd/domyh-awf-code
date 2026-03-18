@@ -1,63 +1,131 @@
-# Skills Category Index
-# For standalone mode (no HSA MCP) — provides fast skill lookup
-# Version: 2026-03
+# =============================================================================
+# Skills Routing Index — Universal Discovery
+# =============================================================================
+# Version: 2026-03-18 v3 (compact — routing + detect merged, no duplication)
+# Total: 99 skills across 8 categories
+#
+# Usage (non-HSA agents):
+#   1. Read this file → find skill by name → get path + detect patterns
+#   2. Read .agent/skills/{path}/SKILL.md
+#   Total: 2 tool calls
+# =============================================================================
 
-categories:
-  core:
-    path: skills/core/
-    skills:
-      - { name: security, patterns: 400+, detect: ["*.env", "auth*", "jwt*"] }
-      - { name: authentication, patterns: 260+, detect: ["login*", "oauth*", "passport*"] }
-      - { name: error-handling, patterns: 180+, detect: ["*error*", "*exception*"] }
-      - { name: api-design, patterns: 200+, detect: ["routes/*", "controllers/*", "api/*"] }
-      - { name: logging, patterns: 120+, detect: ["logger*", "winston*", "pino*"] }
-      - { name: observability, patterns: 150+, detect: ["metrics*", "tracing*", "opentelemetry*"] }
+routing:
+  # --- core (8) ---
+  security:             { path: "core/security", detect: ["*.env", "auth*", "jwt*"] }
+  authentication:       { path: "core/authentication", detect: ["login*", "oauth*", "passport*"] }
+  api-design:           { path: "core/api-design", detect: ["routes/*", "controllers/*", "api/*"] }
+  error-handling:       { path: "core/error-handling", detect: ["*error*", "*exception*"] }
+  logging:              { path: "core/logging", detect: ["logger*", "winston*", "pino*"] }
+  observability:        { path: "core/observability", detect: ["metrics*", "tracing*", "opentelemetry*"] }
+  context-engineering:  { path: "core/context-engineering", detect: [] }
+  skill-creator:        { path: "core/skill-creator", detect: [] }
 
-  cross-cutting:
-    path: skills/cross-cutting/
-    skills:
-      - { name: audit-pro, patterns: 277, detect: [] }  # Triggered by /ap command only
-      - { name: testing, patterns: 200+, detect: ["*.test.*", "*.spec.*", "jest*", "vitest*"] }
-      - { name: coding-rules, patterns: 300+, detect: [] }  # Always relevant
-      - { name: database, patterns: 150+, detect: ["*.sql", "migrations/*", "prisma/*", "drizzle*"] }
-      - { name: web-perf, patterns: 100+, detect: ["lighthouse*", "*.perf.*"] }
-      - { name: domyh-design, patterns: 80+, detect: ["*.css", "*.scss", "tailwind*"] }
-      - { name: cascade-review, patterns: 50+, detect: [] }      # Cascade review pipeline
-      - { name: receiving-code-review, patterns: 30+, detect: [] } # Review feedback handling
-      - { name: tdd-workflow, patterns: 180+, detect: ["*.test.*", "*.spec.*"] }
+  # --- cross-cutting (25) ---
+  audit-pro:            { path: "cross-cutting/audit-pro", detect: [] }
+  testing:              { path: "cross-cutting/testing", detect: ["*.test.*", "*.spec.*", "jest*", "vitest*"] }
+  coding-rules:         { path: "cross-cutting/coding-rules", detect: [] }
+  database:             { path: "cross-cutting/database", detect: ["*.sql", "migrations/*", "prisma/*", "drizzle*"] }
+  web-perf:             { path: "cross-cutting/web-perf", detect: ["lighthouse*", "*.perf.*"] }
+  domyh-design:         { path: "cross-cutting/domyh-design", detect: ["*.css", "*.scss", "tailwind*"] }
+  cascade-review:       { path: "cross-cutting/cascade-review", detect: [] }
+  receiving-code-review: { path: "cross-cutting/receiving-code-review", detect: [] }
+  tdd-workflow:         { path: "cross-cutting/tdd-workflow", detect: ["*.test.*", "*.spec.*"] }
+  accessibility:        { path: "cross-cutting/accessibility", detect: ["aria-*", "a11y*"] }
+  bun:                  { path: "cross-cutting/bun", detect: ["bun.lockb", "bunfig.toml"] }
+  deno:                 { path: "cross-cutting/deno", detect: ["deno.json", "deno.lock"] }
+  electron:             { path: "cross-cutting/electron", detect: ["electron*"] }
+  event-driven:         { path: "cross-cutting/event-driven", detect: ["*event*", "*queue*", "*pubsub*"] }
+  microservices:        { path: "cross-cutting/microservices", detect: ["docker-compose*", "*gateway*"] }
+  monorepo:             { path: "cross-cutting/monorepo", detect: ["pnpm-workspace.yaml", "lerna.json", "nx.json", "turbo.json"] }
+  output-enforcement:   { path: "cross-cutting/output-enforcement", detect: [] }
+  payment-integration:  { path: "cross-cutting/payment-integration", detect: ["*stripe*", "*paypal*", "*payment*"] }
+  playwright:           { path: "cross-cutting/playwright", detect: ["playwright.config*"] }
+  real-time:            { path: "cross-cutting/real-time", detect: ["*socket*", "*websocket*", "*sse*"] }
+  seo:                  { path: "cross-cutting/seo", detect: ["*sitemap*", "*robots*"] }
+  sql:                  { path: "cross-cutting/sql", detect: ["*.sql"] }
+  tailwind:             { path: "cross-cutting/tailwind", detect: ["tailwind.config*"] }
+  tauri:                { path: "cross-cutting/tauri", detect: ["tauri.conf*", "src-tauri/*"] }
+  wasm:                 { path: "cross-cutting/wasm", detect: ["*.wasm", "*.wat"] }
 
-  languages:
-    path: skills/languages/
-    skills:
-      - { name: typescript, detect: ["tsconfig.json", "*.ts", "*.tsx"] }
-      - { name: python, detect: ["*.py", "pyproject.toml", "requirements.txt"] }
-      - { name: go, detect: ["go.mod", "*.go"] }
-      - { name: rust, detect: ["Cargo.toml", "*.rs"] }
-      - { name: csharp, detect: ["*.csproj", "*.cs", "*.sln"] }
-      - { name: java, detect: ["pom.xml", "build.gradle", "*.java"] }
+  # --- languages (28) ---
+  typescript:           { path: "languages/typescript", detect: ["tsconfig.json", "*.ts", "*.tsx"] }
+  python:               { path: "languages/python", detect: ["*.py", "pyproject.toml", "requirements.txt"] }
+  go:                   { path: "languages/go", detect: ["go.mod", "*.go"] }
+  rust:                 { path: "languages/rust", detect: ["Cargo.toml", "*.rs"] }
+  csharp:               { path: "languages/csharp", detect: ["*.csproj", "*.cs", "*.sln"] }
+  java:                 { path: "languages/java", detect: ["pom.xml", "build.gradle", "*.java"] }
+  javascript:           { path: "languages/javascript", detect: ["*.js", "*.jsx"] }
+  kotlin:               { path: "languages/kotlin", detect: ["*.kt", "build.gradle.kts"] }
+  swift:                { path: "languages/swift", detect: ["*.swift", "Package.swift"] }
+  ruby:                 { path: "languages/ruby", detect: ["Gemfile", "*.rb"] }
+  php:                  { path: "languages/php", detect: ["composer.json", "*.php"] }
+  cpp:                  { path: "languages/cpp", detect: ["*.cpp", "*.h", "CMakeLists.txt"] }
+  c:                    { path: "languages/c", detect: ["*.c", "*.h", "Makefile"] }
+  lua:                  { path: "languages/lua", detect: ["*.lua"] }
+  asm:                  { path: "languages/asm", detect: ["*.asm", "*.s"] }
+  perl:                 { path: "languages/perl", detect: ["*.pl", "*.pm"] }
+  nim:                  { path: "languages/nim", detect: ["*.nim", "*.nimble"] }
+  crystal:              { path: "languages/crystal", detect: ["*.cr", "shard.yml"] }
+  zig:                  { path: "languages/zig", detect: ["*.zig", "build.zig"] }
+  haskell:              { path: "languages/haskell", detect: ["*.hs", "stack.yaml", "*.cabal"] }
+  elixir:               { path: "languages/elixir", detect: ["*.ex", "*.exs", "mix.exs"] }
+  scala:                { path: "languages/scala", detect: ["*.scala", "build.sbt"] }
+  clojure:              { path: "languages/clojure", detect: ["*.clj", "project.clj"] }
+  fsharp:               { path: "languages/fsharp", detect: ["*.fs", "*.fsproj"] }
+  ocaml:                { path: "languages/ocaml", detect: ["*.ml", "*.mli", "dune"] }
+  r:                    { path: "languages/r", detect: ["*.R", "*.Rmd", "DESCRIPTION"] }
+  julia:                { path: "languages/julia", detect: ["*.jl", "Project.toml"] }
+  solidity:             { path: "languages/solidity", detect: ["*.sol", "hardhat.config*", "truffle*"] }
 
-  frameworks:
-    path: skills/frameworks/
-    skills:
-      - { name: nextjs, detect: ["next.config.*"] }
-      - { name: nuxt, detect: ["nuxt.config.*"] }
-      - { name: express, detect: ["express"] }  # package.json dep
-      - { name: fastapi, detect: ["fastapi"] }   # pyproject dep
+  # --- frameworks (9) ---
+  nextjs:               { path: "frameworks/nextjs", detect: ["next.config.*"] }
+  nuxt:                 { path: "frameworks/nuxt", detect: ["nuxt.config.*"] }
+  react:                { path: "frameworks/react", detect: ["react", "*.jsx", "*.tsx"] }
+  vue:                  { path: "frameworks/vue", detect: ["*.vue", "vue.config*"] }
+  angular:              { path: "frameworks/angular", detect: ["angular.json", "*.component.ts"] }
+  svelte:               { path: "frameworks/svelte", detect: ["svelte.config*", "*.svelte"] }
+  flutter:              { path: "frameworks/flutter", detect: ["pubspec.yaml", "*.dart"] }
+  react-native:         { path: "frameworks/react-native", detect: ["react-native*", "app.json"] }
+  streamlit:            { path: "frameworks/streamlit", detect: ["streamlit*"] }
 
-  devops:
-    path: skills/devops/
-    skills:
-      - { name: docker, detect: ["Dockerfile", "docker-compose*"] }
-      - { name: ci-cd, detect: [".github/workflows/*", ".gitlab-ci.yml", "Jenkinsfile"] }
-      - { name: kubernetes, detect: ["k8s/*", "*.k8s.yaml", "helm/*"] }
+  # --- devops (7) ---
+  docker:               { path: "devops/docker", detect: ["Dockerfile", "docker-compose*"] }
+  ci-cd:                { path: "devops/ci-cd", detect: [".github/workflows/*", ".gitlab-ci.yml", "Jenkinsfile"] }
+  kubernetes:           { path: "devops/kubernetes", detect: ["k8s/*", "helm/*"] }
+  aws:                  { path: "devops/aws", detect: ["*.aws*", "serverless*", "cdk*"] }
+  azure:                { path: "devops/azure", detect: ["azure-*", "*.azure*"] }
+  gcp:                  { path: "devops/gcp", detect: ["*.gcp*", "app.yaml"] }
+  terraform:            { path: "devops/terraform", detect: ["*.tf", "*.tfvars", "terraform*"] }
 
-  ai-ml:
-    path: skills/ai-ml/
-    skills:
-      - { name: prompt-engineering, detect: ["prompts/*", "*.prompt"] }
+  # --- ai-ml (9) ---
+  prompt-engineering:   { path: "ai-ml/prompt-engineering", detect: ["prompts/*", "*.prompt"] }
+  ai-agents:            { path: "ai-ml/ai-agents", detect: ["*agent*", "*agentic*"] }
+  agentic-orchestration: { path: "ai-ml/agentic-orchestration", detect: [] }
+  gemini-live:          { path: "ai-ml/gemini-live", detect: ["*gemini*"] }
+  gemini-media-gen:     { path: "ai-ml/gemini-media-gen", detect: [] }
+  gemini-tts:           { path: "ai-ml/gemini-tts", detect: [] }
+  ml-pipelines:         { path: "ai-ml/ml-pipelines", detect: ["*pipeline*", "*.pkl", "*.onnx"] }
+  rag-patterns:         { path: "ai-ml/rag-patterns", detect: ["*rag*", "*retrieval*", "*embedding*"] }
+  vector-search:        { path: "ai-ml/vector-search", detect: ["*vector*", "*pinecone*", "*chromadb*"] }
 
-# Usage (standalone mode):
-# 1. Read this file
-# 2. Match project files against detect patterns
-# 3. Load matching skills' META.yaml
-# 4. On user request, load SKILL.md
+  # --- governance (8) ---
+  session-memory:       { path: "governance/session-memory", detect: [] }
+  session-lifecycle:    { path: "governance/session-lifecycle", detect: [] }
+  evidence-discipline:  { path: "governance/evidence-discipline", detect: [] }
+  context-integrity:    { path: "governance/context-integrity", detect: [] }
+  delegation-intelligence: { path: "governance/delegation-intelligence", detect: [] }
+  context-first-gatekeeping: { path: "governance/context-first-gatekeeping", detect: [] }
+  debug-orchestration:  { path: "governance/debug-orchestration", detect: [] }
+  pre-stop-checklist:   { path: "governance/pre-stop-checklist", detect: [] }
+
+  # --- tooling (5) ---
+  api-protocols:        { path: "tooling/api-protocols", detect: ["*openapi*", "*swagger*", "*graphql*"] }
+  browser-agent:        { path: "tooling/browser-agent", detect: [] }
+  cli-dev:              { path: "tooling/cli-dev", detect: ["*commander*", "*yargs*", "*cli*"] }
+  ide-extension:        { path: "tooling/ide-extension", detect: [] }
+  mcp:                  { path: "tooling/mcp", detect: ["*mcp*", "mcp.json"] }
+
+# Category summary (for human reference only — agent uses routing above)
+# core: 8 | cross-cutting: 25 | languages: 28 | frameworks: 9
+# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 5 | TOTAL: 99

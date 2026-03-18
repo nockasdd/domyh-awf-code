@@ -1,12 +1,14 @@
 # core/_index.yaml — Core Skills Index (Always Loaded)
 category: core
-description: "Core patterns - security, API, errors, logging, observability, auth"
+description: "Core patterns - security, API, errors, logging, observability, auth, context, skill-creator"
 always_load: true
-count: 6
+count: 8
 skills:
   - { id: security, has_advanced: true }
   - { id: api-design, has_advanced: true }
-  - { id: error-handling, has_advanced: true }
-  - { id: logging, has_advanced: true }
-  - { id: observability, has_advanced: true }
+  - { id: error-handling, has_advanced: false }
+  - { id: logging, has_advanced: false }
+  - { id: observability, has_advanced: false }
   - { id: authentication, has_advanced: true }
+  - { id: context-engineering, has_advanced: false }
+  - { id: skill-creator, has_advanced: false }

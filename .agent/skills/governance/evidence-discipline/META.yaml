@@ -1,0 +1,34 @@
+name: evidence-discipline
+display: "Evidence Discipline"
+category: governance
+tier: 1
+priority: 1
+
+desc: "Never claim, always prove. Enforces evidence-based completion claims with verification commands, failure signal parsing, and stack-specific checks. Prevents false 'done' claims."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - evidence
+    - verify
+    - verification
+    - proof
+    - done claim
+    - test pass
+    - build pass
+    - lint pass
+    - claim completion
+    - subagent result
+    - partial success
+  intents:
+    - verify completion
+    - validate results
+    - check build status
+    - verify subagent output
+
+caps:
+  - Pre-action gate for completion claims
+  - Stack-specific verification commands (JS/TS, Python, Go, .NET, Rust)
+  - Failure signal detection in subagent output
+  - Partial success handling (pass rate thresholds)
+  - Evidence levels (L1 visual, L2 command, L3 test)

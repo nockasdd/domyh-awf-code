@@ -1,0 +1,13 @@
+# governance/_index.yaml — Session Governance Skills Index
+category: governance
+description: "Session governance & context discipline — memory, lifecycle, evidence, delegation"
+count: 8
+skills:
+  - { id: session-memory, has_advanced: false }
+  - { id: session-lifecycle, has_advanced: false }
+  - { id: evidence-discipline, has_advanced: false }
+  - { id: context-integrity, has_advanced: false }
+  - { id: delegation-intelligence, has_advanced: false }
+  - { id: context-first-gatekeeping, has_advanced: false }
+  - { id: debug-orchestration, has_advanced: false }
+  - { id: pre-stop-checklist, has_advanced: false }

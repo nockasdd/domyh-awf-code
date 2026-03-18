@@ -2,7 +2,7 @@
 name: php
 description: "PHP development patterns for web applications and Laravel. Use when working with .php files or composer.json projects."
 detect: ["composer.json", "*.php", "artisan", "symfony.lock"]
-category: backend
+category: languages
 tier: 1
 ---
 
@@ -31,31 +31,13 @@ Use for: Web applications, APIs, Laravel/Symfony projects, WordPress plugins.
 | **Symfony 8**  | Enterprise, modular       | 8.4+        |
 | **Slim 5**     | Micro-framework           | 8.2+        |
 
-### Laravel Ecosystem
+### Laravel Ecosystem & Tools
 
-| Library            | Use Case              | Install                                      |
-| ------------------ | --------------------- | -------------------------------------------- |
-| **Livewire 3**     | Full-stack without JS | `composer require livewire/livewire`         |
-| **Inertia.js**     | SPA with Vue/React    | `composer require inertiajs/inertia-laravel` |
-| **Laravel Octane** | High performance      | `composer require laravel/octane`            |
-| **Laravel Pulse**  | Real-time monitoring  | `composer require laravel/pulse`             |
-| **Pest**           | Modern testing 🏆     | `composer require pestphp/pest --dev`        |
+> See `data/core.yaml` for full library catalog, quality tools, and IDE comparison.
 
-### Quality Tools
-
-| Tool         | Use Case              | Install                                    |
-| ------------ | --------------------- | ------------------------------------------ |
-| **PHPStan**  | Static analysis 🏆    | `composer require phpstan/phpstan --dev`   |
-| **Rector**   | Automated refactoring | `composer require rector/rector --dev`     |
-| **Pint**     | Code styling          | `composer require laravel/pint --dev`      |
-| **Larastan** | PHPStan for Laravel   | `composer require larastan/larastan --dev` |
-
-### IDE Support
-
-| IDE          | Plugin                      | Features                        |
-| ------------ | --------------------------- | ------------------------------- |
-| **PhpStorm** | Built-in                    | Full Laravel/Symfony support 🏆 |
-| **VS Code**  | Intelephense + Laravel Pint | Code completion, formatting     |
+**Laravel**: Livewire 3 · Inertia.js · Octane (performance) · Pest (testing 🏆)
+**Quality**: PHPStan level 9+ · Rector (refactoring) · Pint (styling)
+**IDE**: PhpStorm (full support 🏆) · VS Code + Intelephense
 
 ---
 

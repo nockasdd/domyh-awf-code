@@ -1,0 +1,28 @@
+name: context-first-gatekeeping
+display: "Context-First Gatekeeping"
+category: governance
+tier: 1
+priority: 1
+
+desc: "Enforces context gathering before action. Prevents premature implementation by requiring understanding of existing code, patterns, and constraints before writing code."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - context first
+    - gatekeeping
+    - prerequisite
+    - before coding
+    - understand first
+    - research first
+    - read before write
+  intents:
+    - enforce context gathering
+    - prevent premature coding
+    - require understanding before action
+
+caps:
+  - Pre-implementation context checks
+  - Existing pattern detection before new code
+  - Constraint verification before changes
+  - Research-before-write enforcement

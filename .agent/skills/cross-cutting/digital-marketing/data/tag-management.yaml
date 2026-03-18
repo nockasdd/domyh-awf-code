@@ -1,0 +1,283 @@
+# tag-management.yaml — GTM & Tag Management Patterns
+# dataLayer, GTM triggers, Consent Mode v2, server-side tagging
+# Sources: Simo Ahava (simoahava.com), stape.io, analyticsmania.com
+metadata:
+  skill: digital-marketing
+  domain: tag-management
+  updated: "2026-03"
+  patterns_count: 25
+  columns: [id, pattern_name, keywords, code_example, notes]
+
+patterns:
+  - id: datalayer_init
+    pattern_name: "dataLayer Initialization"
+    keywords: [dataLayer, init, initialize, setup]
+    code_example: |
+      <!-- BEFORE GTM snippet -->
+      <script>window.dataLayer = window.dataLayer || [];</script>
+    notes: "Always initialize before GTM container loads"
+
+  - id: datalayer_push
+    pattern_name: "dataLayer.push() Pattern"
+    keywords: [dataLayer, push, event, custom_event]
+    code_example: |
+      dataLayer.push({
+        event: 'form_submit',
+        form_name: 'contact',
+        form_location: 'footer'
+      });
+    notes: "ALWAYS use push() — never assign directly"
+
+  - id: datalayer_ecommerce
+    pattern_name: "E-commerce dataLayer"
+    keywords: [ecommerce, datalayer, items, purchase, ga4]
+    code_example: |
+      // Clear stale ecommerce data first
+      dataLayer.push({ ecommerce: null });
+      dataLayer.push({
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: 'T_123',
+          value: 49.99,
+          currency: 'USD',
+          items: [{ item_id: 'SKU_1', item_name: 'Shoes', price: 49.99, quantity: 1 }]
+        }
+      });
+    notes: "Always clear ecommerce:{null} before new push"
+
+  - id: datalayer_page_data
+    pattern_name: "Page-Level dataLayer Variables"
+    keywords: [page_type, page_category, user_type, initial]
+    code_example: |
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+          page_type: 'product',
+          page_category: 'electronics',
+          user_logged_in: true,
+          user_plan: 'pro'
+        });
+      </script>
+    notes: "Set page-level vars before GTM for use in triggers/variables"
+
+  - id: gtm_consent_init
+    pattern_name: "Consent Initialization Trigger"
+    keywords: [consent, initialization, trigger, first, cmp]
+    code_example: |
+      GTM Setup:
+        1. Create tag: Consent Mode Default
+        2. Trigger type: Consent Initialization
+        3. Fires BEFORE all other tags
+    notes: "Use Consent Initialization trigger (NOT All Pages)"
+
+  - id: gtm_consent_v2
+    pattern_name: "Consent Mode v2 Setup"
+    keywords: [consent_mode, v2, ad_user_data, ad_personalization, gdpr]
+    code_example: |
+      Default consent state:
+        analytics_storage: denied
+        ad_storage: denied
+        ad_user_data: denied          # New in v2
+        ad_personalization: denied    # New in v2
+        wait_for_update: 500ms
+    notes: "Required for EU traffic since March 2024. 4 consent types"
+
+  - id: gtm_triggers
+    pattern_name: "GTM Trigger Types"
+    keywords: [trigger, pageview, click, form, timer, custom_event]
+    code_example: |
+      Trigger types:
+        - Page View: DOM Ready, Window Loaded
+        - Click: All Elements, Just Links
+        - User Engagement: Scroll Depth, YouTube Video, Element Visibility
+        - Other: Custom Event, History Change, Timer, JavaScript Error
+    notes: "Custom Event trigger matches dataLayer.push event name"
+
+  - id: gtm_variables
+    pattern_name: "GTM Variable Types"
+    keywords: [variable, datalayer_variable, css_selector, javascript]
+    code_example: |
+      Best practice priority:
+        1. Data Layer Variable (most reliable)
+        2. 1st Party Cookie
+        3. URL Variable
+        4. Custom JavaScript (last resort)
+        ❌ Avoid: DOM Element, CSS Selector (fragile)
+    notes: "Data Layer Variables are always preferred over DOM scraping"
+
+  - id: server_side_setup
+    pattern_name: "Server-Side GTM Setup"
+    keywords: [server_side, sgtm, stape, cloud_run, first_party]
+    code_example: |
+      Architecture:
+        Browser → Web GTM → Your Server (sgtm.yourdomain.com) → GA4/Ads/Meta
+      
+      Hosting options:
+        - Google Cloud Run (recommended by Google)
+        - Stape.io (managed, easiest)
+        - AWS/Azure (self-managed)
+      
+      DNS: CNAME sgtm.yourdomain.com → your-server
+    notes: "First-party domain = bypass ad blockers + ITP"
+
+  - id: server_side_benefits
+    pattern_name: "Server-Side Tagging Benefits"
+    keywords: [benefits, performance, privacy, accuracy, adblock]
+    code_example: |
+      Benefits:
+        ✅ Performance: fewer client-side scripts
+        ✅ Privacy: data stays first-party
+        ✅ Accuracy: bypass ad blockers (30-40% blocked)
+        ✅ Control: transform/enrich data server-side
+        ✅ Security: API keys stay server-side
+    notes: "Recommended for sites with >30% ad-blocker usage"
+
+  - id: server_data_tag
+    pattern_name: "Data Tag (Forward All Events)"
+    keywords: [data_tag, forward, ga4_to_server, transport_url]
+    code_example: |
+      // In web GTM: GA4 Configuration tag
+      gtag('config', 'G-XXX', {
+        server_container_url: 'https://sgtm.yourdomain.com'
+      });
+    notes: "Routes all GA4 events through server container"
+
+  - id: gtm_preview_debug
+    pattern_name: "GTM Preview & Debug Mode"
+    keywords: [preview, debug, tag_assistant, test]
+    code_example: |
+      Steps:
+        1. Click Preview in GTM workspace
+        2. Enter site URL → Tag Assistant opens
+        3. Verify: Tags Fired, dataLayer events, Variables
+        4. For server-side: separate Preview in server container
+    notes: "ALWAYS preview before publishing"
+
+  - id: gtm_versioning
+    pattern_name: "GTM Container Versioning"
+    keywords: [version, publish, rollback, workspace]
+    code_example: |
+      Best practices:
+        - Name versions descriptively: "v15: Add purchase tracking"
+        - Use workspaces for parallel development
+        - Review in Preview before publish
+        - Keep rollback plan (1-click revert to previous version)
+    notes: "GTM keeps full version history"
+
+  - id: naming_conventions
+    pattern_name: "GTM Naming Conventions"
+    keywords: [naming, convention, tag_name, trigger_name]
+    code_example: |
+      Tags:    [Platform] - [Type] - [Detail]
+               GA4 - Event - Purchase
+               Meta - Pixel - PageView
+      Triggers: [Type] - [Detail]
+               CE - form_submit
+               Click - CTA Button
+      Variables: [Type] - [Name]
+                DLV - transaction_id
+                URL - utm_source
+    notes: "Consistent naming = maintainable containers"
+
+  - id: lookup_table
+    pattern_name: "Lookup Table Variable"
+    keywords: [lookup_table, mapping, regex_table, variable]
+    code_example: |
+      Use case: Map page paths to categories
+        /products/*  → product_page
+        /blog/*      → blog_page
+        /checkout/*  → checkout_page
+    notes: "Avoid Custom JS when Lookup/Regex Table works"
+
+  - id: custom_templates
+    pattern_name: "GTM Custom Templates"
+    keywords: [custom_template, community_gallery, sandbox]
+    code_example: |
+      Sources:
+        - Community Template Gallery (built into GTM)
+        - Templates for: PostHog, Plausible, Umami, Meta, TikTok
+      Benefits: Sandboxed JS, auditable, shareable
+    notes: "Prefer templates over Custom HTML tags for security"
+
+  - id: cross_domain_gtm
+    pattern_name: "Cross-Domain with GTM"
+    keywords: [cross_domain, linker, auto_link, decorator]
+    code_example: |
+      GA4 Config tag → Fields to Set:
+        linker → domains: ["shop.example.com", "blog.example.com"]
+        linker → accept_incoming: true
+    notes: "For multi-domain tracking with single GA4 property"
+
+  - id: enhanced_conversions
+    pattern_name: "Enhanced Conversions (Google Ads)"
+    keywords: [enhanced_conversions, google_ads, first_party_data, hashed]
+    code_example: |
+      // Send hashed user data for better conversion matching
+      gtag('set', 'user_data', {
+        email: hashSHA256('user@example.com'),
+        phone_number: hashSHA256('+1234567890')
+      });
+    notes: "Uses SHA-256 hashed first-party data for offline matching"
+
+  - id: event_parameters
+    pattern_name: "Custom Event Parameters"
+    keywords: [event_parameter, custom_dimension, custom_metric]
+    code_example: |
+      // Custom parameters in gtag
+      gtag('event', 'cta_click', {
+        cta_text: 'Start Free Trial',
+        cta_location: 'hero',
+        cta_variant: 'green_button'
+      });
+      // Register in GA4: Admin → Custom definitions
+    notes: "Must register custom params in GA4 to appear in reports"
+
+  # === Anti-patterns ===
+  - id: anti_dom_scraping
+    pattern_name: "Anti-Pattern: DOM Scraping"
+    keywords: [anti_pattern, dom_scraping, css_selector, fragile]
+    code_example: |
+      ❌ BAD: CSS Selector Variable → .product-title
+         Breaks when: class renamed, HTML restructured
+      
+      ✅ GOOD: dataLayer.push({ product_name: 'Shoes' })
+         Stable: driven by backend data, not DOM
+    notes: "DOM scraping is the #1 cause of broken tracking"
+
+  - id: anti_no_clear
+    pattern_name: "Anti-Pattern: Stale ecommerce Data"
+    keywords: [anti_pattern, stale_data, ecommerce, clear]
+    code_example: |
+      ❌ BAD: Push new ecommerce without clearing
+      ✅ GOOD: dataLayer.push({ ecommerce: null }); before each push
+    notes: "Stale items[] array causes incorrect purchase data"
+
+  - id: anti_no_consent
+    pattern_name: "Anti-Pattern: No Consent Check"
+    keywords: [anti_pattern, consent, gdpr, fine, penalty]
+    code_example: |
+      ❌ Firing GA4/Ads tags without consent default
+      ✅ Set consent defaults BEFORE any tag loads
+      ✅ Use CMP with Consent Mode v2 integration
+    notes: "GDPR fines up to €20M or 4% annual revenue"
+
+  - id: trigger_group
+    pattern_name: "Trigger Groups"
+    keywords: [trigger_group, multiple_conditions, and_logic]
+    code_example: |
+      Use case: Fire tag only when:
+        - Page is /checkout AND
+        - Custom Event 'payment_complete' fires
+      → Create Trigger Group with both conditions
+    notes: "Trigger Groups = AND logic across multiple triggers"
+
+  - id: tag_sequencing
+    pattern_name: "Tag Sequencing"
+    keywords: [tag_sequencing, setup_tag, cleanup_tag, order]
+    code_example: |
+      Setup Tag → Main Tag → Cleanup Tag
+      Example:
+        Setup: Set dataLayer variables
+        Main: GA4 Event tag
+        Cleanup: Clear temporary variables
+    notes: "Ensures proper execution order"

@@ -1,11 +1,9 @@
 ---
-name: "pre-stop-checklist"
+name: pre-stop-checklist
 description: "5-point gate before ending any task or session. Prevents incomplete work, unsaved state, and silent failures."
-triggers:
-  - "Before claiming task is complete"
-  - "Before ending a session"
-  - "Before responding 'done' to user"
-  - "When user cancels mid-work"
+detect: []
+category: governance
+tier: 1
 ---
 
 # Pre-Stop Checklist

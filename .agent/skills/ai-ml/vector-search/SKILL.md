@@ -2,6 +2,8 @@
 name: vector-search
 description: "Vector search and embedding patterns. Use when implementing similarity search, embeddings, or vector databases."
 category: ai-ml
+detect: ["*vector*", "*pinecone*", "*chromadb*"]
+tier: 2
 ---
 
 # Vector Search & Embeddings

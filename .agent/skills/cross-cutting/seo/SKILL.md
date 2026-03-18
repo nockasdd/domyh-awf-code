@@ -2,6 +2,8 @@
 name: seo
 description: "SEO optimization patterns for web applications. Use when implementing meta tags, structured data, or performance."
 category: cross-cutting
+detect: ["*sitemap*", "*robots*", "*.meta.*"]
+tier: 1
 ---
 
 # SEO & Core Web Vitals

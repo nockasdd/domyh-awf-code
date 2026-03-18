@@ -2,6 +2,8 @@
 name: tdd-workflow
 description: "Test-Driven Development workflow patterns. Use when practicing Red-Green-Refactor methodology."
 category: cross-cutting
+detect: ["*.test.*", "*.spec.*"]
+tier: 1
 ---
 
 # Test-Driven Development (TDD)

@@ -1,7 +1,9 @@
 ---
 name: api-design
 description: "API design patterns for REST, GraphQL, and gRPC. Use when designing endpoints, versioning, pagination, rate limiting, or error responses."
+detect: ["routes/*", "controllers/*", "api/*", "openapi*", "swagger*"]
 category: core
+tier: 1
 ---
 
 # 🔗 API Design Patterns

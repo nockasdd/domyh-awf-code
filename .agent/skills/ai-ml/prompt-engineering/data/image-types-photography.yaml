@@ -1,0 +1,67 @@
+# image-types-photography.yaml — Photography Style Types (8 categories)
+# Style references for photorealistic prompts
+# Lazy-loaded when: food/architecture/fashion/landscape/street/macro/aerial/studio detected
+
+photography_style:
+  - id: food_photography
+    name: "Food Photography"
+    prompt_hints:
+      - "[dish], overhead flat lay, marble surface, natural window light, fresh ingredients"
+      - "[dish], close-up, steam rising, shallow DOF, warm golden tones, rustic table"
+      - "[dish], 45-degree angle, restaurant plating, professional food styling, bokeh"
+    aspect_ratio: "1:1 or 4:5"
+
+  - id: architecture_photography
+    name: "Architecture Photography"
+    prompt_hints:
+      - "[building], dramatic perspective, golden hour, leading lines, wide angle 14mm"
+      - "[interior], symmetrical composition, natural light from windows, minimal"
+      - "[building detail], abstract geometric pattern, high contrast, black and white"
+    aspect_ratio: "3:2 or 16:9"
+
+  - id: fashion_photography
+    name: "Fashion Photography"
+    prompt_hints:
+      - "[model], editorial fashion, studio strobe, minimal background, high fashion"
+      - "[outfit], street style, urban backdrop, candid pose, golden hour, lifestyle"
+      - "[product close-up], detail shot, texture visible, soft lighting, luxury"
+    aspect_ratio: "3:4 or 2:3"
+
+  - id: landscape_photography
+    name: "Landscape Photography"
+    prompt_hints:
+      - "[location], panoramic, golden hour, long exposure silky water, dramatic clouds"
+      - "[mountain], aerial drone 500ft, dramatic clouds, HDR, vivid"
+      - "[forest], misty morning, sunbeams through trees, depth layers, ethereal"
+    aspect_ratio: "16:9 or 2:1"
+
+  - id: street_photography
+    name: "Street Photography"
+    prompt_hints:
+      - "[city scene], black and white, candid, Leica 35mm, film grain, decisive moment"
+      - "[urban life], rain reflections, neon signs, night, cinematic, moody"
+      - "[street scene], golden hour shadows, leading lines, Henri Cartier-Bresson style"
+    aspect_ratio: "3:2"
+
+  - id: macro_photography
+    name: "Macro Photography"
+    prompt_hints:
+      - "[insect/flower], extreme close-up 1:1 macro, sharp focus, dreamy bokeh, dewdrops"
+      - "[texture/material], abstract macro, vivid colors, shallow DOF"
+    aspect_ratio: "3:2 or 1:1"
+
+  - id: aerial_drone
+    name: "Aerial/Drone Photography"
+    prompt_hints:
+      - "[location], bird's eye view, geometric patterns, vibrant, DJI Mavic style"
+      - "[landscape], top-down flat lay, minimalist composition, color contrast"
+      - "[coastline], drone shot, turquoise water, white sand, waves pattern"
+    aspect_ratio: "16:9 or 1:1"
+
+  - id: studio_product
+    name: "Studio Product Photography"
+    prompt_hints:
+      - "[product], white background, 3-point studio lighting, e-commerce, sharp"
+      - "[product], dark background, dramatic rim lighting, premium luxury, reflections"
+      - "[product], lifestyle context, soft shadows, natural materials, warm, editorial"
+    aspect_ratio: "1:1 or 4:3"

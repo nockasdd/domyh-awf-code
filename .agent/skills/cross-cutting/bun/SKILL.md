@@ -2,7 +2,7 @@
 name: bun
 description: "Bun runtime patterns for fast JavaScript/TypeScript execution. Use when working with bun.lockb or Bun projects."
 detect: ["bun.lockb", "bunfig.toml", "bun.lock"]
-category: runtime
+category: cross-cutting
 tier: 2
 ---
 
