@@ -72,6 +72,14 @@ output:
 - G2 (recommended): Skip with `/feature --no-plan-gate`
 - G3 (automated): ACs verified by test results
 
+### Lightweight Mode (XS-S tasks)
+
+For tasks estimated XS-S (< 4h), use streamlined flow:
+- **Skip Phase 2 (Design)** — no ADR needed for trivial changes
+- **Skip Phase 3 (Planning)** — go from requirements to implementation
+- **Combine Phase 5+6** — test and ship in one step
+- Triggered by: effort estimate ≤ S, or user flag `--quick`
+
 ---
 
 ## TRACEABILITY MATRIX

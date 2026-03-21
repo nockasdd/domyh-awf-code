@@ -1,5 +1,6 @@
-# Session Governance
-# Rule module for DOMYH v7.0 — teaches agents to use session governance discipline
+# Session Governance v7.2.0
+# Rule module for DOMYH — teaches agents to use session governance discipline
+# v7.2: Expanded personas to all, mode-aware Pre-Stop Checklist
 ---
 name: session-governance
 rule_id: "MOD-GOV-001"
@@ -13,12 +14,7 @@ category: "governance"
 
 context:
   always_apply: true
-  personas:
-    - Developer
-    - Architect
-    - Debugger
-    - Planner
-    - Orchestrator
+  personas: ["*"]
 
 rules:
   - id: GOV-001
@@ -74,13 +70,19 @@ rules:
     severity: warning
     when: "Before claiming 'done' or ending a session"
     action: |
-      Before ANY stop, verify 5 points:
-        1. BUILD passes (run build command)
-        2. TESTS pass (run test suite)
+      Before ANY stop, verify applicable points:
+        1. BUILD passes — only for code-change workflows (/code, /fix, /refactor, /modify)
+        2. TESTS pass — only for code-change workflows
         3. HIERARCHY updated (hsa_session({action:'track', status:'completed'}))
         4. SESSION persisted: hsa_session({action:'persist', task_summary:'...', snapshot:{...}, auto_notify:true})
            ↳ auto_notify sends notification IF HSA_TELEGRAM_TOKEN is set; silently skips if not.
         5. If HSA unavailable: manually update memory/session.md + CONTEXT_SNAPSHOT.md
+
+      Mode-aware exceptions:
+        - /think, /plan, /recap, /help, /suggest, /search, /onboard:
+          Skip BUILD and TESTS (steps 1-2). Only steps 3-5 required.
+        - /doc, /prompt:
+          Skip TESTS. BUILD check only if docs generated from code.
       Never stop without checking. Incomplete stops compound into lost work.
 
   - id: GOV-006

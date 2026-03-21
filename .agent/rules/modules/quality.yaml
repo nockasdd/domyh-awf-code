@@ -65,6 +65,10 @@ standards:
     - "Keep functions under 50 lines, classes under 300 lines"
     - "Max 3 levels of nesting — refactor deeper logic into helpers"
     - "Prefer early returns over deep if/else chains"
+    - "Separation of concerns scales with task size (see proportional-response module):"
+    - "  MICRO/SMALL (≤50 LOC): inline logic OK, no forced file separation"
+    - "  MEDIUM (50-200 LOC): separate into logical files"
+    - "  LARGE (200+ LOC): full service/controller/model pattern appropriate"
 
   error_handling:
     - "Handle errors explicitly — never silently swallow exceptions"

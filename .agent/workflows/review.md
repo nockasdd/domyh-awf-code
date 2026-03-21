@@ -119,8 +119,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'rev
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): Security-critical (auth, payments), >20 files PR
-**Suggest cascade** (complexity 5-7): Architecture review, cross-cutting changes
+**Auto-cascade** (weighted score ≥6.5): Security-critical (auth, payments), >20 files PR
+**Suggest cascade** (weighted score 4.0-6.5): Architecture review, cross-cutting changes
 
 ---
 

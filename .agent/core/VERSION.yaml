@@ -12,7 +12,7 @@
 # =============================================================================
 
 system:
-  version: "6.6.1"
+  version: "6.6.3"
   codename: "Workflow Enforcement"
   release_date: "2026-03-17"
 

@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=98+Skills+•+26+IDEs+•+44+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=100+Skills+•+26+IDEs+•+44+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -335,11 +335,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-## 🧠 Skills (98 tổng)
+## 🧠 Skills (100 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;7+Core+•+7+DevOps;24+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+98+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+10+Frameworks;8+Core+•+7+DevOps;26+Cross-cutting+•+5+Tooling+•+9+AI-ML;8+Governance+•+100+Tổng+Skills" alt="Skills" />
 </p>
 
 <table>
@@ -373,16 +373,16 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (28) + Governance (8)
+### 🔧 Core & Cross-cutting (34) + Governance (8)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
 </p>
 
 <p align="center">
-  <sub><b>Core (6):</b> Security, API Design, Error Handling, Logging, Observability, Auth</sub>
+  <sub><b>Core (8):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Skill Creator</sub>
   <br>
-  <sub><b>Cross-cutting (23):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration</sub>
+  <sub><b>Cross-cutting (26):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review</sub>
 </p>
 
 ### 🛠️ Tooling (5)
@@ -394,7 +394,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ### 🤖 AI-ML (9)
 
 <p align="center">
-  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live</sub>
+  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration</sub>
 </p>
 
 </td>
@@ -409,13 +409,13 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | :---------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Languages**     | 28       | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal                             |
 | **Frameworks**    | 10       | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
-| **Core**          | 7        | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering                                                                                                                   |
+| **Core**          | 8        | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Skill Creator                                                                                                    |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 23       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Skill Creator, Payment Integration |
+| **Cross-cutting** | 26       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review |
 | **Tooling**       | 5        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent                                                                                                                                                           |
 | **AI-ML**         | 9        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 8        | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation                                                     |
-| **Tổng**          | **98**   |                                                                                                                                                                                                                     |
+| **Tổng**          | **100**  |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -483,12 +483,12 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 100 skills chuyên biệt
+├── 🧠 skills/                # 103 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (8)     # Security, API Design, Auth...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (26)   # Testing, Database, Playwright...
+│   ├── cross-cutting/ (29)   # Testing, Database, Copywriting, C4...
 │   ├── tooling/      (5)     # MCP, API Protocols, IDE Extension...
 │   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (8)     # Drift Prevention, Session Governance...

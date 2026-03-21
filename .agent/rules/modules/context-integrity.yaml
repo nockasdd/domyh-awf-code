@@ -1,5 +1,5 @@
 # Context Integrity
-# Rule module for DOMYH v7.0 — preserves context coherence across long sessions
+# Rule module for DOMYH v7.2 — preserves context coherence across long sessions
 ---
 name: context-integrity
 rule_id: "MOD-CTX-001"
@@ -53,17 +53,25 @@ rules:
       3. Anchors and hierarchy persist in session-state.json automatically
 
   - id: CTX-005
-    name: "Context-First Gate"
+    name: "Verifiable Context Gate"
     severity: warning
     description: |
-      Before ANY implementation, pass through the context gate:
-      1. Check anchors: hsa_session(include_anchors: true)
-      2. Read files: hsa_search for relevant code
-      3. DRY check: search for existing similar code
-      4. Load skills: hsa_search for patterns
-      5. Verify intent: ensure hsa_session is active
-      Never write code without reading existing code first.
-      See skill: governance/context-first-gatekeeping for full protocol.
+      Before ANY code implementation, pass through verifiable context gate.
+      Each step produces visible output — agent cannot silently skip.
+
+      Step 1 ANCHORS: hsa_session(include_anchors: true)
+        → List anchors found. If 0 and not first session → proceed with caution
+      Step 2 SEARCH: hsa_search(query: '{task description}')
+        → Must find ≥1 relevant file. If 0 results → widen query before proceeding
+      Step 3 DRY: hsa_search(query: '{function/component name}')
+        → Log result: "DRY: clear" or "DRY: found similar at {file}:{line}"
+      Step 4 SKILLS: hsa_search(action: 'skills', query: '{task domain}')
+        → List matched skills. At least 1 should match
+      Step 5 INTENT: Verify hsa_session intent is declared
+        → If no active intent → declare one before proceeding
+
+      On gate fail (steps 1-5 insufficient): ask user for context before coding.
+      See also: read-before-write module for per-file enforcement.
 
   - id: CTX-006
     name: "Cross-Session Bridge"
@@ -82,3 +90,4 @@ integration:
   related_modules:
     - session-governance
     - drift-prevention
+    - read-before-write

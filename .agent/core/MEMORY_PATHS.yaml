@@ -17,6 +17,7 @@ paths:
   session:
     notes: memory/session.md
     context_snapshot: memory/CONTEXT_SNAPSHOT.md # Cold-start restore
+    project_plan: memory/project_plan.md        # P0-P6 plan persistence
 
   # Layer 3: State Memory
   state:
@@ -70,6 +71,33 @@ logs:
   cleanup: memory/cleanup_log.json
   metrics: memory/metrics.json
   consolidation: memory/consolidation_log.json
+
+# =============================================================================
+# STATE OWNERSHIP (v7.3 — clarifies who reads/writes what)
+# =============================================================================
+
+ownership:
+  critical_runtime:  # Agent MUST read on session start
+    - path: "memory/CONTEXT_SNAPSHOT.md"
+      owner: "hsa_session(persist) OR auto-shutdown fallback"
+      read_when: "Session start (cold-start recovery)"
+    - path: "memory/session.md"
+      owner: "hsa_session(persist)"
+      read_when: "Session start (last 5 entries)"
+    - path: "memory/state.json"
+      owner: "hsa_detect(stack) + agent preferences"
+      read_when: "Session start (project context)"
+
+  hsa_managed:  # HSA engine owns — agent reads via tools only
+    - path: ".agent/hsa/session-state.json"
+      owner: "HSA engine exclusively"
+      agent_access: "Read via hsa_session/hsa_report tools"
+
+  deprecated:
+    - path: "memory/decisions.md"
+      status: "Use hsa_session anchors (category: decision) instead"
+    - path: "memory/session_rules.json"
+      note: "Still functional but rarely used. Managed by SESSION_001-002."
 
 # =============================================================================
 # USAGE (How other files reference this)

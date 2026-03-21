@@ -13,7 +13,7 @@ success_criteria: "all sub-tasks completed, outputs synthesized, conflicts resol
 
 ## 🔄 ORCHESTRATE FLOW (8 Steps)
 
-1. **STEP 0: SCORE (Auto-Detection)** — Evaluate H1-H5 (`complexity-scoring`). Score < 5 → route to single persona (EXIT). Score 5-7 → suggest orchestration. Score ≥ 8 or `/orchestrate` → proceed.
+1. **STEP 0: SCORE (Auto-Detection)** — Evaluate H1-H5 (`complexity-scoring`). Weighted score < 4.0 → route to single persona (EXIT). Score 4.0-6.5 → suggest orchestration. Score ≥ 6.5 or `/orchestrate` → proceed.
 2. **STEP 1: INIT STATE** — `hsa_detect` (context), `hsa_session` (governance). Create `orchestration-state.yaml`. 
 3. **STEP 2: DECOMPOSE** — Break into sub-tasks (DAG). `hsa_search` + `hsa_explore` for structure. Identify parallel groups.
 4. **STEP 3: ASSIGN (Speaker Selection)** — Match tasks to specialist personas. `hsa_delegate` (context packet) + `hsa_delegate` per specialist. Define scope, constraints, deliverables.
@@ -35,7 +35,7 @@ success_criteria: "all sub-tasks completed, outputs synthesized, conflicts resol
 | `/orchestrate resume`    | Resume from checkpoint            |
 | `/orchestrate checkpoint`| Manual checkpoint save            |
 | `/orchestrate --visual`  | Show DAG visualization            |
-| *(auto-activated)*       | Score ≥ 8 from complexity-scoring |
+| *(auto-activated)*       | Weighted score ≥ 6.5 from complexity-scoring |
 
 ---
 

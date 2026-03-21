@@ -58,6 +58,18 @@ rules:
     severity: high
     desc: "Use manual mapping or reflective loading. Avoid CreateRemoteThread for production."
 
+  GDS_009_dllmain_safety:
+    name: "DllMain Loader-Lock Safety"
+    severity: critical
+    desc: |
+      DllMain runs under Win32 loader lock. NEVER call inside DllMain:
+      - CreateThread — deadlocks waiting for loader lock release
+      - LoadLibrary/FreeLibrary — recursive loader lock
+      - CoInitializeEx — COM init requires DLL loading
+      - Any blocking I/O or synchronization waiting on other threads
+      SAFE: Set flags, DisableThreadLibraryCalls, signal events
+      Pattern: DllMain → set flag → separate init thread checks flag
+
 integration:
   tier: 4
   related_modules: ["quality", "cpp-single-binary-build"]

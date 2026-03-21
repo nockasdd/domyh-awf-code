@@ -1,78 +1,139 @@
 ---
 description: "❓ Show all available commands, usage examples, and language settings"
 skills: { required: [], contextual: [] }
-success_criteria: "All commands listed with correct descriptions"
+success_criteria: "All 44 commands listed with correct descriptions"
 ---
 
 # ❓ /help — Command Reference
 
-> 📋 See `core/COMMANDS.md` for full registry with skill requirements
+> 📋 44 Commands • 100 Skills • 26 IDEs
+
+---
+
+## 🚀 Start Here — 5 Essential Commands
+
+> New to DOMYH? Start with these 5 commands. Everything else is optional.
+
+| Command     | What It Does                | Example                    |
+| ----------- | --------------------------- | -------------------------- |
+| `/help`     | ❓ You're here — see all commands | `/help`               |
+| `/code`     | 💻 Write or fix code        | `/code add login form`     |
+| `/fix`      | ⚡ Quick-fix errors (<60s)  | `/fix build error`         |
+| `/test`     | ✅ Run & write tests         | `/test`                    |
+| `/suggest`  | ➡️ Smart next-step hints     | `/suggest`                 |
+
+---
+
+## 📚 Learning Path
+
+```
+Day 1:  /help → /code → /fix → /test → /suggest
+Day 7:  + /plan → /think → /review → /refactor → /debug
+Day 30: + /ap → /deploy → /orchestrate → /skill-create → /workflow
+```
 
 ---
 
 ## Quick Reference
 
-### Development
+### 💻 Development (12 commands)
 
-| Command              | Description             | Example                   |
-| -------------------- | ----------------------- | ------------------------- |
-| `/code [task]`       | 💻 Write & fix code     | `/code add login form`    |
-| `/debug [error]`     | 🐛 Systematic debugging | `/debug timeout error`    |
-| `/test`              | ✅ Run & write tests    | `/test write UserService` |
-| `/refactor [target]` | 🔧 Code refactoring     | `/refactor extract utils` |
-| `/fix [error]`       | ⚡ Quick-fix (<60s)     | `/fix build error`        |
-| `/dev`               | ▶️ Start dev server     | `/dev`                    |
-| `/git [cmd]`         | 🔀 Git operations       | `/git commit`             |
+| Command              | Description                 | Example                        |
+| -------------------- | --------------------------- | ------------------------------ |
+| `/code [task]`       | 💻 Write & fix code         | `/code add login form`         |
+| `/fix [error]`       | ⚡ Quick-fix (<60s)         | `/fix build error`             |
+| `/debug [error]`     | 🐛 Systematic debugging     | `/debug timeout error`         |
+| `/modify [target]`   | 🔄 Detect + analyze + fix   | `/modify auth module`          |
+| `/refactor [target]` | 🔧 Code refactoring         | `/refactor extract utils`      |
+| `/clean [scope]`     | 🧹 Remove dead code/imports | `/clean src/utils/`            |
+| `/init [project]`    | ✨ Create new project        | `/init REST API with Go`       |
+| `/scaffold [pattern]`| 🏗️ From project patterns    | `/scaffold crud Product`       |
+| `/generate [type]`   | 🏗️ Code generation          | `/generate api Users`          |
+| `/dev`               | ▶️ Start dev server          | `/dev`                         |
+| `/git [cmd]`         | 🔀 Git operations            | `/git commit`                  |
+| `/revert [target]`   | ⏪ Rollback changes          | `/revert last`                 |
 
-### Planning & Design
+### 📋 Planning & Thinking (4 commands)
 
-| Command             | Description          | Example                |
-| ------------------- | -------------------- | ---------------------- |
-| `/plan [feature]`   | 📋 Feature planning  | `/plan shopping cart`  |
-| `/feature [name]`   | 🏗️ Feature lifecycle | `/feature jwt-auth`    |
-| `/think [topic]`    | 💡 Brainstorming     | `/think architecture`  |
-| `/visualize [page]` | 🖼️ UI/UX mockups     | `/visualize dashboard` |
+| Command             | Description              | Example                    |
+| ------------------- | ------------------------ | -------------------------- |
+| `/plan [feature]`   | 📋 Feature planning      | `/plan shopping cart`      |
+| `/think [topic]`    | 💡 Deep reasoning (6 methods) | `/think architecture` |
+| `/prompt [task]`    | ✍️ Create AI prompts     | `/prompt system prompt`    |
+| `/visualize [page]` | 🖼️ UI/UX mockups         | `/visualize dashboard`     |
 
-### Quality & Ops
+### ✅ Quality & Testing (6 commands)
 
-| Command    | Description              | Example           |
-| ---------- | ------------------------ | ----------------- |
-| `/ap`      | 🔬 Full 12-expert audit  | `/ap`             |
-| `/review`  | 👀 Code review           | `/review pr #123` |
-| `/perf`    | ⚡ Performance profiling | `/perf cpu`       |
-| `/deploy`  | 🚀 Deploy to production  | `/deploy staging` |
-| `/monitor` | 📡 Observability setup   | `/monitor logs`   |
+| Command            | Description                    | Example              |
+| ------------------ | ------------------------------ | -------------------- |
+| `/test`            | ✅ Run & write tests            | `/test UserService`  |
+| `/tdd [feature]`   | 🔴🟢 Test-Driven Development   | `/tdd payment flow`  |
+| `/e2e [scenario]`  | 🎭 End-to-End tests            | `/e2e checkout flow`  |
+| `/ap`              | 🔬 Full 12-expert audit        | `/ap`                |
+| `/review`          | 👀 Code review (5 categories)  | `/review pr #123`    |
+| `/verify`          | ✔️ Build-Lint-Test loop         | `/verify`            |
 
-### Generation & Scaffold
+### ⚙️ DevOps & Security (7 commands)
 
-| Command                   | Description              | Example                  |
-| ------------------------- | ------------------------ | ------------------------ |
-| `/generate [type] [name]` | 🏗️ Code generation       | `/generate api Users`    |
-| `/scaffold [pattern]`     | 🏗️ From project patterns | `/scaffold crud Product` |
-| `/doc`                    | 📚 Documentation         | `/doc api`               |
+| Command          | Description                   | Example               |
+| ---------------- | ----------------------------- | --------------------- |
+| `/deploy`        | 🚀 Deploy to production       | `/deploy staging`     |
+| `/security`      | 🔒 OWASP scan & remediation   | `/security scan`      |
+| `/monitor`       | 📡 Observability setup        | `/monitor logs`       |
+| `/env`           | 🔐 Environment config         | `/env scan`           |
+| `/migrate`       | 🗃️ Database migrations        | `/migrate add column` |
+| `/upgrade`       | 📦 Update dependencies        | `/upgrade`            |
+| `/perf`          | ⚡ Performance profiling      | `/perf cpu`           |
 
-### Management
+### 🧰 Management & System (9 commands)
 
-| Command    | Description           | Example        |
-| ---------- | --------------------- | -------------- |
-| `/status`  | 📊 Project health     | `/status`      |
-| `/doctor`  | 🩺 Environment check  | `/doctor`      |
-| `/recap`   | 📖 Session summary    | `/recap`       |
-| `/upgrade` | 📦 Update deps        | `/upgrade`     |
-| `/env`     | 🔐 Environment config | `/env scan`    |
-| `/revert`  | ⏪ Rollback changes   | `/revert last` |
+| Command          | Description                    | Example                  |
+| ---------------- | ------------------------------ | ------------------------ |
+| `/status`        | 📊 Project health              | `/status`                |
+| `/doctor`        | 🩺 Environment check           | `/doctor`                |
+| `/onboard`       | 📦 Project discovery            | `/onboard`               |
+| `/recap`         | 📖 Session summary             | `/recap`                 |
+| `/save`          | 💾 Save session state           | `/save`                  |
+| `/suggest`       | ➡️ Smart next-step hints        | `/suggest`               |
+| `/search`        | 🔍 Semantic search memory       | `/search auth patterns`  |
+| `/doc`           | 📚 Generate documentation       | `/doc api`               |
+| `/help`          | ❓ This command reference       | `/help`                  |
+
+### 🔗 Advanced & Meta (6 commands)
+
+| Command          | Description                        | Example                   |
+| ---------------- | ---------------------------------- | ------------------------- |
+| `/orchestrate`   | 🎯 Multi-agent coordination        | `/orchestrate refactor + test` |
+| `/workflow`      | 🔄 Discover & chain workflows      | `/workflow list`          |
+| `/skill-create`  | 🔨 Create/improve skills           | `/skill-create`           |
+| `/sync-version`  | 🔄 Sync version across files       | `/sync-version`           |
+| `/lang`          | 🌐 Switch language (EN ↔ VI)       | `/lang vi`                |
+| `/feature`       | 🏗️ Feature lifecycle               | `/feature jwt-auth`       |
+
+---
+
+## 🔗 Workflow Chains
+
+```
+🆕 New Feature:    /plan → /code → /test → /review → /deploy
+🐛 Bug Fix:        /debug → /fix → /test → /deploy
+🔍 Quality Gate:   /ap → /refactor → /test → /review
+🚀 Release:        /status → /sync-version → /test → /deploy
+📦 New Team Member: /onboard → /status → /dev → /help
+```
 
 ---
 
 ## 💡 Tips
 
 - Commands auto-detect your tech stack
-- Use `/help [command]` for details
-- `/status` shows project health at a glance
-- `/recap` summarizes your session
+- Use `/help [command]` for details on any command
+- `/suggest` recommends your next action based on context
+- `/onboard domyh` shows DOMYH capabilities for your stack
 
 ### Having Issues?
 
-1. `/debug` with error message
-2. `/status` for project health
-3. `/recap` to see context
+1. `/fix` with error message (quick)
+2. `/debug` for systematic diagnosis
+3. `/doctor` for environment issues
+4. `/status` for project health

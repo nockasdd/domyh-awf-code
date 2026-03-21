@@ -33,8 +33,21 @@ success_criteria: "Feature implemented, build passes, tests written"
    - If user iterates → update via `css_edits` (instant) or file writes (HMR reload)
    - `hsa_canvas({action:"close"})` when approved
    - **Fallback**: If Canvas unavailable, use `browser_subagent` directly
-3. **EXECUTE** — Write code following skill patterns, error handling + types, add tests (auto test loop). Show progress: `[Step 2/4] Creating auth middleware...`
-4. **VERIFY** — Run tests → Fix → Repeat (max 3), lint check. Agent re-reads ALL generated code:
+3. **PRE-IMPLEMENTATION CHECK** (Hard Gate) — Before writing code:
+   <HARD-GATE>
+   - [ ] Requirements understood? (linked to /plan output or user request)
+   - [ ] Tests planned? (TDD or test-after strategy decided)
+   - [ ] Edge cases identified? (empty/null/boundary/concurrent)
+   - [ ] Security implications reviewed? (input validation, auth, secrets)
+   - [ ] Breaking changes assessed? (API contracts, DB schema)
+   ⛔ Missing items = address before coding. Show: `Pre-check: 5/5 ✅`
+   </HARD-GATE>
+4. **EXECUTE** — Follow **Canonical Code Write Protocol** (AGENT_BEHAVIOR.md):
+    LOCATE → UNDERSTAND → SIZE → WRITE → VERIFY
+    SIZE classification from `proportional-response.yaml` determines output scope.
+    Write code following skill patterns, error handling + types, add tests (auto test loop).
+    Show progress: `[Step 2/4] Creating auth middleware...`
+5. **VERIFY** — Run tests → Fix → Repeat (max 3), lint check. Agent re-reads ALL generated code:
    - [ ] Matches original intent?
    - [ ] Edge cases handled?
    - [ ] No hardcoded values or magic numbers?
@@ -177,8 +190,20 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'cod
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): >200 LOC, multi-file feature, complex algorithm
-**Suggest cascade** (complexity 5-7): >100 LOC, moderate multi-file changes
+**Auto-cascade** (weighted score ≥6.5): >200 LOC, multi-file feature, complex algorithm
+**Suggest cascade** (weighted score 4.0-6.5): >100 LOC, moderate multi-file changes
+
+---
+
+## 📜 RULES APPLIED
+
+| Phase   | Rules                                                          |
+|---------|----------------------------------------------------------------|
+| Detect  | `perf-001`, `complexity-scoring`                               |
+| Plan    | `proportional-response`, `stop-conditions`                     |
+| Execute | `proportional-response`, `read-before-write`, `edit-verification` |
+| Verify  | `edit-verification` (mandatory), `quality`                     |
+| Sync    | `session-governance`, `memory-checkpoints`                     |
 
 ---
 

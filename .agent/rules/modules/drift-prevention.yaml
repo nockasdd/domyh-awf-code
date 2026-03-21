@@ -1,31 +1,36 @@
-# Drift Prevention
-# Rule module for DOMYH v7.0 — enforces periodic alignment checks
+# Drift Prevention v7.2.0
+# Rule module for DOMYH — enforces event-based alignment checks
+# v7.2: Replaced counter-based triggers with event-based, expanded personas
 ---
 name: drift-prevention
 rule_id: "MOD-DRF-001"
 
 description: |
-  Prevent agent drift by enforcing periodic alignment checks.
+  Prevent agent drift by enforcing event-based alignment checks.
   Triggers warnings when actions diverge from declared intent.
 
 category: "governance"
 
 context:
-  always_apply: false
-  personas:
-    - Developer
-    - Debugger
-  trigger: "Every 10 tool calls or on scope change"
+  always_apply: true
+  personas: ["*"]
+  trigger: "On scope-change events (see DRF-001 event list)"
 
 rules:
   - id: DRF-001
     name: "Scope Guard"
     severity: warning
     description: |
-      Before editing files outside the declared scope:
-      1. Call hsa_session with current_action describing the edit
+      Trigger on these events (replaces "every 10 tool calls"):
+        - first_file_write: "Is this file in declared scope?"
+        - new_file_creation: "Is creating this file part of the plan?"
+        - error_in_unrelated_file: "Is debugging this error within scope?"
+        - dependency_addition: "Is new dependency justified? Search utils first"
+      For each event:
+      1. Evaluate: does this action align with declared intent?
       2. If drift detected, evaluate necessity
-      3. Either update intent or refocus on declared goals
+      3. If justified → update intent via hsa_session
+      4. If not justified → refocus on declared goals
 
   - id: DRF-002
     name: "Goal Alignment"
@@ -42,7 +47,7 @@ rules:
     description: |
       Ensure behavior matches declared mode:
       - plan_driven: follow structured plan, track progress meticulously
-      - exploration: allow flexibility but still check drift periodically
+      - exploration: allow flexibility but still check drift on file writes
       - bugfix: stay focused on the specific bug, avoid feature creep
       - refactor: limit scope to refactoring, avoid adding new features
 
@@ -70,6 +75,10 @@ rules:
         1. List all hypotheses ranked by likelihood
         2. For each: test, record evidence, verdict (confirmed/rejected)
         3. Save confirmed root cause as anchor
+      ENFORCEMENT: Do NOT re-try an approach already marked REJECTED.
+      After 2 failed attempts on same approach:
+        → MUST try fundamentally different strategy
+        → Save rejected approaches as anchor for cross-session memory
       This prevents circular debugging and preserves investigation progress
       across context compaction.
 

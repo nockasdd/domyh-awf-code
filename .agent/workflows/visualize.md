@@ -353,8 +353,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'bro
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): Multi-platform (web+mobile+desktop), design system migration
-**Suggest cascade** (complexity 5-7): VRT for >10 components, complex layout
+**Auto-cascade** (weighted score ≥6.5): Multi-platform (web+mobile+desktop), design system migration
+**Suggest cascade** (weighted score 4.0-6.5): VRT for >10 components, complex layout
 
 ---
 

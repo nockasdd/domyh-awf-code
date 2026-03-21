@@ -1,6 +1,7 @@
-# Complexity Scoring Engine v7.1.0
+# Complexity Scoring Engine v7.2.0
 # Auto-detect task complexity for orchestration activation
 # Source: LangGraph conditional routing, CrewAI Flows, Anthropic orchestrator analysis
+# v7.2: Weighted + Normalized scoring (replaces additive sum)
 ---
 name: complexity-scoring
 rule_id: "MOD-CMP-001"
@@ -8,7 +9,7 @@ rule_id: "MOD-CMP-001"
 description: |
   Auto-detect multi-agent orchestration need by scoring task complexity.
   Evaluated BEFORE persona routing on every user message.
-  Score ≥ 8 → auto-activate Orchestrator. Score 5-7 → suggest. Score < 5 → normal routing.
+  Score ≥ 6.5 → auto-activate Orchestrator. Score 4-6.5 → suggest. Score < 4 → normal routing.
 
 category: "workflow"
 
@@ -20,6 +21,14 @@ context:
 # ═══ SCORING HEURISTICS ═══
 
 scoring:
+  # v7.2: Weighted scoring — each heuristic normalized to 0-10, then weighted
+  weights:
+    H1_domain: 0.30      # Most important signal
+    H2_subtask: 0.15     # Secondary
+    H3_file_scope: 0.20  # Important
+    H4_cross_persona: 0.20  # Reduced from implicit ~0.25
+    H5_keywords: 0.15    # Least important
+
   heuristics:
 
     # H1: Domain Count — How many technical domains does the task touch?
@@ -34,10 +43,10 @@ scoring:
         data: ["migration", "seed", "schema", "database", "orm", "backup", "restore"]
         documentation: ["doc", "readme", "api-doc", "changelog", "comment"]
       scoring:
-        1_domain: 0
-        2_domains: 2
-        3_domains: 5
-        4_plus: 8
+        1_domain: 0    # normalized 0/10
+        2_domains: 3   # normalized 3/10
+        3_domains: 7   # normalized 7/10
+        4_plus: 10     # normalized 10/10
 
     # H2: Sub-task Detection — How many implicit sub-tasks?
     subtask_count:
@@ -47,10 +56,10 @@ scoring:
         list_patterns: ["1.", "2.", "3.", "- ", "* ", "firstly", "secondly", "thứ nhất", "thứ hai"]
         multi_verb: ["implement AND test", "build AND deploy", "fix AND verify", "create AND document"]
       scoring:
-        1_subtask: 0
-        2_subtasks: 1
-        3_subtasks: 3
-        5_plus: 6
+        1_subtask: 0   # normalized 0/10
+        2_subtasks: 2  # normalized 2/10
+        3_subtasks: 5  # normalized 5/10
+        5_plus: 10     # normalized 10/10
 
     # H3: File Scope — Estimated number of files to be changed
     file_scope:
@@ -60,9 +69,9 @@ scoring:
         refactor_broad: ["refactor all", "across", "toàn bộ", "tất cả", "entire", "whole"]
         single_fix: ["fix", "sửa", "update", "cập nhật", "tweak", "adjust"]
       scoring:
-        1_3_files: 0
-        4_7_files: 2
-        8_plus_files: 5
+        1_3_files: 0   # normalized 0/10
+        4_7_files: 4   # normalized 4/10
+        8_plus_files: 10  # normalized 10/10
 
     # H4: Cross-Persona Need — Does task need multiple specialist personas?
     cross_persona:
@@ -74,9 +83,9 @@ scoring:
         plan_plus_implement: ["design.*implement", "thiết kế.*triển khai", "plan.*build"]
         full_stack: ["full.?stack", "frontend.*backend", "client.*server"]
       scoring:
-        0_cross: 0
-        1_cross: 3
-        2_plus_cross: 6
+        0_cross: 0     # normalized 0/10
+        1_cross: 5     # normalized 5/10
+        2_plus_cross: 10  # normalized 10/10
 
     # H5: Complexity Keywords — Explicit complexity signals
     complexity_keywords:
@@ -84,28 +93,28 @@ scoring:
       high: ["complex", "phức tạp", "full-stack", "end-to-end", "from scratch", "complete system", "toàn diện"]
       medium: ["multiple", "several", "nhiều", "across", "integrate", "coordinate", "phối hợp"]
       scoring:
-        high_keyword: 5
-        medium_keyword: 2
+        high_keyword: 10  # normalized 10/10
+        medium_keyword: 4 # normalized 4/10
 
 # ═══ THRESHOLDS ═══
 
 thresholds:
   single_agent:
-    max: 4
-    description: "Normal single-agent workflow"
+    max: 4.0
+    description: "Weighted score 0-4.0 → normal single-agent workflow"
     action: "Route via ROUTER persona_routing (command_triggers + intent_triggers)"
 
   consider_orchestration:
-    min: 5
-    max: 7
-    description: "Suggest orchestration, don't force"
+    min: 4.0
+    max: 6.5
+    description: "Weighted score 4.0-6.5 → suggest orchestration"
     action: |
       Suggest to user: "Task này có thể cần phối hợp nhiều specialist.
       Bạn muốn dùng orchestration mode không?"
 
   auto_orchestrate:
-    min: 8
-    description: "Auto-activate orchestration"
+    min: 6.5
+    description: "Weighted score 6.5+ → auto-activate orchestration"
     action: |
       1. Switch to Orchestrator persona
       2. Execute orchestrate.md workflow (INIT → DECOMPOSE → ASSIGN → PLAN ⛔)
@@ -127,13 +136,13 @@ cascade_triggers:
     
     # Condition 1: Complexity-based (uses existing H1-H5 scores)
     by_complexity:
-      score_below_5:
+      score_below_4:
         action: "No cascade — handle directly"
-      score_5_7:
+      score_4_6_5:
         action: |
           SUGGEST cascade to user: "Task này có thể benefit từ model chuyên biệt.
           Dùng cascade để delegate? (task_type: [matched_type])"
-      score_8_plus:
+      score_6_5_plus:
         action: |
           AUTO-cascade for primary task_type if user has cascade enabled.
           Use workflow_to_task_type mapping from agent-delegation.yaml.
@@ -162,12 +171,12 @@ cascade_triggers:
 evaluation_flow:
   steps:
     1: "Parse user message text"
-    2: "Score H1 (domain_count) — scan for domain keywords"
-    3: "Score H2 (subtask_count) — detect conjunctions, lists, multi-verb"
-    4: "Score H3 (file_scope) — estimate files from scope signals"
-    5: "Score H4 (cross_persona) — match cross-domain patterns"
-    6: "Score H5 (complexity_keywords) — check explicit keywords"
-    7: "Sum total = H1 + H2 + H3 + H4 + H5"
+    2: "Score H1 (domain_count) — scan for domain keywords → normalize to 0-10"
+    3: "Score H2 (subtask_count) — detect conjunctions, lists, multi-verb → normalize"
+    4: "Score H3 (file_scope) — estimate files from scope signals → normalize"
+    5: "Score H4 (cross_persona) — match cross-domain patterns → normalize"
+    6: "Score H5 (complexity_keywords) — check explicit keywords → normalize"
+    7: "Weighted total = (H1×0.30) + (H2×0.15) + (H3×0.20) + (H4×0.20) + (H5×0.15)"
     8: "Apply threshold → single_agent | consider | auto_orchestrate"
     9: "Apply cascade_triggers → no_cascade | suggest | auto_cascade"
 
@@ -177,21 +186,21 @@ examples:
   score_low:
     message: "Fix the button color on login page"
     scores: { H1: 0, H2: 0, H3: 0, H4: 0, H5: 0 }
-    total: 0
+    weighted: 0.0
     decision: "single_agent → developer persona → /code workflow"
     cascade: "no_cascade"
 
   score_medium:
     message: "Build auth module and write tests for it"
-    scores: { H1: 2, H2: 1, H3: 2, H4: 3, H5: 0 }
-    total: 8
-    decision: "auto_orchestrate → Orchestrator persona"
-    cascade: "auto_cascade → task_type:'code'"
+    scores: { H1: 3, H2: 2, H3: 4, H4: 5, H5: 0 }
+    weighted: "(3×0.30)+(2×0.15)+(4×0.20)+(5×0.20)+(0×0.15) = 0.9+0.3+0.8+1.0+0 = 3.0"
+    decision: "single_agent → developer persona (was incorrectly 8 → auto in v7.1)"
+    cascade: "no_cascade"
 
   score_high:
     message: "Build complete auth system: API endpoints, database models, frontend UI, tests, and deploy"
-    scores: { H1: 8, H2: 6, H3: 5, H4: 6, H5: 5 }
-    total: 30
+    scores: { H1: 10, H2: 10, H3: 10, H4: 10, H5: 10 }
+    weighted: "(10×0.30)+(10×0.15)+(10×0.20)+(10×0.20)+(10×0.15) = 10.0"
     decision: "auto_orchestrate → Orchestrator persona → full DAG"
     cascade: "auto_cascade → task_type:'code' for each sub-task"
 

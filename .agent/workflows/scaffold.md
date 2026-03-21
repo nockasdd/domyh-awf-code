@@ -80,6 +80,10 @@ pattern_scan:
 | Express | `src/controllers/{name}.controller.ts` | `src/services/{name}.service.ts`      | —                                      | `src/models/{name}.model.ts` | —                      |
 | Python  | `src/api/{name}_router.py`             | `src/services/{name}_service.py`      | —                                      | `src/models/{name}.py`       | `tests/test_{name}.py` |
 
+> ⚠️ **Proportional Response**: For MICRO/SMALL tasks (≤50 LOC), generate ONLY the
+> primary file (e.g., handler). Skip service/repository layers unless explicitly needed.
+> See `rules/modules/proportional-response.yaml` for sizing rules.
+
 ### Mobile
 
 | Stack        | screen                           | widget/component                 | state                               | model                    |

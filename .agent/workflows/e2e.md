@@ -125,8 +125,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'tes
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): Multi-page flow (checkout, onboarding), >10 E2E tests
-**Suggest cascade** (complexity 5-7): Comprehensive E2E suite, cross-browser testing
+**Auto-cascade** (weighted score ≥6.5): Multi-page flow (checkout, onboarding), >10 E2E tests
+**Suggest cascade** (weighted score 4.0-6.5): Comprehensive E2E suite, cross-browser testing
 
 ---
 

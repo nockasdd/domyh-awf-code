@@ -16,7 +16,8 @@ success_criteria: "Error resolved, build passes, no regressions"
 1. **DETECT** (5s) — `hsa_session("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect`), load context (`hsa_search`), locate file + line, read surrounding code, classify fix category
    - **UI FIX DETECTED?** → `hsa_design({action:'analyze', scope:'component', paths:[affected_file]})` → understand design context before fixing
    - **VISUAL FIX?** (layout/color/style changes) → generate before/after `.preview/{fix}.html` → open with `browser_subagent` → screenshot comparison → confirm with user
-2. **EXECUTE** (30s) — Apply targeted fix, minimal changes only, preserve existing behavior
+2. **EXECUTE** (30s) — Follow **Canonical Code Write Protocol** (LOCATE→UNDERSTAND→SIZE→WRITE→VERIFY).
+    Apply targeted fix, minimal changes only, preserve existing behavior.
 3. **VERIFY** (15s) — Build/syntax check, run affected tests. **If UI fix**: `hsa_design({action:'health'})` → verify design Grade stable. → If FAIL: retry (max 2) → If still FAIL: escalate to `/debug`
 4. **SYNC** — `hsa_check_changes` to update index after edits
 
@@ -121,8 +122,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'deb
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): Fix after 2 retry failures, multi-file fix >3 files
-**Suggest cascade** (complexity 5-7): Deep analysis needed, cross-module fix
+**Auto-cascade** (weighted score ≥6.5): Fix after 2 retry failures, multi-file fix >3 files
+**Suggest cascade** (weighted score 4.0-6.5): Deep analysis needed, cross-module fix
 
 ---
 

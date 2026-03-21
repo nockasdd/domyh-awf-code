@@ -21,6 +21,7 @@ commits:
     - "Description in imperative mood: 'Add feature' not 'Added feature'"
     - "Max 72 chars for first line"
     - "Reference issue/ticket in body when applicable"
+    - "Incremental commits — DO NOT batch >5 file changes into one commit. Each logical change (1 bug fix, 1 feature) = 1 commit. Refactor separate from feature work."
 
 # --- BRANCHING ---
 

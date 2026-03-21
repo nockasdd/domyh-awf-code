@@ -22,10 +22,14 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
      - IF empty directory → proceed normally
    - Infer stack from keywords
    - **Complexity Scoring** — Evaluate via `complexity-scoring.yaml` (H1-H5):
-     - Score < 5 → Developer persona, standard flow
-     - Score 5-7 → Suggest orchestration to user
-     - Score ≥ 8 (multi-stack/system) → Auto-activate Orchestrator persona
-   - **Runtime Validation** — Verify minimum versions (Node ≥ 20, Go ≥ 1.22, Python ≥ 3.12, Rust ≥ 1.80, etc.)
+      - Weighted score < 4.0 → Developer persona, standard flow
+      - Weighted score 4.0-6.5 → Suggest orchestration to user
+      - Weighted score ≥ 6.5 (multi-stack/system) → Auto-activate Orchestrator persona
+    - **Architecture Sizing** (from `proportional-response.yaml`):
+      - Score < 4.0 → **SKIP Architecture Gate** → use flat/simple structure
+      - Score 4.0-6.5 → Present 2-3 lightweight architecture options
+      - Score ≥ 6.5 → Full Architecture Selection Gate with ADR
+    - **Runtime Validation** — Verify minimum versions (Node ≥ 20, Go ≥ 1.22, Python ≥ 3.12, Rust ≥ 1.80, etc.)
    - **MCP**: `hsa_detect`, `hsa_detect`, `hsa_session("init project {name}")`
 
 2. **ARCHITECTURE SELECTION** (Gate ⛔)
@@ -42,9 +46,11 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
    - → ⛔ STOP: User confirms architecture + directory structure before scaffold
 
 3. **SCAFFOLD** — Run init commands, create folder structure, generate base files
-   - Apply architecture-specific structure from Step 2
-   - Generate ADR-001: `docs/adr/001-architecture-decision.md` (chosen pattern + reasoning)
-   - **MCP**: `hsa_session("scaffold completed")`
+    - Apply architecture-specific structure from Step 2
+    - **VALIDATE PACKAGES**: For each core dependency:
+      `hsa_research({action:'pkg', package_name:'...'})` → check latest version, deprecated status
+    - Generate ADR-001: `docs/adr/001-architecture-decision.md` (chosen pattern + reasoning)
+    - **MCP**: `hsa_session("scaffold completed")`
 
 4. **SETUP** — Setup linting/formatting, git hooks, create .env.example
    - Load naming conventions: `hsa_search("naming conventions {language}")`
@@ -56,10 +62,12 @@ success_criteria: "Project scaffolded, build passes, P0-P6 plan generated"
    - **MCP**: `hsa_check_changes`, `hsa_feedback` on key files, `hsa_session("project: {name}, stack: {stack}, arch: {pattern}")`
 
 6. **PLAN + UAT** — Generate P0-P6 implementation plan with acceptance criteria
-   - Map each phase to workflow command (see LIFECYCLE HANDOFF)
-   - Generate quality checklist (SOLID/DRY/KISS/YAGNI/12-Factor)
-   - Show next recommended command
-   - **MCP**: `hsa_session("P0-P6 plan generated")`
+    - Map each phase to workflow command (see LIFECYCLE HANDOFF)
+    - Generate quality checklist (SOLID/DRY/KISS/YAGNI/12-Factor)
+    - **PERSIST PLAN**: Save P0-P6 plan to `memory/project_plan.md`
+      (anchor: `hsa_session({action:'anchor', content:'P0-P6: [phases]', category:'decision'})`)
+    - Show next recommended command
+    - **MCP**: `hsa_session("P0-P6 plan generated")`
 
 ---
 
@@ -225,7 +233,7 @@ After `/init` completes, suggest the next workflow based on the P0-P6 plan:
 ### Multi-Project (Monorepo)
 
 If user requests multiple stacks (e.g., "Go backend + Next.js frontend"):
-1. → Auto-activate **Orchestrator** persona (complexity ≥ 8)
+1. → Auto-activate **Orchestrator** persona (weighted score ≥ 6.5)
 2. → Create monorepo structure (turborepo/nx/pnpm)
 3. → Run `/init` for each package sequentially
 4. → Wire shared configs (tsconfig, eslint, docker-compose)
@@ -238,6 +246,18 @@ If user requests multiple stacks (e.g., "Go backend + Next.js frontend"):
 | Before /init | After /init |
 |-------------|-------------|
 | — (fresh project) | `/env` → `/dev` → `/scaffold` → `/code` → `/feature` → `/test` → `/deploy` |
+
+---
+
+## 📜 RULES APPLIED
+
+| Phase     | Rules                                                    |
+|-----------|----------------------------------------------------------|
+| Detect    | `perf-001`, `complexity-scoring`                         |
+| Architect | `proportional-response`, `quality`                       |
+| Scaffold  | `read-before-write`, `edit-verification`                 |
+| Setup     | `quality`, `yagni`                                       |
+| Plan      | `proportional-response` (plan tiers), `session-governance` |
 
 ---
 

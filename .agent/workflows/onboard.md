@@ -28,10 +28,53 @@ success_criteria: "architecture mapped, getting-started guide generated, report 
 | ----------------------- | ------------------------- | ----------------------------- |
 | `/onboard`              | Full project discovery    | Architecture diagram + guide  |
 | `/onboard quick`        | 2-minute overview         | Stack + key files + setup     |
+| `/onboard domyh`        | DOMYH capabilities tour   | Skills + workflows + tools    |
 | `/onboard architecture` | Architecture diagram only | Mermaid diagram               |
 | `/onboard deps`         | Dependency analysis       | Dep graph + outdated check    |
 | `/onboard conventions`  | Coding conventions        | Detected patterns + rules     |
 | `/onboard share`        | Export onboard guide      | Markdown doc for team sharing |
+
+---
+
+## 🧠 DOMYH DISCOVERY (`/onboard domyh`)
+
+> Introduces DOMYH ecosystem capabilities — focused on what the agent CAN DO, not the project itself.
+
+### Flow
+
+1. **DETECT** — `hsa_detect(action="stack")` to identify project tech stack
+2. **MATCH** — `hsa_search(action="skills", query=detected_stack)` to find relevant skills
+3. **PRESENT** — Show matched skills, top workflows, and available tools
+
+### Output Format
+
+```
+🧠 DOMYH CAPABILITIES — Your Stack: [TypeScript + React]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 Skills for Your Stack: 12 matched
+  • typescript (language patterns)
+  • react (component + hooks)
+  • authentication (370+ patterns)
+  • security (290+ patterns)
+  • testing (unit + integration)
+  + 7 more cross-cutting skills
+
+🔧 Top Workflows for You:
+  1. /code  — Write & fix code
+  2. /fix   — Quick-fix errors (<60s)
+  3. /test  — Run & write tests
+  4. /suggest — Smart next steps
+
+🛠️ HSA Tools Available: 16
+  • hsa_search — Code search (BM25 + Vector)
+  • hsa_explore — Project map (PageRank)
+  • hsa_trace_flow — Dependency tracing
+  • hsa_delegate — Cross-model cascade
+  + 12 more tools
+
+💡 Start with: /help → /code → /suggest
+```
 
 ---
 

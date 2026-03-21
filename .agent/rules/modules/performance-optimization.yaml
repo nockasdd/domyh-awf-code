@@ -1,4 +1,5 @@
-# Performance Optimization Rule
+# Performance Optimization Rule v7.2.0
+# v7.2: Added mode-aware token allocation profiles
 ---
 name: performance-optimization
 rule_id: "MOD-PERF-001"
@@ -33,11 +34,34 @@ context_management:
 # --- TOKEN BUDGET ---
 
 token_budget:
-  system_prompt: "10%"
-  skill_loading: "15%"
-  code_context: "40%"
-  reasoning: "25%"
-  output: "10%"
+  # Default allocation (backward-compatible)
+  default:
+    system_prompt: "10%"
+    skill_loading: "15%"
+    code_context: "40%"
+    reasoning: "25%"
+    output: "10%"
+
+  # v7.2: Mode-aware profiles — auto-select based on active workflow
+  profiles:
+    exploration:  # /think, /plan, /onboard, /suggest
+      system_prompt: "8%"
+      skill_loading: "10%"
+      code_context: "25%"
+      reasoning: "45%"   # More reasoning for exploration
+      output: "12%"
+    precision:    # /code, /fix, /debug, /refactor, /modify
+      system_prompt: "10%"
+      skill_loading: "20%"  # More skill patterns needed
+      code_context: "40%"
+      reasoning: "22%"
+      output: "8%"
+    audit:        # /ap, /review, /security
+      system_prompt: "10%"
+      skill_loading: "25%"  # More skills for comprehensive review
+      code_context: "35%"
+      reasoning: "22%"
+      output: "8%"
 
 # --- EFFICIENT TOOL USAGE ---
 
@@ -51,4 +75,4 @@ tool_efficiency:
 
 integration:
   tier: 2
-  related_modules: ["yagni", "stop-conditions"]
+  related_modules: ["yagni", "stop-conditions", "response-precision"]

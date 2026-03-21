@@ -122,10 +122,10 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
   
   <requirement id="MCP_004" tier="2" severity="warn">
     <text>Auto-detect multi-agent orchestration need:
-    Before routing to a single persona, evaluate task complexity using rules/modules/complexity-scoring.yaml heuristics (H1-H5).
-    If complexity score ≥ 8: auto-activate Orchestrator persona and execute orchestrate.md workflow.
-    If complexity score 5-7: suggest orchestration mode to user.
-    If complexity score &lt; 5: route normally via persona_routing.
+    Before routing to a single persona, evaluate task complexity using rules/modules/complexity-scoring.yaml weighted heuristics (H1-H5).
+    If weighted score ≥ 6.5: auto-activate Orchestrator persona and execute orchestrate.md workflow.
+    If weighted score 4.0-6.5: suggest orchestration mode to user.
+    If weighted score &lt; 4.0: route normally via persona_routing.
     This evaluation happens BEFORE persona selection, not after.</text>
     <rationale>Complex tasks routed to single personas produce fragmented results. Auto-detection ensures orchestration activates when needed, even without explicit /orchestrate command. Research shows multi-agent coordination improves output quality by 90% for complex tasks (Anthropic 2025).</rationale>
     <config>
@@ -140,10 +140,10 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     Before executing workflow main logic, evaluate cascade suitability:
     1. Check complexity score (rules/modules/complexity-scoring.yaml cascade_triggers)
     2. Check workflow-specific triggers (security→always suggest, debug L3→auto)
-    3. Check scope triggers (>100 LOC, >5 files, multi-language)
+    3. Check scope triggers (&gt;100 LOC, &gt;5 files, multi-language)
     If ANY trigger condition met AND cascade enabled:
-    - Score 5-7: SUGGEST cascade to user with matched task_type
-    - Score 8+: AUTO-cascade primary sub-task
+    - Weighted score 4.0-6.5: SUGGEST cascade to user with matched task_type
+    - Weighted score 6.5+: AUTO-cascade primary sub-task
     - Workflow-specific: Follow workflow cascade_triggers rules
     Agent retains final decision — cascade is SUGGESTED not FORCED.</text>
     <rationale>Without evaluation checkpoint, agents never proactively consider cascade even when user has configured specialized models. This bridges the gap between "cascade available" and "cascade actually used".</rationale>

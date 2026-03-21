@@ -116,6 +116,29 @@ During PHASE 0 (Interview) and PHASE 3 (Design):
 
 ---
 
+## 🔒 UNDERSTANDING LOCK (Hard Gate — Before Design)
+
+<HARD-GATE>
+Before PHASE 3 (Design), MUST present understanding summary and get explicit confirmation:
+
+1. Summarize understanding in 5-7 bullets:
+   - Goal: [what we're building]
+   - Users: [who uses it]
+   - Constraints: [tech, time, budget]
+   - Scope IN: [what's included]
+   - Scope OUT: [what's explicitly excluded]
+   - Dependencies: [what it needs to work]
+   - Success criteria: [how we know it's done]
+
+2. Ask: **"Is this understanding correct? Anything to add/change?"**
+
+3. Only proceed to Design after explicit **"confirmed"** or equivalent.
+
+⛔ Skip = restart Phase 0. Designing without confirmed understanding = wasted effort.
+</HARD-GATE>
+
+---
+
 ## SCOPE CHECK
 
 If the spec covers multiple independent subsystems → suggest breaking into separate plans — one per subsystem. Each plan should produce working, testable software on its own.

@@ -16,7 +16,9 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests, trace dependencies via `hsa_trace_flow(entry_point, direction:'both')` for impact analysis
 2. **BASELINE** — Run tests, record passing state
 3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
-4. **EXECUTE** — Apply refactoring (one commit per change) → ⛔ STOP if tests fail at any point
+4. **EXECUTE** — Apply refactoring (one commit per change).
+    Use `proportional-response.yaml` SIZE classification to scope output.
+    → ⛔ STOP if tests fail at any point
 5. **VERIFY** — Re-run tests, validate behavior unchanged
 6. **SYNC** — `hsa_check_changes` to update index, `hsa_feedback` on key refactored files
 
@@ -173,8 +175,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'cod
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): >5 files, >200 LOC, pattern migration
-**Suggest cascade** (complexity 5-7): Design system migration, cross-module refactor
+**Auto-cascade** (weighted score ≥6.5): >5 files, >200 LOC, pattern migration
+**Suggest cascade** (weighted score 4.0-6.5): Design system migration, cross-module refactor
 
 ---
 

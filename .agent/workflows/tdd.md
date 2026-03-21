@@ -159,8 +159,8 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'tes
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 → repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (complexity ≥8): >3 TDD cycles, domain-specific testing
-**Suggest cascade** (complexity 5-7): Complex feature requiring specialized model
+**Auto-cascade** (weighted score ≥6.5): >3 TDD cycles, domain-specific testing
+**Suggest cascade** (weighted score 4.0-6.5): Complex feature requiring specialized model
 
 ---
 

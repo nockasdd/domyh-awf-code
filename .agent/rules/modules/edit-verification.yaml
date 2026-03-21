@@ -1,10 +1,12 @@
-# Edit Verification Rule
+# Edit Verification Rule v7.3.0
+# v7.3: Upgraded severity to warning, added mandatory gates for code workflows
 ---
 name: edit-verification
 rule_id: "MOD-EDV-001"
 
 description: "Mandatory verification after code edits to prevent silent failures."
 category: "verification"
+severity: warning
 
 context:
   always_apply: true
@@ -14,9 +16,12 @@ context:
 
 principles:
   verify_after_edit:
-    - "Display diff evidence (file path, lines added/removed, status)"
-    - "Run syntax check after editing (use hsa_detect for correct command)"
-    - "Run related tests if they exist"
+    severity: warning
+    mandatory_for: ["/code", "/fix", "/modify", "/refactor", "/generate"]
+    steps:
+      - "Display diff evidence (file path, lines added/removed, status)"
+      - "Run syntax check after editing (use hsa_detect for correct command)"
+      - "Run related tests if they exist"
 
   scope_containment:
     - "Edit only files mentioned in the request or their direct dependencies"
@@ -58,4 +63,4 @@ patch_rules:
 
 integration:
   tier: 2
-  related_modules: ["stop-conditions"]
+  related_modules: ["stop-conditions", "read-before-write", "proportional-response"]
