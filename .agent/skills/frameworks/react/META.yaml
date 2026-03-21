@@ -24,8 +24,6 @@ patterns:
     core: 6
     server: 5
 
-    - search_react_patterns
-    - get_react_hook
 
 triggers:
   file_patterns:

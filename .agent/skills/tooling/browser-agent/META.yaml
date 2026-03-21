@@ -6,13 +6,6 @@ priority: 1
 
 desc: "AI browser agent verification patterns: 5-phase comprehensive testing flow, interactive element discovery, systematic interaction testing, evidence-based reporting. Forces agents to test ALL interactive elements (dropdowns, modals, buttons, hover) not just surface-level checks."
 
-  ### Data Files (5 domains, ~40 patterns)
-  - verification-flow.yaml: 5-phase comprehensive testing flow (5)
-  - subagent-patterns.yaml: Task templates for browser_subagent tool (5)
-  - element-discovery.yaml: Element categorization from accessibility tree (15)
-  - recording-patterns.yaml: WebP video recording best practices (6)
-  - reporting-patterns.yaml: Evidence-based reporting templates (4)
-
 triggers:
   file_patterns: []
   keywords:

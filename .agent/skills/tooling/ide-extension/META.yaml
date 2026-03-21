@@ -6,11 +6,6 @@ priority: 2
 
 desc: "Multi-IDE extension development. VS Code (Extension Host, Contribution Points, LSP, DAP), JetBrains (IntelliJ Plugin SDK, PSI), Neovim (Lua API, lazy.nvim). Cross-platform patterns."
 
-  ### Data Files (3 domains, ~21 patterns)
-  - vscode-patterns.yaml: Extension Host, contribution points, webview (8)
-  - lsp-patterns.yaml: Language Server Protocol, diagnostics, code actions (7)
-  - jetbrains-patterns.yaml: Plugin SDK, PSI, remote dev (6)
-
 triggers:
   file_patterns:
     # VS Code

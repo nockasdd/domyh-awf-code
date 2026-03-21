@@ -24,8 +24,6 @@ patterns:
     core: 5
     platform: 5
 
-    - search_rn_patterns
-    - get_rn_component
 
 triggers:
   file_patterns:

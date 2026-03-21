@@ -24,8 +24,6 @@ patterns:
     core: 6
     server: 5
 
-    - search_nuxt_patterns
-    - get_nuxt_composable
 
 triggers:
   file_patterns:

@@ -24,8 +24,6 @@ patterns:
     core: 6
     advanced: 5
 
-    - search_vue_patterns
-    - get_vue_composable
 
 triggers:
   file_patterns:

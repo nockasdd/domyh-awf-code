@@ -6,11 +6,6 @@ priority: 4
 
 desc: "Modern API protocols: GraphQL (federation, schema design, security), tRPC (end-to-end TypeScript), gRPC (high-performance polyglot). Complements core/api-design."
 
-  ### Data Files (3 domains, ~24 patterns)
-  - graphql-patterns.yaml: schema design, federation, security, performance (10)
-  - trpc-patterns.yaml: router, monorepo, Next.js integration (7)
-  - grpc-patterns.yaml: proto design, streaming, channel management (7)
-
 triggers:
   file_patterns:
     # GraphQL

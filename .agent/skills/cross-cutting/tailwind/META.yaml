@@ -26,10 +26,10 @@ triggers:
     - container query
     # Variants
     - utility class
-    - dark:
+    - "dark:"
     - responsive
     - not-*
-    - starting:
+    - "starting:"
   intents:
     - tailwind styling
     - utility classes

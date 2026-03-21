@@ -12,9 +12,9 @@
 # =============================================================================
 
 system:
-  version: "6.6.3"
+  version: "6.6.4"
   codename: "Workflow Enforcement"
-  release_date: "2026-03-17"
+  release_date: "2026-03-21"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"

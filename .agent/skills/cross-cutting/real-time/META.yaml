@@ -6,11 +6,6 @@ priority: 6
 
 desc: "Real-time communication patterns: WebSocket (full-duplex), Socket.IO (rooms/namespaces), SSE (server-push). Covers scaling, auth, reconnection, and LLM streaming."
 
-  ### Data Files (3 domains, ~21 patterns)
-  - websocket-patterns.yaml: connection, reconnect, auth, scaling (7)
-  - sse-patterns.yaml: event format, LLM streaming, NGINX config (7)
-  - socketio-patterns.yaml: rooms, namespaces, Redis adapter (7)
-
 triggers:
   file_patterns:
     - "**/ws/**"

@@ -24,8 +24,6 @@ patterns:
     runes: 6
     sveltekit: 6
 
-    - search_svelte_patterns
-    - get_svelte_component
 
 triggers:
   file_patterns:

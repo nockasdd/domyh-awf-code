@@ -4,6 +4,8 @@ tier: 3
 
 desc: "Systems programming patterns for Rust 2024 Edition (1.85). Async closures, thiserror/anyhow, Axum 0.8, Tower, SQLx."
 
+triggers:
+  file_patterns:
     - "Cargo.toml"
     - "*.rs"
     - "Cargo.lock"

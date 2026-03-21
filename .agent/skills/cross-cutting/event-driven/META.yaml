@@ -6,11 +6,6 @@ priority: 7
 
 desc: "Event-driven architecture patterns: message queues (Kafka, RabbitMQ, NATS), pub/sub, event sourcing, CQRS, saga pattern. Covers production patterns like DLQ, idempotency, and schema evolution."
 
-  ### Data Files (3 domains, ~24 patterns)
-  - eda-patterns.yaml: pub/sub, event sourcing, CQRS, saga (8)
-  - broker-comparison.yaml: Kafka vs RabbitMQ vs NATS feature matrix (8)
-  - production-patterns.yaml: DLQ, idempotency, schema evolution (8)
-
 triggers:
   file_patterns:
     # Kafka

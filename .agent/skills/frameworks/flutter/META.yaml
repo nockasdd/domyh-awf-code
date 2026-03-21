@@ -26,8 +26,6 @@ patterns:
     state: 4
     platform: 6
 
-    - search_flutter_patterns
-    - get_flutter_widget
 
 triggers:
   file_patterns:

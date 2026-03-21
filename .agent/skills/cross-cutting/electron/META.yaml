@@ -6,17 +6,6 @@ priority: 2
 
 desc: "Cross-platform desktop framework for Electron 33-40. Covers context isolation, IPC, security, auto-updates, testing, and native integrations."
 
-  ### Data Files (9 domains, 45 patterns)
-  - security.yaml: contextBridge, CSP, sandbox, fuses (8)
-  - ipc.yaml: invoke/handle, send/on, MessagePort (6)
-  - window.yaml: BrowserWindow, BrowserView, frameless (6)
-  - build.yaml: electron-vite, forge, builder (6)
-  - updates.yaml: autoUpdater, code signing, notarization (5)
-  - storage.yaml: better-sqlite3, electron-store, safeStorage (5)
-  - native.yaml: Tray, globalShortcut, powerMonitor (7)
-  - testing.yaml: Playwright, Vitest, WebDriver (4)
-  - crash.yaml: crashReporter, Sentry, electron-log (4)
-
 triggers:
   file_patterns:
     # Core
@@ -167,7 +156,7 @@ caps:
 
 # HSA Adapter Integration
 hsa:
-    functions:
+  functions:
     - search_electron_patterns
     - get_electron_api
   pattern_count: 40

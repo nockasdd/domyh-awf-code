@@ -26,8 +26,6 @@ patterns:
     server: 4
     performance: 5
 
-    - search_angular_patterns
-    - get_angular_component
 
 triggers:
   file_patterns:

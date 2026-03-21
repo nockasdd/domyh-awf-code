@@ -26,8 +26,6 @@ patterns:
     caching: 5
     server: 5
 
-    - search_nextjs_patterns
-    - get_nextjs_route
 
 triggers:
   file_patterns:

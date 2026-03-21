@@ -6,11 +6,6 @@ priority: 5
 
 desc: "Tauri 2.0 desktop & mobile app development. Rust core, system WebView, capability-based security, IPC bridge, plugin system, and cross-platform bundling."
 
-  ### Data Files (3 domains, ~21 patterns)
-  - security.yaml: capability permissions, IPC safety, CSP (7)
-  - plugins.yaml: official + custom plugin patterns (7)
-  - build.yaml: bundler config, cross-compilation, CI/CD (7)
-
 triggers:
   file_patterns:
     - "tauri.conf.json"

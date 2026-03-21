@@ -6,11 +6,6 @@ priority: 1
 
 desc: "MCP server & client development. JSON-RPC 2.0, transport (stdio/Streamable HTTP), tool/resource/prompt primitives, OAuth 2.1, and production patterns."
 
-  ### Data Files (3 domains, ~24 patterns)
-  - transport-patterns.yaml: stdio vs Streamable HTTP, config (8)
-  - tool-design.yaml: stateless tools, pagination, error handling (8)
-  - security.yaml: OAuth 2.1 flows, input validation, rate limiting (8)
-
 triggers:
   file_patterns:
     # Config

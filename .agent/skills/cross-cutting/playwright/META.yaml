@@ -6,14 +6,6 @@ priority: 2
 
 desc: "Playwright browser automation: MCP tools (19), E2E testing, AI agents (Planner/Generator/Healer), comprehensive UI interaction checklist (58 checkpoints), accessibility snapshots, Page Object Model."
 
-  ### Data Files (6 domains, ~80 patterns)
-  - mcp-tools.yaml: 19 MCP tool definitions — navigation, interaction, observation (19)
-  - interaction-checklist.yaml: 58 mandatory checkpoints — dropdown, modal, button, hover (58)
-  - locator-patterns.yaml: Priority-ordered locator strategies (5)
-  - config-templates.yaml: CI/local/mobile/visual regression configs (4)
-  - ai-agents.yaml: Planner/Generator/Healer workflow patterns (3)
-  - open-source-tools.yaml: Browser automation ecosystem reference (8)
-
 triggers:
   file_patterns:
     - "playwright.config.*"

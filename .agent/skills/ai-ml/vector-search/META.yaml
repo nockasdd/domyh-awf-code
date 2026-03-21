@@ -6,11 +6,6 @@ priority: 2
 
 desc: "Vector databases & semantic search. Embeddings, similarity search, hybrid search (vector + BM25), indexing strategies, and production patterns."
 
-  ### Data Files (3 domains, ~21 patterns)
-  - vector-dbs.yaml: comparison table, features, pricing (7)
-  - embedding-models.yaml: model comparison, dimensions, perf (7)
-  - search-patterns.yaml: hybrid search, filtering, reranking (7)
-
 triggers:
   file_patterns:
     - "**/embeddings/**"
