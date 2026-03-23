@@ -15,6 +15,7 @@ success_criteria: "Deployed, health checks pass, monitoring stable for 15min"
 
 ---
 
+${RULES_DEPLOY}
 ## DEPLOYMENT FLOW
 
 1. **PRE-FLIGHT** (Auto) — `hsa_session("deploy to {environment}")`, detect stack via HSA (`hsa_detect`), verify environment (`hsa_detect`), load deploy context (`hsa_search`). Run pre-flight checklist:

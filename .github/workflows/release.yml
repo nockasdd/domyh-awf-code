@@ -7,7 +7,47 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .agent/ configs/
+          config_data: |
+            extends: relaxed
+            rules:
+              line-length:
+                max: 200
+              truthy: disable
+
+      - name: Validate public agent content
+        run: node scripts/validate-agent-public.mjs
+
+      - name: Check version consistency
+        run: |
+          version=$(grep -m1 'version:' .agent/core/VERSION.yaml | grep -oP '\d+\.\d+\.\d+')
+          echo "SSoT version: $version"
+          errors=0
+          for f in IDE_COMPATIBILITY.md; do
+            if ! grep -q "$version" "$f"; then
+              echo "❌ Version mismatch in $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then exit 1; fi
+          echo "✅ Version consistent across checked release files"
+
   release:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -5,135 +5,109 @@ related_workflows: [review, security, test, verify, fix]
 success_criteria: "Audit report generated with score and P0-P3 findings"
 ---
 
-# 🔬 /ap — Audit Pro 
+# 🔬 /ap — Audit Pro
 
-> 12-Expert Panel Audit (5 Core + 7 Conditional) • 277 Checkpoints • 16 Files
-> 📊 ISO 25010 • CWE Top 25 • OWASP Top 10 • WCAG 2.2 • GDPR • SRE
+> 12-Expert Panel (5 Core + 7 Conditional) • 277 Checkpoints • 16 Files
+> 📊 ISO 25010:2023 • CWE Top 25 • OWASP Top 10 • WCAG 2.2 • GDPR • SRE
 > 📁 Data: `.agent/skills/cross-cutting/audit-pro/data/checklists/` (per-expert YAML)
-> 🧠 SCoT Reasoning • Cross-Expert Critique • Smart Skill Loading
 
 ---
 
-## AUDIT FLOW (10 Steps)
+## ⛔ RULES (Always Apply)
 
-1. **DISCOVERY** (Auto 30s)
-   - `hsa_session("audit project")`
-   - `hsa_detect(stack)` → languages, frameworks, **project type** (web/desktop/CLI/library/MCP/mobile)
-   - `hsa_explore(snapshot)` → count files, structure
-   - **Diff-aware**: `git diff --name-only HEAD~5..HEAD` if recent commits
-   - **Auto-activate** conditional experts based on detected project type
+| # | Rule | Category |
+|:--|:-----|:---------|
+| R1 | All findings MUST have `file:line` evidence | Quality |
+| R2 | Counter-argument MANDATORY for every FAIL verdict | Fairness |
+| R3 | ⛔ STOP at step 3 — user MUST select scope before execute | Safety |
+| R4 | Max total token budget: 40K (core 30K + conditional 10K) | Efficiency |
+| R5 | If expert panel exceeds 8K tokens → compress + move on | Efficiency |
+| R6 | P0/P1 findings MUST go through Critique Round — never skip | Quality |
+| R7 | Negative probe every PASS on P0/P1 checkpoint: "What would make this FAIL?" | Bias Mitigation |
 
-2. **SMART LOAD** (Token-Optimized, ~3000 tok vs 8000)
+---
+
+## AUDIT FLOW (11 Steps)
+
+1. **DISCOVERY** (30s)
+   - `hsa_session("audit project")`, `hsa_detect(stack)` → languages, frameworks, project type
+   - `hsa_explore(snapshot)` → file count, structure
+   - `git diff --name-only HEAD~5..HEAD` → diff-aware if recent commits
+   - Load previous audit from `.domyh/audits/` → extract score + unresolved findings
+   - Auto-activate conditional experts based on detected project type
+
+2. **RISK ASSESSMENT** (NEW — 30s heuristic scan)
+   ```yaml
+   inputs: [project_type, file_count, dep_count, git_history, complexity_hotspots]
+   output:
+     hot_zones: ["auth/", "api/", "config/"]  # High-risk — full SCoT
+     warm_zones: ["services/", "models/"]      # Medium — standard SCoT
+     cold_zones: ["docs/", "scripts/", "test/"] # Low — lightweight SCoT
+     risk_score: X/10
+   impact: "EXECUTE prioritizes hot_zones first, applies SCoT tiering"
+   ```
+
+3. **SMART LOAD** (Token-Optimized, ~3000 tok)
    - Load ONLY active expert checklists from `data/checklists/{expert}.yaml`
    - Load supplementary checklists if detected (desktop/CLI/library/MCP)
-   - `hsa_search(skills, expert.keywords)` → load skill patterns per expert
-   - Load `scoring.yaml` for weight profiles
-   - **Auto-select weight profile** based on detection:
-     ```
-     electron/tauri deps  → desktop_app profile
-     commander/yargs/clap → cli_tool profile
-     publishConfig/exports → library_sdk profile
-     react-native/flutter → mobile_app profile
-     @modelcontextprotocol → mcp_plugin profile
-     has_ai deps          → ai_ml_focus profile
-     default              → default profile
-     ```
-   - **Fallback** (if HSA unavailable): read SKILL.md directly, search via grep
+   - `hsa_search(skills, expert.keywords)` → skill patterns per expert
+   - Auto-select weight profile from `scoring.yaml`:
+     `electron/tauri → desktop_app` | `commander/clap → cli_tool` | `publishConfig → library_sdk`
+     `react-native/flutter → mobile_app` | `@modelcontextprotocol → mcp_plugin` | `default`
 
-3. **SCOPE CONTRACT** — Display scope options (1-10) → ⛔ **STOP** wait for user
-   - Show **active experts** + **supplementary checklists** detected
-   - Show **auto-selected weight profile** based on project type
-   - Show **previous audit score** if available
+4. **SCOPE CONTRACT** — Display scope (1-10) → ⛔ **STOP** wait for user
+   - Show: active experts, supplementary checklists, weight profile, previous score, risk zones
 
-4. **EXECUTE** — Run Expert Panels with **SCoT Reasoning Protocol**:
-   ```
-   PER CHECKPOINT:
-   1. LOCATE → hsa_search for relevant code
-   2. UNDERSTAND → What does this code do?
-   3. ASSESS → Does it meet the standard?
-   4. EVIDENCE → file:line reference
-   5. IMPACT → What could go wrong? (P0-P3)
-   6. COUNTER → Why might this be acceptable? (Devil's advocate)
-   7. VERDICT → PASS | FAIL | N/A (confidence 1-10)
-   ```
-   Show **progress**: `[Panel 2/8] Architecture — Checkpoint 12/20`
-   
-   **⚡ Context Window Optimization (prevents "lost-in-the-middle"):**
-   - **Chunked execution**: Run 1 expert panel at a time, NOT all simultaneously
-   - **Intermediate summary**: After each expert, compress results to compact format:
-     ```
-     [Security] Score: 8.2 | P0: 1 | P1: 3 | P2: 2 | Key: JWT expiration missing (SEC-001)
-     ```
-   - **Position engineering**: Place current expert's checklist in TAIL (high attention)
-   - **Unload previous**: After summarizing expert, unload their checklist items
-   - **Token ceiling**: If cumulative findings > 5000 tokens, compress older findings to 1-line summaries
+5. **EXECUTE** — Run Expert Panels with **SCoT Tiering**:
 
-5. **CRITIQUE ROUND** (Cross-Expert Challenge)
-   - Only for P0 + P1 findings (skip P2/P3 to save tokens)
-   - Security ↔ Architecture: "Could arch issues create security vulns?"
-   - Architecture ↔ Security: "Are security measures over-engineered for this context?"
-   - Performance ↔ Quality: "Do quality improvements hurt perf?"
-   - Quality ↔ Performance: "Are perf optimizations maintainable?"
-   - DevOps ↔ Security: "Are deployment practices secure? Are secrets properly managed?"
+   **SCoT Tiering** (based on Risk Assessment zones):
+   | Zone | SCoT Level | Steps | Example |
+   |:-----|:-----------|:------|:--------|
+   | Hot (P0/P1 risk) | Full 7-step | LOCATE→UNDERSTAND→ASSESS→EVIDENCE→IMPACT→COUNTER→VERDICT | Auth, secrets |
+   | Warm (P2 risk) | Standard 5-step | LOCATE→UNDERSTAND→ASSESS→EVIDENCE→VERDICT | Business logic |
+   | Cold (P3 risk) | Lightweight 3-step | LOCATE→ASSESS→VERDICT | Docs, scripts |
+
+   **Context Window Optimization:**
+   - Chunked: 1 expert panel at a time, NOT simultaneous
+   - Intermediate summary after each expert: `[Security] Score: 8.2 | P0:1 P1:3 P2:2 | Key: ...`
+   - Position engineering: current checklist in TAIL (high attention zone)
+   - Token ceiling: cumulative findings >5000 tok → compress older to 1-line
+   - **Budget**: If approaching 40K → skip P2/P3, complete P0/P1 only → suggest `/ap --resume`
+
+   Show progress: `[Panel 2/8] Architecture — Checkpoint 12/20`
+
+6. **CRITIQUE ROUND** (P0/P1 only)
+   - Security ↔ Architecture | Performance ↔ Quality | DevOps ↔ Security
    - Each critique: AGREE | DISPUTE (reason) | ELEVATE | LOWER
-   - **Counter-argument required**: Each expert MUST use their `counter_argument_guide`
+   - Counter-argument REQUIRED per expert's `counter_argument_guide`
 
-6. **HOLISTIC SYNTHESIS** (NEW — Project-Level Assessment)
-   > This step prevents "checklist blindness" — passing all checkpoints but missing systemic issues.
-   
-   After all experts complete, agent asks **5 holistic questions**:
-   ```
-   Q1. ARCHITECTURE COHERENCE: "Do all components fit together logically?
-       Or are there design contradictions between modules?"
-   Q2. RISK SURFACE: "What is the single biggest risk to this project?
-       Not from a checklist — from holistic observation."
-   Q3. TEAM CAPABILITY: "Based on code quality variance across files,
-       are there capability gaps? (junior vs senior patterns)"
-   Q4. TECHNICAL DEBT TRAJECTORY: "Is debt increasing or decreasing?
-       Evidence: TODO count, complexity trends, test coverage direction."
-   Q5. PRODUCTION READINESS: "If deployed tomorrow at 10x current load,
-       what breaks first? What is the weakest link?"
-   ```
-   Each answer must include:
-   - **Evidence** (file:line or metric)
-   - **Severity** (Systemic-Critical / Systemic-Warning / Observation)
-   - **Counter-argument** (why it might be acceptable)
+7. **HOLISTIC SYNTHESIS** (5 project-level questions)
+   > Prevents "checklist blindness" — passing all checkpoints but missing systemic issues.
 
-7. **DEBATE ROUND** (NEW — Expert Panel Discussion)
-   > All experts "discuss" the holistic findings. This catches tensions and tradeoffs.
-   
-   ```yaml
-   debate_protocol:
-     trigger: "After holistic synthesis, if Systemic-Critical found"
-     format:
-       - Moderator (agent) presents each systemic finding
-       - Each relevant expert responds:
-           FOR: "This is a real problem because..."
-           AGAINST: "This is acceptable because..."
-           CONDITION: "This is fine IF [condition], dangerous IF [condition]"
-       - Moderator synthesizes: CONFIRMED | DOWNGRADED | CONDITIONAL
-     
-     example:
-       finding: "Systemic: No rate limiting on any API endpoint"
-       security_says: "FOR — this is critical, allows DoS"
-       architecture_says: "CONDITION — fine for internal microservice, critical for public API"
-       performance_says: "FOR — will cause cascading failures under load"
-       devops_says: "AGAINST — reverse proxy handles rate limiting externally"
-       verdict: "CONDITIONAL — verify reverse proxy config exists, if yes → P2, if no → P0"
-   ```
+   | # | Question | Focus |
+   |:--|:---------|:------|
+   | Q1 | Architecture Coherence | Design contradictions between modules? |
+   | Q2 | Risk Surface | Single biggest risk (from observation, not checklist)? |
+   | Q3 | Team Capability | Code quality variance → capability gaps? |
+   | Q4 | Tech Debt Trajectory | Increasing or decreasing? (TODOs, complexity, coverage) |
+   | Q5 | Production Readiness | At 10x load, what breaks first? |
 
-8. **SELF-REVIEW** — Re-read findings, remove duplicates, verify evidence
-   - Check: "Were disputed findings resolved?"
-   - Check: "Are there contradictions between experts?"
-   - Check: "Do holistic findings align with individual findings?"
-   - Assign final confidence (1-10) per finding
+   Each answer: Evidence (file:line) + Severity (Systemic-Critical/Warning/Observation) + Counter-argument
 
-9. **REPORT** — Score (0-10), findings by P0/P1/P2/P3, delta vs previous
-   - Include **Holistic Assessment** section (from step 6)
-   - Include **Debate Summary** (from step 7, if triggered)
-   - Save to `.domyh/audits/audit_YYYY-MM-DD.md`
+8. **DEBATE ROUND** (conditional)
+   - Trigger: Systemic-Critical found OR ≥3 Systemic-Warning
+   - Each expert responds: FOR | AGAINST | CONDITION
+   - Moderator synthesizes: CONFIRMED | DOWNGRADED | CONDITIONAL
 
-10. **MEMORY PERSIST** — `hsa_session(persist)`, update `audit_summary.json`
+9. **SELF-REVIEW** — Deduplicate, verify evidence, resolve disputes, assign final confidence (1-10)
+
+   > ⚠️ **ERROR RECOVERY**: If interrupted → save to `.domyh/audits/audit_PARTIAL_YYYY-MM-DD.md` → `/ap --resume`
+
+10. **REPORT** — Score (0-10), P0/P1/P2/P3 findings, delta vs previous
+    - Include: Holistic Assessment, Debate Summary (if triggered), Token Usage (XK/40K)
+    - Save to `.domyh/audits/audit_YYYY-MM-DD.md`
+
+11. **PERSIST** — `hsa_session(persist)`, update `audit_summary.json`
 
 ---
 
@@ -141,141 +115,77 @@ success_criteria: "Audit report generated with score and P0-P3 findings"
 
 ### Core (Always Active — 5)
 
-| ID           | EN Name        | VN Name | Seniority      | Skills Required                            |
-| ------------ | -------------- | ------- | -------------- | ------------------------------------------ |
-| security     | David Chen     | Minh    | Principal 15yr | `security`, `authentication`               |
-| architecture | Sarah Kim      | Linh    | Staff 12yr     | `coding-rules`, `api-design`               |
-| performance  | James Park     | Khoa    | Senior 10yr    | `observability`, `web-perf`                |
-| quality      | Emma Wilson    | Hương   | Staff 12yr     | `testing`, `error-handling`, `coding-rules` |
-| devops       | Michael Torres | Đức     | Senior 10yr    | `logging`, `observability`                 |
+| ID | Expert | Seniority | Skills | Reasoning Style |
+|:---|:-------|:----------|:-------|:----------------|
+| security | David Chen | Principal 15yr | `security`, `authentication` | Assume hostile actor |
+| architecture | Sarah Kim | Staff 12yr | `coding-rules`, `api-design` | Trace dependency flow |
+| performance | James Park | Senior 10yr | `observability`, `web-perf` | Follow the hot path |
+| quality | Emma Wilson | Staff 12yr | `testing`, `error-handling` | What's NOT being tested? |
+| devops | Michael Torres | Senior 10yr | `logging`, `observability` | Imagine 3AM outage |
 
 ### Conditional (Auto-detect — 7)
 
-| ID          | EN Name           | VN Name | Seniority          | Activates When                |
-| ----------- | ----------------- | ------- | ------------------ | ----------------------------- |
-| ux          | Lisa Wang         | Thảo    | Senior 8yr         | UI files/deps detected        |
-| data        | Robert Martinez   | Tuấn    | Principal 15yr     | DB/migration files detected   |
-| compliance  | Jennifer Anderson | Hà      | Distinguished 18yr | Regulated industry indicators |
-| product     | Daniel Lee        | Lan     | Tech Lead 10yr     | `scope_full` or user request  |
-| reliability | William Brown     | Phong   | Staff 12yr         | Production/deploy files       |
-| cloud       | Alexander White   | Bảo     | Senior 10yr        | IaC/Terraform/K8s files       |
-| ai_safety   | Dr. Sophia Nguyen | Vy      | Distinguished 20yr | AI/ML/LLM code/deps           |
+| ID | Expert | Seniority | Activates When |
+|:---|:-------|:----------|:---------------|
+| ux | Lisa Wang | Senior 8yr | UI files/deps detected |
+| data | Robert Martinez | Principal 15yr | DB/migration files detected |
+| compliance | Jennifer Anderson | Distinguished 18yr | Regulated industry indicators |
+| product | Daniel Lee | Tech Lead 10yr | `scope_full` or user request |
+| reliability | William Brown | Staff 12yr | Production/deploy files |
+| cloud | Alexander White | Senior 10yr | IaC/Terraform/K8s files |
+| ai_safety | Dr. Sophia Nguyen | Distinguished 20yr | AI/ML/LLM code/deps |
 
 ---
 
-## EXPERT REASONING MANDATES
+## TOOL INTEGRATION
 
-```yaml
-reasoning_styles:
-  security:     "Assume hostile actor. What can be exploited?"
-  architecture: "Trace dependency flow. Where does coupling break isolation?"
-  performance:  "Follow the hot path. Where will it break under load?"
-  quality:      "Read the tests. What's NOT being tested?"
-  devops:       "Imagine 3AM outage. Can the team recover?"
-```
+> Auto-run BEFORE AI audit if tools available → ~95% accuracy (vs ~78% AI-only)
 
----
-
-## DIFF-AWARE MODE
-
-```yaml
-diff_aware:
-  trigger: "git log -1 --since='7 days ago'"
-  scope: "git diff --name-only HEAD~5..HEAD"
-  behavior: "Focus audit on changed files + their dependents"
-  full_scan: "Still run full scan but prioritize changed files first"
-```
+| Stack | Commands |
+|:------|:---------|
+| JavaScript | `npx eslint --format json src/`, `npm audit --json`, `npx semgrep --config auto --json` |
+| Python | `ruff check --output-format json`, `pip-audit --format json`, `bandit -r src/ -f json` |
+| Go | `go vet ./...`, `govulncheck ./...`, `golangci-lint run --out-format json` |
+| Rust | `cargo clippy -- -W warnings`, `cargo audit` |
+| C#/.NET | `dotnet build --no-incremental`, `dotnet list package --vulnerable` |
+| General | `trivy fs --format json .` |
 
 ---
 
-## TOOL INTEGRATION (Optional)
-
-> If tools available in project, auto-run BEFORE AI audit for higher accuracy:
-
-```yaml
-pre_audit_tools:
-  javascript:
-    - "npx eslint --format json src/"
-    - "npm audit --json"
-    - "npx semgrep --config auto --json"
-  python:
-    - "ruff check --output-format json"
-    - "pip-audit --format json"
-    - "bandit -r src/ -f json"
-  go:
-    - "go vet ./..."
-    - "govulncheck ./..."
-    - "golangci-lint run --out-format json"
-  rust:
-    - "cargo clippy -- -W warnings"
-    - "cargo audit"
-  csharp:
-    - "dotnet build --no-incremental"
-    - "dotnet list package --vulnerable"
-  general:
-    - "trivy fs --format json ."
-# Tool results fed as additional context → ~95% accuracy (vs ~78% AI-only)
-```
-
----
-
-## DATA LOADING (v2 — Per-Expert)
-
-```yaml
-# v1 (OLD): Load ALL checklists.yaml (8000 tokens)
-# v2 (NEW): Load only active expert checklists (~3000 tokens)
-checklists_dir: .agent/skills/cross-cutting/audit-pro/data/checklists/
-scoring: .agent/skills/cross-cutting/audit-pro/data/scoring.yaml
-loading: smart  # per-expert, lazy, token-optimized
-```
-
----
-
-## FINDING FORMAT (v2 — with SCoT)
+## FINDING FORMAT
 
 ```
 **[P0]** 🔒 Expert `file:line` (Confidence: 9/10)
-**Issue:** description
-**Evidence:** code snippet
-**Impact:** risk
-**Counter:** why this might be acceptable
-**Verdict:** FAIL (after considering counter-argument)
-**Fix:** suggested fix
+Issue: description | Evidence: code snippet | Impact: risk
+Counter: why acceptable | Verdict: FAIL | Fix: suggested fix
 ```
-
----
 
 ## REPORT FORMAT
 
 ```
 📊 DOMYH AUDIT — [project] — [date] — Score: X.X/10 (↑0.3 from last)
 | Expert | Score | Issues | Δ vs Last |
-👥 Active Experts: 8/12 (Security, Architecture, Performance, Quality, DevOps, UX, Data, Reliability)
-📁 Full: .domyh/audits/audit_YYYY-MM-DD.md
-⏱️ Duration: Xm Ys | Files: N | Changed: M
-🧠 SCoT: 7-step reasoning | Critique: X disputed, Y elevated
+👥 Active: 8/12 | 📁 .domyh/audits/audit_YYYY-MM-DD.md
+⏱️ Xm Ys | Files: N | Changed: M | Tokens: XK/40K
+🔍 Holistic: [biggest risk] | ⚔️ Debate: [verdict if triggered]
 ```
 
 ---
 
 ## SUB-COMMANDS
 
-| Command              | Description                           |
-| -------------------- | ------------------------------------- |
-| `/ap`                | Full audit (all active experts)       |
-| `/ap quick`          | Quick audit (Security + Architecture) |
-| `/ap security`       | Security focus only                   |
-| `/ap performance`    | Performance focus only                |
-| `/ap expert [name]`  | Single expert audit                   |
-| `/ap --scope [path]` | Limit scope                           |
-| `/ap --diff`         | Diff-aware (changed files only)       |
-| `/ap --compare`      | Compare with previous audit           |
-| `/ap --experts`      | Show active/inactive expert status    |
-| `/ap --force [name]` | Force-include a conditional expert    |
-| `/ap desktop`        | Desktop app audit (Electron/Tauri)    |
-| `/ap cli`            | CLI tool audit                        |
-| `/ap library`        | Library/SDK publish audit             |
-| `/ap mcp`            | MCP plugin/server audit               |
+| Command | Description |
+|:--------|:------------|
+| `/ap` | Full audit (all active experts) |
+| `/ap quick` | Quick audit (Security + Architecture) |
+| `/ap security` / `/ap performance` | Single-domain focus |
+| `/ap expert [name]` | Single expert audit |
+| `/ap --scope [path]` | Limit scope to path |
+| `/ap --diff` | Diff-aware (changed files + dependents) |
+| `/ap --compare` | Compare with previous audit |
+| `/ap --resume` | Resume interrupted audit |
+| `/ap --force [name]` | Force-include conditional expert |
+| `/ap desktop` / `cli` / `library` / `mcp` | Platform-specific audit |
 
 ---
 

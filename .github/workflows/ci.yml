@@ -11,13 +11,17 @@ permissions:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Lint YAML files
         uses: ibiqlik/action-yamllint@v3
         with:
-          file_or_dir: configs/
+          file_or_dir: .agent/ configs/
           config_data: |
             extends: relaxed
             rules:
@@ -46,6 +50,9 @@ jobs:
             fi
           done
           if [ $errors -gt 0 ]; then exit 1; fi
+
+      - name: Validate public agent content
+        run: node scripts/validate-agent-public.mjs
 
       - name: Check broken links in README
         uses: lycheeverse/lychee-action@v2

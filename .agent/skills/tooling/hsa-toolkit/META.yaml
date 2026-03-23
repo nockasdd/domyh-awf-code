@@ -1,0 +1,29 @@
+name: hsa-toolkit
+display: HSA Toolkit
+category: tooling
+tier: 1
+priority: 1
+
+desc: "Install and configure the DOMYH HSA MCP toolkit for hybrid search, stack detection, session governance, and design analysis."
+
+triggers:
+  keywords:
+    - hsa
+    - mcp
+    - toolkit
+    - hybrid search
+    - codegraph
+    - design analysis
+    - cascade
+    - session governance
+  intents:
+    - install hsa
+    - configure hsa mcp
+    - setup domyh toolkit
+
+caps:
+  - hsa_installation
+  - mcp_configuration
+  - hybrid_search_setup
+  - codegraph_enablement
+  - local_toolkit_validation

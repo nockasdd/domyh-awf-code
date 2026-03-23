@@ -10,6 +10,30 @@ tier: 1
 
 > Modern C# (C# 12/13/14) with .NET 9/10 — 2025-2026
 
+## 🌳 Decision Tree
+
+```
+Task → What C# pattern?
+  ├─ App type
+  │   ├─ Web API → ASP.NET Core Minimal API
+  │   ├─ Full-stack web → Blazor (WASM or Server)
+  │   ├─ Desktop → WPF / WinUI 3 / MAUI
+  │   ├─ Mobile → .NET MAUI
+  │   └─ Game → Unity
+  ├─ Architecture
+  │   ├─ Enterprise → Clean Architecture
+  │   ├─ Simple API → Vertical Slice
+  │   └─ Domain-heavy → DDD + MediatR
+  ├─ Data
+  │   ├─ ORM → EF Core 🏆
+  │   └─ Micro-ORM → Dapper
+  └─ Testing
+      ├─ Unit → xUnit + Moq/NSubstitute
+      └─ Integration → WebApplicationFactory
+```
+
+---
+
 ## 🔍 Language Detection
 
 ```yaml

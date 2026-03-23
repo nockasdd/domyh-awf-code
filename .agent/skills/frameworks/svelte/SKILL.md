@@ -20,6 +20,28 @@ Use for: High-performance web apps, minimal bundle, compile-time optimization.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Svelte pattern?
+  ├─ App type
+  │   ├─ Full-stack → SvelteKit (default)
+  │   └─ Component library → Svelte only
+  ├─ Rendering
+  │   ├─ Static site → adapter-static
+  │   ├─ Server-rendered → adapter-node
+  │   └─ Edge → adapter-vercel/cloudflare
+  ├─ State
+  │   ├─ Component-local → $state rune
+  │   ├─ Derived → $derived rune
+  │   └─ Shared → $state in .svelte.ts module
+  └─ Data loading
+      ├─ Server → +page.server.ts load()
+      └─ Universal → +page.ts load()
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Core

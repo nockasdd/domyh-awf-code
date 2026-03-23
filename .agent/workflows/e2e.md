@@ -11,6 +11,7 @@ success_criteria: "E2E tests generated and passing for critical user flows"
 
 ---
 
+${RULES_E2E}
 ## E2E FLOW
 
 1. **DETECT** — `hsa_session("generate E2E tests")`, detect stack via HSA (`hsa_detect`), verify environment (`hsa_detect`), identify frontend framework, existing E2E setup, test runner. Show: `[Step 1/6] Detecting E2E framework...`

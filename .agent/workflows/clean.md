@@ -4,445 +4,122 @@ skills: { required: [coding-rules], contextual: [auto] }
 success_criteria: "Dead code removed, imports organized, build passes"
 ---
 
-# 🧹 /clean — Code Cleanup Pro v2.0
+# 🧹 /clean — Code Cleanup Pro
 
 > Intelligent code hygiene with safety gates
-> 📚 Auto-detect stack, preview before changes
+> 📚 Auto-detect stack • Preview before changes • Safe rollback
 
 ---
 
-## 🔄 CLEANUP FLOW
+## ⛔ RULES (Always Apply)
 
-1. **PHASE 1: DETECT (Auto - 5s)** — `hsa_session`, `hsa_detect`, identifying tools.
-2. **PHASE 2: SCAN (Auto - 30s)** — Run analysis tools. Collect dead code / unused deps.
-3. **PHASE 3: PREVIEW** — Show proposed removals. ⛔ **STOP - WAIT FOR USER CONFIRMATION**.
-4. **PHASE 4: EXECUTE** — Create backup (optional), apply selected changes, format.
-5. **PHASE 5: VERIFY** — Run build/tests, show summary, offer rollback.
-6. **PHASE 6: SYNC** — `hsa_check_changes` to update index.
-
----
-
-## 🎯 COMMANDS
-
-| Command                | Action                       | Risk Level |
-| ---------------------- | ---------------------------- | ---------- |
-| `/clean`               | Full analysis (preview only) | 🟢 Safe    |
-| `/clean dead`          | Remove dead code             | 🟡 Medium  |
-| `/clean imports`       | Organize imports             | 🟢 Safe    |
-| `/clean deps`          | Remove unused dependencies   | 🟡 Medium  |
-| `/clean cache`         | Clear build/test cache       | 🟢 Safe    |
-| `/clean memory`        | Preview agent memory files   | 🟢 Safe    |
-| `/clean memory reset`  | Reset memory (keep audit)    | 🟠 High    |
-| `/clean memory audit`  | Reset audit logs only        | 🟡 Medium  |
-| `/clean memory --hard` | Delete all memory            | 🔴 Danger  |
-| `/clean all`           | Apply all fixes              | 🟠 High    |
-| `/clean --dry`         | Preview without changes      | 🟢 Safe    |
+| # | Rule | Category |
+|:--|:-----|:---------|
+| R1 | Preview ALL changes before deletion — never delete without showing | Safety |
+| R2 | ⛔ STOP after PREVIEW — wait for user confirmation | Safety |
+| R3 | Run build + tests after every change batch | Quality |
+| R4 | Protected patterns: deprecated comments, TODO markers, test files, configs, migrations | Safety |
+| R5 | Offer backup (`git stash`) before destructive operations | Safety |
 
 ---
 
-## 📋 PHASE 1: DETECT
+## CLEANUP FLOW (6 Phases)
 
-### Stack Detection (30+ Languages)
-
-> Tool configs loaded from `workflows/data/clean-tools.yaml`
-> Agent selects cleanup tools based on `hsa_detect` result
-> Schema per language: `markers`, `dead_code`, `imports`, `deps`, `format`, `lint`
-
-### Output:
-
-> Output concisely: Project name, Stack, and Tools loaded.
-
----
-
-## 📋 PHASE 2: SCAN
-
-### Analysis Commands by Stack:
-
-**Go:**
-
-```bash
-# Dead code detection
-go install golang.org/x/tools/cmd/deadcode@latest
-deadcode ./...
-
-# Unused imports (preview)
-goimports -l .
-
-# Unused dependencies
-go mod tidy -v
-```
-
-**Node.js/TypeScript:**
-
-```bash
-# Dead exports
-npx ts-prune
-
-# Unused dependencies
-npx depcheck
-
-# Organize imports (preview)
-npx organize-imports-cli --check
-```
-
-**Python:**
-
-```bash
-# Dead code
-vulture .
-
-# Organize imports
-isort --check-only .
-
-# Unused deps
-pip-autoremove --list
-```
+1. **DETECT** — `hsa_session`, `hsa_detect`, load cleanup tools from `data/clean-tools.yaml`. Show: `[1/6] Detected: {stack}, tools: {list}`
+2. **SCAN** — Run analysis tools per detected stack. Collect dead code, unused deps, unorganized imports. Show: `[2/6] Found: {n} dead exports, {m} unused deps`
+3. **PREVIEW** — Present concise table of proposed removals.
+   → ⛔ **STOP: "Select: [y] Apply all, [1,2,6] Selective, [--backup] Backup first, [n] Cancel"**
+4. **EXECUTE** — Create backup (if requested), remove dead code, remove unused deps, organize imports, format code.
+   > Stack-specific commands loaded from `data/clean-tools.yaml`
+5. **VERIFY** — Run build → tests → lint. Show summary of freed resources.
+   > If any fail → offer rollback (`git stash pop`)
+6. **SYNC** — `hsa_check_changes` to update index. Show next steps.
 
 ---
 
-## 📋 PHASE 3: PREVIEW
+## COMMANDS
 
-### Report Format:
-
-> Present a concise table of dead code, unused dependencies, and imports. 
-> Then prompt: ⛔ SELECT ACTION: [y] Apply all, [1,2,6] Selective items, [--backup] Backup first, [n] Cancel.
-
----
-
-## 📋 PHASE 4: EXECUTE
-
-### Execution Steps:
-
-```yaml
-step_4.1:
-  action: "Create backup (if requested)"
-  command: "git stash push -m 'Pre-cleanup backup'"
-
-step_4.2:
-  action: "Remove dead code"
-  method: "Delete selected lines/files"
-  verify: "Syntax check after each removal"
-
-step_4.3:
-  action: "Remove unused dependencies"
-  commands:
-    go: "go mod tidy"
-    node: "npm uninstall {package}"
-    python: "pip uninstall {package}"
-
-step_4.4:
-  action: "Organize imports"
-  commands:
-    go: "goimports -w ."
-    node: "npx organize-imports-cli ."
-    python: "isort ."
-
-step_4.5:
-  action: "Format code"
-  commands:
-    go: "gofmt -w ."
-    node: "npx prettier --write ."
-    python: "black ."
-```
-
-### Progress Output:
-
-> Output progress incrementally as steps complete (e.g., `Removing dead code... ✅ auth/helper.go:45`).
+| Command | Action | Risk |
+|:--------|:-------|:-----|
+| `/clean` | Full analysis (preview only) | 🟢 Safe |
+| `/clean dead` | Remove dead code | 🟡 Medium |
+| `/clean imports` | Organize imports | 🟢 Safe |
+| `/clean deps` | Remove unused dependencies | 🟡 Medium |
+| `/clean cache` | Clear build/test cache | 🟢 Safe |
+| `/clean all` | Apply all fixes | 🟠 High |
+| `/clean --dry` | Preview without changes | 🟢 Safe |
+| `/clean memory` | Preview agent memory files | 🟢 Safe |
+| `/clean memory reset` | Reset memory (keep audit) | 🟠 High |
+| `/clean memory --hard` | Delete all memory | 🔴 Danger |
 
 ---
 
-## 📋 PHASE 5: VERIFY
+## DEAD CODE DETECTION
 
-### Verification Steps:
+> Tools + detection patterns loaded from `data/clean-tools.yaml` per stack.
 
-```yaml
-verify_steps:
-  - name: "Build check"
-    commands:
-      go: "go build ./..."
-      node: "npm run build"
-      python: "python -m py_compile *.py"
+| Detection Type | Description |
+|:---------------|:------------|
+| Unused exports | Exported but never imported |
+| Unused functions | Defined but never called |
+| Unused variables | Declared but never used |
+| Unused imports | Imported but never referenced |
+| Unreachable code | After return/throw/break |
 
-  - name: "Test check"
-    commands:
-      go: "go test ./... -short"
-      node: "npm test -- --passWithNoTests"
-
-  - name: "Lint check"
-    commands:
-      go: "golangci-lint run"
-      node: "npm run lint"
-```
-
-### Final Report:
-
-> Show a concise summary of freed resources, updated files, and verification results (Build/Tests/Lint).
-> Provide NEXT STEPS (e.g., review git diff, commit).
+**Safe mode:** Preview → backup → incremental → build-verify after each removal.
 
 ---
 
-## ⚠️ SAFETY RULES
+## DEPENDENCY PRUNING
 
-### Always Applied:
+| Analysis | Description | Tools (auto-detected) |
+|:---------|:------------|:----------------------|
+| Unused | Not imported anywhere | depcheck, knip, go mod tidy |
+| Duplicate | Multiple versions | npm/yarn dedupe |
+| Vulnerable | Security issues | npm audit, snyk, govulncheck |
+| Bloat | Large unused transitive | bundle-analyzer |
 
-```yaml
-safety:
-  - Preview changes before any deletion
-  - Show exact lines before removal
-  - Offer backup option
-  - Run build after changes
-  - Provide rollback instructions
-```
-
-### Protected Patterns:
-
-```yaml
-protected_patterns:
-  - Functions with "deprecated" comment (may be intentional)
-  - Files with TODO markers
-  - Test files (*_test.go, *.test.ts)
-  - Config files (*.config.*, *.yaml)
-  - Migration files
-```
+**Actions:** Remove unused → deduplicate → upgrade vulnerable → replace deprecated.
+**Validation:** Build after → Test after → Size comparison.
 
 ---
 
-## 🔧 TOOL INSTALLATION
+## MEMORY CLEANUP
 
-### First-time Setup:
+> Only runs when explicitly requested with `memory` keyword.
 
-**Go:**
+| Command | Action | Scope |
+|:--------|:-------|:------|
+| `/clean memory` | Preview file sizes | Read-only |
+| `/clean memory reset` | Reset session + state (keep audit) | Session |
+| `/clean memory audit` | Reset audit logs only | Audit |
+| `/clean memory --hard` | Delete everything ⚠️ | All |
 
-```bash
-go install golang.org/x/tools/cmd/deadcode@latest
-go install golang.org/x/tools/cmd/goimports@latest
-```
+**Safety:** Require confirmation → show preview first → backup before delete.
 
-**Node.js:**
-
-```bash
-npm install -g ts-prune depcheck organize-imports-cli
-```
-
-**Python:**
-
-```bash
-pip install vulture isort black pip-autoremove
-```
+> Reset templates loaded from `data/memory-reset-templates.yaml`.
 
 ---
 
-## 📜 RULES APPLIED
+## REFERENCE DATA (Lazy-Load)
 
-| Phase   | Rules                                  |
-| ------- | -------------------------------------- |
-| Detect  | `terminal-safety`                      |
-| Scan    | `perf-001`                             |
-| Preview | `stop-conditions`, `edit-verification` |
-| Execute | `safety`, `edit-verification`          |
-| Verify  | `terminal-safety`, `exec-001`          |
+| Need | Data File | Content |
+|:-----|:----------|:--------|
+| Stack tools | `data/clean-tools.yaml` | Per-language: markers, dead_code, imports, deps, format, lint |
+| Reset templates | `data/memory-reset-templates.yaml` | Session/state/audit reset YAML templates |
 
 ---
 
-## 🔍 DEAD CODE DETECTION (v2.1)
+## CASCADE EVALUATION (Recommended — MCP)
 
-```yaml
-dead_code_detection:
-  description: "Find and remove unused code safely"
+⚠️ **Evaluate before EXECUTE** — see `delegation-intelligence` skill for scoring.
 
-  tools:
-    javascript_ts:
-      - "ts-prune"
-      - "knip"
-      - "depcheck"
-    go:
-      - "deadcode"
-      - "unused"
-    python:
-      - "vulture"
-      - "autoflake"
-    rust:
-      - "cargo-udeps"
-
-  detection:
-    unused_exports: "Exported but never imported"
-    unused_functions: "Defined but never called"
-    unused_variables: "Declared but never used"
-    unused_imports: "Imported but never used"
-    unreachable_code: "After return/throw"
-
-  safe_mode:
-    preview: "Show before delete"
-    backup: "Create .backup before cleanup"
-    git_safety: "Require clean working tree"
-    one_at_a_time: "Process incrementally"
-
-  commands:
-    preview: "/clean dead preview"
-    execute: "/clean dead execute"
-    report: "/clean dead report"
 ```
-
----
-
-## 📦 DEPENDENCY PRUNING (v2.1)
-
-```yaml
-dependency_pruning:
-  description: "Remove unused and problematic dependencies"
-
-  analysis:
-    unused:
-      description: "Not imported anywhere"
-      tools: ["depcheck", "knip"]
-
-    duplicate:
-      description: "Multiple versions of same package"
-      tools: ["npm dedupe", "yarn dedupe"]
-
-    outdated:
-      description: "Security vulnerabilities"
-      tools: ["npm audit", "snyk"]
-
-    bloat:
-      description: "Large unused transitive deps"
-      tools: ["bundle-analyzer", "source-map-explorer"]
-
-  actions:
-    remove_unused: true
-    deduplicate: true
-    upgrade_vulnerable: true
-    replace_deprecated: true
-
-  validation:
-    build_after: true
-    test_after: true
-    size_comparison: true
-
-  commands:
-    analyze: "/clean deps analyze"
-    prune: "/clean deps prune"
-    audit: "/clean deps audit"
+hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'code'})
+→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
 ```
-
----
-
-## 🧠 MEMORY CLEANUP (v2.2)
-
-> Agent memory management - only runs when explicitly requested with `memory` keyword
-
-```yaml
-memory_cleanup:
-  description: "Clean agent memory files"
-  trigger: "/clean memory" # ONLY runs when user includes "memory" keyword
-
-  files:
-    # Session files (safe to reset)
-    session:
-      - memory/session.md
-      - memory/consolidated.md
-      - memory/insights.md
-      - memory/active_memories.json
-      - memory/cleanup_log.json
-
-    # State files (contains project context)
-    state:
-      - memory/state.json
-      - memory/metrics.json
-      - memory/decisions.md
-
-    # Audit history (important records)
-    audit:
-      - memory/audit_summary.json
-      - memory/archive/*
-
-  commands:
-    preview: "/clean memory" # Safe - shows file sizes only
-    reset: "/clean memory reset" # Resets session + state, keeps audit
-    audit: "/clean memory audit" # Resets audit logs only
-    hard: "/clean memory --hard" # ⚠️ Deletes everything
-
-  safety:
-    require_confirmation: true
-    show_preview_first: true
-    backup_before_delete: true
-    require_manual_trigger: true
-```
-
-### Preview Format:
-
-> Show file sizes for Session, State, and Audit files. Prompt for reset level [1-4] or cancel.
-
-### Reset Templates:
-
-```yaml
-# Session reset - creates fresh session files
-session_reset:
-  session.md: |
-    # 📝 Session Notes
-    Reset: {timestamp}
-
-  consolidated.md: |
-    # 🧠 Consolidated Memories
-    Last reset: {timestamp}
-
-  active_memories.json: |
-    {
-      "version": "1.0.0",
-      "last_reset": "{timestamp}",
-      "memories": []
-    }
-
-# State reset - keeps structure, clears data
-state_reset:
-  state.json: |
-    {
-      "version": "1.1.0",
-      "last_updated": "{timestamp}",
-      "project": null,
-      "last_audit": null,
-      "pending_tasks": []
-    }
-
-  metrics.json: |
-    {
-      "version": "1.0.0",
-      "last_reset": "{timestamp}",
-      "sessions": 0,
-      "commands_executed": 0
-    }
-
-# Audit reset - preserves structure for new audits
-audit_reset:
-  audit_summary.json: |
-    {
-      "version": "1.1.0",
-      "last_updated": "{timestamp}",
-      "summary": {
-        "total_audits": 0,
-        "overall_score": null
-      },
-      "history": []
-    }
-```
-
----
-
-## 🔧 SUB-COMMANDS (Updated)
-
-| Command                | Description           |
-| ---------------------- | --------------------- |
-| `/clean`               | Full code cleanup     |
-| `/clean dead preview`  | Preview dead code     |
-| `/clean dead execute`  | Remove dead code      |
-| `/clean deps analyze`  | Analyze dependencies  |
-| `/clean deps prune`    | Remove unused deps    |
-| `/clean imports`       | Organize imports      |
-| `/clean memory`        | Preview memory files  |
-| `/clean memory reset`  | Reset session + state |
-| `/clean memory audit`  | Reset audit logs      |
-| `/clean memory --hard` | Delete all memory ⚠️  |
-| `/clean --safe`        | Extra safe mode       |
+**Auto-cascade** (≥6.5): Multi-language project cleanup, monorepo-wide dead code scan
+**Suggest cascade** (4.0-6.5): Large dependency tree analysis, complex import reorganization
 
 ---
 
@@ -457,4 +134,3 @@ audit_reset:
 3. **PERSIST** (if HSA unavailable — manual fallback):
    - Append task summary to `memory/session.md`
    - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
-

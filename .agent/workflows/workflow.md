@@ -29,16 +29,16 @@ success_criteria: "Workflow chain executed, transitions logged"
 
 | Category    | Label                  | Commands                                                       |
 | ----------- | ---------------------- | -------------------------------------------------------------- |
-| core        | 💻 Core Development    | `/code`, `/debug`, `/fix`, `/test`, `/modify`, `/tdd`          |
-| quality     | 🔍 Quality & Review    | `/ap`, `/review`, `/refactor`, `/security`, `/clean`           |
+| core        | 💻 Core Development    | `/code`, `/debug`, `/fix`, `/test`, `/modify`, `/tdd`, `/feature`          |
+| quality     | 🔍 Quality & Review    | `/ap`, `/review`, `/refactor`, `/security`, `/clean`, `/verify`           |
 | planning    | 📋 Planning & Thinking | `/plan`, `/think`, `/visualize`                                |
 | generation  | 🏗️ Generation          | `/init`, `/scaffold` (= `/generate`), `/doc`, `/prompt`        |
 | operations  | 🚀 Operations          | `/deploy`, `/env`, `/migrate`, `/monitor`, `/revert`           |
-| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`                                    |
-| utility     | 📊 Utility             | `/status`, `/recap`, `/suggest`, `/help`                       |
+| maintenance | 🔧 Maintenance         | `/upgrade`, `/perf`, `/git`, `/sync-version`                                    |
+| utility     | 📊 Utility             | `/status`, `/recap`, `/suggest`, `/help`, `/save`, `/search`, `/lang`                       |
 | onboarding  | 📦 Onboarding          | `/onboard`                                                     |
 | diagnosis   | 🩺 Diagnosis           | `/doctor`, `/e2e`                                              |
-| meta        | 🔄 Meta                | `/workflow`, `/orchestrate`                                    |
+| meta        | 🔄 Meta                | `/workflow`, `/orchestrate`, `/skill-create`                                    |
 
 ---
 

@@ -1,5 +1,7 @@
 ---
 description: 🔨 Create or improve DOMYH skills with guided workflow — scaffold, validate, iterate
+skills: { required: [skill-creator], contextual: [] }
+success_criteria: "Skill created, indexed, BM25 trigger test passes"
 ---
 
 # Skill Creator Workflow
@@ -125,3 +127,4 @@ Finalize and deploy.
 - **Include code examples** — real-world patterns > abstract rules
 - **Use detect field wisely** — specific file patterns avoid false triggers
 - **Test with edge cases** — unusual queries that should/shouldn't trigger
+\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n

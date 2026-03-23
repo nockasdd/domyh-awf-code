@@ -20,6 +20,30 @@ Use for: Backend services, microservices, CLI tools, cloud-native apps.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Go pattern?
+  ├─ App type
+  │   ├─ REST API → Gin / Echo / Chi
+  │   ├─ gRPC service → google.golang.org/grpc
+  │   ├─ CLI tool → Cobra + Viper
+  │   └─ Cloud-native → standard library
+  ├─ Data
+  │   ├─ Type-safe SQL → sqlc 🏆
+  │   ├─ ORM → GORM / Ent
+  │   └─ PostgreSQL driver → pgx/v5
+  ├─ Concurrency
+  │   ├─ Fan-out/fan-in → goroutines + channels
+  │   ├─ Worker pool → errgroup
+  │   └─ Context cancel → context.WithCancel
+  └─ Testing
+      ├─ Unit → testing + testify
+      └─ Integration → testcontainers-go
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Web Frameworks

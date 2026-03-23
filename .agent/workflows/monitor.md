@@ -11,6 +11,7 @@ success_criteria: "logs/traces/metrics configured, data verified in backends, al
 
 ---
 
+${RULES_MONITOR}
 ## MONITOR FLOW
 
 1. **DETECT** (Auto) — `hsa_session("setup observability")`, detect stack via HSA (`hsa_detect`), load obs context (`hsa_search`), check existing observability, identify gaps

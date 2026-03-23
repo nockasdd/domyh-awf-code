@@ -12,6 +12,7 @@ success_criteria: "All ACs verified via traceability matrix, phase docs complete
 
 ---
 
+${RULES_FEATURE}
 ## FEATURE FLOW
 
 1. **PHASE 0: CONTEXT** — `hsa_session("implement feature: {name}")`, detect stack via HSA (`hsa_detect`), gather codebase context (`hsa_search`), repo map (`hsa_explore`), understand existing patterns

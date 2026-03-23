@@ -438,6 +438,15 @@ commands:
     triggers: [workflow, commands]
     skills: { required: [], contextual: [] }
 
+  - id: skill-create
+    file: workflows/skill-create.md
+    icon: "hammer"
+    category: utility
+    persona: developer
+    cache: true
+    triggers: [skill-create, create skill, improve skill, tao skill]
+    skills: { required: [skill-creator], contextual: [auto] }
+
   # ═══════════════════════════════════════════════════════════════════════════
   # UTILITY (7 commands)
   # ═══════════════════════════════════════════════════════════════════════════

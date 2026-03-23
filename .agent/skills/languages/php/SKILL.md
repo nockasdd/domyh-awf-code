@@ -21,6 +21,29 @@ Use for: Web applications, APIs, Laravel/Symfony projects, WordPress plugins.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What PHP pattern?
+  ├─ Framework
+  │   ├─ Full-stack → Laravel 🏆
+  │   ├─ Enterprise → Symfony
+  │   ├─ CMS → WordPress / Statamic
+  │   └─ Micro → Slim / Lumen
+  ├─ Architecture
+  │   ├─ MVC → Laravel default
+  │   ├─ DDD → Symfony + Doctrine
+  │   └─ API-only → Laravel API + Sanctum
+  ├─ Data
+  │   ├─ ORM → Eloquent (Laravel) / Doctrine (Symfony)
+  │   └─ Query builder → DB facade
+  └─ Testing
+      ├─ Unit → PHPUnit + Pest 🏆
+      └─ Browser → Laravel Dusk
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Frameworks

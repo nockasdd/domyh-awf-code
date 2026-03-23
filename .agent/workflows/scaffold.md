@@ -12,6 +12,7 @@ success_criteria: "Files generated matching project conventions, build passes"
 
 ---
 
+${RULES_SCAFFOLD}
 ## SCAFFOLD FLOW
 
 1. **DETECT** (Auto) — Identify framework via HSA (`hsa_detect`), load patterns via HSA (`hsa_search`), scan existing components. Show: `[Step 1/6] Detecting React + TypeScript...`

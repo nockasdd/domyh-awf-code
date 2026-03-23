@@ -10,6 +10,29 @@ tier: 1
 
 > Kotlin 2.0/2.1 • KMP • Compose — 2025-2026
 
+## 🌳 Decision Tree
+
+```
+Task → What Kotlin pattern?
+  ├─ Platform
+  │   ├─ Android → Jetpack Compose 🏆
+  │   ├─ Backend → Ktor / Spring Boot
+  │   ├─ Multiplatform → KMP (shared logic)
+  │   └─ Desktop → Compose Multiplatform
+  ├─ Architecture (Android)
+  │   ├─ UI → MVVM + Compose
+  │   ├─ DI → Hilt / Koin
+  │   └─ Navigation → Navigation Compose
+  ├─ Concurrency
+  │   ├─ Async → Coroutines + Flow
+  │   └─ Structured → CoroutineScope
+  └─ Testing
+      ├─ Unit → JUnit 5 + MockK
+      └─ UI → Compose Testing
+```
+
+---
+
 ## 🔍 Language Detection
 
 ```yaml

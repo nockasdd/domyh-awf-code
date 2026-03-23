@@ -22,6 +22,30 @@ Use for: React SSR/SSG apps, Server Components, App Router, API routes, Turbopac
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Next.js pattern?
+  ├─ Rendering
+  │   ├─ Static content → SSG (generateStaticParams)
+  │   ├─ Dynamic per-request → SSR (no-store)
+  │   ├─ Periodic refresh → ISR (revalidate: N)
+  │   └─ Mixed static+dynamic → Cache Components ("use cache")
+  ├─ Data
+  │   ├─ Server-only → Server Component + direct DB
+  │   ├─ Client interactive → TanStack Query + API route
+  │   └─ Form mutations → Server Functions ("use server")
+  ├─ Routing
+  │   ├─ App Router (default) → app/ directory
+  │   ├─ Route groups → (auth)/ for shared layout
+  │   └─ API endpoints → app/api/route.ts
+  └─ Auth
+      ├─ Full-featured → NextAuth v5
+      └─ Managed → Clerk
+```
+
+---
+
 ## 📦 Recommended Stack
 
 > See `data/core.yaml` for full library comparison tables.

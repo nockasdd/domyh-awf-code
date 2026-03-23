@@ -7,25 +7,19 @@ success_criteria: "Root cause identified and verified, fix applied, tests pass"
 # 🐛 /debug — Debug Pro
 
 > AI-Powered Debugging with Observability & Tracing
-> 📚 30+ Languages • Root Cause Analysis • Hypothesis Testing • Failure Repository
+> 📚 30+ Languages • Root Cause Analysis • Hypothesis Testing
 
 ---
 
-## DEBUG FLOW
+## ⛔ RULES (Always Apply)
 
-1. **CAPTURE** (Auto) — `hsa_session("debug: {error_summary}")`, check **episodic memory** (`.domyh/debug/episodic_memory.yaml`) for similar past bugs FIRST. Auto-detect language via HSA (`hsa_detect`), load skill via HSA (`hsa_search`, `hsa_search`), parse stack trace, identify affected files, `hsa_prefetch` suspected files. Show: `[Step 1/8] Capturing error context...`
-2. **TIMELINE** — Reconstruct event timeline: `git log --oneline -10`, check recent changes to affected files, correlate with error timestamps. Answer: "When did this start?"
-3. **REPRODUCE** — Create minimal reproduction, confirm error occurs consistently → ⛔ STOP if cannot reproduce: ask user 5 questions
-4. **ISOLATE** — Binary search / git bisect, add trace logging, narrow to exact location. Use `hsa_trace_flow` to trace call chains upstream/downstream
-5. **HYPOTHESIZE** — Form 2-3 hypotheses based on evidence:
-   ```
-   H1: [hypothesis] — Evidence: [what supports it] — Test: [how to verify]
-   H2: [hypothesis] — Evidence: [what supports it] — Test: [how to verify]
-   → Test each hypothesis systematically → Confirm/reject
-   ```
-6. **ANALYZE** — 5 Whys on CONFIRMED root cause (not assumptions)
-7. **FIX** — Create FAILING test first, implement single fix → if 2 fixes fail → trigger **Progressive Escalation** (`rules/modules/progressive-escalation.yaml`): REFLECT → REFRAME → WIDEN → DECOMPOSE → ESCALATE. Add **prevention guard** to block similar bugs
-8. **VERIFY** — Run reproduction steps, run full test suite, show before/after evidence. `hsa_feedback(file, useful:true)` on root cause file. Persist pattern to `.domyh/debug/failures.yaml` if novel bug pattern discovered
+| # | Rule | Category |
+|:--|:-----|:---------|
+| R1 | Check episodic memory for similar past bugs FIRST | Efficiency |
+| R2 | Never apply fix without reproduction evidence | Quality |
+| R3 | ⛔ STOP if cannot reproduce — ask user 5 questions | Safety |
+| R4 | Form hypotheses before editing code | Discipline |
+| R5 | Max 3 fix attempts — escalate if still failing | Efficiency |
 
 ---
 
@@ -39,286 +33,144 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 
 ---
 
+## DEBUG FLOW (8 Steps)
+
+1. **CAPTURE** — `hsa_session("debug: {error_summary}")`, check **episodic memory** first. Auto-detect language, parse stack trace, identify affected files. Show: `[1/8] Capturing error context...`
+2. **TIMELINE** — Reconstruct: `git log --oneline -10`, check recent changes, correlate timestamps. Answer: "When did this start?"
+3. **REPRODUCE** — Minimal reproduction, confirm consistent.
+   → ⛔ STOP if cannot reproduce: "Need: (1) exact error, (2) steps to trigger, (3) environment, (4) recent changes, (5) logs"
+4. **ISOLATE** — Binary search / `git bisect`, trace logging, `hsa_trace_flow` for call chains. Narrow to exact location.
+5. **HYPOTHESIZE** — Form 2-3 hypotheses:
+   ```
+   H1: [hypothesis] — Evidence: [supports] — Test: [verify method]
+   H2: [hypothesis] — Evidence: [supports] — Test: [verify method]
+   → Test systematically → Confirm/Reject
+   ```
+6. **ANALYZE** — 5 Whys on CONFIRMED root cause → `🎯 ROOT CAUSE: [summary]` → `🛡️ PREVENTION: [guard]`
+7. **FIX** — Failing test FIRST → single fix → if 2 fail → Progressive Escalation → add prevention guard.
+8. **VERIFY** — Run reproduction, full test suite, show before/after. Persist to episodic memory if novel.
+
+---
+
+## ⛔ 3-FIX ESCALATION
+
+| Attempt | Action |
+|:--------|:-------|
+| Fix #1 fails | Return to root cause investigation |
+| Fix #2 fails | Re-analyze with new info |
+| Fix #3 fails | **STOP. Question the architecture.** |
+
+Signs of architectural problem (not a bug): each fix reveals coupling, requires "massive refactoring", creates new symptoms. **→ Discuss with user before continuing.**
+
+---
+
 ## DEBUG MINDSET
 
 ```
-❌ NEVER assume these:
+❌ NEVER assume:
 - "I know what the bug is"         → Always reproduce first
 - "I'll be quick"                  → Quick fixes create more bugs
 - "It worked before"               → Something changed — check timeline
 - "It must be a library bug"       → It's almost never the library
-- "One fix should do it"           → Form hypotheses first, test each
+- "One fix should do it"           → Form hypotheses first
 ```
-
----
-
-## ⛔ 3-FIX ESCALATION RULE
-
-<HARD-GATE>
-Count your fix attempts:
-- Fix attempt #1 fails → Return to root cause investigation
-- Fix attempt #2 fails → Return to root cause, re-analyze with new info
-- Fix attempt #3 fails → **STOP. Question the architecture.**
-
-**If 3+ fixes failed → Do NOT attempt fix #4.**
-
-Signs of an architectural problem (not a bug):
-- Each fix reveals new shared state/coupling issues
-- Fixes require "massive refactoring"
-- Each fix creates new symptoms elsewhere
-
-**Action**: Discuss with user before continuing. This is a wrong architecture, not a failed hypothesis.
-</HARD-GATE>
 
 ---
 
 ## RATIONALIZATION PREVENTION
 
 | Excuse | Reality |
-|--------|--------|
-| "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
-| "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check thrashing. |
-| "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
+|:-------|:--------|
+| "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast. |
+| "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check. |
+| "Just try this first" | First fix sets the pattern. Do it right. |
 | "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
-| "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Stop fixing. |
-| "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
-
-## RED FLAGS — STOP AND FOLLOW PROCESS
-
-If you catch yourself thinking:
-- "Quick fix for now, investigate later"
-- "Just try changing X and see if it works"
-- "Add multiple changes, run tests"
-- "I don't fully understand but this might work"
-- "Pattern says X but I'll adapt it differently"
-- "Here are the main problems:" (listing fixes without investigation)
-- Proposing solutions before tracing data flow
-
-**ALL of these mean: STOP. Return to Phase 1 (CAPTURE).**
+| "One more fix attempt" (after 2+) | 3+ failures = architectural problem. Stop. |
 
 ---
 
-## TIMELINE RECONSTRUCTION
+## COMMANDS
 
-```yaml
-# Before diving into code, reconstruct the timeline:
-timeline:
-  sources:
-    - "git log --oneline --since='7 days ago' -- [affected_files]"
-    - "Error logs / console output (timestamps)"
-    - "Recent dependency updates (package-lock.json diff)"
-    - "Environment changes (.env, config files)"
-  output: |
-    [timestamp] Event 1: Last known working state
-    [timestamp] Event 2: Change X committed
-    [timestamp] Event 3: Error first reported
-    → Most likely cause: Event between 2 and 3
-```
-
----
-
-## HYPOTHESIS TESTING
-
-```yaml
-# Instead of jumping to fix, test hypotheses:
-process:
-  1_form: "Based on evidence, create 2-3 hypotheses"
-  2_rank: "Rank by likelihood (most evidence first)"
-  3_test: "Design quick test for top hypothesis"
-  4_confirm: "If confirmed → proceed to 5 Whys"
-  5_reject: "If rejected → test next hypothesis"
-  6_stuck: "If all rejected → expand search scope, ask user"
-
-example:
-  H1: "Null user from DB query (no validation)"
-    evidence: "TypeError at user.id, findUser() called without check"
-    test: "Add console.log before line 42, check user value"
-    result: "CONFIRMED — user is undefined when ID not found"
-```
+| Command | Description |
+|:--------|:------------|
+| `/debug [error]` | Full debug flow |
+| `/debug ai [error]` | AI-powered analysis |
+| `/debug similar [error]` | Search episodic memory |
+| `/debug save [pattern]` | Save to failure repository |
+| `/debug --trace` | Add verbose logging |
+| `/debug --bisect` | Git bisect helper |
+| `/debug --profile` | Performance profiling |
+| `/debug --memory` | Memory leak detection |
+| `/debug --timeline` | Reconstruct event timeline |
 
 ---
 
 ## STACK TRACE PARSERS
 
-| Language   | Error Pattern                                | Debugger          |
-| ---------- | -------------------------------------------- | ----------------- |
-| Go         | `goroutine \d+ [running]:, panic:`           | dlv               |
-| Python     | `Traceback (most recent call last):`         | pdb, debugpy      |
-| TypeScript | `at Object.<anonymous> (.ts:\d+)`            | --inspect-brk     |
-| Rust       | `thread 'main' panicked at`                  | rust-gdb          |
-| Java       | `at com.package.Class.method(File.java:\d+)` | jdb               |
-| C++        | `Segmentation fault\|terminate called`       | gdb, lldb         |
-| C#         | `Unhandled exception.*at .*\.cs:line`        | dotnet-dump       |
-| PHP        | `Fatal error:.*in .*.php on line`            | xdebug            |
-| Ruby       | `from .*.rb:\d+:in`                          | byebug            |
-| Swift      | `Fatal error:.*file .*\.swift, line`         | lldb              |
-| Kotlin     | `at .*\.kt:\d+`                              | IntelliJ debugger |
+| Language | Error Pattern | Debugger |
+|:---------|:--------------|:---------|
+| Go | `goroutine \d+ [running]:, panic:` | dlv |
+| Python | `Traceback (most recent call last):` | pdb, debugpy |
+| TypeScript | `at Object.<anonymous> (.ts:\d+)` | --inspect-brk |
+| Rust | `thread 'main' panicked at` | rust-gdb |
+| Java | `at com.package.Class(File.java:\d+)` | jdb |
+| C# | `Unhandled exception.*\.cs:line` | dotnet-dump |
 
-> Full parsers for 30+ languages via HSA: each skill's META.yaml contains `triggers.file_patterns`.
+> Full parsers for 30+ languages via HSA — each skill's META.yaml contains `triggers.file_patterns`.
 
 ---
-
-## ⛔ IF CANNOT REPRODUCE
-
-```
-Need more information:
-1. Exact error message (copy-paste)?
-2. Steps to trigger the error?
-3. Environment details (OS, versions)?
-4. Recent changes (git log)?
-5. Logs from when error occurred?
-→ If intermittent: suspect race condition, timing, or environment-specific issue
-```
-
----
-
-## GIT BISECT
-
-```bash
-git bisect start
-git bisect bad HEAD
-git bisect good <last_working_commit>
-# Agent can automate: git bisect run <test_script>
-```
-
-## QUICK DEBUG LOGGING
-
-| Language   | Snippet                                      |
-| ---------- | -------------------------------------------- |
-| Go         | `log.Printf("[DEBUG] %s: %+v", "var", val)`  |
-| Rust       | `dbg!(&variable);`                           |
-| Python     | `logging.debug(f"[DEBUG] {variable=}")`      |
-| TypeScript | `console.log('[DEBUG]', { variable });`      |
-| Java       | `System.out.println("[DEBUG] " + variable);` |
-
----
-
-## ROOT CAUSE ANALYSIS (5 Whys)
-
-```
-Why 1: [immediate cause]
-Why 2: [why that happened]
-Why 3: [deeper reason]
-Why 4: [systemic issue]
-Why 5: [root cause]
-
-🎯 ROOT CAUSE: [one-line summary]
-🛡️ PREVENTION: [guard to prevent recurrence]
-```
 
 ## BUG CATEGORIES
 
-| Category       | Pattern                      | Common Fix                       |
-| -------------- | ---------------------------- | -------------------------------- |
-| Null Reference | `null\|undefined\|None\|nil` | Null checks, optional chaining   |
-| Type Error     | `TypeError\|cannot convert`  | Validate types, add guards       |
-| Async Race     | `race condition\|deadlock`   | Add locks, atomic ops            |
-| Memory Leak    | `out of memory\|heap`        | Cleanup, weak references         |
-| Network        | `timeout\|ETIMEDOUT`         | Retry logic, increase timeout    |
-| Permission     | `EACCES\|unauthorized`       | Check file/API permissions       |
-| State          | `stale data\|inconsistent`   | Cache invalidation, transactions |
-
----
-
-## OBSERVABILITY INTEGRATION
-
-```yaml
-# If observability tools available, use them:
-tools:
-  sentry: "Check Sentry for error frequency, affected users, breadcrumbs"
-  datadog: "Query DataDog APM for traces, latency spikes"
-  grafana: "Check Grafana dashboards for metric anomalies"
-  cloudwatch: "Search CloudWatch logs for error patterns"
-
-# Ask user: "Do you have any monitoring/APM tools? (Sentry, DataDog, etc.)"
-```
+| Category | Pattern | Common Fix |
+|:---------|:--------|:-----------|
+| Null Reference | null, undefined, None, nil | Null checks, optional chaining |
+| Type Error | TypeError, cannot convert | Type guards, validation |
+| Async Race | race condition, deadlock | Locks, atomic ops, transactions |
+| Memory Leak | out of memory, heap | Cleanup, weak references |
+| Network | timeout, ETIMEDOUT | Retry logic, timeout increase |
+| State | stale data, inconsistent | Cache invalidation, transactions |
 
 ---
 
 ## DEFENSE-IN-DEPTH
 
-> Validate at EVERY layer data passes through: "We made the bug impossible"
+> Validate at EVERY layer: "We made the bug impossible"
 
-| Layer                    | Purpose                               | Example                                 |
-| ------------------------ | ------------------------------------- | --------------------------------------- |
-| 1. Entry Point           | Reject invalid input at API boundary  | `if (!dir) throw Error("dir required")` |
-| 2. Business Logic        | Ensure data makes sense for operation | Validate IDs, check states              |
-| 3. Environment Guard     | Prevent danger in specific contexts   | Refuse ops outside temp in tests        |
-| 4. Debug Instrumentation | Capture context for forensics         | Stack traces, debug logs                |
-
----
-
-## FAILURE REPOSITORY
-
-```yaml
-failure_patterns:
-  - id: "cache-invalidation"
-    symptoms: ["stale data", "deleted item still shows"]
-    fix: "Add cache.invalidate() after mutations"
-    prevention: "Always invalidate cache in write operations"
-  - id: "n+1-query"
-    symptoms: ["slow API", "many DB queries"]
-    fix: "Use eager loading / batch queries"
-    prevention: "Use query analyzer / ORM eager loading"
-  - id: "race-condition"
-    symptoms: ["intermittent failures", "data corruption"]
-    fix: "Add mutex/transaction"
-    prevention: "Always use transactions for multi-step writes"
-  - id: "off-by-one"
-    symptoms: ["missing last item", "index out of bounds"]
-    fix: "Check loop boundaries, use length-1"
-    prevention: "Prefer forEach/map over manual indexing"
-```
+| Layer | Purpose | Example |
+|:------|:--------|:--------|
+| Entry Point | Reject invalid input at boundary | `if (!x) throw Error("required")` |
+| Business Logic | Data makes sense for operation | Validate IDs, check states |
+| Environment Guard | Prevent danger in context | Refuse ops outside temp in tests |
+| Debug Instrumentation | Forensic context | Stack traces, debug logs |
 
 ---
 
 ## PROGRESSIVE ESCALATION
 
-> When fixes repeatedly fail, progressively shift debugging strategy.
-> See `rules/modules/progressive-escalation.yaml` for full protocol.
+> When fixes repeatedly fail → shift strategy. See `rules/modules/progressive-escalation.yaml`.
 
 ```
-Level 1 RETRY     → Fix directly (2 attempts)
-Level 2 REFLECT   → Analyze WHY approach fails (Reflexion + Bias Check)
-Level 3 REFRAME   → Change perspective (Invert + Rubber Duck + Devil's Advocate)
-Level 4 WIDEN     → Expand scope (Trace chain + Git forensics + Env audit)
-Level 5 DECOMPOSE → Isolate precisely (Minimal repro + Binary search)
-Level 6 ESCALATE  → Full report to user with all evidence
+L1 RETRY     → Fix directly (2 attempts)
+L2 REFLECT   → Analyze WHY approach fails
+L3 REFRAME   → Change perspective (Invert + Rubber Duck)
+L4 WIDEN     → Expand scope (Trace chain + Git forensics)
+L5 DECOMPOSE → Minimal repro + Binary search
+L6 ESCALATE  → Full report to user with all evidence
 ```
 
-**Before ANY fix**: Check episodic memory (`.domyh/debug/episodic_memory.yaml`) for past solutions.
-**After resolution**: Save lesson via `templates/reflection/pivot_analysis.md` → episodic memory entry.
+**Before ANY fix:** Check episodic memory. **After resolution:** Save lesson.
 
 ---
 
-## SUB-COMMANDS
+## CASCADE EVALUATION (Recommended — MCP)
 
-| Command                  | Description                |
-| ------------------------ | -------------------------- |
-| `/debug [error]`         | Full debug flow            |
-| `/debug ai [error]`      | AI-powered analysis        |
-| `/debug similar [error]` | Search failure repository  |
-| `/debug save [pattern]`  | Save to repository         |
-| `/debug --trace`         | Add verbose logging        |
-| `/debug --bisect`        | Git bisect helper          |
-| `/debug --profile`       | Performance profiling      |
-| `/debug --memory`        | Memory leak detection      |
-| `/debug --timeline`      | Reconstruct event timeline |
-
----
-
-## 🔄 CASCADE EVALUATION (Recommended — MCP)
-
-⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
-
-For complex debugging sub-tasks, delegate to specialized reasoning model via cascade:
 ```
-hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'debug'})
+hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'debug'})
 → wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
-→ repeat cascade_read (3-5s intervals, max 10 polls)
 ```
-**Auto-cascade** (weighted score ≥6.5): After Level 3 escalation, race condition/concurrency
-**Suggest cascade** (weighted score 4.0-6.5): Multi-step reasoning needed, root cause analysis
+**Auto-cascade** (≥6.5): After L3 escalation, race conditions, concurrency
+**Suggest cascade** (4.0-6.5): Multi-step reasoning, complex RCA
 
 ---
 
@@ -327,10 +179,9 @@ hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'deb
 ⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
+2. **PERSIST** (if HSA available):
    - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
    - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
+3. **PERSIST** (if HSA unavailable):
    - Append task summary to `memory/session.md`
    - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
-

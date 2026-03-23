@@ -11,6 +11,7 @@ success_criteria: "All tests pass green, coverage meets target, refactor clean"
 
 ---
 
+${RULES_TDD}
 ## TDD FLOW
 
 1. **SETUP** — Detect stack via HSA (`hsa_detect`), load TDD skill, load test context (`hsa_search`), identify test framework. Show: `[Step 1/6] Detecting stack and test framework...`

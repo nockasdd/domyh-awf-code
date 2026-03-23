@@ -11,9 +11,17 @@ success_criteria: "Session summary generated, decisions saved, next steps listed
 
 ---
 
+${RULES_RECAP}
 ## RECAP FLOW
 
-1. **COLLECT** — Git changes (`git log --oneline -20`), engine data (`hsa_export`), task list, decisions from memory, file system changes
+0. **IDENTIFY PROJECT** — ⛔ MANDATORY first step before any data collection:
+   - Run `hsa_detect(action='stack')` to identify project
+   - If result is `unknown` / 0% confidence → this is an **umbrella/monorepo** directory
+   - Scan immediate subdirectories for `.git` folders to find actual repos
+   - Run `git log` in **EACH** discovered git repo, NOT at workspace root
+   - ⚠️ NEVER use conversation history as primary data source — conversations may reference OTHER projects
+   - Set `PROJECT_REPOS` list (e.g. `domyh-awf/`, `hsa-engine-ts/`) for subsequent steps
+1. **COLLECT** — Git changes (`git log --oneline -20` **per repo from Step 0**), engine data (`hsa_export`), task list, decisions from memory, file system changes
 2. **ANALYZE** — Categorize changes (features, fixes, refactors, docs), calculate metrics (files changed, lines added/removed)
 3. **SUMMARIZE** — Group by category, generate structured report. Show: `Session: 2h 15m | 8 tasks | 23 files changed`
 4. **PERSIST** — Save key decisions and context to `.agent/memory/state.json` for next session continuity
@@ -87,11 +95,16 @@ Generate with `/recap handoff` for session continuity:
 
 | Source       | What It Captures                   |
 | ------------ | ---------------------------------- |
-| Git log      | Commits, diffs, branch changes     |
+| Git log      | Commits, diffs, branch changes ⚠️ Run in **EACH sub-repo** if monorepo |
 | Memory files | Session state, decisions, patterns |
-| Chat history | Task completions, discussions      |
+| Chat history | Task completions, discussions ⚠️ **VERIFY project alignment first** |
 | File system  | Modified files, new files, deleted |
 | HSA index    | Changed context, invalidated cache |
+
+> [!CAUTION]
+> **Monorepo/Umbrella Detection**: If workspace root has NO `.git`, `package.json`, or `Cargo.toml`,
+> this is likely an umbrella directory. MUST scan subdirectories for actual git repos.
+> NEVER run `git log` at umbrella root — it will fail and cause recap to use wrong project data.
 
 ---
 

@@ -10,6 +10,29 @@ tier: 1
 
 > Flutter 3.29+ & Dart 3.7 — 2025-2026
 
+## 🌳 Decision Tree
+
+```
+Task → What Flutter pattern?
+  ├─ Platform
+  │   ├─ Mobile only → Standard Flutter
+  │   ├─ Web + Mobile → Responsive layouts
+  │   └─ Desktop → Platform channels
+  ├─ State Management
+  │   ├─ Simple local → setState / ValueNotifier
+  │   ├─ App-wide reactive → Riverpod 🏆
+  │   ├─ Complex flows → BLoC
+  │   └─ Simple DI → Provider
+  ├─ Navigation
+  │   ├─ Simple → Navigator 2.0
+  │   └─ Complex → GoRouter / AutoRoute
+  └─ Architecture
+      ├─ Feature-first → lib/features/{name}/
+      └─ Layer-first → lib/{data,domain,presentation}/
+```
+
+---
+
 ## 🔍 Language Detection
 
 ```yaml

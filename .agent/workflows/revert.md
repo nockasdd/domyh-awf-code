@@ -11,6 +11,7 @@ success_criteria: "Changes reverted, backup created, tests passing"
 
 ---
 
+${RULES_REVERT}
 ## REVERT FLOW
 
 1. **DETECT** — What to revert, how far back

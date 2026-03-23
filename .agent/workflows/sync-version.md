@@ -1,5 +1,7 @@
 ---
 description: 🔄 Sync version from VERSION.yaml SSoT across all files
+skills: { required: [], contextual: [] }
+success_criteria: "Version synced across all target files, dry-run verified first"
 ---
 
 # /sync-version — Version Sync from SSoT
@@ -54,3 +56,4 @@ node scripts/bump-version.mjs <bump>              # Apply
 - VERSION.yaml changelog section is protected (historical versions preserved)
 - `.agent/` directory is intentionally skipped by bump script (VERSION.yaml updated separately)
 - Always run `--dry-run` first to preview changes
+\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n

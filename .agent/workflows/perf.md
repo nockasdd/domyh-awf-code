@@ -11,6 +11,7 @@ success_criteria: "baseline recorded, hotspots identified, optimizations applied
 
 ---
 
+${RULES_PERF}
 ## PERF FLOW
 
 1. **BASELINE** — `hsa_session("performance profiling")`, detect stack via HSA (`hsa_detect`), load perf context (`hsa_search`), collect current metrics

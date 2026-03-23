@@ -11,6 +11,7 @@ success_criteria: "migrations applied successfully, schema validated, data integ
 
 ---
 
+${RULES_MIGRATE}
 ## MIGRATION FLOW
 
 1. **DETECT** (Auto) — `hsa_session("migration: {operation}")`, detect stack via HSA (`hsa_detect`), load DB context (`hsa_search`), find migration tool, check pending

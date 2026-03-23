@@ -11,6 +11,7 @@ success_criteria: "Dependencies updated, no vulnerabilities, tests pass"
 
 ---
 
+${RULES_UPGRADE}
 ## UPGRADE FLOW
 
 1. **DETECT** — Detect stack via HSA (`hsa_detect`), detect package manager, list outdated. Show: `[Step 1/6] Scanning 127 dependencies...`

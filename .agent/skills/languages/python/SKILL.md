@@ -21,6 +21,29 @@ Use for: Web APIs, data science, ML/AI, automation, scripting.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Python pattern?
+  ├─ Web API
+  │   ├─ Async/ML → FastAPI 🏆
+  │   ├─ Full-stack/admin → Django 5
+  │   └─ Lightweight → Litestar / Flask
+  ├─ Data
+  │   ├─ DataFrames → Polars 🏆 (or pandas)
+  │   ├─ ML/Deep Learning → PyTorch / sklearn
+  │   └─ LLM/AI → LangChain / transformers
+  ├─ Tooling
+  │   ├─ Package manager → uv 🏆 (or poetry)
+  │   ├─ Linting → Ruff
+  │   └─ Type checking → mypy / Pyright
+  └─ Testing
+      ├─ Unit/Integration → pytest 🏆
+      └─ Async → pytest-asyncio
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Web Frameworks

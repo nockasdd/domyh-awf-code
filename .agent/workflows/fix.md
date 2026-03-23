@@ -11,6 +11,17 @@ success_criteria: "Error resolved, build passes, no regressions"
 
 ---
 
+## ⛔ RULES (Always Apply)
+
+| # | Rule | Category |
+|:--|:-----|:---------|
+| R1 | Max 60s total execution — escalate to /debug if exceeded | Scope |
+| R2 | Minimal changes only — preserve existing behavior | Quality |
+| R3 | Max 2 retry attempts — then escalate | Efficiency |
+| R4 | Run affected tests after every fix | Quality |
+
+---
+
 ## FIX FLOW
 
 1. **DETECT** (5s) — `hsa_session("quick fix: {error_summary}")`, parse error, detect stack via HSA (`hsa_detect`), load context (`hsa_search`), locate file + line, read surrounding code, classify fix category

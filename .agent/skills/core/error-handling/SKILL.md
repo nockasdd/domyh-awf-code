@@ -156,3 +156,21 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 | API        | "RFC 9457 error response format" |
 
 ---
+
+
+## 📁 Data Files
+
+| File | Patterns | Coverage |
+|------|----------|----------|
+| `core-patterns.yaml` | 20+ | Try-catch, Result type, error boundaries |
+| `api-error-patterns.yaml` | 15+ | RFC 9457, HTTP status, GraphQL errors |
+| `resilience-patterns.yaml` | 15+ | Circuit breaker, retry, fallback |
+| `error-codes.yaml` | 30+ | Categorized error code standards |
+| `error-messages.yaml` | 15+ | i18n, user-friendly messaging |
+| `anti-patterns.yaml` | 10+ | Silent catch, pokemon catch, etc |
+| `ui-error-patterns.yaml` | 10+ | Toast, error boundary, loading states |
+| `language-*.yaml` (5 files) | 50+ | Language-specific: Go/Rust, Python/Java, TS/PHP/Ruby, C/C++, Swift/Kotlin |
+
+**Total: 12 data files, 180+ patterns**
+
+---

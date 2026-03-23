@@ -20,6 +20,27 @@ Use for: Game scripting, embedded systems, configuration, plugin systems.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Lua pattern?
+  ├─ Use case
+  │   ├─ Game scripting → Love2D / Defold / Roblox
+  │   ├─ Embedded → C API integration
+  │   ├─ Web server → OpenResty + nginx
+  │   └─ Config/DSL → Table-based configs
+  ├─ Version
+  │   ├─ Lua 5.4 → Standard (integers, goto)
+  │   ├─ LuaJIT → Performance-critical (FFI)
+  │   └─ Lua 5.1 → Legacy compatibility
+  └─ Patterns
+      ├─ OOP → Metatables + __index
+      ├─ Modules → require + return table
+      └─ Coroutines → coroutine.wrap
+```
+
+---
+
 ## 🔍 Version Detection
 
 ```lua

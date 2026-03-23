@@ -11,6 +11,7 @@ success_criteria: "Environment secure, no exposed secrets, .env.example synced"
 
 ---
 
+${RULES_ENV}
 ## ENV FLOW
 
 1. **SCAN** (Auto) — `hsa_session("environment config audit")`, detect stack via HSA (`hsa_detect`), find all .env\* files, check .gitignore rules, detect exposed secrets

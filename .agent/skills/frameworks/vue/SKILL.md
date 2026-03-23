@@ -20,6 +20,28 @@ Use for: Web apps, SSR with Nuxt, progressive enhancement.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Vue pattern?
+  ├─ App type
+  │   ├─ Full-stack SSR → Nuxt (→ nuxt skill)
+  │   ├─ SPA → Vue + Vite
+  │   └─ Component library → Vue only
+  ├─ State
+  │   ├─ Component-local → ref/reactive
+  │   ├─ App-wide → Pinia 🏆
+  │   └─ Server state → TanStack Query
+  ├─ Composition
+  │   ├─ Logic reuse → Composables (use*)
+  │   └─ Shared → VueUse library
+  └─ Styling
+      ├─ Scoped → <style scoped>
+      └─ Utility → Tailwind CSS + UnoCSS
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Core

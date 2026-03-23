@@ -12,6 +12,7 @@ success_criteria: "Scan complete, findings documented with CWE references"
 
 ---
 
+${RULES_SECURITY}
 ## SECURITY FLOW
 
 1. **DETECT** — Identify stack via HSA (`hsa_detect`), discover available security tools, load security context (`hsa_search`). Show: `[Step 1/6] Detecting: Node.js + Go monorepo`

@@ -11,6 +11,7 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ---
 
+${RULES_REFACTOR}
 ## REFACTOR FLOW
 
 1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests, trace dependencies via `hsa_trace_flow(entry_point, direction:'both')` for impact analysis

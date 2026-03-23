@@ -11,6 +11,7 @@ success_criteria: "Tests written, all pass, coverage meets target"
 
 ---
 
+${RULES_TEST}
 ## TEST FLOW
 
 1. **DETECT** — `hsa_session("testing: {scope}")`, identify stack via HSA (`hsa_detect`), load test context (`hsa_search`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`

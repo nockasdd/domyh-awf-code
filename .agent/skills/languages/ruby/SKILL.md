@@ -21,6 +21,29 @@ Use for: Web apps, APIs, scripting, DevOps tools, prototyping.
 
 ---
 
+## 🌳 Decision Tree
+
+```
+Task → What Ruby pattern?
+  ├─ Framework
+  │   ├─ Full-stack → Rails 8 🏆
+  │   ├─ API-only → Rails API mode
+  │   ├─ Lightweight → Sinatra / Roda
+  │   └─ Static site → Jekyll / Bridgetown
+  ├─ Architecture
+  │   ├─ MVC → Rails default
+  │   ├─ Service objects → Plain Ruby classes
+  │   └─ Background → Sidekiq / Solid Queue
+  ├─ Data
+  │   ├─ ORM → ActiveRecord 🏆
+  │   └─ Alternative → Sequel
+  └─ Testing
+      ├─ Unit → RSpec 🏆 + FactoryBot
+      └─ System → Capybara + Selenium
+```
+
+---
+
 ## 📦 Recommended Stack (2025-2026)
 
 ### Web Frameworks

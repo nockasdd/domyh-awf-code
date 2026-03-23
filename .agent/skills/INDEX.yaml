@@ -2,7 +2,7 @@
 # Skills Routing Index — Universal Discovery
 # =============================================================================
 # Version: 2026-03-18 v3 (compact — routing + detect merged, no duplication)
-# Total: 99 skills across 8 categories
+# Total: 101 skills across 8 categories
 #
 # Usage (non-HSA agents):
 #   1. Read this file → find skill by name → get path + detect patterns
@@ -47,6 +47,7 @@ routing:
   tailwind:             { path: "cross-cutting/tailwind", detect: ["tailwind.config*"] }
   tauri:                { path: "cross-cutting/tauri", detect: ["tauri.conf*", "src-tauri/*"] }
   wasm:                 { path: "cross-cutting/wasm", detect: ["*.wasm", "*.wat"] }
+  digital-marketing:    { path: "cross-cutting/digital-marketing", detect: [] }
 
   # --- languages (28) ---
   typescript:           { path: "languages/typescript", detect: ["tsconfig.json", "*.ts", "*.tsx"] }
@@ -125,7 +126,8 @@ routing:
   cli-dev:              { path: "tooling/cli-dev", detect: ["*commander*", "*yargs*", "*cli*"] }
   ide-extension:        { path: "tooling/ide-extension", detect: [] }
   mcp:                  { path: "tooling/mcp", detect: ["*mcp*", "mcp.json"] }
+  hsa-toolkit:          { path: "tooling/hsa-toolkit", detect: [] }
 
 # Category summary (for human reference only — agent uses routing above)
-# core: 8 | cross-cutting: 25 | languages: 28 | frameworks: 9
-# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 5 | TOTAL: 99
+# core: 8 | cross-cutting: 26 | languages: 28 | frameworks: 9
+# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 6 | TOTAL: 101

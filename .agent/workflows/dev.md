@@ -11,6 +11,7 @@ success_criteria: "Dev server running, health check passes"
 
 ---
 
+${RULES_DEV}
 ## DEV FLOW
 
 1. **DETECT** — `hsa_session("start dev server")`, identify stack via HSA (`hsa_detect`), verify environment (`hsa_detect`), find dev commands, check monorepo (nx.json, turbo.json, pnpm-workspace.yaml, package.json workspaces). Show: `[Step 1/6] Detecting stack...`

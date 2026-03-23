@@ -12,6 +12,7 @@ success_criteria: "All checks reported with fix recommendations"
 
 ---
 
+${RULES_DOCTOR}
 ## DOCTOR FLOW
 
 1. **SCAN** — `hsa_session("environment diagnostics")`, detect environment via HSA (`hsa_detect`), identify OS, shell, runtimes, package managers. Show: `[Step 1/4] Scanning environment...`

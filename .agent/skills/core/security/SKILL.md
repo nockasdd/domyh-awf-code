@@ -231,3 +231,25 @@ Security Review Checklist:
 ```
 
 ---
+
+
+---
+
+## 🔌 HSA Integration
+
+All data domains indexed by HSA BM25 engine for semantic search:
+
+| Domain | Data File | Query Examples |
+|--------|-----------|----------------|
+| OWASP | `owasp-top10.yaml` | "injection prevention" |
+| CWE | `cwe-top25.yaml` | "buffer overflow CWE" |
+| API Security | `api-security.yaml` | "rate limiting authentication" |
+| Auth Patterns | `auth-patterns.yaml` | "JWT token refresh" |
+| Supply Chain | `supply-chain.yaml` | "dependency vulnerability" |
+| Cloud | `cloud-security.yaml` | "AWS IAM policy" |
+| AI/ML | `owasp-llm-top10.yaml` | "prompt injection LLM" |
+| Mobile | `mobile-security.yaml` | "certificate pinning" |
+| Network | `network-security.yaml` | "TLS configuration" |
+| Reverse Engineering | `reverse-engineering.yaml` | "binary analysis anti-tamper" |
+
+---

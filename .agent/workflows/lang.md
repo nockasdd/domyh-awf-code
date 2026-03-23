@@ -1,5 +1,7 @@
 ---
 description: 🌐 Switch agent language (English ↔ Vietnamese)
+skills: { required: [], contextual: [] }
+success_criteria: "Language switched, state.json + global preferences updated, confirmation shown in new language"
 ---
 
 # /lang — Language Switching

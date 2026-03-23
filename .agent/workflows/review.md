@@ -11,6 +11,17 @@ success_criteria: "All findings documented with file:line evidence"
 
 ---
 
+## ⛔ RULES (Always Apply)
+
+| # | Rule | Category |
+|:--|:-----|:---------|
+| R1 | All findings MUST have file:line evidence | Quality |
+| R2 | Self-review own findings — remove false positives | Quality |
+| R3 | Focus on high-risk areas: auth, payments, data | Security |
+| R4 | Never approve without running tests | Safety |
+
+---
+
 ## REVIEW FLOW
 
 1. **CONTEXT** — Detect stack via HSA (`hsa_detect`), load review context (`hsa_search`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR

@@ -102,3 +102,4 @@ CI/CD    🟢 Last pass    Git      🟢 Clean
 | `git status --porcelain`                 | Uncommitted changes |
 | `git rev-list --count HEAD ^origin/main` | Ahead of remote     |
 | `git stash list`                         | Stashed changes     |
+\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n

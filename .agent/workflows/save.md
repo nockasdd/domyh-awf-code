@@ -1,9 +1,12 @@
 ---
 description: 💾 Save session state to memory files for later context
+skills: { required: [session-memory], contextual: [] }
+success_criteria: "CONTEXT_SNAPSHOT.md updated + MCP session persisted (if available)"
 ---
 
 # /save — Session Persistence
 
+${RULES_SAVE}
 ## Purpose
 
 Save the current session state to memory files, enabling context continuity across conversations. This captures key decisions, changes made, and next steps.
@@ -73,3 +76,18 @@ Report what was saved:
 - CONTEXT_SNAPSHOT.md is read at the start of every new conversation
 - MCP persist also updates `session.md` with task history
 - If Telegram is configured, a notification is sent confirming the save
+
+---
+
+## ⛔ REFLECTION CHECKPOINT
+
+Before completing, verify:
+
+1. ✅ CONTEXT_SNAPSHOT.md was written/updated?
+2. ✅ MCP `hsa_session(action='persist')` was called (if MCP available)?
+3. ✅ All key decisions from session are captured?
+4. ✅ No unsaved anchors remain?
+
+> If any check fails → go back to Step 2 and retry.
+> If MCP unavailable → file-only save is acceptable.
+\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n
