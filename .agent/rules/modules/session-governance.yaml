@@ -95,6 +95,27 @@ rules:
         Files: {key files}. Build: pass/fail. Tests: X/Y pass.
       This enables clean resume in next session via hsa_session(include_anchors: true).
 
+  - id: GOV-007
+    name: "Memory vs Anchor Selection"
+    severity: info
+    when: "Saving decisions, patterns, or error context for future use"
+    action: |
+      Choose the right persistence mechanism:
+        hsa_session(anchor): Session-scoped immutable facts
+          → Stack choices, conventions, deployment constraints
+          → Survives context compaction within current session
+          → Lost when session ends (unless persisted in snapshot)
+        hsa_memory(store): Cross-session episodic memory
+          → Architecture decisions, resolved bug patterns, error context
+          → Persists across all sessions via episodic-memory.json
+          → Searchable by semantic recall (hsa_memory(recall, query))
+          → Categories: decision | error | pattern | context | anchor
+      Rule of thumb:
+        - Will future sessions need this? → hsa_memory
+        - Only this session needs it? → hsa_session(anchor)
+        - Bug root cause found after debugging? → hsa_memory(category:'error')
+        - Architecture decision made? → hsa_memory(category:'decision')
+
 integration:
   tier: 2
   related_modules:

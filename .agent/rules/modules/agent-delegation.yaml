@@ -103,6 +103,12 @@ cascade_delegation:
     tdd: "test"         # TDD → reuses test model routing
     e2e: "test"         # E2E → reuses test model routing
     visualize: "browser" # UI design → reuses browser model routing
+    think: "research"   # deep analysis → reuses research model routing
+    plan: "research"    # requirement exploration → research routing
+    onboard: "research" # codebase discovery → research routing
+    perf: "debug"       # profiling → reuses debug model routing
+    monitor: "debug"    # observability → reuses debug model routing
+    ap: "review"        # audit → reuses review model routing
   
   lifecycle: |
     1. hsa_delegate({action:'cascade', cascade_text:'...', task_type:'...'})

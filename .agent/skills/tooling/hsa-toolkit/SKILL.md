@@ -1,7 +1,7 @@
 ---
 name: hsa-toolkit
-description: Install and configure DOMYH HSA MCP Server for enhanced AI-powered code intelligence. Provides hybrid BM25+Vector search, CodeGraph tracing, design analysis, and 100+ development skills.
-version: 1.0.0
+description: Install and configure DOMYH HSA MCP Server for enhanced AI-powered code intelligence. Provides hybrid BM25+Vector search, CodeGraph tracing, blast radius analysis, persistent memory, design analysis, and 100+ development skills.
+version: 1.1.0
 metadata:
   openclaw:
     requires:
@@ -12,7 +12,7 @@ metadata:
 
 # DOMYH HSA MCP Toolkit
 
-> Hybrid Search + CodeGraph + Design Analysis + Cross-model Cascade
+> Hybrid Search + CodeGraph + Impact Analysis + Persistent Memory + Cross-model Cascade
 
 ## Quick Install
 
@@ -29,25 +29,38 @@ nock awf mcp install --ide openclaw --scope global
 
 After install, restart OpenClaw to load MCP tools.
 
-## Available MCP Tools (15)
+## Available MCP Tools (16)
 
-| Tool | Action | Description |
-|------|--------|-------------|
-| `hsa_search` | context | BM25+Vector hybrid code search within token budget |
-| `hsa_search` | files | Filename/glob search |
-| `hsa_search` | skills | Knowledge pattern search |
-| `hsa_search` | docs | External library documentation (24+ libs) |
-| `hsa_explore` | repo_map | PageRank-ranked file overview with signatures |
-| `hsa_explore` | snapshot | Full project snapshot (tree + stack + symbols) |
-| `hsa_trace_flow` | - | Trace call chains through dependency graph |
-| `hsa_detect` | stack | Detect project tech stack and frameworks |
-| `hsa_detect` | environment | Detect installed runtimes and tools |
-| `hsa_design` | analyze | Design system analysis (Design DNA) |
-| `hsa_design` | health | WCAG accessibility scoring |
-| `hsa_delegate` | cascade | Cross-model delegation for complex tasks |
-| `hsa_session` | intent | Declare session focus and mode |
-| `hsa_check_changes` | - | Merkle diff + re-index changed files |
-| `hsa_research` | - | Research external GitHub repos |
+### Core Analysis
+
+| Tool | Actions | Description |
+|------|---------|-------------|
+| `hsa_search` | `context` `files` `skills` `docs` | BM25+Vector hybrid code search, file glob, skill patterns, 84+ library docs |
+| `hsa_explore` | `repo_map` `snapshot` | PageRank-ranked file overview, project structure snapshot |
+| `hsa_detect` | `stack` `environment` | Detect tech stack, runtimes, package managers, IDE shell |
+| `hsa_trace_flow` | `trace` `impact` | Trace call chains (up/down/both) + blast radius analysis (scoring, test gaps) |
+| `hsa_check_changes` | — | Merkle diff + re-index changed files (BM25, CodeGraph, Vector) |
+| `hsa_prefetch` | — | Pre-load files/library docs into cache for faster retrieval |
+| `hsa_feedback` | — | Record file usefulness — improves future search ranking |
+
+### Session & Governance
+
+| Tool | Actions | Description |
+|------|---------|-------------|
+| `hsa_session` | `persist` `track` `anchor` `drift` `intent` | Session governance: context snapshots, progress tracking, drift detection |
+| `hsa_memory` | `store` `recall` `list` `delete` `stats` | Persistent cross-session memory: decisions, patterns, errors, semantic recall |
+| `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration |
+| `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
+| `hsa_delegate` | `prepare` `filter` `cascade` `cascade_read` `cascade_models` `cascade_cancel` | Sub-agent delegation, cross-model cascade |
+| `hsa_research` | `index` `overview` `read` `search` `list` `pkg` `releases` `compare` `file` | External repo research, package metadata |
+| `hsa_guide` | — | HSA optimal workflow guide |
+
+### Visual & Design
+
+| Tool | Actions | Description |
+|------|---------|-------------|
+| `hsa_canvas` | `open` `capture` `diff` `update` `extract` `inspect` `close` | LiveCanvas: dev server, screenshots, visual regression, live CSS edits |
+| `hsa_design` | `analyze` `health` `tokens` `analyze_image` | Design DNA extraction, WCAG health scoring, W3C DTCG tokens |
 
 ## Usage Examples
 
@@ -57,15 +70,27 @@ Search for authentication-related code in my project
 ```
 → Agent calls `hsa_search({query: "authentication", output_mode: "skeleton"})`
 
-### Explore project structure
+### Blast radius analysis
 ```
-Give me an overview of the project architecture
+What's the impact of changing the handleLogin function?
 ```
-→ Agent calls `hsa_explore({action: "repo_map"})`
+→ Agent calls `hsa_trace_flow({entry_point: "handleLogin", action: "impact"})`
+
+### Persistent memory
+```
+Remember this architecture decision for future sessions
+```
+→ Agent calls `hsa_memory({action: "store", content: "...", category: "decision"})`
+
+### Recall past decisions
+```
+What architecture decisions did we make before?
+```
+→ Agent calls `hsa_memory({action: "recall", query: "architecture decisions"})`
 
 ### Trace dependencies
 ```
-What functions call the `handleLogin` function?
+What functions call the handleLogin function?
 ```
 → Agent calls `hsa_trace_flow({entry_point: "handleLogin", direction: "upstream"})`
 

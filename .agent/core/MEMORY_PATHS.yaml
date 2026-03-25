@@ -92,6 +92,9 @@ ownership:
     - path: ".agent/hsa/session-state.json"
       owner: "HSA engine exclusively"
       agent_access: "Read via hsa_session/hsa_report tools"
+    - path: ".agent/hsa/episodic-memory.json"
+      owner: "HSA engine via hsa_memory tool"
+      agent_access: "Read/write via hsa_memory(store|recall|list|delete|stats)"
 
   deprecated:
     - path: "memory/decisions.md"

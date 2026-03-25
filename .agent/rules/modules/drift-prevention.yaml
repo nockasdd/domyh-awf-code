@@ -78,9 +78,11 @@ rules:
       ENFORCEMENT: Do NOT re-try an approach already marked REJECTED.
       After 2 failed attempts on same approach:
         → MUST try fundamentally different strategy
-        → Save rejected approaches as anchor for cross-session memory
+        → Save rejected approaches as anchor for current session
+        → Save confirmed root cause via hsa_memory(store, category:'error')
+          for cross-session persistence (future sessions can recall it)
       This prevents circular debugging and preserves investigation progress
-      across context compaction.
+      across context compaction and session boundaries.
 
 integration:
   tier: 2

@@ -88,7 +88,9 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     - hsa_session for session governance: intent, track progress, anchor facts, drift check, persist (with auto_notify)
     - hsa_report for engine health (status/export) and notifications (only when HSA_TELEGRAM_TOKEN env var is set)
     - hsa_design for design system analysis (CSS/components/screenshots — skip for backend-only projects)
-    - hsa_canvas for visual UI feedback: open, capture, diff, update (CSS edits), extract (design tokens), inspect, close</text>
+    - hsa_canvas for visual UI feedback: open, capture, diff, update (CSS edits), extract (design tokens), inspect, close
+    - hsa_memory for persistent cross-session memory: store decisions/patterns/errors, recall by semantic search, list/delete/stats
+    - hsa_trace_flow({action:'impact'}) for blast radius analysis: BFS dependency traversal, impact scoring, test coverage gaps</text>
     <rationale>HSA tools provide hybrid search and context optimization — 70-90% more token-efficient than manual file scanning. Canvas tools provide systematic visual feedback loop for UI development.</rationale>
   </requirement>
   
@@ -113,7 +115,8 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
     - hsa_search({action:'docs'}) for external library docs when working with 3rd-party libraries
     - hsa_get_agent_config for commands/personas/rules when asked about capabilities
     - hsa_report for engine health (action:'status'), state export (action:'export'), notifications (action:'notify')
-    - hsa_trace_flow for tracing call chains and understanding code flow
+    - hsa_trace_flow for tracing call chains (action:'trace') and blast radius analysis (action:'impact' — scoring, test gaps, cold-start warning)
+    - hsa_memory for persistent episodic memory: store decisions/patterns/errors, semantic recall, cross-session continuity
     - hsa_research for external repo analysis (index → overview → read → search), package metadata (pkg), releases, compare repos
     - hsa_prefetch({auto:true}) to auto-warm library docs from package.json dependencies (first task per session)
     - hsa_canvas for full visual feedback: diff (VRT), extract (design tokens), inspect (CSS/AX), close (cleanup)

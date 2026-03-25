@@ -4,14 +4,14 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@nockdev/hsa"><img src="https://img.shields.io/npm/v/@nockdev/hsa?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm" /></a>
-  <img src="https://img.shields.io/badge/MCP%20tools-15-10B981?style=for-the-badge&logo=puzzle&logoColor=white" alt="MCP Tools" />
+  <img src="https://img.shields.io/badge/MCP%20tools-16-10B981?style=for-the-badge&logo=puzzle&logoColor=white" alt="MCP Tools" />
   <img src="https://img.shields.io/badge/docs-84+-06B6D4?style=for-the-badge&logo=bookstack&logoColor=white" alt="Built-in Docs" />
   <img src="https://img.shields.io/badge/node-%E2%89%A518-3B82F6?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/license-MIT-8B5CF6?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
 </p>
 
 <p align="center">
-  Token-optimized MCP context engine with <b>BM25+ search</b>, <b>HNSW vector search</b>, <b>Merkle tree</b> change detection, <b>84+ built-in library docs</b>, <b>cross-model cascade delegation</b>, <b>LiveCanvas</b> visual feedback, and <b>real-time dashboard</b>.<br/>
+  Token-optimized MCP context engine with <b>BM25+ search</b>, <b>HNSW vector search</b>, <b>Merkle tree</b> change detection, <b>84+ built-in library docs</b>, <b>cross-model cascade delegation</b>, <b>impact analysis</b>, <b>persistent memory</b>, <b>LiveCanvas</b> visual feedback, and <b>real-time dashboard</b>.<br/>
   Part of the <a href="https://github.com/nockasdd/domyh-awf-code"><b>DOMYH AWF </b></a> framework.
 </p>
 
@@ -51,6 +51,8 @@ nock-hsa
 | 🖌️ **Design Intelligence** | Design DNA extraction, WCAG health scoring (0-100), W3C DTCG token generation, image analysis |
 | 🌐 **Browser Engine** | Playwright-powered: screenshot, element inspection, page analysis |
 | 🧠 **Session Governance** | Intent declaration, drift detection, 3-level progress tracking, persistent anchors |
+| 🧬 **Persistent Memory** | Cross-session episodic memory with semantic recall — store decisions, patterns, errors |
+| 💥 **Impact Analysis** | Blast radius scoring with BFS dependency traversal, test coverage gap detection |
 | 📊 **Web Dashboard** | Real-time 3-tab SPA (Dashboard · Graph · Logs) at `localhost:13100` |
 | 📋 **Activity Ledger** | Tool call tracking, latency measurement, per-tool usage statistics |
 | 📲 **Notifications** | Telegram Bot + Discord Webhook for session persistence and task completion alerts |
@@ -59,9 +61,9 @@ nock-hsa
 
 ---
 
-## 🛠️ MCP Tools (15)
+## 🛠️ MCP Tools (16)
 
-> 15 public tools with 40+ actions covering search, exploration, delegation, design, and session governance.
+> 16 public tools with 50+ actions covering search, exploration, delegation, memory, design, and session governance.
 
 ### Core Analysis
 
@@ -71,7 +73,7 @@ nock-hsa
 | `hsa_explore` | `repo_map` `snapshot` | PageRank-ranked file overview, project structure snapshot |
 | `hsa_detect` | `stack` `environment` | Detect tech stack, frameworks, runtimes, package managers |
 | `hsa_check_changes` | — | Check file changes via Merkle tree diff, re-index BM25/CodeGraph |
-| `hsa_trace_flow` | — | Trace code execution flow through dependency graph (up to 5 hops) |
+| `hsa_trace_flow` | `trace` `impact` | Trace code execution flow + blast radius analysis (scoring, test gaps) |
 | `hsa_prefetch` | — | Pre-load files/library docs into cache for faster retrieval |
 | `hsa_feedback` | — | Record file usefulness — improves future search ranking |
 
@@ -80,6 +82,7 @@ nock-hsa
 | Tool | Actions | Description |
 |:-----|:--------|:------------|
 | `hsa_session` | `persist` `track` `anchor` `drift` `intent` | Session governance: context snapshots, progress tracking, drift detection |
+| `hsa_memory` | `store` `recall` `list` `delete` `stats` | Persistent cross-session episodic memory with semantic recall |
 | `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration, rules, skills |
 | `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
 | `hsa_delegate` | `prepare` `filter` `cascade` `cascade_read` `cascade_models` `cascade_cancel` | Sub-agent delegation, cross-model cascade |
