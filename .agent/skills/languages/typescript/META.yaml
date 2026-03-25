@@ -101,3 +101,10 @@ prevent_confusion_with:
   - javascript: "TypeScript has types, JS doesn't"
   - java: "TypeScript compiles to JS, runs in browser/Node"
   - csharp: "TypeScript uses structural typing, C# nominal"
+
+links_to:
+  - javascript
+  - react
+  - nextjs
+  - vue
+  - testing

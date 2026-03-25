@@ -14,3 +14,8 @@ related_skills:
 
 prevent_confusion_with:
   - kotlin: "Scala is more FP-focused, Kotlin is more pragmatic"
+
+links_to:
+  - java
+  - kotlin
+  - testing

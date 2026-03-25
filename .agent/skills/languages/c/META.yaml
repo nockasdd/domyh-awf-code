@@ -51,3 +51,8 @@ caps:
 prevent_confusion_with:
   cpp: "C = no classes/templates, C++ = classes"
   rust: "C = manual memory, Rust = ownership"
+
+links_to:
+  - cpp
+  - asm
+  - wasm

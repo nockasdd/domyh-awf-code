@@ -15,3 +15,7 @@ prevent_confusion_with:
   - kotlin: "Swift is for Apple, Kotlin for Android"
   - javascript: "Swift uses var/let differently than JS"
   - rust: "Swift has ARC, Rust has ownership"
+
+links_to:
+  - kotlin
+  - testing

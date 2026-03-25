@@ -23,3 +23,7 @@ triggers:
 related_skills:
   - ruby
   - go
+
+links_to:
+  - ruby
+  - testing

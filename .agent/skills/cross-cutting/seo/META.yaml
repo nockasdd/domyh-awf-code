@@ -44,3 +44,9 @@ data_files:
   - data/core-web-vitals.yaml
   - data/structured-data.yaml
   - data/technical-seo.yaml
+
+links_to:
+  - web-perf
+  - accessibility
+  - nextjs
+  - nuxt

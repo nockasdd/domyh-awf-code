@@ -49,3 +49,8 @@ data_files:
   - workspace-patterns.yaml
   - ci-cd-strategies.yaml
   - versioning.yaml
+
+links_to:
+  - ci-cd
+  - testing
+  - typescript

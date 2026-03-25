@@ -36,3 +36,7 @@ caps:
   - Skill quality checklist
   - Search ranking verification
   - Content splitting guidance (>500 lines)
+
+links_to:
+  - context-engineering
+  - prompt-engineering

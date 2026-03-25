@@ -80,3 +80,8 @@ caps:
 related_skills:
   - kotlin
   - scala
+
+links_to:
+  - kotlin
+  - scala
+  - testing

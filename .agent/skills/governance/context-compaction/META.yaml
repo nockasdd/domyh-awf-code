@@ -34,3 +34,8 @@ caps:
   - HSA strategy mapping (trim-code, llm-summarize, summarize, aggressive)
 
 related_skills: [context-engineering, session-memory, session-lifecycle]
+
+links_to:
+  - context-engineering
+  - context-integrity
+  - session-memory

@@ -58,3 +58,8 @@ related_skills:
 prevent_confusion_with:
   - nodejs: "Bun is faster, uses bun.lockb"
   - deno: "Bun uses npm, Deno uses URL imports"
+
+links_to:
+  - javascript
+  - typescript
+  - testing

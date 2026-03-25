@@ -20,3 +20,8 @@ caps:
   - ASP.NET Core
   - Entity Framework Core
   - Blazor
+
+links_to:
+  - fsharp
+  - java
+  - testing

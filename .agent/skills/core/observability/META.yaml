@@ -70,3 +70,9 @@ data_files:
 
 related_skills:
   - logging
+
+links_to:
+  - logging
+  - ci-cd
+  - kubernetes
+  - docker

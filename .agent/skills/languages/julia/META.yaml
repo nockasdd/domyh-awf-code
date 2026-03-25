@@ -10,3 +10,8 @@ desc: "Julia development patterns for Julia 1.10+. Covers scientific computing, 
 related_skills:
   - python
   - r
+
+links_to:
+  - python
+  - ml-pipelines
+  - r

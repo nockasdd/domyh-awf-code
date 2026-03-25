@@ -15,3 +15,8 @@ related_skills:
 prevent_confusion_with:
   - ruby: "Elixir uses pattern matching, Ruby uses OOP"
   - erlang: "Elixir has modern syntax, runs on BEAM"
+
+links_to:
+  - ruby
+  - event-driven
+  - real-time

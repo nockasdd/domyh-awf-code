@@ -55,3 +55,8 @@ data_files:
   - data/bdd-atdd-patterns.yaml
   - data/language-patterns.yaml
   - data/anti-patterns.yaml
+
+links_to:
+  - testing
+  - playwright
+  - coding-rules

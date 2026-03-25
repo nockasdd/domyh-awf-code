@@ -26,3 +26,8 @@ caps:
   - Existing pattern detection before new code
   - Constraint verification before changes
   - Research-before-write enforcement
+
+links_to:
+  - context-engineering
+  - context-integrity
+  - evidence-discipline

@@ -32,3 +32,8 @@ caps:
   - Failure signal detection in subagent output
   - Partial success handling (pass rate thresholds)
   - Evidence levels (L1 visual, L2 command, L3 test)
+
+links_to:
+  - context-integrity
+  - context-first-gatekeeping
+  - audit-pro

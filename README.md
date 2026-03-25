@@ -256,8 +256,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 
 | URL                                | Description                                                  |
 | :--------------------------------- | :----------------------------------------------------------- |
-| `http://localhost:13100/dashboard` | 📊 Project overview, file tree, stack detection, cache stats |
-| `http://localhost:13100/logs`      | 📋 Real-time tool call logs with SSE streaming               |
+| `http://localhost:13100/dashboard` | 📊 Single-page dashboard with 3 tabs: **Dashboard** (KPIs, tech stack, engine status, memory, project explorer, activity feed, charts, PageRank) · **Graph** (interactive CodeGraph visualization) · **Logs** (real-time tool call logs with filtering) |
 | `http://localhost:13100/health`    | ❤️ Health check endpoint                                     |
 
 <details>
@@ -411,7 +410,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.6.7 across 15 files               |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.6.8 across 15 files               |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
 | `/lang`         | Switch agent language (English ↔ Vietnamese)                          | `/lang vi` → Switch to Vietnamese                            |

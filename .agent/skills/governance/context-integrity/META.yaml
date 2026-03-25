@@ -28,3 +28,8 @@ caps:
   - Intent vs action alignment check
   - Scope creep prevention
   - Focus realignment recommendations
+
+links_to:
+  - context-engineering
+  - context-compaction
+  - evidence-discipline

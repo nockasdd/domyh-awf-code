@@ -53,3 +53,9 @@ related_skills:
 
 prevent_confusion_with:
   - aws: "ci-cd is platform-agnostic, aws covers AWS-specific deployment"
+
+links_to:
+  - docker
+  - testing
+  - monorepo
+  - kubernetes

@@ -45,3 +45,9 @@ caps:
   - 9 context engineering techniques checklist
   - HSA tools for context management
   - Anti-patterns detection (8 patterns)
+
+links_to:
+  - context-compaction
+  - context-integrity
+  - session-memory
+  - prompt-engineering

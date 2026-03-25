@@ -94,3 +94,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/api-protocols/data"
   preload_data: true
+
+links_to:
+  - api-design
+  - microservices
+  - real-time

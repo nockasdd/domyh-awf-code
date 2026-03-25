@@ -68,3 +68,8 @@ data_files:
   - data/webhooks.yaml
   - data/security.yaml
   - data/common-patterns.yaml
+
+links_to:
+  - api-design
+  - security
+  - error-handling

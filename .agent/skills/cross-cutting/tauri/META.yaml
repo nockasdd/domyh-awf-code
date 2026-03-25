@@ -67,3 +67,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/cross-cutting/tauri/data"
   preload_data: true
+
+links_to:
+  - rust
+  - typescript
+  - electron

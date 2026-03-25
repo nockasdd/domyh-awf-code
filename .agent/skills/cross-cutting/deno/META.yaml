@@ -68,3 +68,8 @@ related_skills:
 prevent_confusion_with:
   - nodejs: "Deno uses URL imports, Node uses npm"
   - bun: "Deno is security-first, Bun is speed-first"
+
+links_to:
+  - javascript
+  - typescript
+  - testing

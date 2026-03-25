@@ -32,3 +32,9 @@ caps:
   - Context isolation rules
   - Sub-agent handoff flow
   - Task decomposition strategies
+
+links_to:
+  - ai-agents
+  - delegation-intelligence
+  - mcp
+  - context-engineering

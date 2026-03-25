@@ -70,3 +70,9 @@ related_skills:
 prevent_confusion_with:
   - vue: "Svelte uses compilation, Vue uses virtual DOM"
   - react: "Svelte uses runes, React uses hooks"
+
+links_to:
+  - typescript
+  - testing
+  - tailwind
+  - web-perf

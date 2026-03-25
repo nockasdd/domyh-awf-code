@@ -78,3 +78,9 @@ data_files:
   - data/scoring.yaml
 
 related_skills: [security, authentication, coding-rules, api-design, testing, error-handling, logging, observability, database, sql, web-perf, domyh-design]
+
+links_to:
+  - security
+  - coding-rules
+  - testing
+  - cascade-review

@@ -11,3 +11,8 @@ related_skills:
   - csharp
   - haskell
   - ocaml
+
+links_to:
+  - csharp
+  - ocaml
+  - testing

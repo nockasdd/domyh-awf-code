@@ -58,3 +58,9 @@ data_files:
   - data/error-responses.yaml
   - data/http-status-codes.yaml
   - data/test-apis.yaml
+
+links_to:
+  - error-handling
+  - authentication
+  - security
+  - api-protocols

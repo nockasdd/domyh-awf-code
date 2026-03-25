@@ -82,3 +82,7 @@ data_files:
   - data/email-marketing.yaml
   - data/privacy-analytics.yaml
   - data/conversion-tracking.yaml
+
+links_to:
+  - seo
+  - web-perf

@@ -53,3 +53,8 @@ data_files:
   - data/image-prompts.yaml
   - data/video-generation.yaml
   - data/files-api.yaml
+
+links_to:
+  - gemini-live
+  - gemini-tts
+  - prompt-engineering

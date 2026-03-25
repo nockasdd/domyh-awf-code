@@ -100,3 +100,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/cross-cutting/event-driven/data"
   preload_data: true
+
+links_to:
+  - microservices
+  - real-time
+  - api-design

@@ -105,3 +105,8 @@ related_skills:
 prevent_confusion_with:
   - javascript: "Python uses def/async def, JS uses function/async function"
   - php: "Python uses indentation, PHP uses braces"
+
+links_to:
+  - ml-pipelines
+  - testing
+  - database

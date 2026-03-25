@@ -52,3 +52,8 @@ data_files:
   - data/context-caching.yaml
   - data/code-execution.yaml
   - data/grounding.yaml
+
+links_to:
+  - gemini-media-gen
+  - gemini-tts
+  - prompt-engineering

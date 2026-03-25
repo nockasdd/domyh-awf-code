@@ -81,3 +81,7 @@ related_skills:
 
 prevent_confusion_with:
   - database: "SQL is query language, database skill covers ORMs"
+
+links_to:
+  - database
+  - api-design

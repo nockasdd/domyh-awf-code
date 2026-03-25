@@ -29,3 +29,8 @@ caps:
   - CONTEXT_SNAPSHOT.md update
   - session.md append
   - Unsaved work detection
+
+links_to:
+  - session-lifecycle
+  - context-engineering
+  - testing

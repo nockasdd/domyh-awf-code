@@ -10,3 +10,7 @@ desc: "Clojure development patterns for Clojure 1.11+. Lisp on JVM, functional, 
 related_skills:
   - java
   - haskell
+
+links_to:
+  - java
+  - testing

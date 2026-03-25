@@ -37,3 +37,8 @@ caps:
   - Code quality reviewer prompt template
   - Implementer prompt template with self-review checklist
   - Escalation guidelines
+
+links_to:
+  - audit-pro
+  - coding-rules
+  - receiving-code-review

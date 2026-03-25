@@ -63,3 +63,9 @@ related_skills:
 prevent_confusion_with:
   - docker: "kubernetes orchestrates containers, docker builds them"
   - aws: "kubernetes is general, aws covers EKS specifically"
+
+links_to:
+  - docker
+  - ci-cd
+  - observability
+  - terraform

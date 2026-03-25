@@ -16,3 +16,9 @@ related_skills:
 prevent_confusion_with:
   - python: "Ruby uses end keyword, Python uses indentation"
   - javascript: "Ruby uses do/end blocks, JS uses {}"
+
+links_to:
+  - crystal
+  - elixir
+  - testing
+  - database

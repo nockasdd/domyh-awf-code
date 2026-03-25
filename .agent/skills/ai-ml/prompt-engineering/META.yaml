@@ -102,3 +102,8 @@ data_files:
   - data/image-types-creative.yaml
   - data/image-types-marketing.yaml
   - data/image-types-photography.yaml
+
+links_to:
+  - ai-agents
+  - context-engineering
+  - rag-patterns

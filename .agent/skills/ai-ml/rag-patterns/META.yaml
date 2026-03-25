@@ -54,3 +54,9 @@ data_files:
   - vector-databases.yaml
   - retrieval-patterns.yaml
   - evaluation.yaml
+
+links_to:
+  - vector-search
+  - database
+  - prompt-engineering
+  - ml-pipelines

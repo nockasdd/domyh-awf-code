@@ -47,3 +47,9 @@ related_skills:
 prevent_confusion_with:
   - rust: "Zig has no borrow checker, explicit allocators"
   - c: "Zig has safety checks, no macros"
+
+links_to:
+  - c
+  - cpp
+  - rust
+  - testing

@@ -76,3 +76,10 @@ related_skills:
 prevent_confusion_with:
   - nuxt: "Next.js uses React, Nuxt uses Vue"
   - react: "Next.js is a React meta-framework with SSR/SSG"
+
+links_to:
+  - react
+  - typescript
+  - seo
+  - tailwind
+  - web-perf

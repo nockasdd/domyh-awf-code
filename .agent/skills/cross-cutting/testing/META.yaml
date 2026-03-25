@@ -49,3 +49,9 @@ actions:
 data_files:
   - data/frameworks.yaml
   - data/patterns.yaml
+
+links_to:
+  - tdd-workflow
+  - playwright
+  - coding-rules
+  - ci-cd

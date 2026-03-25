@@ -93,3 +93,9 @@ related_skills:
   - ai-agents
   - rag-patterns
   - streamlit
+
+links_to:
+  - python
+  - docker
+  - vector-search
+  - rag-patterns

@@ -44,3 +44,9 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/cross-cutting/wasm/data"
   preload_data: false
+
+links_to:
+  - rust
+  - cpp
+  - c
+  - web-perf

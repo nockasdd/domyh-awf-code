@@ -31,3 +31,9 @@ caps:
   - Debug session orchestration
   - Stack trace analysis
   - Bisect-style elimination
+
+links_to:
+  - error-handling
+  - logging
+  - observability
+  - testing

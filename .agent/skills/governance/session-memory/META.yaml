@@ -32,3 +32,8 @@ caps:
   - Cross-session memory persistence
   - Decision recall at session start
   - Emergency save sequence
+
+links_to:
+  - session-lifecycle
+  - context-compaction
+  - context-engineering

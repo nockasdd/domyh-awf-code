@@ -67,3 +67,8 @@ data_files:
   - data/language-csharp.yaml
   - data/language-mobile.yaml
   - data/anti-patterns.yaml
+
+links_to:
+  - security
+  - api-design
+  - error-handling

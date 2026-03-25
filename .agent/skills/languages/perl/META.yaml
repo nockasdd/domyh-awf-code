@@ -10,3 +10,8 @@ desc: "Perl 5.40+ development patterns. Covers text processing, regex, system ad
 related_skills:
   - python
   - ruby
+
+links_to:
+  - python
+  - ruby
+  - testing

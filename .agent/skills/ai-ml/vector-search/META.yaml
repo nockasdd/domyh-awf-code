@@ -55,3 +55,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/ai-ml/vector-search/data"
   preload_data: true
+
+links_to:
+  - rag-patterns
+  - database
+  - ml-pipelines

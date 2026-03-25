@@ -52,3 +52,9 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/cli-dev/data"
   preload_data: false
+
+links_to:
+  - typescript
+  - go
+  - rust
+  - testing

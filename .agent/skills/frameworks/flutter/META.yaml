@@ -73,3 +73,7 @@ related_skills:
 prevent_confusion_with:
   - react_native: "Flutter uses Dart, React Native uses JavaScript/TypeScript"
   - kotlin_android: "Flutter is cross-platform, Kotlin Android is native Android"
+
+links_to:
+  - react-native
+  - testing

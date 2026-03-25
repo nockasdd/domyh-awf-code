@@ -67,3 +67,7 @@ data_files:
 
 related_skills:
   - observability
+
+links_to:
+  - observability
+  - error-handling

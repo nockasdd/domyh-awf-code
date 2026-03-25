@@ -30,3 +30,8 @@ caps:
   - 3-level progress hierarchy (trajectory→tactic→action)
   - Session persistence (CONTEXT_SNAPSHOT.md)
   - Mode selection (plan_driven, exploration, bugfix, refactor)
+
+links_to:
+  - session-memory
+  - context-engineering
+  - pre-stop-checklist

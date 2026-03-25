@@ -75,3 +75,8 @@ related_skills:
   - cpp
   - c
   - security
+
+links_to:
+  - c
+  - cpp
+  - wasm

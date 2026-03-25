@@ -38,3 +38,8 @@ caps:
   - Anti-patterns detection (grep for calls, manual file reading)
 
 related_skills: [context-engineering]
+
+links_to:
+  - database
+  - api-design
+  - rag-patterns

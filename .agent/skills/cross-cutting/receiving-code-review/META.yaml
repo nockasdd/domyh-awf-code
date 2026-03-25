@@ -35,3 +35,8 @@ caps:
   - YAGNI check for reviewer suggestions
   - Implementation ordering (blocking → simple → complex)
   - Source-specific handling (user vs external)
+
+links_to:
+  - cascade-review
+  - coding-rules
+  - audit-pro

@@ -65,3 +65,9 @@ related_skills:
 prevent_confusion_with:
   - react: "Vue uses templates, React uses JSX"
   - svelte: "Vue uses VDOM (except Vapor), Svelte compiles away"
+
+links_to:
+  - typescript
+  - nuxt
+  - testing
+  - tailwind

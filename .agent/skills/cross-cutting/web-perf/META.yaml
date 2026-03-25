@@ -85,3 +85,8 @@ related_skills:
 
 prevent_confusion_with:
   - testing: "web-perf audits performance, testing verifies correctness"
+
+links_to:
+  - seo
+  - accessibility
+  - observability

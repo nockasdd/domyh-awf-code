@@ -15,3 +15,9 @@ related_skills:
 prevent_confusion_with:
   - python: "PHP uses $variable, Python uses variable"
   - javascript: "PHP is server-side, don't confuse with Node.js"
+
+links_to:
+  - javascript
+  - database
+  - sql
+  - testing

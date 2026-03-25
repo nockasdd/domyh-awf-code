@@ -46,3 +46,7 @@ data_files:
   - data/models.yaml
   - data/markup-tags.yaml
   - data/prompting-patterns.yaml
+
+links_to:
+  - gemini-live
+  - gemini-media-gen

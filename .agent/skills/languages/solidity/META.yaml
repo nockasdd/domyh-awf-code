@@ -10,3 +10,7 @@ desc: "Solidity smart contract patterns for Solidity 0.8+. Ethereum, EVM-compati
 related_skills:
   - typescript
   - javascript
+
+links_to:
+  - security
+  - testing

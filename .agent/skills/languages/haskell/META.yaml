@@ -15,3 +15,8 @@ related_skills:
 prevent_confusion_with:
   - ocaml: "Haskell is lazy, OCaml is strict"
   - rust: "Haskell has GC, Rust has ownership"
+
+links_to:
+  - ocaml
+  - fsharp
+  - testing

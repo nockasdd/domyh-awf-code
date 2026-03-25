@@ -84,3 +84,10 @@ data_files:
   - resilience.yaml # Circuit breaker, bulkhead, retry
   - observability.yaml # Distributed tracing, correlation IDs
   - deployment.yaml # Blue-green, canary, rolling
+
+links_to:
+  - event-driven
+  - docker
+  - kubernetes
+  - api-design
+  - api-protocols

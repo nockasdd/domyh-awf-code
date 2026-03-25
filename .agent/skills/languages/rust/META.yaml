@@ -80,3 +80,9 @@ related_skills:
 prevent_confusion_with:
   - cpp: "Rust uses ownership, C++ uses RAII"
   - go: "Rust has no GC, Go has GC"
+
+links_to:
+  - cpp
+  - wasm
+  - tauri
+  - testing

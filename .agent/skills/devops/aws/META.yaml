@@ -68,3 +68,9 @@ related_skills:
 
 prevent_confusion_with:
   - kubernetes: "aws covers EKS specifically, kubernetes is general k8s patterns"
+
+links_to:
+  - docker
+  - kubernetes
+  - terraform
+  - ci-cd

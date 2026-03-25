@@ -64,3 +64,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/ide-extension/data"
   preload_data: true
+
+links_to:
+  - typescript
+  - hsa-toolkit
+  - mcp

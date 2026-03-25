@@ -44,3 +44,10 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/devops/terraform/data"
   preload_data: false
+
+links_to:
+  - aws
+  - azure
+  - gcp
+  - kubernetes
+  - docker

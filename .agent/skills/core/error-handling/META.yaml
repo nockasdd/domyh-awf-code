@@ -65,3 +65,8 @@ data_files:
   - data/ui-error-patterns.yaml
   - data/api-error-patterns.yaml
   - data/anti-patterns.yaml
+
+links_to:
+  - logging
+  - observability
+  - api-design

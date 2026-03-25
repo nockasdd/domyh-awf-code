@@ -60,3 +60,9 @@ caps:
   - ORM comparison
   - Query optimization
   - Connection pooling
+
+links_to:
+  - sql
+  - api-design
+  - error-handling
+  - rag-patterns

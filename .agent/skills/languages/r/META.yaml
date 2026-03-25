@@ -13,3 +13,8 @@ related_skills:
 
 prevent_confusion_with:
   - python: "R uses <- for assignment, Python uses ="
+
+links_to:
+  - python
+  - julia
+  - ml-pipelines

@@ -67,3 +67,9 @@ related_skills:
 prevent_confusion_with:
   - flutter: "React Native uses JavaScript/TypeScript, Flutter uses Dart"
   - react: "React Native is for mobile, React is for web"
+
+links_to:
+  - react
+  - typescript
+  - flutter
+  - testing

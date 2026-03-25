@@ -127,3 +127,9 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/ai-ml/ai-agents/data"
   preload_data: true
+
+links_to:
+  - agentic-orchestration
+  - prompt-engineering
+  - rag-patterns
+  - mcp

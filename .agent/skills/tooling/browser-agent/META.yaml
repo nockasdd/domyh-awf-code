@@ -66,3 +66,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/browser-agent/data"
   preload_data: true
+
+links_to:
+  - playwright
+  - testing
+  - web-perf

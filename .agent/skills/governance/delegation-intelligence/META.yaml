@@ -30,3 +30,8 @@ caps:
   - Tool filtering for sub-agent types
   - Cross-model cascade routing
   - Sub-agent result validation
+
+links_to:
+  - agentic-orchestration
+  - ai-agents
+  - context-engineering

@@ -58,3 +58,8 @@ related_skills:
 
 prevent_confusion_with:
   - kubernetes: "docker is for container building, kubernetes is orchestration"
+
+links_to:
+  - kubernetes
+  - ci-cd
+  - microservices

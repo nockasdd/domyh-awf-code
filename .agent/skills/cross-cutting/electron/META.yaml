@@ -160,3 +160,9 @@ hsa:
     - search_electron_patterns
     - get_electron_api
   pattern_count: 40
+
+links_to:
+  - typescript
+  - javascript
+  - tauri
+  - react

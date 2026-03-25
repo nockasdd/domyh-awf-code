@@ -41,3 +41,9 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/devops/azure/data"
   preload_data: false
+
+links_to:
+  - docker
+  - kubernetes
+  - terraform
+  - ci-cd

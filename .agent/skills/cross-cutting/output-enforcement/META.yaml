@@ -28,3 +28,7 @@ caps:
   - Token-limit split handling with PAUSED marker
   - Structural shortcut detection
   - Pre-output cross-check
+
+links_to:
+  - coding-rules
+  - context-engineering

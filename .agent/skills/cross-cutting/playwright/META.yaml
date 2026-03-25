@@ -77,3 +77,8 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/cross-cutting/playwright/data"
   preload_data: true
+
+links_to:
+  - testing
+  - tdd-workflow
+  - web-perf

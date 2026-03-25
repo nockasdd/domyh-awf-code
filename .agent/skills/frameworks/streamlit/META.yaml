@@ -55,3 +55,8 @@ related_skills:
   - ml-pipelines
   - gemini-live
   - rag-patterns
+
+links_to:
+  - python
+  - ml-pipelines
+  - database

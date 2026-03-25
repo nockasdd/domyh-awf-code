@@ -91,3 +91,8 @@ data_files:
   - data/language-specific/ruby-security.yaml
   - data/language-specific/kotlin-security.yaml
   - data/language-specific/swift-security.yaml
+
+links_to:
+  - authentication
+  - api-design
+  - coding-rules

@@ -10,3 +10,8 @@ desc: "OCaml development patterns for OCaml 5.1+. ML family, algebraic types, pa
 related_skills:
   - haskell
   - fsharp
+
+links_to:
+  - haskell
+  - fsharp
+  - testing

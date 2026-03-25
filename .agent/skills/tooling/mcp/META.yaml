@@ -72,3 +72,9 @@ hsa_adapter:
   enabled: true
   data_dir: "skills/tooling/mcp/data"
   preload_data: true
+
+links_to:
+  - ai-agents
+  - hsa-toolkit
+  - api-protocols
+  - agentic-orchestration

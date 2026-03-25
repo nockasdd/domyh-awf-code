@@ -42,3 +42,9 @@ data_files:
   - data/wcag-guidelines.yaml
   - data/aria-patterns.yaml
   - data/testing-tools.yaml
+
+links_to:
+  - seo
+  - domyh-design
+  - web-perf
+  - testing

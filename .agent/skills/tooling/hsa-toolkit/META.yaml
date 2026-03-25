@@ -27,3 +27,8 @@ caps:
   - hybrid_search_setup
   - codegraph_enablement
   - local_toolkit_validation
+
+links_to:
+  - mcp
+  - context-engineering
+  - skill-creator

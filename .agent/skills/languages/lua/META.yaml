@@ -51,3 +51,8 @@ caps:
 prevent_confusion_with:
   python: "Lua uses tables, Python uses dicts/lists"
   javascript: "Lua 1-indexed, JS 0-indexed"
+
+links_to:
+  - c
+  - wasm
+  - testing

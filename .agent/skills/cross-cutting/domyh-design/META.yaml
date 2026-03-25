@@ -136,3 +136,9 @@ data_files:
   - data/image-gen-prompts.yaml
   - data/image-gen-workflows.yaml
   - data/design-system-prompts.yaml
+
+links_to:
+  - accessibility
+  - tailwind
+  - web-perf
+  - seo

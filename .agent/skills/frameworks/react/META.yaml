@@ -68,3 +68,10 @@ related_skills:
 prevent_confusion_with:
   - vue: "React uses JSX, Vue uses templates"
   - angular: "React is a library, Angular is a framework"
+
+links_to:
+  - typescript
+  - nextjs
+  - testing
+  - tailwind
+  - web-perf

@@ -79,3 +79,9 @@ related_skills:
 prevent_confusion_with:
   - react: "Angular uses signals + DI, React uses hooks"
   - vue: "Angular is enterprise-focused with full framework"
+
+links_to:
+  - typescript
+  - testing
+  - accessibility
+  - web-perf
