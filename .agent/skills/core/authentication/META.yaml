@@ -2,7 +2,8 @@ name: authentication
 display: Authentication Patterns
 category: core
 tier: 1
-priority: 0
+
+version: "1.0.0"
 
 desc: "Comprehensive authentication patterns including JWT, OAuth 2.1, passkeys/FIDO2, sessions, MFA, and password security for 12 languages."
 

@@ -1,0 +1,52 @@
+# =============================================================================
+# EVAL_METRICS.yaml — Production Agent Quality Metrics (v1.0.0)
+# =============================================================================
+# Inspired by: SWE-bench, FeatureBench, whocodesbest.com
+# Purpose: Track agent effectiveness across sessions
+# =============================================================================
+
+schema_version: "1.0.0"
+
+# ── Agent Performance Metrics ────────────────────────────────
+agent_metrics:
+  - id: accepted_change_rate
+    desc: "Percentage of agent changes merged without significant rework"
+    formula: "merged_changes / total_changes"
+    target: ">= 0.85"
+    source: "SWE-bench real-world research"
+
+  - id: instruction_fidelity
+    desc: "Agent adherence to specified constraints, rules, and conventions"
+    formula: "correct_behaviors / total_evaluated"
+    target: ">= 0.90"
+    source: "whocodesbest.com evaluation methodology"
+
+  - id: regression_rate_7d
+    desc: "AI-generated changes causing bugs within 7 days"
+    formula: "regressed_changes / total_changes"
+    target: "<= 0.05"
+
+  - id: skill_trigger_precision
+    desc: "Correct skill activated for given context"
+    formula: "correct_skill_activations / total_activations"
+    target: ">= 0.90"
+
+  - id: context_utilization
+    desc: "Percentage of token budget used effectively (not wasted on noise)"
+    formula: "useful_tokens / total_tokens_used"
+    target: ">= 0.70"
+
+# ── Benchmark Reference (March 2026) ────────────────────────
+benchmarks:
+  swe_bench_verified:
+    top_score: "82.1%"
+    model: "Claude Sonnet 5"
+    date: "2026-03"
+  swe_bench_pro:
+    top_score: "57.5%"
+    model: "Claude Opus 4.6 + WarpGrep v2"
+    date: "2026-03"
+  feature_bench:
+    top_score: "11.0%"
+    model: "Claude Opus 4.5"
+    note: "63% gap shows long-horizon feature dev is still hard"

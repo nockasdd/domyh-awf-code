@@ -1,0 +1,36 @@
+name: context-compaction
+display: "Context Compaction"
+category: governance
+tier: 1
+priority: 3
+version: "1.0.0"
+
+desc: "Context window saturation detection and compaction strategies. Triggers at 40% utilization, 50+ tool calls, or 30+ turns. Covers history summarization, output truncation, skill slot release. Maps to HSA context-compactor engine strategies."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - context full
+    - compaction
+    - too many tokens
+    - context overflow
+    - long session
+    - window management
+    - token limit
+    - context budget
+    - out of context
+  intents:
+    - manage context window size
+    - compact conversation history
+    - reduce token usage
+    - handle long session
+
+caps:
+  - Saturation signal detection (5 signals)
+  - History summarization workflow
+  - Output truncation rules
+  - Skill slot management (max 3 T2)
+  - Reference compaction technique
+  - HSA strategy mapping (trim-code, llm-summarize, summarize, aggressive)
+
+related_skills: [context-engineering, session-memory, session-lifecycle]

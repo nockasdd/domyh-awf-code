@@ -2,7 +2,8 @@ name: observability
 display: Observability Patterns
 category: core
 tier: 1
-priority: 0
+
+version: "1.0.0"
 
 desc: "Comprehensive observability patterns for metrics, tracing, and profiling. Covers OpenTelemetry, Prometheus, Jaeger, and 12 programming languages."
 

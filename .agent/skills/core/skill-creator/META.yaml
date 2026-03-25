@@ -2,7 +2,8 @@ name: skill-creator
 display: "Skill Creator"
 category: core
 tier: 1
-priority: 3
+
+version: "1.0.0"
 
 desc: "Meta-skill for creating, improving, and validating DOMYH skills. Scaffolds skill templates, enforces frontmatter schema, validates BM25 trigger accuracy, and guides skill development."
 

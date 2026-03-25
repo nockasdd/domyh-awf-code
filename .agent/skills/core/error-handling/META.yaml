@@ -2,7 +2,8 @@ name: error-handling
 display: Error Handling Patterns
 category: core
 tier: 1
-priority: 1
+
+version: "1.0.0"
 
 desc: "Comprehensive error handling patterns: Result/Either (Rust/FP), exceptions (Python/Java/PHP), errors as values (Go/C), RAII (C++), resilience (circuit breaker, retry, backoff). 12 languages, 250+ patterns."
 

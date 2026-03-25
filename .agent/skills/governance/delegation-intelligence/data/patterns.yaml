@@ -1,0 +1,74 @@
+patterns:
+  - id: DI-001
+    name: "Should I Delegate? — Decision Tree"
+    category: delegation-intelligence
+    description: "Decision framework: Is task self-contained? Does it require context from other tasks? Is it a well-defined task type (code/test/review/debug/browser/research)? All YES → delegate with handoff packet."
+    priority: critical
+
+  - id: DI-002
+    name: "Handoff Packet Checklist"
+    category: delegation-intelligence
+    description: "Every delegation MUST specify: task description, scope boundaries, return format, success metric, context files (focus_files). Optional: constraints, style guide."
+    priority: critical
+    required: ["task", "scope", "return_format", "success_metric", "focus_files"]
+
+  - id: DI-003
+    name: "Cross-Model Cascade Pattern"
+    category: delegation-intelligence
+    description: "Delegate to specialized model via hsa_delegate. Flow: cascade_models (list) → cascade (send prompt + task_type) → wait 5s → cascade_read (poll, max 10) → use response or cascade_cancel."
+    priority: high
+    tools: ["hsa_delegate"]
+
+  - id: DI-004
+    name: "Quick Complexity Score (H1-H10)"
+    category: delegation-intelligence
+    description: "Score 1-3: single file <30 LOC → skip cascade. Score 4-5: single file 30-100 LOC → skip. Score 6-7: multi-file 100-200 LOC → SUGGEST cascade. Score 8-9: multi-file >200 LOC → AUTO cascade. Score 10: cross-cutting >5 files → AUTO."
+    priority: high
+
+  - id: DI-005
+    name: "Task Decomposition Patterns"
+    category: delegation-intelligence
+    description: "Break complex work: By file (independent changes → parallel), By layer (sequential dependencies: API→Service→Tests), By concern (mixed: Frontend+Backend+Docs → parallel), By phase (ordered: Research→Plan→Implement → sequential)."
+    priority: high
+
+  - id: DI-006
+    name: "Parallel vs Sequential Decision"
+    category: delegation-intelligence
+    description: "Parallel: independent tasks, no shared files. Sequential: task B needs A's output. Fan-out: same task different files. Pipeline: transform chain. Independence test: check file overlap before parallel."
+    priority: high
+
+  - id: DI-007
+    name: "Result Parsing Protocol"
+    category: delegation-intelligence
+    description: "Post-delegation validation: 1) Scan for failure signals (failed, error, blocked, skipped). 2) Check completeness against task description. 3) Check specificity (reject vague 'everything works'). 4) Verify independently (build/test/lint). 5) Capture intelligence via hsa_session. 6) Update hierarchy."
+    priority: critical
+
+  - id: DI-008
+    name: "Error Recovery — When Subagent Fails"
+    category: delegation-intelligence
+    description: "Save failure intelligence → Assess retry viability (transient=retry, logic=modify task, scope=break smaller) → Retry with clarified instructions (max 2 retries) → After 2 failures do it yourself or report to user."
+    priority: high
+
+  - id: DI-009
+    name: "Multi-Delegation Coordination"
+    category: delegation-intelligence
+    description: "Dispatch all parallel tasks → Validate each independently using Result Parsing Protocol → Integration check (full build+test after all return, individual successes ≠ combined success) → Save combined intelligence."
+    priority: medium
+
+  - id: DI-010
+    name: "Cascade Prompt Guidelines"
+    category: delegation-intelligence
+    description: "Include in cascade_text: Goal (what to produce), Context (code snippets, file paths, errors), Constraints (language, framework, style), Return format (expected structure). Tool filtering saves 93-97% tokens."
+    priority: high
+
+  - id: DI-011
+    name: "When to Cascade vs Do Yourself"
+    category: delegation-intelligence
+    description: "Do yourself: task within current model strength. Cascade review/debug: need stronger reasoning (Opus/Pro). Cascade code: need fast cheap output (Flash). Cascade research: need web access. User-configured: auto-routes via dashboard."
+    priority: medium
+
+  - id: DI-012
+    name: "Red Flags — Delegation Anti-Patterns"
+    category: delegation-intelligence
+    description: "Don't: trust subagent said done without parsing. Don't: capture intelligence later (compaction may fire). Don't: ignore minor failures (they compound). Don't: assume tasks are independent without file overlap check. Don't: retry more than 2 times."
+    priority: high

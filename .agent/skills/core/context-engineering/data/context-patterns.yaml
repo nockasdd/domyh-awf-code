@@ -1,0 +1,64 @@
+patterns:
+  - id: CE-001
+    name: Layered Context Taxonomy
+    category: context-engineering
+    description: "Structure context into 6 layers: System Rules → Memory → Retrieved Docs → Tool Schemas → Conversation History → Current Task. Each layer has priority and budget."
+    priority: critical
+    budget: "System Rules ~500tok, Memory ~500tok, Retrieved ~2000tok, Tools ~800tok, History ~3000tok, Task ~500tok"
+
+  - id: CE-002
+    name: U-Shape Position Engineering
+    category: context-engineering
+    description: "LLMs have U-shape attention — HEAD and TAIL get highest attention, MIDDLE gets lowest (Lost in the Middle effect). Place critical rules + budgets in HEAD. Place current task + persona in TAIL."
+    priority: critical
+    evidence: "MIT/Stanford research 2024-2025, confirmed by Anthropic, Google, GitHub"
+
+  - id: CE-003
+    name: Context Compaction Signals
+    category: context-engineering
+    description: "Compact when: context >70% of window, >10 consecutive tool results, phase transition (research→execution), repetitive patterns, or context rot detected."
+    priority: high
+    triggers:
+      - "context >70% of window"
+      - ">10 consecutive tool results"
+      - "research→execution phase transition"
+      - "repetitive patterns accumulating"
+      - "context rot — stale cached data"
+
+  - id: CE-004
+    name: Fork Decision (Sub-Agent)
+    category: context-engineering
+    description: "Fork sub-agent when: independent sub-task identified, different tool set needed, current context irrelevant, or multiple research paths needed."
+    priority: medium
+    tool: "hsa_delegate"
+
+  - id: CE-005
+    name: Token Budget Rules
+    category: context-engineering
+    description: "Skills lazy-loading: ~50-100 tok/skill at startup, ~2000-5000 full load. Total 101 skills × ~86 = ~8700 vs 303000 if all loaded. Anchors ~50 each. CONTEXT_SNAPSHOT ~500."
+    priority: high
+
+  - id: CE-006
+    name: Progressive Disclosure (3-Tier)
+    category: context-engineering
+    description: "T1: Metadata only at startup (~50-100 tok). T2: Pattern names + categories on-demand (~500 tok). T3: Full pattern content when matched (~2000-5000 tok)."
+    priority: high
+
+  - id: CE-007
+    name: Context Rot Detection
+    category: context-engineering
+    description: "Anti-pattern: using stale cached data without re-validation. Fix: re-read source files, discard stale cache, use hsa_check_changes to verify file state."
+    priority: medium
+
+  - id: CE-008
+    name: Lost in the Middle Prevention
+    category: context-engineering
+    description: "Anti-pattern: burying important instructions in center of context. Fix: position critical info at HEAD (lines 1-9) or TAIL of context window."
+    priority: critical
+    evidence: "Liu et al. 2024 — Lost in the Middle paper"
+
+  - id: CE-009
+    name: Context Engineering vs Prompt Engineering
+    category: context-engineering
+    description: "Context Engineering supersedes Prompt Engineering. CE = managing everything the model knows when processing (system rules, memory, RAG, tools, history, task). PE = crafting a single prompt."
+    priority: high

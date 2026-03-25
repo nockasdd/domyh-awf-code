@@ -2,7 +2,8 @@ name: api-design
 display: API Design Patterns
 category: core
 tier: 1
-priority: 1
+
+version: "1.0.0"
 
 desc: "Comprehensive API design patterns: REST (Richardson Maturity, HATEOAS), GraphQL (schema, resolvers, DataLoader), gRPC (streaming, protocol buffers). Versioning, pagination, rate limiting, error responses (RFC 9457). HSA dynamic search enabled."
 

@@ -88,7 +88,8 @@ detection:
 # CONTEXT SETTINGS
 # =============================================================================
 
-  # SSoT for token budgets (87 skills × ~100 tok = 8700 T1)
+context:
+  # SSoT for token budgets (101 skills × ~86 tok = 8700 T1)
   t1_budget: 8700
 
   # Maximum tokens per T2 skill

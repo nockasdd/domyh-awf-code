@@ -1,0 +1,40 @@
+name: graph-patterns
+display: "Graph Patterns"
+category: core
+tier: 1
+priority: 4
+version: "1.0.0"
+
+desc: "Decision framework for retrieval strategy selection — when to use CodeGraph (trace_flow) vs BM25+Vector (hsa_search). Covers call chain queries, dependency analysis, impact assessment, and anti-patterns."
+
+triggers:
+  file_patterns: []
+  keywords:
+    - trace flow
+    - call chain
+    - dependency graph
+    - impact analysis
+    - who calls
+    - what depends
+    - upstream
+    - downstream
+    - code graph
+    - symbol lookup
+    - refactor impact
+    - find references
+    - find definitions
+  intents:
+    - find what calls this function
+    - trace dependencies
+    - analyze impact of change
+    - understand code relationships
+    - check before refactoring
+
+caps:
+  - Retrieval strategy selection (CodeGraph vs BM25 vs Vector)
+  - Call chain traversal guidance (upstream/downstream/both)
+  - Impact analysis workflow (pre-refactor checklist)
+  - Refactoring pre-check patterns
+  - Anti-patterns detection (grep for calls, manual file reading)
+
+related_skills: [context-engineering]

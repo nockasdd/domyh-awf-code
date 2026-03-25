@@ -187,3 +187,44 @@ hsa_session(level: "action", label: "Emergency save before compaction", status: 
 | "I remember this" | After compaction you won't. After session switch you can't. |
 | "I already saved something similar" | Check with drift — if not there, save again. |
 | "This decision is temporary" | Temporary decisions have a habit of becoming permanent. Save it. |
+
+## Generative Memory Tools 
+
+Beyond passive recall, the agent can actively manage knowledge:
+
+### Write — Create New Knowledge
+```
+hsa_session(
+  content: "[PATTERN] {name}: {description}. Validated in: {file}",
+  category: "convention"
+)
+```
+**When**: Discovered reusable pattern, new architectural insight, or project-specific convention.
+
+### Update — Evolve Existing Knowledge
+```
+hsa_session(
+  content: "[UPDATED] {old anchor ref} → New: {updated info}. Reason: {why changed}",
+  category: "decision"
+)
+```
+**When**: Decision reversed, constraint changed, better approach found.
+
+### Delete (Machine Unlearning)
+Mark knowledge as superseded — don't delete silently:
+```
+hsa_session(
+  content: "[SUPERSEDED] {old anchor}. Replaced by: {new approach}. Date: {today}",
+  category: "context"
+)
+```
+**When**: Information provably stale, misleading, or contradicted by new evidence.
+
+### Knowledge Lifecycle
+
+```
+Create → Validate → Reinforce → Evolve → Supersede
+  ↓        ↓          ↓          ↓         ↓
+ Write   Use+Cite   Confirm   Update    Unlearn
+```
+

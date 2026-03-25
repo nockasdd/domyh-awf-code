@@ -2,7 +2,8 @@ name: logging
 display: Logging Best Practices
 category: core
 tier: 1
-priority: 1
+
+version: "1.0.0"
 
 desc: "Comprehensive logging patterns covering structured logging, log levels, 12+ programming languages, log aggregation (ELK/Loki/Splunk), and OpenTelemetry integration."
 

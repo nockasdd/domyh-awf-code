@@ -1,6 +1,6 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
-> **Version**: 6.6.6 | **Cập nhật**: 2026-03-22 | **Official Docs Verified** | **Extension Storage Forensics**
+> **Version**: 6.6.7 | **Cập nhật**: 2026-03-22 | **Official Docs Verified** | **Extension Storage Forensics**
 > **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 20 MCP Tools | 5 Custom Agents
 
 ---
@@ -510,4 +510,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code v6.6.6 • 27 IDEs • Extension Storage Forensics • Platform Verified • Mar 22, 2026_
+_DOMYH Awesome Code • 27 IDEs • Extension Storage Forensics • Platform Verified • Mar 22, 2026_

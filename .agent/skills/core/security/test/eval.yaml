@@ -1,0 +1,33 @@
+# =============================================================================
+# security/test/eval.yaml — Evaluation Tests for Security Skill
+# =============================================================================
+# Schema: core/reference/EVAL_SCHEMA.yaml
+# =============================================================================
+
+skill_id: security
+version: "1.0.0"
+
+evals:
+  - name: sql_injection_trigger
+    prompt: "How to prevent SQL injection in this Node.js app?"
+    expected_skill: security
+    expected_output_contains: ["parameterized", "sanitize"]
+    min_confidence: 0.9
+    severity: critical
+
+  - name: xss_detection
+    prompt: "Review this HTML template for XSS vulnerabilities"
+    expected_skill: security
+    expected_output_contains: ["escape", "DOMPurify", "CSP"]
+    severity: critical
+
+  - name: auth_bypass_check
+    prompt: "Is this login flow secure?"
+    expected_skill: security
+    expected_output_contains: ["rate limit", "bcrypt", "CSRF"]
+    severity: important
+
+  - name: negative_non_security
+    prompt: "How to center a div with CSS?"
+    expected_skill: "!security"
+    severity: nice-to-have

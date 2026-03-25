@@ -1,0 +1,44 @@
+# =============================================================================
+# EVAL_SCHEMA.yaml — Skill Evaluation Schema (v1.0.0)
+# =============================================================================
+# Convention: Each skill MAY have test/ directory with eval files.
+# Loaded by: validate-agent-public.mjs (future), /ap workflow
+# =============================================================================
+
+schema_version: "1.0.0"
+
+# ── Eval File Convention ─────────────────────────────────────
+eval_convention:
+  directory: "test/"           # Inside each skill directory
+  file_pattern: "eval.yaml"   # Primary eval file
+  runner: "manual"            # manual | automated | llm-judge
+
+# ── Eval Entry Schema ────────────────────────────────────────
+eval_entry:
+  required:
+    - name          # string: eval name (unique per skill)
+    - prompt        # string: input prompt to trigger skill
+    - expected_skill # string: skill ID that should activate
+  optional:
+    - expected_output_contains  # string[]: output must contain these
+    - expected_output_excludes  # string[]: output must NOT contain
+    - min_confidence            # number: 0.0-1.0
+    - tags                      # string[]: categorization
+    - severity                  # string: critical | important | nice-to-have
+
+# ── Quality Metrics ──────────────────────────────────────────
+metrics:
+  - id: trigger_accuracy
+    desc: "Does the correct skill activate for the given prompt?"
+    formula: "correct_triggers / total_evals"
+    target: ">= 0.90"
+
+  - id: output_fidelity
+    desc: "Does output contain expected patterns/keywords?"
+    formula: "matching_outputs / total_evals"
+    target: ">= 0.80"
+
+  - id: false_positive_rate
+    desc: "Does skill activate when it shouldn't?"
+    formula: "false_activations / total_evals"
+    target: "<= 0.05"

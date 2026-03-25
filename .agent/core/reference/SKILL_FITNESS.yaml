@@ -1,0 +1,89 @@
+# =============================================================================
+# SKILL_FITNESS.yaml — ECS-inspired Skill Discovery Enhancement
+# =============================================================================
+# Track successful skill combinations per project type to improve auto-suggest.
+# Updated by agent during hsa_session(persist) or manually via /status.
+# =============================================================================
+
+# Skill combination fitness scores
+# Higher score = more successful combination for the project type
+fitness_profiles:
+
+  # Web fullstack (TypeScript/React/Next.js)
+  web-fullstack:
+    description: "TypeScript + React/Next.js web applications"
+    top_combos:
+      - skills: [typescript, react, nextjs, tailwind, testing]
+        score: 0.95
+        usage_count: 0
+      - skills: [typescript, api-design, authentication, database]
+        score: 0.90
+        usage_count: 0
+      - skills: [typescript, seo, web-perf, accessibility]
+        score: 0.85
+        usage_count: 0
+
+  # Backend API (Go/Python)
+  backend-api:
+    description: "Go or Python backend services"
+    top_combos:
+      - skills: [go, api-design, database, docker, testing]
+        score: 0.95
+        usage_count: 0
+      - skills: [python, api-design, authentication, ci-cd]
+        score: 0.90
+        usage_count: 0
+
+  # Game development (C++)
+  game-dev:
+    description: "C++ game automation and tooling"
+    top_combos:
+      - skills: [cpp, game-automation, reverse-engineering, anti-detection]
+        score: 0.95
+        usage_count: 0
+      - skills: [cpp, lua, game-automation, security]
+        score: 0.90
+        usage_count: 0
+
+  # DevOps / Infrastructure
+  devops-infra:
+    description: "Infrastructure and deployment"
+    top_combos:
+      - skills: [docker, kubernetes, terraform, ci-cd, monitoring]
+        score: 0.90
+        usage_count: 0
+      - skills: [docker, aws, ci-cd, security]
+        score: 0.85
+        usage_count: 0
+
+  # Agent / AI development
+  agent-ai:
+    description: "AI agent and ML pipeline development"
+    top_combos:
+      - skills: [ai-agents, mcp, prompt-engineering, rag-patterns]
+        score: 0.95
+        usage_count: 0
+      - skills: [typescript, ai-agents, agentic-orchestration, vector-search]
+        score: 0.90
+        usage_count: 0
+
+# =============================================================================
+# SCORING RULES
+# =============================================================================
+
+scoring:
+  # How to update scores
+  on_success: "+0.02 per successful task completion"
+  on_failure: "-0.01 per failed/reverted task"
+  decay: "0.001 per week of non-use"
+
+  # Discovery integration
+  integration:
+    auto_suggest: true    # Feed into config.yaml auto_suggest
+    min_score: 0.5        # Minimum score to suggest
+    max_suggestions: 3    # Top N combos to suggest
+
+# =============================================================================
+# Usage: Agent reads this file during /suggest or session start.
+# Updates usage_count and scores during hsa_session(persist).
+# =============================================================================

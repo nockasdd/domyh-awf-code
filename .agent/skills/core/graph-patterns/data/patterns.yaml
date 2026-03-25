@@ -1,0 +1,44 @@
+patterns:
+  - id: GP-001
+    name: "CodeGraph — When to Use hsa_trace_flow"
+    category: graph-patterns
+    description: "Use CodeGraph (hsa_trace_flow) for structural queries: 'What calls function X?' (upstream), 'What does X depend on?' (downstream), 'Impact of changing X' (both). NOT for semantic/content search."
+    priority: critical
+    tool: "hsa_trace_flow"
+
+  - id: GP-002
+    name: "BM25+Vector — When to Use hsa_search"
+    category: graph-patterns
+    description: "Use BM25+Vector (hsa_search) for semantic/content queries: 'Find code related to auth', 'How is X implemented?'. Use output_mode: references (light) → skeleton (medium) → full (heavy)."
+    priority: critical
+    tool: "hsa_search"
+
+  - id: GP-003
+    name: "Decision Tree — Retrieval Strategy Selection"
+    category: graph-patterns
+    description: "Need structural relationships? → hsa_trace_flow. Need content/semantic? → hsa_search. Need file ranking overview? → hsa_explore(repo_map). Need impact analysis? → trace_flow first, then search affected files."
+    priority: critical
+
+  - id: GP-004
+    name: "Pre-Refactor Checklist"
+    category: graph-patterns
+    description: "MANDATORY before changing function signature: 1) trace_flow upstream (who calls?), 2) trace_flow downstream (what it calls?), 3) hsa_search references (all file refs), 4) blast radius >5 files → STOP confirm user."
+    priority: critical
+
+  - id: GP-005
+    name: "CodeGraph Capabilities — Parameters"
+    category: graph-patterns
+    description: "hsa_trace_flow: entry_point (symbol name), direction (upstream/downstream/both), depth (1-5 max). hsa_explore: action=repo_map (PageRank ranking), focus_files (boost specific files)."
+    priority: high
+
+  - id: GP-006
+    name: "Retrieval Anti-Patterns"
+    category: graph-patterns
+    description: "Don't: grep for function calls (use trace_flow). Don't: search 'imports' as text (use CodeGraph edges). Don't: read files one-by-one (use repo_map). Don't: skip graph check before refactor. Don't: use output_mode=full first (start with skeleton)."
+    priority: high
+
+  - id: GP-007
+    name: "Combined Strategy — Impact Analysis"
+    category: graph-patterns
+    description: "For impact assessment: 1) hsa_trace_flow(entry_point, direction='both') to find call chain, 2) collect affected files, 3) hsa_search affected files for usage patterns. CodeGraph first, BM25 second."
+    priority: high

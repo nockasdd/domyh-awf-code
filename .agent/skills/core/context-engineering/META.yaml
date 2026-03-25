@@ -3,8 +3,9 @@ display: "Context Engineering"
 category: core
 tier: 1
 priority: 3
+version: "1.1.0"
 
-desc: "Context window management, token budget optimization, and compaction strategies. Context Engineering supersedes Prompt Engineering — it's about managing everything the model knows when processing."
+desc: "Context window management, token budget optimization, and compaction strategies. Context Engineering supersedes Prompt Engineering — it's about managing everything the model knows when processing. Covers layered taxonomy, position engineering, U-shape attention, 9 core techniques."
 
 triggers:
   file_patterns: []
@@ -19,16 +20,28 @@ triggers:
     - context limit
     - working memory
     - lazy loading
+    - position engineering
+    - layered context
+    - context rot
+    - lost in the middle
+    - U-shape attention
+    - progressive disclosure
+    - context compression
   intents:
     - manage context window
     - optimize token usage
     - handle context compaction
     - design context strategy
+    - fix context overflow
+    - improve retrieval quality
 
 caps:
   - Context window budget analysis
+  - Layered context taxonomy (6 layers)
+  - Position engineering (U-shape attention)
   - Compaction timing signals
   - Fork decision (when to sub-agent)
   - Token budget rules for skills, memory, tool results
+  - 9 context engineering techniques checklist
   - HSA tools for context management
-  - Anti-patterns detection
+  - Anti-patterns detection (8 patterns)

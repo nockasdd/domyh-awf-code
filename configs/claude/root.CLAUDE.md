@@ -12,6 +12,7 @@ BEFORE any response, MUST call MCP tools in this order:
 
 MUST execute before writing code:
 1. `hsa_search(query, action="skills")` — Find matching skill patterns
+   - **CTXT_001**: Context Engineering — always apply U-shape, compaction, token budgets
 2. `hsa_search(query)` — Search codebase (NEVER use grep when MCP available)
 3. `hsa_detect(action="stack")` — On first code task per project
 4. `hsa_search(action:"docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)

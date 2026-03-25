@@ -2,7 +2,8 @@ name: security
 display: Security Patterns
 category: core
 tier: 1
-priority: 0
+
+version: "1.0.0"
 
 desc: "Comprehensive security patterns: OWASP Top 10/API/Mobile, CWE Top 25, binary exploitation, Web3/DeFi, RE protection, 13 language-specific patterns."
 

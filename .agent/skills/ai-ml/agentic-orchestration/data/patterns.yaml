@@ -1,0 +1,53 @@
+patterns:
+  - id: AO-001
+    name: "Prompt Chaining (Sequential)"
+    category: agentic-orchestration
+    description: "Step1 → validate → Step2 → validate → Step3. Use for workflows with clear dependencies. Each step builds on previous output."
+    pattern: chaining
+    source: "Anthropic 5 Agentic Patterns"
+
+  - id: AO-002
+    name: "Routing (Classification)"
+    category: agentic-orchestration
+    description: "Input → Classify → Route to specialist handler. Use for different input types needing different processing. Map user intent → persona."
+    pattern: routing
+    source: "Anthropic 5 Agentic Patterns"
+
+  - id: AO-003
+    name: "Parallelization (Fan-Out/Fan-In)"
+    category: agentic-orchestration
+    description: "Task → [SubtaskA, SubtaskB, SubtaskC] → Merge results. Use for independent subtasks. Research multiple topics simultaneously."
+    pattern: parallelization
+    source: "Anthropic 5 Agentic Patterns"
+
+  - id: AO-004
+    name: "Orchestrator-Worker (Delegation)"
+    category: agentic-orchestration
+    description: "Orchestrator: Plan → Assign workers → Monitor → Synthesize. Workers: Execute specialized subtask → Report back. Use for complex tasks requiring dynamic decomposition by LLM."
+    pattern: orchestrator-worker
+    source: "Anthropic 5 Agentic Patterns"
+
+  - id: AO-005
+    name: "Evaluator-Optimizer (Feedback Loop)"
+    category: agentic-orchestration
+    description: "Generate → Evaluate quality → Refine → Re-evaluate → Accept. Use for quality-critical output: code review, test coverage, documentation."
+    pattern: evaluator-optimizer
+    source: "Anthropic 5 Agentic Patterns"
+
+  - id: AO-006
+    name: "When to Delegate (Sub-Agent)"
+    category: agentic-orchestration
+    description: "Delegate when: task requires >3 independent research paths, context window >70% capacity, needs specialist knowledge (security audit, visual design, performance profiling), multiple files need parallel analysis, or current context would be polluted."
+    priority: critical
+
+  - id: AO-007
+    name: "Delegation Flow"
+    category: agentic-orchestration
+    description: "1. Declare intent (mode: plan_driven). 2. Break task into subtasks. 3. For each: prepare handoff (task_type: code|test|review|debug|browser|research), filter tools, sub-agent executes with isolated context, collect result + feedback. 4. Synthesize. 5. Verify."
+    priority: high
+
+  - id: AO-008
+    name: "Context Isolation Rules"
+    category: agentic-orchestration
+    description: "Sub-agents get minimal context — only what they need. Sub-agents should NOT receive full conversation history. Results from sub-agents should be summarized before merging. Use context:fork or subagent tools for isolation."
+    priority: high

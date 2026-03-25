@@ -111,7 +111,7 @@ Composable rule modules for specific use cases:
 .agent/rules/
 ├── README.md                    # This file
 ├── SACRED_RULES.xml             # Core XML rules (always active)
-├── modules/                     # v7.0 Modular rules (14 YAML files)
+├── modules/                     # v7.0 Modular rules (23 YAML files)
 │   ├── stop-conditions.yaml     # When to pause
 │   ├── edit-verification.yaml   # Code edit verification
 │   ├── terminal-safety.yaml     # Terminal safety

@@ -1,0 +1,82 @@
+# =============================================================================
+# GRAPH_SCHEMA.yaml — CodeGraph Node/Edge Type Definitions (v1.0.0)
+# =============================================================================
+# Consumed by: HSA CodeGraph engine (read-only reference for AWF)
+# Purpose: Standardize node/edge types, align with CodeSymbol interface
+# Source of truth: hsa-engine-ts/src/search/code-graph.ts
+# =============================================================================
+
+schema_version: "1.0.0"
+
+# ── Node Types ───────────────────────────────────────────────
+# Aligned with CodeSymbol.kind in code-graph.ts:16-17
+node_types:
+  - type: file
+    properties: [path, language, size_bytes, last_modified]
+  - type: function
+    properties: [name, file, start_line, end_line, params, return_type, exported]
+  - type: class
+    properties: [name, file, start_line, end_line, methods_count, exported]
+  - type: interface
+    properties: [name, file, start_line, end_line, exported]
+  - type: type
+    properties: [name, file, line, exported]
+  - type: enum
+    properties: [name, file, line, exported]
+  - type: variable
+    properties: [name, file, line, scope, exported]
+  - type: method
+    properties: [name, file, line, parent_class, exported]
+  - type: module
+    properties: [name, path, exports_count]
+
+# ── Edge Types ───────────────────────────────────────────────
+# Aligned with ImportEdge in code-graph.ts:24-28
+edge_types:
+  - type: calls
+    from: [function, method]
+    to: [function, method]
+    properties: [call_site_line]
+  - type: imports
+    from: [file, module]
+    to: [file, module]
+    properties: [import_type, symbols]  # default | named | namespace
+  - type: inherits
+    from: [class]
+    to: [class, interface]
+  - type: defines
+    from: [file]
+    to: [function, class, variable, interface, type, enum, method]
+  - type: uses
+    from: [function, method]
+    to: [variable]
+  - type: references
+    from: [file]
+    to: [function, class, variable]
+    properties: [line, context]
+
+# ── Current Engine Stats (as of v1.7.2) ─────────────────────
+engine_capabilities:
+  tree_sitter: true         # Primary AST parser
+  regex_fallback: true      # For unsupported languages
+  reverse_import_index: true  # O(1) findDependents
+  tag_index: true           # Def/ref tag tracking
+  page_rank: true           # File importance ranking
+  max_trace_depth: 5        # hsa_trace_flow max hops
+  max_trace_nodes: 500      # Safety cap per trace
+
+# ── Planned Enhancements (HSA Roadmap) ──────────────────────
+planned_enhancements:
+  - id: semantic_annotations
+    desc: "Entity descriptions from docstrings/comments → CodeSymbol.description"
+    status: planned
+    phase: 7
+  - id: cross_project_links
+    desc: "Link symbols across multiple project graphs"
+    status: future
+  - id: nl_query_interface
+    desc: "Natural language → graph traversal translation"
+    status: future
+  - id: persistent_storage
+    desc: "SQLite/LanceDB fallback for graph persistence across sessions"
+    status: future

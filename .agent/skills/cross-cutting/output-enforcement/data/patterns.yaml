@@ -1,0 +1,36 @@
+patterns:
+  - id: OE-001
+    name: "Banned Code Output Patterns"
+    category: output-enforcement
+    description: "Hard failures in code blocks: // ..., // rest of code, // implement here, // TODO, /* ... */, // similar to above, // continue pattern, // add more as needed, bare ... standing in for omitted code, # ... (rest unchanged)."
+    priority: critical
+
+  - id: OE-002
+    name: "Banned Prose Output Patterns"
+    category: output-enforcement
+    description: "Hard failures in prose: 'Let me know if you want me to continue', 'I can provide more details if needed', 'for brevity', 'the rest follows the same pattern', 'similarly for the remaining', 'and so on' replacing content, 'I'll leave that as an exercise'."
+    priority: critical
+
+  - id: OE-003
+    name: "Banned Structural Shortcuts"
+    category: output-enforcement
+    description: "Hard failures: Outputting skeleton when request was full implementation. Showing first and last section skipping middle. Replacing repeated logic with one example. Describing what code should do instead of writing it."
+    priority: critical
+
+  - id: OE-004
+    name: "Execution Process — Full Output"
+    category: output-enforcement
+    description: "1. SCOPE: count distinct deliverables, lock number. 2. BUILD: generate every deliverable completely, no partial drafts. 3. CROSS-CHECK: re-read request, compare deliverable count against scope count, add missing before responding."
+    priority: high
+
+  - id: OE-005
+    name: "Handling Long Outputs — Token Split"
+    category: output-enforcement
+    description: "When approaching token limit: do NOT compress remaining. Do NOT skip to conclusion. Write at full quality to clean breakpoint (end of function/file/section). End with [PAUSED — X of Y complete. Send 'continue' to resume from: next section]. On continue: pick up exactly, no recap."
+    priority: high
+
+  - id: OE-006
+    name: "Pre-Output Verification Checklist"
+    category: output-enforcement
+    description: "Before finalizing: No banned patterns anywhere. Every user-requested item present and finished. Code blocks contain actual runnable code. Nothing shortened to save space. If split, PAUSED marker present with accurate progress."
+    priority: high
