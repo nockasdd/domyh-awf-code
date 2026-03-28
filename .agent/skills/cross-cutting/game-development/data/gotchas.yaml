@@ -1,0 +1,310 @@
+# Game Development Gotchas — DOMYH Awesome Code
+# 40 common mistakes: 25 Unity + 15 UE
+# Version: 2026-03-28
+
+gotchas:
+  # ═══════════════════════════════════════════════════════════════
+  # UNITY GOTCHAS (25)
+  # ═══════════════════════════════════════════════════════════════
+
+  # --- API Deprecations ---
+  - id: U001
+    engine: unity
+    severity: critical
+    problem: "rb.velocity deprecated in Unity 6+"
+    cause: "Rigidbody API renamed for clarity"
+    fix: "Use rb.linearVelocity instead of rb.velocity"
+    code_bad: "rb.velocity = new Vector3(0, jumpForce, 0);"
+    code_good: "rb.linearVelocity = new Vector3(0, jumpForce, 0);"
+
+  - id: U002
+    engine: unity
+    severity: high
+    problem: "Input.GetButtonDown is legacy Input Manager"
+    cause: "Old Input Manager deprecated in favor of New Input System"
+    fix: "Use InputAction.CallbackContext with ReadValue<T>()"
+    code_bad: "if (Input.GetButtonDown(\"Jump\")) Jump();"
+    code_good: "public void OnJump(InputAction.CallbackContext ctx) { if (ctx.started) Jump(); }"
+
+  - id: U003
+    engine: unity
+    severity: medium
+    problem: "Input.GetAxis returns float with smoothing"
+    cause: "Legacy Input smoothing causes laggy movement"
+    fix: "Use New Input System ReadValue<Vector2>() for immediate response"
+
+  # --- Performance ---
+  - id: U004
+    engine: unity
+    severity: high
+    problem: "FindObjectOfType called every frame destroys performance"
+    cause: "Searches entire scene hierarchy each call"
+    fix: "Cache reference in Awake() or use Singleton pattern"
+    code_bad: "void Update() { FindObjectOfType<GameManager>().DoThing(); }"
+    code_good: "private GameManager _gm; void Awake() { _gm = FindObjectOfType<GameManager>(); }"
+
+  - id: U005
+    engine: unity
+    severity: high
+    problem: "Instantiate/Destroy every frame causes GC spikes"
+    cause: "Garbage collector pauses when objects freed"
+    fix: "Use Object Pool pattern (see patterns.yaml:unity-object-pool)"
+
+  - id: U006
+    engine: unity
+    severity: medium
+    problem: "String concatenation in Update() generates garbage"
+    cause: "String is immutable in C#, each + creates new allocation"
+    fix: "Use StringBuilder or cache string, update only on value change"
+    code_bad: "void Update() { text.text = \"Score: \" + score; }"
+    code_good: "void OnScoreChanged(int s) { text.text = $\"Score: {s}\"; }"
+
+  - id: U007
+    engine: unity
+    severity: medium
+    problem: "GetComponent<T>() in Update() is expensive"
+    cause: "Reflection-based component lookup every frame"
+    fix: "Cache component reference in Awake()"
+
+  # --- Rendering ---
+  - id: U008
+    engine: unity
+    severity: high
+    problem: "Built-in Render Pipeline (BIRP) is outdated"
+    cause: "BIRP lacks modern features (SRP Batcher, shader graph)"
+    fix: "Default to URP (Universal Render Pipeline)"
+
+  - id: U009
+    engine: unity
+    severity: medium
+    problem: "Sprites render behind other sprites unexpectedly"
+    cause: "Sorting Layer and Order in Layer not configured"
+    fix: "Set Sorting Layer (Background < Ground < Player < UI) and Order in Layer"
+
+  # --- Scene & Objects ---
+  - id: U010
+    engine: unity
+    severity: high
+    problem: "Manager objects destroyed when scene changes"
+    cause: "No DontDestroyOnLoad called"
+    fix: "Add DontDestroyOnLoad(gameObject) in Singleton Awake()"
+
+  - id: U011
+    engine: unity
+    severity: high
+    problem: "Multiple Singleton instances after scene reload"
+    cause: "No duplicate check in Awake()"
+    fix: "if (Instance != null) { Destroy(gameObject); return; } Instance = this;"
+
+  - id: U012
+    engine: unity
+    severity: medium
+    problem: "Prefab changes don't propagate to existing instances"
+    cause: "Instance overrides block prefab updates"
+    fix: "Right-click > Prefab > Revert All to apply changes"
+
+  - id: U013
+    engine: unity
+    severity: medium
+    problem: "Camera.main is slow (uses FindWithTag internally)"
+    cause: "Tags lookup each call"
+    fix: "Cache Camera.main in Awake(): _cam = Camera.main;"
+
+  # --- Physics ---
+  - id: U014
+    engine: unity
+    severity: high
+    problem: "Physics movement in Update() causes jittery behavior"
+    cause: "Physics should run in FixedUpdate for consistent simulation"
+    fix: "Move Rigidbody operations to FixedUpdate()"
+
+  - id: U015
+    engine: unity
+    severity: medium
+    problem: "Trigger/Collision callbacks not firing"
+    cause: "Missing Collider2D, isTrigger not set, or no Rigidbody2D"
+    fix: "Ensure: both have Collider2D, at least one has Rigidbody2D, isTrigger set correctly"
+
+  # --- UI ---
+  - id: U016
+    engine: unity
+    severity: medium
+    problem: "UI elements not visible in Game view"
+    cause: "No Canvas in scene or wrong Render Mode"
+    fix: "Add Canvas with Screen Space - Overlay render mode"
+
+  - id: U017
+    engine: unity
+    severity: medium
+    problem: "UI doesn't scale on different screen sizes"
+    cause: "Canvas Scaler not configured"
+    fix: "Set Canvas Scaler to 'Scale With Screen Size', Reference Resolution 1920x1080"
+
+  # --- Audio ---
+  - id: U018
+    engine: unity
+    severity: low
+    problem: "Audio plays even when game paused"
+    cause: "AudioSource ignores Time.timeScale"
+    fix: "Manually pause/unpause audio sources on game state change"
+
+  # --- Build ---
+  - id: U019
+    engine: unity
+    severity: high
+    problem: "Build fails with missing scenes"
+    cause: "Scenes not added to Build Settings"
+    fix: "File > Build Settings > Add Open Scenes for all needed scenes"
+
+  - id: U020
+    engine: unity
+    severity: medium
+    problem: "WebGL build fails with System.IO operations"
+    cause: "File system access not available in browser"
+    fix: "Use PlayerPrefs or IndexedDB for persistence in WebGL"
+
+  # --- New Input System ---
+  - id: U021
+    engine: unity
+    severity: high
+    problem: "New Input System actions not triggering"
+    cause: "Input Actions asset not assigned or Player Input component missing"
+    fix: "Add PlayerInput component, assign Input Actions asset, set Behavior to 'Send Messages' or 'Invoke Unity Events'"
+
+  - id: U022
+    engine: unity
+    severity: medium
+    problem: "New Input System installed but old input still used"
+    cause: "Input System Backend not set correctly"
+    fix: "Project Settings > Player > Active Input Handling = 'Input System Package (New)'"
+
+  # --- Assembly ---
+  - id: U023
+    engine: unity
+    severity: medium
+    problem: "Scripts can't reference each other"
+    cause: "Assembly Definition files creating isolated compilation"
+    fix: "Add Assembly Definition References to allow cross-assembly access"
+
+  - id: U024
+    engine: unity
+    severity: low
+    problem: "Editor scripts cause build errors"
+    cause: "Editor-only code included in runtime build"
+    fix: "Put editor scripts in Editor/ folder or use #if UNITY_EDITOR"
+
+  - id: U025
+    engine: unity
+    severity: medium
+    problem: "Coroutines stop when object disabled"
+    cause: "MonoBehaviour.OnDisable stops all coroutines"
+    fix: "Use a persistent coroutine runner or DOTween for animations"
+
+  # ═══════════════════════════════════════════════════════════════
+  # UNREAL ENGINE GOTCHAS (15)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: UE001
+    engine: unreal
+    severity: critical
+    problem: "Remote Control API returns 404"
+    cause: "Plugin 'Remote Control API' not enabled in editor"
+    fix: "Edit > Plugins > search 'Remote Control API' > Enable > Restart Editor"
+
+  - id: UE002
+    engine: unreal
+    severity: high
+    problem: "Property not found when setting value via bridge"
+    cause: "PropertyName is case-sensitive"
+    fix: "Use /remote/preset/{name}/describe to list exact property names"
+
+  - id: UE003
+    engine: unreal
+    severity: critical
+    problem: "ue_execute_python can access filesystem without sandbox"
+    cause: "Python runs in editor context with full permissions"
+    fix: "NEVER delete files outside project. Log all scripts to .domyh/game-logs/"
+
+  - id: UE004
+    engine: unreal
+    severity: high
+    problem: "Actor path unknown for Remote Control"
+    cause: "ObjectPath format is complex: /Game/Maps/Level.Level:PersistentLevel.Actor_0"
+    fix: "Use GetAllActorsOfClass via /remote/object/call to enumerate actors first"
+
+  - id: UE005
+    engine: unreal
+    severity: medium
+    problem: "Function call fails via Remote Control"
+    cause: "Function not marked UFUNCTION(BlueprintCallable)"
+    fix: "Only UFUNCTION(BlueprintCallable) or UFUNCTION(Exec) functions are callable"
+
+  - id: UE006
+    engine: unreal
+    severity: medium
+    problem: "WebSocket push events not arriving"
+    cause: "Used REST (port 30010) instead of WebSocket (port 30020)"
+    fix: "Register preset only via WebSocket connection on port 30020"
+
+  - id: UE007
+    engine: unreal
+    severity: medium
+    problem: "Batch result order doesn't match request order"
+    cause: "Batch responses keyed by RequestId, not array index"
+    fix: "Always key results by RequestId, not assume order"
+
+  - id: UE008
+    engine: unreal
+    severity: high
+    problem: "Python script crashes editor"
+    cause: "Accessing null UObject or calling deprecated API"
+    fix: "Always check unreal.is_valid(obj) before accessing properties"
+
+  - id: UE009
+    engine: unreal
+    severity: medium
+    problem: "Imported assets not visible in Content Browser"
+    cause: "AssetImportTask.automated = False shows dialog instead"
+    fix: "Set automated=True and replace_existing=True"
+
+  - id: UE010
+    engine: unreal
+    severity: medium
+    problem: "Blueprint changes lost after editor restart"
+    cause: "Assets not saved after modification"
+    fix: "Call unreal.EditorAssetLibrary.save_loaded_asset(asset) after edit"
+
+  - id: UE011
+    engine: unreal
+    severity: high
+    problem: "Level actors not persisting after play mode"
+    cause: "Runtime-spawned actors cleared when exiting PIE"
+    fix: "Use editor-mode spawning (EditorLevelLibrary) not runtime spawning"
+
+  - id: UE012
+    engine: unreal
+    severity: medium
+    problem: "Python module import fails"
+    cause: "Python not finding project modules"
+    fix: "Add project Content/Python to sys.path: sys.path.append('/Game/Python')"
+
+  - id: UE013
+    engine: unreal
+    severity: low
+    problem: "Print to screen doesn't appear"
+    cause: "bPrintToScreen parameter not set to true"
+    fix: "Include bPrintToScreen: true in PrintString parameters"
+
+  - id: UE014
+    engine: unreal
+    severity: medium
+    problem: "Material instance changes don't render"
+    cause: "Need to create Dynamic Material Instance at runtime"
+    fix: "Use CreateDynamicMaterialInstance() instead of modifying shared material"
+
+  - id: UE015
+    engine: unreal
+    severity: low
+    problem: "Editor runs slow after many Python script executions"
+    cause: "Python garbage collection not triggered"
+    fix: "Call import gc; gc.collect() periodically in long scripts"

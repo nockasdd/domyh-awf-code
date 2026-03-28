@@ -1,0 +1,347 @@
+# Game Development Patterns — DOMYH Awesome Code
+# 17 patterns: 7 Unity C# + 5 UE Python + 5 Pipeline
+# Version: 2026-03-28
+
+patterns:
+  # ═══════════════════════════════════════════════════════════════
+  # UNITY C# PATTERNS (7)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: unity-event-system
+    name: "ScriptableObject Event System"
+    engine: unity
+    when: "Inter-system communication without tight coupling"
+    difficulty: S
+    scripts: ["GameEvent.cs", "GameEventListener.cs"]
+    example: |
+      [CreateAssetMenu(menuName = "Events/GameEvent")]
+      public class GameEvent : ScriptableObject
+      {
+          private readonly List<GameEventListener> _listeners = new();
+          public void Raise() {
+              for (int i = _listeners.Count - 1; i >= 0; i--)
+                  _listeners[i].OnEventRaised();
+          }
+          public void Register(GameEventListener l) => _listeners.Add(l);
+          public void Unregister(GameEventListener l) => _listeners.Remove(l);
+      }
+
+  - id: unity-object-pool
+    name: "Generic Object Pool"
+    engine: unity
+    when: "High-frequency spawn/destroy (bullets, particles, enemies)"
+    difficulty: S
+    scripts: ["ObjectPool.cs"]
+    example: |
+      public class ObjectPool<T> where T : MonoBehaviour
+      {
+          private readonly Queue<T> _pool = new();
+          private readonly T _prefab;
+          private readonly Transform _parent;
+          public ObjectPool(T prefab, int initialSize, Transform parent = null) {
+              _prefab = prefab; _parent = parent;
+              for (int i = 0; i < initialSize; i++) _pool.Enqueue(CreateNew());
+          }
+          public T Get() {
+              var obj = _pool.Count > 0 ? _pool.Dequeue() : CreateNew();
+              obj.gameObject.SetActive(true); return obj;
+          }
+          public void Return(T obj) { obj.gameObject.SetActive(false); _pool.Enqueue(obj); }
+          private T CreateNew() {
+              var o = Object.Instantiate(_prefab, _parent); o.gameObject.SetActive(false); return o;
+          }
+      }
+
+  - id: unity-state-machine
+    name: "Enum-Based State Machine"
+    engine: unity
+    when: "Player states, enemy AI, game flow management"
+    difficulty: S
+    scripts: ["GameManager.cs"]
+    example: |
+      public enum GameState { Menu, Playing, Paused, GameOver }
+      public class GameManager : MonoBehaviour {
+          public static GameManager Instance { get; private set; }
+          private GameState _state;
+          public event System.Action<GameState> OnStateChanged;
+          private void Awake() {
+              if (Instance != null) { Destroy(gameObject); return; }
+              Instance = this; DontDestroyOnLoad(gameObject);
+          }
+          public void ChangeState(GameState s) {
+              if (_state == s) return; _state = s;
+              OnStateChanged?.Invoke(s);
+              Time.timeScale = s is GameState.Paused or GameState.GameOver ? 0f : 1f;
+          }
+      }
+
+  - id: unity-movement
+    name: "Player Movement (New Input System)"
+    engine: unity
+    when: "Player controller with modern input handling"
+    difficulty: M
+    scripts: ["PlayerController.cs"]
+    dependencies: ["com.unity.inputsystem"]
+    example: |
+      using UnityEngine;
+      using UnityEngine.InputSystem;
+      [RequireComponent(typeof(CharacterController))]
+      public class PlayerController : MonoBehaviour
+      {
+          [SerializeField] private float moveSpeed = 5f;
+          [SerializeField] private float jumpForce = 7f;
+          [SerializeField] private float gravity = -9.81f;
+          private CharacterController _cc;
+          private Vector2 _moveInput;
+          private float _verticalVelocity;
+          private void Awake() => _cc = GetComponent<CharacterController>();
+          public void OnMove(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
+          public void OnJump(InputAction.CallbackContext ctx) {
+              if (ctx.started && _cc.isGrounded) _verticalVelocity = jumpForce;
+          }
+          private void Update() {
+              var move = new Vector3(_moveInput.x, 0, _moveInput.y) * moveSpeed;
+              _verticalVelocity += gravity * Time.deltaTime;
+              if (_cc.isGrounded && _verticalVelocity < 0) _verticalVelocity = -2f;
+              move.y = _verticalVelocity;
+              _cc.Move(move * Time.deltaTime);
+          }
+      }
+
+  - id: unity-camera
+    name: "Camera Follow Controller"
+    engine: unity
+    when: "Third-person or side-scroller camera follow"
+    difficulty: S
+    scripts: ["CameraFollow.cs"]
+    example: |
+      public class CameraFollow : MonoBehaviour
+      {
+          [SerializeField] private Transform target;
+          [SerializeField] private Vector3 offset = new(0, 5, -10);
+          [SerializeField] private float smoothSpeed = 5f;
+          private void LateUpdate() {
+              if (target == null) return;
+              var desired = target.position + offset;
+              transform.position = Vector3.Lerp(transform.position, desired, smoothSpeed * Time.deltaTime);
+              transform.LookAt(target);
+          }
+      }
+
+  - id: unity-ui-manager
+    name: "UI Manager Pattern"
+    engine: unity
+    when: "HUD, menus, score display, health bars"
+    difficulty: S
+    scripts: ["UIManager.cs"]
+    example: |
+      using UnityEngine;
+      using TMPro;
+      public class UIManager : MonoBehaviour
+      {
+          public static UIManager Instance { get; private set; }
+          [SerializeField] private TextMeshProUGUI scoreText;
+          [SerializeField] private GameObject gameOverPanel;
+          [SerializeField] private GameObject pausePanel;
+          private void Awake() { Instance = this; gameOverPanel.SetActive(false); pausePanel.SetActive(false); }
+          public void UpdateScore(int score) => scoreText.text = $"Score: {score}";
+          public void ShowGameOver() => gameOverPanel.SetActive(true);
+          public void TogglePause(bool paused) => pausePanel.SetActive(paused);
+      }
+
+  - id: unity-audio
+    name: "Audio Manager (Pool-based)"
+    engine: unity
+    when: "Sound effects and music management"
+    difficulty: M
+    scripts: ["AudioManager.cs"]
+    example: |
+      public class AudioManager : MonoBehaviour
+      {
+          public static AudioManager Instance { get; private set; }
+          [SerializeField] private AudioSource musicSource;
+          [SerializeField] private AudioSource sfxSourcePrefab;
+          private ObjectPool<AudioSource> _sfxPool;
+          private void Awake() {
+              if (Instance != null) { Destroy(gameObject); return; }
+              Instance = this; DontDestroyOnLoad(gameObject);
+              _sfxPool = new ObjectPool<AudioSource>(sfxSourcePrefab, 10, transform);
+          }
+          public void PlaySFX(AudioClip clip, float volume = 1f) {
+              var src = _sfxPool.Get(); src.clip = clip; src.volume = volume; src.Play();
+              StartCoroutine(ReturnAfterPlay(src, clip.length));
+          }
+          public void PlayMusic(AudioClip clip) { musicSource.clip = clip; musicSource.loop = true; musicSource.Play(); }
+          private System.Collections.IEnumerator ReturnAfterPlay(AudioSource s, float t) {
+              yield return new WaitForSeconds(t); _sfxPool.Return(s);
+          }
+      }
+
+  # ═══════════════════════════════════════════════════════════════
+  # UNREAL ENGINE PYTHON PATTERNS (5)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: ue-blueprint-create
+    name: "Blueprint Creation via Python"
+    engine: unreal
+    when: "Programmatic Blueprint generation in UE Editor"
+    difficulty: M
+    example: |
+      import unreal
+      # Create a new Blueprint
+      factory = unreal.BlueprintFactory()
+      factory.set_editor_property('ParentClass', unreal.Actor)
+      asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
+      bp = asset_tools.create_asset('BP_MyActor', '/Game/Blueprints', None, factory)
+      # Add a Static Mesh component
+      subsystem = unreal.get_engine_subsystem(unreal.SubobjectDataSubsystem)
+      smc = unreal.StaticMeshComponent
+      unreal.log(f"Created Blueprint: {bp.get_name()}")
+
+  - id: ue-asset-import
+    name: "Batch Asset Import"
+    engine: unreal
+    when: "Import textures, meshes, sounds from folder"
+    difficulty: S
+    example: |
+      import unreal
+      import os
+      asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
+      source_dir = "C:/GameAssets/Textures"
+      dest_path = "/Game/Art/Textures"
+      tasks = []
+      for f in os.listdir(source_dir):
+          if f.endswith(('.png', '.jpg', '.tga')):
+              task = unreal.AssetImportTask()
+              task.set_editor_property('filename', os.path.join(source_dir, f))
+              task.set_editor_property('destination_path', dest_path)
+              task.set_editor_property('automated', True)
+              task.set_editor_property('replace_existing', True)
+              tasks.append(task)
+      asset_tools.import_asset_tasks(tasks)
+      unreal.log(f"Imported {len(tasks)} assets")
+
+  - id: ue-level-populate
+    name: "Level Population Script"
+    engine: unreal
+    when: "Scatter actors in level via Python script"
+    difficulty: M
+    example: |
+      import unreal
+      import random
+      world = unreal.EditorLevelLibrary.get_editor_world()
+      mesh_path = "/Game/Meshes/SM_Tree"
+      mesh = unreal.load_asset(mesh_path)
+      for i in range(50):
+          loc = unreal.Vector(
+              random.uniform(-5000, 5000),
+              random.uniform(-5000, 5000),
+              0
+          )
+          rot = unreal.Rotator(0, random.uniform(0, 360), 0)
+          actor = unreal.EditorLevelLibrary.spawn_actor_from_class(
+              unreal.StaticMeshActor, loc, rot
+          )
+          actor.get_editor_property('static_mesh_component').set_editor_property('static_mesh', mesh)
+          actor.set_actor_label(f"Tree_{i:03d}")
+
+  - id: ue-build-config
+    name: "Build Configuration Script"
+    engine: unreal
+    when: "Automated build pipeline for packaging"
+    difficulty: M
+    example: |
+      import unreal
+      # Configure build settings
+      settings = unreal.ProjectPackagingSettings()
+      # Trigger build via Remote Control
+      # POST /remote/object/call
+      # ObjectPath: /Script/Engine.Default__KismetSystemLibrary
+      # FunctionName: ExecuteConsoleCommand
+      # Parameters: { Command: "BuildCookRun -project=... -platform=Win64" }
+
+  - id: ue-editor-utility
+    name: "Editor Utility Widget"
+    engine: unreal
+    when: "Custom editor tools for level designers"
+    difficulty: L
+    example: |
+      import unreal
+      # Create an Editor Utility Widget via Python
+      # This creates a simple tool that batch-renames actors
+      selected = unreal.EditorUtilityLibrary.get_selected_assets()
+      for i, asset in enumerate(selected):
+          old_name = asset.get_name()
+          new_name = f"Prop_{i:03d}"
+          unreal.EditorAssetLibrary.rename_asset(
+              asset.get_path_name(),
+              f"/Game/Props/{new_name}"
+          )
+          unreal.log(f"Renamed {old_name} → {new_name}")
+
+  # ═══════════════════════════════════════════════════════════════
+  # PIPELINE PATTERNS (5)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: gdd-generation
+    name: "GDD Generation from Prompt"
+    engine: any
+    when: "User describes game concept in natural language"
+    difficulty: S
+    steps:
+      - Parse user prompt for genre, mechanics, art style
+      - Match to genre template from genres.yaml
+      - Generate GDD.json with systems, scripts, assets lists
+      - Present GDD to user for approval
+      - Scaffold project from approved GDD
+
+  - id: debug-loop
+    name: "Compile-Log-Fix Debug Loop"
+    engine: any
+    when: "Iterative bug fixing with bridge tools"
+    difficulty: S
+    max_iterations: 5
+    steps:
+      - "compile_scripts() → check for errors"
+      - "Parse error messages → match against gotchas.yaml"
+      - "Apply fix (code edit or bridge property change)"
+      - "Re-compile → verify fix"
+      - "If still failing after 5 iterations → escalate to user"
+
+  - id: greybox-prototype
+    name: "Greybox Level Prototyping"
+    engine: any
+    when: "Quick level layout with primitives before art"
+    difficulty: S
+    steps:
+      - Create ground plane (Cube scaled flat or Plane)
+      - Add player spawn point
+      - Place obstacle primitives (Cubes, Spheres)
+      - Add boundary walls
+      - Set camera position
+      - Test movement
+
+  - id: scene-scaffold
+    name: "Scene Scaffolding from GDD"
+    engine: any
+    when: "Auto-create initial scene objects from GDD specification"
+    difficulty: M
+    steps:
+      - Read GDD.json systems spec
+      - Create Manager objects (GameManager, ScoreManager, etc.)
+      - Attach generated scripts to managers
+      - Create Player object with controller script
+      - Set up UI Canvas with HUD elements
+      - Configure camera follow
+
+  - id: visual-verify
+    name: "Visual Verification Protocol"
+    engine: any
+    when: "Screenshot + multimodal analysis for visual bugs"
+    difficulty: M
+    steps:
+      - Capture screenshot via bridge (future endpoint)
+      - Analyze with multimodal LLM
+      - Compare against expected layout from GDD
+      - Report visual discrepancies
+      - Suggest fixes for misalignment/wrong sprites

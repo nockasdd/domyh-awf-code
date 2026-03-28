@@ -48,6 +48,7 @@ routing:
   tauri:                { path: "cross-cutting/tauri", detect: ["tauri.conf*", "src-tauri/*"] }
   wasm:                 { path: "cross-cutting/wasm", detect: ["*.wasm", "*.wat"] }
   digital-marketing:    { path: "cross-cutting/digital-marketing", detect: [] }
+  game-development:     { path: "cross-cutting/game-development", detect: ["*.unity", "*.uproject", "*.umap"] }
 
   # --- languages (28) ---
   typescript:           { path: "languages/typescript", detect: ["tsconfig.json", "*.ts", "*.tsx"] }
@@ -129,5 +130,5 @@ routing:
   hsa-toolkit:          { path: "tooling/hsa-toolkit", detect: [] }
 
 # Category summary (for human reference only — agent uses routing above)
-# core: 8 | cross-cutting: 26 | languages: 28 | frameworks: 9
-# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 6 | TOTAL: 101
+# core: 8 | cross-cutting: 27 | languages: 28 | frameworks: 9
+# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 6 | TOTAL: 102

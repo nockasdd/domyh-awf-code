@@ -1,12 +1,12 @@
 ---
 description: "❓ Show all available commands, usage examples, and language settings"
 skills: { required: [], contextual: [] }
-success_criteria: "All 44 commands listed with correct descriptions"
+success_criteria: "All 45 commands listed with correct descriptions"
 ---
 
 # ❓ /help — Command Reference
 
-> 📋 44 Commands • 100 Skills • 26 IDEs
+> 📋 45 Commands • 100 Skills • 26 IDEs
 
 ---
 

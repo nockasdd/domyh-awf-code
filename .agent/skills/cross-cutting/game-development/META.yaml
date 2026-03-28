@@ -1,0 +1,103 @@
+name: game-development
+display: "Game Development Pipeline"
+category: cross-cutting
+tier: 1
+priority: 4
+
+desc: "Game development pipeline from concept to gold master. Unity C#/URP and Unreal Engine Python/Blueprint patterns. Use when creating, debugging, or modifying games via MCP bridge. Supports text-to-game automation."
+
+caps:
+  - game-design-document
+  - game-pipeline-6-phase
+  - unity-csharp-patterns
+  - ue-python-patterns
+  - game-debug-loop
+  - visual-verification
+  - genre-templates
+
+data_files:
+  - data/patterns.yaml
+  - data/genres.yaml
+  - data/gotchas.yaml
+
+patterns:
+  total: 17
+  domains:
+    unity: 7
+    unreal: 5
+    pipeline: 5
+
+triggers:
+  file_patterns:
+    - "*.unity"
+    - "*.uproject"
+    - "*.umap"
+    - "*.asset"
+    - "ProjectSettings/*.asset"
+    - "Config/DefaultEngine.ini"
+    - "Assets/Scripts/*.cs"
+  keywords:
+    # Game Development
+    - game
+    - game development
+    - gamedev
+    - tạo game
+    - make game
+    - build game
+    - text-to-game
+    # Design
+    - game design document
+    - GDD
+    - game loop
+    - game mechanics
+    - core loop
+    # Unity
+    - unity game
+    - unity project
+    - game object
+    - prefab
+    - scene management
+    # Unreal
+    - unreal game
+    - unreal engine
+    - spawn actor
+    - blueprint
+    # Genres
+    - platformer
+    - endless runner
+    - shooter
+    - rpg
+    - tower defense
+    - puzzle game
+    - card game
+    # Actions
+    - game debug
+    - game prototype
+    - vertical slice
+    - greybox
+  intents:
+    - create game
+    - build game from scratch
+    - tạo game từ đầu
+    - debug game
+    - game development pipeline
+    - modify game
+    - fix game bug
+
+related_skills:
+  - csharp
+  - python
+  - cpp
+  - mcp
+
+prevent_confusion_with:
+  - flutter: "Flutter is mobile app framework, not game engine"
+  - react: "React is web UI framework, not game engine"
+  - react-native: "React Native is mobile framework, not game engine"
+  - electron: "Electron is desktop app framework, not game engine"
+
+links_to:
+  - csharp
+  - python
+  - mcp
+  - testing

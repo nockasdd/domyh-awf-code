@@ -1,0 +1,201 @@
+# Game Genre Templates — DOMYH Awesome Code
+# 7 genre templates for text-to-game automation
+# Version: 2026-03-28
+
+genres:
+  - id: endless-runner
+    name: "Endless Runner"
+    description: "Flappy Bird, Temple Run, Subway Surfers style"
+    difficulty: S
+    estimated_scripts: 4
+    core_loop:
+      action: "Move forward automatically, player controls obstacles avoidance"
+      challenge: "Increasing speed, obstacle patterns, gap timing"
+      reward: "Score increments, distance milestones"
+      fail_condition: "Hit obstacle or fall off screen"
+    systems:
+      physics: { gravity: -9.81, move_speed: 3.0, speed_increment: 0.1 }
+      spawner: { type: "infinite", spawn_rate: 1.5, gap_range: [2.0, 4.0] }
+      scoring: { type: "distance", multiplier: 1.0 }
+      difficulty: { type: "time-based", ramp_every_seconds: 30 }
+    scripts_needed:
+      - { name: "PlayerController", desc: "Handle tap/click to jump/flap" }
+      - { name: "ObstacleSpawner", desc: "Infinite obstacle generation" }
+      - { name: "ScoreManager", desc: "Distance-based scoring" }
+      - { name: "GameManager", desc: "State management (Menu/Play/GameOver)" }
+    assets_needed:
+      sprites: [player, obstacle_top, obstacle_bottom, background, ground]
+      audio: [jump_sfx, score_sfx, death_sfx, bg_music]
+    unity_setup:
+      render_pipeline: URP
+      input_system: "New Input System"
+      canvas_scaler: "Scale With Screen Size"
+
+  - id: platformer
+    name: "2D Platformer"
+    description: "Mario, Celeste, Hollow Knight style"
+    difficulty: M
+    estimated_scripts: 6
+    core_loop:
+      action: "Run, jump, navigate through levels"
+      challenge: "Moving platforms, enemies, precision jumps, hazards"
+      reward: "Coins, checkpoints, level completion, power-ups"
+      fail_condition: "Fall into pit or lose all health"
+    systems:
+      physics: { gravity: -20.0, jump_force: 12.0, move_speed: 8.0, coyote_time: 0.15 }
+      spawner: { type: "level-based", enemy_types: ["walker", "flyer", "shooter"] }
+      scoring: { type: "collectible", coin_value: 10 }
+      health: { type: "hearts", max: 3, invincibility_time: 1.5 }
+    scripts_needed:
+      - { name: "PlayerController2D", desc: "Movement + jump with coyote time" }
+      - { name: "EnemyAI", desc: "Basic patrol + chase behavior" }
+      - { name: "LevelManager", desc: "Level loading + checkpoints" }
+      - { name: "CoinCollector", desc: "Collectible system" }
+      - { name: "HealthSystem", desc: "Hearts + damage + invincibility" }
+      - { name: "GameManager", desc: "State + score persistence" }
+    assets_needed:
+      sprites: [player_idle, player_run, player_jump, enemy, coin, platform, hazard, background]
+      audio: [jump_sfx, coin_sfx, enemy_death_sfx, player_hurt_sfx, bg_music]
+      tilemaps: [ground_tiles, decoration_tiles, hazard_tiles]
+    unity_setup:
+      render_pipeline: URP
+      physics: "Rigidbody2D"
+      input_system: "New Input System"
+
+  - id: top-down-shooter
+    name: "Top-Down Shooter"
+    description: "Enter the Gungeon, Hotline Miami, Nuclear Throne style"
+    difficulty: M
+    estimated_scripts: 7
+    core_loop:
+      action: "Move in 2D plane, aim and shoot enemies"
+      challenge: "Enemy waves, bullet patterns, boss mechanics"
+      reward: "Weapon drops, power-ups, wave survival"
+      fail_condition: "Health reaches zero"
+    systems:
+      physics: { move_speed: 6.0, bullet_speed: 15.0, fire_rate: 0.2 }
+      spawner: { type: "wave-based", wave_count: 10, enemies_per_wave: [5, 30] }
+      scoring: { type: "kill-count", combo_multiplier: true }
+      weapons: { types: ["pistol", "shotgun", "rifle", "rocket"], ammo_system: true }
+    scripts_needed:
+      - { name: "PlayerController", desc: "WASD movement + mouse aim" }
+      - { name: "WeaponSystem", desc: "Gun firing + switching + reload" }
+      - { name: "BulletPool", desc: "Object pool for projectiles" }
+      - { name: "EnemyAI", desc: "Pathfinding + attack patterns" }
+      - { name: "WaveSpawner", desc: "Enemy wave management" }
+      - { name: "HealthSystem", desc: "Player + enemy health" }
+      - { name: "GameManager", desc: "Waves, scoring, game over" }
+    assets_needed:
+      sprites: [player, enemy_melee, enemy_ranged, enemy_boss, bullet, weapon_pickup, health_pickup]
+      audio: [shoot_sfx, reload_sfx, enemy_death_sfx, explosion_sfx, bg_music]
+
+  - id: puzzle
+    name: "Puzzle Game"
+    description: "Match-3, Tetris, Portal style logic puzzles"
+    difficulty: S
+    estimated_scripts: 5
+    core_loop:
+      action: "Manipulate game objects to solve objective"
+      challenge: "Increasing complexity, time pressure, limited moves"
+      reward: "Star rating, score, unlock new levels"
+      fail_condition: "Run out of moves/time"
+    systems:
+      grid: { width: 8, height: 8, cell_size: 1.0 }
+      scoring: { type: "match-chain", base_score: 10, chain_multiplier: 1.5 }
+      difficulty: { type: "level-based", new_mechanics_every: 5 }
+      timer: { enabled: false, seconds: 120 }
+    scripts_needed:
+      - { name: "GridManager", desc: "Grid creation + tile management" }
+      - { name: "TileController", desc: "Tile interaction + matching logic" }
+      - { name: "ScoreManager", desc: "Score calculation + star rating" }
+      - { name: "LevelManager", desc: "Level data + progression" }
+      - { name: "UIManager", desc: "Score, moves, timer display" }
+    assets_needed:
+      sprites: [tile_red, tile_blue, tile_green, tile_yellow, tile_purple, grid_bg, star]
+      audio: [match_sfx, combo_sfx, level_complete_sfx, bg_music]
+
+  - id: rpg
+    name: "RPG (Role-Playing Game)"
+    description: "Turn-based or action RPG with inventory and quests"
+    difficulty: L
+    estimated_scripts: 10
+    core_loop:
+      action: "Explore world, battle enemies, complete quests"
+      challenge: "Enemy encounters, boss fights, resource management"
+      reward: "XP, loot, level up, story progression"
+      fail_condition: "Party wipe in combat"
+    systems:
+      combat: { type: "turn-based", party_size: 4, enemy_max: 6 }
+      stats: { attributes: ["HP", "MP", "ATK", "DEF", "SPD", "LCK"] }
+      inventory: { max_slots: 20, categories: ["weapon", "armor", "consumable", "key_item"] }
+      quests: { types: ["main", "side", "bounty"], journal: true }
+      leveling: { max_level: 50, xp_curve: "quadratic" }
+    scripts_needed:
+      - { name: "PlayerController", desc: "Overworld movement" }
+      - { name: "CombatManager", desc: "Turn-based battle system" }
+      - { name: "CharacterStats", desc: "Stats + leveling + equipment" }
+      - { name: "InventorySystem", desc: "Item management" }
+      - { name: "QuestManager", desc: "Quest tracking + journal" }
+      - { name: "DialogueSystem", desc: "NPC conversations" }
+      - { name: "EnemyAI", desc: "Combat AI decision making" }
+      - { name: "SaveSystem", desc: "Save/load game state" }
+      - { name: "UIManager", desc: "HUD, menus, inventory UI" }
+      - { name: "GameManager", desc: "Scene transitions, state" }
+    assets_needed:
+      sprites: [player_spritesheet, enemy_spritesheet, npc_portraits, item_icons, tilemap]
+      audio: [battle_music, town_music, overworld_music, attack_sfx, heal_sfx]
+
+  - id: tower-defense
+    name: "Tower Defense"
+    description: "Bloons TD, Kingdom Rush style lane defense"
+    difficulty: M
+    estimated_scripts: 7
+    core_loop:
+      action: "Place towers to defend against enemy waves"
+      challenge: "Enemy variety, limited resources, tower placement strategy"
+      reward: "Currency for upgrades, new tower types unlocked"
+      fail_condition: "Too many enemies reach the end"
+    systems:
+      grid: { type: "path-based", buildable_tiles: true }
+      economy: { starting_gold: 100, kill_reward: 10 }
+      towers: { types: ["arrow", "cannon", "magic", "slow"], upgrade_levels: 3 }
+      waves: { total: 30, enemies_per_wave: [5, 50], boss_every: 5 }
+    scripts_needed:
+      - { name: "TowerController", desc: "Tower placement + targeting + shooting" }
+      - { name: "EnemyWalker", desc: "Path following + health" }
+      - { name: "WaveSpawner", desc: "Wave scheduling + progression" }
+      - { name: "EconomyManager", desc: "Gold + tower costs + upgrades" }
+      - { name: "GridManager", desc: "Buildable tile detection" }
+      - { name: "ProjectilePool", desc: "Tower projectile pooling" }
+      - { name: "GameManager", desc: "Lives, waves, win/lose" }
+    assets_needed:
+      sprites: [tower_arrow, tower_cannon, tower_magic, enemy_basic, enemy_fast, enemy_tank, enemy_boss, projectile, path_tile, grass_tile]
+      audio: [tower_shoot_sfx, enemy_death_sfx, wave_start_sfx, bg_music]
+
+  - id: card-game
+    name: "Card Game / Deck Builder"
+    description: "Slay the Spire, Hearthstone, Yu-Gi-Oh style"
+    difficulty: L
+    estimated_scripts: 8
+    core_loop:
+      action: "Play cards from hand to defeat opponents"
+      challenge: "Deck building strategy, mana management, enemy card plays"
+      reward: "New cards, card upgrades, progression"
+      fail_condition: "Player HP reaches zero"
+    systems:
+      deck: { max_size: 30, starting_hand: 5, draw_per_turn: 1 }
+      mana: { max: 10, starting: 3, gain_per_turn: 1 }
+      cards: { types: ["attack", "defense", "spell", "trap"], rarity: ["common", "rare", "epic", "legendary"] }
+      combat: { type: "turn-based", player_vs_ai: true }
+    scripts_needed:
+      - { name: "CardData", desc: "ScriptableObject for card definitions" }
+      - { name: "DeckManager", desc: "Deck, hand, discard pile management" }
+      - { name: "CardUI", desc: "Card rendering + drag/drop" }
+      - { name: "CombatManager", desc: "Turn system + card resolution" }
+      - { name: "ManaSystem", desc: "Mana tracking + cost validation" }
+      - { name: "EnemyAI", desc: "AI card selection strategy" }
+      - { name: "CollectionManager", desc: "Card collection + deck building" }
+      - { name: "GameManager", desc: "Match flow + win/lose" }
+    assets_needed:
+      sprites: [card_frame, card_back, card_art_attack, card_art_defense, card_art_spell, mana_icon, health_icon]
+      audio: [card_play_sfx, card_draw_sfx, attack_sfx, defend_sfx, bg_music]

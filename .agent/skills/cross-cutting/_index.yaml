@@ -1,7 +1,7 @@
 # cross-cutting/_index.yaml — Cross-cutting Skills Index
 category: cross-cutting
 description: "Cross-cutting concerns and utilities"
-count: 26
+count: 27
 skills:
   - { id: testing, has_advanced: true }
   - { id: database, has_advanced: true }
@@ -29,3 +29,4 @@ skills:
   - { id: wasm, has_advanced: false }
   - { id: output-enforcement, has_advanced: false }
   - { id: digital-marketing, has_advanced: false }
+  - { id: game-development, has_advanced: true }

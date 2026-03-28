@@ -67,4 +67,4 @@ chat:
 # Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. FIRST call hsa_detect to check IDE shell: cmd → cmd /c, bash → native syntax, powershell → PS syntax. Default fallback: cmd /c.
 #
 # Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (96 skills, 8 categories incl. governance)
-# Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (44 commands)
+# Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (45 commands)

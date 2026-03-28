@@ -1,0 +1,63 @@
+============================================================
+UE5 Native Python HTTP Server - Test Suite
+Target: http://127.0.0.1:30011
+============================================================
+
+============================================================
+[PASS] 1. Basic Hello World
+============================================================
+Output:
+OK - Basic test passed
+
+
+
+============================================================
+[PASS] 2. List Level Actors
+============================================================
+Output:
+Total actors: 65
+  - WorldDataLayers (WorldDataLayers)
+  - StaticMeshActor_UAID_F02F74551BF5689602_1372896218 (StaticMeshActor)
+  - StaticMeshActor_23 (StaticMeshActor)
+  - SkyAtmosphere_0 (SkyAtmosphere)
+  - StaticMeshActor_65 (StaticMeshActor)
+  - StaticMeshActor_4 (StaticMeshActor)
+  - StaticMeshActor_12 (StaticMeshActor)
+  - StaticMeshActor_61 (StaticMeshActor)
+  - StaticMeshActor_27 (StaticMeshActor)
+  - StaticMeshActor_24 (StaticMeshActor)
+
+
+
+============================================================
+[PASS] 3. Get Project Info
+============================================================
+Output:
+Project Dir: ../../../../../../Users/Pc/Unreal Projects/testProjectUnreal/
+
+
+
+============================================================
+[PASS] 4. Spawn a PointLight Actor
+============================================================
+Output:
+Spawned: PointLight_UAID_FC34970E3ABE23CC02_1251736079 at (0,0,300)
+
+
+
+============================================================
+[PASS] 5. Search Assets (fixed)
+============================================================
+Output:
+Found 245 assets in /Game
+  - CR_Mannequin_FootIK
+  - IMC_Default
+  - IA_SetDestination_Touch
+  - IA_SetDestination_Click
+  - SK_Mannequin
+
+
+
+============================================================
+RESULTS: 5/5 tests passed
+============================================================

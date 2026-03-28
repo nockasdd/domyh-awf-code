@@ -1,6 +1,6 @@
 # 🧠 Skills Directory
 
-> 103 skills across 8 categories — Progressive Disclosure Architecture
+> 104 skills across 8 categories — Progressive Disclosure Architecture
 
 ---
 

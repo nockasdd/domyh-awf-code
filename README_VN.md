@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=103+Skills+•+26+IDEs+•+44+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=104+Skills+•+26+IDEs+•+45+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,9 +15,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-103-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-104-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-44-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-45-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -236,7 +236,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 </table>
 
 <details>
-<summary><b>📋 Tất cả 44 Commands — Chi tiết & Ví dụ</b></summary>
+<summary><b>📋 Tất cả 45 Commands — Chi tiết & Ví dụ</b></summary>
 <br>
 
 ### 🔥 Chính (9 commands)
@@ -287,7 +287,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-### 🎯 Đặc biệt (9 commands)
+### 🎯 Đặc biệt (10 commands)
 
 | Cmd             | Mô tả                                                                 | Ví dụ                                                     |
 | :-------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------- |
@@ -297,6 +297,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.6.8 across 15 files             |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
+| `/game`         | Trợ lý phát triển game toàn diện (Unity/UE/HTML5)                     | `/game Tạo script di chuyển player 2D`    |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |
 | `/workflow`     | Meta-command: workflow discovery, chaining, aliasing                  | `/workflow list` → Xem tất cả workflows                   |
 | `/clean`        | Dọn code: xóa dead code, sắp xếp imports, xóa deps không dùng         | `/clean src/utils/` → Xóa 12 unused exports               |
@@ -334,11 +335,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-## 🧠 Skills (103 tổng)
+## 🧠 Skills (104 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;9+Core+•+7+DevOps;26+Cross-cutting+•+6+Tooling+•+9+AI-ML;9+Governance+•+103+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;9+Core+•+7+DevOps;27+Cross-cutting+•+6+Tooling+•+9+AI-ML;9+Governance+•+104+Tổng+Skills" alt="Skills" />
 </p>
 </p>
 
@@ -373,7 +374,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (35) + Governance (9)
+### 🔧 Core & Cross-cutting (36) + Governance (9)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -382,7 +383,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 <p align="center">
   <sub><b>Core (9):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator</sub>
   <br>
-  <sub><b>Cross-cutting (26):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review</sub>
+  <sub><b>Cross-cutting (27):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development</sub>
 </p>
 
 ### 🛠️ Tooling (6)
@@ -411,11 +412,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | **Frameworks**    | 9        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 9        | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator                                                                                    |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 26       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review |
+| **Cross-cutting** | 26       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development |
 | **Tooling**       | 6        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit                                                                                                                                              |
 | **AI-ML**         | 9        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 9        | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation, Context Compaction                                  |
-| **Tổng**          | **103**  |                                                                                                                                                                                                                     |
+| **Tổng**          | **104**  |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -483,16 +484,16 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 103 skills chuyên biệt
+├── 🧠 skills/                # 104 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (9)     # Security, API Design, Auth, Graph Patterns...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (26)   # Testing, Database, Copywriting, C4...
+│   ├── cross-cutting/ (27)   # Testing, Database, Copywriting, C4...
 │   ├── tooling/      (6)     # MCP, API Protocols, IDE Extension, HSA Toolkit...
 │   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (9)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (44)    # 44 command handlers
+├── 🔄 workflows/     (45)    # 45 command handlers
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Cấu hình engine

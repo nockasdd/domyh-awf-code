@@ -43,10 +43,10 @@ core:
 # =============================================================================
 
 skills:
-  # Baseline: Only META.yaml loaded = 103 skills × ~100-400 tokens
+  # Baseline: Only META.yaml loaded = 104 skills × ~100-400 tokens
   # Activated: +1,500 tokens per skill (data/*.yaml)
   # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
-  # Categories: 9 core + 28 languages + 9 frameworks + 7 devops + 26 cross-cutting + 6 tooling + 9 ai-ml + 9 governance = 103
+  # Categories: 9 core + 28 languages + 9 frameworks + 7 devops + 27 cross-cutting + 6 tooling + 9 ai-ml + 9 governance = 104
 
   loading:
     # SSoT: config.yaml → skills section
@@ -138,6 +138,7 @@ skills:
           playwright,
           skill-creator,
           payment-integration,
+          game-development,
         ]
 
     tooling:
@@ -193,7 +194,7 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (43 workflows) — Complete Command Set
+# COMMANDS (45 workflows) — Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
@@ -256,6 +257,16 @@ commands:
     cache: true
     triggers: [generate, tạo code]
     skills: { required: [coding-rules], contextual: [auto] }
+
+  - id: game
+    file: workflows/game.md
+    icon: "🎮"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [game, tạo game, make game, build game, gamedev, text-to-game]
+    skills:
+      { required: [game-development], contextual: [csharp, python, mcp] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # PLANNING & DESIGN (6 commands)

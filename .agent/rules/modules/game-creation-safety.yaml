@@ -1,0 +1,94 @@
+name: game-creation-safety
+rule_id: "MOD-GCS-001"
+description: "Safety rules for agent-driven game creation via MCP bridge. Prevents accidental destruction, enforces spawn limits, and ensures bridge health checks."
+category: "safety"
+
+context:
+  always_apply: false
+  personas: ["Developer", "Debugger"]
+  workflows: ["/code", "/game", "/debug"]
+  detect_patterns: ["*.unity", "*.uproject", "*.umap"]
+
+rules:
+  GCS_001_bridge_health:
+    name: "Bridge Health Check Before Start"
+    severity: critical
+    desc: |
+      BEFORE any bridge operation, agent MUST verify connection:
+      - Unity: WebSocket ws://127.0.0.1:15557 or HTTP http://127.0.0.1:30030
+      - UE: HTTP http://127.0.0.1:30010 or Python http://127.0.0.1:30011
+      If unreachable → STOP and inform user: "Please open Unity/UE Editor with HSA bridge plugin."
+    action: "hsa_bridge({target:'unity|ue', action:'health_check'})"
+
+  GCS_002_spawn_limit:
+    name: "Object Spawn Limit"
+    severity: high
+    desc: |
+      Max 100 objects spawned per agent session to prevent editor lag.
+      Agent MUST maintain running count of spawned objects.
+      At 80 objects: warn user. At 100: hard stop.
+    limit: 100
+    warn_at: 80
+
+  GCS_003_save_before_modify:
+    name: "Save Scene Before Modification"
+    severity: critical
+    desc: |
+      Agent MUST call save_scene/save_current_level before any destructive operation:
+      - Deleting GameObjects/Actors
+      - Overwriting scripts
+      - Changing physics settings
+      - Modifying render pipeline settings
+
+  GCS_004_input_system:
+    name: "Use New Input System Default"
+    severity: medium
+    desc: |
+      Always use Unity New Input System (com.unity.inputsystem) by default.
+      Legacy Input (Input.GetAxis, Input.GetButtonDown) only if user explicitly requests.
+      ⚠️ Check: Project Settings > Player > Active Input Handling
+
+  GCS_005_urp_default:
+    name: "URP Default Render Pipeline"
+    severity: medium
+    desc: |
+      Default to Universal Render Pipeline (URP) for new Unity projects.
+      - BIRP (Built-in): Only for legacy projects
+      - HDRP: Only if user specifies high-end rendering needs
+      ⚠️ Always check existing pipeline before creating materials
+
+  GCS_006_debug_loop_limit:
+    name: "Debug Loop Iteration Limit"
+    severity: high
+    desc: |
+      Max 5 debug iterations (compile → check → fix) per debug session.
+      After 5 consecutive failures: STOP and escalate to user with summary:
+      - What was tried
+      - What errors remain
+      - Suggested next steps
+    max_iterations: 5
+
+  GCS_007_python_sandbox:
+    name: "UE Python Execution Safety"
+    severity: critical
+    desc: |
+      ue_execute_python runs with FULL editor permissions. Safety rules:
+      - NEVER delete files outside project directory
+      - NEVER access network resources from Python
+      - NEVER modify Engine/ config files (only project Config/)
+      - NEVER call sys.exit() or os.abort()
+      - Log ALL executed scripts to .domyh/game-logs/ for audit
+
+  GCS_008_asset_backup:
+    name: "Asset Backup Before Overwrite"
+    severity: high
+    desc: |
+      Before overwriting any existing asset (scene, prefab, script):
+      1. Check if file exists
+      2. If exists: create backup (append .bak or copy to .domyh/backups/)
+      3. Then proceed with overwrite
+      4. Inform user of backup location
+
+integration:
+  tier: 4
+  related_modules: ["quality", "game-dev-security", "edit-verification"]

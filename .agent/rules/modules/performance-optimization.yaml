@@ -71,7 +71,8 @@ tool_efficiency:
   - "Use multi_replace for multiple edits in same file"
   - "Stop searching after finding the answer (early termination)"
   - "Use view_file_outline before full file reads"
-  - "Load META.yaml before SKILL.md before ADVANCED.md"
+  - "Load META.yaml before SKILL.md before data/*.yaml before ADVANCED.md"
+  - "NEVER skip data/ files — they contain project-specific patterns that override pre-training knowledge"
 
 integration:
   tier: 2

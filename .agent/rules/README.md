@@ -98,6 +98,7 @@ Composable rule modules for specific use cases:
 | `session-governance.yaml`       | Session governance discipline| All                 |
 | `context-integrity.yaml`        | Context coherence across sessions | Developer, Architect |
 | `drift-prevention.yaml`         | Drift alignment checks       | Developer, Debugger |
+| `game-creation-safety.yaml`      | Game creation safety rules   | Developer, Debugger |
 
 > **Merged into constitutional tiers** (in `archive/`): `reflection.yaml`, `context-management.yaml`, `evidence.yaml`
 
