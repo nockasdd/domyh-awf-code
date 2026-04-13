@@ -253,3 +253,18 @@ All data domains indexed by HSA BM25 engine for semantic search:
 | Reverse Engineering | `reverse-engineering.yaml` | "binary analysis anti-tamper" |
 
 ---
+
+## Anti-Patterns
+<!-- Liệt kê cụ thể điều KHÔNG được làm khi sử dụng skill này -->
+| Don't | Do Instead | Why |
+|:------|:-----------|:----|
+
+## Failure Modes
+<!-- Các cách skill có thể fail và cách xử lý -->
+| Failure | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+
+## Integration
+<!-- Skill nào bổ trợ/xung đột -->
+| Skill | Relationship |
+|:------|:-------------|

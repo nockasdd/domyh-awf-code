@@ -174,3 +174,13 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 **Total: 12 data files, 180+ patterns**
 
 ---
+
+## Failure Modes
+<!-- Các cách skill có thể fail và cách xử lý -->
+| Failure | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+
+## Integration
+<!-- Skill nào bổ trợ/xung đột -->
+| Skill | Relationship |
+|:------|:-------------|

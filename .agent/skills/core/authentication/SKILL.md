@@ -163,3 +163,13 @@ Data powered by HSA BM25 search engine. Query YAML data via skill search:
 | MD5/SHA1 password hash      | Rainbow tables  | bcrypt/argon2          |
 
 ---
+
+## Failure Modes
+<!-- Các cách skill có thể fail và cách xử lý -->
+| Failure | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+
+## Integration
+<!-- Skill nào bổ trợ/xung đột -->
+| Skill | Relationship |
+|:------|:-------------|

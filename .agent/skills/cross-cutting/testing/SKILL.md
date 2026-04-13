@@ -248,3 +248,18 @@ Data powered by HSA BM25 search engine:
 **Data domains**: `frameworks`, `patterns`, `pyramid`, `mocking`, `coverage`
 
 ---
+
+## Anti-Patterns
+<!-- Liệt kê cụ thể điều KHÔNG được làm khi sử dụng skill này -->
+| Don't | Do Instead | Why |
+|:------|:-----------|:----|
+
+## Failure Modes
+<!-- Các cách skill có thể fail và cách xử lý -->
+| Failure | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+
+## Integration
+<!-- Skill nào bổ trợ/xung đột -->
+| Skill | Relationship |
+|:------|:-------------|

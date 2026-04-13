@@ -162,3 +162,19 @@ All 12 data domains are indexed by HSA BM25 engine for semantic search:
 | Directory Trees     | `framework-directories.yaml`  | "nuxt directory structure"  |
 
 ---
+
+## Anti-Patterns
+<!-- Liệt kê cụ thể điều KHÔNG được làm khi sử dụng skill này -->
+| Don't | Do Instead | Why |
+|:------|:-----------|:----|
+
+## Failure Modes
+<!-- Các cách skill có thể fail và cách xử lý -->
+| Failure | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+
+## Integration
+<!-- Skill nào bổ trợ/xung đột -->
+| Skill | Relationship |
+|:------|:-------------|
+

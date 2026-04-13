@@ -17,13 +17,13 @@ MUST execute before writing code:
 3. `hsa_detect(action="stack")` — On first code task per project
 4. `hsa_search(action:"docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)
 
-## 🔄 Cross-Model Cascade (Sub-Agent Delegation)
+## 🔄 Multi-Step Task Orchestration
 
-For complex sub-tasks, delegate to specialized model:
-- `hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'code'})` → wait 5s → `hsa_delegate({action:'cascade_read', cascade_id:'...'})`
-- task_type: `code` | `test` | `review` | `debug` | `browser` | `research`
-- Model auto-selected from user's dashboard routing settings
-- List models: `hsa_delegate({action:'cascade_models'})`
+For complex multi-step tasks, use built-in cognitive workflows:
+- `/think [topic]` — Structured analysis (Six Hats, SCAMPER, Tree of Thought)
+- `/loop` — Autonomous development pipeline (plan → code → test → verify)
+- `hsa_delegate({action:'prepare', task_type:'code'})` — Context packets for native sub-agents
+- Platform-native subagents: `.claude/agents/`, Codex AGENTS.md, or IDE-specific delegation
 
 ## ❌ NEVER (When MCP Connected)
 

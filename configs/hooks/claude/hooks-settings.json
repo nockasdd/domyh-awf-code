@@ -39,6 +39,22 @@
                 "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\inject-context.ps1",
                 "timeout": 10
             }
+        ],
+        "Stop": [
+            {
+                "type": "command",
+                "command": ".claude/hooks/scripts/session-persist.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\session-persist.ps1",
+                "timeout": 10
+            }
+        ],
+        "PreCompact": [
+            {
+                "type": "command",
+                "command": ".claude/hooks/scripts/pre-compact-snapshot.sh",
+                "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\pre-compact-snapshot.ps1",
+                "timeout": 5
+            }
         ]
     }
 }

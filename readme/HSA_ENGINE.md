@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  Token-optimized MCP context engine with <b>BM25+ search</b>, <b>HNSW vector search</b>, <b>Merkle tree</b> change detection, <b>84+ built-in library docs</b>, <b>cross-model cascade delegation</b>, <b>impact analysis</b>, <b>persistent memory</b>, <b>LiveCanvas</b> visual feedback, and <b>real-time dashboard</b>.<br/>
+  Token-optimized MCP context engine with <b>BM25+ search</b>, <b>HNSW vector search</b>, <b>Merkle tree</b> change detection, <b>84+ built-in library docs</b>, <b>sub-agent delegation</b>, <b>impact analysis</b>, <b>persistent memory</b>, <b>LiveCanvas</b> visual feedback, and <b>real-time dashboard</b>.<br/>
   Part of the <a href="https://github.com/nockasdd/domyh-awf-code"><b>DOMYH AWF </b></a> framework.
 </p>
 
@@ -46,7 +46,7 @@ nock-hsa
 | 💾 **LRU Cache** | Semantic caching with TTL + background revalidation |
 | 📚 **Doc Fetcher** | 84+ built-in library docs + llms.txt, npm README, local files, custom URLs |
 | 🔬 **External Research** | GitHub repo indexing, npm/PyPI package metadata, release notes, remote file reading |
-| 🔄 **Cross-Model Cascade** | Delegate tasks to Gemini, Claude, GPT models with dashboard-configurable routing |
+| 🔄 **Sub-Agent Delegation** | Context packet preparation and tool filtering for native sub-agents |
 | 🎨 **LiveCanvas** | Visual feedback loop — dev server management, screenshots, visual regression, live CSS edits via CDP |
 | 🖌️ **Design Intelligence** | Design DNA extraction, WCAG health scoring (0-100), W3C DTCG token generation, image analysis |
 | 🌐 **Browser Engine** | Playwright-powered: screenshot, element inspection, page analysis |
@@ -85,7 +85,7 @@ nock-hsa
 | `hsa_memory` | `store` `recall` `list` `delete` `stats` | Persistent cross-session episodic memory with semantic recall |
 | `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration, rules, skills |
 | `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
-| `hsa_delegate` | `prepare` `filter` `cascade` `cascade_read` `cascade_models` `cascade_cancel` | Sub-agent delegation, cross-model cascade |
+| `hsa_delegate` | `prepare` `filter` | Sub-agent context preparation and tool filtering |
 | `hsa_research` | `index` `overview` `read` `search` `list` `refresh` `delete` `pkg` `releases` `compare` `file` | External repo research, package metadata, release notes, remote file reading |
 | `hsa_guide` | — | HSA optimal workflow guide |
 

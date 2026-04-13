@@ -200,7 +200,7 @@ semantic:
 
 commands:
   # ═══════════════════════════════════════════════════════════════════════════
-  # DEVELOPMENT (6 commands)
+  # DEVELOPMENT (8 commands)
   # ═══════════════════════════════════════════════════════════════════════════
 
   - id: code
@@ -267,6 +267,16 @@ commands:
     triggers: [game, tạo game, make game, build game, gamedev, text-to-game]
     skills:
       { required: [game-development], contextual: [csharp, python, mcp] }
+
+  - id: loop
+    file: workflows/loop.md
+    icon: "🔄"
+    category: development
+    persona: developer
+    cache: false
+    triggers: [loop, auto, tự động, vòng lặp, autonomous]
+    skills:
+      { required: [coding-rules, testing], contextual: [auto] }
 
   # ═══════════════════════════════════════════════════════════════════════════
   # PLANNING & DESIGN (6 commands)
