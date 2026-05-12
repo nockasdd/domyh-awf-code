@@ -24,7 +24,7 @@ Thank you for your interest in contributing! 🎉
 
 1. Create directory: `configs/{ide-name}/`
 2. Add root config file: `root.{expected-filename}`
-3. Follow the SLIM Config v7 template (see any existing Markdown config as reference)
+3. Follow the SLIM Config template (see any existing Markdown config as reference)
 4. Update `configs/README.md` and `IDE_COMPATIBILITY.md`
 
 ## Version Bumping

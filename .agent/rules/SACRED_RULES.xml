@@ -155,7 +155,23 @@ Load .agent/i18n/{lang}.yaml for tone and honorific rules at conversation start.
       <mapping>rules/modules/agent-delegation.yaml#cascade_delegation.workflow_to_task_type</mapping>
     </config>
   </requirement>
-  
+
+  <requirement id="SURGICAL_001" tier="2" severity="block">
+    <text>When fixing a bug or adding a feature, touch ONLY files/functions directly in scope:
+  - Do NOT refactor, reformat, or "improve" code outside the declared scope
+  - Style changes (quotes, whitespace, type hints, docstrings) are NEVER a standalone change
+  - If dead code is noticed: MENTION it but DO NOT delete unless user explicitly asks
+  - Every changed line must trace directly to the user's request
+  - Match existing code style EXACTLY (quotes, naming, formatting) — even if you would do it differently
+  - If you notice unrelated code issues: describe them in text, do not fix them
+This rule directly addresses the karpathy "surgical changes" principle. See rules/modules/behavioral-patterns.yaml for concrete anti-pattern examples.</text>
+    <rationale>60%+ of regressions come from touching unrelated code. LLMs commonly "improve adjacent code" or reformat while fixing bugs — this is the most common reasoning failure. The test: "Does every changed line trace directly to the user's request?" If no, the change violates this rule.</rationale>
+    <config>
+      <module>behavioral-patterns.yaml</module>
+      <module>surgical_changes</module>
+    </config>
+  </requirement>
+
   <!-- ═══ TIER 3: SESSION & MEMORY ═══ -->
   
   <requirement id="SESSION_001" tier="3" severity="warn">

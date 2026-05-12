@@ -1,5 +1,6 @@
-# Session Governance v7.2.0
-# Rule module for DOMYH — teaches agents to use session governance discipline
+# Session Governance v7.3.0
+# Rule module for DOMYH HSA — teaches agents to use session governance discipline
+# v7.3: Updated to use new API with backward-compat parameters
 # v7.2: Expanded personas to all, mode-aware Pre-Stop Checklist
 ---
 name: session-governance
@@ -23,10 +24,13 @@ rules:
     when: "Starting any significant task (feature, bugfix, refactor)"
     action: |
       Call hsa_session with:
-        - focus: what you're working on
+        - action: "intent"
+        - intent: short goal description
+        - focus: what you're working on (required)
         - mode: plan_driven | exploration | bugfix | refactor
-        - goals: concrete deliverables (array of strings)
+        - goals: concrete deliverables (array of strings) — backward compat v7
       This creates a session trajectory and enables drift detection.
+      Example: hsa_session({action:"intent", intent:"Fix login bug", focus:"User cannot login with OAuth", mode:"bugfix", goals:["Identify OAuth callback issue", "Fix token refresh", "Test login flow"]})
 
   - id: GOV-002
     name: "Track Progress Hierarchy"
@@ -34,11 +38,16 @@ rules:
     when: "Completing a milestone or starting a new sub-task"
     action: |
       Call hsa_session with:
+        - action: "track"
         - level: trajectory (top goal) | tactic (sub-task) | action (leaf step)
         - label: what this step is about
         - status: active | completed | blocked | cancelled
         - parent_id: parent node ID (for tactic/action)
+        - intent: short goal description
+        - focus: what you're working on
+        - mode: plan_driven | exploration | bugfix | refactor
       Hierarchy: 1 trajectory → N tactics → N actions per tactic.
+      Example: hsa_session({action:"track", level:"tactic", label:"Fix OAuth callback", status:"completed", parent_id:"traj_123", focus:"OAuth token refresh", mode:"bugfix"})
 
   - id: GOV-003
     name: "Anchor Immutable Facts"
@@ -46,11 +55,14 @@ rules:
     when: "Discovering project conventions, making architectural decisions"
     action: |
       Call hsa_session with:
-        - content: the fact to remember
+        - action: "anchor"
+        - key: identifier for this fact
+        - value: the fact to remember
         - category: stack | convention | decision | constraint | context
       Anchors are immutable — they survive context compaction and session resets.
       Save anchors for: tech stack, coding conventions, architecture decisions,
       deployment constraints, project-specific context.
+      Example: hsa_session({action:"anchor", key:"auth-method", value:"OAuth2 with JWT tokens", category:"stack"})
 
   - id: GOV-004
     name: "Drift Check"
@@ -58,12 +70,15 @@ rules:
     when: "Before starting unplanned work or changing scope"
     action: |
       Call hsa_session with:
-        - current_action: what you're about to do
+        - action: "drift"
+        - focus: current action being considered (required)
+        - current_action: what you're about to do (backward compat v7)
         - include_anchors: true (for full context)
       If drift detected:
         1. Evaluate: is this deviation necessary?
         2. If yes: call hsa_session to update intent
         3. If no: return to declared focus
+      Example: hsa_session({action:"drift", current_action:"Adding analytics tracking", include_anchors:true})
 
   - id: GOV-005
     name: "Pre-Stop Checklist"
@@ -93,7 +108,7 @@ rules:
       Use structured format for session anchors:
         [SESSION-END] Topic: {what}. Done: {completed}. Pending: {remaining}.
         Files: {key files}. Build: pass/fail. Tests: X/Y pass.
-      This enables clean resume in next session via hsa_session(include_anchors: true).
+      This enables clean resume in next session via hsa_session(action="snapshot").
 
   - id: GOV-007
     name: "Memory vs Anchor Selection"
@@ -107,14 +122,31 @@ rules:
           → Lost when session ends (unless persisted in snapshot)
         hsa_memory(store): Cross-session episodic memory
           → Architecture decisions, resolved bug patterns, error context
-          → Persists across all sessions via episodic-memory.json
-          → Searchable by semantic recall (hsa_memory(recall, query))
+          → Persists across all sessions via SQLite
+          → Searchable by semantic recall (hsa_session(action="recall", content="..."))
           → Categories: decision | error | pattern | context | anchor
       Rule of thumb:
-        - Will future sessions need this? → hsa_memory
-        - Only this session needs it? → hsa_session(anchor)
-        - Bug root cause found after debugging? → hsa_memory(category:'error')
-        - Architecture decision made? → hsa_memory(category:'decision')
+        - Will future sessions need this? → hsa_session(action="fact") or hsa_session(action="shelve")
+        - Only this session needs it? → hsa_session(action="anchor")
+        - Bug root cause found after debugging? → hsa_session(action="fact", entity:"bug", relationship:"root_cause")
+        - Architecture decision made? → hsa_session(action="fact", entity:"architecture", relationship:"decision")
+
+  - id: GOV-008
+    name: "Backward Compatibility v7"
+    severity: info
+    when: "Using old API from session-governance.yaml v7"
+    action: |
+      The new hsa_session supports ALL old v7 parameters for backward compatibility:
+        - level: trajectory | tactic | action
+        - label: step description
+        - status: active | completed | blocked | cancelled
+        - parent_id: parent node ID
+        - goals: array of goal strings
+        - current_action: current action for drift
+        - include_anchors: boolean for drift response
+        - auto_notify: boolean for Telegram notification
+        - snapshot: { skills, project_type, last_files_touched, last_tools_used, confidence }
+      These are automatically mapped to the new API internally.
 
 integration:
   tier: 2

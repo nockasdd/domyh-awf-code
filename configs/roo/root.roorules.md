@@ -5,7 +5,7 @@
 ## ⛔ MANDATORY FIRST ACTIONS (Every Conversation)
 
 BEFORE any response, MUST call MCP tools in this order:
-1. `hsa_get_agent_config("bootstrap")` — Load ALL rules, commands, skills
+1. `hsa_get_agent_config("bootstrap")` — Load bootstrap config, paths, project stack
 2. `hsa_session(action="intent", focus, mode)` — Declare session intent
 
 ## ⛔ BEFORE ANY Code Implementation
@@ -15,7 +15,7 @@ MUST execute before writing code:
    - **CTXT_001**: Context Engineering — always apply U-shape, compaction, token budgets
 2. `hsa_search(query)` — Search codebase (NEVER use grep when MCP available)
 3. `hsa_detect(action="stack")` — On first code task per project
-4. `hsa_search(action:"docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)
+4. `hsa_search(action="docs", query, doc_libraries:["lib"])` — Search external library docs (24+ built-in)
 
 
 ## 🔄 Multi-Step Task Orchestration
@@ -65,10 +65,10 @@ NEVER use these on Windows — they hang indefinitely:
 
 **Fallback Loading Protocol** (when MCP unavailable):
 Match user intent → read `.agent/workflows/{command}.md` → load matching skill → execute.
-45 commands available — browse `.agent/workflows/` for full list.
+46 commands available — browse `.agent/workflows/` for full list.
 
 ## Personas
 
 Developer · Architect · Auditor · Debugger · Tester · DevOps · Documenter · Planner · Researcher · Orchestrator · Security — Load details: `.agent/personas/{id}.md`
 
-_DOMYH Awesome Code · Enforced Config v7 · NockDev_
+_DOMYH Awesome Code · Enforced Config · NockDev_

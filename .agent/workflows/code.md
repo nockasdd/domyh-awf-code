@@ -44,6 +44,17 @@ success_criteria: "Feature implemented, build passes, tests written"
    - ⛔ STOP if major change (>50 lines) — confirm with user
    - **If UI** (T1/T2): `hsa_canvas(open)` → preview → ⛔ STOP: "Preview ready. Approve?"
 
+   **Assumption Listing (MANDATORY — SURGICAL_001, TC-001/TC-002/TC-003)**
+   Before proceeding to implementation, explicitly list ALL assumptions:
+   ```
+   1. Scope assumption: [What is/isn't included? All users or filtered?]
+   2. Format assumption: [JSON/CSV/API response? File location?]
+   3. Technology assumption: [Using existing lib or adding new dependency?]
+   4. Constraint assumption: [Performance/security/compatibility requirements?]
+   ```
+   If ANY assumption is uncertain → STOP and ask user before implementing.
+   Reference: `behavioral-patterns.yaml` (TC-001 Silent Assumption, TC-002 Tradeoff, TC-003 Drift)
+
 3. **PRE-IMPLEMENTATION CHECK** (Hard Gate)
    > Verifiable actions — NOT self-reported checkboxes.
 

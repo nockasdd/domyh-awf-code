@@ -53,7 +53,7 @@ reviews:
 chat:
   auto_reply: true
 
-# DOMYH Awesome Code Agent Framework — Enforced Config v7
+# DOMYH Awesome Code Agent Framework — Enforced Config
 #
 # ⛔ MANDATORY: MUST call hsa_get_agent_config('bootstrap') FIRST.
 # MUST call hsa_search(query) before implementing code.
