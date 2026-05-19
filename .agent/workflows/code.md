@@ -1,171 +1,68 @@
 ---
-description: "💻 Write production-ready code, fix/improve existing projects, with proper error handling, types, and documentation"
+description: "Write production-ready code, fix/improve existing projects"
 skills: { required: [coding-rules], contextual: [auto, domyh-design, tailwind] }
 success_criteria: "Feature implemented, build passes, tests written"
 ---
 
-# 💻 /code — Code Pro
+# /code
 
-> Intelligent code generation & project improvement with language-specific patterns
-> 📚 30+ Languages • Auto Test Loop • Fix/Improve Mode • Self-Review
+## RULES
 
----
+- R1-R5 Security: validate input, no hardcoded secrets, parameterized queries, XSS prevention, RBAC
+- R6-R9 Quality: error handling at boundaries, types for public APIs, constants over magic numbers, tests >70%
+- R10 Context: read + trace dependencies BEFORE modifying
+- R11 Safety: STOP if >50 lines change — confirm with user
 
-## ⛔ RULES (Always Apply)
+## CODE FLOW
 
-| # | Rule | Category |
-|:--|:-----|:---------|
-| R1 | Validate all user input, sanitize output | Security |
-| R2 | No hardcoded secrets — use environment variables | Security |
-| R3 | Parameterized queries only — no raw SQL | Security |
-| R4 | Context-aware encoding, XSS prevention on output | Security |
-| R5 | RBAC checks, secure sessions for auth | Security |
-| R6 | Error handling at every boundary, non-revealing errors | Quality |
-| R7 | Types/interfaces defined for all public APIs | Quality |
-| R8 | Constants over magic numbers, named exports preferred | Quality |
-| R9 | Tests written for all new code (>70% coverage target) | Quality |
-| R10 | **Read + trace dependencies BEFORE modifying code** | Context |
-| R11 | ⛔ STOP if major change (>50 lines) — confirm with user | Safety |
-
----
-
-## CODE FLOW (6 Steps)
-
-1. **DETECT** (Auto)
+1. **DETECT**
    - Parse intent: feature / bugfix / refactor
-   - `hsa_detect(stack)` → languages, frameworks
-   - `hsa_search(skills)` → load language-specific patterns
-   - **UI Intent**: T1 (new UI) → load `domyh-design` skill | T2 (modify UI) → `hsa_design(analyze)` | T3 (design-only) → route to `/visualize`
+   - `hsa_detect(stack)`, `hsa_search(skills)` for language patterns
+   - UI intent: T1 (new) load domyh-design | T2 (modify) hsa_design(analyze) | T3 route to /visualize
 
 2. **PLAN**
-   - Break down into steps, identify dependencies
-   - `hsa_prefetch` planned files
-   - Show: `Plan: 4 steps, ~85 lines`
-   - ⛔ STOP if major change (>50 lines) — confirm with user
-   - **If UI** (T1/T2): `hsa_canvas(open)` → preview → ⛔ STOP: "Preview ready. Approve?"
+   - Break into steps, `hsa_prefetch` planned files
+   - STOP if >50 lines — confirm with user
+   - List assumptions (scope, format, technology, constraints) — STOP if uncertain
 
-   **Assumption Listing (MANDATORY — SURGICAL_001, TC-001/TC-002/TC-003)**
-   Before proceeding to implementation, explicitly list ALL assumptions:
-   ```
-   1. Scope assumption: [What is/isn't included? All users or filtered?]
-   2. Format assumption: [JSON/CSV/API response? File location?]
-   3. Technology assumption: [Using existing lib or adding new dependency?]
-   4. Constraint assumption: [Performance/security/compatibility requirements?]
-   ```
-   If ANY assumption is uncertain → STOP and ask user before implementing.
-   Reference: `behavioral-patterns.yaml` (TC-001 Silent Assumption, TC-002 Tradeoff, TC-003 Drift)
+3. **PRE-CHECK** (hard gate)
+   - Quote key criteria from requirement
+   - List 3+ test cases, 2+ edge cases
+   - If auth/secrets: security review notes
+   - If breaking: list affected consumers with file:line
 
-3. **PRE-IMPLEMENTATION CHECK** (Hard Gate)
-   > Verifiable actions — NOT self-reported checkboxes.
+4. **EXECUTE**
+   - Read target files BEFORE editing
+   - hsa_trace_flow for modified functions
+   - Check imports/exports dependencies
+   - Write protocol: LOCATE > UNDERSTAND > SIZE > WRITE > VERIFY
+   - Auto test loop: write > run > fix (max 3)
 
-   ```
-   1. Read original requirement → quote key criteria in output
-   2. List planned test cases (minimum 3)
-   3. List edge cases (minimum 2: empty/null/boundary)
-   4. If touching auth/secrets → log security review notes
-   5. If breaking changes → list affected consumers with file:line
-   ⛔ Missing items = address before coding. Show: `Pre-check: 5/5 ✅`
-   ```
-
-4. **EXECUTE** — Context-Aware Implementation
-
-   **Context Gathering Protocol** (MANDATORY before writing code):
-   ```yaml
-   mandatory:
-     - "Read target file(s) BEFORE editing — never edit blind"
-     - "hsa_trace_flow(entry_point) for functions being modified"
-     - "Check imports/exports — what depends on this code?"
-   conditional:
-     - "If modifying API → hsa_search for all consumers"
-     - "If modifying types/interfaces → hsa_search for all usages"
-     - "If modifying config → check all environment variants"
-     - "If modifying shared utility → trace upstream + downstream"
-   ```
-
-   **Canonical Write Protocol** (from AGENT_BEHAVIOR.md):
-   LOCATE → UNDERSTAND → SIZE → WRITE → VERIFY
-   - SIZE classification from `proportional-response.yaml` determines output scope
-   - Write code following skill patterns, error handling + types
-   - Add tests (auto test loop: write → run → fix → repeat, max 3)
-   - Show progress: `[Step 2/4] Creating auth middleware...`
-
-5. **VERIFY** — Run tests → Fix → Repeat (max 3), lint check
-   - Agent re-reads ALL generated code and checks:
-     Intent match? Edge cases? No magic numbers? Helpful errors? Naming conventions? No security anti-patterns?
-   - If issues found → fix silently before output
-   - **UI Quality Gate** (if UI intent):
-     Visual QA Pipeline (score /100): Accessibility (30pts) + Visual Consistency (25pts) + Responsiveness (20pts) + Interaction (15pts) + Performance (10pts)
-     Nielsen Heuristic Check: ≥8/10
-     Result: ≥90 → SHIP ✅ | 70-89 → FIX MINOR ⚠️ | <70 → REDESIGN ❌
-     Bonus: `hsa_design(health)` → Grade (A-F) | `hsa_canvas(capture)` → CLS, AX tree, console errors
+5. **VERIFY**
+   - Run tests, lint, build
+   - Self-review: intent match, edge cases, naming, security
+   - UI gate (if applicable): accessibility + visual + responsive score
 
 6. **SYNC**
    - `hsa_check_changes` to update index
-   - `hsa_feedback` on key files used
-   - Output: summary of changes, confidence score (1-10), next steps
-   - Persist key decisions to `.agent/memory/state.json`
-
----
+   - Output: summary, confidence (1-10), next steps
 
 ## SUB-COMMANDS
 
-| Command | Description | Mode |
-|:--------|:------------|:-----|
-| `/code [task]` | Generate code for task | Create |
-| `/code fix [issue]` | Fix existing issue | Fix |
-| `/code improve [area]` | Improve existing code | Refactor |
-| `/code add [feature]` | Add feature to existing | Update |
-| `/code test [feature]` | Generate tests only | Test |
-| `/code secure [feature]` | Generate secure code | Create |
-| `/code quality analyze [path]` | Static analysis | Analyze |
+| Command | Mode |
+|:--------|:-----|
+| `/code [task]` | Create |
+| `/code fix [issue]` | Fix |
+| `/code improve [area]` | Refactor |
+| `/code add [feature]` | Update |
+| `/code test [feature]` | Test only |
 
----
+## CASCADE
 
-## FIX/IMPROVE MODE
+Auto (score >=6.5, >200 LOC): `hsa_delegate({action:'cascade', task_type:'code'})`
+Suggest (score 4-6.5, >100 LOC): ask user first.
 
-DETECT → ANALYZE issue → PLAN fix → EXECUTE → VERIFY → SELF-REVIEW → SUMMARY
+## CHECKPOINT
 
-| Priority | Description | SLA | Action |
-|:---------|:------------|:----|:-------|
-| **P0** | Critical security/breaking | Immediate | Must fix now |
-| **P1** | Affects core functionality | Same session | Fix before next task |
-| **P2** | Code quality/maintainability | This sprint | Schedule fix |
-| **P3** | Nice to have improvements | Backlog | Track |
-
----
-
-## AI QUALITY GATES
-
-| Layer | Name | What |
-|:------|:-----|:-----|
-| 1 | AI Auto-Fix | Linting, formatting, naming, comments |
-| 2 | Static Analysis | Snyk, SonarQube, ESLint; cyclomatic < 10 |
-| 3 | Self-Review | Agent self-critique before delivery |
-| 4 | Human Review | Complex logic, security, infra, >100 lines |
-
----
-
-## CASCADE EVALUATION (MCP)
-
-> ⚠️ Evaluate before EXECUTE — see `delegation-intelligence` skill for scoring.
-
-```
-hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'code'})
-→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
-```
-**Auto-cascade** (score ≥6.5): >200 LOC, multi-file, complex algorithm
-**Suggest cascade** (score 4.0-6.5): >100 LOC, moderate multi-file
-
----
-
-## REFLECTION CHECKPOINT
-
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
-
-1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
-   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
-   - Append task summary to `memory/session.md`
-   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
+1. Verify success_criteria met
+2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

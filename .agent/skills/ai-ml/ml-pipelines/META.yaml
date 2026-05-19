@@ -1,7 +1,5 @@
-# =============================================================================
 # ML Pipelines — META.yaml
 # End-to-End Machine Learning Pipeline Patterns
-# =============================================================================
 
 name: ml-pipelines
 category: ai-ml

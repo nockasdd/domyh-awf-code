@@ -1,6 +1,4 @@
-# =============================================================================
 # Kubernetes Security Patterns (Feb 2026)
-# =============================================================================
 # Pod Security Standards, RBAC, Secrets, User Namespaces
 
 metadata:

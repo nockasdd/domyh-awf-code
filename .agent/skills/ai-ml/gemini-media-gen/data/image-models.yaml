@@ -1,9 +1,6 @@
-# =============================================================================
 # image-models.yaml — Nano Banana Image Generation Models
-# =============================================================================
 # 8 patterns for model selection, configuration, and API usage
 # Source: https://ai.google.dev/gemini-api/docs/image-generation
-# =============================================================================
 
 total_patterns: 8
 
@@ -106,5 +103,3 @@ batch_generation:
     - "Reference previous images: 'Generate another image like the previous one but...'"
     - "Flash model for batch, Pro for final selection"
 
-# =============================================================================
-# =============================================================================

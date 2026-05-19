@@ -169,40 +169,8 @@ cascade_triggers:
 # ═══ EVALUATION FLOW ═══
 
 evaluation_flow:
-  steps:
-    1: "Parse user message text"
-    2: "Score H1 (domain_count) — scan for domain keywords → normalize to 0-10"
-    3: "Score H2 (subtask_count) — detect conjunctions, lists, multi-verb → normalize"
-    4: "Score H3 (file_scope) — estimate files from scope signals → normalize"
-    5: "Score H4 (cross_persona) — match cross-domain patterns → normalize"
-    6: "Score H5 (complexity_keywords) — check explicit keywords → normalize"
-    7: "Weighted total = (H1×0.30) + (H2×0.15) + (H3×0.20) + (H4×0.20) + (H5×0.15)"
-    8: "Apply threshold → single_agent | consider | auto_orchestrate"
-    9: "Apply cascade_triggers → no_cascade | suggest | auto_cascade"
-
-# ═══ EXAMPLES ═══
-
-examples:
-  score_low:
-    message: "Fix the button color on login page"
-    scores: { H1: 0, H2: 0, H3: 0, H4: 0, H5: 0 }
-    weighted: 0.0
-    decision: "single_agent → developer persona → /code workflow"
-    cascade: "no_cascade"
-
-  score_medium:
-    message: "Build auth module and write tests for it"
-    scores: { H1: 3, H2: 2, H3: 4, H4: 5, H5: 0 }
-    weighted: "(3×0.30)+(2×0.15)+(4×0.20)+(5×0.20)+(0×0.15) = 0.9+0.3+0.8+1.0+0 = 3.0"
-    decision: "single_agent → developer persona (was incorrectly 8 → auto in v7.1)"
-    cascade: "no_cascade"
-
-  score_high:
-    message: "Build complete auth system: API endpoints, database models, frontend UI, tests, and deploy"
-    scores: { H1: 10, H2: 10, H3: 10, H4: 10, H5: 10 }
-    weighted: "(10×0.30)+(10×0.15)+(10×0.20)+(10×0.20)+(10×0.15) = 10.0"
-    decision: "auto_orchestrate → Orchestrator persona → full DAG"
-    cascade: "auto_cascade → task_type:'code' for each sub-task"
+  formula: "Weighted = (H1×0.30) + (H2×0.15) + (H3×0.20) + (H4×0.20) + (H5×0.15)"
+  thresholds: { single: "<4.0", suggest: "4.0-6.5", auto: ">=6.5" }
 
 integration:
   tier: 2

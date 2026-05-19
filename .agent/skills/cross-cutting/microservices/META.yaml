@@ -1,8 +1,5 @@
-# =============================================================================
 # META.yaml — Microservices Patterns
-# =============================================================================
 # Tier 1: Always loaded (~100 tokens)
-# =============================================================================
 
 name: microservices
 category: cross-cutting
@@ -12,9 +9,7 @@ description: |
   Microservices architecture patterns: Saga, CQRS, Event Sourcing,
   service mesh, inter-service communication, resilience, and deployment.
 
-# =============================================================================
 # TRIGGERS — When to activate this skill
-# =============================================================================
 
 triggers:
   keywords:
@@ -55,9 +50,7 @@ triggers:
       ["docker-compose.yaml", "docker-compose.yml", "k8s/", "helm/", "proto/"]
     content: ["@EventHandler", "@SagaStep", "proto3", "service mesh"]
 
-# =============================================================================
 # CAPABILITIES — What this skill provides
-# =============================================================================
 
 caps:
   - saga_orchestration
@@ -71,9 +64,7 @@ caps:
   - inter_service_communication
   - deployment_strategies
 
-# =============================================================================
 # DATA FILES — Tier 2/3 resources
-# =============================================================================
 
 data_files:
   - saga-patterns.yaml # Orchestration & Choreography

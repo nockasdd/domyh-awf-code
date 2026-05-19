@@ -1,6 +1,4 @@
-# =============================================================================
 # PostgreSQL 17/18 Performance Patterns (Feb 2026)
-# =============================================================================
 # Query optimization and performance monitoring
 
 metadata:

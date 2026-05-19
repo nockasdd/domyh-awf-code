@@ -1,7 +1,5 @@
-# =============================================================================
 # ML Pipeline Patterns (Feb 2026)
 # Source: 9 E2E ML projects (Airbnb, Diamond, Heart, Student, Flight, etc.)
-# =============================================================================
 
 metadata:
   skill: ml-pipelines

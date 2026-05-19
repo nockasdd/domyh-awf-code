@@ -1,15 +1,10 @@
-# =============================================================================
 # gemini3-patterns.yaml — Gemini 3 Agentic Prompt Patterns
-# =============================================================================
 # 20 patterns for Gemini 3 agentic system instructions, thinking, and output
 # Source: https://ai.google.dev/gemini-api/docs/prompting-strategies
-# =============================================================================
 
 total_patterns: 20
 
-# =============================================================================
 # AGENTIC SYSTEM INSTRUCTIONS
-# =============================================================================
 
 agentic_template:
   description: "Google's official 9-rule agentic system instruction format"
@@ -56,9 +51,7 @@ system_instruction_rules:
     desc: "Set safety guardrails for harmful content"
     example: "Never provide advice on harmful activities."
 
-# =============================================================================
 # THINKING CONTROLS
-# =============================================================================
 
 thinking_levels:
   description: "Gemini 3 thinking level controls"
@@ -103,9 +96,7 @@ thought_summaries:
   billing: "Thinking tokens are billed as output tokens"
   signatures: "Opaque signature string for conversation continuity"
 
-# =============================================================================
 # STRUCTURED OUTPUT
-# =============================================================================
 
 structured_output:
   description: "Type-safe JSON output with schema enforcement"
@@ -131,9 +122,7 @@ structured_output:
     - "Enum (restricted values)"
     - "Nullable fields"
 
-# =============================================================================
 # PROMPTING STRATEGIES
-# =============================================================================
 
 prompting_strategies:
   few_shot:
@@ -164,5 +153,3 @@ prompting_strategies:
       - "Refine based on critique"
       - "Final quality check"
 
-# =============================================================================
-# =============================================================================

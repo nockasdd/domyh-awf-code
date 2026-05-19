@@ -1,7 +1,5 @@
-# =============================================================================
 # NLP Text Processing Patterns (Feb 2026)
 # Source: Spam Email Detection, Movie RecSys, Article Scraping
-# =============================================================================
 
 metadata:
   skill: ml-pipelines

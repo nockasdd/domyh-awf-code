@@ -3,9 +3,7 @@ metadata:
   domain: common-patterns
   updated: "2026-02-27"
 
-# ============================================================
 # UNIVERSAL INTEGRATION FLOW
-# ============================================================
 
 integration_flow:
   description: "Standard payment integration flow (applies to all providers)"
@@ -49,9 +47,7 @@ integration_flow:
       warning: "NEVER update order status from return URL"
       note: "Show 'Thank you' or 'Payment processing' page"
 
-# ============================================================
 # ERROR HANDLING
-# ============================================================
 
 error_handling:
   api_calls:
@@ -71,9 +67,7 @@ error_handling:
     payment_failed: "Show clear error message + retry option"
     cancel: "Handle provider cancel URL gracefully"
 
-# ============================================================
 # DATABASE SCHEMA PATTERN
-# ============================================================
 
 database_schema:
   orders:
@@ -103,9 +97,7 @@ database_schema:
       - {name: processed, type: BOOLEAN, default: false}
       - {name: created_at, type: TIMESTAMP}
 
-# ============================================================
 # SANDBOX / TESTING
-# ============================================================
 
 sandbox_configs:
   vnpay:
@@ -158,9 +150,7 @@ sandbox_configs:
       success: "4111 1111 1111 1111"
     upi: "success@razorpay"
 
-# ============================================================
 # PROVIDER COMPARISON
-# ============================================================
 
 comparison:
   decision_matrix:

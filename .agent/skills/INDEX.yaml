@@ -1,6 +1,4 @@
-# =============================================================================
 # Skills Routing Index — Universal Discovery
-# =============================================================================
 # Version: 2026-03-18 v3 (compact — routing + detect merged, no duplication)
 # Total: 101 skills across 8 categories
 #
@@ -8,7 +6,6 @@
 #   1. Read this file → find skill by name → get path + detect patterns
 #   2. Read .agent/skills/{path}/SKILL.md
 #   Total: 2 tool calls
-# =============================================================================
 
 routing:
   # --- core (8) ---

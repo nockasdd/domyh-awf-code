@@ -1,6 +1,6 @@
 name: typescript
-category: frontend
-tier: 3
+category: languages
+tier: 1
 priority: 3
 
 desc: "Type-safe JavaScript development for TypeScript 5.8/6.0. Zod validation, Effect-TS, Iterator Helpers, using declaration."

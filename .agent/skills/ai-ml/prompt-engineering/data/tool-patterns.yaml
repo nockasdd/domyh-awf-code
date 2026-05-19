@@ -1,15 +1,10 @@
-# =============================================================================
 # tool-patterns.yaml — Function Calling & Tool Use Patterns
-# =============================================================================
 # 15 patterns for function calling, MCP, multi-tool combinations
 # Source: https://ai.google.dev/gemini-api/docs/function-calling
-# =============================================================================
 
 total_patterns: 15
 
-# =============================================================================
 # FUNCTION CALLING FUNDAMENTALS
-# =============================================================================
 
 function_declaration:
   description: "Define functions the model can call"
@@ -41,9 +36,7 @@ function_calling_modes:
       desc: "Model cannot call functions"
       use_case: "Generate text only, testing"
 
-# =============================================================================
 # ADVANCED PATTERNS
-# =============================================================================
 
 parallel_function_calling:
   description: "Multiple independent function calls in one request"
@@ -77,9 +70,7 @@ automatic_function_calling:
           """Get weather for a city."""
           return {"temp": 72, "condition": "sunny"}
 
-# =============================================================================
 # MCP INTEGRATION
-# =============================================================================
 
 mcp_built_in_support:
   description: "Gemini SDK native MCP (Model Context Protocol) integration"
@@ -101,9 +92,7 @@ mcp_built_in_support:
     - "Only local MCP servers (no remote SSE)"
     - "Tool names must be unique across servers"
 
-# =============================================================================
 # MULTI-TOOL COMBINATIONS
-# =============================================================================
 
 multi_tool_combinations:
   description: "Combine native Gemini tools with function calling"
@@ -142,9 +131,7 @@ multimodal_function_responses:
     - "video/mp4"
   use_case: "Image analysis tools, screenshot processors"
 
-# =============================================================================
 # BEST PRACTICES
-# =============================================================================
 
 best_practices:
   function_descriptions:
@@ -167,5 +154,3 @@ best_practices:
     - "Use ANY mode when function call is required"
     - "Cache function results when appropriate"
 
-# =============================================================================
-# =============================================================================

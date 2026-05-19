@@ -1,9 +1,6 @@
-# =============================================================================
 # grounding.yaml — Grounding with Google Search Patterns
-# =============================================================================
 # 6 patterns for real-time web grounding and citation building
 # Source: https://ai.google.dev/gemini-api/docs/grounding
-# =============================================================================
 
 total_patterns: 6
 
@@ -91,5 +88,3 @@ pricing:
   tip: "Use grounding selectively — not all queries need real-time data"
   free_tier: "Available with API key"
 
-# =============================================================================
-# =============================================================================

@@ -1,9 +1,6 @@
-# =============================================================================
 # files-api.yaml — Gemini Files API Patterns
-# =============================================================================
 # 6 patterns for file upload, management, and multimodal usage
 # Source: https://ai.google.dev/gemini-api/docs/files
-# =============================================================================
 
 total_patterns: 6
 
@@ -90,5 +87,3 @@ best_practices:
   - "Use display_name for easier file management"
   - "Files API works across all Gemini models"
 
-# =============================================================================
-# =============================================================================

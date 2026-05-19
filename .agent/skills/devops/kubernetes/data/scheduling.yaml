@@ -1,6 +1,4 @@
-# =============================================================================
 # Kubernetes Scheduling Patterns (Feb 2026)
-# =============================================================================
 # Kueue, Priority Classes, Affinity, Topology Spread
 
 metadata:

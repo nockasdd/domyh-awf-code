@@ -1,16 +1,11 @@
-# =============================================================================
 # prompt-frameworks.yaml — Framework Templates & Platform Constraints
-# =============================================================================
 # 5 frameworks (RCTO, CO-STAR, SVCLMA, AIDA, PAS) + 8 platform constraints
 # Flow control (interview Qs, lazy load, variants) is in prompt.md
 # Updated: 2026-03-18 v2
-# =============================================================================
 
 total_frameworks: 5
 
-# =============================================================================
 # FRAMEWORK DEFINITIONS
-# =============================================================================
 
 frameworks:
   - id: rcto
@@ -154,9 +149,7 @@ frameworks:
       - "Solve should feel like relief, not a hard sell"
       - "Works great for Google Ads, Facebook primary text, landing page heroes"
 
-# =============================================================================
 # PLATFORM CONSTRAINTS
-# =============================================================================
 
 platform_constraints:
   google_ads:

@@ -1,11 +1,7 @@
-# =============================================================================
 # resilience.yaml — Resilience Patterns for Microservices
-# =============================================================================
 
 
-# =============================================================================
 # CIRCUIT BREAKER
-# =============================================================================
 
 circuit_breaker:
   description: "Prevent cascade failures by stopping requests to failing services"
@@ -78,9 +74,7 @@ circuit_breaker:
     dotnet: ["Polly"]
     typescript: ["opossum", "cockatiel"]
 
-# =============================================================================
 # BULKHEAD
-# =============================================================================
 
 bulkhead:
   description: "Isolate failures so one component can't take down the whole system"
@@ -113,9 +107,7 @@ bulkhead:
         }
     }
 
-# =============================================================================
 # RETRY
-# =============================================================================
 
 retry:
   description: "Automatically retry failed operations with backoff"
@@ -157,9 +149,7 @@ retry:
         return nil
     }
 
-# =============================================================================
 # TIMEOUT
-# =============================================================================
 
 timeout:
   description: "Prevent hanging by setting time limits"
@@ -169,9 +159,7 @@ timeout:
     grpc_call: "1-3 seconds"
     message_processing: "30 seconds"
 
-# =============================================================================
 # FALLBACK
-# =============================================================================
 
 fallback:
   description: "Provide alternative when primary fails"

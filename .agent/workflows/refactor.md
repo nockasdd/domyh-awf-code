@@ -1,195 +1,62 @@
 ---
-description: "🔧 Code refactoring & cleanup: identify smells, clean dead code, organize imports, restructure — verify tests pass"
+description: "Code refactoring and cleanup: identify smells, clean dead code, organize imports, restructure"
 skills: { required: [coding-rules], contextual: [auto, domyh-design] }
 success_criteria: "Code improved, all tests pass, no behavior change"
 ---
 
-# 🔧 /refactor — Refactor Pro
+# /refactor
 
-> Safe Code Transformation with Test Verification
-> 📚 Code Smells • Analysis Tools • Characterization Tests
+## RULES
 
----
+- R1: STOP after PLAN — confirm scope with user
+- R2: Run tests BEFORE and AFTER every change
+- R3: One commit per logical refactoring step
+- R4: Never change behavior — only structure
+- R5: Preserve existing test coverage
 
-${RULES_REFACTOR}
 ## REFACTOR FLOW
 
-1. **DETECT** — `hsa_session("refactor: {target}")`, identify stack via HSA (`hsa_detect`), load context (`hsa_search`), locate tests, trace dependencies via `hsa_trace_flow(entry_point, direction:'both')` for impact analysis
+1. **DETECT** — hsa_session, hsa_detect(stack), hsa_search for context, hsa_trace_flow(entry, direction:'both') for impact
 2. **BASELINE** — Run tests, record passing state
-3. **PLAN** — Define changes, confirm scope → `hsa_prefetch` target files
-4. **EXECUTE** — Apply refactoring (one commit per change).
-    Use `proportional-response.yaml` SIZE classification to scope output.
-    → ⛔ STOP if tests fail at any point
+3. **PLAN** — Define changes, confirm scope. hsa_prefetch target files. STOP: confirm with user.
+4. **EXECUTE** — Apply refactoring (one commit per change). Use proportional-response SIZE classification.
 5. **VERIFY** — Re-run tests, validate behavior unchanged
-6. **SYNC** — `hsa_check_changes` to update index, `hsa_feedback` on key refactored files
-
----
+6. **SYNC** — hsa_check_changes to update index
 
 ## COMMANDS
 
-| Command                   | Description             |
-| ------------------------- | ----------------------- |
-| `/refactor [file]`        | Refactor specific file  |
-| `/refactor [dir]`         | Refactor directory      |
-| `/refactor extract`       | Extract method/function |
-| `/refactor rename`        | Rename with references  |
-| `/refactor simplify`      | Reduce complexity       |
-| `/refactor clean imports` | Organize imports        |
-| `/refactor clean dead`    | Remove dead code        |
-| `/refactor clean all`     | Apply all cleanup       |
-| `/refactor clean --dry`   | Preview without changes |
+| Command | Description |
+|:--------|:------------|
+| `/refactor [file]` | Refactor specific file |
+| `/refactor [dir]` | Refactor directory |
+| `/refactor extract` | Extract method/function |
+| `/refactor rename` | Rename with references |
+| `/refactor simplify` | Reduce complexity |
+| `/refactor clean imports` | Organize imports |
+| `/refactor clean dead` | Remove dead code |
+| `/refactor clean all` | Apply all cleanup |
+| `/refactor clean --dry` | Preview without changes |
 
-### Cleanup Safety Rules
+## CLEANUP SAFETY
 
 - Preview changes before any deletion
 - Show exact lines before removal
-- Offer backup (`git stash`)
+- Offer backup (git stash)
 - Run build after changes
-- Confirm before removing: deprecated functions, TODO files, test files, configs, migrations
+- Confirm before removing: deprecated functions, TODO files, test files, configs
 
----
+## CODE SMELLS TO TARGET
 
-## 🎨 UI REFACTOR SUB-COMMANDS
+| Smell | Detection | Fix |
+|:------|:----------|:----|
+| Long function (>50 lines) | Line count | Extract methods |
+| Deep nesting (>3 levels) | Indentation | Early returns, extract |
+| Duplicate code | Similar blocks | Extract shared utility |
+| God class (>300 lines) | Line count | Split by responsibility |
+| Dead code | Unused exports/functions | Remove |
+| Magic numbers | Literal values | Extract constants |
 
-| Command                    | Description               | What It Does                                        |
-| -------------------------- | ------------------------- | --------------------------------------------------- |
-| `/refactor ui [component]` | Refactor UI component     | Break down, clean props, extract sub-components     |
-| `/refactor layout [page]`  | Restructure page layout   | Reorganize grid/flex structure, simplify nesting    |
-| `/refactor styles`         | Clean/organize CSS        | Remove dead CSS, merge duplicates, organize imports |
-| `/refactor design-system`  | Migrate to design tokens  | Extract hardcoded values → CSS custom properties    |
-| `/refactor responsive`     | Fix/add responsive design | Add container queries, fix breakpoints, fluid typo  |
-| `/refactor a11y`           | Fix accessibility issues  | Add ARIA labels, fix contrast, keyboard navigation  |
+## CHECKPOINT
 
-### UI Refactor Flow (with VRT Baseline)
-
-> Extends standard 6-step flow with screenshot comparison
-
-1. **DETECT** — Stack + scan UI component structure + `hsa_design({action:'analyze', scope:'full'})` → read Design DNA
-2. **BASELINE** — Run tests + capture current screenshot (Playwright `toHaveScreenshot()`)
-3. **PLAN** — Define UI changes using DNA insights (identify hardcoded values, low token adoption, missing a11y). For `/refactor design-system`: `hsa_design({action:'tokens', format:'css'})` → get migration plan. → ⛔ **STOP — confirm before executing**
-4. **EXECUTE** — Apply refactoring (one commit per change)
-5. **COMPARE** — Screenshot after → pixelmatch diff → show visual delta
-6. **VERIFY** — Tests pass + `hsa_design({action:'health', strict:true})` → compare score before/after + a11y check + responsive check
-7. **SYNC** — `hsa_check_changes` to update index
-
----
-
-## CODE SMELLS CATALOG
-
-### Bloaters (Size Issues)
-
-| Smell               | Detect                | Fix              |
-| ------------------- | --------------------- | ---------------- |
-| Long Method         | > 20 lines            | Extract Method   |
-| Large Class         | > 200 lines           | Extract Class    |
-| Long Parameter List | > 3 params            | Parameter Object |
-| Data Clumps         | Repeated field groups | Extract Class    |
-| Primitive Obsession | Raw types everywhere  | Value Objects    |
-
-### Change Preventers
-
-| Smell                | Detect                        | Fix                       |
-| -------------------- | ----------------------------- | ------------------------- |
-| Divergent Change     | One class, many reasons       | SRP, Extract Class        |
-| Shotgun Surgery      | One change → many files       | Move Method, Inline Class |
-| Parallel Inheritance | Subclass in A → subclass in B | Merge hierarchies         |
-
-### Dispensables
-
-| Smell                  | Detect              | Fix                  |
-| ---------------------- | ------------------- | -------------------- |
-| Duplicate Code         | Copy-paste          | Extract Method/Class |
-| Dead Code              | Unreachable         | Remove               |
-| Speculative Generality | Unused abstractions | Collapse Hierarchy   |
-
-### Couplers
-
-| Smell                  | Detect                           | Fix                          |
-| ---------------------- | -------------------------------- | ---------------------------- |
-| Feature Envy           | Method uses another class's data | Move Method                  |
-| Inappropriate Intimacy | Classes access internals         | Extract Class, Hide Delegate |
-
----
-
-## REFACTORING PATTERNS
-
-| Pattern                    | When                        | Example                                     |
-| -------------------------- | --------------------------- | ------------------------------------------- |
-| Extract Method             | Mixed logic in one function | Split into validateInput(), transformData() |
-| Replace Magic Numbers      | Hardcoded values            | `STATUS_ACTIVE = 1`, `TIMEOUT_MS = 30000`   |
-| Replace Conditional        | Complex if/else chains      | Strategy pattern, polymorphism              |
-| Introduce Parameter Object | Many params                 | `CreateUserInput { name, email, role }`     |
-| Replace Temp with Query    | Temp var used once          | Inline as method call                       |
-
----
-
-## ANALYSIS TOOLS
-
-| Language   | Complexity        | Duplication | Lint             |
-| ---------- | ----------------- | ----------- | ---------------- |
-| Go         | gocyclo           | dupl        | golangci-lint    |
-| TypeScript | eslint complexity | jscpd       | eslint           |
-| Python     | radon cc          | pylint      | ruff             |
-| Rust       | cargo clippy      | —           | clippy           |
-| Java       | PMD               | CPD         | Checkstyle       |
-| C#         | —                 | —           | Roslyn analyzers |
-
----
-
-## COMPLEXITY THRESHOLDS
-
-| Metric          | Good | Warning | Critical |
-| --------------- | ---- | ------- | -------- |
-| Cyclomatic      | < 10 | 10-20   | > 20     |
-| Cognitive       | < 15 | 15-25   | > 25     |
-| Lines/function  | < 30 | 30-50   | > 50     |
-| Params/function | ≤ 3  | 4-5     | > 5      |
-| Nesting depth   | ≤ 3  | 4       | > 4      |
-| Duplication     | < 3% | 3-10%   | > 10%    |
-
----
-
-## CHARACTERIZATION TESTS
-
-> For legacy code without tests — document existing behavior before refactoring
-
-1. Run code with known inputs
-2. Record actual outputs (even if "wrong")
-3. Write tests capturing current behavior
-4. Now refactor safely — tests catch regressions
-
-### Mikado Method (Large Refactors)
-
-1. Make one refactoring
-2. Run tests → Pass? Commit. Fail? Revert.
-3. Repeat
-
----
-
-## 🔄 CASCADE EVALUATION (Recommended — MCP)
-
-⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
-
-For large-scale refactoring, delegate to specialized model via cascade:
-```
-hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'code'})
-→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
-→ repeat cascade_read (3-5s intervals, max 10 polls)
-```
-**Auto-cascade** (weighted score ≥6.5): >5 files, >200 LOC, pattern migration
-**Suggest cascade** (weighted score 4.0-6.5): Design system migration, cross-module refactor
-
----
-
-## REFLECTION CHECKPOINT
-
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
-
-1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
-   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
-   - Append task summary to `memory/session.md`
-   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
-
+1. Verify: all tests pass, no behavior change
+2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

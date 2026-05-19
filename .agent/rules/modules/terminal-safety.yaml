@@ -1,119 +1,34 @@
-# Terminal Safety Rule
+# Terminal Safety (merged: terminal-safety + terminal-antigravity)
 ---
 name: terminal-safety
 rule_id: "MOD-TRM-001"
 
-description: "Safe terminal command execution patterns and platform-aware syntax."
-category: "safety"
+description: "Safe terminal execution and Windows hang prevention."
+category: safety
 
 context:
   always_apply: true
-  personas: ["developer", "devops"]
-
-# --- CORE PRINCIPLES ---
+  platforms: [windows]
 
 principles:
-  - "Detect shell (PowerShell/Bash/CMD) before generating commands"
-  - "Use shell-specific chaining syntax (PS5: semicolons, Bash: &&)"
-  - "Confirm with user before running destructive commands"
-  - "Prefer non-interactive flags (--yes, -y) for scripted operations"
-  - "Set reasonable timeouts for long-running commands"
+  - Detect shell before generating commands (hsa_detect or manual check)
+  - Use shell-specific chaining (bash: &&, cmd: &, ps5: ;, ps7: &&)
+  - Confirm with user before destructive commands
+  - Prefer non-interactive flags (--yes, -y)
 
-# --- DANGEROUS COMMANDS ---
+windows_hang_prevention:
+  core: "On Windows MINGW64/ConPTY: NEVER pipe, NEVER pager, NEVER interactive without flags."
+  shell_detection: "hsa_detect(action:environment) FIRST. cmd=cmd /c, bash=native, ps=PS syntax."
+  banned_pipes: ["| grep", "| tail", "| head", "| wc", "| sort", "| awk", "| sed", "| less", "| more"]
+  banned_pagers: ["less", "more", "man", "git log/diff/show without --no-pager"]
+  banned_interactive: ["npm init (add -y)", "npx create-* (add -y)", "python/node without -c/-e", "git add -p / rebase -i"]
+  banned_infinite: ["tail -f", "watch", "docker logs -f", "npm run dev (background it)"]
+  recovery: "No output >30s = terminate, retry with safe alternative"
 
 dangerous_commands:
-  require_confirmation:
-    - pattern: "rm -rf|Remove-Item -Recurse|del /s"
-      reason: "Recursive deletion"
-    - pattern: "DROP TABLE|DROP DATABASE|TRUNCATE"
-      reason: "Data destruction"
-    - pattern: "chmod 777|icacls /grant Everyone"
-      reason: "Insecure permissions"
-    - pattern: "curl.*| sh|wget.*| bash"
-      reason: "Remote code execution"
-    - pattern: "force push|--force"
-      reason: "History rewrite"
-    - pattern: "> /dev/null 2>&1|*> $null"
-      reason: "Output suppression hides errors"
-
-  always_blocked:
-    - pattern: ":(){ :|:& };:|fork bomb"
-      reason: "System crash"
-    - pattern: "mkfs|format [A-Z]:"
-      reason: "Disk format"
-
-# --- SHELL SYNTAX REFERENCE ---
+  require_confirmation: ["rm -rf", "DROP TABLE", "chmod 777", "curl|sh", "--force push"]
+  always_blocked: ["fork bomb", "mkfs", "format drive"]
 
 shell_syntax:
-  chaining:
-    powershell_5: "cmd1; cmd2"
-    powershell_7: "cmd1 && cmd2"
-    bash: "cmd1 && cmd2"
-    cmd: "cmd1 & cmd2"
-
-  path_separator:
-    windows: "\\"
-    unix: "/"
-
-  env_vars:
-    powershell: "$env:VAR"
-    bash: "$VAR"
-    cmd: "%VAR%"
-
-# --- SAFE PATTERNS ---
-
-safe_patterns:
-  - name: "Dry run first"
-    rule: "Use --dry-run or --what-if before destructive operations"
-  - name: "Capture output"
-    rule: "Redirect output to files for long operations: command > output.log 2>&1"
-  - name: "Check before delete"
-    rule: "List files before deletion: ls/dir first, then rm/del"
-  - name: "Background safety"
-    rule: "Monitor long-running background commands with status checks"
-
-# --- ANTI-HANG: Shell-Aware Command Wrapping (Windows) ---
-
-anti_hang:
-  description: |
-    On Windows, ConPTY + MinGW (Git Bash) has a stdin race condition
-    that intermittently drops sendText() input. However, wrapping with
-    cmd /c ONLY works when the IDE terminal shell is actually cmd.exe.
-    Using cmd /c in a bash or PowerShell terminal will BREAK commands.
-    Ref: https://github.com/microsoft/vscode/issues/215402
-
-  rule: |
-    On Windows, MUST call hsa_detect FIRST to identify IDE terminal shell:
-    - If shell = cmd → wrap with cmd /c "command" (prevents stdin race hang)
-    - If shell = bash/zsh → use native syntax (&& chaining, NO cmd /c wrapper)
-    - If shell = powershell → use PS syntax (; for PS5, && for PS7+)
-    - If shell = unknown/unavailable → default to cmd /c (safest fallback)
-    NEVER blindly use cmd /c — it WILL hang if the terminal is bash or PowerShell.
-
-  examples:
-    cmd_shell:
-      - 'cmd /c "go test ./..."'
-      - 'cmd /c "npm run build"'
-    bash_shell:
-      - "go test ./..."
-      - "npm run build && npm test"
-    powershell_shell:
-      - "go test ./...; if ($?) { npm run build }"
-      - "npm run build; npm test"
-
-  exceptions:
-    - "Commands already running inside bash scripts"
-    - "Background/long-running processes (use cmd /c start instead)"
-    - "Interactive commands (vim, nano) — should not be run at all"
-
-  escaping:
-    note: "Special chars in cmd /c need ^ prefix (only when shell = cmd)"
-    chars: ["&", "|", "(", ")", "<", ">"]
-    example: 'cmd /c "echo hello ^& world"'
-
-  limitations:
-    - "Max command length: 8191 characters (cmd only)"
-    - "Unix tools (grep, sed, awk) unavailable inside cmd /c"
-
-integration:
-  tier: 1
+  chaining: { bash: "&&", cmd: "&", ps5: ";", ps7: "&&" }
+  env_vars: { bash: "$VAR", cmd: "%VAR%", ps: "$env:VAR" }

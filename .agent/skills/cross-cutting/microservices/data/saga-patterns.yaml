@@ -1,11 +1,7 @@
-# =============================================================================
 # saga-patterns.yaml — Saga Pattern Implementation
-# =============================================================================
 
 
-# =============================================================================
 # ORCHESTRATION SAGA
-# =============================================================================
 
 orchestration:
   description: "Central orchestrator coordinates saga steps"
@@ -90,9 +86,7 @@ orchestration:
       }
     }
 
-# =============================================================================
 # CHOREOGRAPHY SAGA
-# =============================================================================
 
 choreography:
   description: "Services communicate via events, no central coordinator"
@@ -127,9 +121,7 @@ choreography:
         Timestamp time.Time `json:"timestamp"`
     }
 
-# =============================================================================
 # DECISION GUIDE
-# =============================================================================
 
 decision_guide:
   use_orchestration:

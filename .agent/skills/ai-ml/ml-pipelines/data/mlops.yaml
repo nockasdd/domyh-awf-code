@@ -1,7 +1,5 @@
-# =============================================================================
 # MLOps Patterns (Feb 2026)
 # Source: Diamond, Heart, Flight (DVC+MLflow), all E2E repos (Docker+CI/CD)
-# =============================================================================
 
 metadata:
   skill: ml-pipelines

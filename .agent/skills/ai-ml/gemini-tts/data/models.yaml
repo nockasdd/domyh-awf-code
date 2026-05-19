@@ -1,9 +1,6 @@
-# =============================================================================
 # models.yaml — Gemini TTS Model Comparison
-# =============================================================================
 # 6 patterns for model selection, voice options, output configuration
 # Source: https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
-# =============================================================================
 
 total_patterns: 6
 
@@ -118,5 +115,3 @@ api_usage:
           # Process each audio chunk in real-time
           audio_data = chunk.candidates[0].content.parts[0].inline_data.data
 
-# =============================================================================
-# =============================================================================

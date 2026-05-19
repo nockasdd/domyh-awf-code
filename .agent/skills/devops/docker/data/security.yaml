@@ -1,6 +1,4 @@
-# =============================================================================
 # Docker Security Patterns (Feb 2026)
-# =============================================================================
 # Hardened images, rootless, scanning, microVM sandboxes
 
 metadata:

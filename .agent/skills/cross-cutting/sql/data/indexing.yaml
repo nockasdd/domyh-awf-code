@@ -1,6 +1,4 @@
-# =============================================================================
 # PostgreSQL 17/18 Indexing Patterns (Feb 2026)
-# =============================================================================
 # Index optimization patterns including PG18 Index Skip Scan
 
 metadata:

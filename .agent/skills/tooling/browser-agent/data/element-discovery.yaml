@@ -1,6 +1,4 @@
-# =============================================================================
 # element-discovery.yaml — Element Categorization from Accessibility Tree
-# =============================================================================
 
 
 # How to discover and categorize interactive elements from browser_snapshot

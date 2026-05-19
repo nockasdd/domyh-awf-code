@@ -1,9 +1,6 @@
-# =============================================================================
 # context-caching.yaml — Gemini Context Caching Patterns
-# =============================================================================
 # 6 patterns for implicit and explicit caching strategies
 # Source: https://ai.google.dev/gemini-api/docs/caching
-# =============================================================================
 
 total_patterns: 6
 
@@ -90,5 +87,3 @@ cost_analysis:
     - "TTL cost: longer cache = higher storage cost"
     - "Break-even: typically 3-5 requests to same content"
 
-# =============================================================================
-# =============================================================================

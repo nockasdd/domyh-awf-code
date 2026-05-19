@@ -1,7 +1,5 @@
-# =============================================================================
 # Python Packaging Patterns (Feb 2026)
 # Source: All E2E repos (setup.py), Doclify (pyproject.toml + uv)
-# =============================================================================
 
 metadata:
   skill: python

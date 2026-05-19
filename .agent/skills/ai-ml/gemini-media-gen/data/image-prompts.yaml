@@ -1,8 +1,5 @@
-# =============================================================================
 # image-prompts.yaml — Image Generation Prompt Patterns
-# =============================================================================
 # 12 patterns for crafting effective image generation prompts
-# =============================================================================
 
 total_patterns: 12
 
@@ -125,5 +122,3 @@ vietnamese_support:
   example: "Một cô gái Việt Nam mặc áo dài trắng đang đi dưới hàng cây phượng vĩ đỏ"
   tip: "Vietnamese prompts produce culturally accurate imagery"
 
-# =============================================================================
-# =============================================================================

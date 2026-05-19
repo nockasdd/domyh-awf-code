@@ -1,7 +1,5 @@
-# =============================================================================
 # Computer Vision Patterns (Feb 2026)
 # Source: Hand Tracking (OpenCV+MediaPipe), Chest Disease (CNN)
-# =============================================================================
 
 metadata:
   skill: ml-pipelines

@@ -1,6 +1,4 @@
-# =============================================================================
 # CI/CD Security Patterns (Feb 2026)
-# =============================================================================
 # Dependency review, secret scanning, supply chain security
 
 metadata:

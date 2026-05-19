@@ -1,15 +1,10 @@
-# =============================================================================
 # ai-models-catalog.yaml — AI Generation Model Specs
-# =============================================================================
 # 14 models (image/video/audio) with prompt syntax, capabilities, and auto-selection
 # Updated: 2026-03-17
-# =============================================================================
 
 total_models: 14
 
-# =============================================================================
 # AUTO-SELECTION LOGIC
-# =============================================================================
 
 auto_selection:
   image:
@@ -34,9 +29,7 @@ auto_selection:
     voice_cloning: "elevenlabs"
     default: "suno_v5"
 
-# =============================================================================
 # IMAGE MODELS
-# =============================================================================
 
 image_models:
   - id: midjourney_v7
@@ -145,9 +138,7 @@ image_models:
     strengths: ["vector output", "design consistency", "text", "branding"]
     weaknesses: ["less photorealistic than MJ/Flux"]
 
-# =============================================================================
 # VIDEO MODELS
-# =============================================================================
 
 video_models:
   - id: sora_2
@@ -249,9 +240,7 @@ video_models:
     strengths: ["fast rendering", "prompt precision", "physics", "value"]
     weaknesses: ["shortest duration (6s)", "less control than Runway"]
 
-# =============================================================================
 # CAMERA MOVEMENT VOCABULARY (for video prompts)
-# =============================================================================
 
 camera_movements:
   - id: dolly
@@ -303,9 +292,7 @@ camera_movements:
     effect: "Emphasis"
     prompt_terms: ["slow digital zoom into eyes", "crash zoom"]
 
-# =============================================================================
 # AUDIO MODELS
-# =============================================================================
 
 audio_models:
   - id: suno_v5
@@ -375,9 +362,7 @@ audio_models:
       - "Sound effects generation"
     strengths: ["voice quality", "cloning", "multilingual"]
 
-# =============================================================================
 # NEGATIVE PROMPT PATTERNS (per model)
-# =============================================================================
 
 negative_prompt_patterns:
   midjourney:

@@ -1,8 +1,5 @@
-# =============================================================================
 # prompting-patterns.yaml — TTS Style Prompting Patterns
-# =============================================================================
 # 8 patterns for controlling TTS output via natural language prompts
-# =============================================================================
 
 total_patterns: 8
 
@@ -75,5 +72,3 @@ multi_language:
     - "Model auto-detects language from text"
     - "Code-switching (mixed languages) works but quality varies"
 
-# =============================================================================
-# =============================================================================

@@ -1,11 +1,7 @@
-# =============================================================================
 # communication.yaml — Inter-Service Communication Patterns
-# =============================================================================
 
 
-# =============================================================================
 # SYNCHRONOUS PATTERNS
-# =============================================================================
 
 synchronous:
   rest:
@@ -62,9 +58,7 @@ synchronous:
       Service B: Order { id, userId, total }
       Gateway: User { id, name, email, orders: [Order] }
 
-# =============================================================================
 # ASYNCHRONOUS PATTERNS
-# =============================================================================
 
 asynchronous:
   kafka:
@@ -104,9 +98,7 @@ asynchronous:
       - "JetStream: At-least-once with persistence"
       - "Key-Value: Distributed key-value store"
 
-# =============================================================================
 # API GATEWAY PATTERNS
-# =============================================================================
 
 api_gateway:
   purpose: "Single entry point for all clients"
@@ -135,9 +127,7 @@ api_gateway:
       Web BFF     → /api/web/...     → Rich desktop responses
       IoT BFF     → /api/iot/...     → Minimal payloads
 
-# =============================================================================
 # DECISION GUIDE
-# =============================================================================
 
 decision_guide:
   sync_vs_async:

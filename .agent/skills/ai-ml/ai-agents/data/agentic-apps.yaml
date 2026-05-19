@@ -1,7 +1,5 @@
-# =============================================================================
 # Agentic Application Patterns (Feb 2026)
 # Source: MarketInsight (FastAPI+LangChain+React+Langfuse)
-# =============================================================================
 
 metadata:
   skill: ai-agents

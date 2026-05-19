@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 
-language: vi-VN # Default; user can change via nock awf init --language en
+language: vi-VN
 
 reviews:
   profile: assertive
@@ -15,56 +15,30 @@ reviews:
   path_instructions:
     - path: "**/*.ts"
       instructions: |
-        Follow DOMYH Awesome Code standards:
-        - TypeScript strict mode
-        - Explicit types, no any
-        - Proper error handling
-        - Clean code principles
-        Load rules: `.agent/rules/SACRED_RULES.xml`
-        Load skill: `.agent/skills/languages/typescript/SKILL.md`
+        Principles: simplicity first, surgical changes, verify before done.
+        TypeScript strict mode, explicit types, proper error handling.
+        Skill: `.agent/skills/languages/typescript/SKILL.md`
 
     - path: "**/*.vue"
       instructions: |
-        Follow DOMYH Awesome Code standards:
-        - Vue 3 Composition API with <script setup>
-        - Type-safe props and emits
-        - Proper ref/reactive usage
-        Load rules: `.agent/rules/SACRED_RULES.xml`
-        Load skill: `.agent/skills/frameworks/vue/SKILL.md`
+        Vue 3 Composition API with <script setup>, type-safe props/emits.
+        Skill: `.agent/skills/frameworks/vue/SKILL.md`
 
     - path: "**/*.go"
       instructions: |
-        Follow DOMYH Awesome Code standards:
-        - Effective Go conventions
-        - Proper error wrapping
-        - Context propagation
-        Load rules: `.agent/rules/SACRED_RULES.xml`
-        Load skill: `.agent/skills/languages/go/SKILL.md`
+        Effective Go conventions, proper error wrapping, context propagation.
+        Skill: `.agent/skills/languages/go/SKILL.md`
 
     - path: "**/*.py"
       instructions: |
-        Follow DOMYH Awesome Code standards:
-        - PEP 8 compliance
-        - Type hints
-        - Proper exception handling
-        Load rules: `.agent/rules/SACRED_RULES.xml`
-        Load skill: `.agent/skills/languages/python/SKILL.md`
+        PEP 8, type hints, proper exception handling.
+        Skill: `.agent/skills/languages/python/SKILL.md`
 
 chat:
   auto_reply: true
 
-# DOMYH Awesome Code Agent Framework — Enforced Config
-#
-# ⛔ MANDATORY: MUST call hsa_get_agent_config('bootstrap') FIRST.
-# MUST call hsa_search(query) before implementing code.
-# Use hsa_search(action:'docs', doc_libraries:['lib']) for external library docs (24+ built-in).
-# MUST call hsa_session(action:'intent', focus, mode) for session governance.
-#
-# ❌ NEVER: grep_search for code (use hsa_search), skip skills search, code without declare_intent.
-# 🔄 Multi-Step Tasks: Use /think for analysis, /loop for pipelines. hsa_delegate(action:'prepare') for sub-agent context packets. Platform-native subagents (.claude/agents/, Codex AGENTS.md).
-#
-# Core: Do No Harm | Truthfulness (file:line) | User Sovereignty | Confirm destructive | File outlines+grep first
-# Terminal Safety (Win): NO pipes (|grep/tail/head), NO pagers (less/more), use git --no-pager, add -y/-c/-e flags. FIRST call hsa_detect to check IDE shell: cmd → cmd /c, bash → native syntax, powershell → PS syntax. Default fallback: cmd /c.
-#
-# Skills & Workflows: .agent/skills/{cat}/{name}/SKILL.md (96 skills, 8 categories incl. governance)
-# Fallback: Match intent → read .agent/workflows/{id}.md → load skill → execute (45 commands)
+# DOMYH Awesome Code — NockDev
+# Principles: think before coding, simplicity first, surgical changes, verify before done, stop when uncertain, session discipline.
+# MCP: hsa_get_agent_config('bootstrap'), hsa_session(action='intent'), hsa_search(action='skills').
+# Fallback: .agent/workflows/{command}.md, .agent/rules/AGENT_RULES.md
+# Terminal (Windows): no pipes, no pagers, detect shell first.

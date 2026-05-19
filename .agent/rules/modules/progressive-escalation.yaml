@@ -90,24 +90,9 @@ levels:
 
 episodic_memory:
   storage: ".domyh/debug/episodic_memory.yaml"
-  entry_schema:
-    id: "EP-{timestamp}"
-    bug_signature: "hash(error_message + file + line)"
-    failed_approaches: [{ approach: "desc", reason_failed: "why" }]
-    successful_approach: "what worked (if resolved)"
-    lesson: "one-line takeaway"
-  lookup: |
-    Before EACH fix: hash error → search memory → exclude failed approaches.
+  lookup: "Before EACH fix: hash error → search memory → exclude failed approaches."
 
 integration:
   tier: 2
-  related_modules: ["stop-conditions", "edit-verification", "complexity-scoring"]
+  related_modules: ["stop-conditions", "complexity-scoring"]
   workflows: ["/debug", "/fix"]
-  templates:
-    - "reflection/escalation-L2.md"
-    - "reflection/escalation-L3.md"
-    - "reflection/escalation-L4.md"
-    - "reflection/escalation-L5.md"
-    - "reflection/escalation-L6.md"
-    - "reflection/pivot_analysis.md"
-    - "reflection/error_analysis.md"

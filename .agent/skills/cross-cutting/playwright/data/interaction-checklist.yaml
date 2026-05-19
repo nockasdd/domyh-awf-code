@@ -1,15 +1,10 @@
-# =============================================================================
 # interaction-checklist.yaml — 58 Mandatory UI Interaction Checkpoints
-# =============================================================================
 # Agent MUST verify ALL applicable checkpoints for comprehensive testing.
 # Each checkpoint maps to specific MCP tools for execution.
-# =============================================================================
 
 total_checkpoints: 58
 
-# =============================================================================
 # DROPDOWN (18 checkpoints)
-# =============================================================================
 dropdown:
   count: 18
 
@@ -125,9 +120,7 @@ dropdown:
       severity: high
       verify: "Read error text, verify helpful"
 
-# =============================================================================
 # MODAL (16 checkpoints)
-# =============================================================================
 modal:
   count: 16
 
@@ -231,9 +224,7 @@ modal:
       severity: high
       verify: "On error → clear error message shown"
 
-# =============================================================================
 # BUTTON (14 checkpoints)
-# =============================================================================
 button:
   count: 14
 
@@ -324,9 +315,7 @@ button:
       severity: high
       verify: "Accessibility tree: name matches purpose"
 
-# =============================================================================
 # HOVER STATE (10 checkpoints)
-# =============================================================================
 hover:
   count: 10
 

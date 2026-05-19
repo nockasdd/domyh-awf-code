@@ -1,9 +1,6 @@
-# =============================================================================
 # code-execution.yaml — Gemini Code Execution Patterns
-# =============================================================================
 # 8 patterns for Python sandbox execution
 # Source: https://ai.google.dev/gemini-api/docs/code-execution
-# =============================================================================
 
 total_patterns: 8
 
@@ -125,5 +122,3 @@ tool_combinations:
   - "Code Execution + Function Calling = Compute + External Data"
   - "All three combined via Live API"
 
-# =============================================================================
-# =============================================================================

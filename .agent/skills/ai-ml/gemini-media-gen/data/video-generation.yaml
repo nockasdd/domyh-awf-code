@@ -1,9 +1,6 @@
-# =============================================================================
 # video-generation.yaml — Veo 3.1 Video Generation Patterns
-# =============================================================================
 # 10 patterns for text/image-to-video, prompting, extension, frame control
 # Source: https://ai.google.dev/gemini-api/docs/video
-# =============================================================================
 
 total_patterns: 10
 
@@ -125,5 +122,3 @@ async_generation:
         operation = client.operations.get(name=operation.name)
         time.sleep(5)
 
-# =============================================================================
-# =============================================================================
