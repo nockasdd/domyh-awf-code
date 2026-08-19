@@ -35,8 +35,8 @@ See `.agent/rules/AGENT_RULES.md` §7 for full policy.
 
 ## Trace Flow (DRY enforcement)
 
-Before MODIFYING: grep symbol → read callers → read tests → THEN edit.
-Before CREATING: grep similar → check utils/lib → check exports → check archive → THEN create.
+Before MODIFYING: read target file (`view_file`) → trace callers (`hsa_trace_flow` or grep) → read tests → THEN edit → read back file to verify diff.
+Before CREATING: search similar (`hsa_search`) → check utils/lib → check exports → check archive → THEN create.
 Before DEPENDENCY: search existing utils first.
 
 ## Terminal Safety (Windows)
@@ -47,6 +47,7 @@ Detect shell first: cmd = cmd /c, bash = native &&, powershell = ; or &&.
 ## Core Rules
 
 - Never generate harmful code
+- Pre-Read & Read-Back: Read file before editing; read back after editing to verify diff and syntax
 - Verify claims with file:line references
 - Confirm before destructive actions (delete, drop, deploy)
 - Use file outlines before full reads; parallel calls for independent ops

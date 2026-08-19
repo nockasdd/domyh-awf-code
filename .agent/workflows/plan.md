@@ -1,185 +1,99 @@
 ---
-description: "📋 Feature planning with impact analysis, task breakdown, and effort estimation"
+description: "Plan Pro: Outcome-focused feature planning with impact analysis, risk matrix, bite-sized tasks, and TDD granularity"
 skills: { required: [], contextual: [auto] }
-success_criteria: "plan approved by user, tasks broken down, saved to .domyh/plans/"
+success_criteria: "Understanding lock passed, plan approved by user, bite-sized tasks broken down, saved to .domyh/plans/"
 ---
 
-# 📋 /plan — Plan Pro
+# /plan — Outcome-Focused Feature Planning
 
-> Outcome-Focused Feature Planning
-> 📚 Impact Analysis • Task Breakdown • RICE Scoring
+## 🛡️ [GATE 0: PRE-FLIGHT PLANNING RULES — BẮT BUỘC ĐỌC TRƯỚC KHI LẬP KẾ HOẠCH]
 
----
-
-## ⛔ RULES (Always Apply)
-
-| # | Rule | Category |
-|:--|:-----|:---------|
-| R1 | All design decisions MUST cite evidence (codebase analysis, research) | Quality |
-| R2 | ⛔ STOP before Phase 3 (Design) — UNDERSTANDING LOCK must pass | Safety |
-| R3 | Scope creep guard: if new requirement surfaces during design → document in Scope OUT, don't silently expand | Anti-Drift |
-| R4 | ONE question per message during interview — don't overwhelm user | UX |
+1. **EVIDENCE-BASED DESIGN**: Mọi quyết định thiết kế và lựa chọn công nghệ BẮT BUỘC phải dựa trên khảo sát thực tế codebase (`hsa_search`, `hsa_explore`, `view_file`). Không đoán mò kiến trúc.
+2. **UNDERSTANDING LOCK MANDATE**: BẮT BUỘC chốt "Khóa Hiểu Biết" (Understanding Lock) với User ở Phase 1 trước khi bước vào Phase 3 (Thiết kế chi tiết).
+3. **SCOPE CREEP GUARD**: Nếu phát hiện yêu cầu mới hoặc ý tưởng mở rộng trong quá trình lập kế hoạch ➔ Đưa ngay vào danh mục **Scope OUT**, tuyệt đối không tự ý mở rộng phạm vi ("no scope creep").
+4. **BITE-SIZED TASK GRANULARITY**: Mỗi bước trong kế hoạch phải là **một hành động nguyên tử (2 - 5 phút)**, chỉ rõ đường dẫn file chính xác (`file:line`), code mẫu hoàn chỉnh và lệnh chạy thực tế.
+5. **TDD / TEST-FIRST PRIORITY**: Với các tính năng nghiệp vụ logic, bắt buộc thiết kế theo quy trình Test-First: `Viết Test (RED) ➔ Implement (GREEN) ➔ Refactor ➔ Commit`.
+6. **STOP FOR APPROVAL**: Kế hoạch phải được User bấm duyệt chính thức trước khi chuyển sang giai đoạn thực thi mã nguồn `/code`.
 
 ---
 
-## PLAN FLOW (7 Phases)
+## 🔄 7-PHASE SYSTEMATIC PLAN FLOW
 
-1. **PHASE 0: DEEP INTERVIEW** — Gather context (skip if clear) → ⛔ STOP if info missing
-   - ONE question per message — wait for answer before next
-   - Present 2-3 options with tradeoffs for design decisions → wait
+### PHASE 0: DEEP INTERVIEW (Phỏng vấn Đào sâu Bối cảnh)
+*   *Bỏ qua nếu yêu cầu của User đã đầy đủ và rõ ràng*.
+*   Nếu còn mơ hồ: Hỏi **1 câu hỏi trọng tâm mỗi lượt** (không spam nhiều câu hỏi làm quá tải User).
+*   Đưa ra 2 - 3 phương án lựa chọn kèm Trade-offs để User chọn hướng.
 
-2. **PHASE 1: UNDERSTAND** — `hsa_session("plan feature: {name}")`, parse request, detect stack (`hsa_detect`), load context (`hsa_search(output_mode='references')`), `hsa_explore(repo_map)`, clarify scope
-   > **UNDERSTANDING LOCK** (Hard Gate — MUST pass before Phase 3):
-   > Summarize understanding in 5-7 bullets: Goal, Users, Constraints, Scope IN, Scope OUT, Dependencies, Success criteria
-   > Ask: **"Is this understanding correct? Anything to add/change?"**
-   > ⛔ Only proceed after explicit confirmation. Skip = restart Phase 0.
+### PHASE 1: UNDERSTAND & UNDERSTANDING LOCK (Khóa Hiểu Biết — Hard Gate)
+*   Khởi tạo phiên: `hsa_session(action="intent", focus="plan: {feature}")`.
+*   Khảo sát bối cảnh: `hsa_detect(stack)`, `hsa_explore(repo_map)`.
+*   **🔒 UNDERSTANDING LOCK**: Tóm tắt ngắn gọn 6 điểm mấu chốt:
+    1.  **Mục tiêu (Goal)**: [1 câu duy nhất]
+    2.  **Đối tượng & Quy mô**: [Ai sử dụng, tải dự kiến]
+    3.  **Ràng buộc kỹ thuật (Constraints)**: [Ngôn ngữ, framework, chuẩn bảo mật]
+    4.  **Phạm vi THỰC HIỆN (Scope IN)**: [Danh sách tính năng cụ thể]
+    5.  **Phạm vi KHÔNG LÀM (Scope OUT)**: [Các tính năng hoãn lại để chống phình scope]
+    6.  **Tiêu chí Nghiệm thu (Success Criteria)**: [Điều kiện để xem là hoàn thành]
+*   ⛔ **HỎI USER**: *"Bản tóm tắt hiểu biết này đã hoàn toàn chính xác chưa? Có điểm nào cần bổ sung/thay đổi không?"* ➔ **Chỉ tiếp tục khi User xác nhận OK.**
 
-3. **PHASE 2: ANALYZE** — Impact assessment, risk analysis, dependencies. `hsa_prefetch` target files.
-   - Consider using `/think analyze` for multi-perspective impact analysis
-   - Consider using `/think tradeoff` for approach comparison
+### PHASE 2: IMPACT ANALYSIS & RISK MATRIX (Phân tích Tác động & Rủi ro)
+*   Đánh giá độ phức tạp: `XS (<1h)` | `S (1-4h)` | `M (1-2d)` | `L (3-5d)` | `XL (>1w)`.
+*   Liệt kê số lượng files ảnh hưởng, dependencies mới, breaking changes tiềm ẩn.
+*   Xây dựng bảng Ma trận Rủi ro (Risk Likelihood $\times$ Impact).
 
-4. **PHASE 3: DESIGN** — Technical design, architecture, API contracts. Propose 2-3 approaches → get user approval on direction
+### PHASE 3: TECHNICAL DESIGN & CONTRACTS (Thiết kế Kỹ thuật & Giao diện)
+*   Thiết kế kiến trúc hệ thống, sơ đồ quan hệ dữ liệu (Data Models), API Contracts / Interfaces.
+*   Đề xuất phương án tối giản nhất (YAGNI).
 
-5. **PHASE 4: BREAKDOWN** — Task decomposition (bite-sized granularity), effort estimation → ⛔ STOP for user approval
+### PHASE 4: BITE-SIZED TASK BREAKDOWN (Bẻ nhỏ Tác vụ theo Hành động Nguyên tử)
+*   Chia nhỏ kế hoạch thành từng Task độc lập. Mỗi task gồm các bước nhỏ có Checkbox (`- [ ]`).
+*   Tuân thủ cấu trúc mẫu bên dưới.
 
-6. **PHASE 5: VALIDATE** — Review with user, finalize plan
-   - Optional: dispatch cascade reviewer (`hsa_delegate(cascade)`) for plan quality check
+### PHASE 5: VALIDATE & USER CONFIRMATION GATE (Nghiệm thu Kế hoạch — STOP)
+*   Trình bày toàn bộ bản kế hoạch cho User.
+*   ⛔ **STOP**: Tạm dừng chờ User duyệt kế hoạch trước khi chuyển sang `/code`.
 
-7. **PHASE 6: PERSIST** — Save to `.domyh/plans/YYYY-MM-DD_{slug}/plan.md`. If scope ≥ L: also save `impact.md` and `tasks.md`. Update `.agent/memory/state.json → active_plan`. Show: `📁 Saved: .domyh/plans/{date}_{slug}/`
-
----
-
-## SCOPE CHECK
-
-If spec covers multiple independent subsystems → suggest breaking into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
-
----
-
-## COMMANDS
-
-| Command | Description |
-|:--------|:------------|
-| `/plan [feature]` | Full planning flow |
-| `/plan quick [feature]` | Rapid plan (skip Phase 0) |
-| `/plan estimate [feature]` | Effort estimation only |
-| `/plan specify [feature]` | Spec-driven (DoR + INVEST) |
-| `/plan sprint` | Sprint planning (DoD/DoR) |
-| `/plan uat [feature]` | UAT scenario planning |
-| `/plan flow [sprint]` | Flow metrics for sprint |
-| `/plan forecast [n]` | Forecast n items |
-| `/plan list` | List saved plans in `.domyh/plans/` |
-| `/plan open [slug]` | Open a saved plan |
-| `/plan compare [a] [b]` | Compare two plan versions |
+### PHASE 6: PERSIST & SAVE (Lưu trữ Kế hoạch)
+*   Lưu kế hoạch vào thư mục: `.domyh/plans/YYYY-MM-DD_{feature_slug}/plan.md`.
+*   Nếu phạm vi $\ge$ Size L: Lưu thêm `impact.md` và `tasks.md`.
+*   Cập nhật `active_plan` trong `.agent/memory/state.json`.
 
 ---
 
-## PLAN DOCUMENT HEADER (Mandatory)
+## 🧱 CẤU TRÚC MẪU TASK NGUYÊN TỬ (BITE-SIZED TASK FORMAT)
 
-Every plan MUST start with:
 ```markdown
-# [Feature Name] Implementation Plan
-> **For agentic workers:** Use cascade-review skill for QA. Steps use checkbox syntax.
-**Goal:** [One sentence] | **Architecture:** [2-3 sentences] | **Tech Stack:** [Key tech]
+### Task 1: [Tên Module / Thành phần]
+- **Files liên quan**: Tạo mới: `src/auth/token.ts` | Sửa đổi: `src/server.ts:45-60` | Tests: `tests/auth.test.ts`
+- **Mục tiêu**: Xử lý logic xác thực JWT token và mã hóa khóa bí mật.
+
+- [ ] **Step 1 (Test RED)**: Viết test case kiểm tra token hết hạn trong `tests/auth.test.ts`.
+- [ ] **Step 2 (Lệnh chạy Test)**: Chạy `pnpm test tests/auth.test.ts` (Xác nhận test FAIL).
+- [ ] **Step 3 (Implement GREEN)**: Thêm hàm `verifyToken()` vào `src/auth/token.ts`.
+- [ ] **Step 4 (Read-Back Diff)**: Gọi `view_file` đọc lại `src/auth/token.ts` kiểm tra cú pháp.
+- [ ] **Step 5 (Verify PASS)**: Chạy lại `pnpm test tests/auth.test.ts` (Xác nhận test PASS 100%).
+- [ ] **Step 6 (Commit)**: `git commit -m "feat(auth): add jwt token verification"`.
 ```
 
 ---
 
-## BITE-SIZED TASK GRANULARITY
+## ⚡ SUB-COMMANDS
 
-**Each step = ONE action (2-5 minutes):**
-
-```markdown
-### Task N: [Component Name]
-**Files:** Create: `path/file.ts` | Modify: `path/existing.ts:123-145` | Test: `tests/file.test.ts`
-- [ ] Step 1: [Concrete action with complete code, not "add validation"]
-- [ ] Step 2: [Exact command with expected output]
-- [ ] Step 3: [Commit]
-```
-
-**TDD Pattern** (recommended for logic-heavy code):
-`Write test → Run → Fail → Implement → Run → Pass → Commit`
-
-**Implementation First** (for config, docs, CI/CD, non-testable):
-`Implement → Verify manually → Commit`
-
-**Rules:** Exact file paths • Complete code • Exact commands • DRY, YAGNI
+| Lệnh | Mô tả |
+|:-----|:------|
+| `/plan [feature]` | Quy trình lập kế hoạch đầy đủ (7 Phases) |
+| `/plan quick [feature]` | Lập kế hoạch nhanh cho task nhỏ (bỏ qua Phase 0) |
+| `/plan estimate [feature]` | Đánh giá nỗ lực và kích thước task (RICE / T-shirt sizing) |
+| `/plan list` | Xem danh sách các plan đã lưu trong `.domyh/plans/` |
+| `/plan open [slug]` | Mở và tiếp tục thực thi một plan đã lưu |
 
 ---
 
-## PHASE 0: DEEP INTERVIEW
+## 🎯 [GATE 9: POST-FLIGHT PLANNING CHECKLIST — BẮT BUỘC ĐỐI SOÁT TRƯỚC KHI BÀN GIAO KẾ HOẠCH]
 
-> Skip if user already provided enough context
-
-### 3 Golden Questions
-
-| # | Question | Purpose | Skip If |
-|:--|:---------|:--------|:--------|
-| 1 | What does this feature handle/manage? | Domain & scope | Request clear |
-| 2 | Who uses it? How many users? | Scale & UX | Obvious |
-| 3 | Any constraints? (deadline, budget, tech) | Boundaries | None |
-
-**Follow-up:** Technical (endpoints? DB changes? perf reqs?) | Business (priority? deadline? success metrics?)
-
----
-
-## IMPACT ANALYSIS
-
-| Factor | Assessment | Notes |
-|:-------|:-----------|:------|
-| Code complexity | S/M/L/XL | {detail} |
-| Files affected | {count} | {list} |
-| Dependencies | {count} | {list} |
-| Breaking changes | Yes/No | {detail} |
-| Security impact | Low/Med/High | {detail} |
-
-### Risk Matrix
-
-|  | Low Likelihood | Medium | High |
-|:--|:---------------|:-------|:-----|
-| **High Impact** | 🟡 | 🔴 | 🔴 |
-| **Med Impact** | 🟢 | 🟡 | 🔴 |
-| **Low Impact** | 🟢 | 🟢 | 🟡 |
-
----
-
-## TASK BREAKDOWN & ESTIMATION
-
-| Size | Time | Examples |
-|:-----|:-----|:---------|
-| **XS** | < 1h | Config change, copy fix |
-| **S** | 1-4h | Simple endpoint, UI tweak |
-| **M** | 4h-2d | Feature with tests |
-| **L** | 2-5d | Multi-component feature |
-| **XL** | 1-2w | Cross-cutting feature |
-| **XXL** | 2w+ | **Needs breakdown** |
-
-> Include: testing (20-30%), buffer (10-20%), review time
-
----
-
-## RICE SCORING
-
-> Agent facilitates RICE scoring conversation — requires user estimates for Reach and Effort.
-
-| Factor | Scale | Description |
-|:-------|:------|:------------|
-| **R**each | Number | Users affected per quarter |
-| **I**mpact | 0.25-3 | 0.25=minimal → 3=massive |
-| **C**onfidence | 0-100% | How sure about estimates |
-| **E**ffort | Person-months | Dev time required |
-
-> Formula: `(R × I × C) / E` → Higher = prioritize
-
----
-
-## REFLECTION CHECKPOINT
-
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
-
-1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
-   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
-   - Append task summary to `memory/session.md`
-   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
+Trước khi bàn giao bản kế hoạch cho User, Agent BẮT BUỘC tự kiểm tra 5 câu hỏi vàng:
+1.  ✅ **Khóa Hiểu Biết (Understanding Lock) đã được User xác nhận chưa?**
+2.  ✅ **Mọi tác vụ đã được bẻ nhỏ thành từng bước nguyên tử (2-5 phút, kèm file:line và lệnh chạy cụ thể) chưa?**
+3.  ✅ **Đã có danh mục Scope OUT để ngăn chặn triệt để hiện tượng phình phạm vi chưa?**
+4.  ✅ **Các module logic đã được thiết kế theo quy trình Test-First / TDD chưa?**
+5.  ✅ **Kế hoạch đã được lưu đầy đủ vào `.domyh/plans/` và STOP chờ User bấm duyệt chưa?**
