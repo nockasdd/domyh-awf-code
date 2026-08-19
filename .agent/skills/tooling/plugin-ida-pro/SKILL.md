@@ -1,49 +1,99 @@
 ---
 name: plugin-ida-pro
-description: "Use when a task involves analyzing or mutating EXE/DLL/binary targets in IDA Pro, or when the agent needs a bounded multi-call flow for IDA bridge work."
+description: "Use when analyzing or mutating EXE/DLL/binary targets in IDA Pro, or orchestrating bounded multi-call batch/plan flows for reverse engineering."
 category: tooling
 tier: 1
 ---
 
-# IDA Pro Binary Workflow
+# IDA Pro Binary & Reverse Engineering Workflow
 
-## When To Use
+## 1. When To Use
 
-- Any task mentioning `exe`, `dll`, `binary`, `dump`, `packer`, `anti-tamper`, `decompile`, `xrefs`, `strings`, `struct`, `class`, or `rename`.
-- Any task that needs several IDA facts in one pass.
-- Any task that mutates names, comments, types, or structs in the same binary.
+- Any task mentioning `exe`, `dll`, `binary`, `dump`, `packer`, `anti-tamper`, `disassembly`, `decompile`, `xrefs`, `strings`, `struct`, `class`, or `rename`.
+- Any task that needs several IDA facts in one pass to avoid latency.
+- Any task that mutates names, comments, types, or structs in an IDA database (`.idb`/`.i64`).
 
-## Workflow
+---
 
-1. Discover live targets first: `hsa_bridge(action='discover', target='ida')`; pass `scan_ports` if the default port window may be too small.
-2. Pin identity before mutation with `port` and, when relevant, `instance_key`, `process_id`, `binary_path`, `module_name`, or `module_path`.
-3. Inspect the current surface with `hsa_bridge(action='tools', target='ida')`.
-4. Prefer `ida_batch` for mixed read/write bundles and `ida_apply_plan` for coordinated IDB edits.
-5. For writes, pass `allow_mutations=true` and keep the batch/plan bounded.
-6. If bulk tools are unavailable, fall back to bounded single `ida_*` calls.
+## 2. Batch Decision Matrix (Anti-Confusion Guide)
 
-## Good Batch Shapes
+| Operation Goal | Correct Mechanism | Why & How |
+| :--- | :--- | :--- |
+| **Index source code files** in workspace | `nock-hsa index .` (CPG Indexer) | Runs on Node.js runtime, scans project code into AST + SQLite BM25F. |
+| **Query multiple arbitrary binary facts** | `ida_batch` | Packs up to 32 discrete commands (e.g., `get_info` + `list_functions` + `decompile`) in 1 HTTP/MCP roundtrip. |
+| **Coordinated IDB Struct/Type Refactoring** | `ida_apply_plan` | Applies an ordered refactoring transaction: declarations → structs → renames → local renames → types → comments. |
+| **Single targeted query or mutation** | Individual `ida_*` tool | (e.g. `ida_decompile`, `ida_rename_function`, `ida_get_xrefs`). |
 
-- Read bundle: `ida_get_info`, `ida_list_functions`, `ida_get_segments`, `ida_get_strings`, `ida_get_xrefs`, `ida_decompile`
-- Rename bundle: `ida_search_functions`, `ida_decompile`, `ida_rename_function`, `ida_rename_global`, `ida_rename_many`, `ida_set_comment`
-- Type bundle: `ida_import_c_declarations`, `ida_apply_type`, `ida_apply_types`, `ida_set_function_type`
-- Struct bundle: `ida_get_types`, `ida_create_struct`, `ida_add_struct_member`, `ida_set_struct_member_type`, `ida_rename_struct_member`
-- Plan bundle: `ida_apply_plan` with `declarations`, `structs`, `renames`, `local_renames`, `types`, `comments`, `allow_mutations=true`
+---
 
-## Mutation Rules
+## 3. Standard Execution Workflow
 
-- Treat `ok:false` as not completed even when the MCP call itself succeeds.
-- Read `retry_hint`, `conflict_address`, and per-item `results` before retrying a rename.
-- For function names, prefer `ida_rename_function`; for exact labels/data names, use `ida_rename_global`.
-- For multiple IDA windows, read `instances`, `matched_instances`, `selected_port`, and `bridge_route`; never mutate until the `instance_key`, `process_id`, `binary_path`, or `imagebase` matches the requested target.
-- Prefer `port + instance_key`; if `port` is unknown, pass `process_id` or exact `binary_path` so the bridge can resolve the correct live IDA instead of falling back to the first port.
-- Port scans are bounded and parallel; if a custom range is large, keep it explicit and read `probe_timeout_ms` and `scan_workers` from `ida_list_instances`.
-- A single unpinned read may auto-route only when exactly one live IDA instance is found. If several instances are live, the bridge must reject the call until the agent pins the intended instance.
-- For EXE/DLL relationship work, discover/list each open IDA instance, then pin by `port` plus `binary_path` or module identity.
+1. **Discover Live Instances First**:
+   ```json
+   hsa_bridge({ "action": "discover", "target": "ida" })
+   ```
+2. **Pin Identity**: Always extract and pin `port` (e.g., `31337`), `instance_key`, `process_id`, or `binary_path`.
+3. **Execute Reads or Writes via Batch**:
+   - For mixed/read bundles → use `ida_batch`.
+   - For full refactoring plans → use `ida_apply_plan`.
+   - For mutations → ALWAYS set `allow_mutations: true`.
 
-## Guardrails
+---
 
-- Never assume the first live IDA window is correct.
-- Never mutate without a pinned target and explicit `allow_mutations=true`.
-- Keep batches bounded. Default to 32 requests or fewer.
-- Use `plugin-ida-pro.md` for exact bridge contracts and current runtime notes.
+## 4. Exact Payload Schemas & Examples
+
+### A. Mixed/Read Batch (`ida_batch`)
+```json
+{
+  "port": 31337,
+  "allow_mutations": false,
+  "stop_on_error": true,
+  "requests": [
+    { "command": "ida_get_info" },
+    { "command": "ida_get_segments" },
+    { "command": "ida_search_functions", "params": { "pattern": "Decrypt" } },
+    { "command": "ida_decompile", "params": { "address": "0x140001000" } }
+  ]
+}
+```
+
+### B. Coordinated Refactoring Plan (`ida_apply_plan`)
+```json
+{
+  "port": 31337,
+  "allow_mutations": true,
+  "declarations": "typedef unsigned __int64 QWORD;\nstruct PacketHeader { DWORD magic; DWORD size; };",
+  "structs": [
+    {
+      "name": "NetworkSession",
+      "members": [
+        { "name": "socket_fd", "offset": 0, "size": 4, "type_name": "int" },
+        { "name": "is_authenticated", "offset": 4, "size": 1, "type_name": "bool" }
+      ]
+    }
+  ],
+  "renames": [
+    { "address": "0x140002100", "name": "PacketHandler_ProcessAuth", "scope": "function" }
+  ],
+  "local_renames": [
+    { "function_address": "0x140002100", "old_name": "v3", "new_name": "pHeader" }
+  ],
+  "types": [
+    { "address": "0x140002100", "c_decl": "int __fastcall PacketHandler_ProcessAuth(void* pSession, struct PacketHeader* pHeader)" }
+  ],
+  "comments": [
+    { "address": "0x140002100", "comment": "Discovered via IDA Bridge — auth packet validation entry" }
+  ]
+}
+```
+
+---
+
+## 5. Multi-Instance Pinning Rules & Error Handling
+
+- If bridge returns: `"Multiple live IDA instances are available. Candidates: [31337, 31338]"`:
+  1. Call `hsa_bridge(action='discover', target='ida')` to see all loaded binaries.
+  2. Choose the specific `port` or `binary_path` matching your target.
+  3. Re-send request with `port: 31337` (or whichever port matches your binary).
+- Never assume the first port is the active binary.
+- Always check `ok: true` in response before considering the operation successful.

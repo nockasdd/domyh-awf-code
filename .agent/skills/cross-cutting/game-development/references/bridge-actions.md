@@ -1,55 +1,50 @@
 # Bridge Actions Quick Reference — Game Development
 
 > All MCP bridge tool actions for Unity and Unreal Engine.
-> Use via: `hsa_bridge({target:'unity|ue', action:'...', payload:{...}})`
+> Use via: `hsa_bridge({action:'call', target:'unity|ue', tool:'<tool_name>', payload:{...}})`
 
 ---
 
-## Unity Bridge Actions (14 commands)
+## Unity Bridge Actions (22 commands)
 
-Target: `unity` | Protocol: WebSocket `ws://127.0.0.1:15557` or HTTP `http://127.0.0.1:30030`
+Target: `unity` | Protocol: HTTP `http://127.0.0.1:30010`
 
-| Action | Payload | Response | Use Case |
+| Tool Name | Payload | Response | Use Case |
 |:-------|:--------|:---------|:---------|
-| `get_hierarchy` | `{}` | Scene tree with all GameObjects | Understand scene structure |
-| `get_object` | `{ path: "/Player" }` | Object details + components | Read component values |
-| `set_property` | `{ path: "/Player", component: "Transform", field: "position", value: [0,1,0] }` | Success/fail | Modify any property |
-| `create_object` | `{ type: "Empty/Cube/Sphere/Capsule/Plane/Cylinder", name: "MyObj" }` | Created object path | Add new GameObjects |
-| `create_object` | `{ type: "Empty", name: "MyObj", parent: "/Canvas" }` | Created UI object | Add UI elements |
-| `destroy_object` | `{ path: "/OldObj" }` | Success/fail | Remove GameObjects |
-| `get_assets` | `{ filter: "t:Prefab", folder: "Assets/Prefabs" }` | Asset list with paths | Find project assets |
-| `load_scene` | `{ scenePath: "Assets/Scenes/Level1.unity" }` | Success/fail | Switch active scene |
-| `save_scene` | `{}` | Success/fail | Persist scene changes |
-| `compile_scripts` | `{}` | Compilation result | Trigger C# recompilation |
-| `get_logs` | `{ count: 50 }` | Recent console logs | Read errors/warnings |
-| `build_player` | `{ scenes: [...], outputPath: "...", target: "StandaloneWindows64" }` | Build result | Export game build |
-| `execute_menu` | `{ menuPath: "Edit/Project Settings..." }` | Success/fail | Trigger menu actions |
-| `get_components` | `{ path: "/Player" }` | List of attached components | Inspect object setup |
+| `unity_get_hierarchy` | `{}` | Scene tree with all GameObjects | Understand scene structure |
+| `unity_get_properties` | `{ objectPath: "/Player" }` | Object details + components | Read component values |
+| `unity_set_property` | `{ objectPath: "/Player", componentType: "Transform", propertyName: "position", propertyValue: [0,1,0] }` | Success/fail | Modify any property |
+| `unity_create_object` | `{ primitiveType: "Sphere", name: "Bird" }` | Created object path | Add new GameObjects |
+| `unity_delete_object` | `{ objectPath: "/OldObj" }` | Success/fail | Remove GameObjects |
+| `unity_save_scene` | `{}` | Success/fail | Persist scene changes |
+| `unity_recompile` | `{}` | Compilation result | Trigger C# recompilation |
+| `unity_get_logs` | `{ limit: 50 }` | Recent console logs | Read errors/warnings |
+| `unity_execute_menu` | `{ menuPath: "Edit/Project Settings..." }` | Success/fail | Trigger menu actions |
 
 ### Unity Example Flow: Create Flappy Bird
 
 ```javascript
 // 1. Understand scene
-hsa_bridge({target:'unity', action:'get_hierarchy'})
+hsa_bridge({action:'call', target:'unity', tool:'unity_get_hierarchy'})
 
 // 2. Create player
-hsa_bridge({target:'unity', action:'create_object', payload:{type:'Sphere', name:'Bird'}})
-hsa_bridge({target:'unity', action:'set_property', payload:{
-  path:'/Bird', component:'Transform', field:'position', value:[0, 3, 0]
+hsa_bridge({action:'call', target:'unity', tool:'unity_create_object', payload:{primitiveType:'Sphere', name:'Bird'}})
+hsa_bridge({action:'call', target:'unity', tool:'unity_set_property', payload:{
+  objectPath:'/Bird', componentType:'Transform', propertyName:'position', propertyValue:[0, 3, 0]
 }})
 
 // 3. Create pipe spawner
-hsa_bridge({target:'unity', action:'create_object', payload:{type:'Empty', name:'PipeSpawner'}})
-hsa_bridge({target:'unity', action:'set_property', payload:{
-  path:'/PipeSpawner', component:'Transform', field:'position', value:[10, 0, 0]
+hsa_bridge({action:'call', target:'unity', tool:'unity_create_object', payload:{primitiveType:'Empty', name:'PipeSpawner'}})
+hsa_bridge({action:'call', target:'unity', tool:'unity_set_property', payload:{
+  objectPath:'/PipeSpawner', componentType:'Transform', propertyName:'position', propertyValue:[10, 0, 0]
 }})
 
 // 4. Save and compile
-hsa_bridge({target:'unity', action:'save_scene'})
-hsa_bridge({target:'unity', action:'compile_scripts'})
+hsa_bridge({action:'call', target:'unity', tool:'unity_save_scene'})
+hsa_bridge({action:'call', target:'unity', tool:'unity_recompile'})
 
 // 5. Check for errors
-hsa_bridge({target:'unity', action:'get_logs', payload:{count: 20}})
+hsa_bridge({action:'call', target:'unity', tool:'unity_get_logs', payload:{limit: 20}})
 ```
 
 ---

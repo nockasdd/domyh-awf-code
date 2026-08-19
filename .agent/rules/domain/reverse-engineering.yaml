@@ -4,14 +4,15 @@ rule_id: "MOD-RE-IDA-001"
 
 description: |
   Route EXE/DLL/binary analysis tasks to the reverse-engineering lane.
-  Use discovery-first, identity-pinned, bounded batch flows for IDA/Ghidra/x64dbg.
+  Enforces Three-Tier Batch classification (CPG Indexer vs Bridge Multi-Command vs IDB Plan),
+  strict Multi-Instance Identity Pinning, and bounded mutation safety gates for IDA/Ghidra/x64dbg.
 
 category: "workflow"
 
 context:
   always_apply: false
   personas: ["Developer", "Debugger", "Security", "Researcher"]
-  workflows: ["/audit", "/debug", "/review", "/reverse-engineer"]
+  workflows: ["/audit", "/debug", "/review", "/reverse-engineer", "/code"]
 
 rules:
   RE_001_binary_scope:
@@ -23,39 +24,53 @@ rules:
       IDA/Ghidra/x64dbg workflow before general coding rules.
 
   RE_002_discover_first:
-    name: "Discover First"
+    name: "Discover First & Identity Pinning"
     severity: critical
     desc: |
-      Always discover running instances before mutation. Pin the exact target
-      with port, session_id, process_id, binary_path, module_name, or module_path.
+      Always discover running bridge instances before reading or mutating:
+      `hsa_bridge(action='discover', target='ida')`.
+      When multiple IDA/Ghidra/x64dbg windows are open, ALWAYS pin the exact instance
+      using `port`, `instance_key`, `process_id`, or `binary_path`. Never execute
+      unpinned calls in multi-target environments.
 
-  RE_003_batch_reads:
-    name: "Bounded Batch Reads"
+  RE_003_batch_classification:
+    name: "Three-Tier Batch Classification"
+    severity: critical
+    desc: |
+      Distinguish between the 3 distinct batch concepts to avoid hallucination:
+      1. CPG Codebase Indexer Batch (`nock-hsa index .`): Indexes source code files into AST + SQLite BM25F.
+      2. Bridge Multi-Command Batch (`ida_batch`, `ue_batch`): Packs up to 32 discrete bridge read/write commands into 1 HTTP/MCP call.
+      3. IDB Structural Plan Batch (`ida_apply_plan`): Executes a deterministic, ordered database refactoring pipeline (declarations -> structs -> renames -> local renames -> types -> comments).
+
+  RE_004_batch_selection:
+    name: "Batch Selection Protocol (ida_batch vs ida_apply_plan)"
     severity: high
     desc: |
-      Prefer a bounded batch request when the agent needs multiple facts from
-      the same binary target. Keep batches small and deterministic.
+      - Use `ida_batch` when collecting multiple arbitrary facts (e.g. `get_info` + `list_functions` + `decompile` + `get_segments`).
+      - Use `ida_apply_plan` when executing coordinated structural edits to an IDB to preserve dependency order.
+      - Never use CLI indexers for live reverse engineering tasks, and never use bridge batches for source code indexing.
 
-  RE_004_batch_writes:
-    name: "Bounded Batch Writes"
+  RE_005_mutation_guard:
+    name: "Bounded Mutation Safety Gates"
+    severity: critical
+    desc: |
+      Every mutating batch (`ida_batch`, `ida_apply_plan`, `ida_rename_many`, `ida_apply_types`)
+      MUST explicitly specify `allow_mutations: true` and have a pinned target identity.
+      Capped at 32 operations per batch to prevent IDA UI thread locks.
+
+  RE_006_module_scope:
+    name: "Module Scope Required for Debuggers"
     severity: high
     desc: |
-      Mutating batches require explicit allow_mutations=true and a precise
-      target identity. Keep the smallest possible set of edits in one batch.
+      When searching memory or symbol patterns in x64dbg/debuggers for DLL-scoped behavior,
+      require `module_name` or `module_path` in addition to process identity (`pid` / `session_id`).
 
-  RE_005_module_scope:
-    name: "Module Scope Required"
-    severity: high
-    desc: |
-      When searching DLL-scoped behavior in a debugger, require module_name or
-      module_path in addition to process identity.
-
-  RE_006_doc_truth:
+  RE_007_doc_truth:
     name: "Runtime Truth First"
     severity: medium
     desc: |
-      Treat bundled bridge runtime and tool manifests as truth. If docs drift
-      from runtime, update the docs after verifying the live bridge.
+      Treat bundled bridge runtime and tool manifests as ground truth. If docs drift
+      from runtime, update the docs after verifying against live bridge capabilities.
 
 integration:
   tier: 2
