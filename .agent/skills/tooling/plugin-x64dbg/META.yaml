@@ -1,0 +1,5 @@
+name: plugin-x64dbg
+description: "Live dynamic binary debugging, memory pattern scanning, hardware breakpoints, register tracing, and runtime hooking with x64dbg/x32dbg."
+category: tooling
+tier: 1
+tags: ["x64dbg", "debugger", "dynamic-analysis", "breakpoints", "memory-pattern"]

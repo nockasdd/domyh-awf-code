@@ -121,15 +121,18 @@ routing:
   debug-orchestration:  { path: "governance/debug-orchestration", detect: [] }
   pre-stop-checklist:   { path: "governance/pre-stop-checklist", detect: [] }
 
-  # --- tooling (5) ---
+  # --- tooling (9) ---
   api-protocols:        { path: "tooling/api-protocols", detect: ["*openapi*", "*swagger*", "*graphql*"] }
   browser-agent:        { path: "tooling/browser-agent", detect: [] }
   cli-dev:              { path: "tooling/cli-dev", detect: ["*commander*", "*yargs*", "*cli*"] }
   ide-extension:        { path: "tooling/ide-extension", detect: [] }
   mcp:                  { path: "tooling/mcp", detect: ["*mcp*", "mcp.json"] }
   plugin-ida-pro:       { path: "tooling/plugin-ida-pro", detect: ["*.idb", "*.i64", "*.exe", "*.dll", "IDA", "ida_rename", "ida_apply_plan"] }
+  plugin-ghidra:        { path: "tooling/plugin-ghidra", detect: ["*.gzf", "*.rep", "ghidra*", "DecompInterface"] }
+  plugin-x64dbg:        { path: "tooling/plugin-x64dbg", detect: ["*.x64dbg", "*.x32dbg", "*.dd64", "*.dd32"] }
   hsa-toolkit:          { path: "tooling/hsa-toolkit", detect: [] }
 
 # Category summary (for human reference only — agent uses routing above)
 # core: 8 | cross-cutting: 30 | languages: 28 | frameworks: 9
-# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 7 | TOTAL: 106
+# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 9 | TOTAL: 108
+

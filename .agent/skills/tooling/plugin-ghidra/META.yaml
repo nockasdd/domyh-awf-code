@@ -1,0 +1,5 @@
+name: plugin-ghidra
+description: "Ghidra headless batch analysis, PDB symbol parsing, cross-platform binary decompilation, and DataTypeManager automation."
+category: tooling
+tier: 1
+tags: ["ghidra", "reverse-engineering", "decompilation", "pdb", "datatype"]

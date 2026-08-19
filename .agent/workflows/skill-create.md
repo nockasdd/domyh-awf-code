@@ -1,130 +1,102 @@
 ---
-description: 🔨 Create or improve DOMYH skills with guided workflow — scaffold, validate, iterate
-skills: { required: [skill-creator], contextual: [] }
-success_criteria: "Skill created, indexed, BM25 trigger test passes"
+description: "Create or improve DOMYH skills with guided workflow — supports generic ecosystem skills and project-tailored codebase skills"
+skills: { required: [skill-creator], contextual: [auto] }
+success_criteria: "Skill created, indexed, BM25 trigger test passes, project patterns accurately captured"
 ---
 
-# Skill Creator Workflow
+# /skill-create — Intelligent Skill Creator Workflow
 
-> Meta-workflow for creating new skills or improving existing ones.
-> Inspired by Anthropic's skill-creator, adapted for DOMYH's multi-IDE, model-agnostic ecosystem.
+## 🛡️ [GATE 0: PRE-FLIGHT CREATION RULES — READ BEFORE CREATING SKILLS]
 
-## Prerequisites
-
-- HSA MCP server running (`nock awf hsa start`)
-- Read skill-creator skill: `.agent/skills/core/skill-creator/SKILL.md`
-
----
-
-## Step 1: Discovery
-
-Determine what skill to create and verify it doesn't already exist.
-
-```
-1. hsa_search(action:"skills", query:"<topic>")
-   → Check if skill exists or overlaps with existing
-
-2. Interview user:
-   - What should this skill do?
-   - What file patterns trigger it? (e.g., *.go, docker-compose.yml)
-   - What's the target audience? (backend dev, frontend, devops)
-   - What category? (languages|frameworks|core|devops|cross-cutting|tooling|ai-ml)
-
-3. hsa_search(action:"docs", doc_libraries:["<relevant-lib>"])
-   → Gather reference material
-```
-
-## Step 2: Scaffold
-
-Create the SKILL.md with DOMYH standard format.
-
-```
-1. Create folder: .agent/skills/{category}/{name}/
-
-2. Create SKILL.md with frontmatter:
-   ---
-   name: skill-name           # kebab-case, unique
-   description: "..."         # 50-200 chars, include trigger keywords
-   detect: ["*.ext", "file"]  # File patterns that auto-trigger
-   category: <category>       # One of 7 categories
-   tier: 1                    # 1=standard, 2=deep-dive
-   ---
-
-3. Body structure:
-   # {Name} Patterns — DOMYH Awesome Code
-   > Version, Philosophy
-   ## 🎯 When to Use This Skill
-   ## 📦 Recommended Stack
-   ## 🆕 Latest Features (code examples)
-   ## 📝 Core Patterns
-   ## 🛡️ Error Handling
-   ## 🧪 Testing Patterns
-   ## 📁 Project Structure
-   ## ✅ Best Practices Checklist
-```
-
-## Step 3: Validate
-
-Verify skill quality and searchability.
-
-```
-1. Schema check:
-   - name: kebab-case? unique?
-   - description: 50-200 chars? has trigger keywords?
-   - detect: ≥1 pattern?
-   - category: valid enum?
-   - body: ≤500 lines?
-
-2. BM25 trigger test:
-   - hsa_check_changes() → re-index
-   - hsa_search(action:"skills", query:"<test queries>")
-   - Verify skill appears in top 3 results
-
-3. Content quality:
-   - ≥3 code examples?
-   - Error handling section present?
-   - Testing patterns included?
-   - Best practices checklist?
-```
-
-## Step 4: Iterate
-
-Improve based on testing and feedback.
-
-```
-Loop until user satisfied:
-  1. User tests skill in their IDE
-  2. Collect feedback on what's missing/wrong
-  3. Improve SKILL.md content
-  4. hsa_check_changes() → re-index
-  5. Re-run BM25 trigger test
-```
-
-## Step 5: Register
-
-Finalize and deploy.
-
-```
-1. Verify file is in correct path:
-   .agent/skills/{category}/{name}/SKILL.md
-
-2. Optional: Create ADVANCED.md for deep-dive content (tier 2)
-
-3. hsa_check_changes() → final re-index
-
-4. Verify with: hsa_search(action:"skills", query:"<topic>")
-   → Should appear in top results
-
-5. Done! Skill is live across all IDEs via HSA.
-```
+1. **NO DUPLICATE SKILLS**: Always search existing skills first (`hsa_search(query, action="skills")`). Extend existing skills if overlapping.
+2. **PROJECT-AWARE TRACING**: When creating a project-specific skill, MUST inspect actual codebase files (`hsa_detect`, `hsa_explore`, `view_file`) to extract authentic conventions rather than generic boilerplate.
+3. **REAL PRODUCTION PATTERNS**: Every skill MUST include $\ge 3$ concrete, battle-tested code examples and explicit error-handling patterns.
+4. **STRICT SIZE BUDGET**: Keep `SKILL.md` $\le 500$ lines. Use `ADVANCED.md` or `references/` for deep-dive documentation.
+5. **INDEX VALIDATION MANDATE**: After creating/editing a skill, MUST run `hsa_check_changes()` and verify BM25 top-3 retrieval before reporting done.
 
 ---
 
-## Tips
+## 🧭 MODE SELECTION
 
-- **Keep SKILL.md ≤500 lines** — use ADVANCED.md for extras
-- **Explain the WHY** — not just WHAT to do, but WHY it matters
-- **Include code examples** — real-world patterns > abstract rules
-- **Use detect field wisely** — specific file patterns avoid false triggers
-- **Test with edge cases** — unusual queries that should/shouldn't trigger
-\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n
+| Mode | Command | Target Category | Use Case |
+|:-----|:--------|:----------------|:---------|
+| **Generic / Ecosystem** | `/skill-create [topic]` | `frameworks`, `languages`, `tooling`, `devops`, `core` | Universal skills applicable across multiple projects |
+| **Project-Specific** | `/skill-create project [name]` | `projects` (`.agent/skills/projects/{slug}/`) | Custom codebase skill capturing internal APIs, DTOs, rules & conventions |
+
+---
+
+## 🔄 5-PHASE CREATION FLOW
+
+### PHASE 1: DISCOVERY & CODEBASE TRACING
+*   **Check Existence**: Run `hsa_search(query, action="skills")` to ensure no duplicate skill exists.
+*   **If Project Mode (`/skill-create project`)**:
+    1.  **Detect Tech Stack**: Call `hsa_detect(stack)` to extract runtime, frameworks, ORM, and build tools.
+    2.  **Explore Architecture**: Run `hsa_explore(repo_map)` to map directory layout (`src/services/`, `controllers/`, `entities/`, `models/`).
+    3.  **Harvest Idioms & Constraints**: Inspect 3-5 key source files to extract internal error classes, repository patterns, naming conventions, and forbidden anti-patterns in this repository.
+*   **If Generic Mode**: Identify trigger keywords, target file patterns (`detect`), and gather official reference material.
+
+### PHASE 2: SCAFFOLD & STRUCTURE
+Create directory `.agent/skills/{category}/{name}/` and write `SKILL.md` with standard DOMYH frontmatter:
+
+```markdown
+---
+name: skill-name           # kebab-case, unique identifier
+description: "..."         # 50-200 chars, dense with semantic trigger keywords
+detect: ["pattern/**"]     # Glob patterns that auto-trigger this skill
+category: <category>       # languages | frameworks | core | devops | cross-cutting | tooling | ai-ml | projects
+tier: 1                    # 1 = standard, 2 = deep-dive
+---
+
+# {Name} Architecture & Patterns
+
+## 1. When To Use
+- Specific scenarios, tasks, or file types that require this skill.
+
+## 2. Architecture Invariants & Standards
+- Core rules, internal API conventions, error-handling protocols.
+
+## 3. Production Code Patterns (>= 3 concrete examples)
+- Real, copy-pasteable idioms matching project style.
+
+## 4. Forbidden Anti-Patterns
+- Explicit list of what NOT to do in this domain / codebase.
+
+## 5. Testing & Verification Patterns
+- Standard unit/integration test patterns for this stack.
+```
+
+### PHASE 3: VALIDATE & SCHEMA AUDIT
+*   **Frontmatter Audit**: Name in kebab-case, description contains search keywords, valid category, non-empty `detect` array.
+*   **Quality Audit**: $\ge 3$ code examples, error handling section, forbidden anti-patterns section, $\le 500$ lines.
+
+### PHASE 4: BM25 INDEXING & RETRIEVAL TEST
+1.  **Refresh Index**: Call `hsa_check_changes()` to re-index all skills into BM25F SQLite engine.
+2.  **Retrieval Test**: Call `hsa_search(query="<task scenario>", action="skills")`.
+3.  **Pass Condition**: The newly created skill MUST rank in the Top 3 results for relevant queries.
+
+### PHASE 5: ITERATE & FINALIZE
+*   Test skill execution on a representative coding task.
+*   Refine trigger keywords or code examples based on test results.
+*   Persist session state via `hsa_session(action="persist")`.
+
+---
+
+## ⚡ SUB-COMMANDS
+
+| Command | Description |
+|:--------|:------------|
+| `/skill-create [topic]` | Scaffold standard ecosystem skill (languages, frameworks, tools) |
+| `/skill-create project [name]` | Auto-trace current codebase and scaffold project-tailored skill |
+| `/skill-create test [name]` | Run BM25 search and trigger validation against a skill |
+| `/skill-create refine [name]` | Iterate and improve an existing skill's code patterns |
+
+---
+
+## 🎯 [GATE 9: POST-FLIGHT CREATION CHECKLIST — VERIFY BEFORE REPORTING]
+
+Before declaring skill creation complete, MUST self-audit these 5 golden criteria:
+1.  ✅ **Did I verify no duplicate/overlapping skill already existed?**
+2.  ✅ **Are code examples extracted from real, working patterns (no synthetic pseudocode)?**
+3.  ✅ **Is `SKILL.md` strictly within the $\le 500$ lines limit?**
+4.  ✅ **Did I run `hsa_check_changes()` and confirm Top-3 BM25 search ranking?**
+5.  ✅ **Does the `detect` glob accurately match relevant project files?**
