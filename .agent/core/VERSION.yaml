@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.7.7"
-  codename: "Rules Coverage & MCP Bootstrap Discovery"
+  version: "6.7.9"
+  codename: "Bridge Optimization & Three-Tier Batch Clarification"
   release_date: "2026-05-20"
 
   # Identity comes from BRANDING.yaml

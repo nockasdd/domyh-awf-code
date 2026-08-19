@@ -20,8 +20,8 @@ const AGENT_DIR = join(ROOT_DIR, '.agent');
 const CONFIGS_DIR = join(ROOT_DIR, 'configs');
 const DIST_PLUGINS_DIR = join(ROOT_DIR, 'dist-plugins');
 
-const VERSION = '7.2.1';
-const HSA_VERSION = '2.0.6';
+const VERSION = '7.2.2';
+const HSA_VERSION = '2.0.7';
 const AUTHOR = 'NockDev (DOMYH Awesome Code)';
 
 console.log('🚀 Starting DOMYH Multi-Target Plugin Builder v' + VERSION + '...');
