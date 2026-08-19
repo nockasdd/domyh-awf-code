@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.7.9"
-  codename: "Bridge Optimization & Three-Tier Batch Clarification"
+  version: "6.7.10"
+  codename: "Decompilation 8-Pillar Mastery & Project-Aware Skill Creator"
   release_date: "2026-05-20"
 
   # Identity comes from BRANDING.yaml

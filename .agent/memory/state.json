@@ -1,10 +1,10 @@
 {
-  "version": "v6.7.9",
-  "last_updated": "2026-08-19T10:35:00+07:00",
+  "version": "v6.7.10",
+  "last_updated": "2026-08-19T11:40:00+07:00",
   "system": {
     "name": "DOMYH Awesome Code",
-    "version": "v6.7.9",
-    "version_short": "v6.7.9",
+    "version": "v6.7.10",
+    "version_short": "v6.7.10",
     "_note": "Sync from core/VERSION.yaml"
   },
   "project": {
