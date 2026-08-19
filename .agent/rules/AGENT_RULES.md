@@ -44,7 +44,7 @@ You are violating this if:
 
 Self-check: "Does every changed line trace directly to the user's request?"
 
-Rules: read file before editing. Preserve conventions. No emoji in code. No phase/version markers. Comments: one line, WHY not WHAT.
+Rules: read file before editing. Read back file after editing to verify diff. Preserve conventions. No emoji in code. No phase/version markers. Comments: one line, WHY not WHAT.
 
 ## 4. Verify Before Claiming Done
 
