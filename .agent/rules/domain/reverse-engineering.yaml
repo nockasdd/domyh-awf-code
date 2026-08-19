@@ -5,7 +5,8 @@ rule_id: "MOD-RE-IDA-001"
 description: |
   Route EXE/DLL/binary analysis tasks to the reverse-engineering lane.
   Enforces Three-Tier Batch classification (CPG Indexer vs Bridge Multi-Command vs IDB Plan),
-  strict Multi-Instance Identity Pinning, and bounded mutation safety gates for IDA/Ghidra/x64dbg.
+  strict Multi-Instance Identity Pinning, bounded mutation safety gates, and the
+  Complete 8-Pillar Decompilation Mastery (Calling conventions, Enums, Unions, RTTI, VTables, Stride, Lvars, FLIRT).
 
 category: "workflow"
 
@@ -71,6 +72,35 @@ rules:
     desc: |
       Treat bundled bridge runtime and tool manifests as ground truth. If docs drift
       from runtime, update the docs after verifying against live bridge capabilities.
+
+  RE_008_calling_conventions:
+    name: "Calling Convention & Custom Register Prototypes"
+    severity: high
+    desc: |
+      When functions receive arguments in non-standard registers, apply explicit `__usercall`
+      or `__fastcall` prototypes (e.g. `int __usercall fn@<eax>(int a@<ecx>, void* p@<esi>)`)
+      to eliminate dummy register variables in decompiled pseudocode.
+
+  RE_009_enum_bitfield_resolution:
+    name: "Enum & Bitfield Magic Number Resolution"
+    severity: medium
+    desc: |
+      Convert raw integer constants and bitwise mask operations (`a1 & 0x400`, `state == 3`)
+      into typed enums (`FLAG_ASYNC`, `STATE_TIMEOUT`) via Local Types and CTree operand binding.
+
+  RE_010_flirt_library_filtering:
+    name: "FLIRT Signatures & CRT Noise Filtering"
+    severity: high
+    desc: |
+      Apply standard FLIRT signatures (`vc_ucrt`, `msvcrt`, `libcmt`) before in-depth decompilation
+      to automatically label static CRT/STL library functions and locate real user entry points.
+
+  RE_011_rtti_vtable_binding:
+    name: "C++ RTTI & VTable Virtual Dispatch Binding"
+    severity: high
+    desc: |
+      Reconstruct C++ class hierarchies using `__cppobj`, name vtable types `CLASSNAME_vtbl`,
+      and bind `__vftable` member pointer so indirect calls transform into typed method invocations.
 
 integration:
   tier: 2
