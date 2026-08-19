@@ -1,0 +1,150 @@
+# =====================================================
+# Stealth & Evasion Patterns
+# =====================================================
+
+pe_manipulation:
+  header_erasure:
+    name: "PE Header Erasure"
+    desc: "Erase DOS/NT headers after DLL loaded"
+    code: |
+      void EraseHeaders(HMODULE module) {
+          DWORD oldProtect;
+          VirtualProtect(module, 0x1000, PAGE_READWRITE, &oldProtect);
+          memset(module, 0, 0x1000);
+          VirtualProtect(module, 0x1000, oldProtect, &oldProtect);
+      }
+
+  module_unlink:
+    name: "PEB Module Unlinking"
+    desc: "Remove from InLoadOrderModuleList, InMemoryOrderModuleList"
+    code: |
+      void UnlinkModule(HMODULE module) {
+          auto peb = (PPEB)__readgsqword(0x60);
+          auto ldr = peb->Ldr;
+          auto head = &ldr->InLoadOrderModuleList;
+          for (auto entry = head->Flink; entry != head; entry = entry->Flink) {
+              auto mod = CONTAINING_RECORD(entry, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
+              if (mod->DllBase == module) {
+                  mod->InLoadOrderLinks.Flink->Blink = mod->InLoadOrderLinks.Blink;
+                  mod->InLoadOrderLinks.Blink->Flink = mod->InLoadOrderLinks.Flink;
+                  break;
+              }
+          }
+      }
+
+syscall:
+  direct_syscall:
+    name: "Direct Syscall"
+    desc: "Bypass ntdll hooks by calling syscall instruction directly"
+    code: |
+      // Manual syscall — bypasses all ntdll hooks
+      // SSN (System Service Number) varies by Windows version
+      extern "C" NTSTATUS NtReadVirtualMemory_Syscall(
+          HANDLE ProcessHandle, PVOID BaseAddress,
+          PVOID Buffer, SIZE_T NumberOfBytesToRead,
+          PSIZE_T NumberOfBytesRead);
+
+  syscall_stub:
+    name: "Syscall Stub Generator"
+    desc: "Generate syscall stubs from clean ntdll copy"
+
+handle_protection:
+  handle_cloak:
+    name: "Handle Cloaking"
+    desc: "Set OBJ_PROTECT_CLOSE flag"
+
+  process_id_spoof:
+    name: "Process ID Anti-Enum"
+    desc: "Make process harder to find via EnumProcesses"
+
+hwid_spoof:
+  disk_serial:
+    name: "Disk Serial Spoof"
+    desc: "Intercept IOCTL_STORAGE_QUERY_PROPERTY"
+
+  mac_address:
+    name: "MAC Address Spoof"
+    desc: "Registry + NDIS filter driver"
+
+  smbios:
+    name: "SMBIOS/DMI Spoof"
+    desc: "Intercept GetSystemFirmwareTable"
+
+  gpu_serial:
+    name: "GPU Serial Spoof"
+    desc: "Hook DXGI adapter enumeration"
+
+behavior:
+  human_timing:
+    name: "Human-Like Behavioral Patterns"
+    tips:
+      - "Use normal_distribution for click/key timing"
+      - "Add micro-pauses between actions"
+      - "Vary movement paths (Bezier curves)"
+      - "Randomize action order where possible"
+      - "Include idle periods (AFK simulation)"
+
+  api_normalization:
+    name: "API Call Pattern Normalization"
+    desc: "Avoid suspicious API call sequences"
+    tips:
+      - "Spread API calls over time"
+      - "Mix with legitimate API calls"
+      - "Avoid rapid RPM/WPM bursts"
+
+etw_bypass:
+  etw_event_write_patch:
+    name: "EtwEventWrite RET Patch"
+    desc: "Patch ntdll!EtwEventWrite to return immediately — blinds ETW/EDR"
+    code: |
+      void PatchETW() {
+          auto addr = GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "EtwEventWrite");
+          DWORD old;
+          VirtualProtect(addr, 1, PAGE_EXECUTE_READWRITE, &old);
+          *(uint8_t*)addr = 0xC3; // RET
+          VirtualProtect(addr, 1, old, &old);
+      }
+    tags: [etw, bypass, telemetry, stealth]
+
+  nt_trace_event_patch:
+    name: "NtTraceEvent RET Patch"
+    desc: "Lower-level ETW bypass — intercepts before kernel transition"
+    code: |
+      void PatchNtTraceEvent() {
+          auto addr = GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtTraceEvent");
+          DWORD old;
+          VirtualProtect(addr, 1, PAGE_EXECUTE_READWRITE, &old);
+          *(uint8_t*)addr = 0xC3;
+          VirtualProtect(addr, 1, old, &old);
+      }
+    notes:
+      - "Patch NtTraceEvent for deeper coverage than EtwEventWrite alone"
+      - "EDR may detect VirtualProtect on ntdll — use direct syscall instead"
+    tags: [etw, bypass, ntapi, stealth]
+
+amsi_bypass:
+  amsi_scan_buffer_patch:
+    name: "AmsiScanBuffer Patch"
+    desc: "Patch amsi.dll!AmsiScanBuffer to always return AMSI_RESULT_CLEAN"
+    code: |
+      void PatchAMSI() {
+          auto amsi = LoadLibraryW(L"amsi.dll");
+          auto addr = GetProcAddress(amsi, "AmsiScanBuffer");
+          DWORD old;
+          VirtualProtect(addr, 6, PAGE_EXECUTE_READWRITE, &old);
+          // xor eax, eax; ret → always returns S_OK / AMSI_RESULT_CLEAN
+          uint8_t patch[] = { 0x31, 0xC0, 0xC3 };
+          memcpy(addr, patch, sizeof(patch));
+          VirtualProtect(addr, 6, old, &old);
+      }
+    notes:
+      - "Only relevant for .NET/PowerShell contexts"
+      - "Not needed for pure native C++ payloads"
+    tags: [amsi, bypass, scripting]
+
+instrumentation_callback:
+  desc: "Windows instrumentation callbacks monitor syscall returns"
+  evasion: |
+    // Anti-cheat may use NtSetInformationProcess(ProcessInstrumentationCallback)
+    // Evasion: detect and clear the callback, or use kernel-mode to bypass
+  tags: [advanced, syscall_monitoring]

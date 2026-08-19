@@ -1,0 +1,363 @@
+# =====================================================
+# Game Data Extraction Guide
+# =====================================================
+# What data an auto needs, how to find it, pointer
+# chain walking, entity list, structure analysis.
+# Complete reference for game automation developers.
+
+# ── 1. Essential Data Categories ────────────────────
+data_categories:
+  player:
+    name: "Player/Character Data"
+    priority: critical
+    fields:
+      - { name: "Health (HP)", type: float, hint: "Current/Max — scan for known value" }
+      - { name: "Mana (MP/SP)", type: float, hint: "Same structure as HP, nearby offset" }
+      - { name: "Stamina/Energy", type: float, hint: "Often +4/+8 bytes from MP" }
+      - { name: "Level", type: int32, hint: "Usually near name string" }
+      - { name: "Experience (XP)", type: "int64 or float", hint: "Large number, check nearby" }
+      - { name: "Position X,Y,Z", type: "float[3]", hint: "3 consecutive floats, move to verify" }
+      - { name: "Rotation/Yaw", type: float, hint: "0-360 or 0-2π, turn character to find" }
+      - { name: "Speed", type: float, hint: "Movement speed multiplier" }
+      - { name: "Name", type: "char[]/wchar_t[]", hint: "String scan, usually UTF-16 in modern games" }
+      - { name: "Class/Job ID", type: int32, hint: "Enum value near name" }
+      - { name: "State Flags", type: "uint32 bitfield", hint: "Dead/Alive/InCombat/Stunned bits" }
+
+  position:
+    name: "World Coordinates"
+    priority: critical
+    type: "float[3] or double[3]"
+    finding_method: |
+      1. Cheat Engine → Unknown initial value (float)
+      2. Move character North → Increased value
+      3. Move character South → Decreased value
+      4. Repeat → narrow down to X axis
+      5. Same for Y (usually height) and Z
+      6. Three floats adjacent = position struct
+    verification: "Move to known location, check values match map coordinates"
+    common_layouts:
+      - "struct { float x, y, z; }         // XYZ flat"
+      - "struct { float x, z, y; }         // XZY (height = Y)"
+      - "struct { Vec3 pos; Vec3 rot; }    // Position + Rotation together"
+      - "struct { float pos[3]; float vel[3]; } // With velocity"
+
+  entity_list:
+    name: "Entity/Object List"
+    priority: critical
+    desc: "Array/linked list of all game objects — players, NPCs, monsters, items"
+    structures:
+      array_of_pointers: |
+        // Most common: static array of pointers
+        // game.exe + 0xABCDEF → EntityList*
+        struct EntityList {
+            Entity** entities;    // Pointer to array
+            uint32_t count;       // Active count
+            uint32_t capacity;    // Array size
+        };
+        // Access: EntityList->entities[i]->position
+      linked_list: |
+        // Some games use linked lists
+        struct EntityNode {
+            Entity* entity;
+            EntityNode* next;
+            EntityNode* prev;
+        };
+      object_manager: |
+        // WoW-style Object Manager
+        struct ObjectManager {
+            uintptr_t firstObject;    // Head of linked list
+            uint32_t objectCount;
+            // Walk: obj->NextObject until nullptr
+        };
+    finding_steps:
+      - "Find your own player position address"
+      - "Find what ACCESSES that address (Cheat Engine debugger)"
+      - "Look for loop pattern: for(i=0; i<count; i++) entity[i]->..."
+      - "Trace back to find the list/array base pointer"
+      - "Or: find a second player's position → find common parent pointer"
+
+  inventory:
+    name: "Inventory/Bag Data"
+    priority: high
+    fields:
+      - { name: "Item ID", type: int32, hint: "Known item → scan for its ID" }
+      - { name: "Quantity/Stack", type: int32, hint: "Use/sell 1 → decreased value" }
+      - { name: "Slot Index", type: int32, hint: "Position in inventory grid" }
+      - { name: "Item Name", type: string, hint: "Search item name string → xref" }
+      - { name: "Item Quality/Rarity", type: "int32 enum", hint: "0=Common, 4=Legendary typical" }
+      - { name: "Durability", type: float, hint: "Current/Max" }
+    structure: |
+      struct InventorySlot {
+          uint32_t itemId;      // 0 = empty slot
+          uint32_t count;
+          uint32_t durability;
+          uint8_t  quality;
+          // ... more fields
+      };
+      struct Inventory {
+          InventorySlot slots[MAX_SLOTS];
+          uint32_t gold;
+          uint32_t usedSlots;
+      };
+
+  target:
+    name: "Target/Selected Entity"
+    priority: high
+    fields:
+      - { name: "Target Pointer", type: uintptr_t, hint: "Select target → scan pointer value" }
+      - { name: "Target HP", type: float, hint: "Same as player HP method" }
+      - { name: "Target Name", type: string, hint: "Display text → string scan" }
+      - { name: "Target Distance", type: float, hint: "Calculate from positions" }
+      - { name: "Target Type", type: int32, hint: "NPC/Player/Monster enum" }
+
+  combat:
+    name: "Combat State"
+    priority: high
+    fields:
+      - { name: "InCombat Flag", type: bool, hint: "Enter/exit combat → changed value" }
+      - { name: "Cast Bar", type: float, hint: "0-1 progress, scan while casting" }
+      - { name: "Cooldowns", type: "float[]", hint: "Timer decreasing for each skill" }
+      - { name: "Skill Ready", type: "bool[]", hint: "True when cooldown = 0" }
+      - { name: "Auto Attack", type: bool, hint: "Toggle auto attack → changed value" }
+
+  quest:
+    name: "Quest System"
+    priority: medium
+    fields:
+      - { name: "Active Quest IDs", type: "int32[]", hint: "Accept quest → scan new value" }
+      - { name: "Quest Progress", type: "int32 or float", hint: "Kill count increasing" }
+      - { name: "Quest Complete", type: bool, hint: "Complete → changed from 0 to 1" }
+      - { name: "Waypoint/Objective", type: "float[3]", hint: "Quest marker position" }
+
+  chat:
+    name: "Chat/Message System"
+    priority: medium
+    fields:
+      - { name: "Chat Buffer", type: "string array or ring buffer", hint: "Type msg → string scan" }
+      - { name: "Whisper Target", type: string, hint: "Open whisper → string appears" }
+      - { name: "Channel ID", type: int32, hint: "Switch channel → value changes" }
+
+  map:
+    name: "Map/Navigation Data"
+    priority: medium
+    fields:
+      - { name: "Zone/Map ID", type: int32, hint: "Change zone → value changes" }
+      - { name: "Zone Name", type: string, hint: "String scan zone name" }
+      - { name: "Minimap Data", type: "texture/buffer", hint: "Advanced — DXGI capture easier" }
+      - { name: "Navmesh Pointer", type: uintptr_t, hint: "For pathfinding — complex to RE" }
+
+# ── 2. Pointer Chain Walking ────────────────────────
+pointer_chain:
+  explanation: |
+    Game objects live in HEAP memory → address changes every restart.
+    Solution: Find STATIC base in .exe/.dll → follow pointer chain → reach target.
+
+    Example chain: game.exe+0x123456 → [+0x10] → [+0x48] → [+0x2C] = Player HP
+
+    Read process:
+    1. base = gameModule + 0x123456
+    2. ptr1 = ReadMemory<uintptr_t>(base)          // 0x1A2B3000
+    3. ptr2 = ReadMemory<uintptr_t>(ptr1 + 0x10)   // 0x2C4D5000
+    4. ptr3 = ReadMemory<uintptr_t>(ptr2 + 0x48)   // 0x3E5F6000
+    5. hp   = ReadMemory<float>(ptr3 + 0x2C)        // 100.0f
+
+  code: |
+    // Generic pointer chain resolver
+    uintptr_t ResolvePointerChain(HANDLE hProcess, uintptr_t base,
+                                    const std::vector<uintptr_t>& offsets) {
+        uintptr_t addr = base;
+        for (size_t i = 0; i < offsets.size(); ++i) {
+            if (!ReadProcessMemory(hProcess, (LPCVOID)addr,
+                                    &addr, sizeof(addr), nullptr))
+                return 0; // Failed to read
+            if (i < offsets.size() - 1) // Don't add last offset to pointer
+                addr += offsets[i];
+            else
+                addr += offsets[i]; // Or: return addr + offsets[i] for value read
+        }
+        return addr;
+    }
+
+    // Usage:
+    auto moduleBase = GetModuleBaseAddress(pid, "game.exe");
+    auto playerHP = ResolvePointerChain(hProcess,
+        moduleBase + 0x123456,
+        {0x10, 0x48, 0x2C}
+    );
+    float hp; ReadProcessMemory(hProcess, (LPCVOID)playerHP, &hp, sizeof(hp), nullptr);
+
+  finding_with_cheat_engine:
+    steps:
+      - "1. Find HP address (value scan)"
+      - "2. Right-click → Find out what accesses this address"
+      - "3. Move/attack to trigger access → note instruction + offset"
+      - "4. Right-click instruction → More info → shows register value"
+      - "5. That register = pointer → scan for THAT address"
+      - "6. Repeat until you reach a GREEN (static) address"
+      - "7. Or: Pointer scan → generates all valid chains automatically"
+    pointer_scan_settings:
+      max_level: "5-7 (rarely need more)"
+      max_offset: "0x1000 (4096) for first level, 0x400 for deeper"
+      allow_negative: false
+      base_modules: ["game.exe", "UnityPlayer.dll", "GameAssembly.dll"]
+
+# ── 3. Finding Methods by Value Type ───────────────
+finding_methods:
+  float_values:
+    examples: ["HP", "MP", "Position X/Y/Z", "Speed"]
+    method: |
+      1. Know approximate value → Exact Value scan (Float)
+      2. Don't know exact → Unknown initial value
+      3. Changed → Increased/Decreased/Changed value
+      4. Didn't change → Unchanged value
+      5. Repeat until < 10 results
+
+  integer_values:
+    examples: ["Level", "Gold", "Item count", "Skill Points"]
+    method: |
+      1. Exact value scan (4 Bytes)
+      2. Spend/gain → scan changed value
+      3. Usually near other player data in same structure
+
+  string_values:
+    examples: ["Player name", "Item name", "Zone name"]
+    method: |
+      1. Cheat Engine → String scan (UTF-8 or UTF-16)
+      2. Find string in .rdata section → xref in code
+      3. IDA/Ghidra: string window → cross-reference → parent function
+
+  boolean_flags:
+    examples: ["InCombat", "Mounted", "Dead", "Visible"]
+    method: |
+      1. Toggle state (enter/exit combat)
+      2. Changed value scan → find bits that flipped
+      3. Often stored as bitfield in uint32
+
+  enum_values:
+    examples: ["Class/Job", "Weapon type", "Zone ID"]
+    method: |
+      1. If known → Exact value scan
+      2. If unknown → Change class/zone → Changed value scan
+      3. Check game files for enum definitions (especially Unity/Unreal)
+
+# ── 4. Structure Analysis with Tools ───────────────
+structure_analysis:
+  cheat_engine:
+    name: "Structure Dissector"
+    steps:
+      - "Right-click found address → Browse Memory Region"
+      - "Tools → Dissect Data/Structures"
+      - "Add address, click Structures → Guess types"
+      - "Manually label known fields (HP, MP, pos, etc.)"
+      - "Navigate pointers to discover linked structures"
+
+  reclass_net:
+    name: "ReClass.NET"
+    desc: "Visual memory class reconstruction — generates C++ structs"
+    url: "https://github.com/ReClassNET/ReClass.NET"
+    features:
+      - "Visual drag-drop struct editor"
+      - "Auto-detect types (int, float, pointer, string)"
+      - "Follow pointers visually"
+      - "Generate C++/C# struct definitions"
+      - "Plugin system for game-specific features"
+
+  ghidra:
+    name: "Ghidra Structure Explorer"
+    steps:
+      - "Find function that accesses your target value"
+      - "Decompile → identify struct member access patterns"
+      - "Data Type Manager → create struct definition"
+      - "Apply struct to pointer → auto-labels all offsets"
+
+# ── 5. Game Engine-Specific Tips ────────────────────
+engine_tips:
+  unity:
+    module: "GameAssembly.dll (IL2CPP) or Assembly-CSharp.dll (Mono)"
+    tools:
+      - "Il2CppDumper — extract class definitions, method signatures"
+      - "Cpp2IL — IL2CPP → IL conversion"
+      - "dnSpy — Mono builds (decompile C# directly)"
+      - "UnityExplorer — in-game inspector (if can load mod)"
+    object_pattern: |
+      // Unity objects typically:
+      // ObjectBase → Component → MonoBehaviour → YourScript
+      // Transform component always has position
+      // Find: Transform.position → Vec3 {x, y, z}
+    tips:
+      - "All classes from C# have RTTI — use Il2CppDumper for offsets"
+      - "Transform component always at same index per object type"
+      - "Camera.main.WorldToScreenPoint for ESP/overlay"
+
+  unreal_engine:
+    module: "Game binary or UE4/UE5 DLLs"
+    tools:
+      - "UE4SS (Unreal Engine Scripting System)"
+      - "SDK Generator — auto-generate class definitions"
+      - "Cheat Engine with UE4/UE5 mono dissector"
+    object_pattern: |
+      // UObjects: GObjects→ObjectArray[index]
+      // UWorld → PersistentLevel → Actors[]
+      // Each Actor has RootComponent → RelativeLocation (FVector)
+    key_globals:
+      - "GWorld — world pointer"
+      - "GEngine — engine instance"
+      - "GObjects — master object array"
+      - "GNames — FName pool for string lookups"
+
+  custom_cpp:
+    desc: "C++ games without major engine"
+    approach:
+      - "RTTI scan for class names (see address-discovery.yaml)"
+      - "String scan for UI text → xref to data structures"
+      - "Debug symbol search (PDB files if available)"
+      - "Export table for public APIs"
+      - "Pattern scan .text section for known instruction sequences"
+
+# ── 6. Auto Bot Decision Data ───────────────────────
+bot_decisions:
+  what_to_read:
+    every_frame:
+      - "Player position (pathfinding)"
+      - "Player HP/MP (survival)"
+      - "Target existence and HP (combat)"
+      - "Cooldown timers (skill rotation)"
+    every_second:
+      - "Entity list (target selection)"
+      - "Inventory state (full check)"
+      - "Buff/debuff timers"
+      - "Zone/map ID (navigation)"
+    on_event:
+      - "Level up → update skill rotation"
+      - "Death → respawn logic"
+      - "Disconnect → reconnect flow"
+      - "Chat message → parse commands"
+
+  action_data_needed:
+    farming:
+      read: ["position", "entity_list", "hp", "mp", "inventory", "target"]
+      write: ["movement_input", "skill_use", "target_select"]
+    questing:
+      read: ["quest_state", "quest_objectives", "npc_positions", "dialogue"]
+      write: ["movement", "interaction", "dialogue_selection"]
+    trading:
+      read: ["inventory", "gold", "market_prices", "trade_window"]
+      write: ["item_movement", "price_input", "confirm_trade"]
+    pvp:
+      read: ["enemy_positions", "enemy_hp", "own_hp", "cooldowns", "buffs"]
+      write: ["movement", "skills", "target_switch", "pot_use"]
+
+# ── 7. Common Offset Patterns ──────────────────────
+common_offsets:
+  desc: "Frequently seen offset relationships (game-specific but common patterns)"
+  patterns:
+    position_to_rotation: "+0x0C to +0x18 (3 floats after XYZ)"
+    hp_to_max_hp: "+0x04 (next float)"
+    name_to_level: "-0x40 to +0x40 range"
+    entity_to_vtable: "+0x00 (always first member in C++)"
+    entity_to_position: "+0x80 to +0x200 range (varies widely)"
+  tips:
+    - "Player and NPC often share same base class → same offsets"
+    - "If HP offset = +0x1A4, likely all entities have HP at +0x1A4"
+    - "VTable pointer is ALWAYS at offset 0 in polymorphic C++ objects"
+    - "Position is usually embedded Transform/Component, not directly in entity"

@@ -1,0 +1,61 @@
+# =====================================================
+# Code Obfuscation Patterns
+# =====================================================
+
+string_encryption:
+  compiletime_xor:
+    name: "Compile-Time XOR String Encryption"
+    desc: "Encrypt strings at compile-time, decrypt at runtime"
+    code: |
+      template<size_t N, char Key>
+      struct XorString {
+          char data[N];
+          constexpr XorString(const char (&str)[N]) {
+              for (size_t i = 0; i < N; ++i)
+                  data[i] = str[i] ^ Key ^ static_cast<char>(i);
+          }
+          std::string decrypt() const {
+              std::string result(N - 1, '\0');
+              for (size_t i = 0; i < N - 1; ++i)
+                  result[i] = data[i] ^ Key ^ static_cast<char>(i);
+              return result;
+          }
+      };
+      #define XS(s) XorString<sizeof(s), 0x42>(s).decrypt()
+      // Usage: auto name = XS("ReadProcessMemory");
+
+  advc_encrypt:
+    name: "ADVobfuscator-Style Encryption"
+    desc: "Multiple encryption layers with compile-time RNG"
+
+control_flow:
+  opaque_predicates:
+    name: "Opaque Predicates"
+    desc: "Always-true/false conditions that confuse decompilers"
+    code: |
+      // Always true: (x*x + x) is always even
+      volatile int x = GetTickCount();
+      if ((x * x + x) % 2 == 0) { /* real code */ }
+
+  bogus_control_flow:
+    name: "Bogus Control Flow"
+    desc: "Insert unreachable code paths"
+
+  call_obfuscation:
+    name: "Indirect Call Obfuscation"
+    desc: "Call functions via computed addresses"
+    code: |
+      using FnType = BOOL(WINAPI*)(HANDLE, LPCVOID, LPVOID, SIZE_T, SIZE_T*);
+      auto fn = reinterpret_cast<FnType>(
+          GetProcAddress(GetModuleHandleW(L"kernel32.dll"), XS("ReadProcessMemory").c_str()));
+
+api_hashing:
+  name: "API Hashing"
+  desc: "Resolve API functions by hash instead of string"
+  code: |
+    constexpr uint32_t FnvHash(const char* str) {
+        uint32_t hash = 0x811c9dc5;
+        while (*str) { hash ^= *str++; hash *= 0x01000193; }
+        return hash;
+    }
+    // Resolve by walking PEB -> InLoadOrderModuleList -> export table

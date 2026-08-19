@@ -1,0 +1,54 @@
+# =============================================================================
+# META.yaml — Anti-Detection & Stealth (Private)
+# =============================================================================
+
+name: anti-detection
+display: Anti-Detection & Stealth
+category: cross-cutting
+tier: 1
+priority: 4
+
+desc: "Anti-detection techniques: code obfuscation, anti-debugging, stealth patterns, false positive avoidance, evasion methods. Use when reviewing or hardening detection surfaces."
+
+triggers:
+  file_patterns:
+    - "*.cpp"
+    - "*.h"
+    - "*.hpp"
+  keywords:
+    - anti-detection
+    - anti-cheat
+    - anti-debug
+    - stealth
+    - obfuscation
+    - polymorphic
+    - metamorphic
+    - evasion
+    - false positive
+    - detection bypass
+    - EAC bypass
+    - BattleEye
+    - Vanguard
+    - integrity check
+    - HWID spoof
+    - driver signing
+    - timing attack
+    - syscall
+    - direct syscall
+
+caps:
+  - "Code obfuscation (compile-time string encrypt, control flow, opaque predicates)"
+  - "Anti-debugging (NtQueryInformationProcess, timing checks, TLS callbacks)"
+  - "Stealth patterns (header erasure, module unlinking, handle cloaking)"
+  - "False positive avoidance (behavioral analysis, timing normalization)"
+  - "Anti-cheat specifics (EAC, BattleEye, Vanguard evasion)"
+  - "HWID spoofing (disk serial, MAC, SMBIOS, GPU serial)"
+
+data_files:
+  - data/obfuscation-patterns.yaml
+  - data/anti-debug-patterns.yaml
+  - data/stealth-evasion.yaml
+
+related_skills:
+  - game-automation
+  - reverse-engineering

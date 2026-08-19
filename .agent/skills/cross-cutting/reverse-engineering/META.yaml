@@ -1,0 +1,55 @@
+# =============================================================================
+# META.yaml — Reverse Engineering (Private)
+# =============================================================================
+
+name: reverse-engineering
+display: Reverse Engineering
+category: cross-cutting
+tier: 1
+priority: 4
+
+desc: "RE tools, patterns, IDA/Ghidra scripting, pattern scanning, struct reconstruction, protocol analysis. Use when analyzing binaries, dumped processes, or decompiler output."
+
+triggers:
+  file_patterns:
+    - "*.idb"
+    - "*.i64"
+    - "*.gzf"
+    - "*.sig"
+    - "*.py"
+  keywords:
+    - reverse engineering
+    - IDA Pro
+    - Ghidra
+    - x64dbg
+    - disassemble
+    - decompile
+    - pattern scan
+    - signature
+    - AOB
+    - xref
+    - cross reference
+    - vtable
+    - class dump
+    - struct reconstruction
+    - ReClass
+    - protocol RE
+    - binary analysis
+
+caps:
+  - "IDA Pro scripting (IDAPython, FLIRT signatures, xref analysis)"
+  - "Ghidra scripting (Java/Python, Pcode, data type manager)"
+  - "Pattern/Signature generation (AOB from function prologue)"
+  - "Struct reconstruction (ReClass.NET, manual memory layout)"
+  - "Protocol reverse engineering (packet capture, format analysis)"
+  - "Binary diffing (BinDiff, Diaphora)"
+
+data_files:
+  - data/ida-patterns.yaml
+  - data/ghidra-patterns.yaml
+  - data/signature-generation.yaml
+
+related_skills:
+  - game-automation
+  - anti-detection
+  - cpp

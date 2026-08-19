@@ -1,0 +1,52 @@
+# =====================================================
+# Signature Generation — AOB Patterns
+# =====================================================
+
+strategies:
+  basic_aob:
+    name: "Basic AOB Generation"
+    process: |
+      1. Disassemble target function
+      2. Take first 15-20 unique bytes
+      3. Wildcard relocation-dependent bytes (call targets, jumps)
+      4. Test across multiple game versions
+
+  wildcard_rules:
+    name: "Wildcard Strategy"
+    rules:
+      - "E8 XX XX XX XX — relative CALL (wildcard 4 bytes after E8)"
+      - "FF 15 XX XX XX XX — indirect CALL via IAT"
+      - "48 8D XX XX XX XX XX — LEA with RIP-relative offset"
+      - "0F 84/85 XX XX XX XX — conditional JMP (wildcard offset)"
+    keep:
+      - "Opcode prefixes (48, 4C, 41, etc.)"
+      - "Register encodings in ModR/M"
+      - "Immediate constants (magic numbers)"
+
+  version_safe:
+    name: "Version-Safe Signatures"
+    tips:
+      - "Use function prologue (push rbp, sub rsp) as anchor"
+      - "Include unique constants or string refs"
+      - "Test sig against 3+ game versions minimum"
+      - "Avoid bytes from inlined functions (may change)"
+
+  ida_sig_generation:
+    name: "IDA Signature Generation"
+    code: |
+      def generate_sig(func_ea, length=32):
+          bytes_list = []
+          for i in range(length):
+              flags = idc.get_full_flags(func_ea + i)
+              if idc.is_off(flags, 0) or idc.is_code(flags):
+                  bytes_list.append("?")
+              else:
+                  bytes_list.append(f"{idc.get_wide_byte(func_ea + i):02X}")
+          return " ".join(bytes_list)
+
+  code_style_sig:
+    name: "Code-Style Signature (mask format)"
+    format: |
+      Pattern: "\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20"
+      Mask:    "xxxx?xxxxx"
+      // x = match, ? = wildcard

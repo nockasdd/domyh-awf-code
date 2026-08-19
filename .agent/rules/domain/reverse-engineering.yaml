@@ -1,0 +1,62 @@
+# Reverse Engineering Bridge Rules
+name: reverse-engineering-bridge
+rule_id: "MOD-RE-IDA-001"
+
+description: |
+  Route EXE/DLL/binary analysis tasks to the reverse-engineering lane.
+  Use discovery-first, identity-pinned, bounded batch flows for IDA/Ghidra/x64dbg.
+
+category: "workflow"
+
+context:
+  always_apply: false
+  personas: ["Developer", "Debugger", "Security", "Researcher"]
+  workflows: ["/audit", "/debug", "/review", "/reverse-engineer"]
+
+rules:
+  RE_001_binary_scope:
+    name: "Binary Scope Detection"
+    severity: critical
+    desc: |
+      If the task mentions binary, exe, dll, dump, packer, anti-tamper,
+      disassembly, decompilation, or reverse engineering, load the dedicated
+      IDA/Ghidra/x64dbg workflow before general coding rules.
+
+  RE_002_discover_first:
+    name: "Discover First"
+    severity: critical
+    desc: |
+      Always discover running instances before mutation. Pin the exact target
+      with port, session_id, process_id, binary_path, module_name, or module_path.
+
+  RE_003_batch_reads:
+    name: "Bounded Batch Reads"
+    severity: high
+    desc: |
+      Prefer a bounded batch request when the agent needs multiple facts from
+      the same binary target. Keep batches small and deterministic.
+
+  RE_004_batch_writes:
+    name: "Bounded Batch Writes"
+    severity: high
+    desc: |
+      Mutating batches require explicit allow_mutations=true and a precise
+      target identity. Keep the smallest possible set of edits in one batch.
+
+  RE_005_module_scope:
+    name: "Module Scope Required"
+    severity: high
+    desc: |
+      When searching DLL-scoped behavior in a debugger, require module_name or
+      module_path in addition to process identity.
+
+  RE_006_doc_truth:
+    name: "Runtime Truth First"
+    severity: medium
+    desc: |
+      Treat bundled bridge runtime and tool manifests as truth. If docs drift
+      from runtime, update the docs after verifying the live bridge.
+
+integration:
+  tier: 2
+  related_modules: ["progressive-escalation", "complexity-scoring", "behavioral-patterns"]

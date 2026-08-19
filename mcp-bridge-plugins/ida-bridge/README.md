@@ -46,10 +46,14 @@ The DOMYH Agent will automatically spawn the external bridge server when it need
 **Example MCP Tool Calls used by the Agent:**
 
 ```python
-hsa_bridge(target="ida", action="ida_get_info")
-hsa_bridge(target="ida", action="ida_decompile", payload={"address": "0x140001000"})
-hsa_bridge(target="ida", action="ida_rename", payload={"address": "0x140001000", "name": "main"})
-hsa_bridge(target="ida", action="ida_search_string", payload={"pattern": "password", "max_results": 10})
+hsa_bridge(action="call", target="ida", tool="ida_get_info")
+hsa_bridge(action="call", target="ida", tool="ida_decompile", payload={"address": "0x140001000"})
+hsa_bridge(action="call", target="ida", tool="ida_rename", payload={"address": "0x140001000", "name": "main"})
+hsa_bridge(action="call", target="ida", tool="ida_rename_function", payload={"address": 4198400, "name": "main", "force": false})
+hsa_bridge(action="call", target="ida", tool="ida_rename_many", payload={"items": [{"address": "0x140001000", "name": "main"}]})
+hsa_bridge(action="call", target="ida", tool="ida_apply_type", payload={"address": "0x140001000", "c_decl": "int __cdecl main(int argc, char **argv)"})
+hsa_bridge(action="call", target="ida", tool="ida_apply_plan", payload={"allow_mutations": True, "renames": [{"address": "0x140001000", "name": "main"}]})
+hsa_bridge(action="call", target="ida", tool="ida_create_struct", payload={"name": "MY_STRUCT", "members": [{"name": "field_0", "offset": 0, "size": 4}]})
 ```
 
 ## 🛠️ Available Tools
@@ -67,5 +71,21 @@ hsa_bridge(target="ida", action="ida_search_string", payload={"pattern": "passwo
 | `ida_get_strings` | Get all extracted strings in the database. |
 | `ida_search_string` | Search strings using substring or pattern. |
 | `ida_get_segments` | List all memory segments and permissions. |
-| `ida_rename` | Rename a symbol, function, or auto-generated local variable. |
+| `ida_rename` | Rename a symbol/function with diagnostics and optional force fallback. |
+| `ida_rename_function` | Rename the function containing or starting at an address. |
+| `ida_rename_global` | Rename the exact address/global label. |
+| `ida_rename_many` | Rename several functions/symbols with per-item diagnostics. |
+| `ida_rename_local` | Rename a Hex-Rays local variable inside a function. |
 | `ida_set_comment` | Set inline or function-level comments. |
+| `ida_apply_type` | Apply a C declaration or type to an address. |
+| `ida_apply_types` | Apply several C declarations/prototypes to addresses. |
+| `ida_set_function_type` | Set a function prototype at an address. |
+| `ida_import_c_declarations` | Import C declarations into Local Types. |
+| `ida_create_struct` | Create or update a struct/class-like type. |
+| `ida_add_struct_member` | Add a member to an existing struct. |
+| `ida_set_struct_member_type` | Set a struct member type by member name or offset. |
+| `ida_rename_struct_member` | Rename a struct member by member name or offset. |
+| `ida_delete_struct_member` | Delete a struct member by offset. |
+| `ida_list_structs` | List structs and local types by name pattern. |
+| `ida_get_types` | List type inventory using the struct/type fallback. |
+| `ida_apply_plan` | Apply declarations, structs, renames, local renames, types, and comments in one bounded plan. |

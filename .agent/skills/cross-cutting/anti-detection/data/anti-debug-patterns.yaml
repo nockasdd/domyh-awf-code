@@ -1,0 +1,69 @@
+# =====================================================
+# Anti-Debug Patterns
+# =====================================================
+
+user_mode:
+  is_debugger_present:
+    name: "IsDebuggerPresent"
+    level: basic
+    bypass: "PEB.BeingDebugged = 0"
+    code: |
+      if (IsDebuggerPresent()) ExitProcess(0);
+
+  nt_query_info:
+    name: "NtQueryInformationProcess — ProcessDebugPort"
+    level: moderate
+    code: |
+      DWORD debugPort = 0;
+      NtQueryInformationProcess(GetCurrentProcess(),
+          ProcessDebugPort, &debugPort, sizeof(debugPort), nullptr);
+      if (debugPort != 0) ExitProcess(0);
+
+  nt_query_flags:
+    name: "NtQueryInformationProcess — ProcessDebugFlags"
+    level: moderate
+    code: |
+      DWORD debugFlags = 0;
+      NtQueryInformationProcess(GetCurrentProcess(),
+          ProcessDebugFlags, &debugFlags, sizeof(debugFlags), nullptr);
+      if (debugFlags == 0) ExitProcess(0);
+
+timing_checks:
+  rdtsc:
+    name: "RDTSC Timing Check"
+    desc: "Detect debugger by CPU cycle delta"
+    code: |
+      auto t1 = __rdtsc();
+      // ... code to protect ...
+      auto t2 = __rdtsc();
+      if (t2 - t1 > 1000000) ExitProcess(0);
+
+  query_performance:
+    name: "QueryPerformanceCounter Timing"
+    code: |
+      LARGE_INTEGER t1, t2;
+      QueryPerformanceCounter(&t1);
+      // ... protected code ...
+      QueryPerformanceCounter(&t2);
+      if (t2.QuadPart - t1.QuadPart > threshold) ExitProcess(0);
+
+hardware:
+  dr_register_check:
+    name: "Hardware Breakpoint Detection"
+    code: |
+      CONTEXT ctx{};
+      ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+      GetThreadContext(GetCurrentThread(), &ctx);
+      if (ctx.Dr0 || ctx.Dr1 || ctx.Dr2 || ctx.Dr3) ExitProcess(0);
+
+tls_callbacks:
+  name: "TLS Callback Anti-Debug"
+  desc: "Runs before main() — check debugger early"
+  code: |
+    void WINAPI TlsCallback(PVOID DllHandle, DWORD Reason, PVOID Reserved) {
+        if (Reason == DLL_PROCESS_ATTACH && IsDebuggerPresent())
+            ExitProcess(0);
+    }
+    #pragma section(".CRT$XLB", read)
+    __declspec(allocate(".CRT$XLB"))
+    PIMAGE_TLS_CALLBACK pTlsCallback = TlsCallback;

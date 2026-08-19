@@ -1,0 +1,262 @@
+# =====================================================
+# C++ Header Safety & Include Optimization
+# =====================================================
+# Critical patterns for avoiding header conflicts,
+# reducing compile time, and preventing linker errors
+# in Windows C++ game automation projects.
+
+# ── 1. Windows.h / WinSock2.h Conflict Resolution ──
+include_order:
+  problem:
+    desc: "Windows.h includes winsock.h (WinSock 1.1) by default, causing redefinition errors with WinSock2.h"
+    error: "error C2011: 'fd_set' already defined, error C2375: 'closesocket' redefinition"
+
+  solutions:
+    # === Solution 1: WIN32_LEAN_AND_MEAN (Recommended) ===
+    win32_lean_and_mean:
+      priority: 1
+      desc: "Define WIN32_LEAN_AND_MEAN before including Windows.h — strips 30+ rarely-used headers"
+      code: |
+        // pch.h or framework.h — ALWAYS define BEFORE any Windows include
+        #ifndef PCH_H
+        #define PCH_H
+        #define WIN32_LEAN_AND_MEAN     // Excludes: winsock.h, commdlg.h, shellapi.h, etc.
+        #define NOMINMAX                // Prevents min/max macros conflicting with std::min/max
+        #define NOGDI                   // Excludes GDI functions (if not needed)
+        #define NOUSER                  // Excludes User functions (if not needed)
+        #include <WinSock2.h>           // MUST come before Windows.h
+        #include <WS2tcpip.h>           // For getaddrinfo, inet_pton
+        #include <Windows.h>
+        #include <WinHTTP.h>            // For HTTP requests
+        #pragma comment(lib, "ws2_32.lib")
+        #pragma comment(lib, "winhttp.lib")
+        #endif // PCH_H
+      removes:
+        - "winsock.h — WinSock 1.1 (conflicts with WinSock2)"
+        - "commdlg.h — Common dialog boxes"
+        - "shellapi.h — Shell API"
+        - "winperf.h — Performance monitoring"
+        - "dde.h — DDE (Dynamic Data Exchange)"
+        - "mmsystem.h — Multimedia"
+      compile_time_savings: "20-40% faster compilation"
+
+    # === Solution 2: Guard Macro ===
+    guard_macro:
+      priority: 2
+      desc: "Manually define _WINSOCKAPI_ to prevent winsock.h inclusion"
+      code: |
+        #define _WINSOCKAPI_  // Prevent winsock.h from being included by windows.h
+        #include <Windows.h>
+        #undef _WINSOCKAPI_
+        #include <WinSock2.h>
+      when: "When WIN32_LEAN_AND_MEAN removes headers you actually need"
+
+    # === Solution 3: Include Order Enforcement ===
+    include_order_rule:
+      priority: 3
+      desc: "Always include WinSock2.h BEFORE Windows.h in every translation unit"
+      enforcement: |
+        // .clang-tidy rule or comment convention
+        // Rule: WinSock2.h → WS2tcpip.h → Windows.h → WinHTTP.h → everything else
+
+# ── 2. Precompiled Headers (PCH) ────────────────────
+pch:
+  desc: "Pre-compile stable headers once — eliminates repeated parsing of Windows.h (100K+ lines)"
+  msvc:
+    setup: |
+      // pch.h — Include all stable Windows/STL headers here
+      #pragma once
+      #define WIN32_LEAN_AND_MEAN
+      #define NOMINMAX
+      #include <WinSock2.h>
+      #include <WS2tcpip.h>
+      #include <Windows.h>
+      #include <WinHTTP.h>
+      #include <TlHelp32.h>
+      #include <Psapi.h>
+      // STL
+      #include <string>
+      #include <vector>
+      #include <optional>
+      #include <memory>
+      #include <functional>
+      #include <thread>
+      #include <mutex>
+      #include <atomic>
+      #include <span>
+      #include <expected>
+    compile_savings: "60-80% faster rebuild on large projects"
+    cmake: |
+      target_precompile_headers(MyProject PRIVATE
+          <WinSock2.h>
+          <WS2tcpip.h>
+          <Windows.h>
+          <string>
+          <vector>
+          <memory>
+      )
+
+  clang:
+    setup: "-include-pch pch.h.pch"
+
+# ── 3. Forward Declaration Patterns ─────────────────
+forward_declarations:
+  desc: "Declare types without including full header — reduces compile-time dependencies"
+  patterns:
+    windows_types: |
+      // Instead of #include <Windows.h> in .h files:
+      typedef void* HANDLE;
+      typedef unsigned long DWORD;
+      typedef int BOOL;
+      // Use these in function signatures → include full header only in .cpp
+    com_interfaces: |
+      // Forward declare COM interfaces without full headers
+      struct IDXGISwapChain;
+      struct ID3D11Device;
+      struct ID3D11DeviceContext;
+      struct ID3D11RenderTargetView;
+      // Full #include only in implementation .cpp files
+    custom_classes: |
+      // Header files should forward-declare, not include
+      class GameManager;       // Forward declare
+      class EntityList;        // Forward declare
+      struct PlayerState;      // Forward declare
+      // #include "GameManager.h" only in .cpp
+  rules:
+    - "Header files (.h) → forward declarations only"
+    - "Source files (.cpp) → full #include"
+    - "Exception: templates and inline functions need full definition in header"
+    - "Exception: base classes must be fully included (for sizeof/layout)"
+
+# ── 4. Include Guard Best Practices ─────────────────
+include_guards:
+  pragma_once:
+    desc: "Compiler-specific but universally supported (MSVC/GCC/Clang)"
+    code: |
+      #pragma once
+      // ... header content ...
+    pros: "Fast, no naming conflicts, less boilerplate"
+    cons: "Non-standard (but supported everywhere in practice)"
+
+  traditional:
+    code: |
+      #ifndef GAME_AUTO_MEMORY_READER_H
+      #define GAME_AUTO_MEMORY_READER_H
+      // ... header content ...
+      #endif // GAME_AUTO_MEMORY_READER_H
+    naming: "PROJECT_FOLDER_FILENAME_H — unique across project"
+    pros: "Standard C/C++, portable"
+    cons: "Naming collisions possible, more boilerplate"
+
+  recommendation: "Use #pragma once for game automation projects (all target MSVC)"
+
+# ── 5. Header Dependency Minimization ───────────────
+dependency_reduction:
+  pimpl:
+    name: "Pointer to Implementation (PIMPL)"
+    desc: "Hide implementation details — header only exposes interface"
+    code: |
+      // MemoryReader.h — clean public header
+      #pragma once
+      #include <cstdint>
+      #include <optional>
+      #include <memory>
+      class MemoryReader {
+      public:
+          MemoryReader(uint32_t processId);
+          ~MemoryReader();
+          template<typename T> std::optional<T> Read(uintptr_t address);
+      private:
+          struct Impl;
+          std::unique_ptr<Impl> pImpl_;
+      };
+
+      // MemoryReader.cpp — implementation with heavy includes
+      #include "pch.h"
+      #include "MemoryReader.h"
+      struct MemoryReader::Impl {
+          HANDLE hProcess = nullptr;
+          // All Windows-specific code here
+      };
+    benefit: "MemoryReader.h needs zero Windows headers — anyone can include it safely"
+
+  opaque_handles:
+    desc: "Use void* or typed handles instead of exposing Windows types"
+    code: |
+      // NetworkClient.h — no Windows includes needed
+      #pragma once
+      #include <string>
+      #include <functional>
+      using HttpCallback = std::function<void(int statusCode, std::string body)>;
+      class NetworkClient {
+      public:
+          NetworkClient();
+          ~NetworkClient();
+          void GetAsync(const std::string& url, HttpCallback callback);
+      private:
+          void* session_;  // HINTERNET — but callers don't need WinHTTP.h
+      };
+
+# ── 6. NOMINMAX and Other Critical Macros ───────────
+critical_macros:
+  NOMINMAX:
+    desc: "Prevents Windows.h from defining min/max macros"
+    problem: "Windows.h defines min(a,b) and max(a,b) macros that conflict with std::min/std::max and C++ templates"
+    fix: "#define NOMINMAX before #include <Windows.h>"
+
+  UNICODE:
+    desc: "Controls whether Windows API uses wide (W) or narrow (A) functions"
+    recommendation: "Always define UNICODE and _UNICODE for modern projects"
+    code: |
+      #define UNICODE
+      #define _UNICODE
+      #include <Windows.h>
+
+  STRICT:
+    desc: "Enables stricter type checking for Windows handles"
+    code: "#define STRICT"
+
+# ── 7. Recommended Project Header Layout ────────────
+project_layout:
+  hierarchy:
+    - "pch.h — Precompiled: WIN32_LEAN_AND_MEAN → WinSock2 → Windows → STL"
+    - "framework.h — Windows-specific utilities (PIMPL wrappers)"
+    - "types.h — Common types, enums, constants (no Windows includes)"
+    - "module/*.h — Feature headers (forward declarations only)"
+    - "module/*.cpp — Implementation (includes pch.h + Windows headers)"
+  example_tree: |
+    include/
+    ├── pch.h              # Precompiled headers (Windows + STL)
+    ├── framework.h        # Windows utilities
+    ├── types.h            # Game automation types (no Windows deps)
+    ├── memory/
+    │   ├── reader.h       # Forward declarations, PIMPL
+    │   ├── scanner.h      # Pattern scanner interface
+    │   └── batch.h        # Batch read interface
+    ├── hooks/
+    │   ├── hook_base.h    # Abstract hook interface
+    │   └── dx_hooks.h     # DirectX hook declarations
+    ├── network/
+    │   ├── http_client.h  # Opaque handle, no WinHTTP
+    │   └── socket.h       # Abstracted socket
+    └── threading/
+        ├── task_queue.h   # Lock-free queue
+        └── game_thread.h  # Game thread dispatcher
+
+# ── 8. Common Pitfalls ──────────────────────────────
+pitfalls:
+  - name: "Including Windows.h in .h files"
+    fix: "Use forward declarations or PIMPL, include in .cpp only"
+  - name: "#include order varies per .cpp file"
+    fix: "Always include pch.h first, then project headers, then third-party"
+  - name: "Missing #pragma comment(lib)"
+    fix: |
+      #pragma comment(lib, "ws2_32.lib")   // WinSock2
+      #pragma comment(lib, "winhttp.lib")  // WinHTTP
+      #pragma comment(lib, "d3d11.lib")    // Direct3D 11
+      #pragma comment(lib, "dxgi.lib")     // DXGI
+      #pragma comment(lib, "psapi.lib")    // Process Status API
+  - name: "Using std::min/max without NOMINMAX"
+    fix: "#define NOMINMAX before Windows.h, OR use (std::min)(a, b) with extra parentheses"
+  - name: "TlHelp32 without Windows.h"
+    fix: "TlHelp32.h depends on Windows.h — ensure PCH includes it first"

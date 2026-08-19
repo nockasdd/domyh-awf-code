@@ -1,0 +1,165 @@
+# =====================================================
+# Kernel-Mode Driver Patterns for Game Automation
+# =====================================================
+
+driver_frameworks:
+  kmdf:
+    name: "KMDF — Kernel-Mode Driver Framework"
+    desc: "Modern WDK framework, easier PnP/power management"
+    entry: |
+      NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
+          WDF_DRIVER_CONFIG config;
+          WDF_DRIVER_CONFIG_INIT(&config, EvtDeviceAdd);
+          return WdfDriverCreate(DriverObject, RegistryPath,
+                                 WDF_NO_OBJECT_ATTRIBUTES, &config, WDF_NO_HANDLE);
+      }
+
+  wdm:
+    name: "WDM — Windows Driver Model"
+    desc: "Lower-level, full control, more boilerplate"
+    entry: |
+      NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
+          DriverObject->DriverUnload = DriverUnload;
+          DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = DeviceControl;
+          IoCreateDevice(DriverObject, 0, &deviceName, FILE_DEVICE_UNKNOWN,
+                         FILE_DEVICE_SECURE_OPEN, FALSE, &DeviceObject);
+          IoCreateSymbolicLink(&symLink, &deviceName);
+          return STATUS_SUCCESS;
+      }
+
+memory_operations:
+  mmcopy_virtual:
+    name: "MmCopyVirtualMemory"
+    desc: "Official NT API for cross-process memory copy"
+    risk: "medium — anti-cheat may hook"
+    code: |
+      NTSTATUS KernelReadMemory(PEPROCESS target, PVOID srcAddr,
+                                 PVOID destAddr, SIZE_T size) {
+          SIZE_T bytes{};
+          return MmCopyVirtualMemory(target, srcAddr,
+                                      PsGetCurrentProcess(), destAddr,
+                                      size, KernelMode, &bytes);
+      }
+
+  cr3_physical:
+    name: "CR3 Physical Memory Read"
+    desc: "Manual page table walk — bypasses all API hooks"
+    risk: "low detection"
+    concept: |
+      1. Get CR3 (DirectoryTableBase) from EPROCESS
+      2. Page table walk: PML4 -> PDPT -> PD -> PT
+      3. Read physical memory via MmMapIoSpace/MmGetPhysicalAddress
+
+  mdl_mapping:
+    name: "MDL-based Memory Mapping"
+    code: |
+      PMDL mdl = IoAllocateMdl(targetAddr, size, FALSE, FALSE, nullptr);
+      MmProbeAndLockPages(mdl, KernelMode, IoReadAccess);
+      auto mapped = MmMapLockedPagesSpecifyCache(mdl, KernelMode,
+          MmNonCached, nullptr, FALSE, NormalPagePriority);
+      // Read from mapped pointer
+      MmUnmapLockedPages(mapped, mdl);
+      MmUnlockPages(mdl);
+      IoFreeMdl(mdl);
+
+driver_loading:
+  kdmapper:
+    name: "kdmapper — Unsigned Driver Loading"
+    desc: "Map unsigned driver via VulnDriver exploit"
+    tools: ["kdmapper", "KDU (Kernel Driver Utility)"]
+
+  vulndriver:
+    name: "Exploitable Signed Drivers"
+    examples:
+      - "Intel Network Adapter — IQVW64E.sys"
+      - "Capcom — capcom.sys (legacy)"
+      - "Various GPU drivers with IOCTL vulnerabilities"
+
+  reflective_driver:
+    name: "Reflective Kernel Driver Loading"
+    desc: "No file on disk, no service registry entry"
+
+communication:
+  ioctl:
+    name: "IOCTL Communication"
+    code: |
+      #define IOCTL_READ_MEMORY CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
+      NTSTATUS DeviceControl(PDEVICE_OBJECT, PIRP Irp) {
+          auto stack = IoGetCurrentIrpStackLocation(Irp);
+          auto buffer = (ReadRequest*)Irp->AssociatedIrp.SystemBuffer;
+          switch (stack->Parameters.DeviceIoControl.IoControlCode) {
+              case IOCTL_READ_MEMORY:
+                  KernelReadMemory(buffer->process, buffer->src, buffer->dst, buffer->size);
+                  break;
+          }
+          IoCompleteRequest(Irp, IO_NO_INCREMENT);
+          return STATUS_SUCCESS;
+      }
+
+  shared_memory_kernel:
+    name: "Shared Memory — Kernel to User"
+    desc: "Map kernel buffer into user process space"
+
+dkom:
+  process_hiding:
+    name: "DKOM Process Hiding"
+    desc: "Unlink EPROCESS from PsActiveProcessList — hide from Task Manager"
+    code: |
+      // EPROCESS->ActiveProcessLinks is a LIST_ENTRY doubly-linked list
+      void HideProcess(PEPROCESS targetProcess) {
+          PLIST_ENTRY entry = (PLIST_ENTRY)((ULONG_PTR)targetProcess + ActiveProcessLinksOffset);
+          PLIST_ENTRY prev = entry->Blink;
+          PLIST_ENTRY next = entry->Flink;
+          prev->Flink = next;
+          next->Blink = prev;
+          // Self-link to prevent BSOD on process exit
+          entry->Flink = entry;
+          entry->Blink = entry;
+      }
+    detection: "Memory forensics (Volatility), object-header back-pointer validation"
+    tags: [kernel, stealth, dkom]
+
+  ob_callback_removal:
+    name: "ObRegisterCallbacks Removal"
+    desc: "Remove anti-cheat handle-stripping callbacks via DKOM"
+    code: |
+      // Walk callback array, find anti-cheat entries, nullify
+      void RemoveObCallbacks(POBJECT_TYPE objectType) {
+          // OBJECT_TYPE->CallbackList is LIST_ENTRY of CALLBACK_ENTRY_ITEM
+          PLIST_ENTRY head = &objectType->CallbackList;
+          for (auto entry = head->Flink; entry != head; entry = entry->Flink) {
+              auto cbEntry = CONTAINING_RECORD(entry, CALLBACK_ENTRY_ITEM, EntryItemList);
+              // Check if PreOperation/PostOperation belongs to anti-cheat driver
+              if (IsAntiCheatDriver(cbEntry->ObjectType)) {
+                  // Replace with dummy function that just returns OB_PREOP_SUCCESS
+                  cbEntry->PreOperation = DummyPreCallback;
+                  cbEntry->PostOperation = nullptr;
+              }
+          }
+      }
+    risks:
+      - "BSOD if anti-cheat driver unregisters invalid handle"
+      - "Anti-cheat may monitor callback integrity"
+    tags: [kernel, dkom, anti_cheat_bypass]
+
+  handle_elevation:
+    name: "Handle Access Rights Elevation"
+    desc: "Modify HANDLE_TABLE_ENTRY.GrantedAccess after anti-cheat strips rights"
+    code: |
+      // After ObRegisterCallbacks strips PROCESS_VM_READ from handle:
+      // Find handle in kernel handle table, restore GrantedAccess
+      void ElevateHandle(HANDLE hProcess, ACCESS_MASK desiredAccess) {
+          // Walk HANDLE_TABLE -> HANDLE_TABLE_ENTRY
+          // Set GrantedAccess |= desiredAccess
+      }
+    tags: [kernel, handle, bypass]
+
+  pte_manipulation:
+    name: "PTE Manipulation"
+    desc: "Direct Page Table Entry modification for memory hiding"
+    concept: |
+      1. Get virtual address → PFN (Page Frame Number)
+      2. Walk PML4 → PDPT → PD → PT
+      3. Modify PTE flags: NX bit, supervisor bit, valid bit
+      4. Use case: Mark injected pages as supervisor-only (user-mode invisible)
+    tags: [kernel, advanced, memory_hiding]

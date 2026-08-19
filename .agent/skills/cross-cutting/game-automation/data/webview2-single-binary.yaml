@@ -1,0 +1,85 @@
+# =====================================================
+# WebView2 + Single Binary Build Patterns
+# =====================================================
+
+single_binary_build:
+  compiler_flags:
+    msvc:
+      runtime: "/MT"
+      static_debug: "/MTd"
+      desc: "Static CRT — no msvcrt*.dll dependency"
+
+    cmake: |
+      cmake_policy(SET CMP0091 NEW)
+      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+    vcpkg:
+      triplet: "x64-windows-static"
+      cmake: |
+        cmake -B build
+          -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
+          -DVCPKG_TARGET_TRIPLET=x64-windows-static
+          -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+
+  resource_embedding:
+    rc_file:
+      name: "Windows Resource Compiler (.rc)"
+      code: |
+        // resources.rc
+        IDR_INDEX_HTML   RCDATA  "web\\index.html"
+        IDR_STYLES_CSS   RCDATA  "web\\styles.css"
+        IDR_APP_JS       RCDATA  "web\\app.js"
+        IDR_TAILWIND_CSS RCDATA  "web\\tailwind-output.css"
+
+    load_resource:
+      name: "Load Resource from EXE"
+      code: |
+        std::string LoadEmbeddedResource(int resourceId) {
+            HRSRC hRes = FindResourceW(nullptr, MAKEINTRESOURCEW(resourceId), RT_RCDATA);
+            HGLOBAL hData = LoadResource(nullptr, hRes);
+            DWORD size = SizeofResource(nullptr, hRes);
+            auto data = static_cast<const char*>(LockResource(hData));
+            return std::string(data, size);
+        }
+
+webview2:
+  static_loader:
+    name: "Static Link WebView2Loader"
+    vcxproj: '<WebView2LoaderPreference>Static</WebView2LoaderPreference>'
+
+  serve_embedded:
+    name: "WebResourceRequested — Serve from Resources"
+    desc: "Virtual domain for embedded web content"
+    code: |
+      webview->AddWebResourceRequestedFilter(L"https://app.local/*",
+          COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+      webview->add_WebResourceRequested(
+          Callback<ICoreWebView2WebResourceRequestedEventHandler>(
+              [](auto*, ICoreWebView2WebResourceRequestedEventArgs* args) {
+                  wil::com_ptr<ICoreWebView2WebResourceRequest> request;
+                  args->get_Request(&request);
+                  wil::unique_cotaskmem_string uri;
+                  request->get_Uri(&uri);
+                  // Map URI -> embedded resource ID -> create IStream -> set response
+                  return S_OK;
+              }).Get(), nullptr);
+
+  navigate_options:
+    navigate_string: "NavigateToString(html) — simple, no sub-resources"
+    virtual_host: "SetVirtualHostNameToFolderMapping — if extracting to temp"
+    web_resource: "WebResourceRequested — recommended, all sub-resources"
+
+  tailwind_v4:
+    name: "Tailwind CSS v4 Build"
+    build_cmd: "npx @tailwindcss/cli -i input.css -o tailwind-output.css --minify"
+    embed: "Embed output into .rc -> serve via WebResourceRequested"
+
+  runtime:
+    evergreen:
+      desc: "System-installed Edge WebView2 Runtime"
+      check: |
+        LPWSTR version = nullptr;
+        HRESULT hr = GetAvailableCoreWebView2BrowserVersionString(nullptr, &version);
+        if (FAILED(hr) || !version) { /* prompt install */ }
+    fixed_version:
+      desc: "Bundle specific runtime — ~200-400MB, not truly single-exe"

@@ -1,0 +1,90 @@
+# =====================================================
+# Hypervisor-Level Patterns — Ring -1
+# =====================================================
+
+concepts:
+  vtx_amdv:
+    name: "Intel VT-x / AMD-V"
+    desc: "CPU virtualization. VMX Root (ring -1) > Guest OS (ring 0)"
+    requirement: "Enable VT-x/AMD-V in BIOS"
+
+  ept:
+    name: "Extended Page Tables (Intel) / NPT (AMD)"
+    desc: "Second layer page table controlled by hypervisor"
+    capability:
+      - "Intercept all memory accesses"
+      - "Invisible function hooking (EPT violations)"
+      - "Shadow page tables for code splitting"
+
+  vmx_operations:
+    name: "VMX Root Mode Operations"
+    operations:
+      vmxon: "Enter VMX operation"
+      vmlaunch: "Launch VM (first guest entry)"
+      vmresume: "Resume VM (subsequent entries)"
+      vmexit: "Exit to VMX Root on trigger"
+    vmexit_reasons:
+      - "EPT violation (memory access)"
+      - "CPUID instruction"
+      - "MSR access"
+      - "I/O port access"
+
+techniques:
+  ept_hooking:
+    name: "EPT Hooking"
+    desc: "Split page view: execute=hooked, read=original"
+    detection_risk: "very low"
+    concept: |
+      1. Set EPT entry: R=original, X=hooked
+      2. On execute: guest runs hooked code
+      3. On read (integrity check): guest reads original
+      4. Anti-cheat integrity checks pass while hook is active
+
+  hypervisor_memory_rw:
+    name: "Hypervisor Memory Read/Write"
+    desc: "R/W game memory from VMX Root — completely invisible"
+
+  process_hiding:
+    name: "Process/Driver Hiding"
+    desc: "Intercept NtQuerySystemInformation -> remove from list"
+
+frameworks:
+  scyvisor:
+    name: "ScyVisor"
+    desc: "2025 framework for hypervisor cheat development"
+    features: ["EAC bypass", "BattleEye bypass", "EPT hooking"]
+
+  hvpp:
+    name: "hvpp"
+    github: "wbenny/hvpp"
+    desc: "Lightweight C++ hypervisor — educational + practical"
+
+dma_hardware:
+  fpga_pcie:
+    name: "FPGA DMA PCIe Attack"
+    desc: "Hardware-level memory access — completely external"
+    hardware:
+      - "Screamer M.2 (35T/75T)"
+      - "EnigmaX1"
+      - "Captain DMA 75t"
+    topology: "Gaming PC <-(PCIe)-> FPGA <-(USB)-> Attack PC"
+    software: "PCILeech — open-source DMA framework"
+
+  firmware_spoofing:
+    name: "FPGA Firmware Spoofing"
+    spoof_targets: ["Network card", "Sound card", "USB controller"]
+    tools: ["Xilinx Vivado Design Suite"]
+    evasion:
+      - "Spoof Vendor ID, Device ID, Class Code"
+      - "Emulate realistic config space"
+      - "Proper TLP behavior"
+
+  countermeasures:
+    name: "Anti-DMA Detection"
+    methods:
+      - "Config space anomaly detection"
+      - "TLP pattern analysis"
+      - "FPGA chip DNA fingerprint"
+      - "BME toggling (Vanguard)"
+      - "IOMMU enforcement (Windows 11)"
+      - "Behavioral AI analysis"

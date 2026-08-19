@@ -1,0 +1,87 @@
+# =====================================================
+# Network/Socket Interception Patterns
+# =====================================================
+
+winsock_hooks:
+  wsasend_hook:
+    name: "WSASend Hook — Outgoing Packets"
+    target: "ws2_32.dll!WSASend"
+    code: |
+      using WSASendFn = int(WINAPI*)(SOCKET, LPWSABUF, DWORD, LPDWORD, DWORD,
+                                      LPWSAOVERLAPPED, LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+      WSASendFn oWSASend = nullptr;
+      int WINAPI hkWSASend(SOCKET s, LPWSABUF bufs, DWORD bufCount,
+                           LPDWORD bytesSent, DWORD flags,
+                           LPWSAOVERLAPPED ov, LPWSAOVERLAPPED_COMPLETION_ROUTINE cr) {
+          for (DWORD i = 0; i < bufCount; ++i)
+              LogPacket("SEND", bufs[i].buf, bufs[i].len);
+          return oWSASend(s, bufs, bufCount, bytesSent, flags, ov, cr);
+      }
+
+  wsarecv_hook:
+    name: "WSARecv Hook — Incoming Packets"
+    target: "ws2_32.dll!WSARecv"
+    warning: "Overlapped I/O: data may not be ready when hook runs"
+
+  send_recv_hook:
+    name: "send/recv Hook — Simple Alternative"
+    target: ["ws2_32.dll!send", "ws2_32.dll!recv"]
+    desc: "For games using synchronous BSD sockets"
+
+packet_parsing:
+  generic_structure:
+    name: "Generic Game Packet Structure"
+    format: |
+      [2 bytes: packet_length ]
+      [2 bytes: opcode/cmd_id ]
+      [N bytes: payload        ]
+      [optional: checksum      ]
+
+  packet_dispatcher:
+    name: "Packet Handler / Dispatcher"
+    code: |
+      using PacketHandler = std::function<void(std::span<const uint8_t>)>;
+      class PacketDispatcher {
+          std::unordered_map<uint16_t, PacketHandler> handlers_;
+      public:
+          void Register(uint16_t opcode, PacketHandler handler) {
+              handlers_[opcode] = std::move(handler);
+          }
+          void Dispatch(const uint8_t* data, size_t len) {
+              if (len < 4) return;
+              uint16_t opcode = *reinterpret_cast<const uint16_t*>(data + 2);
+              if (auto it = handlers_.find(opcode); it != handlers_.end())
+                  it->second({data + 4, len - 4});
+          }
+      };
+
+  encryption_bypass:
+    name: "Hook Before/After Encryption"
+    strategy: |
+      1. Find encrypt function: xref from WSASend back-trace
+      2. Hook function BEFORE encrypt (outgoing plaintext)
+      3. Hook function AFTER decrypt (incoming plaintext)
+
+external_sniffing:
+  libraries:
+    - { name: libtins, desc: "High-level C++ packet crafting/sniffing" }
+    - { name: "Npcap/WinPCap", desc: "Low-level network capture" }
+    - { name: Wireshark, desc: "GUI packet analyzer for initial RE" }
+
+ipc:
+  shared_memory:
+    name: "Shared Memory — Game <-> Bot"
+    desc: "Zero-copy data exchange via memory-mapped file"
+    code: |
+      // Producer (injected DLL)
+      auto hMap = CreateFileMappingW(INVALID_HANDLE_VALUE, nullptr,
+                                      PAGE_READWRITE, 0, sizeof(GameState), L"GameBot_SharedMem");
+      auto pData = MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(GameState));
+      // Consumer (external bot process)
+      auto hMap = OpenFileMappingW(FILE_MAP_READ, FALSE, L"GameBot_SharedMem");
+      auto pData = MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, sizeof(GameState));
+
+  named_pipe:
+    name: "Named Pipe — Command Channel"
+    desc: "Injected DLL receives commands from external controller"
+    latency: "~50-150us"

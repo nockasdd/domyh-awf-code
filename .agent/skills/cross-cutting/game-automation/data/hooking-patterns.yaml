@@ -1,0 +1,326 @@
+# =====================================================
+# Function Hooking Patterns — 6 Libraries + Manual
+# =====================================================
+
+libraries:
+  minhook:
+    name: MinHook
+    github: "TsudaKageworker/minhook"
+    desc: "Minimal x86/x64 API hooking. Simple but dated"
+    status: "legacy — still works but lower trust factor"
+    example: |
+      #include <MinHook.h>
+      using PresentFn = HRESULT(WINAPI*)(IDXGISwapChain*, UINT, UINT);
+      PresentFn oPresent = nullptr;
+      HRESULT WINAPI hkPresent(IDXGISwapChain* chain, UINT sync, UINT flags) {
+          return oPresent(chain, sync, flags);
+      }
+      void Install() {
+          MH_Initialize();
+          MH_CreateHook(pPresent, &hkPresent, reinterpret_cast<void**>(&oPresent));
+          MH_EnableHook(pPresent);
+      }
+
+  detours:
+    name: "Microsoft Detours"
+    github: "microsoft/Detours"
+    desc: "Official MS library. Trampoline-based. x86/x64/ARM. MIT license."
+    status: "robust, well-maintained, production-grade since 2002"
+    multi_hook: |
+      #include <detours.h>
+      // Transaction = atomic multi-hook install
+      LONG error = DetourTransactionBegin();
+      if (error != NO_ERROR) return false;
+      DetourUpdateThread(GetCurrentThread()); // Fix thread instruction pointers
+      // Attach multiple hooks in single transaction
+      DetourAttach(&(PVOID&)oPresent,     hkPresent);
+      DetourAttach(&(PVOID&)oEndScene,    hkEndScene);
+      DetourAttach(&(PVOID&)oResizeBuffers, hkResizeBuffers);
+      error = DetourTransactionCommit(); // All-or-nothing commit
+      if (error != NO_ERROR) {
+          DetourTransactionAbort(); // Rollback on error
+          return false;
+      }
+    dllmain_pattern: |
+      BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
+          if (DetourIsHelperProcess()) return TRUE;
+          switch (reason) {
+              case DLL_PROCESS_ATTACH:
+                  DetourRestoreAfterWith(); // Required for CreateProcessWithDll
+                  DetourTransactionBegin();
+                  DetourUpdateThread(GetCurrentThread());
+                  DetourAttach(&(PVOID&)oTargetFn, hkTargetFn);
+                  DetourTransactionCommit();
+                  break;
+              case DLL_PROCESS_DETACH:
+                  DetourTransactionBegin();
+                  DetourUpdateThread(GetCurrentThread());
+                  DetourDetach(&(PVOID&)oTargetFn, hkTargetFn);
+                  DetourTransactionCommit();
+                  break;
+          }
+          return TRUE;
+      }
+    error_handling:
+      NO_ERROR: "Success"
+      ERROR_INVALID_OPERATION: "Transaction already in progress"
+      ERROR_NOT_ENOUGH_MEMORY: "Insufficient memory for trampoline"
+      ERROR_INVALID_BLOCK: "Function too small to hook"
+    best_practices:
+      - "Always check return values of TransactionBegin/Commit"
+      - "Use TransactionAbort for rollback on partial failure"
+      - "Match exact function signatures including calling convention"
+      - "Don't set debugger breakpoints on hooked functions"
+      - "Call DetourRestoreAfterWith() in injected DLLs"
+
+  polyhook2:
+    name: PolyHook2
+    github: "stevemk14ebr/PolyHook_2_0"
+    desc: "Multi-method: inline, VTable, IAT, VEH. Modern C++20. Active 2025."
+    status: "recommended 2025 — versatile, active development"
+    methods: [inline, vtable_swap, vfunc_swap, iat, veh]
+    x64_detour: |
+      #include <polyhook2/Detour/x64Detour.hpp>
+      // 1. Define function typedef matching target signature
+      typedef HRESULT(WINAPI* PresentFn)(IDXGISwapChain*, UINT, UINT);
+      uint64_t oPresent = 0; // trampoline address
+
+      // 2. Hook callback — MUST use trampoline to call original
+      HRESULT WINAPI hkPresent(IDXGISwapChain* chain, UINT sync, UINT flags) {
+          // Custom rendering here
+          return PLH::FnCast(oPresent, (PresentFn)nullptr)(chain, sync, flags);
+      }
+
+      // 3. Install hook
+      PLH::x64Detour detour((uint64_t)pPresent, (uint64_t)&hkPresent, &oPresent);
+      if (!detour.hook()) { /* handle error */ }
+
+      // 4. Unhook
+      detour.unHook();
+    vtable_swap: |
+      #include <polyhook2/Virtuals/VTableSwapHook.hpp>
+      // Deep-copy entire vtable, swap object's vptr
+      PLH::VFuncMap redirects = {{
+          {3, (uint64_t)&hkEndScene},  // vtable index 3 = EndScene
+          {8, (uint64_t)&hkPresent}    // vtable index 8 = Present
+      }};
+      PLH::VTableSwapHook vtableHook((uint64_t)pDevice, redirects);
+      vtableHook.hook();
+      auto oEndScene = vtableHook.getOriginal<EndSceneFn>(3);
+    iat_hook: |
+      #include <polyhook2/IATHook.hpp>
+      PLH::IATHook iatHook("kernel32.dll", "CreateFileW",
+                            (uint64_t)&hkCreateFileW, &oCreateFileW, L"game.exe");
+      iatHook.hook();
+    best_practices:
+      - "Always store trampoline as uint64_t, use PLH::FnCast to call"
+      - "Check hook() return value — false means relocation failure"
+      - "For member functions, include 'this' pointer as first arg"
+      - "VTableSwapHook is safer than VFuncSwapHook (deep copy vs direct patch)"
+
+  safetyhook:
+    name: SafetyHook
+    github: "cursey/safetyhook"
+    desc: "Best-in-class 2025. C++23 API. Safe exception-aware. Minimal detection."
+    status: "top recommended — handles edge cases MinHook/Detours miss"
+    inline_hook: |
+      #include <safetyhook.hpp>
+      // RAII — unhooks on destruction
+      SafetyHookInline g_hook;
+      HRESULT WINAPI hkPresent(IDXGISwapChain* chain, UINT sync, UINT flags) {
+          return g_hook.call<HRESULT>(chain, sync, flags);
+      }
+      g_hook = safetyhook::create_inline(pPresent, hkPresent);
+    mid_hook: |
+      // SafetyHook mid-hook — hook mid-function without trampoline
+      SafetyHookMid g_midHook;
+      void midCallback(SafetyHookContext& ctx) {
+          // Access/modify registers: ctx.rax, ctx.rcx, ctx.xmm0, etc.
+          ctx.rax = 100; // Override return value
+      }
+      g_midHook = safetyhook::create_mid(targetAddr, midCallback);
+    advantages:
+      - "RAII lifetime management (no manual unhook needed)"
+      - "Exception-safe hooking (handles SEH/VEH correctly)"
+      - "Mid-function hooks without full trampoline"
+      - "Thread-safe hook installation"
+
+
+  matichook:
+    name: MaticHook
+    desc: "Syscall-based hooking — bypasses NtProtectVirtualMemory hooks"
+    status: "niche — heavy anti-cheat bypass"
+
+  mhook:
+    name: mhook
+    github: "apriorit/mhook"
+    desc: "Dynamic hook install/remove. Memory inefficient (64KB/hook)"
+    status: "working — use Apriorit fork"
+
+hook_types:
+  vmt_direct:
+    name: "Direct VTable Patch"
+    desc: "Overwrite single vtable entry — simple but detectable"
+    detection_risk: "high — integrity checks compare vtable against .rdata"
+    when: "Quick prototype, no anti-cheat"
+    code: |
+      class VMTHook {
+          void** vtable_; size_t index_; void* original_;
+      public:
+          VMTHook(void* obj, size_t idx, void* hook) : index_(idx) {
+              vtable_ = *reinterpret_cast<void***>(obj);
+              original_ = vtable_[idx];
+              DWORD old;
+              VirtualProtect(&vtable_[idx], sizeof(void*), PAGE_READWRITE, &old);
+              vtable_[idx] = hook;
+              VirtualProtect(&vtable_[idx], sizeof(void*), old, &old);
+          }
+          template<typename T> T GetOriginal() { return reinterpret_cast<T>(original_); }
+          ~VMTHook() { vtable_[index_] = original_; } // Restore on destroy
+      };
+
+  vmt_shadow_copy:
+    name: "Shadow VMT Hook (Full Reconstruction)"
+    desc: "Deep-copy entire VTable → modify copy → redirect vptr. Original VTable untouched."
+    detection_risk: "low — original .rdata VTable intact"
+    when: "Anti-cheat present, need per-instance hooking"
+    code: |
+      class ShadowVMT {
+          void**  originalVtable_;
+          void**  shadowVtable_;
+          void*** vptrLocation_; // Points to object's vptr slot
+          size_t  vtableSize_;
+      public:
+          ShadowVMT(void* obj) {
+              vptrLocation_ = reinterpret_cast<void***>(obj);
+              originalVtable_ = *vptrLocation_;
+              // Count vtable entries (stop at nullptr or non-executable)
+              vtableSize_ = 0;
+              while (originalVtable_[vtableSize_]) {
+                  MEMORY_BASIC_INFORMATION mbi;
+                  VirtualQuery(originalVtable_[vtableSize_], &mbi, sizeof(mbi));
+                  if (!(mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ |
+                        PAGE_EXECUTE_READWRITE))) break;
+                  ++vtableSize_;
+              }
+              // Deep copy — allocate shadow table
+              shadowVtable_ = new void*[vtableSize_];
+              memcpy(shadowVtable_, originalVtable_, vtableSize_ * sizeof(void*));
+              // Redirect object's vptr to shadow
+              *vptrLocation_ = shadowVtable_;
+          }
+          void Hook(size_t index, void* hookFn) {
+              shadowVtable_[index] = hookFn;
+          }
+          template<typename T> T GetOriginal(size_t index) {
+              return reinterpret_cast<T>(originalVtable_[index]);
+          }
+          ~ShadowVMT() {
+              *vptrLocation_ = originalVtable_; // Restore original
+              delete[] shadowVtable_;
+          }
+      };
+    vtable_index_discovery:
+      methods:
+        - "IDA Pro: analyze vtable, count from first virtual function"
+        - "Declaration order: vtable index = order in class definition"
+        - "Pattern scan: find vtable in .rdata, index = entry offset / sizeof(void*)"
+        - "Debugger: set hardware breakpoint on object, trace vcall"
+      directx_common_indices:
+        IDXGISwapChain_Present: 8
+        IDXGISwapChain_ResizeBuffers: 13
+        ID3D11DeviceContext_DrawIndexed: 12
+        ID3D11DeviceContext_Draw: 13
+        IDirect3DDevice9_EndScene: 42
+        IDirect3DDevice9_Reset: 16
+
+  iat_hook:
+    name: "IAT Hooking"
+    desc: "Replace Import Address Table entry"
+    when: "Hook imported WinAPI functions"
+
+  veh_hook:
+    name: "Vectored Exception Handler Hook"
+    desc: "Hook via hardware breakpoints + VEH. Harder to detect"
+    when: "Anti-cheat detects inline hooks"
+    detection_risk: "low"
+    code: |
+      LONG CALLBACK VEHHandler(PEXCEPTION_POINTERS info) {
+          if (info->ExceptionRecord->ExceptionCode == EXCEPTION_SINGLE_STEP) {
+              if (info->ExceptionRecord->ExceptionAddress == targetAddr) {
+                  info->ContextRecord->Rip = (DWORD64)hookFn;
+                  return EXCEPTION_CONTINUE_EXECUTION;
+              }
+          }
+          return EXCEPTION_CONTINUE_SEARCH;
+      }
+
+  inline_hook:
+    name: "Manual Inline Hook"
+    desc: "Direct JMP patch at function start"
+    detection_risk: "high — easily detected by integrity checks"
+
+  syscall_hook:
+    name: "Syscall Hooking (Kernel)"
+    desc: "Intercept system calls from kernel driver"
+    when: "Kernel-level operation interception"
+
+  mid_function_hook:
+    name: "Mid-Function Codecave Hook"
+    desc: "Inject JMP into middle of function, redirect to code cave. Preserves prologue."
+    when: "Need to intercept specific branch/calculation within a function"
+    detection_risk: "low-medium — harder to spot than prologue rewrite"
+    code: |
+      // Write codecave trampoline — x64
+      void InstallMidHook(uintptr_t addr, uintptr_t hookFn, size_t nopSlide = 14) {
+          DWORD old;
+          VirtualProtect(reinterpret_cast<void*>(addr), nopSlide, PAGE_EXECUTE_READWRITE, &old);
+          // Save original bytes for unhook
+          uint8_t cave[14] = { 0xFF, 0x25, 0x00, 0x00, 0x00, 0x00 }; // jmp [rip+0]
+          memcpy(cave + 6, &hookFn, 8);
+          memcpy(reinterpret_cast<void*>(addr), cave, 14);
+          VirtualProtect(reinterpret_cast<void*>(addr), nopSlide, old, &old);
+      }
+    tags: [internal, stealth, advanced]
+
+  boundhook:
+    name: "BoundHook (Exception-Based)"
+    desc: "Use BOUND instruction to trigger exception → redirect via VEH. Page still COW-clean."
+    detection_risk: "very low — page appears unmodified to integrity checks"
+    code: |
+      // BoundHook concept (CyberArk research):
+      // 1. Set BOUND instruction at target to trigger #BR exception
+      // 2. VEH catches EXCEPTION_ARRAY_BOUNDS_EXCEEDED
+      // 3. Modify RIP to hook function
+      // 4. Memory page remains copy-on-write clean
+    notes:
+      - "Bypasses PatchGuard MDL-based page checks"
+      - "COW-clean = page hash unchanged"
+      - "Best for stealthy usermode hooks"
+    tags: [stealth, exception_based, advanced]
+
+  frida_dynamic:
+    name: "Frida Dynamic Instrumentation"
+    desc: "JavaScript-based runtime instrumentation — no recompilation needed"
+    when: "Rapid prototyping, RE analysis, testing hook logic before C++ port"
+    code: |
+      // Python controller
+      import frida
+      session = frida.attach("game.exe")
+      script = session.create_script("""
+        Interceptor.attach(Module.getExportByName("user32.dll", "GetAsyncKeyState"), {
+            onEnter(args) { console.log("Key:", args[0].toInt32()); },
+            onLeave(retval) { /* modify retval */ }
+        });
+      """)
+      script.load()
+    stalker_api: |
+      // Frida Stalker — trace every instruction
+      Stalker.follow(threadId, {
+          events: { call: true, ret: true, exec: false },
+          onCallSummary(summary) {
+              for (const [addr, count] of Object.entries(summary))
+                  console.log(DebugSymbol.fromAddress(ptr(addr)).name, count);
+          }
+      });
+    tags: [dynamic, javascript, prototyping, re_tool]

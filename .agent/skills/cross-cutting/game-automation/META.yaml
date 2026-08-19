@@ -1,0 +1,121 @@
+# =============================================================================
+# META.yaml — Game Automation Systems (Private)
+# =============================================================================
+
+name: game-automation
+display: Game Automation Systems
+category: cross-cutting
+tier: 1
+priority: 4
+
+desc: "C++20 game automation: memory, hooking, injection, Lua, DirectX overlay, input, networking, concurrency, bot AI, kernel, hypervisor, emulator, WebView2. Use when building game automation or runtime tooling."
+
+triggers:
+  file_patterns:
+    - "*.cpp"
+    - "*.h"
+    - "*.hpp"
+    - "*.cxx"
+    - "scripts/**/*.lua"
+    - "CMakeLists.txt"
+    - "*.vcxproj"
+    - "*.sln"
+  keywords:
+    - game automation
+    - game hack
+    - game bot
+    - memory read
+    - memory write
+    - ReadProcessMemory
+    - WriteProcessMemory
+    - hooking
+    - VMT hook
+    - detour
+    - MinHook
+    - PolyHook
+    - SafetyHook
+    - DLL inject
+    - manual mapping
+    - bot framework
+    - auto farming
+    - game client
+    - packet hook
+    - WSASend
+    - WSARecv
+    - DirectX hook
+    - ImGui overlay
+    - pixel bot
+    - OCR game
+    - emulator automation
+    - ldconsole
+    - ADB command
+    - kernel driver
+    - KMDF
+    - WDM
+    - DriverEntry
+    - MmCopyVirtualMemory
+    - CR3
+    - physical memory
+    - hypervisor
+    - VT-x
+    - EPT hook
+    - DMA
+    - FPGA
+    - PCILeech
+    - WebView2
+    - webview
+    - single exe
+    - single binary
+    - static link
+    - embed resource
+    - UE4 SDK
+    - UE5 SDK
+    - IL2CPP
+    - Il2CppDumper
+    - GObject
+    - FName
+
+caps:
+  - "Memory manipulation (RPM/WPM, pointer chains, AOB scanner, module base)"
+  - "Function hooking (VMT, trampoline, inline, VEH, IAT — 6 libraries)"
+  - "DLL injection (6 methods: CRT, manual mapping, reflective, APC, thread hijack, sideload)"
+  - "Lua-C++ integration (sol2/LuaBridge, hot-reload, coroutine automation)"
+  - "DirectX rendering hooks (DX9/11/12 Present/EndScene, ImGui overlay)"
+  - "Input simulation (5 levels: PostMessage → SendInput → hardware → driver)"
+  - "Network/Socket interception (WSASend/WSARecv hook, packet parsing)"
+  - "Computer vision (OpenCV template match, Tesseract OCR, pixel detection)"
+  - "C++20 concurrency (jthread, coroutines, thread pool, lock-free queues)"
+  - "IPC patterns (shared memory, memory-mapped files, named pipes)"
+  - "Bot AI architecture (FSM, HFSM, behavior tree, GOAP)"
+  - "Emulator automation (LDPlayer ldconsole, BlueStacks, NoxPlayer, ADB)"
+  - "Kernel-mode driver (KMDF DriverEntry, IOCTL, MmCopyVirtualMemory, CR3 physical read)"
+  - "Hypervisor-level (VT-x/AMD-V, EPT hooking, VMX Root, DMA hardware)"
+  - "Game engine RE (UE4/5 SDK dumpers, Unity IL2CPP, ReClass)"
+  - "WebView2 single-exe builds (static link, .rc embedding, Tailwind v4)"
+
+data_files:
+  - data/memory-patterns.yaml
+  - data/hooking-patterns.yaml
+  - data/injection-methods.yaml
+  - data/address-discovery.yaml
+  - data/cpp-header-safety.yaml
+  - data/networking-optimization.yaml
+  - data/game-thread-patterns.yaml
+  - data/ipc-communication.yaml
+  - data/external-notifications.yaml
+  - data/game-data-extraction.yaml
+  - data/concurrency-patterns.yaml
+  - data/networking-patterns.yaml
+  - data/input-vision-patterns.yaml
+  - data/bot-architecture.yaml
+  - data/kernel-mode-patterns.yaml
+  - data/hypervisor-patterns.yaml
+  - data/game-engine-re.yaml
+  - data/webview2-single-binary.yaml
+
+related_skills:
+  - cpp
+  - lua
+  - reverse-engineering
+  - anti-detection
+  - security

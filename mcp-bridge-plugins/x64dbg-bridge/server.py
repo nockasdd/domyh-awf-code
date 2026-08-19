@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "mcp>=1.26.0,<2",
+#   "x64dbg_automate[mcp]>=0.9.0,<1",
+# ]
+# ///
 """
 HSA x64dbg MCP Bridge — Custom Search & Auto-Connect Server
 =============================================================
@@ -12,6 +19,7 @@ It imports the official MCP tools AND adds custom tools.
 
 import os
 import json
+from typing import List, Optional
 from mcp.server.fastmcp import FastMCP
 from x64dbg_automate import X64DbgClient
 
@@ -36,9 +44,13 @@ def get_client() -> X64DbgClient:
     return _client
 
 
-def ensure_attached() -> X64DbgClient:
+def ensure_attached(pid: int | None = None) -> X64DbgClient:
     """Ensure client is attached to a session. Auto-attach if not."""
     client = get_client()
+
+    if pid is not None and pid > 0:
+        client.attach_session(pid)
+        return client
 
     # Check if we have an active session
     try:
@@ -59,10 +71,59 @@ def ensure_attached() -> X64DbgClient:
     )
 
 
+def format_sessions(sessions) -> str:
+    data = []
+    for session in sessions or []:
+        data.append({
+            "pid": getattr(session, "pid", None),
+            "name": getattr(session, "name", "") or getattr(session, "process_name", "") or "",
+            "path": getattr(session, "path", "") or getattr(session, "exe", "") or "",
+        })
+    return json.dumps({
+        "ok": True,
+        "sessions": data,
+        "count": len(data),
+    }, indent=2, default=str)
+
+
+def resolve_pid(pid: int = 0, session_id: str = "") -> int | None:
+    if pid and pid > 0:
+        return pid
+    if session_id:
+        try:
+            parsed = int(session_id)
+            return parsed if parsed > 0 else None
+        except ValueError:
+            return None
+    return None
+
+
+def _match_scope(region, module_name: str = "", module_path: str = "") -> bool:
+    info = str(getattr(region, "info", "") or "")
+    if not module_name and not module_path:
+        return True
+    if module_name and module_name.lower() in info.lower():
+        return True
+    if module_path and module_path.lower() in info.lower():
+        return True
+    return False
+
+
 # ── Session Management Tools ─────────────────────────────────
 
 @mcp.tool()
-def x64_auto_connect() -> str:
+def x64_list_sessions(scan_ports: Optional[List[int]] = None) -> str:
+    """List available x64dbg sessions before attaching."""
+    try:
+        client = get_client()
+        sessions = client.list_sessions()
+        return format_sessions(sessions)
+    except Exception as e:
+        return f"❌ Error listing sessions: {e}"
+
+
+@mcp.tool()
+def x64_auto_connect(pid: int = 0, session_id: str = "") -> str:
     """Auto-detect and connect to a running x64dbg session.
     If no session found, returns instructions to start one.
     """
@@ -73,7 +134,17 @@ def x64_auto_connect() -> str:
             return ("❌ No x64dbg sessions found.\n"
                     "Use x64_start_session to launch x64dbg with a target binary.")
 
-        session = sessions[0]
+        wanted_pid = resolve_pid(pid, session_id)
+        session = None
+        if wanted_pid is not None:
+            for candidate in sessions:
+                if getattr(candidate, "pid", None) == wanted_pid:
+                    session = candidate
+                    break
+            if session is None:
+                return f"❌ No x64dbg session found for PID {wanted_pid}."
+        if session is None:
+            session = sessions[0]
         client.attach_session(session.pid)
 
         # Try to get status, but don't fail if ZMQ times out
@@ -140,7 +211,7 @@ def x64_attach_process(pid: int) -> str:
 # ── Search Tools ──────────────────────────────────────────────
 
 @mcp.tool()
-def x64_find_string(pattern: str, max_results: int = 50) -> str:
+def x64_find_string(pattern: str, max_results: int = 50, pid: int = 0, session_id: str = "", module_name: str = "", module_path: str = "") -> str:
     """Search for a string pattern in the debugged process memory.
     Scans readable memory regions for ASCII/UTF-16 string occurrences.
 
@@ -149,17 +220,18 @@ def x64_find_string(pattern: str, max_results: int = 50) -> str:
         max_results: Maximum matches to return (default 50)
     """
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
         mem = client.memmap()
         results = []
         pattern_bytes = pattern.encode('ascii')
         pattern_utf16 = pattern.encode('utf-16-le')
-
         for region in mem:
             if len(results) >= max_results:
                 break
             # Only scan readable regions of reasonable size (< 10MB)
             if region.region_size > 10 * 1024 * 1024 or region.region_size == 0:
+                continue
+            if not _match_scope(region, module_name, module_path):
                 continue
             try:
                 data = client.read_memory(region.base_address, region.region_size)
@@ -213,7 +285,7 @@ def x64_find_string(pattern: str, max_results: int = 50) -> str:
 
 
 @mcp.tool()
-def x64_find_pattern(hex_pattern: str, max_results: int = 50) -> str:
+def x64_find_pattern(hex_pattern: str, max_results: int = 50, pid: int = 0, session_id: str = "", module_name: str = "", module_path: str = "") -> str:
     """Search for a hex byte pattern in process memory (no wildcards in this mode).
 
     Args:
@@ -221,7 +293,7 @@ def x64_find_pattern(hex_pattern: str, max_results: int = 50) -> str:
         max_results: Maximum matches (default 50)
     """
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
         # Clean hex input
         clean = hex_pattern.replace(" ", "").replace("0x", "")
         search_bytes = bytes.fromhex(clean)
@@ -233,6 +305,8 @@ def x64_find_pattern(hex_pattern: str, max_results: int = 50) -> str:
             if len(results) >= max_results:
                 break
             if region.region_size > 10 * 1024 * 1024 or region.region_size == 0:
+                continue
+            if not _match_scope(region, module_name, module_path):
                 continue
             try:
                 data = client.read_memory(region.base_address, region.region_size)
@@ -268,7 +342,7 @@ def x64_find_pattern(hex_pattern: str, max_results: int = 50) -> str:
 
 
 @mcp.tool()
-def x64_find_references(address: str) -> str:
+def x64_find_references(address: str, pid: int = 0, session_id: str = "", module_name: str = "", module_path: str = "") -> str:
     """Find all references to a specific address in code sections.
     Searches for the address value in E8 (call) and FF15 (call [addr]) patterns.
 
@@ -276,7 +350,7 @@ def x64_find_references(address: str) -> str:
         address: Hex address (e.g. '0x7FF9E67E0000' or 'rip')
     """
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
 
         # Resolve address via eval
         addr_val, _ = client.eval_sync(address)
@@ -290,6 +364,8 @@ def x64_find_references(address: str) -> str:
             if len(results) >= 50:
                 break
             if region.region_size > 10 * 1024 * 1024 or region.region_size == 0:
+                continue
+            if not _match_scope(region, module_name, module_path):
                 continue
             try:
                 data = client.read_memory(region.base_address, region.region_size)
@@ -321,14 +397,14 @@ def x64_find_references(address: str) -> str:
 
 
 @mcp.tool()
-def x64_find_api_calls(api_name: str) -> str:
+def x64_find_api_calls(api_name: str, pid: int = 0, session_id: str = "", module_name: str = "", module_path: str = "") -> str:
     """Find calls to a specific API by searching for the API address in import tables.
 
     Args:
         api_name: API function name (e.g. 'CreateFileA', 'VirtualAlloc', 'MessageBoxW')
     """
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
         # Resolve API address via x64dbg expression evaluator
         api_addr, ok = client.eval_sync(api_name)
         if not ok or api_addr == 0:
@@ -340,16 +416,18 @@ def x64_find_api_calls(api_name: str) -> str:
 
 
 @mcp.tool()
-def x64_get_modules() -> str:
+def x64_get_modules(pid: int = 0, session_id: str = "", module_name: str = "", module_path: str = "", scan_ports: Optional[List[int]] = None) -> str:
     """List all loaded modules in the debugged process with base addresses and sizes."""
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
         mem = client.memmap()
         
         # Group regions by module info
         modules = {}
         for region in mem:
             info = region.info if hasattr(region, 'info') else ""
+            if not _match_scope(region, module_name, module_path):
+                continue
             if info and info not in modules:
                 modules[info] = {
                     "name": info,
@@ -359,17 +437,18 @@ def x64_get_modules() -> str:
             elif info in modules:
                 modules[info]["size"] += region.region_size
 
-        output = f"### Loaded Modules ({len(modules)} unique)\n\n"
-        output += "| Module | Base | Size |\n|--------|------|------|\n"
-        for m in sorted(modules.values(), key=lambda x: x["name"]):
-            output += f"| {m['name']} | `{m['base']}` | {m['size'] // 1024}KB |\n"
-        return output
+        return json.dumps({
+            "ok": True,
+            "modules": sorted(modules.values(), key=lambda x: x["name"]),
+            "count": len(modules),
+            "pid": resolve_pid(pid, session_id),
+        }, indent=2, default=str)
     except Exception as e:
         return f"❌ Error: {e}"
 
 
 @mcp.tool()
-def x64_search_command(command: str) -> str:
+def x64_search_command(command: str, pid: int = 0, session_id: str = "") -> str:
     """Execute any raw x64dbg command.
     Note: cmd_sync returns success/fail boolean, not text output.
     For data retrieval, use specific tools instead.
@@ -379,7 +458,7 @@ def x64_search_command(command: str) -> str:
         command: x64dbg command string (e.g. 'bp MessageBoxA', 'bc *')
     """
     try:
-        client = ensure_attached()
+        client = ensure_attached(resolve_pid(pid, session_id))
         result = client.cmd_sync(command)
         return f"### Command: {command}\nSuccess: {result}"
     except Exception as e:

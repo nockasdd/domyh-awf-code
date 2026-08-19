@@ -1,0 +1,345 @@
+# =====================================================
+# Game Thread Safety Patterns for Injected DLLs
+# =====================================================
+# CRITICAL: Threading is the #1 cause of crashes in
+# injected DLLs. Every library, every API call, every
+# data access MUST respect game's threading model.
+
+# ── 1. Thread Model in Injected DLLs ───────────────
+thread_model:
+  overview: |
+    When DLL is injected via CreateRemoteThread + LoadLibrary:
+    - DllMain runs on INJECTION THREAD (not game thread!)
+    - Hook callbacks run on GAME THREAD (whichever thread calls hooked function)
+    - Worker threads you create run on YOUR THREADS
+    - WinHTTP/COM callbacks run on SYSTEM THREAD POOL
+    ━━━ DIFFERENT THREADS → MUST USE SYNCHRONIZATION ━━━
+
+  thread_map:
+    injection_thread:
+      created_by: "CreateRemoteThread / SetWindowsHookEx / QueueUserAPC"
+      lifetime: "Temporary — exists only during DllMain execution"
+      safe_operations:
+        - "CreateThread for worker threads"
+        - "Event/mutex creation"
+        - "Memory allocation"
+      dangerous_operations:
+        - "LoadLibrary (loader lock deadlock!)"
+        - "CoInitializeEx (DllMain restriction)"
+        - "CreateWindow (no message pump)"
+        - "Waiting on other threads"
+        - "Calling game functions"
+
+    game_render_thread:
+      desc: "Present/EndScene hooks execute on this thread"
+      owner: "Game's main/render thread — handles DirectX + UI"
+      rules:
+        - "ID3D11DeviceContext is NOT thread-safe — only use from this thread"
+        - "ID3D11Device IS thread-safe — create resources from any thread"
+        - "ImGui render must happen here"
+        - "NEVER block this thread (no Sleep, no blocking I/O, no mutex wait > 1ms)"
+      max_work_per_frame: "< 1ms to avoid FPS drops"
+
+    worker_threads:
+      desc: "Threads you create for background work"
+      use_for:
+        - "HTTP requests (WinHTTP)"
+        - "File I/O (logging)"
+        - "Heavy computation (path finding, pattern scan)"
+        - "Game data processing"
+      rules:
+        - "Initialize COM separately: CoInitializeEx(nullptr, COINIT_MULTITHREADED)"
+        - "Never call DirectX immediate context from worker"
+        - "Use lock-free queue to communicate with game thread"
+
+# ── 2. Safe DllMain Pattern ─────────────────────────
+dllmain:
+  name: "Minimal DllMain — Fire and Forget"
+  desc: |
+    DllMain is called under LOADER LOCK — extremely restrictive.
+    Only spawn a single init thread, do NOT do real work here.
+  code: |
+    HANDLE g_hModule = nullptr;
+    HANDLE g_initThread = nullptr;
+
+    // Main initialization — runs on OWN thread (NOT under loader lock)
+    DWORD WINAPI InitThread(LPVOID param) {
+        // ✅ Safe here: LoadLibrary, CoInitializeEx, CreateWindow, everything
+        Sleep(500); // Wait for game to fully initialize
+
+        // 1. Find game functions
+        auto gameBase = (uintptr_t)GetModuleHandle(nullptr);
+
+        // 2. Install hooks (on this thread, but hooks fire on GAME thread)
+        InstallPresentHook();
+        InstallGameFunctionHooks();
+
+        // 3. Start network worker
+        g_networkWorker = std::make_unique<NetworkWorker>();
+
+        return 0;
+    }
+
+    BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
+        if (reason == DLL_PROCESS_ATTACH) {
+            g_hModule = hModule;
+            DisableThreadLibraryCalls(hModule); // Performance: skip DLL_THREAD_ATTACH
+            g_initThread = CreateThread(nullptr, 0, InitThread, nullptr, 0, nullptr);
+            // ← Returns immediately, DllMain exits, loader lock released
+        }
+        else if (reason == DLL_PROCESS_DETACH) {
+            // Unhook and cleanup
+            RemoveAllHooks();
+            if (g_initThread) {
+                WaitForSingleObject(g_initThread, 5000);
+                CloseHandle(g_initThread);
+            }
+        }
+        return TRUE;
+    }
+  dllmain_restrictions:
+    never_do:
+      - "LoadLibrary / LoadLibraryEx (deadlock under loader lock)"
+      - "GetModuleHandle with full path (might trigger LoadLibrary)"
+      - "CoInitializeEx (COM init forbidden under loader lock)"
+      - "CreateProcess (child process creation)"
+      - "ExitThread (premature thread termination)"
+      - "Wait on synchronization objects (deadlock risk)"
+      - "Call any function in another DLL not yet loaded"
+    safe_to_do:
+      - "CreateThread (starts AFTER DllMain returns)"
+      - "DisableThreadLibraryCalls"
+      - "TlsAlloc / TlsSetValue"
+      - "GetModuleHandle(nullptr) — already loaded"
+      - "Simple variable assignment"
+      - "CloseHandle on kernel objects"
+
+# ── 3. Lock-Free Communication Patterns ─────────────
+lockfree_patterns:
+  spsc_queue:
+    name: "Single-Producer Single-Consumer Queue"
+    desc: "For game_thread ↔ worker_thread communication. Zero contention."
+    code: |
+      template<typename T, size_t Capacity = 1024>
+      class SPSCQueue {
+          std::array<T, Capacity> buffer_{};
+          alignas(64) std::atomic<size_t> head_{0}; // Producer writes
+          alignas(64) std::atomic<size_t> tail_{0}; // Consumer reads
+          // ↑ Different cache lines to avoid false sharing
+
+      public:
+          bool Push(T item) {
+              size_t head = head_.load(std::memory_order_relaxed);
+              size_t next = (head + 1) % Capacity;
+              if (next == tail_.load(std::memory_order_acquire)) return false; // Full
+              buffer_[head] = std::move(item);
+              head_.store(next, std::memory_order_release);
+              return true;
+          }
+
+          bool TryPop(T& item) {
+              size_t tail = tail_.load(std::memory_order_relaxed);
+              if (tail == head_.load(std::memory_order_acquire)) return false; // Empty
+              item = std::move(buffer_[tail]);
+              tail_.store((tail + 1) % Capacity, std::memory_order_release);
+              return true;
+          }
+      };
+    perf: "~15ns per operation, zero allocations, zero locks"
+    tags: [lockfree, spsc, game_thread]
+
+  command_pattern:
+    name: "Thread-Safe Command Queue"
+    desc: "Queue lambdas from worker → execute on game thread"
+    code: |
+      // Command queue — worker threads produce, game thread consumes
+      SPSCQueue<std::function<void()>, 256> g_gameThreadQueue;
+
+      // Worker thread: queue work for game thread
+      void OnHttpResponse(int code, std::string body) {
+          // ⚠️ We're on WinHTTP callback thread — can't touch game state!
+          g_gameThreadQueue.Push([code, body = std::move(body)]() {
+              // ✅ This runs on game thread (Present hook)
+              g_gameState.UpdateFromServer(code, body);
+              g_overlay.ShowNotification("Server sync complete");
+          });
+      }
+
+      // Game thread (Present hook): drain queue each frame
+      HRESULT WINAPI hkPresent(IDXGISwapChain* chain, UINT sync, UINT flags) {
+          // Process all queued callbacks — runs on game thread
+          std::function<void()> cmd;
+          while (g_gameThreadQueue.TryPop(cmd)) {
+              cmd(); // Execute on game thread — safe!
+          }
+          // Render ImGui overlay
+          RenderOverlay();
+          return oPresent(chain, sync, flags);
+      }
+    tags: [command, queue, thread_safe]
+
+  atomic_double_buffer:
+    name: "Atomic Double Buffer"
+    desc: "Worker writes to back buffer, game reads front buffer. Atomic swap."
+    code: |
+      template<typename T>
+      class DoubleBuffer {
+          T buffers_[2];
+          std::atomic<int> readIndex_{0};
+          std::mutex writeMutex_;  // Only if multiple writers
+      public:
+          // Writer (worker thread)
+          void Write(const T& data) {
+              int writeIdx = 1 - readIndex_.load(std::memory_order_acquire);
+              buffers_[writeIdx] = data;
+              readIndex_.store(writeIdx, std::memory_order_release);
+          }
+          // Reader (game thread) — lock-free read
+          const T& Read() const {
+              return buffers_[readIndex_.load(std::memory_order_acquire)];
+          }
+      };
+    use_case: "Player list, entity data, config updates from server"
+    tags: [double_buffer, lockfree]
+
+# ── 4. Library-Specific Threading Rules ─────────────
+library_threading:
+  directx:
+    d3d11:
+      device: "ID3D11Device — thread-safe (create textures from any thread)"
+      context: "ID3D11DeviceContext Immediate — NOT thread-safe (single thread only!)"
+      deferred: "ID3D11DeviceContext Deferred — per-thread, submit CommandList to immediate"
+    dxgi:
+      present: "Always called from render thread"
+      resize: "Must be called from same thread as Present"
+    imgui:
+      rule: "All ImGui calls MUST be from render thread (between NewFrame/Render)"
+      pattern: |
+        // In Present hook (game render thread):
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        DrawMenu();  // Your UI — runs on render thread
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+  minhook:
+    thread_safety: "Hook install/remove is NOT atomic — use from single thread"
+    rule: "Install all hooks from init thread, hooks fire on caller's thread"
+
+  polyhook:
+    thread_safety: "hook()/unHook() — not thread-safe, call from single thread"
+    trampoline: "Thread-safe to call trampoline from any thread after hook()"
+    rule: "Install from init thread → callbacks safe from any thread"
+
+  safetyhook:
+    thread_safety: "Stops all threads during hook install/remove — safest option"
+    rule: "Can install/remove from any thread — SafetyHook handles synchronization"
+
+  detours:
+    thread_safety: "DetourUpdateThread must list all running threads"
+    rule: "Transaction freezes listed threads → install → resume → safe"
+
+# ── 5. Common Crash Patterns and Fixes ──────────────
+crash_patterns:
+  - name: "Calling game function from wrong thread"
+    symptom: "Access violation in game code after hook installs fine"
+    cause: "Game functions expect to run on main thread — called from worker"
+    fix: "Queue call via SPSCQueue, execute from Present hook"
+
+  - name: "DirectX context used from multiple threads"
+    symptom: "Random corruption, D3D errors, TDR (timeout)"
+    cause: "ID3D11DeviceContext::Draw/Map called from non-render thread"
+    fix: "Use Deferred Context on worker, submit CommandList on render thread"
+
+  - name: "WinHTTP callback accesses game state"
+    symptom: "Race condition, data corruption, intermittent crash"
+    cause: "WinHTTP callback fires on system thread, modifies game data unsafely"
+    fix: "Callback only queues result → game thread processes it"
+
+  - name: "CoInitializeEx on game's STA thread"
+    symptom: "RPC_E_CHANGED_MODE (0x80010106) → crash"
+    cause: "Game initialized COM as STA, your code tries MTA on same thread"
+    fix: "Create dedicated worker thread, init COM there with COINIT_MULTITHREADED"
+
+  - name: "LoadLibrary in DllMain"
+    symptom: "Deadlock — process hangs on injection"
+    cause: "DllMain runs under loader lock, LoadLibrary tries to acquire same lock"
+    fix: "Move all library loading to init thread spawned by DllMain"
+
+  - name: "Blocking call in Present hook"
+    symptom: "Game freezes for N seconds, then resumes (or TDR crash)"
+    cause: "Synchronous HTTP/file I/O/mutex wait in Present callback"
+    fix: "All I/O on worker threads, Present only drains lock-free queue"
+
+  - name: "ImGui NewFrame/EndFrame mismatch"
+    symptom: "Assertion failure in ImGui, crash on next frame"
+    cause: "Exception inside render code skips EndFrame/Render"
+    fix: |
+      try {
+          ImGui_ImplDX11_NewFrame();
+          ImGui_ImplWin32_NewFrame();
+          ImGui::NewFrame();
+          DrawMenu();
+          ImGui::Render();
+          ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+      } catch (...) {
+          ImGui::EndFrame(); // Ensure cleanup on exception
+      }
+
+# ── 6. Performance Budget for Hook Callbacks ────────
+performance_budget:
+  present_hook:
+    max_time: "< 1ms per frame (at 60fps = 16.6ms total budget)"
+    do:
+      - "Drain command queue (< 0.1ms)"
+      - "ImGui render (< 0.5ms)"
+      - "Read 10-20 values from game (< 0.05ms)"
+    dont:
+      - "Pattern scan (100ms+)"
+      - "HTTP request (1000ms+)"
+      - "File I/O (10ms+)"
+      - "String formatting with std::string (allocation = 0.01ms each)"
+  game_function_hook:
+    max_time: "< 0.01ms (10μs) if called frequently"
+    do: "Modify parameters, log to ring buffer, queue work"
+    dont: "Allocate memory, format strings, call complex functions"
+
+# ── 7. Hook Library Optimization Comparison ─────────
+library_optimization:
+  comparison_table:
+    MinHook:
+      memory_per_hook: "64KB (VirtualAlloc granularity waste)"
+      install_speed: "~10μs"
+      call_overhead: "~2ns (direct JMP)"
+      thread_safe_install: false
+      max_hooks: "Limited by address space"
+      verdict: "Legacy — simple but wastes memory, no thread safety"
+    PolyHook2:
+      memory_per_hook: "~100B (code cave search)"
+      install_speed: "~50μs (code cave search slower)"
+      call_overhead: "~5ns (through cave)"
+      thread_safe_install: false
+      max_hooks: "1000+ easily"
+      verdict: "Modern — best memory efficiency, flexible"
+    SafetyHook:
+      memory_per_hook: "~200B"
+      install_speed: "~100μs (suspends all threads)"
+      install_speed_note: "Slower install but SAFEST"
+      call_overhead: "~3ns"
+      thread_safe_install: true
+      max_hooks: "1000+"
+      verdict: "Safest — suspends threads, RAII, C++23"
+    Detours:
+      memory_per_hook: "~100B (efficient trampoline)"
+      install_speed: "~15μs (transaction-based)"
+      call_overhead: "~2ns (direct JMP)"
+      thread_safe_install: "partial (must specify threads)"
+      max_hooks: "1000+"
+      verdict: "Industry standard — fast, stable, well-documented"
+
+  recommendation: |
+    Solo project → SafetyHook (safest, modern C++)
+    Multi-method needs → PolyHook2 (inline + vtable + IAT)
+    Production/Enterprise → Detours (battle-tested, Microsoft backing)
+    Legacy maintenance → MinHook (simplest API)

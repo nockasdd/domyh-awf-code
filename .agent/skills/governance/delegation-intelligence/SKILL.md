@@ -8,160 +8,148 @@ tier: 1
 
 # Delegation Intelligence
 
-## Task Decomposition
+> **Philosophy**: Subagent-Driven Development (SDD) + 2-Tier Review Gate + Workspace Isolation (inspired by *obra/superpowers*).
 
-### Decision Tree: Should I Delegate?
+## 1. Task Decomposition & The 1% Trigger Gate
+
+### 1% Trigger Gate: When to Delegate
+If there is even a 1% chance that the task requires multi-domain coordination, cross-file refactoring, or independent verification:
+- **Do NOT** jump straight into monolithic implementation.
+- **Force** decomposition into **bite-sized subtasks (2–5 minutes runtime)**.
+- **Prepare** a formal Task Contract before dispatching.
 
 ```
-Is this task self-contained (clear input → output)?
-  NO → Do it yourself or break it down further
-  YES ↓
-
-Does it require context from other running tasks?
-  YES → Execute sequentially (wait for dependency)
+Is task single-file & < 30 LOC?
+  YES → Execute directly in main agent ✅
   NO ↓
 
-Is it a well-defined task type? (code/test/review/debug/browser/research)
-  NO → Do it yourself
-  YES ↓
+Does it span multiple domains / files / concerns?
+  YES → Generate SDD DAG (Task Decomposition)
+  ↓
 
-Delegate with proper handoff packet ✅
+Is hsa_delegate available?
+  YES → Call hsa_delegate({action:'prepare', task_type:'...', focus_files:[...]})
+  NO → Prepare manual handoff packet
 ```
 
-### Breaking Down Complex Work
+### Breaking Down Complex Work into Bite-Sized Tasks
 
-| Pattern | When | Example |
-|---------|------|---------|
-| **By file** | Independent file changes | "Update 5 config files" → 5 parallel tasks |
-| **By layer** | Sequential dependencies | "API → Service → Tests" → 3 sequential tasks |
-| **By concern** | Mixed independence | "Frontend + Backend + Docs" → parallel |
-| **By phase** | Order matters | "Research → Plan → Implement" → sequential |
+| Pattern | When | Sizing Rule | Example |
+|---|---|---|---|
+| **By File / Component** | Independent file logic | Max 1-2 files per subtask | "Build Auth Token Generator" $\rightarrow$ `src/auth/jwt.ts` + `tests/jwt.test.ts` |
+| **By Layer (TDD)** | Sequential pipeline | Red (Test) $\rightarrow$ Green (Impl) | 1. Write tests $\rightarrow$ 2. Implement logic $\rightarrow$ 3. Refactor |
+| **By Concern** | Cross-cutting features | Parallel isolated tasks | Frontend Component + Backend API + Migration script |
+| **By Audit / Quality** | Verification & Security | Read-only specialist | Security audit or Performance profiling |
 
-## Pre-Delegation: Prepare Handoff
+---
 
-### Handoff Packet (Required)
+## 2. Pre-Delegation: SDD Task Contract
 
-```
-hsa_delegate(
-  task_type: "code",
-  task_description: "Implement JWT middleware with validation and error handling",
-  focus_files: ["src/auth/middleware.ts", "tests/auth.test.ts"],
-  max_tokens: 2000
-)
-```
+Every subagent MUST receive an immutable, explicit contract:
 
-### Handoff Checklist
-
-Every delegation MUST specify:
-
-| Item | Required | Example |
-|------|----------|---------|
-| **Task** | ✅ | "Implement JWT middleware" (not "figure it out") |
-| **Scope** | ✅ | "Only touch src/auth/. Do NOT modify routes." |
-| **Return format** | ✅ | "Return: files changed, tests added, verification output" |
-| **Success metric** | ✅ | "All tests pass, TypeScript compiles" |
-| **Context files** | ✅ | `focus_files: [...]` |
-| **Constraints** | 🟡 | "Use jose library. No external auth services." |
-| **Style guide** | 🟡 | "Follow existing patterns in src/auth/" |
-
-### Tool Filtering (Reduce Bloat)
-
-```
-hsa_delegate(task_type: "code")
-# Returns recommended tool include/exclude lists
-# → 93-97% token savings in subagent prompt
-```
-
-## Cross-Model Cascade
-
-When the primary model isn't optimal for a sub-task, delegate to a specialized model:
-
-```
-# 1. List available models
-hsa_delegate({action: 'cascade_models'})
-
-# 2. Send cascade
+```typescript
+// 1. Call MCP to prepare contract & get native dispatch instructions
 hsa_delegate({
-  action: 'cascade',
-  cascade_text: '[detailed prompt with all context]',
-  task_type: 'code',           # enables dashboard model routing
-  cascade_model: 'model-id'    # optional — override dashboard routing
+  action: "prepare",
+  task_type: "code", // code | test | review | debug | browser | research
+  task_description: "Implement JWT middleware with expiration and role checking",
+  focus_files: ["src/auth/middleware.ts", "tests/auth/middleware.test.ts"],
+  workspace_mode: "branch", // branch | share | inherit
+  acceptance_criteria: {
+    tdd_stage: "red_to_green",
+    required_tests: ["should verify valid token", "should reject expired token"],
+    lint_check: "npm run lint",
+    build_check: "tsc --noEmit"
+  }
 })
-# → returns cascade_id
-
-# 3. Poll for response (3-5s intervals, max 10 polls)
-hsa_delegate({action: 'cascade_read', cascade_id: '...'})
-# → status: pending | complete | error
-
-# 4. Cancel if needed
-hsa_delegate({action: 'cascade_cancel', cascade_id: '...'})
 ```
 
-### When to Cascade vs Do Yourself
+### Handoff Contract Checklist
 
-| Scenario | Action |
-|----------|--------|
-| Task within current model's strength | Do yourself |
-| Need stronger reasoning (Opus/Pro) | Cascade with task_type:'review' or 'debug' |
-| Need fast cheap output (Flash) | Cascade with task_type:'code' |
-| Research needing web access | Cascade with task_type:'research' |
-| User configured specific model | Cascade — auto-routes via dashboard |
+| Field | Requirement | Description |
+|---|---|---|
+| **Task Description** | ✅ Required | Concrete, bite-sized goal (not open-ended research) |
+| **Focus Files** | ✅ Required | Exact list of allowed files to touch (Surgical containment) |
+| **Tool Policy** | ✅ Required | Recommended & restricted tools (reduces context bloat by 90%+) |
+| **Acceptance Criteria** | ✅ Required | Exact verification commands, tests, and lint rules |
+| **Workspace Mode** | ✅ Required | `branch` (isolated worktree), `share`, or `inherit` |
 
-### Mandatory Cascade Evaluation
+---
 
-⚠️ **MUST evaluate before EXECUTE step** in any workflow:
+## 3. Multi-Platform Native Dispatch
 
-```
-Is hsa_delegate MCP tool available?
-  NO → Skip cascade, proceed normally
-  YES ↓
+Always use the **Native Subagent Engine** of the active platform first:
 
-Quick Complexity Score ≥ 8?
-  YES → AUTO-cascade with matched task_type ✅
-  NO ↓
-
-Complexity score 5-7?
-  YES → SUGGEST cascade to user ↗️
-  NO ↓
-
-Workflow-specific trigger? (security=always, debug L3=auto)
-  YES → Follow trigger rule ✅
-  NO ↓
-
-Scope trigger? (>100 LOC, >5 files, multi-lang)
-  YES → SUGGEST cascade ↗️
-  NO → Proceed without cascade ✅
+### A. Antigravity (Google DeepMind)
+Use native `invoke_subagent` tool with workspace branching:
+```json
+{
+  "Subagents": [{
+    "TypeName": "self",
+    "Role": "DEVELOPER [code]",
+    "Prompt": "[TASK CONTRACT: sdd_code_...]\nImplement JWT middleware in src/auth/middleware.ts.\nOnly touch focus files. Run tests to verify.",
+    "Workspace": "branch"
+  }]
+}
 ```
 
-Key: Agent ALWAYS has final decision. "AUTO" = strong recommendation. "SUGGEST" = informational.
+### B. Claude Code (Anthropic)
+Use `.claude/agents/` definitions and Git worktree isolation:
+- Launch subagent in isolated git worktree: `git worktree add -b task-auth ../worktrees/auth`
+- Provide strict prompt with focus files and acceptance criteria.
 
-### Quick Complexity Score (H1-H10)
+### C. OpenAI Codex / CLI
+Use `AGENTS.md` persona routing with scoped directory execution:
+- Restrict file access to `focus_files`.
 
-| Score | Criteria | Cascade |
-|:------|:---------|:--------|
-| 1-3 | Single file, <30 LOC, clear pattern | Skip |
-| 4-5 | Single file, 30-100 LOC, moderate logic | Skip |
-| 6-7 | Multi-file, 100-200 LOC, moderate complexity | SUGGEST |
-| 8-9 | Multi-file, >200 LOC, complex algorithm/architecture | AUTO |
-| 10 | Cross-cutting change, >5 files, breaking change risk | AUTO |
+### D. Cursor & MCP Fallback
+If native subagents are unavailable, fallback to `hsa_delegate`:
+```typescript
+// Dispatch cascade
+hsa_delegate({ action: "cascade", cascade_text: "...", task_type: "code" })
+// Poll transcript
+hsa_delegate({ action: "cascade_read", cascade_id: "..." })
+```
 
-### IDE Cascade Support
+---
 
-| IDE | Supported | Method |
-|:----|:----------|:-------|
-| Antigravity | ✅ Full | LS RPC (session-managed cascade) |
-| VS Code + Copilot | ✅ | vscode.lm API (direct model call) |
-| VS Code Insiders | ✅ | vscode.lm API |
-| Cursor | ⚠️ Unverified | vscode.lm (may work) |
-| Windsurf | ❌ | No extension API available |
+## 4. Post-Execution: 2-Tier Quality Review Gate
 
-### Cascade Prompt Guidelines
+Never trust subagent assertions ("I have finished successfully"). Always run the 2-Tier Gate:
 
-Include in `cascade_text`:
-- **Goal**: What exactly the sub-agent must produce
-- **Context**: Relevant code snippets, file paths, error messages
-- **Constraints**: Language, framework, style conventions
-- **Return format**: Expected output structure
+```
+Subagent Deliverable Returned
+            │
+            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ TIER 1: SPEC COMPLIANCE REVIEW (Scope Containment)          │
+│ • Call: hsa_delegate({                                      │
+│     action: "verify",                                       │
+│     focus_files: ["src/auth/middleware.ts"],                │
+│     modified_files: ["src/auth/middleware.ts"]              │
+│   })                                                        │
+│ • PASS: All edits strictly within focus scope               │
+│ • FAIL: Out-of-scope files modified → REJECT & REVERT       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ PASS
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ TIER 2: CODE QUALITY & TDD VERIFICATION                     │
+│ • Run test suite (npm test / pytest / cargo test)           │
+│ • Run typechecker (tsc --noEmit) & linter (eslint)          │
+│ • Inspect diff for surgical precision (no formatting churn) │
+│ • PASS: 100% tests green, 0 errors                          │
+│ • FAIL: Re-dispatch correction or fix failing assertion     │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ PASS
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ MERGE & PERSIST INTELLIGENCE                                │
+│ • Merge branched workspace into main                        │
+│ • hsa_session({ action: "persist", task_summary: "..." })   │
+│ • hsa_check_changes to sync Merkle search index             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Parallel vs Sequential
 

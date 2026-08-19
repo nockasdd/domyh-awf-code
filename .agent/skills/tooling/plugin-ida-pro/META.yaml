@@ -1,0 +1,54 @@
+name: plugin-ida-pro
+display: IDA Pro Bridge
+category: tooling
+tier: 1
+priority: 2
+
+desc: "IDA Pro reverse-engineering workflow for EXE/DLL/binary tasks. Use for discovery-first analysis, bounded batch reads/writes, and identity-pinned bridge calls."
+
+triggers:
+  file_patterns:
+    - "*.exe"
+    - "*.dll"
+    - "*.pdb"
+  keywords:
+    - IDA
+    - IDA Pro
+    - binary
+    - exe
+    - dll
+    - dump
+    - decompile
+    - disassembly
+    - xrefs
+    - strings
+    - struct
+    - class
+    - rename
+    - patch
+    - anti-tamper
+    - reverse engineering
+  intents:
+    - binary audit
+    - analyze executable
+    - inspect dll
+    - patch binary
+    - rebuild structure
+
+caps:
+  - Discover live IDA/Ghidra/x64dbg instances before mutation
+  - Pin target identity with port/session/process/module fields
+  - Use bounded batch reads for multi-view analysis
+  - Use bounded batch writes for rename/comment/type/struct edits
+  - Prefer one request that gathers or mutates several related facts
+  - Defer to plugin docs for exact command contracts
+
+related_skills:
+  - security
+  - graph-patterns
+  - mcp
+
+links_to:
+  - security
+  - graph-patterns
+  - mcp

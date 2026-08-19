@@ -1,0 +1,84 @@
+# =====================================================
+# Game Engine RE — UE4/UE5, Unity IL2CPP
+# =====================================================
+
+unreal_engine:
+  core_objects:
+    gname:
+      name: "GName / FNamePool"
+      desc: "Global name table — all UE object names"
+      importance: "CRITICAL"
+
+    gobject:
+      name: "GObjects / FUObjectArray"
+      desc: "Global object array — every UObject instance"
+      importance: "CRITICAL"
+
+    gworld:
+      name: "GWorld / UWorld"
+      desc: "Current world → actors, levels, players"
+      chain: "GWorld -> PersistentLevel -> Actors[] -> iterate"
+
+  reflection:
+    macros: ["UCLASS()", "UPROPERTY()", "UFUNCTION()", "USTRUCT()"]
+    desc: "Runtime type info baked into binary, enables SDK dumping"
+
+  sdk_tools:
+    dumper7:
+      name: "Dumper-7"
+      github: "Encryqed/Dumper-7"
+      desc: "Universal SDK gen for UE4.19 — UE5.3+"
+      features: ["Auto SDK/MDK generation", "Live editor", "C++ headers"]
+
+    uedumper:
+      name: "UEDumper"
+      github: "Spuckwaffel/UEDumper"
+      features: ["Rich GUI", "Live editor", "MDK generation"]
+
+    ue45dumper:
+      name: "UnrealEngine4-5-Dumper"
+      github: "MehmetBicerDev"
+      desc: "Auto-updatable SDK dump via DLL injection"
+
+  key_structures:
+    tarray: { desc: "Dynamic array: { T* Data; int32 Count; int32 Max; }", size: "24 bytes x64" }
+    fname: { desc: "Name index: { int32 ComparisonIndex; int32 Number; }", size: "8 bytes" }
+    fvector: { desc: "{ float X, Y, Z; }", size: "12 bytes" }
+    frotator: { desc: "{ float Pitch, Yaw, Roll; }", size: "12 bytes" }
+
+unity_il2cpp:
+  overview:
+    desc: "IL2CPP compiles C# to native C++. Harder RE than Mono"
+    key_files:
+      - "GameAssembly.dll — compiled native code"
+      - "global-metadata.dat — class/method name strings"
+
+  tools:
+    il2cppdumper:
+      name: "Il2CppDumper"
+      github: "Perfare/Il2CppDumper"
+      generates: ["dump.cs — C# class stubs", "script.py — IDA/Ghidra imports"]
+
+    cpp2il:
+      name: "Cpp2IL"
+      desc: "Generates C# source approximation"
+
+  re_process: |
+    1. Extract GameAssembly.dll + global-metadata.dat
+    2. Run Il2CppDumper -> class definitions + IDA script
+    3. Import script into IDA/Ghidra -> label functions
+    4. Reconstruct key structs in ReClass
+    5. Build SDK headers
+
+general_tools:
+  reclass:
+    name: "ReClass.NET"
+    desc: "Visual memory structure reconstruction"
+
+  vtable_reconstruction:
+    name: "VTable Reconstruction"
+    process: |
+      1. Find vtable pointer at object+0x00
+      2. Each entry = virtual function address
+      3. Common: Destructor at [0], key methods follow
+      4. Use xrefs in IDA to map class relationships

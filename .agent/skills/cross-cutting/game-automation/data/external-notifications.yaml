@@ -1,0 +1,268 @@
+# =====================================================
+# External Notification Patterns
+# =====================================================
+# Send game data (coordinates, status, alerts) to
+# Discord, Telegram, and other external services.
+
+# ── 1. Discord Webhook ──────────────────────────────
+discord:
+  webhook:
+    name: "Discord Webhook via WinHTTP"
+    desc: "Send rich embed messages to Discord channel — no bot token needed"
+    setup: "Server Settings → Integrations → Webhooks → New Webhook → Copy URL"
+    code: |
+      #include <WinHTTP.h>
+      #pragma comment(lib, "winhttp.lib")
+
+      class DiscordNotifier {
+          std::wstring host_;
+          std::wstring path_;
+
+      public:
+          DiscordNotifier(const std::wstring& webhookUrl) {
+              // Parse: https://discord.com/api/webhooks/ID/TOKEN
+              URL_COMPONENTS urlComp{sizeof(URL_COMPONENTS)};
+              wchar_t hostBuf[256], pathBuf[1024];
+              urlComp.lpszHostName = hostBuf; urlComp.dwHostNameLength = 256;
+              urlComp.lpszUrlPath = pathBuf; urlComp.dwUrlPathLength = 1024;
+              WinHttpCrackUrl(webhookUrl.c_str(), 0, 0, &urlComp);
+              host_ = hostBuf;
+              path_ = pathBuf;
+          }
+
+          bool SendEmbed(const std::string& title, const std::string& description,
+                         int color = 0x00FF00,  // Green
+                         const std::vector<std::pair<std::string,std::string>>& fields = {}) {
+              // Build JSON payload
+              std::string json = R"({"embeds":[{"title":")" + title +
+                  R"(","description":")" + description +
+                  R"(","color":)" + std::to_string(color);
+
+              if (!fields.empty()) {
+                  json += R"(,"fields":[)";
+                  for (size_t i = 0; i < fields.size(); ++i) {
+                      if (i > 0) json += ",";
+                      json += R"({"name":")" + fields[i].first +
+                              R"(","value":")" + fields[i].second +
+                              R"(","inline":true})";
+                  }
+                  json += "]";
+              }
+              json += "}]}";
+
+              return HttpPost(json);
+          }
+
+          bool SendAlert(const std::string& message) {
+              std::string json = R"({"content":")" + message + R"("})";
+              return HttpPost(json);
+          }
+
+      private:
+          bool HttpPost(const std::string& json) {
+              auto session = WinHttpOpen(L"GameAuto/1.0",
+                  WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, nullptr, nullptr, 0);
+              auto connect = WinHttpConnect(session, host_.c_str(),
+                  INTERNET_DEFAULT_HTTPS_PORT, 0);
+              auto request = WinHttpOpenRequest(connect, L"POST", path_.c_str(),
+                  nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES,
+                  WINHTTP_FLAG_SECURE);
+              LPCWSTR headers = L"Content-Type: application/json\r\n";
+              bool ok = WinHttpSendRequest(request, headers, -1,
+                  (LPVOID)json.c_str(), (DWORD)json.size(),
+                  (DWORD)json.size(), 0);
+              if (ok) WinHttpReceiveResponse(request, nullptr);
+              WinHttpCloseHandle(request);
+              WinHttpCloseHandle(connect);
+              WinHttpCloseHandle(session);
+              return ok;
+          }
+      };
+
+      // Usage:
+      // DiscordNotifier discord(L"https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN");
+      // discord.SendEmbed("Bot Status", "Farming complete",
+      //     0x00FF00, {{"Gold", "15,230"}, {"Level", "45"}, {"Zone", "Forest"}});
+    embed_fields_examples:
+      - title: "🎮 Auto Status"
+        fields: ["Player HP", "Position X,Y,Z", "Current Zone", "Gold Earned", "Time Running"]
+      - title: "⚠️ Alert"
+        fields: ["Event", "Details", "Action Taken"]
+    rate_limit: "30 requests per 60 seconds per webhook"
+    tags: [discord, webhook, notification]
+
+# ── 2. Telegram Bot API ─────────────────────────────
+telegram:
+  bot_api:
+    name: "Telegram Bot Notification"
+    desc: "Send game status to Telegram via Bot API — supports inline keyboard"
+    setup: |
+      1. Talk to @BotFather → /newbot → get TOKEN
+      2. Get chat_id: https://api.telegram.org/bot<TOKEN>/getUpdates
+      3. Use sendMessage endpoint
+    code: |
+      class TelegramNotifier {
+          std::string token_;
+          std::string chatId_;
+
+      public:
+          TelegramNotifier(std::string token, std::string chatId)
+              : token_(std::move(token)), chatId_(std::move(chatId)) {}
+
+          bool SendMessage(const std::string& text, bool markdown = true) {
+              std::string path = "/bot" + token_ + "/sendMessage";
+              std::string json = R"({"chat_id":")" + chatId_ +
+                  R"(","text":")" + EscapeJson(text) + R"(")";
+              if (markdown) json += R"(,"parse_mode":"MarkdownV2")";
+              json += "}";
+
+              // Use WinHTTP to POST to api.telegram.org
+              return HttpsPost(L"api.telegram.org", 
+                  std::wstring(path.begin(), path.end()), json);
+          }
+
+          bool SendPhoto(const std::string& caption, const std::string& photoUrl) {
+              std::string path = "/bot" + token_ + "/sendPhoto";
+              std::string json = R"({"chat_id":")" + chatId_ +
+                  R"(","photo":")" + photoUrl +
+                  R"(","caption":")" + EscapeJson(caption) + R"("})";
+              return HttpsPost(L"api.telegram.org",
+                  std::wstring(path.begin(), path.end()), json);
+          }
+
+      private:
+          std::string EscapeJson(const std::string& s) {
+              std::string result;
+              for (char c : s) {
+                  if (c == '"' || c == '\\') result += '\\';
+                  if (c == '\n') { result += "\\n"; continue; }
+                  result += c;
+              }
+              return result;
+          }
+
+          bool HttpsPost(const std::wstring& host, const std::wstring& path,
+                          const std::string& json) {
+              // Same WinHTTP pattern as Discord
+              auto session = WinHttpOpen(L"GameAuto/1.0",
+                  WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, nullptr, nullptr, 0);
+              auto connect = WinHttpConnect(session, host.c_str(),
+                  INTERNET_DEFAULT_HTTPS_PORT, 0);
+              auto request = WinHttpOpenRequest(connect, L"POST", path.c_str(),
+                  nullptr, nullptr, nullptr, WINHTTP_FLAG_SECURE);
+              LPCWSTR headers = L"Content-Type: application/json\r\n";
+              bool ok = WinHttpSendRequest(request, headers, -1,
+                  (LPVOID)json.c_str(), (DWORD)json.size(),
+                  (DWORD)json.size(), 0);
+              if (ok) WinHttpReceiveResponse(request, nullptr);
+              WinHttpCloseHandle(request);
+              WinHttpCloseHandle(connect);
+              WinHttpCloseHandle(session);
+              return ok;
+          }
+      };
+
+      // Usage:
+      // TelegramNotifier tg("123456:ABC-DEF", "987654321");
+      // tg.SendMessage("🎮 *Bot Status*\n💰 Gold: 15,230\n📍 Zone: Forest");
+    rate_limit: "30 messages/second (across all chats)"
+    tags: [telegram, bot, notification]
+
+# ── 3. Generic Webhook (Custom Server) ──────────────
+generic_webhook:
+  name: "Custom HTTP Webhook"
+  desc: "Send game data to any HTTP endpoint (own server, Zapier, etc.)"
+  code: |
+    // Reusable webhook sender
+    class WebhookSender {
+        std::wstring host_;
+        std::wstring path_;
+        uint16_t port_;
+    public:
+        WebhookSender(const std::wstring& host, uint16_t port, 
+                       const std::wstring& path)
+            : host_(host), port_(port), path_(path) {}
+
+        bool Send(const std::string& jsonPayload) {
+            auto session = WinHttpOpen(L"GameAuto/1.0",
+                WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, nullptr, nullptr, 0);
+            auto connect = WinHttpConnect(session, host_.c_str(), port_, 0);
+            DWORD flags = (port_ == 443) ? WINHTTP_FLAG_SECURE : 0;
+            auto request = WinHttpOpenRequest(connect, L"POST", path_.c_str(),
+                nullptr, nullptr, nullptr, flags);
+            LPCWSTR headers = L"Content-Type: application/json\r\n";
+            bool ok = WinHttpSendRequest(request, headers, -1,
+                (LPVOID)jsonPayload.c_str(), (DWORD)jsonPayload.size(),
+                (DWORD)jsonPayload.size(), 0);
+            if (ok) WinHttpReceiveResponse(request, nullptr);
+            WinHttpCloseHandle(request);
+            WinHttpCloseHandle(connect);
+            WinHttpCloseHandle(session);
+            return ok;
+        }
+    };
+  use_cases:
+    - "Own Node.js/Python server collecting telemetry"
+    - "Zapier/Make/IFTTT automation trigger"
+    - "Google Sheets API for logging"
+  tags: [webhook, custom, generic]
+
+# ── 4. Notification Manager (Unified Interface) ─────
+unified_manager:
+  name: "Multi-Channel Notification Manager"
+  desc: "Single interface for Discord + Telegram + Webhook notifications"
+  code: |
+    class NotificationManager {
+        std::unique_ptr<DiscordNotifier> discord_;
+        std::unique_ptr<TelegramNotifier> telegram_;
+        std::unique_ptr<WebhookSender> webhook_;
+        SPSCQueue<std::string, 64> queue_; // From game thread
+        std::jthread worker_;
+
+    public:
+        void Init(const NotificationConfig& cfg) {
+            if (!cfg.discordWebhook.empty())
+                discord_ = std::make_unique<DiscordNotifier>(cfg.discordWebhook);
+            if (!cfg.telegramToken.empty())
+                telegram_ = std::make_unique<TelegramNotifier>(
+                    cfg.telegramToken, cfg.telegramChatId);
+            // Start worker thread for non-blocking sends
+            worker_ = std::jthread([this](std::stop_token st) {
+                CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+                while (!st.stop_requested()) {
+                    std::string msg;
+                    while (queue_.TryPop(msg)) {
+                        if (discord_) discord_->SendAlert(msg);
+                        if (telegram_) telegram_->SendMessage(msg);
+                    }
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+                CoUninitialize();
+            });
+        }
+
+        // Call from ANY thread — non-blocking
+        void Notify(const std::string& msg) { queue_.Push(msg); }
+    };
+  key_point: "All HTTP runs on dedicated worker thread — never blocks game"
+  tags: [notification, manager, unified]
+
+# ── 5. Message Templates for Game Auto ──────────────
+templates:
+  status_report: |
+    🎮 **Auto Status Report**
+    ⏱ Uptime: {uptime}
+    👤 Character: {name} (Lv.{level})
+    ❤️ HP: {hp}/{maxHp} | 💙 MP: {mp}/{maxMp}
+    📍 Position: ({x:.1f}, {y:.1f}, {z:.1f})
+    💰 Gold: {gold} (+{goldPerHour}/hr)
+    🗡 Kills: {kills} | 📦 Items: {items}
+
+  alert_types:
+    low_hp: "⚠️ HP thấp: {hp}/{maxHp} — đang chạy về thành phố"
+    disconnected: "🔴 Mất kết nối game — đang thử reconnect..."
+    target_found: "🎯 Tìm thấy target: {targetName} tại ({x}, {y})"
+    inventory_full: "📦 Inventory đầy — bán đồ tại NPC"
+    level_up: "🎉 Level up! {name} → Lv.{level}"
+    rare_drop: "💎 Rare drop: {itemName} từ {mobName}!"
+    error: "❌ Error: {error} — bot tạm dừng"

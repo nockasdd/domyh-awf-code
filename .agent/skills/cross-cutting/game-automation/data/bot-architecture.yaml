@@ -1,0 +1,207 @@
+# =====================================================
+# Bot AI Architecture Patterns
+# =====================================================
+
+architectures:
+  fsm:
+    name: "Finite State Machine"
+    complexity: "O(N^2) transitions"
+    when: "< 10 states, simple linear flow"
+    code: |
+      enum class BotState { Idle, Moving, Fighting, Looting, Healing };
+      class BotFSM {
+          BotState state_ = BotState::Idle;
+      public:
+          void Update(GameContext& ctx) {
+              switch (state_) {
+                  case BotState::Idle:
+                      if (ctx.HasTarget()) state_ = BotState::Moving; break;
+                  case BotState::Moving:
+                      ctx.MoveToTarget();
+                      if (ctx.IsInRange()) state_ = BotState::Fighting; break;
+                  case BotState::Fighting:
+                      ctx.Attack();
+                      if (ctx.TargetDead()) state_ = BotState::Looting;
+                      if (ctx.HPLow()) state_ = BotState::Healing; break;
+              }
+          }
+      };
+
+  hfsm:
+    name: "Hierarchical FSM"
+    when: "Complex behaviors needing grouped states"
+    advantage: "Super-states share transitions"
+
+  behavior_tree:
+    name: "Behavior Tree"
+    when: "> 10 behaviors, modular, reusable"
+    node_types:
+      - "Selector (OR): try children until success"
+      - "Sequence (AND): run children until failure"
+      - "Condition: check game state"
+      - "Action: perform game action"
+    code: |
+      class BTNode {
+      public:
+          virtual ~BTNode() = default;
+          virtual Status Tick(GameContext& ctx) = 0;
+      };
+      class Selector : public BTNode {
+          std::vector<std::unique_ptr<BTNode>> children_;
+      public:
+          Status Tick(GameContext& ctx) override {
+              for (auto& child : children_) {
+                  auto s = child->Tick(ctx);
+                  if (s != Status::Failure) return s;
+              }
+              return Status::Failure;
+          }
+      };
+      class Sequence : public BTNode {
+          std::vector<std::unique_ptr<BTNode>> children_;
+      public:
+          Status Tick(GameContext& ctx) override {
+              for (auto& child : children_) {
+                  auto s = child->Tick(ctx);
+                  if (s != Status::Success) return s;
+              }
+              return Status::Success;
+          }
+      };
+
+  goap:
+    name: "Goal-Oriented Action Planning"
+    when: "Emergent AI, needs to find action sequences"
+    concept: |
+      Goal: { hasLoot = true }
+      Actions:
+        - Attack:  pre={inRange}, effect={targetDead}
+        - Loot:    pre={targetDead}, effect={hasLoot}
+        - MoveTo:  pre={}, effect={inRange}
+      Planner finds: MoveTo -> Attack -> Loot
+
+task_scheduler:
+  priority_queue:
+    name: "Priority Task Queue"
+    code: |
+      struct BotTask {
+          int priority;
+          std::function<bool()> execute;
+          auto operator<=>(const BotTask& o) const { return priority <=> o.priority; }
+      };
+
+  cooldown_manager:
+    name: "Skill Cooldown Tracker"
+    code: |
+      class CooldownManager {
+          std::unordered_map<int, std::chrono::steady_clock::time_point> cooldowns_;
+      public:
+          bool IsReady(int skillId, std::chrono::milliseconds cd) {
+              auto now = std::chrono::steady_clock::now();
+              if (auto it = cooldowns_.find(skillId); it != cooldowns_.end())
+                  if (now - it->second < cd) return false;
+              cooldowns_[skillId] = now;
+              return true;
+          }
+      };
+
+emulator_automation:
+  ldplayer:
+    name: "LDPlayer ldconsole API"
+    commands:
+      - "ldconsole launch --index 0"
+      - "ldconsole runapp --index 0 --packagename com.game.app"
+      - "ldconsole adb --index 0 --command 'shell input tap 500 800'"
+
+  bluestacks:
+    name: "BlueStacks Automation"
+    commands:
+      - "HD-Player.exe --instance Pie64 --cmd launchApp --package com.game"
+
+  adb_universal:
+    name: "ADB — Universal Emulator Control"
+    commands:
+      - "adb shell input tap <x> <y>"
+      - "adb shell input swipe <x1> <y1> <x2> <y2> <duration>"
+      - "adb shell screencap -p /sdcard/screen.png"
+      - "adb shell am start -n <package>/<activity>"
+
+pathfinding:
+  astar:
+    name: "A* Pathfinding"
+    desc: "Optimal shortest path. Works on grid or NavMesh graph."
+    code: |
+      struct Node {
+          Vec2i pos; float g, h;
+          float f() const { return g + h; }
+          auto operator<=>(const Node& o) const { return f() <=> o.f(); }
+      };
+      std::vector<Vec2i> AStar(const Grid& grid, Vec2i start, Vec2i goal) {
+          std::priority_queue<Node, std::vector<Node>, std::greater<>> open;
+          std::unordered_map<Vec2i, Vec2i> cameFrom;
+          std::unordered_map<Vec2i, float> gScore;
+          open.push({start, 0, Heuristic(start, goal)});
+          gScore[start] = 0;
+          while (!open.empty()) {
+              auto current = open.top(); open.pop();
+              if (current.pos == goal) return ReconstructPath(cameFrom, goal);
+              for (auto& neighbor : grid.GetNeighbors(current.pos)) {
+                  float tentG = gScore[current.pos] + Cost(current.pos, neighbor);
+                  if (!gScore.count(neighbor) || tentG < gScore[neighbor]) {
+                      gScore[neighbor] = tentG;
+                      cameFrom[neighbor] = current.pos;
+                      open.push({neighbor, tentG, Heuristic(neighbor, goal)});
+                  }
+              }
+          }
+          return {}; // no path
+      }
+    tags: [pathfinding, ai, grid]
+
+  bezier_movement:
+    name: "Bezier Curve Path Smoother"
+    desc: "Smooth waypoint paths with cubic Bezier curves for human-like movement"
+    code: |
+      Vec2f CubicBezier(Vec2f p0, Vec2f p1, Vec2f p2, Vec2f p3, float t) {
+          float u = 1 - t;
+          return u*u*u*p0 + 3*u*u*t*p1 + 3*u*t*t*p2 + t*t*t*p3;
+      }
+      std::vector<Vec2f> SmoothPath(const std::vector<Vec2f>& waypoints, int segments = 20) {
+          std::vector<Vec2f> smooth;
+          for (size_t i = 0; i + 3 < waypoints.size(); i += 3) {
+              for (int s = 0; s <= segments; ++s)
+                  smooth.push_back(CubicBezier(
+                      waypoints[i], waypoints[i+1], waypoints[i+2], waypoints[i+3],
+                      static_cast<float>(s) / segments));
+          }
+          return smooth;
+      }
+    tags: [movement, human_like, pathfinding]
+
+  navmesh:
+    name: "NavMesh Integration"
+    desc: "Read game NavMesh data for walkable polygon navigation"
+    tips:
+      - "UE4/5: UNavigationSystemV1::FindPathSync"
+      - "Unity: NavMesh.CalculatePath"
+      - "Custom: Recast/Detour library (MIT)"
+    recast: "github.com/recastnavigation/recastnavigation"
+    tags: [pathfinding, navmesh, 3d]
+
+utility_ai:
+  scoring:
+    name: "Utility AI Scoring"
+    desc: "Score-based action selection — more nuanced than BT/FSM"
+    code: |
+      struct UtilAction {
+          std::string name;
+          std::function<float(const GameContext&)> scorer;
+          std::function<void(GameContext&)> execute;
+      };
+      void UpdateUtilityAI(GameContext& ctx, std::vector<UtilAction>& actions) {
+          auto best = std::ranges::max_element(actions,
+              {}, [&](auto& a) { return a.scorer(ctx); });
+          if (best != actions.end() && best->scorer(ctx) > 0.1f)
+              best->execute(ctx);
+      }
+    tags: [ai, utility, advanced]

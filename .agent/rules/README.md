@@ -80,30 +80,33 @@ Additional **modular rules** can be composed for specific use cases.
 
 ## Modular Rules
 
-Composable rule modules for specific use cases:
+Composable rule modules in `modules/` (active in this project):
 
 | Module                          | Purpose                      | Personas            |
 | ------------------------------- | ---------------------------- | ------------------- |
-| `stop-conditions.yaml`          | When to pause                | All                 |
-| `edit-verification.yaml`        | Code edit verification       | Developer, Debugger |
+| `complexity-scoring.yaml`        | Auto-detect orchestration need | All                 |
+| `progressive-escalation.yaml`   | Stuck detection & pivot      | Developer, Debugger  |
 | `terminal-safety.yaml`          | Terminal command safety      | Developer, DevOps   |
 | `git-workflow.yaml`             | Git operations               | Developer, DevOps    |
-| `quality.yaml`                  | Code quality standards       | Developer, Tester    |
-| `language.yaml`                 | Language/i18n rules         | All                 |
-| `yagni.yaml`                   | YAGNI enforcement            | Developer, Planner   |
-| `online-research.yaml`          | Web research guidelines      | Researcher          |
-| `agent-delegation.yaml`         | Task delegation patterns     | Orchestrator        |
-| `performance-optimization.yaml` | Perf optimization guidelines | Developer, DevOps    |
-| `progressive-escalation.yaml`   | Stuck detection & pivot      | Developer, Debugger  |
-| `session-governance.yaml`       | Session governance discipline | All                 |
-| `context-integrity.yaml`        | Context coherence across sessions | Developer, Architect |
-| `drift-prevention.yaml`         | Drift alignment checks       | Developer, Debugger |
-| `behavioral-patterns.yaml`       | Behavioral anti-pattern examples | All                 |
-| `game-creation-safety.yaml`     | Game creation safety rules    | Developer, Debugger |
+| `behavioral-patterns.yaml`       | Anti-pattern BAD/GOOD examples | All                 |
 
-> **Merged into constitutional tiers** (in `archive/`): `reflection.yaml`, `context-management.yaml`, `evidence.yaml`
+Domain-specific rules in `domain/`:
 
-Location: `modules/*.yaml`
+| Module                          | Purpose                      | Triggered When        |
+| ------------------------------- | ---------------------------- | --------------------- |
+| `cpp-build.yaml`                 | C++ single-binary build      | C++ projects detected |
+| `game-safety.yaml`               | Game creation safety         | Unity/UE projects     |
+| `game-security.yaml`             | Game dev security            | Game automation       |
+| `reverse-engineering.yaml`       | Binary/IDA/Ghidra/x64dbg     | EXE/DLL audit         |
+| `orchestration-comm.yaml`        | Agent-to-agent communication | Orchestration active  |
+| `orchestration-deleg.yaml`       | Task delegation patterns     | Orchestrator persona  |
+
+Data files in `data/`:
+
+| File                            | Purpose                      |
+| ------------------------------- | ---------------------------- |
+| `build-systems.yaml`             | Stack/build detection patterns |
+| `quality-standards.json`         | ISO 25010 + CWE Top 25 + OWASP Top 10 |
 
 ---
 
@@ -111,39 +114,27 @@ Location: `modules/*.yaml`
 
 ```
 .agent/rules/
-├── README.md                    # This file
-├── SACRED_RULES.xml             # Core XML rules (always active)
-├── modules/                     # v7.0 Modular rules
-│   ├── stop-conditions.yaml     # When to pause
-│   ├── edit-verification.yaml   # Code edit verification
-│   ├── terminal-safety.yaml     # Terminal safety
-│   ├── git-workflow.yaml        # Git operations
-│   ├── quality.yaml            # Code quality
-│   ├── language.yaml           # Language/i18n
-│   ├── yagni.yaml              # YAGNI enforcement
-│   ├── online-research.yaml     # Web research
-│   ├── progressive-escalation.yaml # Stuck detection & pivot
-│   ├── session-governance.yaml  # Session governance discipline
-│   ├── context-integrity.yaml   # Context coherence
-│   ├── drift-prevention.yaml    # Drift alignment checks
-│   └── behavioral-patterns.yaml # Behavioral anti-pattern examples
-├── data/                        # Supporting data files
-│   └── build-systems.yaml       # Build system detection data
-├── archive/                     # Merged/legacy rules
-│   ├── constitutional/          # v6.5.0 Constitutional YAML tiers
-│   │   ├── tier-0-core.yaml     # Immutable principles
-│   │   ├── tier-1-safety.yaml   # Safety rules
-│   │   └── tier-2-execution.yaml # Quality guidelines
-│   ├── reflection.yaml          # Merged into Tier 2
-│   ├── context-management.yaml  # Merged into Tier 2
-│   ├── evidence.yaml           # Merged into Tier 2
-│   ├── duplication-prevention.md # DRY enforcement
-│   └── incremental-changes.md  # Step-by-step modifications
-└── [Standalone Rules]           # Active standalone rules
-    ├── project-detection.md     # Project/stack detection
-    ├── shell-commands.md        # Shell syntax per platform
-    ├── prompt-injection-guard.md # Security: CVE-2025 protection
-    └── validation-framework.md  # Input validation patterns
+├── README.md                       # This file
+├── SACRED_RULES.xml                # Core XML rules (always active)
+├── AGENT_RULES.md                  # 6 principles (Markdown fallback for non-MCP)
+├── prompt-injection-guard.md       # Security: prompt injection patterns
+├── validation-framework.md         # 6-phase pre-implementation validation
+├── modules/                        # Composable rules (5 active)
+│   ├── complexity-scoring.yaml
+│   ├── progressive-escalation.yaml
+│   ├── terminal-safety.yaml
+│   ├── git-workflow.yaml
+│   └── behavioral-patterns.yaml
+├── domain/                         # Stack-specific rules (6 modules)
+│   ├── cpp-build.yaml
+│   ├── game-safety.yaml
+│   ├── game-security.yaml
+│   ├── reverse-engineering.yaml
+│   ├── orchestration-comm.yaml
+│   └── orchestration-deleg.yaml
+└── data/                           # Detection data
+    ├── build-systems.yaml
+    └── quality-standards.json
 ```
 
 ---
@@ -160,14 +151,14 @@ Tier 0 (Core) > Tier 1 (Safety) > Tier 2 (Execution) > Modular Rules
 
 | Persona    | Always Load  | Additional Modules              |
 | ---------- | ------------ | ------------------------------- |
-| Developer  | Tier 0, 1, 2 | edit-verification, quality, git, session-governance |
-| Debugger   | Tier 0, 1, 2 | edit-verification, evidence, progressive-escalation, drift-prevention |
-| Architect  | Tier 0, 1, 2 | context-integrity, session-governance |
-| Auditor    | Tier 0, 1, 2 | evidence                        |
-| Tester     | Tier 0, 1, 2 | quality                         |
-| DevOps     | Tier 0, 1, 2 | terminal-safety, git            |
-| Researcher | Tier 0, 1, 2 | online-research                 |
-| All        | Tier 0, 1, 2 | behavioral-patterns, session-governance |
+| Developer  | Tier 0-2     | behavioral-patterns, terminal-safety, git-workflow |
+| Debugger   | Tier 0-2     | behavioral-patterns, progressive-escalation |
+| Architect  | Tier 0-2     | behavioral-patterns, complexity-scoring |
+| Auditor    | Tier 0-2     | behavioral-patterns             |
+| Tester     | Tier 0-2     | behavioral-patterns             |
+| DevOps     | Tier 0-2     | terminal-safety, git-workflow   |
+| Researcher | Tier 0-2     | (uses online-research from user global) |
+| Orchestrator | Tier 0-2   | complexity-scoring, orchestration-comm, orchestration-deleg |
 
 ### Override Behavior
 

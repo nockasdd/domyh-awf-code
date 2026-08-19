@@ -1,0 +1,300 @@
+# =====================================================
+# Windows Native Networking for Game Automation
+# =====================================================
+# Optimal patterns when no third-party networking libs
+# are available in injected DLL context.
+
+# ── 1. Library Comparison ───────────────────────────
+comparison:
+  overview:
+    recommendation: "WinHTTP for HTTP/HTTPS, raw WinSock2 for TCP/UDP custom protocols"
+    table:
+      WinHTTP:
+        purpose: "HTTP/HTTPS client requests"
+        async: true
+        service_safe: true
+        overhead: low
+        thread_model: "Callback-based (WINHTTP_STATUS_CALLBACK)"
+        best_for: "API calls, webhook, data sync from injected DLL"
+        perf: "Fastest HTTP option on Windows"
+      WinInet:
+        purpose: "HTTP/FTP with browser features"
+        async: true
+        service_safe: false    # ⚠️ NOT safe in services/injected DLLs
+        overhead: high
+        thread_model: "Legacy callback"
+        best_for: "Desktop apps with cookie/cache needs"
+        perf: "Dead slow compared to WinHTTP — avoid"
+        warning: "Microsoft explicitly warns against use in service-like processes"
+      WinSock2:
+        purpose: "Raw TCP/UDP sockets"
+        async: true
+        service_safe: true
+        overhead: "lowest — kernel direct"
+        thread_model: "IOCP, select, WSAAsyncSelect, Overlapped I/O"
+        best_for: "Game packet interception, custom protocols, high-throughput"
+        perf: "Maximum control, maximum performance"
+
+# ── 2. WinHTTP Async Pattern (Recommended for HTTP) ─
+winhttp:
+  async_request:
+    name: "WinHTTP Async GET/POST"
+    desc: "Non-blocking HTTP from injected DLL — won't freeze game thread"
+    code: |
+      #include <WinHTTP.h>
+      #pragma comment(lib, "winhttp.lib")
+
+      class AsyncHttpClient {
+          HINTERNET session_ = nullptr;
+          HINTERNET connect_ = nullptr;
+
+          struct RequestContext {
+              std::string response;
+              std::function<void(int, std::string)> callback;
+              bool complete = false;
+          };
+
+      public:
+          AsyncHttpClient() {
+              session_ = WinHttpOpen(L"GameAuto/1.0",
+                  WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+                  WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 
+                  WINHTTP_FLAG_ASYNC);  // ← ASYNC flag
+              WinHttpSetStatusCallback(session_, StatusCallback,
+                  WINHTTP_CALLBACK_FLAG_ALL_COMPLETIONS, 0);
+          }
+
+          void GetAsync(const std::wstring& host, const std::wstring& path,
+                        std::function<void(int, std::string)> callback) {
+              auto connect = WinHttpConnect(session_, host.c_str(),
+                  INTERNET_DEFAULT_HTTPS_PORT, 0);
+              auto request = WinHttpOpenRequest(connect, L"GET", path.c_str(),
+                  nullptr, WINHTTP_NO_REFERER,
+                  WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+              auto* ctx = new RequestContext{.callback = std::move(callback)};
+              WinHttpSendRequest(request, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
+                  WINHTTP_NO_REQUEST_DATA, 0, 0, (DWORD_PTR)ctx);
+          }
+
+          static void CALLBACK StatusCallback(HINTERNET hInternet, DWORD_PTR context,
+              DWORD status, LPVOID info, DWORD infoLen) {
+              auto* ctx = reinterpret_cast<RequestContext*>(context);
+              switch (status) {
+                  case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
+                      WinHttpReceiveResponse(hInternet, nullptr);
+                      break;
+                  case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE: {
+                      DWORD size = 0;
+                      WinHttpQueryDataAvailable(hInternet, &size);
+                      break;
+                  }
+                  case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE: {
+                      DWORD size = *reinterpret_cast<DWORD*>(info);
+                      if (size > 0) {
+                          std::vector<char> buf(size);
+                          WinHttpReadData(hInternet, buf.data(), size, nullptr);
+                      } else {
+                          ctx->callback(200, std::move(ctx->response));
+                          delete ctx;
+                      }
+                      break;
+                  }
+                  case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
+                      ctx->response.append((char*)info, infoLen);
+                      WinHttpQueryDataAvailable(hInternet, nullptr);
+                      break;
+                  case WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
+                      ctx->callback(-1, "Request failed");
+                      delete ctx;
+                      break;
+              }
+          }
+
+          ~AsyncHttpClient() {
+              if (session_) WinHttpCloseHandle(session_);
+          }
+      };
+    thread_notes:
+      - "Callbacks fire on WinHTTP thread pool — NOT game thread"
+      - "Must queue results to game thread via lock-free queue"
+      - "Never call DirectX/game APIs directly from callback"
+    tags: [winhttp, async, http, injected_dll]
+
+  sync_simple:
+    name: "WinHTTP Synchronous (Blocking)"
+    desc: "Simple blocking HTTP — use from worker thread only, NEVER from game thread"
+    code: |
+      std::string HttpGet(const std::wstring& host, const std::wstring& path) {
+          auto session = WinHttpOpen(L"GameAuto/1.0",
+              WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, nullptr, nullptr, 0);
+          auto connect = WinHttpConnect(session, host.c_str(),
+              INTERNET_DEFAULT_HTTPS_PORT, 0);
+          auto request = WinHttpOpenRequest(connect, L"GET", path.c_str(),
+              nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES,
+              WINHTTP_FLAG_SECURE);
+          WinHttpSendRequest(request, nullptr, 0, nullptr, 0, 0, 0);
+          WinHttpReceiveResponse(request, nullptr);
+          std::string result;
+          DWORD size = 0, downloaded = 0;
+          do {
+              WinHttpQueryDataAvailable(request, &size);
+              std::vector<char> buf(size);
+              WinHttpReadData(request, buf.data(), size, &downloaded);
+              result.append(buf.data(), downloaded);
+          } while (size > 0);
+          WinHttpCloseHandle(request);
+          WinHttpCloseHandle(connect);
+          WinHttpCloseHandle(session);
+          return result;
+      }
+    warning: "⚠️ Blocking — will freeze game if called from render/main thread"
+    tags: [winhttp, sync, simple]
+
+# ── 3. IOCP Socket Pattern (Maximum Performance) ────
+iocp:
+  desc: "I/O Completion Port — most scalable async I/O on Windows. Kernel-level event queue."
+  code: |
+    class IOCPSocket {
+        HANDLE completionPort_ = nullptr;
+        SOCKET listenSocket_ = INVALID_SOCKET;
+        static constexpr int WORKER_COUNT = 2;
+
+        struct OverlappedEx : OVERLAPPED {
+            WSABUF buffer;
+            char data[4096];
+            enum Op { RECV, SEND } operation;
+        };
+
+    public:
+        IOCPSocket() {
+            WSADATA wsaData;
+            WSAStartup(MAKEWORD(2, 2), &wsaData);
+            completionPort_ = CreateIoCompletionPort(
+                INVALID_HANDLE_VALUE, nullptr, 0, WORKER_COUNT);
+        }
+
+        void AssociateSocket(SOCKET s) {
+            CreateIoCompletionPort((HANDLE)s, completionPort_, (ULONG_PTR)s, 0);
+        }
+
+        void PostRecv(SOCKET s) {
+            auto* ov = new OverlappedEx{};
+            ov->operation = OverlappedEx::RECV;
+            ov->buffer = { sizeof(ov->data), ov->data };
+            DWORD flags = 0, bytes = 0;
+            WSARecv(s, &ov->buffer, 1, &bytes, &flags, ov, nullptr);
+        }
+
+        // Worker thread — runs on thread pool
+        void WorkerLoop() {
+            DWORD bytes; ULONG_PTR key; OVERLAPPED* ov;
+            while (GetQueuedCompletionStatus(completionPort_, &bytes, &key, &ov, INFINITE)) {
+                auto* ex = static_cast<OverlappedEx*>(ov);
+                if (bytes == 0) { /* connection closed */ delete ex; continue; }
+                if (ex->operation == OverlappedEx::RECV) {
+                    // Process received data: ex->data[0..bytes-1]
+                    PostRecv((SOCKET)key); // Post next recv
+                }
+                // Don't delete — reuse for next operation
+            }
+        }
+
+        ~IOCPSocket() {
+            if (completionPort_) CloseHandle(completionPort_);
+            WSACleanup();
+        }
+    };
+  performance:
+    throughput: "100K+ connections on single machine"
+    latency: "Sub-microsecond event dispatch"
+    cpu: "Worker threads wake only on completion — zero busy-wait"
+  use_case: "Game packet proxy, relay server, high-volume data collection"
+  tags: [iocp, socket, high_performance]
+
+# ── 4. COM Threading for Network in Injected DLLs ──
+com_threading:
+  problem: |
+    Game's main thread is usually STA (Single-Threaded Apartment).
+    WinHTTP/COM require proper apartment initialization.
+    Calling CoInitializeEx(MTA) on game's STA thread → RPC_E_CHANGED_MODE crash.
+
+  solution:
+    name: "Dedicated Worker Thread with MTA"
+    desc: "Create separate thread for all networking — never use game thread for HTTP"
+    code: |
+      class NetworkWorker {
+          std::jthread thread_;
+          SPSCQueue<std::function<void()>> pendingResults_;
+
+      public:
+          NetworkWorker() : thread_([this](std::stop_token st) {
+              // Initialize COM on worker (MTA — safe for WinHTTP)
+              CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+              AsyncHttpClient client;
+
+              while (!st.stop_requested()) {
+                  // Process queued HTTP requests
+                  ProcessPendingRequests(client);
+                  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+              }
+              CoUninitialize();
+          }) {}
+
+          // Queue result for game thread pickup
+          void QueueResult(std::function<void()> cb) {
+              pendingResults_.Push(std::move(cb));
+          }
+
+          // Call from game thread (e.g., in Present hook) to process results
+          void DrainResults() {
+              std::function<void()> fn;
+              while (pendingResults_.TryPop(fn)) {
+                  fn(); // Execute on game thread — safe for game API calls
+              }
+          }
+      };
+  rules:
+    - "NEVER call CoInitializeEx on game's existing thread"
+    - "Create dedicated thread for COM/networking"
+    - "Use lock-free queue to pass results back to game thread"
+    - "DrainResults() from Present hook — executes on render thread safely"
+
+# ── 5. Injected DLL Network Architecture ────────────
+architecture:
+  name: "Thread-Safe Network Architecture for Game Automation"
+  flow: |
+    ┌─────────────┐      ┌──────────────────┐      ┌─────────────┐
+    │ Game Thread  │      │  Worker Thread    │      │   Server    │
+    │ (Present     │◄────►│  (MTA, WinHTTP)  │◄────►│   (API)     │
+    │  Hook)       │ SPSC │                  │ HTTP │             │
+    │              │ Queue│ CoInitializeEx   │      │             │
+    │ DrainResults │◄─────│ (COINIT_MT)      │      │             │
+    │ QueueRequest │─────►│                  │      │             │
+    └─────────────┘      └──────────────────┘      └─────────────┘
+  key_principles:
+    - "Game thread NEVER blocks on network I/O"
+    - "All HTTP runs on dedicated worker with its own COM apartment"
+    - "SPSC lock-free queue for bidirectional game↔worker communication"
+    - "Worker thread lifetime managed by std::jthread (auto-join)"
+    - "Graceful shutdown: stop_token → drain queue → CoUninitialize"
+
+# ── 6. WSA Init/Cleanup Best Practice ──────────────
+wsa_lifecycle:
+  code: |
+    // RAII WSA wrapper — prevents double-init and missed cleanup
+    class WSAGuard {
+        bool initialized_ = false;
+    public:
+        WSAGuard() {
+            WSADATA data;
+            initialized_ = (WSAStartup(MAKEWORD(2, 2), &data) == 0);
+        }
+        ~WSAGuard() { if (initialized_) WSACleanup(); }
+        explicit operator bool() const { return initialized_; }
+        WSAGuard(const WSAGuard&) = delete;
+        WSAGuard& operator=(const WSAGuard&) = delete;
+    };
+  notes:
+    - "WSAStartup/Cleanup are ref-counted — multiple calls OK but must balance"
+    - "Place WSAGuard as static member in network manager singleton"
+    - "Initialize in worker thread, not DllMain"

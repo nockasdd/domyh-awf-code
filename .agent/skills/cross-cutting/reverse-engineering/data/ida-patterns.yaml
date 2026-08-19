@@ -1,0 +1,50 @@
+# =====================================================
+# IDA Pro Patterns — IDAPython Scripts & FLIRT
+# =====================================================
+
+idapython:
+  find_function_by_string:
+    name: "Find Function by String Reference"
+    code: |
+      import idautils, idc, ida_bytes
+      def find_func_by_string(search_str):
+          for s in idautils.Strings():
+              if search_str in str(s):
+                  for xref in idautils.DataRefsTo(s.ea):
+                      func = idaapi.get_func(xref)
+                      if func: return func.start_ea
+          return None
+
+  enumerate_xrefs:
+    name: "Enumerate Cross References"
+    code: |
+      def get_callers(func_ea):
+          return [ref.frm for ref in idautils.XrefsTo(func_ea, 0)]
+      def get_callees(func_ea):
+          return [ref.to for ref in idautils.XrefsFrom(func_ea, 0)]
+
+  rename_function:
+    name: "Rename Function"
+    code: |
+      idc.set_name(func_ea, "MyClassName::MyMethod", idc.SN_NOWARN)
+
+  batch_rename_vtable:
+    name: "Batch Rename VTable Functions"
+    code: |
+      def rename_vtable(vtable_ea, class_name, names):
+          for i, name in enumerate(names):
+              func_ea = idc.get_qword(vtable_ea + i * 8)  # x64
+              idc.set_name(func_ea, f"{class_name}::{name}", idc.SN_NOWARN)
+
+  create_struct:
+    name: "Create Struct from Offsets"
+    code: |
+      import ida_struct
+      sid = ida_struct.add_struc(-1, "PlayerData", False)
+      ida_struct.add_struc_member(sid, "health", 0x100, ida_bytes.FF_DWORD, None, 4)
+      ida_struct.add_struc_member(sid, "mana", 0x104, ida_bytes.FF_DWORD, None, 4)
+
+flirt:
+  desc: "Fast Library Identification and Recognition Technology"
+  usage: "Apply .sig files to identify library functions automatically"
+  tools: ["FLAIR utilities", "sigmake", "pat2sig"]

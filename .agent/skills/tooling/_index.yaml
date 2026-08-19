@@ -1,7 +1,7 @@
 # tooling/_index.yaml — Dev Tooling Skills Index
 category: tooling
-description: "Dev tools — API protocols, browser agents, CLI, IDE extensions, MCP, HSA toolkit"
-count: 6
+description: "Dev tools — API protocols, browser agents, CLI, IDE extensions, MCP, HSA toolkit, IDA Pro bridge"
+count: 7
 skills:
   - { id: api-protocols, has_advanced: false }
   - { id: browser-agent, has_advanced: true }
@@ -9,3 +9,4 @@ skills:
   - { id: ide-extension, has_advanced: false }
   - { id: mcp, has_advanced: false }
   - { id: hsa-toolkit, has_advanced: false }
+  - { id: plugin-ida-pro, has_advanced: false }

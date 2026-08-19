@@ -1,0 +1,334 @@
+# =====================================================
+# IPC & Communication Patterns for Game Automation
+# =====================================================
+# App↔DLL, machine↔machine, emulator↔host communication
+# methods for game automation systems.
+
+# ── 1. IPC Method Comparison ────────────────────────
+comparison:
+  table:
+    shared_memory:
+      latency: "< 1μs"
+      throughput: "GB/s (RAM speed)"
+      cross_machine: false
+      complexity: medium
+      best_for: "App↔DLL real-time data, entity lists, telemetry"
+    named_pipe:
+      latency: "~10μs"
+      throughput: "100MB/s+"
+      cross_machine: true   # \\servername\pipe\name
+      complexity: low
+      best_for: "Command/response, control messages, config updates"
+    memory_mapped_file:
+      latency: "< 1μs (same as shared memory)"
+      throughput: "GB/s"
+      cross_machine: false
+      complexity: medium
+      best_for: "Large data sharing, game state snapshots, persistent data"
+    tcp_socket:
+      latency: "~100μs (localhost), ~1ms (LAN)"
+      throughput: "10-100MB/s"
+      cross_machine: true
+      complexity: medium
+      best_for: "Multi-machine coordination, remote control, bot farm"
+    udp_socket:
+      latency: "~50μs (localhost)"
+      throughput: "Faster than TCP"
+      cross_machine: true
+      complexity: medium
+      best_for: "Real-time position/state streaming, heartbeat, discovery"
+
+# ── 2. Shared Memory (App↔DLL) ──────────────────────
+shared_memory:
+  name: "Win32 Shared Memory via File Mapping"
+  desc: "Fastest IPC — app and DLL share same memory region. Zero copy."
+  code: |
+    // Shared data structure — both app and DLL use this header
+    #pragma pack(push, 1)
+    struct SharedGameData {
+        volatile LONG lock;           // SpinLock
+        uint32_t version;             // Incremented on each write
+        // Player data
+        float playerX, playerY, playerZ;
+        float playerHP, playerMP;
+        uint32_t playerLevel;
+        char playerName[64];
+        // Entity list
+        uint32_t entityCount;
+        struct EntityInfo {
+            uint32_t id;
+            float x, y, z;
+            float hp;
+            uint32_t type;  // 0=NPC, 1=Player, 2=Monster, 3=Item
+        } entities[256];
+        // Commands from app → DLL
+        uint32_t commandId;           // Non-zero = pending command
+        char commandData[1024];
+        // Status from DLL → app
+        uint32_t status;              // 0=idle, 1=running, 2=error
+        char statusMessage[256];
+    };
+    #pragma pack(pop)
+
+    // === DLL side: Create shared memory ===
+    class SharedMemServer {
+        HANDLE mapFile_ = nullptr;
+        SharedGameData* data_ = nullptr;
+    public:
+        bool Create(const char* name = "GameAutoShared") {
+            mapFile_ = CreateFileMappingA(INVALID_HANDLE_VALUE, nullptr,
+                PAGE_READWRITE, 0, sizeof(SharedGameData), name);
+            if (!mapFile_) return false;
+            data_ = (SharedGameData*)MapViewOfFile(mapFile_,
+                FILE_MAP_ALL_ACCESS, 0, 0, sizeof(SharedGameData));
+            ZeroMemory(data_, sizeof(SharedGameData));
+            return data_ != nullptr;
+        }
+        SharedGameData* Data() { return data_; }
+        ~SharedMemServer() {
+            if (data_) UnmapViewOfFile(data_);
+            if (mapFile_) CloseHandle(mapFile_);
+        }
+    };
+
+    // === App side: Open shared memory ===
+    class SharedMemClient {
+        HANDLE mapFile_ = nullptr;
+        SharedGameData* data_ = nullptr;
+    public:
+        bool Open(const char* name = "GameAutoShared") {
+            mapFile_ = OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, name);
+            if (!mapFile_) return false;
+            data_ = (SharedGameData*)MapViewOfFile(mapFile_,
+                FILE_MAP_ALL_ACCESS, 0, 0, sizeof(SharedGameData));
+            return data_ != nullptr;
+        }
+        const SharedGameData* Data() const { return data_; }
+        ~SharedMemClient() {
+            if (data_) UnmapViewOfFile(data_);
+            if (mapFile_) CloseHandle(mapFile_);
+        }
+    };
+  synchronization: |
+    // SpinLock for fast locking (< 1μs hold time)
+    void Lock(volatile LONG* lock) {
+        while (InterlockedCompareExchange(lock, 1, 0) != 0)
+            _mm_pause(); // CPU yield hint
+    }
+    void Unlock(volatile LONG* lock) {
+        InterlockedExchange(lock, 0);
+    }
+    // Usage: Lock(&data->lock); ... write ... Unlock(&data->lock);
+  tags: [ipc, shared_memory, fast, app_dll]
+
+# ── 3. Named Pipe (Command Channel) ────────────────
+named_pipe:
+  name: "Named Pipe Server/Client"
+  desc: "Bidirectional command/response channel — works across machines"
+  code: |
+    // === DLL side: Pipe server ===
+    class PipeServer {
+        HANDLE pipe_ = INVALID_HANDLE_VALUE;
+        std::jthread thread_;
+    public:
+        using Handler = std::function<std::string(const std::string&)>;
+        void Start(const char* name, Handler handler) {
+            thread_ = std::jthread([=](std::stop_token st) {
+                while (!st.stop_requested()) {
+                    pipe_ = CreateNamedPipeA(
+                        ("\\\\.\\pipe\\" + std::string(name)).c_str(),
+                        PIPE_ACCESS_DUPLEX,
+                        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                        1, 4096, 4096, 0, nullptr);
+                    if (ConnectNamedPipe(pipe_, nullptr)) {
+                        char buf[4096]; DWORD bytesRead;
+                        while (ReadFile(pipe_, buf, sizeof(buf), &bytesRead, nullptr)) {
+                            auto response = handler(std::string(buf, bytesRead));
+                            DWORD written;
+                            WriteFile(pipe_, response.c_str(),
+                                (DWORD)response.size(), &written, nullptr);
+                        }
+                    }
+                    DisconnectNamedPipe(pipe_);
+                    CloseHandle(pipe_);
+                }
+            });
+        }
+    };
+
+    // === App side: Pipe client ===
+    std::string SendCommand(const char* pipeName, const std::string& cmd) {
+        HANDLE pipe = CreateFileA(
+            ("\\\\.\\pipe\\" + std::string(pipeName)).c_str(),
+            GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
+        if (pipe == INVALID_HANDLE_VALUE) return "";
+        DWORD mode = PIPE_READMODE_MESSAGE;
+        SetNamedPipeHandleState(pipe, &mode, nullptr, nullptr);
+        DWORD written;
+        WriteFile(pipe, cmd.c_str(), (DWORD)cmd.size(), &written, nullptr);
+        char buf[4096]; DWORD bytesRead;
+        ReadFile(pipe, buf, sizeof(buf), &bytesRead, nullptr);
+        CloseHandle(pipe);
+        return std::string(buf, bytesRead);
+    }
+  use_cases:
+    - "Send commands: START, STOP, SET_TARGET, GET_STATUS"
+    - "Cross-machine: \\\\MACHINE2\\pipe\\GameAuto"
+    - "Config updates from control panel to DLL"
+  tags: [ipc, named_pipe, command, cross_machine]
+
+# ── 4. ADB Emulator Automation ──────────────────────
+adb:
+  overview:
+    desc: "Android Debug Bridge — control emulators (LDPlayer, BlueStacks, NoxPlayer)"
+    connection:
+      LDPlayer: "adb connect 127.0.0.1:5555  (or use ldconsole.exe)"
+      BlueStacks: "adb connect 127.0.0.1:5555  (enable ADB in settings)"
+      NoxPlayer: "adb connect 127.0.0.1:62001"
+      MEmu: "adb connect 127.0.0.1:21503"
+    multi_instance: |
+      LDPlayer: ldconsole list2 → get ports → adb connect per instance
+      Ports typically: 5555, 5557, 5559, ...
+  commands:
+    tap: "adb shell input tap <x> <y>"
+    swipe: "adb shell input swipe <x1> <y1> <x2> <y2> [duration_ms]"
+    keyevent: "adb shell input keyevent <code>"
+    text: "adb shell input text 'hello'"
+    screenshot: "adb shell screencap -p /sdcard/screen.png && adb pull /sdcard/screen.png"
+    record: "adb shell screenrecord /sdcard/video.mp4 --time-limit 30"
+    install: "adb install -r game.apk"
+    forward_port: "adb forward tcp:8888 tcp:8888  # Forward port for local server"
+
+  cpp_integration:
+    name: "C++ ADB Wrapper"
+    code: |
+      class ADBController {
+          std::string serial_;  // "127.0.0.1:5555"
+
+          std::string Exec(const std::string& cmd) {
+              std::string full = "adb -s " + serial_ + " " + cmd;
+              FILE* pipe = _popen(full.c_str(), "r");
+              if (!pipe) return "";
+              char buf[256]; std::string result;
+              while (fgets(buf, sizeof(buf), pipe)) result += buf;
+              _pclose(pipe);
+              return result;
+          }
+      public:
+          ADBController(std::string serial) : serial_(std::move(serial)) {}
+
+          void Tap(int x, int y) {
+              Exec("shell input tap " + std::to_string(x) + " " + std::to_string(y));
+          }
+          void Swipe(int x1, int y1, int x2, int y2, int ms = 300) {
+              Exec("shell input swipe " + std::to_string(x1) + " " +
+                   std::to_string(y1) + " " + std::to_string(x2) + " " +
+                   std::to_string(y2) + " " + std::to_string(ms));
+          }
+          std::vector<uint8_t> Screenshot() {
+              Exec("shell screencap -p /sdcard/_auto.png");
+              Exec("pull /sdcard/_auto.png _auto.png");
+              // Read _auto.png into buffer for OpenCV
+              return ReadFile("_auto.png");
+          }
+          void KeyEvent(int code) {
+              Exec("shell input keyevent " + std::to_string(code));
+          }
+      };
+    ldconsole: |
+      // LDPlayer-specific commands via ldconsole.exe
+      // ldconsole.exe list2          → list instances
+      // ldconsole.exe launch --index 0
+      // ldconsole.exe quit --index 0
+      // ldconsole.exe adb --index 0 --command "shell input tap 500 500"
+  tags: [adb, emulator, mobile, automation]
+
+# ── 5. LAN Multi-Machine Coordination ──────────────
+lan_coordination:
+  discovery:
+    name: "UDP Broadcast Discovery"
+    desc: "Bots auto-discover master via UDP broadcast on LAN"
+    code: |
+      // Master: broadcasts presence
+      void BroadcastPresence(uint16_t port = 9999) {
+          SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
+          BOOL broadcast = TRUE;
+          setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char*)&broadcast, sizeof(broadcast));
+          sockaddr_in addr{AF_INET, htons(port)};
+          addr.sin_addr.s_addr = INADDR_BROADCAST;
+          const char* msg = "GAMEAUTO_MASTER|192.168.1.100|8080";
+          while (running_) {
+              sendto(sock, msg, strlen(msg), 0, (sockaddr*)&addr, sizeof(addr));
+              Sleep(2000); // Broadcast every 2 seconds
+          }
+          closesocket(sock);
+      }
+
+      // Worker: listens for master broadcast
+      std::string DiscoverMaster(uint16_t port = 9999) {
+          SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
+          sockaddr_in addr{AF_INET, htons(port)};
+          addr.sin_addr.s_addr = INADDR_ANY;
+          bind(sock, (sockaddr*)&addr, sizeof(addr));
+          char buf[256]; sockaddr_in from; int fromLen = sizeof(from);
+          recvfrom(sock, buf, sizeof(buf), 0, (sockaddr*)&from, &fromLen);
+          closesocket(sock);
+          return std::string(buf); // Parse: GAMEAUTO_MASTER|ip|port
+      }
+
+  architecture:
+    name: "Controller-Worker Bot Farm"
+    flow: |
+      ┌─────────────┐    UDP Broadcast    ┌─────────────┐
+      │   Master     │ ───────────────────►│  Worker 1   │
+      │  Controller  │                     │  (Bot 1-5)  │
+      │              │◄───────────────────►│             │
+      │              │    TCP Commands     └─────────────┘
+      │              │                     ┌─────────────┐
+      │              │◄───────────────────►│  Worker 2   │
+      │              │    TCP Commands     │  (Bot 6-10) │
+      │              │                     └─────────────┘
+      │              │                     ┌─────────────┐
+      │              │◄───────────────────►│  Worker N   │
+      └─────────────┘    TCP Commands     └─────────────┘
+    commands:
+      - "START_BOT <id> <config>"
+      - "STOP_BOT <id>"
+      - "GET_STATUS"
+      - "UPDATE_CONFIG <json>"
+      - "REPORT <bot_id> <data>"
+  tags: [lan, multi_machine, coordination, bot_farm]
+
+# ── 6. Memory-Mapped File for Persistent State ─────
+mmap_file:
+  name: "Memory-Mapped File for Game State Persistence"
+  desc: "Share game state between app and DLL via file mapping — survives crashes"
+  code: |
+    class MappedState {
+        HANDLE mapFile_ = nullptr;
+        void* view_ = nullptr;
+        size_t size_;
+    public:
+        template<typename T>
+        T* Create(const std::string& filename) {
+            size_ = sizeof(T);
+            HANDLE file = CreateFileA(filename.c_str(),
+                GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+            SetFilePointer(file, size_, nullptr, FILE_BEGIN);
+            SetEndOfFile(file);
+            mapFile_ = CreateFileMappingA(file, nullptr, PAGE_READWRITE, 0, size_, nullptr);
+            view_ = MapViewOfFile(mapFile_, FILE_MAP_ALL_ACCESS, 0, 0, size_);
+            CloseHandle(file);
+            return static_cast<T*>(view_);
+        }
+        ~MappedState() {
+            if (view_) { FlushViewOfFile(view_, size_); UnmapViewOfFile(view_); }
+            if (mapFile_) CloseHandle(mapFile_);
+        }
+    };
+  use_case:
+    - "Bot waypoint data that persists between sessions"
+    - "Config/settings shared between control app and DLL"
+    - "Trade history, event logs"
+  tags: [mmap, persistence, state]

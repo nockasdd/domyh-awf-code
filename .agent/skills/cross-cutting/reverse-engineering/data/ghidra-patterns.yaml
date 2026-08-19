@@ -1,0 +1,44 @@
+# =====================================================
+# Ghidra Patterns — Java/Python Scripting
+# =====================================================
+
+ghidra_scripts:
+  decompile_function:
+    name: "Decompile Function"
+    lang: java
+    code: |
+      DecompInterface decomp = new DecompInterface();
+      decomp.openProgram(currentProgram);
+      DecompileResults result = decomp.decompileFunction(func, 60, monitor);
+      println(result.getDecompiledFunction().getC());
+
+  find_function_by_name:
+    name: "Find Function by Name"
+    lang: python
+    code: |
+      from ghidra.program.model.symbol import SymbolType
+      for sym in currentProgram.getSymbolTable().getAllSymbols(True):
+          if "targetName" in sym.getName():
+              print(f"{sym.getName()} at {sym.getAddress()}")
+
+  enumerate_calls:
+    name: "Enumerate Function Calls"
+    lang: python
+    code: |
+      from ghidra.program.model.symbol import RefType
+      refs = getReferencesTo(toAddr(func_ea))
+      for ref in refs:
+          if ref.getReferenceType() == RefType.UNCONDITIONAL_CALL:
+              print(f"Called from: {ref.getFromAddress()}")
+
+  apply_struct:
+    name: "Apply Data Type to Address"
+    lang: python
+    code: |
+      dtm = currentProgram.getDataTypeManager()
+      struct_type = dtm.getDataType("/MyStruct")
+      createData(toAddr(address), struct_type)
+
+  pcode_analysis:
+    name: "P-code Analysis"
+    desc: "Ghidra intermediate representation for cross-arch analysis"

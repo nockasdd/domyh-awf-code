@@ -1,0 +1,173 @@
+# =====================================================
+# C++20 Concurrency Patterns for Game Automation
+# =====================================================
+
+threading:
+  jthread_worker:
+    name: "std::jthread Worker with Stop Token"
+    desc: "Auto-joining thread with cooperative cancellation"
+    code: |
+      std::jthread worker([](std::stop_token stoken) {
+          while (!stoken.stop_requested()) {
+              // automation work
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
+          }
+      });
+
+  thread_pool:
+    name: "C++20 Thread Pool"
+    desc: "jthread-based pool with task queue"
+    code: |
+      class ThreadPool {
+          std::vector<std::jthread> workers_;
+          std::queue<std::function<void()>> tasks_;
+          std::mutex mtx_;
+          std::condition_variable_any cv_;
+      public:
+          ThreadPool(size_t n = std::thread::hardware_concurrency()) {
+              for (size_t i = 0; i < n; ++i)
+                  workers_.emplace_back([this](std::stop_token st) {
+                      while (!st.stop_requested()) {
+                          std::function<void()> task;
+                          { std::unique_lock lock(mtx_);
+                            cv_.wait(lock, st, [&] { return !tasks_.empty(); });
+                            if (st.stop_requested()) return;
+                            task = std::move(tasks_.front()); tasks_.pop(); }
+                          task();
+                      }
+                  });
+          }
+          template<typename F> void Submit(F&& f) {
+              { std::lock_guard lock(mtx_); tasks_.push(std::forward<F>(f)); }
+              cv_.notify_one();
+          }
+      };
+
+coroutines:
+  task_coroutine:
+    name: "Coroutine Task for Automation"
+    desc: "co_await-based task chaining"
+    code: |
+      struct Task {
+          struct promise_type {
+              Task get_return_object() { return {}; }
+              std::suspend_never initial_suspend() { return {}; }
+              std::suspend_never final_suspend() noexcept { return {}; }
+              void return_void() {}
+              void unhandled_exception() { std::terminate(); }
+          };
+      };
+      Task AutoFarmSequence() {
+          co_await MoveToTarget(waypoint);
+          co_await WaitForMobSpawn(3s);
+          co_await AttackTarget();
+          co_await LootItems();
+      }
+
+  timer_awaiter:
+    name: "Timer Awaiter"
+    desc: "co_await sleep without blocking thread"
+    code: |
+      struct TimerAwaiter {
+          std::chrono::milliseconds duration;
+          bool await_ready() { return duration <= 0ms; }
+          void await_suspend(std::coroutine_handle<> h) {
+              std::jthread([h, d = duration] {
+                  std::this_thread::sleep_for(d); h.resume();
+              }).detach();
+          }
+          void await_resume() {}
+      };
+
+lock_free:
+  spsc_queue:
+    name: "Lock-Free SPSC Ring Buffer"
+    desc: "Single Producer Single Consumer — zero-lock, cache-friendly"
+    code: |
+      template<typename T, size_t Size>
+      class SPSCQueue {
+          std::array<T, Size> buffer_;
+          alignas(64) std::atomic<size_t> head_{0};
+          alignas(64) std::atomic<size_t> tail_{0};
+      public:
+          bool Push(const T& item) {
+              auto h = head_.load(std::memory_order_relaxed);
+              auto next = (h + 1) % Size;
+              if (next == tail_.load(std::memory_order_acquire)) return false;
+              buffer_[h] = item;
+              head_.store(next, std::memory_order_release);
+              return true;
+          }
+          bool Pop(T& item) {
+              auto t = tail_.load(std::memory_order_relaxed);
+              if (t == head_.load(std::memory_order_acquire)) return false;
+              item = buffer_[t];
+              tail_.store((t + 1) % Size, std::memory_order_release);
+              return true;
+          }
+      };
+
+  mpmc_queue:
+    name: "MPMC Queue Libraries"
+    libraries: ["moodycamel::ConcurrentQueue", "boost::lockfree::queue"]
+
+ui_safety:
+  thread_separation:
+    name: "Thread Separation Pattern"
+    pattern: |
+      Game Main Thread: Render + Input
+      Bot Worker Thread: Logic + Memory Read → SPSCQueue → Main Thread
+      Network Thread: Packet Read → SPSCQueue → Bot Thread
+    rule: "NEVER call game API from bot thread directly"
+
+  frame_budget:
+    name: "Frame Budget Hook"
+    desc: "Limit processing time per frame to avoid UI freeze"
+    code: |
+      void OnGameTick() {
+          auto start = std::chrono::high_resolution_clock::now();
+          while (taskQueue.HasPending()) {
+              taskQueue.ProcessOne();
+              auto elapsed = std::chrono::high_resolution_clock::now() - start;
+              if (elapsed > 2ms) break;
+          }
+      }
+
+cpp23:
+  generator:
+    name: "std::generator — Lazy Sequence"
+    desc: "C++23 on-demand value generation with coroutines. Zero allocation for short sequences."
+    code: |
+      #include <generator>
+      std::generator<Entity> NearbyEntities(const EntityList& all, Vec3 pos, float radius) {
+          for (const auto& e : all)
+              if (Distance(e.pos, pos) <= radius)
+                  co_yield e;
+      }
+      // Usage: for (auto& e : NearbyEntities(entities, myPos, 100.f)) { ... }
+    tags: [cpp23, coroutine, lazy]
+
+  expected:
+    name: "std::expected — Error Handling Without Exceptions"
+    desc: "Performance-critical error handling for game contexts where exceptions are disabled"
+    code: |
+      #include <expected>
+      std::expected<PlayerData, MemError> ReadPlayer(HANDLE proc, uintptr_t base) {
+          auto health = Read<int>(proc, base + 0x100);
+          if (!health) return std::unexpected(MemError::ReadFailed);
+          auto mana = Read<int>(proc, base + 0x104);
+          if (!mana) return std::unexpected(MemError::ReadFailed);
+          return PlayerData{ *health, *mana };
+      }
+    tags: [cpp23, error_handling, no_exceptions]
+
+  mdspan:
+    name: "std::mdspan — Zero-Copy Grid View"
+    desc: "Multidimensional view over game world grid/map data"
+    code: |
+      #include <mdspan>
+      // View flat buffer as 2D grid
+      std::vector<uint8_t> mapData(width * height);
+      auto grid = std::mdspan(mapData.data(), width, height);
+      bool isWalkable = grid[x, y] != TILE_BLOCKED;
+    tags: [cpp23, memory, zero_copy]

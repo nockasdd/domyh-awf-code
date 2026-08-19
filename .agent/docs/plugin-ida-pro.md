@@ -4,14 +4,21 @@ version: 1
 latest: true
 category: mcp-plugin
 target_app: IDA Pro 8.x / 9.x
-transport: WebSocket ws://127.0.0.1:15555
-plugin_type: IDAPython (.py in IDA plugins folder)
-last_updated: 2026-03-27
+transport: HTTP JSON http://127.0.0.1:28472
+plugin_type: IDAPython HTTP plugin (.py in IDA plugins folder)
+last_updated: 2026-07-28
 ---
 
 # plugin-ida-pro — HSA MCP Bridge for IDA Pro
 
-> Full IDAPython plugin reference: threading model, all module APIs, Hex-Rays Decompiler SDK, type system, debugger control, and complete WebSocket dispatch table.
+> Current bundled runtime uses a localhost HTTP bridge and supports bounded `ida_batch` calls. Older WebSocket snippets in this reference are legacy patterns only; prefer the runtime in `mcp-bridge-plugins/ida-bridge`.
+
+Current discovery flow: `hsa_bridge(action="discover", target="ida", scan_ports=[...])` scans ports
+in parallel with a bounded probe timeout and returns `instances`, `matched_instances`,
+`selected_port`, `probe_timeout_ms`, and `scan_workers`. For multiple IDA windows, pin calls with
+`port + instance_key` when possible, or exact `process_id`/`binary_path`. Unpinned reads may auto-route
+only when exactly one live IDA instance is found; if several instances are live, the bridge rejects
+the call until the target is pinned.
 
 ---
 

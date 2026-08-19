@@ -1,0 +1,272 @@
+# =====================================================
+# Memory Manipulation Patterns for Game Automation
+# =====================================================
+
+patterns:
+  safe_rpm:
+    name: "Safe ReadProcessMemory"
+    category: memory_rw
+    desc: "RAII-wrapped RPM with std::optional return"
+    code: |
+      template<typename T>
+      std::optional<T> Read(HANDLE hProcess, uintptr_t address) {
+          T value{};
+          SIZE_T bytesRead{};
+          if (ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(address),
+                                &value, sizeof(T), &bytesRead) && bytesRead == sizeof(T))
+              return value;
+          return std::nullopt;
+      }
+    tags: [external, safe, template]
+
+  safe_wpm:
+    name: "Safe WriteProcessMemory"
+    category: memory_rw
+    desc: "Error-checked WPM with old protection restore"
+    code: |
+      template<typename T>
+      bool Write(HANDLE hProcess, uintptr_t address, const T& value) {
+          DWORD oldProtect{};
+          VirtualProtectEx(hProcess, reinterpret_cast<LPVOID>(address),
+                           sizeof(T), PAGE_EXECUTE_READWRITE, &oldProtect);
+          SIZE_T bytesWritten{};
+          bool ok = WriteProcessMemory(hProcess, reinterpret_cast<LPVOID>(address),
+                                       &value, sizeof(T), &bytesWritten);
+          VirtualProtectEx(hProcess, reinterpret_cast<LPVOID>(address),
+                           sizeof(T), oldProtect, &oldProtect);
+          return ok && bytesWritten == sizeof(T);
+      }
+    tags: [external, safe, template]
+
+  pointer_chain:
+    name: "Multi-Level Pointer Chain Resolver"
+    category: memory_rw
+    desc: "Resolve pointer chains with C++20 std::span"
+    code: |
+      template<typename T>
+      std::optional<T> ReadChain(HANDLE hProcess, uintptr_t base,
+                                  std::span<const uintptr_t> offsets) {
+          uintptr_t addr = base;
+          for (size_t i = 0; i < offsets.size() - 1; ++i) {
+              auto next = Read<uintptr_t>(hProcess, addr + offsets[i]);
+              if (!next) return std::nullopt;
+              addr = *next;
+          }
+          return Read<T>(hProcess, addr + offsets.back());
+      }
+    tags: [external, pointer, template]
+
+  internal_read:
+    name: "Internal Direct Read/Write"
+    category: memory_internal
+    desc: "Direct memory access khi da inject vao process"
+    code: |
+      template<typename T>
+      T ReadInternal(uintptr_t address) {
+          return *reinterpret_cast<T*>(address);
+      }
+      template<typename T>
+      void WriteInternal(uintptr_t address, const T& value) {
+          *reinterpret_cast<T*>(address) = value;
+      }
+    tags: [internal, fast]
+
+  aob_scanner_external:
+    name: "External AOB Pattern Scanner"
+    category: pattern_scan
+    desc: "Scan process memory cho byte pattern voi wildcards"
+    code: |
+      uintptr_t FindPattern(HANDLE hProcess, uintptr_t start, size_t size,
+                            const std::vector<int>& pattern) {
+          std::vector<uint8_t> buffer(size);
+          SIZE_T bytesRead{};
+          ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(start),
+                            buffer.data(), size, &bytesRead);
+          for (size_t i = 0; i <= bytesRead - pattern.size(); ++i) {
+              bool found = true;
+              for (size_t j = 0; j < pattern.size(); ++j) {
+                  if (pattern[j] != -1 && buffer[i + j] != static_cast<uint8_t>(pattern[j])) {
+                      found = false; break;
+                  }
+              }
+              if (found) return start + i;
+          }
+          return 0;
+      }
+    tags: [external, pattern_scan]
+
+  aob_scanner_internal:
+    name: "Internal AOB Pattern Scanner"
+    category: pattern_scan
+    desc: "Scan trong process da inject"
+    code: |
+      uintptr_t FindPatternInternal(uintptr_t moduleBase, size_t moduleSize,
+                                     std::string_view pattern, std::string_view mask) {
+          auto base = reinterpret_cast<const uint8_t*>(moduleBase);
+          for (size_t i = 0; i <= moduleSize - mask.size(); ++i) {
+              bool found = true;
+              for (size_t j = 0; j < mask.size(); ++j) {
+                  if (mask[j] != '?' && pattern[j] != static_cast<char>(base[i + j])) {
+                      found = false; break;
+                  }
+              }
+              if (found) return moduleBase + i;
+          }
+          return 0;
+      }
+    tags: [internal, pattern_scan]
+
+  ida_pattern_scanner:
+    name: "IDA-Style Pattern Scanner"
+    category: pattern_scan
+    desc: "Parse IDA-format pattern strings: 'E8 ? ? ? ? 48 8B'"
+    code: |
+      std::vector<int> ParseIDAPattern(std::string_view pattern) {
+          std::vector<int> bytes;
+          std::istringstream stream(std::string(pattern));
+          std::string token;
+          while (stream >> token) {
+              if (token == "?" || token == "??")
+                  bytes.push_back(-1);
+              else
+                  bytes.push_back(std::stoi(token, nullptr, 16));
+          }
+          return bytes;
+      }
+    tags: [pattern_scan, utility]
+
+  module_base:
+    name: "Get Module Base Address"
+    category: memory_util
+    desc: "Lay base address cua module trong target process"
+    code: |
+      uintptr_t GetModuleBase(DWORD processId, std::wstring_view moduleName) {
+          HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
+          if (snapshot == INVALID_HANDLE_VALUE) return 0;
+          MODULEENTRY32W entry{};
+          entry.dwSize = sizeof(entry);
+          if (Module32FirstW(snapshot, &entry)) {
+              do {
+                  if (moduleName == entry.szModule) {
+                      CloseHandle(snapshot);
+                      return reinterpret_cast<uintptr_t>(entry.modBaseAddr);
+                  }
+              } while (Module32NextW(snapshot, &entry));
+          }
+          CloseHandle(snapshot);
+          return 0;
+      }
+    tags: [external, utility]
+
+  handle_raii:
+    name: "RAII Handle Wrapper"
+    category: memory_util
+    desc: "unique_ptr wrapper cho WinAPI HANDLEs"
+    code: |
+      struct HandleDeleter {
+          void operator()(HANDLE h) const {
+              if (h && h != INVALID_HANDLE_VALUE) CloseHandle(h);
+          }
+      };
+      using UniqueHandle = std::unique_ptr<void, HandleDeleter>;
+      UniqueHandle MakeHandle(HANDLE h) { return UniqueHandle(h); }
+    tags: [utility, raii, safe]
+
+  virtual_alloc_raii:
+    name: "VirtualAllocEx RAII"
+    category: memory_util
+    desc: "RAII wrapper cho remote memory allocation"
+    code: |
+      class RemoteMemory {
+          HANDLE process_; void* addr_; size_t size_;
+      public:
+          RemoteMemory(HANDLE proc, size_t size, DWORD protect = PAGE_EXECUTE_READWRITE)
+              : process_(proc), size_(size) {
+              addr_ = VirtualAllocEx(proc, nullptr, size, MEM_COMMIT | MEM_RESERVE, protect);
+          }
+          ~RemoteMemory() { if (addr_) VirtualFreeEx(process_, addr_, 0, MEM_RELEASE); }
+          void* get() const { return addr_; }
+          explicit operator bool() const { return addr_ != nullptr; }
+      };
+    tags: [external, raii, injection]
+
+  simd_aob_scanner:
+    name: "SIMD AVX2 AOB Pattern Scanner"
+    category: pattern_scan
+    desc: "12+ GB/s throughput — AVX2 256-bit vectorized scan. Fallback SSE2 for older CPUs."
+    code: |
+      #include <immintrin.h>
+      uintptr_t FindPatternSIMD(const uint8_t* data, size_t size,
+                                 const uint8_t* pattern, const uint8_t* mask, size_t patLen) {
+          if (patLen == 0 || size < patLen) return 0;
+          const __m256i first = _mm256_set1_epi8(pattern[0]);
+          const __m256i last  = _mm256_set1_epi8(pattern[patLen - 1]);
+          for (size_t i = 0; i <= size - patLen - 32; i += 32) {
+              auto blockFirst = _mm256_loadu_si256((const __m256i*)(data + i));
+              auto blockLast  = _mm256_loadu_si256((const __m256i*)(data + i + patLen - 1));
+              auto eqFirst = _mm256_cmpeq_epi8(first, blockFirst);
+              auto eqLast  = _mm256_cmpeq_epi8(last, blockLast);
+              uint32_t bits = _mm256_movemask_epi8(_mm256_and_si256(eqFirst, eqLast));
+              while (bits) {
+                  uint32_t bit = _tzcnt_u32(bits);
+                  bool match = true;
+                  for (size_t j = 1; j < patLen - 1; ++j) {
+                      if (mask[j] != '?' && data[i + bit + j] != pattern[j]) {
+                          match = false; break;
+                      }
+                  }
+                  if (match) return reinterpret_cast<uintptr_t>(data + i + bit);
+                  bits &= bits - 1; // clear lowest set bit
+              }
+          }
+          return 0;
+      }
+    performance: "12-33 GB/s depending on pattern complexity and CPU"
+    tags: [internal, pattern_scan, simd, avx2, high_performance]
+
+  batch_read:
+    name: "Batch Memory Read"
+    category: memory_rw
+    desc: "Read multiple values in single RPM call to reduce syscall overhead"
+    code: |
+      struct ReadRequest { uintptr_t address; size_t size; void* outBuffer; };
+      bool BatchRead(HANDLE hProcess, std::span<ReadRequest> requests) {
+          // Sort by address for cache-friendly access
+          std::ranges::sort(requests, {}, &ReadRequest::address);
+          bool allOk = true;
+          for (auto& req : requests) {
+              SIZE_T bytesRead{};
+              if (!ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(req.address),
+                                      req.outBuffer, req.size, &bytesRead))
+                  allOk = false;
+          }
+          return allOk;
+      }
+    tags: [external, performance, batch]
+
+  dxgi_screen_capture:
+    name: "DXGI Desktop Duplication Capture"
+    category: screen_capture
+    desc: "GPU-accelerated screen capture — 100+ FPS, dirty rect optimization"
+    code: |
+      // IDXGIOutputDuplication-based capture
+      struct DXGICapture {
+          ComPtr<IDXGIOutputDuplication> duplication;
+          ComPtr<ID3D11Device> device;
+          ComPtr<ID3D11DeviceContext> context;
+
+          HRESULT AcquireFrame(ID3D11Texture2D** outTexture, UINT timeoutMs = 0) {
+              DXGI_OUTDUPL_FRAME_INFO frameInfo{};
+              ComPtr<IDXGIResource> resource;
+              HRESULT hr = duplication->AcquireNextFrame(timeoutMs, &frameInfo, &resource);
+              if (SUCCEEDED(hr) && frameInfo.LastPresentTime.QuadPart != 0)
+                  hr = resource.As(outTexture);
+              return hr;
+          }
+          void ReleaseFrame() { duplication->ReleaseFrame(); }
+      };
+    notes:
+      - "Handle DXGI_ERROR_ACCESS_LOST — recreate duplication"
+      - "Use GetFrameDirtyRects() for partial updates"
+      - "Alternative: Windows Graphics Capture API (Win10 1903+)"
+    tags: [gpu, screen_capture, overlay, dxgi]

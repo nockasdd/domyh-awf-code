@@ -1,6 +1,6 @@
 # Skills Routing Index — Universal Discovery
 # Version: 2026-03-18 v3 (compact — routing + detect merged, no duplication)
-# Total: 101 skills across 8 categories
+# Total: 106 skills across 8 categories
 #
 # Usage (non-HSA agents):
 #   1. Read this file → find skill by name → get path + detect patterns
@@ -18,7 +18,7 @@ routing:
   context-engineering:  { path: "core/context-engineering", detect: [] }
   skill-creator:        { path: "core/skill-creator", detect: [] }
 
-  # --- cross-cutting (25) ---
+  # --- cross-cutting (30) ---
   audit-pro:            { path: "cross-cutting/audit-pro", detect: [] }
   testing:              { path: "cross-cutting/testing", detect: ["*.test.*", "*.spec.*", "jest*", "vitest*"] }
   coding-rules:         { path: "cross-cutting/coding-rules", detect: [] }
@@ -46,6 +46,9 @@ routing:
   wasm:                 { path: "cross-cutting/wasm", detect: ["*.wasm", "*.wat"] }
   digital-marketing:    { path: "cross-cutting/digital-marketing", detect: [] }
   game-development:     { path: "cross-cutting/game-development", detect: ["*.unity", "*.uproject", "*.umap"] }
+  game-automation:      { path: "cross-cutting/game-automation", detect: ["*.cpp", "*.h", "*.hpp", "*.cxx", "scripts/**/*.lua", "CMakeLists.txt", "*.vcxproj", "*.sln"] }
+  reverse-engineering:  { path: "cross-cutting/reverse-engineering", detect: ["*.idb", "*.i64", "*.gzf", "*.sig", "*.py", "*.dll", "*.exe"] }
+  anti-detection:       { path: "cross-cutting/anti-detection", detect: ["*.cpp", "*.h", "*.hpp", "*.cxx", "*.cs", "*.py"] }
 
   # --- languages (28) ---
   typescript:           { path: "languages/typescript", detect: ["tsconfig.json", "*.ts", "*.tsx"] }
@@ -124,8 +127,9 @@ routing:
   cli-dev:              { path: "tooling/cli-dev", detect: ["*commander*", "*yargs*", "*cli*"] }
   ide-extension:        { path: "tooling/ide-extension", detect: [] }
   mcp:                  { path: "tooling/mcp", detect: ["*mcp*", "mcp.json"] }
+  plugin-ida-pro:       { path: "tooling/plugin-ida-pro", detect: ["*.idb", "*.i64", "*.exe", "*.dll", "IDA", "ida_rename", "ida_apply_plan"] }
   hsa-toolkit:          { path: "tooling/hsa-toolkit", detect: [] }
 
 # Category summary (for human reference only — agent uses routing above)
-# core: 8 | cross-cutting: 27 | languages: 28 | frameworks: 9
-# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 6 | TOTAL: 102
+# core: 8 | cross-cutting: 30 | languages: 28 | frameworks: 9
+# devops: 7 | ai-ml: 9 | governance: 8 | tooling: 7 | TOTAL: 106

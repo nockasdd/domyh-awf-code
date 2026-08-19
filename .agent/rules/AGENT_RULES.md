@@ -88,6 +88,90 @@ With MCP: hsa_get_agent_config("bootstrap") then hsa_session(action:"intent"). O
 
 ---
 
+## 7. Comment Policy
+
+Default: NO comments. Add only when WHY is non-obvious.
+
+WRITE a comment when:
+- Hidden constraint or invariant (e.g., "must be sorted before binary search")
+- Workaround for specific bug (reference issue/PR)
+- Non-obvious behavior that would surprise a reader
+- Public API contracts (params, return types, throws)
+
+DO NOT write comments for:
+- WHAT the code does (well-named identifiers show that)
+- Current task/fix/caller context (belongs in PR description)
+- Version markers, "added by X for Y", phase markers
+- TODO without issue reference (becomes orphan tech debt)
+- Trailing summaries ("// End of module")
+
+Format:
+- Single line preferred. Multi-line only for public API docstrings.
+- Lead with context: `// [constraint]: must run before X` not `// this runs before X`
+- Vietnamese for explanations IF project language is Vi; English for technical terms
+
+BAD: `// Loop through users and check permissions`
+GOOD: `// OAuth2 spec 4.1: token refresh needs 5s buffer for clock skew`
+
+---
+
+## 8. Trace Flow Protocol (DRY enforcement)
+
+Before MODIFYING a function:
+1. Grep symbol/function name across project
+2. Read all callers (with MCP: `hsa_trace_flow(entry, direction:'backward')`)
+3. Read tests for the function
+4. THEN apply change. Update callers if signature changes.
+
+Before CREATING a new function/file:
+1. Grep for similar names/purpose (with MCP: `hsa_search(query)`)
+2. Check existing utils/helpers/shared/lib directories
+3. Check `index.{ts,js,py}` exports for already-exported helpers
+4. Check `_deprecated/` or `archive/` for refactored-but-not-deleted code
+5. If similar exists → extend it. If truly new → create.
+
+Before ADDING a dependency:
+1. Search existing utils for similar functionality
+2. Check package health (downloads, last update, maintainer)
+3. Verify license compatibility
+4. Propose to user before adding (unless trivial dev dep)
+
+Self-check: "If a teammate searched for this, would they find existing code first?"
+
+---
+
+## 9. MCP Fallback Schema (when HSA unavailable)
+
+When `hsa_session(persist)` not available, manually update `memory/session.md`:
+
+```
+### [ISO-timestamp] Task summary
+- **What**: [1-line description of work done]
+- **Files**: [list of key files touched: path:line]
+- **Decisions**: [any architectural/library choices made]
+- **Status**: done | in-progress | blocked
+- **Next**: [what to do next session]
+```
+
+When `hsa_search` not available, fallback search recipe:
+1. Glob for filename patterns first (faster than grep)
+2. Grep for symbol with `--files-with-matches` mode
+3. Read only top 3 matches by relevance
+4. Stop when sufficient context (do NOT read all matches)
+
+When `hsa_trace_flow` not available:
+1. Grep function name → list call sites
+2. Read 1-2 lines context per call site
+3. If signature changes → must update each call site
+
+When `hsa_check_changes` not available:
+- Trust git status as source of truth
+- After edit batch, run lint/build before next batch
+
+Never silently skip fallback. State explicitly: "MCP unavailable, using manual recipe."
+
+---
+
 ## Terminal Safety (Windows)
 
 Never use: pipes (|), pagers (less/more/man), interactive prompts without -y, infinite commands (tail -f, watch).

@@ -1,0 +1,116 @@
+# =====================================================
+# Input Simulation + Computer Vision + DX Overlay
+# =====================================================
+
+input_methods:
+  post_message:
+    name: "PostMessage / SendMessage"
+    level: 1
+    detection_risk: very_high
+    when: "Simple automation, non-competitive games"
+
+  send_input:
+    name: "SendInput API"
+    level: 2
+    detection_risk: high
+    code: |
+      void MoveMouse(int dx, int dy) {
+          INPUT input{};
+          input.type = INPUT_MOUSE;
+          input.mi.dx = dx; input.mi.dy = dy;
+          input.mi.dwFlags = MOUSEEVENTF_MOVE;
+          SendInput(1, &input, sizeof(INPUT));
+      }
+      void PressKey(WORD vk) {
+          INPUT inputs[2]{};
+          inputs[0].type = INPUT_KEYBOARD;
+          inputs[0].ki.wVk = vk;
+          inputs[1] = inputs[0];
+          inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+          SendInput(2, inputs, sizeof(INPUT));
+      }
+
+  hardware_emulation:
+    name: "Arduino HID / USB Emulation"
+    level: 3
+    detection_risk: very_low
+    tools: ["Arduino Leonardo", "Teensy", "CH9329"]
+
+  driver_level:
+    name: "Kernel Driver Input"
+    level: 4
+    detection_risk: minimal
+
+  human_timing:
+    name: "Randomized Human-Like Input"
+    code: |
+      void HumanDelay(int baseMs, int varianceMs) {
+          static std::mt19937 rng(std::random_device{}());
+          std::normal_distribution<> dist(baseMs, varianceMs);
+          auto delay = std::max(1, static_cast<int>(dist(rng)));
+          std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+      }
+
+computer_vision:
+  template_matching:
+    name: "OpenCV Template Matching"
+    code: |
+      cv::Point FindTemplate(const cv::Mat& screen, const cv::Mat& templ,
+                              double threshold = 0.9) {
+          cv::Mat result;
+          cv::matchTemplate(screen, templ, result, cv::TM_CCOEFF_NORMED);
+          double maxVal; cv::Point maxLoc;
+          cv::minMaxLoc(result, nullptr, &maxVal, nullptr, &maxLoc);
+          return (maxVal >= threshold) ? maxLoc : cv::Point(-1, -1);
+      }
+
+  pixel_detection:
+    name: "Pixel Color Detection"
+    code: |
+      bool IsPixelColor(const cv::Mat& screen, int x, int y,
+                         cv::Vec3b expected, int tolerance = 10) {
+          auto pixel = screen.at<cv::Vec3b>(y, x);
+          return std::abs(pixel[0] - expected[0]) <= tolerance &&
+                 std::abs(pixel[1] - expected[1]) <= tolerance &&
+                 std::abs(pixel[2] - expected[2]) <= tolerance;
+      }
+
+  ocr_tesseract:
+    name: "Tesseract OCR — Read Game Text"
+    tips:
+      - "Preprocess: grayscale → threshold → denoise"
+      - "Train with game-specific fonts"
+      - "Use PSM 7 (single line) or PSM 6 (uniform block)"
+
+  screen_capture:
+    name: "Fast Screen Capture with BitBlt"
+    code: |
+      cv::Mat CaptureScreen(HWND hwnd) {
+          RECT rect; GetClientRect(hwnd, &rect);
+          int w = rect.right, h = rect.bottom;
+          HDC hdcWindow = GetDC(hwnd);
+          HDC hdcMem = CreateCompatibleDC(hdcWindow);
+          HBITMAP hBitmap = CreateCompatibleBitmap(hdcWindow, w, h);
+          SelectObject(hdcMem, hBitmap);
+          BitBlt(hdcMem, 0, 0, w, h, hdcWindow, 0, 0, SRCCOPY);
+          cv::Mat mat(h, w, CV_8UC4);
+          BITMAPINFOHEADER bi{sizeof(bi), w, -h, 1, 32, BI_RGB};
+          GetDIBits(hdcMem, hBitmap, 0, h, mat.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+          DeleteObject(hBitmap); DeleteDC(hdcMem); ReleaseDC(hwnd, hdcWindow);
+          return mat;
+      }
+
+dx_overlay:
+  dx11_present:
+    name: "DirectX 11 Present Hook + ImGui"
+    vtable_index: 8
+    desc: "Hook IDXGISwapChain::Present for internal overlay"
+
+  dx9_endscene:
+    name: "DirectX 9 EndScene Hook"
+    vtable_index: 42
+    desc: "Legacy but still used in many online games"
+
+  dx12_present:
+    name: "DirectX 12 Present Hook"
+    desc: "Similar to DX11 but requires command queue handling"

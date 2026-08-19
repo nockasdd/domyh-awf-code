@@ -83,12 +83,67 @@ integration:
   tier: 2
   related_modules: ["quality", "stop-conditions", "complexity-scoring", "agent-communication"]
 
-# ═══ CASCADE (Cross-Model) DELEGATION ═══
+# ═══ SUBAGENT-DRIVEN DEVELOPMENT (SDD) & QUALITY GATES ═══
+# Inspired by obra/superpowers: Senior-engineer rigor for agentic delegation
+
+sdd_framework:
+  philosophy: "Bite-sized tasks (2-5 mins) + 2-Tier Review Gate + Workspace Isolation"
+  core_tenets:
+    - "Never delegate an underspecified task — always prepare a formal Task Contract"
+    - "Enforce 1% trigger threshold: if task is non-trivial, force planning & delegation contract"
+    - "Isolate workspaces: use branched workspaces or git worktrees to prevent context collision"
+    - "Zero blind trust: every subagent deliverable MUST pass 2-Tier Review before merge"
+
+# ═══ 2-TIER REVIEW GATE PROTOCOL ═══
+
+two_tier_review_gate:
+  tier_1_spec_compliance:
+    name: "Specification & Scope Containment Review"
+    checks:
+      - "Modified files strictly match focus_files contract (zero out-of-scope edits)"
+      - "No YAGNI violations (no speculative features or unsolicited modifications)"
+      - "Deliverable directly fulfills the task contract acceptance criteria"
+    on_failure: "REJECT immediately. Revert out-of-scope edits or re-dispatch correction."
+
+  tier_2_code_quality:
+    name: "Code Quality & Verification Review"
+    checks:
+      - "TDD verification: run unit/integration tests and verify green status"
+      - "Type safety: compiler/typechecker passes with 0 errors"
+      - "Linting & style: linter passes cleanly without suppressions"
+      - "Surgical changes: no whitespace/formatting churn outside target logic"
+    on_failure: "Request fix from subagent or fix failing assertions before merge."
+
+# ═══ WORKSPACE ISOLATION MODES ═══
+
+workspace_isolation:
+  branch: "Isolated workspace branch (Antigravity 'branch', Git worktree) — recommended for active code modification"
+  share: "Shared underlying workspace (Antigravity 'share') — for read-heavy cross-referencing"
+  inherit: "Same workspace context — for quick read-only inspections"
+
+# ═══ NATIVE IDE DISPATCH MAPPING ═══
+
+native_ide_dispatch:
+  antigravity:
+    mechanism: "invoke_subagent tool"
+    workspace_mode: "branch | share | inherit"
+    messaging: "send_message / manage_subagents"
+  claude_code:
+    mechanism: "Subagent / .claude/agents/ + git worktree"
+    workspace_mode: "git worktree per task"
+  codex:
+    mechanism: "AGENTS.md hierarchy + scoped directory execution"
+  cursor:
+    mechanism: "Background agent + hsa_delegate transcript sync"
+  mcp_fallback:
+    mechanism: "hsa_delegate({action:'prepare' | 'cascade' | 'verify'})"
+
+# ═══ CASCADE (Cross-Model) & ENGINE ROUTING ═══
 
 cascade_delegation:
-  description: "Cross-model delegation via MCP hsa_delegate cascade action"
+  description: "Cross-model and cross-subagent delegation via MCP hsa_delegate"
   reference: "SACRED_RULES MCP_002"
-  engine_constraint: "DelegateSchema.task_type accepts ONLY: code|test|review|debug|browser|research"
+  engine_constraint: "DelegateSchema.task_type accepts: code|test|review|debug|browser|research"
   
   workflow_to_task_type:
     # Base (1:1 mapping — these are the engine-accepted values)
@@ -111,8 +166,8 @@ cascade_delegation:
     ap: "review"        # audit → reuses review model routing
   
   lifecycle: |
-    1. hsa_delegate({action:'cascade', cascade_text:'...', task_type:'...'})
-    2. Wait 5s
-    3. hsa_delegate({action:'cascade_read', cascade_id:'...'})
-    4. Repeat step 3 (3-5s intervals, max 10 polls)
-    5. Use response or hsa_delegate({action:'cascade_cancel', cascade_id:'...'})
+    1. Prepare contract: hsa_delegate({action:'prepare', task_type:'...', focus_files:[...]})
+    2. Dispatch subagent via Native IDE tool (invoke_subagent, Claude subagent, Codex AGENTS.md)
+    3. If MCP Cascade: hsa_delegate({action:'cascade', cascade_text:'...'}) -> poll cascade_read
+    4. Upon completion: hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})
+    5. Pass 2-Tier Gate -> Merge deliverables & hsa_session({action:'persist'})
