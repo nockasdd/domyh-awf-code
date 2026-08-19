@@ -6,72 +6,72 @@ success_criteria: "Understanding lock passed, plan approved by user, bite-sized 
 
 # /plan — Outcome-Focused Feature Planning
 
-## 🛡️ [GATE 0: PRE-FLIGHT PLANNING RULES — BẮT BUỘC ĐỌC TRƯỚC KHI LẬP KẾ HOẠCH]
+## 🛡️ [GATE 0: PRE-FLIGHT PLANNING RULES — READ BEFORE PLANNING]
 
-1. **EVIDENCE-BASED DESIGN**: Mọi quyết định thiết kế và lựa chọn công nghệ BẮT BUỘC phải dựa trên khảo sát thực tế codebase (`hsa_search`, `hsa_explore`, `view_file`). Không đoán mò kiến trúc.
-2. **UNDERSTANDING LOCK MANDATE**: BẮT BUỘC chốt "Khóa Hiểu Biết" (Understanding Lock) với User ở Phase 1 trước khi bước vào Phase 3 (Thiết kế chi tiết).
-3. **SCOPE CREEP GUARD**: Nếu phát hiện yêu cầu mới hoặc ý tưởng mở rộng trong quá trình lập kế hoạch ➔ Đưa ngay vào danh mục **Scope OUT**, tuyệt đối không tự ý mở rộng phạm vi ("no scope creep").
-4. **BITE-SIZED TASK GRANULARITY**: Mỗi bước trong kế hoạch phải là **một hành động nguyên tử (2 - 5 phút)**, chỉ rõ đường dẫn file chính xác (`file:line`), code mẫu hoàn chỉnh và lệnh chạy thực tế.
-5. **TDD / TEST-FIRST PRIORITY**: Với các tính năng nghiệp vụ logic, bắt buộc thiết kế theo quy trình Test-First: `Viết Test (RED) ➔ Implement (GREEN) ➔ Refactor ➔ Commit`.
-6. **STOP FOR APPROVAL**: Kế hoạch phải được User bấm duyệt chính thức trước khi chuyển sang giai đoạn thực thi mã nguồn `/code`.
+1. **EVIDENCE-BASED DESIGN**: All technical decisions and architectural choices MUST be grounded in codebase inspection (`hsa_search`, `hsa_explore`, `view_file`). Never guess architecture.
+2. **UNDERSTANDING LOCK MANDATE**: MUST lock and confirm understanding with user in Phase 1 before entering Phase 3 (Detailed Technical Design).
+3. **SCOPE CREEP GUARD**: If new requirements or expansions arise during planning ➔ place them immediately into **Scope OUT**. Never expand scope silently.
+4. **BITE-SIZED TASK GRANULARITY**: Every task step MUST be an **atomic action (2 - 5 minutes)** with exact file paths (`file:line`), complete code snippets, and verification commands.
+5. **TDD / TEST-FIRST PRIORITY**: For logic-heavy features, mandate Test-First: `Write Test (RED) ➔ Implement (GREEN) ➔ Refactor ➔ Commit`.
+6. **STOP FOR APPROVAL**: The implementation plan MUST be explicitly approved by user before transitioning to execution `/code`.
 
 ---
 
 ## 🔄 7-PHASE SYSTEMATIC PLAN FLOW
 
-### PHASE 0: DEEP INTERVIEW (Phỏng vấn Đào sâu Bối cảnh)
-*   *Bỏ qua nếu yêu cầu của User đã đầy đủ và rõ ràng*.
-*   Nếu còn mơ hồ: Hỏi **1 câu hỏi trọng tâm mỗi lượt** (không spam nhiều câu hỏi làm quá tải User).
-*   Đưa ra 2 - 3 phương án lựa chọn kèm Trade-offs để User chọn hướng.
+### PHASE 0: DEEP INTERVIEW
+*   *Skip if user request already provides comprehensive context*.
+*   If ambiguous: Ask **1 focused question per message** (do not overwhelm user with multi-part questions).
+*   Offer 2 - 3 structured options with trade-offs to guide decisions.
 
-### PHASE 1: UNDERSTAND & UNDERSTANDING LOCK (Khóa Hiểu Biết — Hard Gate)
-*   Khởi tạo phiên: `hsa_session(action="intent", focus="plan: {feature}")`.
-*   Khảo sát bối cảnh: `hsa_detect(stack)`, `hsa_explore(repo_map)`.
-*   **🔒 UNDERSTANDING LOCK**: Tóm tắt ngắn gọn 6 điểm mấu chốt:
-    1.  **Mục tiêu (Goal)**: [1 câu duy nhất]
-    2.  **Đối tượng & Quy mô**: [Ai sử dụng, tải dự kiến]
-    3.  **Ràng buộc kỹ thuật (Constraints)**: [Ngôn ngữ, framework, chuẩn bảo mật]
-    4.  **Phạm vi THỰC HIỆN (Scope IN)**: [Danh sách tính năng cụ thể]
-    5.  **Phạm vi KHÔNG LÀM (Scope OUT)**: [Các tính năng hoãn lại để chống phình scope]
-    6.  **Tiêu chí Nghiệm thu (Success Criteria)**: [Điều kiện để xem là hoàn thành]
-*   ⛔ **HỎI USER**: *"Bản tóm tắt hiểu biết này đã hoàn toàn chính xác chưa? Có điểm nào cần bổ sung/thay đổi không?"* ➔ **Chỉ tiếp tục khi User xác nhận OK.**
+### PHASE 1: UNDERSTAND & UNDERSTANDING LOCK (Hard Gate)
+*   Initialize session: `hsa_session(action="intent", focus="plan: {feature}")`.
+*   Survey landscape: `hsa_detect(stack)`, `hsa_explore(repo_map)`.
+*   **🔒 UNDERSTANDING LOCK**: Summarize in 6 core points:
+    1.  **Goal**: [One concise sentence]
+    2.  **Target & Scale**: [Target users, expected load]
+    3.  **Constraints**: [Language, framework, security invariants]
+    4.  **Scope IN**: [Explicit features to implement]
+    5.  **Scope OUT**: [Explicitly deferred features to prevent scope creep]
+    6.  **Success Criteria**: [Concrete conditions for completion]
+*   ⛔ **ASK USER**: *"Is this understanding accurate? Anything to adjust before technical design?"* ➔ **Proceed only upon explicit confirmation.**
 
-### PHASE 2: IMPACT ANALYSIS & RISK MATRIX (Phân tích Tác động & Rủi ro)
-*   Đánh giá độ phức tạp: `XS (<1h)` | `S (1-4h)` | `M (1-2d)` | `L (3-5d)` | `XL (>1w)`.
-*   Liệt kê số lượng files ảnh hưởng, dependencies mới, breaking changes tiềm ẩn.
-*   Xây dựng bảng Ma trận Rủi ro (Risk Likelihood $\times$ Impact).
+### PHASE 2: IMPACT ANALYSIS & RISK MATRIX
+*   Estimate complexity: `XS (<1h)` | `S (1-4h)` | `M (1-2d)` | `L (3-5d)` | `XL (>1w)`.
+*   Catalogue affected files, new dependencies, potential breaking changes.
+*   Construct Risk Matrix (Likelihood $\times$ Impact).
 
-### PHASE 3: TECHNICAL DESIGN & CONTRACTS (Thiết kế Kỹ thuật & Giao diện)
-*   Thiết kế kiến trúc hệ thống, sơ đồ quan hệ dữ liệu (Data Models), API Contracts / Interfaces.
-*   Đề xuất phương án tối giản nhất (YAGNI).
+### PHASE 3: TECHNICAL DESIGN & CONTRACTS
+*   Design architecture, data models, schemas, and API contracts.
+*   Enforce YAGNI — select the simplest robust design.
 
-### PHASE 4: BITE-SIZED TASK BREAKDOWN (Bẻ nhỏ Tác vụ theo Hành động Nguyên tử)
-*   Chia nhỏ kế hoạch thành từng Task độc lập. Mỗi task gồm các bước nhỏ có Checkbox (`- [ ]`).
-*   Tuân thủ cấu trúc mẫu bên dưới.
+### PHASE 4: BITE-SIZED TASK BREAKDOWN
+*   Decompose plan into independent, bite-sized tasks with checkbox (`- [ ]`) steps.
+*   Follow the standard atomic task template below.
 
-### PHASE 5: VALIDATE & USER CONFIRMATION GATE (Nghiệm thu Kế hoạch — STOP)
-*   Trình bày toàn bộ bản kế hoạch cho User.
-*   ⛔ **STOP**: Tạm dừng chờ User duyệt kế hoạch trước khi chuyển sang `/code`.
+### PHASE 5: VALIDATE & USER CONFIRMATION GATE (STOP)
+*   Present complete implementation plan to user.
+*   ⛔ **STOP**: Pause and wait for user's explicit approval before proceeding to `/code`.
 
-### PHASE 6: PERSIST & SAVE (Lưu trữ Kế hoạch)
-*   Lưu kế hoạch vào thư mục: `.domyh/plans/YYYY-MM-DD_{feature_slug}/plan.md`.
-*   Nếu phạm vi $\ge$ Size L: Lưu thêm `impact.md` và `tasks.md`.
-*   Cập nhật `active_plan` trong `.agent/memory/state.json`.
+### PHASE 6: PERSIST & SAVE
+*   Save plan to: `.domyh/plans/YYYY-MM-DD_{feature_slug}/plan.md`.
+*   If scope $\ge$ Size L: Also generate `impact.md` and `tasks.md`.
+*   Update `active_plan` in `.agent/memory/state.json`.
 
 ---
 
-## 🧱 CẤU TRÚC MẪU TASK NGUYÊN TỬ (BITE-SIZED TASK FORMAT)
+## 🧱 ATOMIC TASK TEMPLATE (BITE-SIZED GRANULARITY)
 
 ```markdown
-### Task 1: [Tên Module / Thành phần]
-- **Files liên quan**: Tạo mới: `src/auth/token.ts` | Sửa đổi: `src/server.ts:45-60` | Tests: `tests/auth.test.ts`
-- **Mục tiêu**: Xử lý logic xác thực JWT token và mã hóa khóa bí mật.
+### Task 1: [Component / Module Name]
+- **Target Files**: Create: `src/auth/token.ts` | Modify: `src/server.ts:45-60` | Tests: `tests/auth.test.ts`
+- **Objective**: Implement JWT verification and secret key management.
 
-- [ ] **Step 1 (Test RED)**: Viết test case kiểm tra token hết hạn trong `tests/auth.test.ts`.
-- [ ] **Step 2 (Lệnh chạy Test)**: Chạy `pnpm test tests/auth.test.ts` (Xác nhận test FAIL).
-- [ ] **Step 3 (Implement GREEN)**: Thêm hàm `verifyToken()` vào `src/auth/token.ts`.
-- [ ] **Step 4 (Read-Back Diff)**: Gọi `view_file` đọc lại `src/auth/token.ts` kiểm tra cú pháp.
-- [ ] **Step 5 (Verify PASS)**: Chạy lại `pnpm test tests/auth.test.ts` (Xác nhận test PASS 100%).
+- [ ] **Step 1 (Test RED)**: Write unit test for expired token in `tests/auth.test.ts`.
+- [ ] **Step 2 (Run Test)**: Execute `pnpm test tests/auth.test.ts` (Verify test FAILS).
+- [ ] **Step 3 (Implement GREEN)**: Add `verifyToken()` in `src/auth/token.ts`.
+- [ ] **Step 4 (Read-Back Diff)**: Call `view_file` on `src/auth/token.ts` to verify syntax and diff.
+- [ ] **Step 5 (Verify PASS)**: Run `pnpm test tests/auth.test.ts` (Verify 100% PASS).
 - [ ] **Step 6 (Commit)**: `git commit -m "feat(auth): add jwt token verification"`.
 ```
 
@@ -79,21 +79,21 @@ success_criteria: "Understanding lock passed, plan approved by user, bite-sized 
 
 ## ⚡ SUB-COMMANDS
 
-| Lệnh | Mô tả |
-|:-----|:------|
-| `/plan [feature]` | Quy trình lập kế hoạch đầy đủ (7 Phases) |
-| `/plan quick [feature]` | Lập kế hoạch nhanh cho task nhỏ (bỏ qua Phase 0) |
-| `/plan estimate [feature]` | Đánh giá nỗ lực và kích thước task (RICE / T-shirt sizing) |
-| `/plan list` | Xem danh sách các plan đã lưu trong `.domyh/plans/` |
-| `/plan open [slug]` | Mở và tiếp tục thực thi một plan đã lưu |
+| Command | Description |
+|:--------|:------------|
+| `/plan [feature]` | Full 7-phase planning flow |
+| `/plan quick [feature]` | Rapid plan for smaller tasks (skip Phase 0) |
+| `/plan estimate [feature]` | Effort and sizing estimation (RICE / T-shirt) |
+| `/plan list` | List saved plans in `.domyh/plans/` |
+| `/plan open [slug]` | Open and resume execution of a saved plan |
 
 ---
 
-## 🎯 [GATE 9: POST-FLIGHT PLANNING CHECKLIST — BẮT BUỘC ĐỐI SOÁT TRƯỚC KHI BÀN GIAO KẾ HOẠCH]
+## 🎯 [GATE 9: POST-FLIGHT PLANNING CHECKLIST — VERIFY BEFORE PRESENTING]
 
-Trước khi bàn giao bản kế hoạch cho User, Agent BẮT BUỘC tự kiểm tra 5 câu hỏi vàng:
-1.  ✅ **Khóa Hiểu Biết (Understanding Lock) đã được User xác nhận chưa?**
-2.  ✅ **Mọi tác vụ đã được bẻ nhỏ thành từng bước nguyên tử (2-5 phút, kèm file:line và lệnh chạy cụ thể) chưa?**
-3.  ✅ **Đã có danh mục Scope OUT để ngăn chặn triệt để hiện tượng phình phạm vi chưa?**
-4.  ✅ **Các module logic đã được thiết kế theo quy trình Test-First / TDD chưa?**
-5.  ✅ **Kế hoạch đã được lưu đầy đủ vào `.domyh/plans/` và STOP chờ User bấm duyệt chưa?**
+Before presenting plan to user, MUST self-audit these 5 golden criteria:
+1.  ✅ **Has Understanding Lock been confirmed by user?**
+2.  ✅ **Is every task broken down into 2-5 min atomic steps with exact file:line and commands?**
+3.  ✅ **Is Scope OUT clearly documented to prevent scope creep?**
+4.  ✅ **Are logic modules designed with Test-First / TDD sequencing?**
+5.  ✅ **Is plan saved to `.domyh/plans/` and stopped for user approval?**
