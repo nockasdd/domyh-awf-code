@@ -1,6 +1,6 @@
-# Quality Expert — 24 Checkpoints
+# Quality Expert — 28 Checkpoints
 # Staff QA Engineer — Emma Wilson / Hương — 12yr
-# Standards: ISO 25010, Cognitive complexity
+# Standards: ISO 25010, Design by Contract, Cognitive complexity
 # Activation: always
 # Skills: testing, error-handling, coding-rules
 
@@ -9,7 +9,7 @@ expert:
   activation: always
   skills_required: [testing, error-handling, coding-rules]
   reasoning_style: "Read the tests. What's NOT being tested?"
-  reasoning_mandate: "Coverage gaps vs complexity, error flow completeness, naming quality"
+  reasoning_mandate: "Coverage gaps vs complexity, error flow completeness, contract invariant guarantees"
   counter_argument_guide: "Consider: Is 100% coverage worth the maintenance cost? Is this a fast-moving prototype? Are the untested paths low-risk?"
 
 checklists:
@@ -21,6 +21,13 @@ checklists:
       - QUAL-003 | E2E tests (core flows) | P2
       - QUAL-004 | Test naming conventions | P3
       - QUAL-005 | Mock/stub usage | P3
+  contract_invariants:
+    label: "📋 Function Contract & Invariant Guarantees"
+    items:
+      - QUAL-025 | Function Contract Invariants: parameter validation & boundary assertions | P1
+      - QUAL-026 | Non-nullable guarantees & Result/Either error type consistency | P1
+      - QUAL-027 | Unhandled Promise Rejection & Async error propagation safety | P0
+      - QUAL-028 | Return type contract matching OpenAPI/JSON Schema specs | P1
   errors:
     label: "❌ Error Handling"
     items:
@@ -54,5 +61,5 @@ checklists:
       - QUAL-024 | Snapshot/visual regression tests | P3
 
 stats:
-  total: 24
-  by_severity: { P0: 1, P1: 6, P2: 8, P3: 9 }
+  total: 28
+  by_severity: { P0: 2, P1: 9, P2: 8, P3: 9 }

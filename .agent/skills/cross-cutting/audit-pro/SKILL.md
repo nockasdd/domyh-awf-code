@@ -1,169 +1,113 @@
 ---
 name: audit-pro
-description: "12-Expert Panel audit with SCoT reasoning, cross-expert critique, and smart skill loading. v2: 277 checkpoints, 16 per-expert files, 11 weight profiles."
+description: "Deep Interprocedural Project Audit: 12-Expert Panel with Call Graph, API Contract Invariants, Taint Flow, and Blast Radius Analysis."
 detect: []
 priority: 1
 category: cross-cutting
 tier: 1
 ---
 
-# Audit Pro v2 — 12-Expert Panel System
+# Audit Pro — Deep Interprocedural Audit System
 
-> 🔬 **277 Checkpoints** | **12 Experts** | **16 Files** | **11 Weight Profiles**
-> 🧠 **SCoT Reasoning** | **Cross-Expert Critique** | **Smart Skill Loading**
+> 🔬 **12-Expert Panel** | **277+ Checkpoints** | **Interprocedural Analysis**
+> 🧠 **Call Graph Tracing** | **Contract Invariants** | **Blast Radius Quantification**
 
 ---
 
-## Decision Tree
+## 1. Core Audit Methodology: Beyond Surface Checklists
+
+Traditional auditing stops at single-file/intraprocedural inspection ("does this function have try-catch?"). Audit Pro enforces **Interprocedural & Contract Auditing**:
 
 ```
-User requests audit
-    │
-    ├─ /ap → Full audit (auto-detect all experts)
-    ├─ /ap quick → Security + Architecture only
-    ├─ /ap [expert] → Single expert
-    ├─ /ap desktop → Core 5 + Desktop supplement
-    ├─ /ap cli → Core 5 + CLI supplement
-    ├─ /ap library → Core 5 + Library supplement
-    ├─ /ap mcp → Core 5 + MCP supplement
-    │
-    ▼
-  1. DISCOVERY → detect stack, project type, auto-activate experts
-    │
-    ▼
-  2. SMART LOAD → per-expert checklists + skill patterns (~3000 tok)
-    │
-    ▼
-  3. SCOPE CONTRACT → ⛔ STOP (user selects 1-10)
-    │
-    ▼
-  4. EXECUTE → SCoT 7-step per checkpoint
-    │
-    ▼
-  5. CRITIQUE ROUND → cross-expert challenge (P0/P1 only)
-    │
-    ▼
-  6. HOLISTIC SYNTHESIS → 5 project-level questions (beyond checklists)
-    │
-    ▼
-  7. DEBATE ROUND → IF systemic issues found, experts discuss
-    │
-    ▼
-  8. SELF-REVIEW → deduplicate, verify, resolve disputes
-    │
-    ▼
-  9. REPORT → score, findings, holistic assessment, debate summary
-    │
-    ▼
-  10. PERSIST → save to memory
+[1. ENTRY POINT] ➔ [2. CALL GRAPH TRACE] ➔ [3. CONTRACT INVARIANTS] ➔ [4. STATE MUTATION] ➔ [5. BLAST RADIUS]
 ```
 
----
+### The 4 Deep Analysis Vectors:
 
-## Expert × Skill Matrix
-
-| Expert | Skills Loaded | Total Patterns | Focus |
-|:-------|:-------------|:--------------|:------|
-| Security | security + authentication | 660+ | OWASP/CWE, auth, supply chain |
-| Architecture | coding-rules + api-design | 360+ | SOLID, patterns, structure |
-| Performance | observability + web-perf | 400+ | OTel, metrics, profiling |
-| Quality | testing + error-handling + coding-rules | 510+ | Tests, errors, naming |
-| DevOps | logging + observability | 705 | Logs, alerting, CI/CD |
-| UX | domyh-design + web-perf | varies | WCAG, design system |
-| Data | database + sql | varies | Schema, migrations |
-| AI Safety | security (AI subset) | 20+ | Prompt injection, guardrails |
+| Vector | What To Audit | Primary Tool / Protocol |
+|:-------|:--------------|:------------------------|
+| **1. Interprocedural Call Graph** | Caller ⇄ Callee dependency tree, cyclic dependencies, deadlock potential, unreachable code | `hsa_trace_flow(entry, direction:"both")` |
+| **2. Taint & Data Flow** | Untrusted Source ➔ Sanitizers/Validators ➔ Mutators ➔ Sensitive Sinks (SQL, Crypto, FS, Network) | Source-to-Sink Path Tracing |
+| **3. API & Function Contracts** | Pre-conditions (boundary/null checks), Post-conditions, Return schemas, Consistent error codes | Design by Contract Invariant Verification |
+| **4. State Mutation & Atomicity** | Partial database mutations, lack of transaction rollbacks (`$transaction`), Cache/Queue desync, Race conditions | ACID & Idempotency Analysis |
 
 ---
 
-## SCoT Protocol (Per Checkpoint)
+## 2. Blast Radius Quantification Protocol
+
+For every identified vulnerability or architectural flaw, classify its impact across 3 concentric circles:
+
+```
+                  ┌─────────────────────────────────────────┐
+                  │          3. SYSTEMIC IMPACT             │
+                  │   (Cascading Failure, Service Outage,   │
+                  │    Data Corruption, Security Breach)    │
+                  │    ┌───────────────────────────────┐    │
+                  │    │     2. TRANSITIVE IMPACT      │    │
+                  │    │  (Downstream Services, Queues,│    │
+                  │    │   Dependent APIs, Background) │    │
+                  │    │    ┌─────────────────────┐    │    │
+                  │    │    │  1. DIRECT IMPACT   │    │    │
+                  │    │    │(Immediate Callers & │    │    │
+                  │    │    │ Local Function State│    │    │
+                  │    │    └─────────────────────┘    │    │
+                  │    └───────────────────────────────┘    │
+                  └─────────────────────────────────────────┘
+```
+
+### Blast Radius Scoring:
+- **Low (Score 1-3)**: Isolated to single helper/pure function. No database mutation or public exposure.
+- **Medium (Score 4-6)**: Affects multiple internal services or unhandled edge cases in non-critical endpoints.
+- **High / Critical (Score 7-10)**: Reaches Public Entry Points, corrupts persistent database state without rollback, or causes cascading timeout/crash across multiple services.
+
+---
+
+## 3. Deep SCoT Protocol (Per Checkpoint)
 
 ```yaml
-# 7-step Structured Chain-of-Thought
-scot_protocol:
-  1_locate: "hsa_search for relevant code → file:line refs"
-  2_understand: "What does this code actually do? (1 sentence)"
-  3_assess: "Does it meet the checkpoint standard?"
-  4_evidence: "Quote exact code or file:line (max 200 chars)"
-  5_impact: "If it fails, worst case? → P0-P3 severity"
-  6_counter: "Devil's advocate — why might this be acceptable?"
-  7_verdict: "PASS | FAIL | N/A (confidence 1-10)"
+# 7-step Deep Structured Chain-of-Thought
+deep_scot_protocol:
+  1_locate: "Pin exact file:line references using hsa_search"
+  2_trace: "Run hsa_trace_flow to map full Call Graph from Entry Point to Sink"
+  3_contract: "Audit Pre-conditions, Post-conditions, Null-safety, and Error Invariants"
+  4_mutation: "Verify State Mutations, Transaction Rollback safety, and Concurrency"
+  5_blast_radius: "Quantify Direct, Transitive, and Systemic impact radius"
+  6_counter: "Devil's advocate — examine valid engineering trade-offs / MVP rationale"
+  7_verdict: "P0 / P1 / P2 / P3 verdict with calibrated confidence score (1-10)"
 ```
 
 ---
 
-## Critique Round Protocol
+## 4. Deep Finding Output Schema (Mandatory for P0/P1)
 
-```yaml
-# Cross-expert challenge on P0/P1 findings only
-critique_round:
-  pairs:
-    - Security ↔ Architecture: "Arch issues → security vulns?"
-    - Architecture ↔ Security: "Security measures → over-engineered?"
-    - Performance ↔ Quality: "Quality improvements → perf impact?"
-    - Quality ↔ Performance: "Perf optimizations → maintainable?"
-    - DevOps ↔ Security: "Deployment practices → secure? Secrets managed?"
-  outcomes:
-    - AGREE: "Confirmed, severity appropriate"
-    - DISPUTE: "Disagree because [reason]"
-    - ELEVATE: "More severe than reported"
-    - LOWER: "Less severe, recommend downgrade"
-  rules:
-    - Each expert MUST use their counter_argument_guide
-    - Counter-argument is MANDATORY for every FAIL verdict
-    - N/A verdicts still require brief justification
+```markdown
+### 🔴 [P0/P1 - SEVERITY] Finding Title
+- **Entry Point**: `METHOD /route` (`path/to/controller.ts:line`)
+- **Interprocedural Call Chain**:
+  `EntryController.handler()` ➔ `DomainService.execute()` ➔ `Repository.mutate()` ➔ `ExternalAPI.call()`
+- **Contract & Logic Flaw**:
+  [Exact description of violated invariants, unhandled edge cases, or missing transaction boundary]
+- **Taint Flow & Side-Effects**:
+  * Unsanitized data flow: `req.body.field` reaches `DB.query()` without boundary check.
+  * Side-effects: Writes to Table A before Table B without atomic rollback (`$transaction`).
+- **Blast Radius & Cascading Impact**:
+  * *Direct (Callers)*: [Affected immediate consumers]
+  * *Transitive (Services)*: [Downstream APIs, background queues, dependencies]
+  * *Systemic Risk*: [Data corruption, deadlock, service crash, auth bypass]
+- **Remediation**:
+  [Concrete, actionable refactoring steps to restore contract and transaction safety]
 ```
 
 ---
 
-## Data Files (16 Checklists + 1 Scoring)
+## 5. Expert × Skill Matrix
 
-### Expert Checklists (12 files)
-
-| File | Expert | Items | Activation |
-|:-----|:-------|:------|:-----------|
-| `checklists/security.yaml` | Security | 28 | always |
-| `checklists/architecture.yaml` | Architecture | 26 | always |
-| `checklists/performance.yaml` | Performance | 24 | always |
-| `checklists/quality.yaml` | Quality | 24 | always |
-| `checklists/devops.yaml` | DevOps | 24 | always |
-| `checklists/ux.yaml` | UX | 16 | has_ui |
-| `checklists/data.yaml` | Data | 15 | has_database |
-| `checklists/compliance.yaml` | Compliance | 15 | is_regulated |
-| `checklists/product.yaml` | Product | 13 | scope_full |
-| `checklists/reliability.yaml` | Reliability | 15 | is_production |
-| `checklists/cloud.yaml` | Cloud | 12 | has_infra |
-| `checklists/ai-safety.yaml` | AI Safety | 10 | has_ai |
-
-### Supplementary Checklists (4 files, NEW)
-
-| File | Type | Items | Detection |
-|:-----|:-----|:------|:----------|
-| `checklists/desktop.yaml` | Desktop App | 15 | electron/tauri deps |
-| `checklists/cli.yaml` | CLI Tool | 12 | commander/yargs/clap deps |
-| `checklists/library.yaml` | Library/SDK | 14 | publishConfig/exports |
-| `checklists/mcp-plugin.yaml` | MCP Plugin | 14 | @modelcontextprotocol deps |
-
-### Scoring
-| File | Content |
-|:-----|:--------|
-| `scoring.yaml` | 11 profiles, 10 scopes, grades, priorities |
-
----
-
-## Usage
-
-```
-# Full audit
-/ap
-
-# Desktop app audit
-/ap desktop
-
-# Single expert
-/ap expert security
-
-# Compare with previous
-/ap --compare
-```
-
----
+| Expert | Core Skills Loaded | Deep Tracing Focus |
+|:-------|:-------------------|:-------------------|
+| **Security** | `security`, `authentication` | Public Entry Points, Taint Flow, Auth Bypass, Secrets, RBAC, Injection |
+| **Architecture** | `coding-rules`, `api-design` | Interprocedural Call Graph, Module Boundaries, Cyclic Dependencies, Layers |
+| **Reliability / SRE** | `observability`, `error-handling` | Transaction Boundaries, Rollbacks, Graceful Degradation, Circuit Breaking |
+| **Performance** | `observability`, `web-perf` | Query N+1 in Call Chains, Memory Leaks, Heavy Blocking Operations |
+| **Quality** | `testing`, `error-handling` | Contract Invariants, Null Safety, Boundary Limits, Error Code Consistency |
+| **Data** | `database`, `sql` | ACID Transactions, Migration Invariants, Indexing Hotspots, Orphan Records |
+| **DevOps** | `logging`, `ci-cd` | Supply Chain, Secrets in Configs, Deployment Blast Radius |

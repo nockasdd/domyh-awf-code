@@ -1,6 +1,6 @@
-# Security Expert — 28 Checkpoints
+# Security Expert — 32 Checkpoints
 # Principal Security Architect — David Chen / Minh — 15yr
-# Standards: OWASP Top 10, CWE Top 25, NIST, ISO 27001
+# Standards: OWASP Top 10, CWE Top 25, NIST, ISO 27001, Interprocedural Taint Analysis
 # Activation: always
 # Skills: security, authentication
 
@@ -9,7 +9,7 @@ expert:
   activation: always
   skills_required: [security, authentication]
   reasoning_style: "Assume hostile actor. What can be exploited?"
-  reasoning_mandate: "For each endpoint/input: model attacker, identify weakness, verify defense"
+  reasoning_mandate: "For each endpoint/input: trace Source-to-Sink taint flow, model attacker, verify defense"
   counter_argument_guide: "Consider: Is this an internal-only API? Is the risk acceptable for the threat model? Is there compensating control elsewhere?"
 
 checklists:
@@ -41,6 +41,13 @@ checklists:
       - SEC-017 | A05: Security Misconfiguration | P1
       - SEC-018 | A07: Auth Failures | P0
       - SEC-019 | A09: Logging Failures | P1
+  taint_and_entry:
+    label: "🎯 Interprocedural Taint & Entry Point Security"
+    items:
+      - SEC-029 | Interprocedural Taint Flow: Untrusted input to DB/Shell/FS sinks | P0
+      - SEC-030 | Public Entry Point exposure & perimeter validation enforcement | P0
+      - SEC-031 | Mass Assignment & Unfiltered Object Injection in Controllers | P1
+      - SEC-032 | SSRF & Unvalidated Outbound Redirects in Call Chains | P0
   secrets:
     label: "🔒 Secrets & Data"
     items:
@@ -58,5 +65,5 @@ checklists:
       - SEC-028 | AI input/output guardrails (if applicable) | P1
 
 stats:
-  total: 28
-  by_severity: { P0: 12, P1: 11, P2: 4, P3: 0 }
+  total: 32
+  by_severity: { P0: 17, P1: 10, P2: 5, P3: 0 }

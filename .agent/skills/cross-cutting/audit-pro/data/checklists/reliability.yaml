@@ -1,6 +1,6 @@
-# Reliability Expert — 15 Checkpoints
+# Reliability Expert — 19 Checkpoints
 # Staff Site Reliability Engineer — William Brown / Phong — 12yr
-# Standards: Google SRE Book, Chaos Engineering Principles
+# Standards: Google SRE Book, Chaos Engineering Principles, ACID Transaction Safety
 # Activation: conditional (is_production)
 
 expert:
@@ -27,6 +27,13 @@ checklists:
       - SRE-007 | Runbooks for top 5 failure modes | P1
       - SRE-008 | Blameless postmortem template and process | P1
       - SRE-009 | Incident communication channels | P1
+  transactions_and_state:
+    label: "⚡ State Mutation & Transaction Atomicity"
+    items:
+      - SRE-016 | Atomic transaction rollbacks on partial failure ($transaction / saga) | P0
+      - SRE-017 | Idempotency on payment, webhooks, and critical mutation endpoints | P0
+      - SRE-018 | Cascading timeout prevention & deadline propagation across call chains | P1
+      - SRE-019 | Re-entrancy and race condition guard on shared memory/cache | P1
   resilience:
     label: "🛡️ Resilience & Chaos"
     items:
@@ -38,5 +45,5 @@ checklists:
       - SRE-015 | Production readiness checklist passed | P0
 
 stats:
-  total: 15
-  by_severity: { P0: 2, P1: 9, P2: 4, P3: 0 }
+  total: 19
+  by_severity: { P0: 4, P1: 11, P2: 4, P3: 0 }

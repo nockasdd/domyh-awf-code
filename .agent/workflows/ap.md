@@ -1,202 +1,129 @@
 ---
-description: "🔬 Full project audit (12-expert panel with conditional activation)"
+description: "Deep Interprocedural Project Audit: 12-Expert Panel with Call Graph, API Contract Invariants, Taint Flow, and Blast Radius Analysis"
 skills: { required: [audit-pro], contextual: [security, coding-rules, testing, observability, authentication] }
 related_workflows: [review, security, test, verify, fix]
-success_criteria: "Audit report generated with score and P0-P3 findings"
+success_criteria: "Audit report generated with score, deep interprocedural findings, call chain traces, and blast radius quantification"
 ---
 
-# 🔬 /ap — Audit Pro
+# 🔬 /ap — Deep Interprocedural Audit Pro
 
-> 12-Expert Panel (5 Core + 7 Conditional) • 277 Checkpoints • 16 Files
-> 📊 ISO 25010:2023 • CWE Top 25 • OWASP Top 10 • WCAG 2.2 • GDPR • SRE
-> 📁 Data: `.agent/skills/cross-cutting/audit-pro/data/checklists/` (per-expert YAML)
+## 🛡️ [GATE 0: PRE-FLIGHT AUDIT RULES — READ BEFORE AUDITING]
 
----
-
-## ⛔ RULES (Always Apply)
-
-| # | Rule | Category |
-|:--|:-----|:---------|
-| R1 | All findings MUST have `file:line` evidence | Quality |
-| R2 | Counter-argument MANDATORY for every FAIL verdict | Fairness |
-| R3 | ⛔ STOP at step 3 — user MUST select scope before execute | Safety |
-| R4 | Max total token budget: 40K (core 30K + conditional 10K) | Efficiency |
-| R5 | If expert panel exceeds 8K tokens → compress + move on | Efficiency |
-| R6 | P0/P1 findings MUST go through Critique Round — never skip | Quality |
-| R7 | Negative probe every PASS on P0/P1 checkpoint: "What would make this FAIL?" | Bias Mitigation |
+1. **NO SURFACE-ONLY AUDITING**: Never stop at intraprocedural (single-file/local) checks. Every P0/P1 finding MUST trace the entire interprocedural call graph (`hsa_trace_flow`) from Entry Point to Sink.
+2. **EVIDENCE MANDATE**: All findings MUST have concrete `file:line` citations, exact call chain paths, and reproducible scenarios.
+3. **COUNTER-ARGUMENT MANDATORY**: Every FAIL verdict MUST include a devil's advocate counter-argument explaining why the pattern might have been chosen.
+4. **BLAST RADIUS QUANTIFICATION**: For every P0/P1 vulnerability or architectural defect, explicitly map Direct, Transitive, and Systemic impact radius.
+5. **SCOPE CONTRACT STOP**: MUST pause at Step 4 (Scope Contract) for explicit user scope confirmation before running the full execution panel.
 
 ---
 
-## AUDIT FLOW (11 Steps)
-
-1. **DISCOVERY** (30s)
-   - `hsa_session("audit project")`, `hsa_detect(stack)` → languages, frameworks, project type
-   - `hsa_explore(snapshot)` → file count, structure
-   - `git diff --name-only HEAD~5..HEAD` → diff-aware if recent commits
-   - Load previous audit from `.domyh/audits/` → extract score + unresolved findings
-   - Auto-activate conditional experts based on detected project type
-
-2. **RISK ASSESSMENT** (NEW — 30s heuristic scan)
-   ```yaml
-   inputs: [project_type, file_count, dep_count, git_history, complexity_hotspots]
-   output:
-     hot_zones: ["auth/", "api/", "config/"]  # High-risk — full SCoT
-     warm_zones: ["services/", "models/"]      # Medium — standard SCoT
-     cold_zones: ["docs/", "scripts/", "test/"] # Low — lightweight SCoT
-     risk_score: X/10
-   impact: "EXECUTE prioritizes hot_zones first, applies SCoT tiering"
-   ```
-
-3. **SMART LOAD** (Token-Optimized, ~3000 tok)
-   - Load ONLY active expert checklists from `data/checklists/{expert}.yaml`
-   - Load supplementary checklists if detected (desktop/CLI/library/MCP)
-   - `hsa_search(skills, expert.keywords)` → skill patterns per expert
-   - Auto-select weight profile from `scoring.yaml`:
-     `electron/tauri → desktop_app` | `commander/clap → cli_tool` | `publishConfig → library_sdk`
-     `react-native/flutter → mobile_app` | `@modelcontextprotocol → mcp_plugin` | `default`
-
-4. **SCOPE CONTRACT** — Display scope (1-10) → ⛔ **STOP** wait for user
-   - Show: active experts, supplementary checklists, weight profile, previous score, risk zones
-
-5. **EXECUTE** — Run Expert Panels with **SCoT Tiering**:
-
-   **SCoT Tiering** (based on Risk Assessment zones):
-   | Zone | SCoT Level | Steps | Example |
-   |:-----|:-----------|:------|:--------|
-   | Hot (P0/P1 risk) | Full 7-step | LOCATE→UNDERSTAND→ASSESS→EVIDENCE→IMPACT→COUNTER→VERDICT | Auth, secrets |
-   | Warm (P2 risk) | Standard 5-step | LOCATE→UNDERSTAND→ASSESS→EVIDENCE→VERDICT | Business logic |
-   | Cold (P3 risk) | Lightweight 3-step | LOCATE→ASSESS→VERDICT | Docs, scripts |
-
-   **Context Window Optimization:**
-   - Chunked: 1 expert panel at a time, NOT simultaneous
-   - Intermediate summary after each expert: `[Security] Score: 8.2 | P0:1 P1:3 P2:2 | Key: ...`
-   - Position engineering: current checklist in TAIL (high attention zone)
-   - Token ceiling: cumulative findings >5000 tok → compress older to 1-line
-   - **Budget**: If approaching 40K → skip P2/P3, complete P0/P1 only → suggest `/ap --resume`
-
-   Show progress: `[Panel 2/8] Architecture — Checkpoint 12/20`
-
-6. **CRITIQUE ROUND** (P0/P1 only)
-   - Security ↔ Architecture | Performance ↔ Quality | DevOps ↔ Security
-   - Each critique: AGREE | DISPUTE (reason) | ELEVATE | LOWER
-   - Counter-argument REQUIRED per expert's `counter_argument_guide`
-
-7. **HOLISTIC SYNTHESIS** (5 project-level questions)
-   > Prevents "checklist blindness" — passing all checkpoints but missing systemic issues.
-
-   | # | Question | Focus |
-   |:--|:---------|:------|
-   | Q1 | Architecture Coherence | Design contradictions between modules? |
-   | Q2 | Risk Surface | Single biggest risk (from observation, not checklist)? |
-   | Q3 | Team Capability | Code quality variance → capability gaps? |
-   | Q4 | Tech Debt Trajectory | Increasing or decreasing? (TODOs, complexity, coverage) |
-   | Q5 | Production Readiness | At 10x load, what breaks first? |
-
-   Each answer: Evidence (file:line) + Severity (Systemic-Critical/Warning/Observation) + Counter-argument
-
-8. **DEBATE ROUND** (conditional)
-   - Trigger: Systemic-Critical found OR ≥3 Systemic-Warning
-   - Each expert responds: FOR | AGAINST | CONDITION
-   - Moderator synthesizes: CONFIRMED | DOWNGRADED | CONDITIONAL
-
-9. **SELF-REVIEW** — Deduplicate, verify evidence, resolve disputes, assign final confidence (1-10)
-
-   > ⚠️ **ERROR RECOVERY**: If interrupted → save to `.domyh/audits/audit_PARTIAL_YYYY-MM-DD.md` → `/ap --resume`
-
-10. **REPORT** — Score (0-10), P0/P1/P2/P3 findings, delta vs previous
-    - Include: Holistic Assessment, Debate Summary (if triggered), Token Usage (XK/40K)
-    - Save to `.domyh/audits/audit_YYYY-MM-DD.md`
-
-11. **PERSIST** — `hsa_session(persist)`, update `audit_summary.json`
-
----
-
-## EXPERT PANEL
-
-### Core (Always Active — 5)
-
-| ID | Expert | Seniority | Skills | Reasoning Style |
-|:---|:-------|:----------|:-------|:----------------|
-| security | David Chen | Principal 15yr | `security`, `authentication` | Assume hostile actor |
-| architecture | Sarah Kim | Staff 12yr | `coding-rules`, `api-design` | Trace dependency flow |
-| performance | James Park | Senior 10yr | `observability`, `web-perf` | Follow the hot path |
-| quality | Emma Wilson | Staff 12yr | `testing`, `error-handling` | What's NOT being tested? |
-| devops | Michael Torres | Senior 10yr | `logging`, `observability` | Imagine 3AM outage |
-
-### Conditional (Auto-detect — 7)
-
-| ID | Expert | Seniority | Activates When |
-|:---|:-------|:----------|:---------------|
-| ux | Lisa Wang | Senior 8yr | UI files/deps detected |
-| data | Robert Martinez | Principal 15yr | DB/migration files detected |
-| compliance | Jennifer Anderson | Distinguished 18yr | Regulated industry indicators |
-| product | Daniel Lee | Tech Lead 10yr | `scope_full` or user request |
-| reliability | William Brown | Staff 12yr | Production/deploy files |
-| cloud | Alexander White | Senior 10yr | IaC/Terraform/K8s files |
-| ai_safety | Dr. Sophia Nguyen | Distinguished 20yr | AI/ML/LLM code/deps |
-
----
-
-## TOOL INTEGRATION
-
-> Auto-run BEFORE AI audit if tools available → ~95% accuracy (vs ~78% AI-only)
-
-| Stack | Commands |
-|:------|:---------|
-| JavaScript | `npx eslint --format json src/`, `npm audit --json`, `npx semgrep --config auto --json` |
-| Python | `ruff check --output-format json`, `pip-audit --format json`, `bandit -r src/ -f json` |
-| Go | `go vet ./...`, `govulncheck ./...`, `golangci-lint run --out-format json` |
-| Rust | `cargo clippy -- -W warnings`, `cargo audit` |
-| C#/.NET | `dotnet build --no-incremental`, `dotnet list package --vulnerable` |
-| General | `trivy fs --format json .` |
-
----
-
-## FINDING FORMAT
+## 🔄 5 DEEP AUDIT PILLARS (INTERPROCEDURAL ANALYSIS)
 
 ```
-**[P0]** 🔒 Expert `file:line` (Confidence: 9/10)
-Issue: description | Evidence: code snippet | Impact: risk
-Counter: why acceptable | Verdict: FAIL | Fix: suggested fix
-```
-
-## REPORT FORMAT
-
-```
-📊 DOMYH AUDIT — [project] — [date] — Score: X.X/10 (↑0.3 from last)
-| Expert | Score | Issues | Δ vs Last |
-👥 Active: 8/12 | 📁 .domyh/audits/audit_YYYY-MM-DD.md
-⏱️ Xm Ys | Files: N | Changed: M | Tokens: XK/40K
-🔍 Holistic: [biggest risk] | ⚔️ Debate: [verdict if triggered]
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ 1. ENTRY POINT HARVESTING   ➔ Map all Public APIs, Route Handlers, CLI & Event Listeners│
+│ 2. CALL GRAPH & TAINT FLOW  ➔ Trace Source ➔ Sanitizer ➔ Mutator ➔ Sink (hsa_trace_flow)│
+│ 3. API & FUNCTION CONTRACTS ➔ Verify Pre-conditions, Post-conditions, Null & Error Invariants│
+│ 4. STATE MUTATION & ACID    ➔ Audit Database Rollbacks, Cache Invalidations, Idempotency│
+│ 5. BLAST RADIUS MATRIX      ➔ Quantify Direct, Transitive & Systemic Failure Impact    │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## SUB-COMMANDS
+## 📋 11-STEP AUDIT FLOW
 
-| Command | Description |
-|:--------|:------------|
-| `/ap` | Full audit (all active experts) |
-| `/ap quick` | Quick audit (Security + Architecture) |
-| `/ap security` / `/ap performance` | Single-domain focus |
-| `/ap expert [name]` | Single expert audit |
-| `/ap --scope [path]` | Limit scope to path |
-| `/ap --diff` | Diff-aware (changed files + dependents) |
-| `/ap --compare` | Compare with previous audit |
-| `/ap --resume` | Resume interrupted audit |
-| `/ap --force [name]` | Force-include conditional expert |
-| `/ap desktop` / `cli` / `library` / `mcp` | Platform-specific audit |
+### 1. DISCOVERY & ENTRY POINT HARVESTING (30s)
+*   `hsa_session("audit project")`, `hsa_detect(stack)` → extract runtime, frameworks, database, external dependencies.
+*   `hsa_explore(repo_map)` → map directory structure and catalogue all **Public Entry Points** (HTTP Routes, RPC endpoints, Webhooks, Message Listeners, CLI commands).
+*   `git diff --name-only HEAD~5..HEAD` → identify recent churn hotspots.
+*   Load previous audit from `.domyh/audits/` → track score delta and unresolved findings.
+
+### 2. RISK & HEURISTIC ASSESSMENT
+```yaml
+inputs: [project_type, file_count, dep_count, git_history, complexity_hotspots]
+output:
+  hot_zones: ["auth/", "api/", "payment/", "config/"] # High-risk → Full Interprocedural SCoT
+  warm_zones: ["services/", "models/", "helpers/"]     # Medium → Standard SCoT
+  cold_zones: ["docs/", "scripts/", "test/"]          # Low → Lightweight SCoT
+  risk_score: X/10
+```
+
+### 3. SMART LOAD (Token-Optimized, ~3000 tok)
+*   Load active expert checklists from `data/checklists/{expert}.yaml`.
+*   Load supplementary checklists if detected (desktop, CLI, library, MCP, game).
+*   Auto-select weight profile from `scoring.yaml`.
+
+### 4. SCOPE CONTRACT GATE (⛔ STOP — Confirm with User)
+*   Display active expert panel, risk zones, previous score, and estimated token budget.
+*   ⛔ **STOP**: Await user confirmation before beginning deep execution.
+
+### 5. EXECUTE: SCoT DEEP INTERPROCEDURAL PANEL
+Run Expert Panels sequentially with **SCoT Deep Tracing**:
+
+| Step | Action | Description |
+|:-----|:-------|:------------|
+| 1. LOCATE | `hsa_search` | Pin exact `file:line` references across module boundaries |
+| 2. TRACE | `hsa_trace_flow` | Delineate full Call Graph from Entry Point (Source) to Sink |
+| 3. CONTRACT | Function Invariants | Verify parameter sanity, return types, null safety, error codes |
+| 4. MUTATE | Side-Effects & ACID | Check database transactions, shared memory mutations, race conditions |
+| 5. BLAST | Impact Matrix | Quantify Direct (Callers), Transitive (Services), Systemic (Failures) |
+| 6. COUNTER | Devil's Advocate | Challenge the finding: Is there a legitimate architectural trade-off? |
+| 7. VERDICT | P0 / P1 / P2 / P3 | Assign severity with confidence score (1-10) |
+
+### 6. CRITIQUE ROUND (Cross-Expert Challenge on P0/P1)
+*   Security ↔ Architecture | Performance ↔ Quality | DevOps ↔ Reliability.
+*   Outcomes: `AGREE` | `DISPUTE` (reasoned) | `ELEVATE` | `LOWER`.
+
+### 7. HOLISTIC SYNTHESIS (5 Systemic Questions)
+*   Q1: **Architecture Coherence**: Contradictions between modules or layer-skipping?
+*   Q2: **Inter-Service Fragility**: Undocumented tight coupling or circular dependency?
+*   Q3: **State Corruption Risk**: Can any partial failure leave orphaned or corrupt records?
+*   Q4: **Cascading Blast Radius**: At 10x load or external API outage, what cascades first?
+*   Q5: **Production Readiness**: Security, observability, and graceful degradation in place?
+
+### 8. DEBATE ROUND (Triggered on Systemic-Critical or $\ge 3$ Systemic-Warnings)
+*   Expert panel debates systemic findings to confirm or downgrade severity.
+
+### 9. SELF-REVIEW & DEDUPLICATION
+*   Deduplicate overlapping findings, verify evidence paths, resolve open disputes.
+
+### 10. GENERATE DEEP AUDIT REPORT
+*   Output overall score (0-10), P0-P3 breakdown with Call Chains and Blast Radius matrices.
+*   Save report to `.domyh/audits/audit_YYYY-MM-DD.md`.
+
+### 11. PERSIST SESSION
+*   `hsa_session(action="persist", task_summary="Deep audit completed with interprocedural analysis")`.
 
 ---
 
-## REFLECTION CHECKPOINT
+## 📊 DEEP FINDING OUTPUT SCHEMA (MANDATORY FOR P0/P1)
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+```markdown
+### 🔴 [P0/P1 - SEVERITY] Finding Title
+- **Entry Point**: `METHOD /route` (`path/to/controller.ts:line`)
+- **Interprocedural Call Chain**:
+  `EntryController.handler()` ➔ `DomainService.execute()` ➔ `Repository.mutate()` ➔ `ExternalAPI.call()`
+- **Contract & Logic Flaw**:
+  [Exact description of violated invariants, unhandled edge cases, or missing transaction boundary]
+- **Taint Flow & Side-Effects**:
+  * Unsanitized data flow: `req.body.field` reaches `DB.query()` without boundary check.
+  * Side-effects: Writes to Table A before Table B without atomic rollback (`$transaction`).
+- **Blast Radius & Cascading Impact**:
+  * *Direct (Callers)*: [Affected immediate consumers]
+  * *Transitive (Services)*: [Downstream APIs, background queues, dependencies]
+  * *Systemic Risk*: [Data corruption, deadlock, service crash, auth bypass]
+- **Remediation**:
+  [Concrete, actionable refactoring steps to restore contract and transaction safety]
+```
 
-1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
-2. **PERSIST** (if HSA available — preferred, 1 tool call):
-   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`
-   - If key decision → `hsa_session({action:'anchor', content:'[decision]', category:'decision'})`
-3. **PERSIST** (if HSA unavailable — manual fallback):
-   - Append task summary to `memory/session.md`
-   - If last task → Update `memory/CONTEXT_SNAPSHOT.md`
+---
+
+## 🎯 [GATE 9: POST-FLIGHT AUDIT CHECKLIST — VERIFY BEFORE PRESENTING]
+
+Before delivering the audit report, MUST verify:
+1.  ✅ **Does every P0/P1 finding contain a complete Interprocedural Call Chain (`hsa_trace_flow`)?**
+2.  ✅ **Are API and Function Contract Invariants explicitly checked (not just syntax)?**
+3.  ✅ **Is the Blast Radius quantified across Direct, Transitive, and Systemic layers?**
+4.  ✅ **Is a counter-argument provided for every FAIL verdict to eliminate bias?**
+5.  ✅ **Has the report been saved to `.domyh/audits/` and persisted in session memory?**
