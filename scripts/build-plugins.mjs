@@ -20,8 +20,8 @@ const AGENT_DIR = join(ROOT_DIR, '.agent');
 const CONFIGS_DIR = join(ROOT_DIR, 'configs');
 const DIST_PLUGINS_DIR = join(ROOT_DIR, 'dist-plugins');
 
-const VERSION = '7.2.3';
-const HSA_VERSION = '2.0.8';
+const VERSION = '7.2.4';
+const HSA_VERSION = '2.0.9';
 const AUTHOR = 'NockDev (DOMYH Awesome Code)';
 
 console.log('🚀 Starting DOMYH Multi-Target Plugin Builder v' + VERSION + '...');
@@ -235,10 +235,13 @@ console.log('\n📦 [3/4] Building OpenAI Codex Plugin & AGENTS.md Hierarchy...'
 const codexPluginDir = join(DIST_PLUGINS_DIR, 'codex-plugin');
 mkdirSync(codexPluginDir, { recursive: true });
 
+const DEFAULT_LANG_INSTRUCTION = 'Tiếng Việt — PHẢI trả lời TOÀN BỘ bằng tiếng Việt. Chỉ giữ tiếng Anh cho code, technical terms, commands. KHÔNG tự chuyển ngôn ngữ.';
+
 // 3.1 AGENTS.md
 const codexAgentsMd = join(CONFIGS_DIR, 'codex', 'root.AGENTS.md');
 if (existsSync(codexAgentsMd)) {
-  writeFileSync(join(codexPluginDir, 'AGENTS.md'), readFileSync(codexAgentsMd));
+  const content = readFileSync(codexAgentsMd, 'utf-8').replace('{{LANGUAGE_INSTRUCTION}}', DEFAULT_LANG_INSTRUCTION);
+  writeFileSync(join(codexPluginDir, 'AGENTS.md'), content, 'utf-8');
 }
 
 // 3.2 Rules and Skills
@@ -268,7 +271,8 @@ mkdirSync(vscodeBundleDir, { recursive: true });
 // 4.1 Cursor rules & MCP
 const cursorRulesFile = join(CONFIGS_DIR, 'cursor', 'root.cursorrules');
 if (existsSync(cursorRulesFile)) {
-  writeFileSync(join(cursorBundleDir, '.cursorrules'), readFileSync(cursorRulesFile));
+  const content = readFileSync(cursorRulesFile, 'utf-8').replace('{{LANGUAGE_INSTRUCTION}}', DEFAULT_LANG_INSTRUCTION);
+  writeFileSync(join(cursorBundleDir, '.cursorrules'), content, 'utf-8');
 }
 copyDir(join(AGENT_DIR, 'rules'), join(cursorBundleDir, '.cursor', 'rules'));
 const cursorMcp = {
@@ -286,7 +290,8 @@ const vscodeInstructions = join(CONFIGS_DIR, 'vscode', 'root.copilot-instruction
 const vscodeMetaDir = join(vscodeBundleDir, '.github');
 mkdirSync(vscodeMetaDir, { recursive: true });
 if (existsSync(vscodeInstructions)) {
-  writeFileSync(join(vscodeMetaDir, 'copilot-instructions.md'), readFileSync(vscodeInstructions));
+  const content = readFileSync(vscodeInstructions, 'utf-8').replace('{{LANGUAGE_INSTRUCTION}}', DEFAULT_LANG_INSTRUCTION);
+  writeFileSync(join(vscodeMetaDir, 'copilot-instructions.md'), content, 'utf-8');
 }
 writeFileSync(join(vscodeBundleDir, 'mcp.json'), JSON.stringify(cursorMcp, null, 2), 'utf-8');
 
