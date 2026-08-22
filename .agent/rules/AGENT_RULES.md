@@ -88,7 +88,31 @@ With MCP: hsa_get_agent_config("bootstrap") then hsa_session(action:"intent"). O
 
 ---
 
-## 7. Comment Policy
+## 7. Parallel Tool Batching Mandate (Anti-Fragmentation)
+
+Always batch independent read/search operations in a SINGLE turn to eliminate roundtrip overhead and credit waste.
+
+You are violating this if:
+- Emitting sequential single-tool turns when gathering context for multiple files or symbols
+- Calling `view_file` on 3 files across 3 separate turns instead of calling them in parallel in 1 turn
+- Splitting `view_file` and `hsa_trace_flow` into separate turns when both are needed for context
+
+Rules:
+1. **Parallel by Default**: Call `view_file`, `hsa_search`, and `hsa_trace_flow` for all target files in parallel in 1 turn.
+2. **Cohesive Action Blocks**: Complete full logical units in 1-2 turns (e.g. [Read Target + Trace Callers in Turn 1] ➔ [Edit File + Verify Syntax in Turn 2]).
+
+## 8. Subagent Delegation Protocol
+
+For large codebases (≥20 files, multi-package monorepos) or complex audits, the Main Agent MUST act as Orchestrator and delegate to specialized subagents to keep context unpolluted.
+
+Signals for Subagent Dispatch:
+- Large codebase: ≥20 files or ≥3,000 LOC
+- Full project audit (`/ap` full, `/ap deep`): dispatch `Security`, `Architecture`, `Reliability` subagents
+- Multi-domain task: frontend + backend + database refactoring simultaneously
+
+---
+
+## 9. Comment Policy
 
 Default: NO comments. Add only when WHY is non-obvious.
 

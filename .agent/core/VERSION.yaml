@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.7.11"
-  codename: "Interprocedural Audit Pro & Multi-Target Plugin Distribution"
+  version: "6.7.12"
+  codename: "Subagent-Driven Auditing & Lean Parallel Architecture"
   release_date: "2026-05-20"
 
   # Identity comes from BRANDING.yaml

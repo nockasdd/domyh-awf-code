@@ -1,6 +1,6 @@
 ---
 name: audit-pro
-description: "Deep Interprocedural Project Audit: 12-Expert Panel with Call Graph, API Contract Invariants, Taint Flow, and Blast Radius Analysis."
+description: "Deep Interprocedural Project Audit: 12-Expert Panel with Subagent Delegation, Call Graph, API Contract Invariants, and Blast Radius Analysis."
 detect: []
 priority: 1
 category: cross-cutting
@@ -10,7 +10,7 @@ tier: 1
 # Audit Pro — Deep Interprocedural Audit System
 
 > 🔬 **12-Expert Panel** | **277+ Checkpoints** | **Interprocedural Analysis**
-> 🧠 **Call Graph Tracing** | **Contract Invariants** | **Blast Radius Quantification**
+> 🧠 **Subagent Delegation** | **Parallel Tool Batching** | **Blast Radius Quantification**
 
 ---
 
@@ -33,7 +33,44 @@ Traditional auditing stops at single-file/intraprocedural inspection ("does this
 
 ---
 
-## 2. Blast Radius Quantification Protocol
+## 2. Subagent-Driven Auditing (SDA) for Large Repositories
+
+When auditing large codebases (≥20 files or multi-package monorepos), the Main Agent MUST act as Orchestrator and dispatch 3 specialized subagents concurrently to keep context clean and avoid "Lost in the Middle" degradation:
+
+```
+                          ┌───────────────────────────┐
+                          │     MAIN ORCHESTRATOR     │
+                          │   (Discovery & Synthesis) │
+                          └─────────────┬─────────────┘
+                ┌───────────────────────┼───────────────────────┐
+                ▼                       ▼                       ▼
+   ┌────────────────────────┐┌────────────────────────┐┌────────────────────────┐
+   │   SUBAGENT SECURITY    ││   SUBAGENT ARCHITECT   ││ SUBAGENT RELIABILITY   │
+   │• Public Entry Points   ││• Call Graph & Cycles   ││• ACID Transactions     │
+   │• Auth & Taint Analysis ││• Layer Isolation       ││• Idempotency & Concurr.│
+   │• Secrets & Injections  ││• Blast Radius Mapping  ││• Cascading Timeouts    │
+   └───────────┬────────────┘└──────────┬─────────────┘└───────────┬────────────┘
+               └────────────────────────┼──────────────────────────┘
+                                        ▼
+                          ┌───────────────────────────┐
+                          │   SYNTHESIS & CRITIQUE    │
+                          │  • Cross-Expert Challenge │
+                          │  • Final Report Output    │
+                          └───────────────────────────┘
+```
+
+---
+
+## 3. Parallel Tool Batching Mandate (Anti-Fragmentation)
+
+To prevent credit and token exhaustion from excessive roundtrips:
+- **Batch Independent Reads**: Always call `view_file` for multiple target files in a SINGLE turn in parallel.
+- **Batch Searches & Traces**: Call `hsa_search` and `hsa_trace_flow` alongside `view_file` in the same turn.
+- **Cohesive Action Blocks**: Complete full logical units in 1-2 turns rather than micro-stepping.
+
+---
+
+## 4. Blast Radius Quantification Protocol
 
 For every identified vulnerability or architectural flaw, classify its impact across 3 concentric circles:
 
@@ -55,14 +92,9 @@ For every identified vulnerability or architectural flaw, classify its impact ac
                   └─────────────────────────────────────────┘
 ```
 
-### Blast Radius Scoring:
-- **Low (Score 1-3)**: Isolated to single helper/pure function. No database mutation or public exposure.
-- **Medium (Score 4-6)**: Affects multiple internal services or unhandled edge cases in non-critical endpoints.
-- **High / Critical (Score 7-10)**: Reaches Public Entry Points, corrupts persistent database state without rollback, or causes cascading timeout/crash across multiple services.
-
 ---
 
-## 3. Deep SCoT Protocol (Per Checkpoint)
+## 5. Deep SCoT Protocol (Per Checkpoint)
 
 ```yaml
 # 7-step Deep Structured Chain-of-Thought
@@ -78,7 +110,7 @@ deep_scot_protocol:
 
 ---
 
-## 4. Deep Finding Output Schema (Mandatory for P0/P1)
+## 6. Deep Finding Output Schema (Mandatory for P0/P1)
 
 ```markdown
 ### 🔴 [P0/P1 - SEVERITY] Finding Title
@@ -97,17 +129,3 @@ deep_scot_protocol:
 - **Remediation**:
   [Concrete, actionable refactoring steps to restore contract and transaction safety]
 ```
-
----
-
-## 5. Expert × Skill Matrix
-
-| Expert | Core Skills Loaded | Deep Tracing Focus |
-|:-------|:-------------------|:-------------------|
-| **Security** | `security`, `authentication` | Public Entry Points, Taint Flow, Auth Bypass, Secrets, RBAC, Injection |
-| **Architecture** | `coding-rules`, `api-design` | Interprocedural Call Graph, Module Boundaries, Cyclic Dependencies, Layers |
-| **Reliability / SRE** | `observability`, `error-handling` | Transaction Boundaries, Rollbacks, Graceful Degradation, Circuit Breaking |
-| **Performance** | `observability`, `web-perf` | Query N+1 in Call Chains, Memory Leaks, Heavy Blocking Operations |
-| **Quality** | `testing`, `error-handling` | Contract Invariants, Null Safety, Boundary Limits, Error Code Consistency |
-| **Data** | `database`, `sql` | ACID Transactions, Migration Invariants, Indexing Hotspots, Orphan Records |
-| **DevOps** | `logging`, `ci-cd` | Supply Chain, Secrets in Configs, Deployment Blast Radius |

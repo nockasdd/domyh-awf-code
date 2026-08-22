@@ -1,5 +1,5 @@
 ---
-description: "Deep Interprocedural Project Audit: 12-Expert Panel with Call Graph, API Contract Invariants, Taint Flow, and Blast Radius Analysis"
+description: "Deep Interprocedural Project Audit: 12-Expert Panel with Subagent Delegation, Call Graph, API Contract Invariants, and Blast Radius Analysis"
 skills: { required: [audit-pro], contextual: [security, coding-rules, testing, observability, authentication] }
 related_workflows: [review, security, test, verify, fix]
 success_criteria: "Audit report generated with score, deep interprocedural findings, call chain traces, and blast radius quantification"
@@ -10,10 +10,10 @@ success_criteria: "Audit report generated with score, deep interprocedural findi
 ## 🛡️ [GATE 0: PRE-FLIGHT AUDIT RULES — READ BEFORE AUDITING]
 
 1. **NO SURFACE-ONLY AUDITING**: Never stop at intraprocedural (single-file/local) checks. Every P0/P1 finding MUST trace the entire interprocedural call graph (`hsa_trace_flow`) from Entry Point to Sink.
-2. **EVIDENCE MANDATE**: All findings MUST have concrete `file:line` citations, exact call chain paths, and reproducible scenarios.
-3. **COUNTER-ARGUMENT MANDATORY**: Every FAIL verdict MUST include a devil's advocate counter-argument explaining why the pattern might have been chosen.
-4. **BLAST RADIUS QUANTIFICATION**: For every P0/P1 vulnerability or architectural defect, explicitly map Direct, Transitive, and Systemic impact radius.
-5. **SCOPE CONTRACT STOP**: MUST pause at Step 4 (Scope Contract) for explicit user scope confirmation before running the full execution panel.
+2. **SUBAGENT DELEGATION ON SCALE**: If codebase has ≥20 files or is a multi-package monorepo, Main Agent MUST act as Orchestrator and dispatch specialized subagents to prevent context saturation.
+3. **PARALLEL TOOL BATCHING**: Always batch independent `view_file`, `hsa_search`, and `hsa_trace_flow` calls in PARALLEL in a SINGLE turn.
+4. **EVIDENCE & BLAST RADIUS**: All findings MUST have concrete `file:line` citations, call chain paths, and quantified Direct, Transitive, and Systemic impact radius.
+5. **SCOPE CONTRACT STOP**: MUST pause at Step 4 (Scope Contract) for explicit user scope confirmation before deep execution.
 
 ---
 
@@ -28,6 +28,15 @@ success_criteria: "Audit report generated with score, deep interprocedural findi
 │ 5. BLAST RADIUS MATRIX      ➔ Quantify Direct, Transitive & Systemic Failure Impact    │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 🔀 EXECUTION MODE SELECTION (SCALE MATRIX)
+
+| Codebase Scale | Trigger Condition | Execution Strategy |
+|:---------------|:------------------|:-------------------|
+| **Small (<20 files)** | Single module, focused repo | **Single Agent**: Sequential expert panel in main context. |
+| **Large (≥20 files)** | Monorepo, complex system, or `--subagents` flag | **Subagent-Driven Auditing (SDA)**: Main Agent dispatches 3 specialized subagents concurrently. |
 
 ---
 
@@ -55,12 +64,19 @@ output:
 *   Auto-select weight profile from `scoring.yaml`.
 
 ### 4. SCOPE CONTRACT GATE (⛔ STOP — Confirm with User)
-*   Display active expert panel, risk zones, previous score, and estimated token budget.
+*   Display active expert panel, risk zones, execution mode (Single vs Subagents), and estimated token budget.
 *   ⛔ **STOP**: Await user confirmation before beginning deep execution.
 
 ### 5. EXECUTE: SCoT DEEP INTERPROCEDURAL PANEL
-Run Expert Panels sequentially with **SCoT Deep Tracing**:
 
+#### Mode A: Subagent-Driven Auditing (for Large Repos ≥20 files)
+Orchestrator dispatches 3 specialized subagents in parallel with isolated contexts:
+1.  **Subagent Security**: `invoke_subagent` for Entry points, Authentication, Taint Flow, Secrets, and Injection analysis.
+2.  **Subagent Architecture**: `invoke_subagent` for Interprocedural Call Graph, Module Boundaries, Circular Dependencies, and Blast Radius mapping.
+3.  **Subagent Reliability**: `invoke_subagent` for Database Transactions (`$transaction`), Rollback safety, Idempotency, and Concurrency.
+
+#### Mode B: Single Agent Panel (for Small Repos <20 files)
+Sequential execution using 7-step Deep SCoT:
 | Step | Action | Description |
 |:-----|:-------|:------------|
 | 1. LOCATE | `hsa_search` | Pin exact `file:line` references across module boundaries |
@@ -93,7 +109,7 @@ Run Expert Panels sequentially with **SCoT Deep Tracing**:
 *   Save report to `.domyh/audits/audit_YYYY-MM-DD.md`.
 
 ### 11. PERSIST SESSION
-*   `hsa_session(action="persist", task_summary="Deep audit completed with interprocedural analysis")`.
+*   `hsa_session(action="persist", task_summary="Deep audit completed with interprocedural analysis and subagent orchestration")`.
 
 ---
 
@@ -122,8 +138,8 @@ Run Expert Panels sequentially with **SCoT Deep Tracing**:
 ## 🎯 [GATE 9: POST-FLIGHT AUDIT CHECKLIST — VERIFY BEFORE PRESENTING]
 
 Before delivering the audit report, MUST verify:
-1.  ✅ **Does every P0/P1 finding contain a complete Interprocedural Call Chain (`hsa_trace_flow`)?**
-2.  ✅ **Are API and Function Contract Invariants explicitly checked (not just syntax)?**
-3.  ✅ **Is the Blast Radius quantified across Direct, Transitive, and Systemic layers?**
-4.  ✅ **Is a counter-argument provided for every FAIL verdict to eliminate bias?**
+1.  ✅ **Was Subagent Delegation triggered if the repo has ≥20 files to keep context unpolluted?**
+2.  ✅ **Does every P0/P1 finding contain a complete Interprocedural Call Chain (`hsa_trace_flow`)?**
+3.  ✅ **Are API and Function Contract Invariants explicitly checked (not just syntax)?**
+4.  ✅ **Is the Blast Radius quantified across Direct, Transitive, and Systemic layers?**
 5.  ✅ **Has the report been saved to `.domyh/audits/` and persisted in session memory?**
