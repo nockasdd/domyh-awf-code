@@ -12,8 +12,8 @@
 # =============================================================================
 
 system:
-  version: "6.7.12"
-  codename: "Subagent-Driven Auditing & Lean Parallel Architecture"
+  version: "6.7.13"
+  codename: "Tri-Tier Subagent Delegation & Safe Platform Orchestration"
   release_date: "2026-05-20"
 
   # Identity comes from BRANDING.yaml

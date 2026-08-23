@@ -101,14 +101,20 @@ Rules:
 1. **Parallel by Default**: Call `view_file`, `hsa_search`, and `hsa_trace_flow` for all target files in parallel in 1 turn.
 2. **Cohesive Action Blocks**: Complete full logical units in 1-2 turns (e.g. [Read Target + Trace Callers in Turn 1] ➔ [Edit File + Verify Syntax in Turn 2]).
 
-## 8. Subagent Delegation Protocol
+## 8. Tri-Tier Subagent Delegation Protocol
 
-For large codebases (≥20 files, multi-package monorepos) or complex audits, the Main Agent MUST act as Orchestrator and delegate to specialized subagents to keep context unpolluted.
+Treat Context Window as a scarce budget. Use subagents to isolate exploration, auditing, and multi-module implementation:
 
-Signals for Subagent Dispatch:
-- Large codebase: ≥20 files or ≥3,000 LOC
-- Full project audit (`/ap` full, `/ap deep`): dispatch `Security`, `Architecture`, `Reliability` subagents
-- Multi-domain task: frontend + backend + database refactoring simultaneously
+1. **Mandatory Subagent Delegation**:
+   - Broad codebase research & exploration (>10 unknown files) ➔ Dispatch `research` subagent (Read-Only) to protect parent context.
+   - Deep project audits (`/ap`, `/security`) on large codebases (≥20 files or Monorepo) ➔ Dispatch 3 specialized subagents (`Security`, `Architecture`, `Reliability`).
+   - Multi-module implementation (Frontend + Backend + DB) ➔ Dispatch isolated subagents in `branch` workspaces.
+2. **Direct Main Agent Execution (Zero Subagent Overhead)**:
+   - Targeted file reads (1-3 known files) ➔ Call `view_file` in parallel in the main turn.
+   - Single-function tracing ➔ Call `hsa_trace_flow` directly.
+   - Surgical bugfixes & small edits (<50 lines) ➔ Execute in main context.
+3. **Compact Handoff Mandate**:
+   - Subagents must return compact summaries / structured findings (never dump raw context or long transcripts back into parent agent).
 
 ---
 
@@ -196,9 +202,10 @@ Never silently skip fallback. State explicitly: "MCP unavailable, using manual r
 
 ---
 
-## Terminal Safety (Windows)
+## Terminal Safety (Windows & POSIX)
 
 Never use: pipes (|), pagers (less/more/man), interactive prompts without -y, infinite commands (tail -f, watch).
+Never spawn arbitrary external GUI executables or unverified binaries (e.g. `orca`, `orca.exe`, external screen readers). All operations must stay within the active IDE/CLI agent harness.
 Detect shell first: cmd = wrap cmd /c, bash = native &&, powershell = ; or &&.
 
 ## Orchestration Trigger
