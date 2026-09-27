@@ -1,0 +1,13 @@
+[project]
+name = "ida-mcp-bridge"
+version = "0.1.0"
+description = "Dual-Mode MCP Bridge for IDA Pro 8.x/9.x"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

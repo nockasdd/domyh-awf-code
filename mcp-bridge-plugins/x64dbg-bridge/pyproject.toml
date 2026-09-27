@@ -1,0 +1,16 @@
+[project]
+name = "x64dbg-mcp-bridge"
+version = "0.2.0"
+description = "MCP Bridge for x64dbg Automate — uses official x64dbg-automate MCP server"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "x64dbg-automate[mcp]>=0.7.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+managed = true

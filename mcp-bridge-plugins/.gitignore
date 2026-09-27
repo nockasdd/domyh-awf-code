@@ -1,0 +1,11 @@
+# Runtime artifacts from manual bridge testing. Each bridge leaves a log or a
+# test-run dump next to its source; none of it belongs in history.
+err.txt
+out.txt
+test_results.txt
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
