@@ -46,23 +46,36 @@ Open x64dbg, load and attach to a binary, then let the DOMYH Agent take control.
 **Example MCP Tool Calls used by the Agent:**
 
 ```python
-hsa_bridge(target="x64dbg", action="x64_get_registers")
-hsa_bridge(target="x64dbg", action="x64_read_memory", payload={"address": "0x401000", "size": 64})
-hsa_bridge(target="x64dbg", action="x64_set_breakpoint", payload={"address": "0x401000"})
-hsa_bridge(target="x64dbg", action="x64_step_over")
+hsa_bridge(target="x64dbg", action="x64_list_sessions")
+hsa_bridge(target="x64dbg", action="x64_auto_connect", payload={"pid": 1234})
+hsa_bridge(target="x64dbg", action="x64_get_modules")
+hsa_bridge(target="x64dbg", action="x64_find_string", payload={"pattern": "CreateFile", "module_name": "kernel32"})
+hsa_bridge(target="x64dbg", action="x64_find_references", payload={"address": "0x7FF9E67E0000"})
 ```
 
 ## 🛠️ Available Tools
 
-| Tool | Description |
-|------|-------------|
-| `x64_get_registers` | Read all CPU registers. |
-| `x64_read_memory` | Hex dump memory at the specified address. |
-| `x64_get_disasm` | Disassemble instructions. |
-| `x64_step_over` | Step over (F8). |
-| `x64_step_into` | Step into (F7). |
-| `x64_run` | Resume execution (F9). |
-| `x64_pause` | Pause execution (F12). |
-| `x64_set_breakpoint` | Set a software or hardware breakpoint. |
-| `x64_get_modules` | List all loaded modules in the process memory. |
-| `x64_get_callstack` | Get the current call stack context. |
+Generated from `server.py` — the ten `@mcp.tool()` functions it actually defines.
+
+| Tool | Description | Params |
+|------|-------------|--------|
+| `x64_list_sessions` | List running x64dbg sessions and their PIDs. | `scan_ports` |
+| `x64_auto_connect` | Connect to a running x64dbg session, by PID or the first found. | `pid`, `session_id` |
+| `x64_start_session` | Launch x64dbg with a target executable. *(mutates)* | `executable`, `args` |
+| `x64_attach_process` | Attach x64dbg to a process PID. *(mutates)* | `pid` |
+| `x64_get_modules` | List loaded modules with base addresses and sizes. | `pid`, `session_id`, `module_name`, `module_path`, `scan_ports` |
+| `x64_find_string` | Search readable memory for ASCII/UTF-16 strings, optionally scoped to one module. | `pattern`, `max_results`, `pid`, `session_id`, `module_name`, `module_path` |
+| `x64_find_pattern` | Search memory for a hex byte pattern, optionally scoped to one module. | `hex_pattern`, `max_results`, `pid`, `session_id`, `module_name`, `module_path` |
+| `x64_find_references` | Search code sections for references to an address. | `address`, `pid`, `session_id`, `module_name`, `module_path` |
+| `x64_find_api_calls` | Resolve an API address and return the address to pass to `x64_find_references`. | `api_name`, `pid`, `session_id`, `module_name`, `module_path` |
+| `x64_search_command` | Execute a raw x64dbg command. *(mutates)* | `command`, `pid`, `session_id` |
+
+### What this bridge does not do
+
+There is no register read, memory read, disassembly, stepping, or callstack tool.
+Those come from the upstream `x64dbg-automate` MCP server, which this bridge runs
+alongside — the HSA tool manifest only covers what `server.py` here defines.
+
+`x64_search_command` passes its argument straight to the debugger with no
+validation, so treat it as a debugger console and prefer the specific tools
+above.

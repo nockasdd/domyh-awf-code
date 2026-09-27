@@ -34,10 +34,18 @@ class BridgeError(RuntimeError):
 
 _client: X64DbgClient | None = None
 
-X64DBG_PATH = os.environ.get(
-    "X64DBG_PATH",
-    "E:/Deverloper/snapshot_2025-08-19_19-40/release/x64/x64dbg.exe"
-)
+
+def _resolve_x64dbg_path() -> str:
+    """Fail loudly when unset. A hardcoded fallback here used to point at one
+    developer's snapshot directory, so a fresh install silently targeted a path
+    that does not exist on the machine actually running it."""
+    path = os.environ.get("X64DBG_PATH", "").strip()
+    if not path:
+        raise BridgeError(
+            "X64DBG_PATH is not set. Point it at x96dbg.exe (preferred) or directly "
+            "at x64dbg.exe / x32dbg.exe for the x64dbg install you want to drive."
+        )
+    return path
 
 
 def get_client() -> X64DbgClient:
@@ -45,7 +53,7 @@ def get_client() -> X64DbgClient:
     global _client
     if _client is not None:
         return _client
-    _client = X64DbgClient(X64DBG_PATH)
+    _client = X64DbgClient(_resolve_x64dbg_path())
     return _client
 
 
