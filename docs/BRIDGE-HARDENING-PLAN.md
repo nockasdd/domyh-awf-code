@@ -412,6 +412,64 @@ anywhere** — grepped). Enforce at `callBridgeTool` (`t17_bridge.ts:918`) and u
 `mutates` to require explicit opt-in, generalising what `ida_batch` already does
 at `:838-847`.
 
+#### 3.3 as implemented — two layers, and a false completion
+
+The `inputs` fix shipped first (`validateToolPayload`, tests in
+`tests/unit/bridge-schema.test.ts`). The command allowlist did not, and was
+recorded as complete. It was not.
+
+Grep for `ALLOWED_COMMAND|DENIED|allowlist|allow_list|DANGEROUS` across
+`x64dbg-bridge/` returned **0 matches**. The manifest marked
+`x64_search_command` as `mutates: true` and that was the whole of it. **A
+consent gate is not a command allowlist:** `allow_mutations: true` records that
+the user agreed, not that their agreement covered every command the verb can
+reach. An approved call could still send `bc *`, `erun` or `d`.
+
+Shipped: `X64DBG_COMMAND_ALLOWLIST` + `validateX64Command`, wired into both the
+call and the batch path. Two details that turned out to matter:
+
+- **The list is read-only with respect to the debuggee, not absolutely.**
+  `d`/`dump` read the debuggee's memory and then *write a file*; `rtr`/`rte`
+  advance the process. Both were in the first draft of the list, while the
+  manifest description already claimed "read-only".
+- **Chaining is screened on the whole string, not the tokens after the verb.**
+  `lm|dd` puts the separator inside what whitespace-splitting calls the verb, so
+  a token-scoped check rejects it for the wrong reason and says so.
+
+A second, unrelated hole surfaced while testing this: `mutatesTool` was
+reachable only through `validateBatchRequest`, and only `action: "batch"` called
+it. **`action: "call"` never asked for consent at all** — `ida_rename`,
+`ghidra_rename_symbol`, `ue_execute_python` and `x64_write_memory` all ran from
+a single call with no `allow_mutations`. The path that looked stricter because it
+named one explicit tool was the looser one. The two fixes are independent and
+committed separately (`4614c14`, `4417932`).
+
+### 3.4 UE bridges wedge instead of failing — DONE
+
+`init_unreal.py` left the socket mid-conversation on one return path, and exited
+the process on an error path that should have returned. Both turn a
+debuggee-side fault into a dispatcher that stops answering, which reads as a
+hang rather than a failure.
+
+### 3.5 `ue_execute_python` ran arbitrary code with no record — DONE
+
+Consent plus an audit entry. Consent is not a log: without the record, a session
+that ran Python leaves no trace of what was approved.
+
+### 3.6 `ue_execute_python` accepted any expression — DONE (off by default)
+
+An AST allowlist, default off, so the restriction is opt-in rather than a
+behaviour change for anyone already relying on arbitrary code.
+
+### 3.7 Unity script creation accepted any path — DONE
+
+`unity_create_script` wrote wherever it was told. Path validation is now in the
+C# `HsaUnityServer.cs` handler.
+
+**Not verified in a live editor.** 3.4, 3.6 and 3.7 were exercised against
+harnesses only — a stubbed `unreal` module and an extracted C# validator. None
+has been run inside a real UE or Unity Editor.
+
 ---
 
 ## Phase 4 — Capability
@@ -461,7 +519,7 @@ against a 600-line upstream handshake — we need one instance, not many.
 the current boolean, and must not deploy as a side effect of a status check
 (see 3.2).
 
-### 4.4 `x64dbg_automate.mcp_server` ships 50 tools and is already a dependency — UNVERIFIED
+### 4.4 `x64dbg_automate.mcp_server` ships 50 tools and is already a dependency — RESOLVED (counts wrong, conclusion reversed)
 
 The research reports `x64dbg_automate/mcp_server.py` is 1603 lines with 50
 `@mcp.tool()` functions, MIT, maintained by the same author as the plugin, and
@@ -469,10 +527,42 @@ already in our dependency tree — we have been reimplementing ~10 weak tools on
 top of it. It has our defect too (errors returned as strings), and it solves the
 bitness-aware path problem from 1.5.
 
-**Read `mcp_server.py` before acting on this.** If confirmed, adopt it as the
-x64dbg base and keep only the tools that add something it lacks —
-`x64_find_string` / `x64_find_pattern` do scoped multi-region scanning with
-module filtering and it is said to have no equivalent.
+**Read `mcp_server.py` before acting on this.** Done. The counts are wrong and
+the conclusion does not survive them.
+
+The file is **1168 lines with 46 `@mcp.tool()`** functions, not 1603/50. More
+decisive than the counts:
+
+- **46 tools, 46 of which return errors as strings.** `return f"Error: {e}"`
+  appears 46 times; `isError` appears **zero** times. This is defect 1.1
+  reproduced at scale, not the one instance we already fixed.
+- **No authentication of any kind.** Grep for token/auth/secret across the
+  module returns 0 hits.
+- **`execute_command` runs `client.cmd_sync(command)` raw**, with no allowlist.
+  Adopting it wholesale would have imported the exact hole 3.3 had to close.
+
+It does solve 1.5: `_pe_bitness` reads the PE Machine field (`0x8664`→64,
+`0x14C`→32). That is worth having and worth porting, not worth adopting 46
+tools for.
+
+**Resolution — Option A, keep our bridge, port selectively.** Wrapping a
+46-tool server with no auth, no `isError` and an unfiltered raw-command
+passthrough would have undone 1.1 and 3.3 in one move, to gain tool count
+rather than capability. Four tools were missing against our manifest:
+`read_memory`, `write_memory`, `disassemble`, `list_breakpoints`. They are
+ported against the `X64DbgClient` API this bridge already depends on
+(`read_memory`, `write_memory`, `disassemble_at`, `get_breakpoints`), with
+`pyproject.toml` already pinning `x64dbg-automate[mcp]>=0.7.0` — so the
+dependency claim holds even though the adoption plan did not.
+
+Bitness-aware address handling is left as the obvious next port from upstream.
+
+**Note on where the allowlist lives:** the dispatcher enforces the 3.3 command
+allowlist, and `x64dbg-bridge/server.py` still calls `cmd_sync` with whatever
+it is handed. The bridge is a separate process and receives no dispatcher
+config, so a caller that speaks MCP to it directly bypasses the list. Adding a
+matching allowlist server-side is the obvious hardening; it is not done.
+
 
 ---
 
@@ -577,6 +667,29 @@ handling.
 **Consequence:** the 64-second scan (2.2) and the unloadable Ghidra plugin
 (1.2) both pass CI today. A regression suite that spawns each bridge and asserts
 on `isError` (1.1) is what makes phases 1-3 hold.
+
+**Status — DONE.** Each bridge is now spawned as a real subprocess and the suite
+asserts on the result (`8cc733c`, `tests/unit/bridge-spawn.test.ts`). The
+separate finding in 3.3b came from a different test — the new single-call
+consent test *failed* against the code as written, returning `success: true`
+where it should have refused, and that failure is what exposed the missing gate.
+
+---
+
+## Outstanding after implementation
+
+Carried forward deliberately rather than left implied-done.
+
+- **The x64dbg bridge enforces nothing itself.** `X64DBG_COMMAND_ALLOWLIST`
+  (3.3) lives in the dispatcher, and the bridge still hands whatever string it
+  receives to `cmd_sync`. A caller speaking MCP straight to `x64dbg-bridge`
+  bypasses the allowlist completely. The dispatcher is one enforcement layer, not
+  the only one — the bridge needs its own check before this is defence in depth
+  rather than a single point of failure.
+- **3.4, 3.6 and 3.7 have not run in a live editor.** They were exercised
+  against a stubbed `unreal` module and an extracted C# validator. The logic is
+  tested; the integration is not.
+- **Neither repository has been pushed.** All work is committed locally.
 
 ---
 
