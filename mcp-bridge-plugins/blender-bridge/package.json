@@ -1,0 +1,25 @@
+{
+  "name": "blender-hsa-bridge",
+  "version": "1.0.0",
+  "description": "MCP Bridge for Blender via the HSA add-on command queue",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node --no-warnings dist/index.js",
+    "test": "python test_bridge_logic.py",
+    "test:envelope": "node test/envelope.test.mjs",
+    "test:e2e": "node test/e2e.mjs",
+    "test:handover": "node test/handover.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.1.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  }
+}
