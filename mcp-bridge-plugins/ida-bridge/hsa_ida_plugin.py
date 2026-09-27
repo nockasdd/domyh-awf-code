@@ -33,6 +33,7 @@ import idc
 import os
 import json
 import hmac
+import secrets
 import socket
 import threading
 import traceback
@@ -49,17 +50,47 @@ HTTP_PORT_RANGE = int(os.environ.get("HSA_IDA_HTTP_PORT_RANGE", "32"))
 ACTIVE_HTTP_PORT = HTTP_PORT
 
 # IDA's launcher does not always forward the environment a developer sets in
-# their shell, so the token also comes from a file next to the database. The
-# bridge writes it; see server.py:write_bridge_config.
-BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
-if not BRIDGE_TOKEN:
-    # Next to the plugin itself, i.e. %IDADIR%/plugins/hsa_bridge_token.
+# their shell, so the token also comes from a file next to the plugin. That file
+# is where either side can leave one; see _resolve_token.
+TOKEN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "hsa_bridge_token")
+
+
+def _resolve_token():
+    """The token to authenticate calls with, generating one if needed.
+
+    Every command here writes to the database or runs batch scripts, so an
+    unauthenticated listener is worse than no listener. But requiring a token
+    before the plugin will listen makes the startup a deadlock: the side that
+    would generate one is the bridge, and the bridge only runs once something is
+    already listening. So the plugin generates its own and writes it where the
+    bridge looks for it, which is the same handover the blender add-on uses.
+    """
+    token = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+    if token:
+        return token
     try:
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "hsa_bridge_token"), "r") as _fh:
-            BRIDGE_TOKEN = _fh.read().strip()
+        with open(TOKEN_PATH, "r") as _fh:
+            token = _fh.read().strip()
+        if token:
+            return token
     except Exception:
-        BRIDGE_TOKEN = ""
+        pass
+    token = secrets.token_urlsafe(32)
+    try:
+        # Written 0o600: os.open's mode is masked by the umask and ignored on
+        # Windows, so the bearer token would otherwise land world-readable.
+        with open(TOKEN_PATH, "w") as _fh:
+            _fh.write(token)
+        os.chmod(TOKEN_PATH, 0o600)
+    except Exception as _exc:
+        # An unwritable plugin dir still yields a working session — the token
+        # simply cannot be shared, and the bridge reports it on the first call.
+        ida_kernwin.msg(f"[HSA] Generated a token but could not write {TOKEN_PATH}: {_exc}\n")
+    return token
+
+
+BRIDGE_TOKEN = _resolve_token()
 MAX_BODY_BYTES = int(os.environ.get("HSA_IDA_MAX_BODY_BYTES", str(4 * 1024 * 1024)))
 SYNC_TIMEOUT_S = float(os.environ.get("HSA_IDA_SYNC_TIMEOUT_S", "30"))
 
@@ -1365,8 +1396,11 @@ class HsaBridgeHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(info).encode())
 
     def _authorized(self):
+        # _resolve_token always yields one, so the empty case is the unwritable
+        # plugin dir rather than a missing token — reported as such, because
+        # telling the caller to set HSA_BRIDGE_TOKEN would not help.
         if not BRIDGE_TOKEN:
-            return False, "HSA_BRIDGE_TOKEN is not set, so no call can be authenticated."
+            return False, "No token could be generated. Check that %IDADIR%/plugins is writable."
         header = self.headers.get("Authorization", "")
         prefix = "Bearer "
         if not header.startswith(prefix):
@@ -1457,15 +1491,6 @@ class HsaMcpBridgePlugin(idaapi.plugin_t):
         """Start the HTTP server in a background thread."""
         if self._server is not None:
             return  # Already running
-        if not BRIDGE_TOKEN:
-            # Every command here writes to the database or runs batch scripts.
-            # On an unauthenticated localhost socket any local process could
-            # drive IDA, so the listener stays closed instead.
-            ida_kernwin.msg(
-                f"[HSA] Server NOT started: no HSA_BRIDGE_TOKEN. Set it in the environment "
-                f"IDA sees, or write it to %IDADIR%/plugins/hsa_bridge_token.\n"
-            )
-            return
         try:
             global ACTIVE_HTTP_PORT
             last_error = None

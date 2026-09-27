@@ -2,6 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #   "mcp>=1.26.0,<2",
+#   "psutil>=5.9",
 # ]
 # ///
 """
@@ -33,40 +34,120 @@ class BridgeError(RuntimeError):
     agent sees a failed call instead of prose describing a failure."""
 
 
-BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+IDA_PLUGIN_DIR = os.environ.get("HSA_IDA_PLUGIN_DIR", "").strip()
+
+
+def _discover_plugin_dir() -> str:
+    """The plugins directory of a running IDA, or "" if none is found.
+
+    The plugin generates its own token on startup and writes it beside itself, so
+    the bridge has to go and collect it rather than demand one up front. The
+    search is by running IDA process, not by a fixed install path: IDA lives in
+    a different directory per user and per version, and this bridge is spawned by
+    the agent without knowing where the GUI was started from.
+
+    The directory is returned whether or not the token file is there yet, because
+    requiring it would make the lookup fail for every IDA that starts after this
+    process — the exact case the lazy re-read in _token() exists to cover.
+    """
+    if IDA_PLUGIN_DIR:
+        return IDA_PLUGIN_DIR
+    try:
+        import psutil
+    except ImportError:
+        return ""
+    found = []
+    for proc in psutil.process_iter(["pid", "name", "exe"]):
+        name = (proc.info.get("name") or "").lower()
+        if not name.startswith("ida"):
+            continue
+        exe = proc.info.get("exe")
+        if not exe:
+            continue
+        candidate = os.path.join(os.path.dirname(exe), "plugins")
+        if os.path.isdir(candidate):
+            found.append(candidate)
+    return found[0] if found else ""
+
+
+IDA_PLUGIN_DIR = _discover_plugin_dir()
+
+
+def _resolve_token() -> str:
+    """The plugin's token, read from wherever it was left.
+
+    Precedence is env, then the file beside the plugin. Env first because an
+    explicit export is a deliberate override of whatever the plugin generated,
+    and reading it before the file keeps a stale file from silently winning.
+    """
+    token = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+    if token:
+        return token
+    if IDA_PLUGIN_DIR:
+        try:
+            with open(os.path.join(IDA_PLUGIN_DIR, "hsa_bridge_token"), "r") as fh:
+                return fh.read().strip()
+        except Exception:
+            return ""
+    return ""
+
+
+BRIDGE_TOKEN = _resolve_token()
+
+
+def _token() -> str:
+    """BRIDGE_TOKEN, re-resolved if it was empty at import.
+
+    The bridge is spawned by the agent and IDA is often launched afterwards, so
+    both the plugin directory and the token file can appear after this process
+    started. The re-resolve is cheap — a process list and one small file — and
+    only runs while there is nothing to send, so a working session costs one
+    failed auth rather than a filesystem poll per call.
+    """
+    global BRIDGE_TOKEN, IDA_PLUGIN_DIR
+    if not BRIDGE_TOKEN:
+        if not IDA_PLUGIN_DIR:
+            IDA_PLUGIN_DIR = _discover_plugin_dir()
+        BRIDGE_TOKEN = _resolve_token()
+    return BRIDGE_TOKEN
+
+
 IDA_HTTP_HOST = os.environ.get("HSA_IDA_HTTP_HOST", "127.0.0.1")
 IDA_HTTP_PORT = int(os.environ.get("HSA_IDA_HTTP_PORT", "28472"))
 IDA_HTTP_PORT_RANGE = int(os.environ.get("HSA_IDA_HTTP_PORT_RANGE", "32"))
 IDA_HTTP_PROBE_TIMEOUT = max(0.05, int(os.environ.get("HSA_IDA_PROBE_TIMEOUT_MS", "350")) / 1000)
 IDA_HTTP_SCAN_WORKERS = max(1, int(os.environ.get("HSA_IDA_SCAN_WORKERS", "32")))
 IDA_AUTODISCOVER_ON_CALL = os.environ.get("HSA_IDA_AUTODISCOVER_ON_CALL", "1").lower() not in {"0", "false", "no"}
-IDA_PLUGIN_DIR = os.environ.get("HSA_IDA_PLUGIN_DIR", "").strip()
 
 
 def write_bridge_config() -> str:
-    """Drop the token where the plugin can read it.
+    """Publish an exported token for a plugin that has not started yet.
 
-    IDA's launcher does not reliably forward a shell environment, so the plugin
-    reads HSA_BRIDGE_TOKEN and then this file. Writing it is a no-op when the
-    plugin directory is unknown, which is why HSA_IDA_PLUGIN_DIR is an override
-    rather than a guess: the plugin lives in %IDADIR%/plugins, and guessing at
-    IDA's install layout from here would be wrong more often than it was right.
+    Normally nothing writes here: the plugin generates its own token on startup
+    and the bridge collects it. This path is only for the case where IDA is
+    launched after the bridge and someone has explicitly exported
+    HSA_BRIDGE_TOKEN — inverting the normal order. The file is left alone when a
+    plugin is already known to have written one, so exporting a token for a
+    running IDA cannot silently swap the credential it is validating against.
     """
-    if not BRIDGE_TOKEN or not IDA_PLUGIN_DIR:
+    token = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+    if not token or not IDA_PLUGIN_DIR:
         return ""
     target = os.path.join(IDA_PLUGIN_DIR, "hsa_bridge_token")
     try:
+        if os.path.isfile(target):
+            return target
         os.makedirs(IDA_PLUGIN_DIR, exist_ok=True)
         with open(target, "w") as fh:
-            fh.write(BRIDGE_TOKEN)
+            fh.write(token)
         # chmod after the write, not as a mode argument: os.open's mode is masked
         # by the process umask, and on Windows it is not applied at all, so the
         # bearer token would land world-readable.
         os.chmod(target, 0o600)
         return target
     except Exception:
-        # A bridge that cannot write the file still works for anyone who did
-        # export the token, so this is reported, not fatal.
+        # A bridge that cannot write the file still works for anyone whose IDA
+        # already has the token, so this is reported, not fatal.
         return ""
 
 
@@ -294,13 +375,14 @@ def _resolve_base_url(params: dict | None = None, command: str = "") -> tuple[st
 
 def _request_json(url: str, payload: dict) -> dict:
     headers = {"Content-Type": "application/json"}
-    if not BRIDGE_TOKEN:
+    token = _token()
+    if not token:
         raise BridgeError(
-            "HSA_BRIDGE_TOKEN is not set. The IDA plugin refuses to start without it, "
-            "because every command it accepts writes to the database or runs batch "
-            "scripts. Set the same token for this bridge and for IDA."
+            "No bridge token available. The IDA plugin writes one to "
+            "%IDADIR%/plugins/hsa_bridge_token when it starts, or export "
+            "HSA_BRIDGE_TOKEN for both IDA and this bridge."
         )
-    headers["Authorization"] = "Bearer %s" % BRIDGE_TOKEN
+    headers["Authorization"] = "Bearer %s" % token
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
@@ -1439,10 +1521,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     _token_file = write_bridge_config()
-    if BRIDGE_TOKEN and not _token_file:
+    if os.environ.get("HSA_BRIDGE_TOKEN", "").strip() and not _token_file:
         print(
-            "HSA bridge: could not write %IDADIR%/plugins/hsa_bridge_token. IDA may not see "
-            "HSA_BRIDGE_TOKEN unless it is exported in the environment IDA launches from."
+            "HSA bridge: could not publish HSA_BRIDGE_TOKEN to the IDA plugin directory. "
+            "IDA will generate its own token, and this bridge will pick that up instead."
         )
 
     if args.headless:
