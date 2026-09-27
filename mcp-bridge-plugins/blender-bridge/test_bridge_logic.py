@@ -41,18 +41,27 @@ bpy.props = types.SimpleNamespace(
 
 
 class _Timers:
+    """bpy.app.timers is keyed by string, but both register and unregister take
+    the function itself — Blender looks the name up. Keying on __name__ alone
+    hides the difference and passes an unregister-by-function call as a no-op.
+    """
+
     def __init__(self):
         self.registered = {}
         self.ran = []
 
+    @staticmethod
+    def _key(fn):
+        return fn if isinstance(fn, str) else fn.__name__
+
     def register(self, fn, first_interval=0.0, persistent=False):
-        self.registered[fn.__name__] = fn
+        self.registered[self._key(fn)] = fn
 
-    def unregister(self, name):
-        self.registered.pop(name, None)
+    def unregister(self, fn):
+        self.registered.pop(self._key(fn), None)
 
-    def is_registered(self, name):
-        return name in self.registered
+    def is_registered(self, fn):
+        return self._key(fn) in self.registered
 
 
 class _App:
@@ -64,13 +73,13 @@ class _App:
 bpy.app = _App()
 bpy.types = types.SimpleNamespace(AddonPreferences=object, Operator=object)
 bpy.utils = types.SimpleNamespace(register_class=lambda c: None, unregister_class=lambda c: None)
+# bpy.app.handlers.load_post is a plain list in Blender, not a namespace with
+# methods. Stubbing it as a namespace lets the add-on call methods that do not
+# exist on the real thing, which is how register() shipped a call to
+# is_registered() that only ever ran against this stub.
 bpy.app.handlers = types.SimpleNamespace(
     persistent=lambda fn: fn,
-    load_post=types.SimpleNamespace(
-        append=lambda fn: None,
-        is_registered=lambda fn: False,
-        remove=lambda fn: None,
-    )
+    load_post=[],
 )
 bpy.context = types.SimpleNamespace(
     scene=types.SimpleNamespace(name="Scene"),
@@ -609,6 +618,55 @@ class TestPublishedConfig(unittest.TestCase):
         finally:
             bridge.stop()
         self.assertFalse(bridge.is_running())
+
+
+class TestRegisterUnregister(unittest.TestCase):
+    """register() runs inside Blender, where a bad call takes the add-on down.
+
+    Blender reports a failure here as "Exception in module register()" and then
+    carries on with the add-on half-loaded: classes registered, autostart timer
+    never started, no bridge, and a Preferences entry that refuses to disable.
+    The socket stays closed and the symptom is a dead port, so the code has to
+    survive on the real bpy surface rather than on whatever the stub offers.
+    """
+
+    def setUp(self):
+        self._load_post = bpy.app.handlers.load_post
+        self._registered = []
+        self._unregistered = []
+        bpy.app.handlers.load_post = []
+        bpy.utils = types.SimpleNamespace(
+            register_class=lambda c: self._registered.append(c),
+            unregister_class=lambda c: self._unregistered.append(c),
+        )
+
+    def tearDown(self):
+        bpy.app.handlers.load_post = self._load_post
+        bpy.utils = types.SimpleNamespace(
+            register_class=lambda c: None, unregister_class=lambda c: None
+        )
+
+    def test_register_enables_the_autostart_timer(self):
+        addon.register()
+        self.assertIn("_autostart", bpy.app.timers.registered)
+
+    def test_register_attaches_the_load_post_handler_once(self):
+        addon.register()
+        self.assertIn(addon._on_load_post, bpy.app.handlers.load_post)
+        addon.register()
+        self.assertEqual(
+            bpy.app.handlers.load_post.count(addon._on_load_post), 1
+        )
+
+    def test_unregister_detaches_the_handler_and_stops_the_timer(self):
+        addon.register()
+        addon.unregister()
+        self.assertNotIn(addon._on_load_post, bpy.app.handlers.load_post)
+        self.assertNotIn("_autostart", bpy.app.timers.registered)
+        self.assertEqual(len(self._unregistered), len(self._registered))
+
+    def test_unregister_without_register_does_not_raise(self):
+        addon.unregister()
 
 
 if __name__ == "__main__":

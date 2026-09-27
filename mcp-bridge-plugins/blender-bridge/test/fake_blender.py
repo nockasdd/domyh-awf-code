@@ -31,14 +31,18 @@ def build_fake_bpy(object_count):
         def __init__(self):
             self.r = {}
 
+        @staticmethod
+        def _key(fn):
+            return fn if isinstance(fn, str) else fn.__name__
+
         def register(self, fn, first_interval=0.0, persistent=False):
-            self.r[fn.__name__] = fn
+            self.r[self._key(fn)] = fn
 
-        def unregister(self, n):
-            self.r.pop(n, None)
+        def unregister(self, fn):
+            self.r.pop(self._key(fn), None)
 
-        def is_registered(self, n):
-            return n in self.r
+        def is_registered(self, fn):
+            return self._key(fn) in self.r
 
     class _App:
         def __init__(self):
@@ -48,12 +52,8 @@ def build_fake_bpy(object_count):
     bpy.app = _App()
     bpy.types = types.SimpleNamespace(AddonPreferences=object, Operator=object)
     bpy.utils = types.SimpleNamespace(register_class=lambda c: None, unregister_class=lambda c: None)
-    bpy.app.handlers = types.SimpleNamespace(
-        persistent=lambda f: f,
-        load_post=types.SimpleNamespace(
-            append=lambda f: None, is_registered=lambda f: False, remove=lambda f: None
-        ),
-    )
+    # load_post is a list in Blender, not a namespace with methods.
+    bpy.app.handlers = types.SimpleNamespace(persistent=lambda f: f, load_post=[])
 
     objects = []
     for i in range(object_count):

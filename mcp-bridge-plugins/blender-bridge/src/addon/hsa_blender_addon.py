@@ -558,7 +558,7 @@ _CLASSES = (HSAAddonPreferences, HSA_OT_start, HSA_OT_stop)
 def register():
     for cls in _CLASSES:
         bpy.utils.register_class(cls)
-    if bpy.app.handlers.load_post.is_registered(_on_load_post) is False:
+    if _on_load_post not in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.append(_on_load_post)
 
     # A bridge with a token starts itself: an IDE harness that launches Blender
@@ -573,8 +573,13 @@ def unregister():
         _BRIDGE.stop()
     for cls in reversed(_CLASSES):
         bpy.utils.unregister_class(cls)
-    if bpy.app.handlers.load_post.is_registered(_on_load_post):
+    if _on_load_post in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(_on_load_post)
+    # _autostart outliving unregister() means a disabled add-on still polls for
+    # a token and re-opens the socket, and a re-enable registers it a second
+    # time. Blender keeps firing it either way, so the stop has to be explicit.
+    if bpy.app.timers.is_registered(_autostart):
+        bpy.app.timers.unregister(_autostart)
 
 
 if __name__ == "__main__":
