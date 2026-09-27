@@ -470,6 +470,43 @@ C# `HsaUnityServer.cs` handler.
 harnesses only — a stubbed `unreal` module and an extracted C# validator. None
 has been run inside a real UE or Unity Editor.
 
+### 3.8 A check that exists proves nothing until something calls it — DONE
+
+Found while reading two external bridges, and it names the failure mode both
+this file and 3.3 kept stepping into: a control written, a test written for the
+control, and the control never wired into the path. 3.3 was exactly that — the
+allowlist was absent, and 3.3b was a gate that existed and was reachable only
+from `action: "batch"`.
+
+`ChiR24/Unreal_mcp` addresses it in `tests/unit/plugin/prequeue-gate-contracts.test.ts:6-11`,
+and states it as a rule:
+
+> a passing predicate proves nothing if nobody CALLS it. Every assertion here
+> fails if the corresponding enforcement line is deleted
+
+Its assertions read the C++ **source text** and check call ordering, so deleting
+the enforcement line fails CI. The same repo's `Private/Safety/AGENTS.md:38`
+applies the same idea to a ban: `UPackage::SavePackage` is machine-enforced
+forbidden, and a raw call fails the build. "This is not advisory."
+
+Applied here, in both directions:
+
+- **Wiring.** `test_the_tool_itself_refuses_before_touching_the_client` asserts
+  `x64_search_command` calls the validator and never reaches `cmd_sync` on a
+  refused verb. The predicate's own tests would all pass with the call deleted.
+- **Drift.** `TestAllowlistParityWithDispatcher` reads the dispatcher's
+  `X64DBG_COMMAND_ALLOWLIST` out of `t17_bridge.ts` and compares it to the
+  bridge's. Verified by mutation: adding `'zap'` to the dispatcher list fails the
+  test. It **fails** rather than skips when the sibling repo is missing, because
+  a skipped parity check is exactly how a second copy drifts unnoticed.
+
+Also taken from `Unreal_mcp`, on the gap it documents about itself — its
+`execute_python` authorises *whether* code runs (Admin scope) but not *what* it
+contains, and its `system-control-security.test.ts` asserts metadata strings
+rather than enforcement (`src/tools/catalog/.../system-control-security.test.ts:10-44`).
+Our 3.6 AST allowlist is the position worth holding: restrict the content, not
+only the permission.
+
 ---
 
 ## Phase 4 — Capability
@@ -558,10 +595,12 @@ dependency claim holds even though the adoption plan did not.
 Bitness-aware address handling is left as the obvious next port from upstream.
 
 **Note on where the allowlist lives:** the dispatcher enforces the 3.3 command
-allowlist, and `x64dbg-bridge/server.py` still calls `cmd_sync` with whatever
-it is handed. The bridge is a separate process and receives no dispatcher
-config, so a caller that speaks MCP to it directly bypasses the list. Adding a
-matching allowlist server-side is the obvious hardening; it is not done.
+allowlist, and `x64dbg-bridge/server.py` now enforces the same set itself
+(`10f1c95`). The bridge is a separate process reachable on its own port, so
+enforcing in one place only would have left a caller speaking MCP directly to it
+with no filter at all. The two lists are one policy in two copies, kept in step
+by a parity test that reads the dispatcher's source and compares — see
+`McpPrequeueGate`-style layering under 3.8.
 
 
 ---
@@ -680,15 +719,16 @@ where it should have refused, and that failure is what exposed the missing gate.
 
 Carried forward deliberately rather than left implied-done.
 
-- **The x64dbg bridge enforces nothing itself.** `X64DBG_COMMAND_ALLOWLIST`
-  (3.3) lives in the dispatcher, and the bridge still hands whatever string it
-  receives to `cmd_sync`. A caller speaking MCP straight to `x64dbg-bridge`
-  bypasses the allowlist completely. The dispatcher is one enforcement layer, not
-  the only one — the bridge needs its own check before this is defence in depth
-  rather than a single point of failure.
 - **3.4, 3.6 and 3.7 have not run in a live editor.** They were exercised
   against a stubbed `unreal` module and an extracted C# validator. The logic is
   tested; the integration is not.
+- **The x64dbg allowlist is a denylist of writers expressed as an allowlist of
+  readers.** It was built from knowledge of x64dbg rather than from its source:
+  `WebSearch` returned nothing, `WebFetch` on help.x64dbg.com and the upstream
+  repository 404'd, and `gh` is not authenticated here. A verb that neither
+  writes to the debuggee, nor to a file, nor advances the process, and that I
+  simply did not think of, would be admitted. Widening coverage means reading
+  x64dbg's command table, not adding entries by feel.
 - **Neither repository has been pushed.** All work is committed locally.
 
 ---
