@@ -462,20 +462,82 @@ def x64_get_modules(pid: int = 0, session_id: str = "", module_name: str = "", m
         raise BridgeError(str(e)) from e
 
 
+# ── Command Allowlist ─────────────────────────────────────────
+
+# The dispatcher (src/tools/t17_bridge.ts) screens the command before the string
+# ever reaches this process, but the bridge is a separate MCP server and cannot
+# assume the dispatcher is its only caller. Anything speaking MCP to this port
+# directly would otherwise reach cmd_sync unchecked. The two lists are the same
+# set; they are kept in step by tests/unit/bridge-x64-allowlist.test.ts reading
+# this file, because a second copy that drifts is how the hole reopens.
+#
+# Read-only WITH RESPECT TO THE DEBUGGEE. Every verb reads state or configures
+# the debugger's own breakpoints and traces. Deliberately absent:
+#   d, dump, savedata, dd   write the target's memory to a file
+#   erun, run, rtr, rte, go  advance or end the debuggee
+#   writemem, patch         write the target's memory
+#   TraceSetLogFile, TraceSetDir   redirect trace output to a file
+X64DBG_COMMAND_ALLOWLIST = frozenset({
+    # Breakpoints: set, list and remove.
+    "bp", "bph", "bphws", "bphwc", "bpr", "bpc", "bpdll",
+    # Traces and the configuration that decides what a trace captures.
+    "trace", "tracelog", "tracesetlog", "tracesetcommand", "tracesetcondition",
+    "tracesetcmdlog",
+    # Disassembly and symbolic reads.
+    "dasm", "disasm", "lm", "lmv", "sym", "symenum", "type", "anal",
+})
+
+# x64dbg accepts these as a command separator, with or without surrounding
+# spaces, so 'lm|dd' is one token and a verb-scoped check would not see the
+# separator at all.
+X64DBG_CHAIN_CHARS = (";", "&&", "||", "|", "\n")
+
+
+def validate_command(command: str) -> None:
+    """Refuse a command the allowlist does not cover.
+
+    The whole string is screened for a separator, not just the tokens after the
+    verb, so a chain cannot hide inside the verb. Over-refusing is the safe
+    direction: a breakpoint expression that needs one of these characters has a
+    dedicated tool, and a separator that slips past is a write the caller never
+    approved.
+    """
+    trimmed = (command or "").strip()
+    if not trimmed:
+        raise BridgeError("command must not be empty.")
+    for sep in X64DBG_CHAIN_CHARS:
+        if sep in trimmed:
+            raise BridgeError(
+                f"Refusing chained x64dbg command {command!r}. Run one command per "
+                "call — chaining would bypass the allowlist."
+            )
+    verb = trimmed.split()[0]
+    if verb.lower() not in X64DBG_COMMAND_ALLOWLIST:
+        raise BridgeError(
+            f"x64dbg command {verb!r} is not in the read-only allowlist. Allowed: "
+            f"{', '.join(sorted(X64DBG_COMMAND_ALLOWLIST))}. A command that writes "
+            "or changes process state needs a dedicated tool, not a raw one."
+        )
+
+
 @mcp.tool()
 def x64_search_command(command: str, pid: int = 0, session_id: str = "") -> str:
-    """Execute any raw x64dbg command.
-    Note: cmd_sync returns success/fail boolean, not text output.
-    For data retrieval, use specific tools instead.
+    """Execute one read-only x64dbg command from a fixed allowlist.
+
+    cmd_sync returns a success boolean, not text output. For data retrieval use
+    the specific tools instead of a command.
     See: https://help.x64dbg.com/en/latest/commands/
 
     Args:
-        command: x64dbg command string (e.g. 'bp MessageBoxA', 'bc *')
+        command: a single x64dbg command (e.g. 'bp MessageBoxA', 'bpc 0x401000')
     """
     try:
+        validate_command(command)
         client = ensure_attached(resolve_pid(pid, session_id))
         result = client.cmd_sync(command)
         return f"### Command: {command}\nSuccess: {result}"
+    except BridgeError:
+        raise
     except Exception as e:
         raise BridgeError(str(e)) from e
 

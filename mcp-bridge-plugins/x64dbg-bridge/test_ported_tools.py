@@ -8,6 +8,8 @@ into an unbounded loop.
 Run: python test_ported_tools.py
 """
 
+import os
+import re
 import sys
 import types
 import unittest
@@ -127,6 +129,18 @@ def run(tool, client, **kwargs):
         return tool(**kwargs)
 
 
+def _repo_root():
+    """The two bridge repos share a parent; the dispatcher lives in the sibling.
+
+    __file__ is this file; three dirname calls walk out of x64dbg-bridge and
+    mcp-bridge-plugins and land on the shared parent.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))          # x64dbg-bridge
+    here = os.path.dirname(here)                              # mcp-bridge-plugins
+    here = os.path.dirname(here)                              # domyh-awf
+    return os.path.dirname(here)                              # domyh-awesome-code-agent
+
+
 class TestResolveAddress(unittest.TestCase):
     def test_empty_address_is_refused(self):
         with self.assertRaises(server.BridgeError) as ctx:
@@ -230,6 +244,119 @@ class TestDisassemble(unittest.TestCase):
     def test_count_cap(self):
         with self.assertRaises(server.BridgeError):
             run(server.x64_disassemble, FakeClient(), address="0x401000", count=65)
+
+
+class TestValidateCommand(unittest.TestCase):
+    """The bridge's own copy of the dispatcher's allowlist.
+
+    The dispatcher screens the string first, but this process is reachable
+    directly over MCP, so the check cannot live only there.
+    """
+
+    def test_allows_the_documented_read_only_verbs(self):
+        for cmd in [
+            "bp MessageBoxA", "bpc 0x401000", "bphws LoadLibraryA, rcx",
+            "lm", "lmv", "trace", "dasm 0x401000:40", "sym info, 401000",
+        ]:
+            with self.subTest(cmd=cmd):
+                server.validate_command(cmd)  # must not raise
+
+    def test_refuses_verbs_that_change_the_debuggee(self):
+        for cmd in [
+            "bc *", "erun", "run", "rtr", "rte", "go", "dd",
+            "kill", "init", "attach", "dlgcmd", "setcmd", "savedata",
+            "writemem", "patch",
+        ]:
+            with self.subTest(cmd=cmd):
+                with self.assertRaises(server.BridgeError) as ctx:
+                    server.validate_command(cmd)
+                self.assertIn("allowlist", str(ctx.exception))
+
+    def test_refuses_verbs_that_write_a_file(self):
+        # d/dump read the target and then write to disk, TraceSetLogFile
+        # redirects trace output. All three are "reads" in the casual sense and
+        # none of them is read-only.
+        for cmd in ["d dump C:\\out.bin", "TraceSetLogFile C:\\t.log", "TraceSetDir C:\\t"]:
+            with self.subTest(cmd=cmd):
+                with self.assertRaises(server.BridgeError) as ctx:
+                    server.validate_command(cmd)
+                self.assertIn("allowlist", str(ctx.exception))
+
+    def test_refuses_chained_commands_with_and_without_spaces(self):
+        for cmd in [
+            "bp X; erun", "bp X;erun", "bp X && erun", "lm | dd C:\\d",
+            "lm|dd C:\\out.bin", "bc * || erun", "bpc 401000\nerun",
+        ]:
+            with self.subTest(cmd=cmd):
+                with self.assertRaises(server.BridgeError) as ctx:
+                    server.validate_command(cmd)
+                self.assertIn("chained", str(ctx.exception))
+
+    def test_chained_refusal_reports_the_separator_not_the_verb(self):
+        # 'lm|dd' is a single whitespace token, so a verb-scoped check rejects
+        # it for the wrong reason. The message has to name the chain.
+        with self.assertRaises(server.BridgeError) as ctx:
+            server.validate_command("lm|dd C:\\out.bin")
+        self.assertIn("chained", str(ctx.exception))
+
+    def test_refuses_empty(self):
+        for cmd in ["", "   ", "\t\n"]:
+            with self.subTest(cmd=repr(cmd)):
+                with self.assertRaises(server.BridgeError):
+                    server.validate_command(cmd)
+
+    def test_verb_case_does_not_decide(self):
+        # x64dbg verbs are case-insensitive; an allowlist that is not is a
+        # bypass.
+        server.validate_command("LM")
+        with self.assertRaises(server.BridgeError):
+            server.validate_command("ERUN")
+
+    def test_the_tool_itself_refuses_before_touching_the_client(self):
+        # The predicate existing proves nothing if the tool does not call it.
+        # This is the wiring assertion, and it is the one that would have caught
+        # the gap.
+        client = FakeClient()
+        with self.assertRaises(server.BridgeError):
+            run(server.x64_search_command, client, command="erun")
+        self.assertEqual(client.calls, [])
+
+
+class TestAllowlistParityWithDispatcher(unittest.TestCase):
+    """The two allowlists are two copies of one policy.
+
+    A second copy that drifts is how the hole reopens, so the shared entries are
+    pinned from both sides rather than from one file's opinion of the other.
+    """
+
+    def _dispatcher_allowlist(self):
+        path = os.path.join(
+            _repo_root(), "domyh-hsa-mcp", "src", "tools", "t17_bridge.ts"
+        )
+        # Not a skipTest: a missing sibling repo means the two lists can no
+        # longer be compared, and a skipped parity check is how a second copy
+        # drifts unnoticed. Fail so it cannot go quiet.
+        if not os.path.exists(path):
+            raise AssertionError(f"dispatcher source not present at {path}")
+        with open(path, encoding="utf-8") as fh:
+            source = fh.read()
+        start = source.index("X64DBG_COMMAND_ALLOWLIST = new Set([")
+        end = source.index("]);", start)
+        return set(re.findall(r"'([^']+)'", source[start:end]))
+
+    def test_the_two_lists_agree(self):
+        dispatcher = {v.lower() for v in self._dispatcher_allowlist()}
+        self.assertEqual(
+            dispatcher,
+            {v.lower() for v in server.X64DBG_COMMAND_ALLOWLIST},
+            "the bridge and the dispatcher must allow the same verbs",
+        )
+
+    def test_neither_list_carries_a_known_writer(self):
+        forbidden = {"d", "dump", "dd", "savedata", "erun", "run", "rtr", "rte",
+                     "go", "writemem", "patch", "tracesetlogfile", "tracesetdir"}
+        overlap = {v.lower() for v in server.X64DBG_COMMAND_ALLOWLIST} & forbidden
+        self.assertEqual(overlap, set(), f"allowlist must not contain {overlap}")
 
 
 class TestListBreakpoints(unittest.TestCase):
