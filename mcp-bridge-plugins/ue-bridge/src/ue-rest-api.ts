@@ -20,8 +20,10 @@ export class UnrealRestClient {
         throw new Error(
           `UE API ${res.status}: ${text}\n` +
           `Remote Control refused ${fn ?? 'this function'}. Add it to ` +
-          `+CustomAllowedRemoteFunctionCalls in <project>/Config/DefaultEngine.ini under [RemoteControl], ` +
-          `then restart the editor. Setting bAllowAnyRemoteFunctionCall=true would also work and is not recommended: ` +
+          `<project>/Config/DefaultRemoteControl.ini under [RemoteControl] as ` +
+          `+CustomAllowedRemoteFunctionCalls, then restart the editor. The file is named after ` +
+          `ClassConfigName, so a UCLASS(config=RemoteControl) does not read DefaultEngine.ini. ` +
+          `Setting bAllowAnyRemoteFunctionCall=true would also work and is not recommended: ` +
           `it lets any local process call any function in the editor.`,
         );
       }

@@ -320,8 +320,10 @@ async function ensurePythonExecutor(): Promise<{ ready: boolean; message: string
         ready: false,
         message:
           `Remote Control blocked GetProjectDirectory, so the executor cannot be deployed. ${e.message}\n` +
-          `Add a [RemoteControl] section to <project>/Config/DefaultEngine.ini allowing it, then restart the editor:\n` +
+          `Add it to <project>/Config/DefaultRemoteControl.ini, then restart the editor:\n` +
+          `  [RemoteControl]\n` +
           `  +CustomAllowedRemoteFunctionCalls=((ClassPath="/Script/Engine.KismetSystemLibrary",FunctionName="GetProjectDirectory",bAllowChildClasses=false))\n` +
+          `The filename follows ClassConfigName, not DefaultEngine.ini: it is Default<ConfigName>.ini for a UCLASS(config=...) tag.\n` +
           `Do not set bAllowAnyRemoteFunctionCall=true instead — it would let any local process call any function in the editor.`,
       };
     }
