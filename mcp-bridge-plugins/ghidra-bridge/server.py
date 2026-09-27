@@ -16,6 +16,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Optional
 
 from mcp.server.fastmcp import FastMCP
@@ -24,6 +25,8 @@ mcp = FastMCP("ghidra-mcp-bridge")
 GHIDRA_HTTP_HOST = os.environ.get("HSA_GHIDRA_HTTP_HOST", "127.0.0.1")
 GHIDRA_HTTP_PORT = int(os.environ.get("HSA_GHIDRA_HTTP_PORT", "28572"))
 GHIDRA_HTTP_PORT_RANGE = int(os.environ.get("HSA_GHIDRA_HTTP_PORT_RANGE", "32"))
+GHIDRA_HTTP_PROBE_TIMEOUT = max(0.05, int(os.environ.get("HSA_GHIDRA_PROBE_TIMEOUT_MS", "350")) / 1000)
+GHIDRA_HTTP_SCAN_WORKERS = max(1, int(os.environ.get("HSA_GHIDRA_SCAN_WORKERS", "32")))
 
 
 def _port_candidates(scan_ports: Optional[List[int]] = None) -> List[int]:
@@ -104,7 +107,7 @@ def format_result(res: dict) -> str:
 
 def _probe_instance(port: int) -> dict | None:
     try:
-        with urllib.request.urlopen("http://%s:%s" % (GHIDRA_HTTP_HOST, port), timeout=2) as resp:
+        with urllib.request.urlopen("http://%s:%s" % (GHIDRA_HTTP_HOST, port), timeout=GHIDRA_HTTP_PROBE_TIMEOUT) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             if isinstance(data, dict) and data.get("status") == "ok":
                 data["port"] = port
@@ -114,14 +117,31 @@ def _probe_instance(port: int) -> dict | None:
     return None
 
 
+def _probe_instances(ports: List[int]) -> List[dict]:
+    """Probe the range concurrently. A serial scan costs the full timeout on
+    every closed port, which is the whole range when Ghidra is not running —
+    long enough that the MCP client gives up and reports the tools as missing."""
+    if not ports:
+        return []
+    results: dict[int, dict] = {}
+    max_workers = min(len(ports), GHIDRA_HTTP_SCAN_WORKERS)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_map = {executor.submit(_probe_instance, port): port for port in ports if port > 0}
+        for future in as_completed(future_map):
+            port = future_map[future]
+            try:
+                info = future.result()
+            except Exception:
+                info = None
+            if info is not None:
+                results[port] = info
+    return [results[port] for port in ports if port in results]
+
+
 @mcp.tool()
 def ghidra_list_instances(scan_ports: Optional[List[int]] = None) -> str:
     ports = _port_candidates(scan_ports)
-    instances = []
-    for port in ports:
-        info = _probe_instance(port)
-        if info is not None:
-            instances.append(info)
+    instances = _probe_instances(ports)
     return json.dumps({
         "ok": True,
         "instances": instances,
