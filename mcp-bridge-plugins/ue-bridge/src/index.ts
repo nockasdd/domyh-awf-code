@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { UnrealRestClient } from "./ue-rest-api.js";
+import { auditPath, logAttempt, logResult } from "./audit.js";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -221,6 +222,23 @@ wrapTool("ue_batch",
 // ══════════════════════════════════════════════════════════
 
 /**
+ * Whether the user has agreed to let code run in the editor.
+ *
+ * Deliberately not a tool. Every tool on this server is reachable by the model,
+ * so a `ue_execute_python_consent` tool would be consent the model grants
+ * itself, and the call would be indistinguishable from the execution it
+ * authorises. An environment variable is the only channel here the model
+ * cannot write to.
+ */
+const EXEC_CONSENT = process.env.HSA_UE_EXEC_CONSENT || "";
+const CONSENT_GRANTED = ["1", "true", "yes", "on"].includes(EXEC_CONSENT.toLowerCase());
+const CONSENT_REFUSED =
+  "HSA_UE_EXEC_CONSENT is not set on the ue-bridge, so ue_execute_python is refused. " +
+  "This is the one control between a generated code string and arbitrary Python running " +
+  "in the editor as you. Set HSA_UE_EXEC_CONSENT=1 in the MCP server environment and " +
+  "restart it to allow execution. Every call is appended to " + auditPath() + " either way.";
+
+/**
  * Ensure the Native Python Server is deployed and running.
  * Uses KismetSystemLibrary to find the project and auto-creates init_unreal.py.
  */
@@ -303,9 +321,15 @@ wrapTool("ue_execute_python",
     code: z.string().describe("Python source code to execute. Has access to 'unreal' module. Example: unreal.EditorLevelLibrary.spawn_actor_from_class(unreal.PointLight, unreal.Vector(0,0,300))"),
   },
   async ({ code }) => {
+    if (!CONSENT_GRANTED) {
+      logAttempt(code, "refused", CONSENT_REFUSED);
+      return { ok: false, error: CONSENT_REFUSED };
+    }
+
     // Ensure executor is deployed
     const setup = await ensurePythonExecutor();
     if (!setup.ready) {
+      logAttempt(code, "refused", setup.message);
       return { ok: false, error: setup.message, hint: "Enable 'Python Editor Script Plugin' in UE, RESTART editor, then retry." };
     }
 
@@ -325,13 +349,19 @@ wrapTool("ue_execute_python",
 
       const responseData = await response.json();
       if (response.status === 401) {
+        logAttempt(code, "refused", "token rejected by the editor");
         return {
           ok: false,
           error: "UE Python server rejected the token. HSA_BRIDGE_TOKEN must be identical on the bridge and in the UE project (Saved/HSA/bridge_config.json).",
         };
       }
+      // Logged here rather than in the editor: the editor's record cannot be
+      // trusted to cover a task that timed out, because the thread that would
+      // write it is the one that is stuck.
+      logResult(code, responseData);
       return responseData;
     } catch (e: any) {
+      logAttempt(code, "err", e.message);
       return { ok: false, error: `Failed to connect to UE Python Server: ${e.message}` };
     }
   },
@@ -346,6 +376,15 @@ wrapTool("ue_python_status",
 );
 
 // ── Entry ─────────────────────────────────────────────────
+
+// On stderr, not stdout: stdout is the MCP transport, and a stray line there
+// corrupts the protocol stream.
+if (!CONSENT_GRANTED) {
+  console.error(
+    `[ue-bridge] ue_execute_python is refused: HSA_UE_EXEC_CONSENT is unset. ` +
+    `Set it to 1 to allow. Attempts are still logged to ${auditPath()}.`,
+  );
+}
 
 async function main() {
   const transport = new StdioServerTransport();
