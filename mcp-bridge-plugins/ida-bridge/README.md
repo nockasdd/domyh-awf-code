@@ -13,6 +13,23 @@ flowchart LR
 
 > **Note:** For IDA 9.x+ with `idalib` configured, this bridge also supports a headless mode where `server.py` runs `idalib` directly without needing the GUI open.
 
+## 🔐 Authentication
+
+The bridge authenticates every request with a bearer token, because each command
+it accepts writes to the database or runs batch scripts. **You never have to
+create or pass one.** On startup the plugin generates a token, writes it to
+`%IDADIR%/plugins/hsa_bridge_token`, and the bridge collects it from there.
+
+The bridge finds that directory by walking the running `ida*` processes, so it
+does not need to know where IDA was launched from — IDA installs in a different
+directory per user and per version. If IDA starts *after* the bridge, the bridge
+picks the file up on its next call.
+
+Set `HSA_BRIDGE_TOKEN` in the environment of both IDA and the bridge only when
+you want one specific credential, such as a CI job shared across two machines.
+An exported token wins over the file, and the plugin will not overwrite a file
+a running IDA has already written.
+
 ## 📦 Prerequisites
 
 1. **IDA Pro 8.x or 9.x** with Hex-Rays Decompiler.
@@ -26,7 +43,7 @@ In the `mcp-bridge-plugins/ida-bridge` directory, initialize the environment:
 ```bash
 uv sync
 ```
-*(This installs FastAPI, Uvicorn, and other required dependencies).*
+*(This installs the MCP SDK, and `psutil` — which is how the bridge locates the running IDA.)*
 
 ### 2. Install the IDA Plugin
 Copy the plugin file into your IDA installation's plugins folder:
@@ -39,6 +56,9 @@ Copy the plugin file into your IDA installation's plugins folder:
 3. Press `Ctrl+Shift+H` (or run the "HSA MCP Bridge" plugin from the Edit -> Plugins menu).
 4. The output window will show the assigned unique port, for example: `[HSA] HTTP server auto-started on http://127.0.0.1:28472`
 
+Nothing else is needed. Each IDA picks the next free port in `28472`–`28503`, so
+several can run at once and `discover` will list all of them.
+
 ## 💻 Usage via HSA
 
 The DOMYH Agent will automatically spawn the external bridge server when it needs to interact with IDA. You can prompt the agent to analyze malware, decompile functions, or rename variables.
@@ -50,6 +70,10 @@ The DOMYH Agent will automatically spawn the external bridge server when it need
 3. Use direct tools for one operation: `ida_get_info`, `ida_decompile`, `ida_get_xrefs`, or another specific `ida_*` tool.
 4. `ida_get_xrefs` takes `address` and `direction="to"` or `direction="from"`.
 5. Use `ida_batch` only for two or more independent commands on the same pinned instance; never use it for discovery, identity, or a single read.
+
+A `stripped` binary returns `count: 0` from `ida_search_functions` and empty
+results from the other name-based tools. That is the binary, not the bridge —
+switch to `ida_search_bytes` or `ida_get_strings` to work without symbols.
 
 **Example MCP Tool Calls used by the Agent:**
 
