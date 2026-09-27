@@ -26,6 +26,14 @@ from mcp.server.fastmcp import FastMCP
 from hsa_ida_compat import compat
 
 mcp = FastMCP("ida-mcp-bridge")
+
+
+class BridgeError(RuntimeError):
+    """Bridge-side failure. Raising this makes FastMCP set isError, so the
+    agent sees a failed call instead of prose describing a failure."""
+
+
+BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
 IDA_HTTP_HOST = os.environ.get("HSA_IDA_HTTP_HOST", "127.0.0.1")
 IDA_HTTP_PORT = int(os.environ.get("HSA_IDA_HTTP_PORT", "28472"))
 IDA_HTTP_PORT_RANGE = int(os.environ.get("HSA_IDA_HTTP_PORT_RANGE", "32"))
@@ -257,20 +265,40 @@ def _resolve_base_url(params: dict | None = None, command: str = "") -> tuple[st
 
 
 def _request_json(url: str, payload: dict) -> dict:
+    headers = {"Content-Type": "application/json"}
+    if not BRIDGE_TOKEN:
+        raise BridgeError(
+            "HSA_BRIDGE_TOKEN is not set. The IDA plugin refuses to start without it, "
+            "because every command it accepts writes to the database or runs batch "
+            "scripts. Set the same token for this bridge and for IDA."
+        )
+    headers["Authorization"] = "Bearer %s" % BRIDGE_TOKEN
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
+        headers=headers,
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")
+        if e.code == 401:
+            raise BridgeError(
+                "IDA plugin rejected the token. HSA_BRIDGE_TOKEN must be identical for "
+                "this bridge and for the plugin (env, or %IDADIR%/plugins/hsa_bridge_token)."
+            )
+        raise BridgeError("IDA plugin returned %d: %s" % (e.code, detail))
 
 
 def ida_request(command: str, params: dict) -> dict:
     """Send a command to the IDA plugin HTTP server."""
     if compat.is_headless:
         return {"error": "Headless mode — HTTP bridge not used."}
+    # BridgeError re-raises on purpose: a missing or rejected token is a setup
+    # problem the agent must see verbatim, not a dict that format_result turns
+    # into another layer of prose.
     try:
         base_url, route = _resolve_base_url(params, command)
         response = _request_json(base_url, {"command": command, "params": params})
@@ -283,13 +311,10 @@ def ida_request(command: str, params: dict) -> dict:
         return response
     except urllib.error.URLError as e:
         return {"ok": False, "error": f"Cannot connect to IDA plugin: {e}. Is IDA running with hsa_ida_plugin.py loaded?"}
+    except BridgeError:
+        raise
     except Exception as e:
         return {"ok": False, "error": str(e)}
-
-
-class BridgeError(RuntimeError):
-    """Bridge-side failure. Raising this makes FastMCP set isError, so the
-    agent sees a failed call instead of prose describing a failure."""
 
 
 def format_result(res: dict) -> str:

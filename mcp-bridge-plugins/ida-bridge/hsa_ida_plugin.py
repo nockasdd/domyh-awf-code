@@ -32,20 +32,35 @@ import idc
 
 import os
 import json
+import hmac
 import socket
 import threading
 import traceback
 
 # Use http.server from stdlib (no pip install needed in IDA's Python)
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 PLUGIN_NAME    = "HSA MCP Bridge"
-PLUGIN_VERSION = "1.0.0"
+PLUGIN_VERSION = "1.1.0"
 PLUGIN_HOTKEY  = "Ctrl-Shift-H"
 HTTP_HOST      = "127.0.0.1"
 HTTP_PORT      = int(os.environ.get("HSA_IDA_HTTP_PORT", "28472"))
 HTTP_PORT_RANGE = int(os.environ.get("HSA_IDA_HTTP_PORT_RANGE", "32"))
 ACTIVE_HTTP_PORT = HTTP_PORT
+
+# IDA's launcher does not always forward the environment a developer sets in
+# their shell, so the token also comes from a file next to the database. The
+# bridge writes it; see server.py:write_bridge_config.
+BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+if not BRIDGE_TOKEN:
+    # Next to the plugin itself, i.e. %IDADIR%/plugins/hsa_bridge_token.
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "hsa_bridge_token"), "r") as _fh:
+            BRIDGE_TOKEN = _fh.read().strip()
+    except Exception:
+        BRIDGE_TOKEN = ""
+MAX_BODY_BYTES = int(os.environ.get("HSA_IDA_MAX_BODY_BYTES", str(4 * 1024 * 1024)))
 
 # ── Thread-safe IDA execution ──────────────────────────────────────
 # ALL IDA API calls MUST run on the main thread via execute_sync.
@@ -1305,7 +1320,9 @@ class HsaBridgeHandler(BaseHTTPRequestHandler):
         )
 
     def do_GET(self):
-        """Health check endpoint."""
+        """Liveness. Unauthenticated on purpose: it answers only 'is the
+        listener up', which leaks nothing actionable, and it keeps discovery
+        from needing the token."""
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
@@ -1314,6 +1331,7 @@ class HsaBridgeHandler(BaseHTTPRequestHandler):
             "plugin": PLUGIN_NAME,
             "version": PLUGIN_VERSION,
             "port": ACTIVE_HTTP_PORT,
+            "auth_required": bool(BRIDGE_TOKEN),
             "commands": list(COMMANDS.keys()),
         }
         try:
@@ -1323,10 +1341,33 @@ class HsaBridgeHandler(BaseHTTPRequestHandler):
             info["info_error"] = str(e)
         self.wfile.write(json.dumps(info).encode())
 
+    def _authorized(self):
+        if not BRIDGE_TOKEN:
+            return False, "HSA_BRIDGE_TOKEN is not set, so no call can be authenticated."
+        header = self.headers.get("Authorization", "")
+        prefix = "Bearer "
+        if not header.startswith(prefix):
+            return False, "Missing Authorization: Bearer <HSA_BRIDGE_TOKEN> header"
+        # compare_digest rather than ==, which returns on the first mismatched
+        # byte and so leaks the length of the matching prefix.
+        if not hmac.compare_digest(header[len(prefix):], BRIDGE_TOKEN):
+            return False, "Invalid HSA_BRIDGE_TOKEN"
+        return True, None
+
     def do_POST(self):
         """Execute a command."""
+        authorized, reason = self._authorized()
+        if not authorized:
+            ida_kernwin.msg(f"[HSA] Rejected unauthenticated request: {reason}\n")
+            self._send_error(401, reason)
+            return
         try:
             content_len = int(self.headers.get("Content-Length", 0))
+            # Refused before the body is buffered, so an oversized request costs
+            # nothing.
+            if content_len > MAX_BODY_BYTES:
+                self._send_error(413, f"Request body is {content_len} bytes, limit is {MAX_BODY_BYTES}")
+                return
             body = self.rfile.read(content_len)
             req = json.loads(body.decode("utf-8"))
 
@@ -1358,8 +1399,9 @@ class HsaBridgeHandler(BaseHTTPRequestHandler):
         self._send_json(code, {"ok": False, "error": msg})
 
 
-class HsaBridgeHTTPServer(HTTPServer):
+class HsaBridgeHTTPServer(ThreadingHTTPServer):
     allow_reuse_address = False
+    daemon_threads = True
 
     def server_bind(self):
         if os.name == "nt":
@@ -1392,6 +1434,15 @@ class HsaMcpBridgePlugin(idaapi.plugin_t):
         """Start the HTTP server in a background thread."""
         if self._server is not None:
             return  # Already running
+        if not BRIDGE_TOKEN:
+            # Every command here writes to the database or runs batch scripts.
+            # On an unauthenticated localhost socket any local process could
+            # drive IDA, so the listener stays closed instead.
+            ida_kernwin.msg(
+                f"[HSA] Server NOT started: no HSA_BRIDGE_TOKEN. Set it in the environment "
+                f"IDA sees, or write it to %IDADIR%/plugins/hsa_bridge_token.\n"
+            )
+            return
         try:
             global ACTIVE_HTTP_PORT
             last_error = None
