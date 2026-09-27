@@ -1,0 +1,132 @@
+# Complexity Scoring Engine v7.2.0
+# Auto-detect task complexity for orchestration activation
+# Source: LangGraph conditional routing, CrewAI Flows, Anthropic orchestrator analysis
+# v7.2: Weighted + Normalized scoring (replaces additive sum)
+---
+name: complexity-scoring
+rule_id: "MOD-CMP-001"
+
+description: |
+  Auto-detect multi-agent orchestration need by scoring task complexity.
+  Evaluated BEFORE persona routing on every user message.
+  Score ≥ 6.5 → auto-activate Orchestrator. Score 4-6.5 → suggest. Score < 4 → normal routing.
+
+category: "workflow"
+
+context:
+  always_apply: true
+  personas: ["*"]
+  trigger: "On every user message before persona routing"
+
+# ═══ SCORING HEURISTICS ═══
+
+scoring:
+  # v7.2: Weighted scoring — each heuristic normalized to 0-10, then weighted
+  weights:
+    H1_domain: 0.30      # Most important signal
+    H2_subtask: 0.15     # Secondary
+    H3_file_scope: 0.20  # Important
+    H4_cross_persona: 0.20  # Reduced from implicit ~0.25
+    H5_keywords: 0.15    # Least important
+
+  heuristics:
+
+    # H1: Domain Count — How many technical domains does the task touch?
+    domain_count:
+      description: "Count distinct technical domains in request"
+      domains:
+        backend: ["api", "database", "auth", "server", "endpoint", "model", "migration", "route", "middleware", "orm"]
+        frontend: ["ui", "ux", "component", "css", "page", "layout", "responsive", "form", "modal", "sidebar"]
+        testing: ["test", "coverage", "e2e", "unit", "integration", "jest", "vitest", "cypress"]
+        devops: ["deploy", "ci", "cd", "docker", "kubernetes", "infra", "monitoring", "pipeline"]
+        security: ["security", "auth", "permission", "encryption", "vulnerability", "scan", "owasp"]
+        data: ["migration", "seed", "schema", "database", "orm", "backup", "restore"]
+        documentation: ["doc", "readme", "api-doc", "changelog", "comment"]
+      scoring:
+        1_domain: 0    # normalized 0/10
+        2_domains: 3   # normalized 3/10
+        3_domains: 7   # normalized 7/10
+        4_plus: 10     # normalized 10/10
+
+    # H2: Sub-task Detection — How many implicit sub-tasks?
+    subtask_count:
+      description: "Detect implicit sub-tasks via linguistic patterns"
+      indicators:
+        conjunction_words: ["và", "and", "rồi", "then", "sau đó", "tiếp theo", "cũng", "also", "plus"]
+        list_patterns: ["1.", "2.", "3.", "- ", "* ", "firstly", "secondly", "thứ nhất", "thứ hai"]
+        multi_verb: ["implement AND test", "build AND deploy", "fix AND verify", "create AND document"]
+      scoring:
+        1_subtask: 0   # normalized 0/10
+        2_subtasks: 2  # normalized 2/10
+        3_subtasks: 5  # normalized 5/10
+        5_plus: 10     # normalized 10/10
+
+    # H3: File Scope — Estimated number of files to be changed
+    file_scope:
+      description: "Estimate files affected by the task"
+      signals:
+        full_feature: ["feature", "module", "tính năng", "chức năng", "system", "hệ thống"]
+        refactor_broad: ["refactor all", "across", "toàn bộ", "tất cả", "entire", "whole"]
+        single_fix: ["fix", "sửa", "update", "cập nhật", "tweak", "adjust"]
+      scoring:
+        1_3_files: 0   # normalized 0/10
+        4_7_files: 4   # normalized 4/10
+        8_plus_files: 10  # normalized 10/10
+
+    # H4: Cross-Persona Need — Does task need multiple specialist personas?
+    cross_persona:
+      description: "Detect need for multiple specialized personas"
+      patterns:
+        dev_plus_test: ["implement.*test", "code.*verify", "viết.*kiểm tra", "build.*test"]
+        dev_plus_security: ["implement.*security", "build.*auth", "code.*permission"]
+        dev_plus_deploy: ["build.*deploy", "implement.*release", "code.*ship"]
+        plan_plus_implement: ["design.*implement", "thiết kế.*triển khai", "plan.*build"]
+        full_stack: ["full.?stack", "frontend.*backend", "client.*server"]
+      scoring:
+        0_cross: 0     # normalized 0/10
+        1_cross: 5     # normalized 5/10
+        2_plus_cross: 10  # normalized 10/10
+
+    # H5: Complexity Keywords — Explicit complexity signals
+    complexity_keywords:
+      description: "Direct complexity indicators in user request"
+      high: ["complex", "phức tạp", "full-stack", "end-to-end", "from scratch", "complete system", "toàn diện"]
+      medium: ["multiple", "several", "nhiều", "across", "integrate", "coordinate", "phối hợp"]
+      scoring:
+        high_keyword: 10  # normalized 10/10
+        medium_keyword: 4 # normalized 4/10
+
+# ═══ THRESHOLDS ═══
+
+thresholds:
+  single_agent:
+    max: 4.0
+    description: "Weighted score 0-4.0 → normal single-agent workflow"
+    action: "Route via ROUTER persona_routing (command_triggers + intent_triggers)"
+
+  consider_orchestration:
+    min: 4.0
+    max: 6.5
+    description: "Weighted score 4.0-6.5 → suggest orchestration"
+    action: |
+      Suggest to user: "Task này có thể cần phối hợp nhiều specialist.
+      Bạn muốn dùng orchestration mode không?"
+
+  auto_orchestrate:
+    min: 6.5
+    description: "Weighted score 6.5+ → auto-activate orchestration"
+    action: |
+      1. Switch to Orchestrator persona
+      2. Execute orchestrate.md workflow (INIT → DECOMPOSE → ASSIGN → PLAN ⛔)
+      3. Show DAG to user for approval before execution
+
+# ═══ EVALUATION FLOW ═══
+
+evaluation_flow:
+  formula: "Weighted = (H1×0.30) + (H2×0.15) + (H3×0.20) + (H4×0.20) + (H5×0.15)"
+  thresholds: { single: "<4.0", suggest: "4.0-6.5", auto: ">=6.5" }
+
+integration:
+  tier: 2
+  related_modules: ["agent-delegation", "agent-communication", "stop-conditions"]
+  referenced_by: ["SACRED_RULES.xml MCP_004", "SACRED_RULES.xml MCP_005", "orchestrator.md", "agent-delegation.yaml"]

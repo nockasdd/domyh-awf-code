@@ -1,0 +1,172 @@
+# Agent Delegation Rule v7.1.0
+# Enhanced with complexity scoring, state permissions, and checkpoint support
+---
+name: agent-delegation
+rule_id: "MOD-DEL-001"
+
+description: "When and how to delegate tasks to specialized sub-agents."
+category: "workflow"
+
+context:
+  always_apply: false
+  personas: ["orchestrator", "developer", "architect", "planner"]
+  trigger: "When task complexity exceeds single-agent capacity"
+  scoring_ref: "rules/modules/complexity-scoring.yaml"
+
+# ═══ DELEGATION CRITERIA ═══
+
+when_to_delegate:
+  always:
+    - "Security review → Security persona"
+    - "Performance audit → Performance persona"
+    - "E2E test generation → Tester persona"
+    - "Documentation sync → Documenter persona"
+    - "Complexity score >= 8 → Orchestrator persona"
+
+  consider:
+    - "Task involves 3+ distinct domains (H1 >= 3)"
+    - "Code review with 500+ changed lines"
+    - "Multi-language refactoring"
+    - "Simultaneous frontend + backend changes (H4 cross_persona)"
+    - "Complexity score 5-7 → suggest orchestration to user"
+
+  requires_full_context:
+    - "Tasks requiring full conversation context — keep in main agent"
+    - "User preference/style decisions — defer to user"
+    - "Critical data migrations — require user review before delegation"
+    - "Destructive operations (delete, drop) — confirm with user first"
+
+# ═══ SCOPE LIMITS ═══
+
+scope_limits:
+  max_files: 10
+  max_tool_calls: 50
+  max_tokens: 10000
+  timeout_minutes: 15
+  default_tools: ["Read", "Grep", "Glob", "View"]
+  elevated_tools: ["Write", "Edit", "Bash", "Terminal"]
+  elevated_requires: "Explicit approval"
+
+# ═══ STATE PERMISSIONS ═══
+
+state_permissions:
+  orchestrator:
+    read: ["*"]
+    write: ["dag", "event_log", "budget", "shared_context", "status"]
+  specialist:
+    read: ["shared_context", "own_task", "dependency_task.output"]
+    write: ["own_task.output", "shared_context.decisions", "shared_context.blockers"]
+
+# ═══ HANDOFF PATTERNS ═══
+
+patterns:
+  sequential: "Agent A → Result → Agent B → Orchestrator (for dependent tasks)"
+  parallel: "Orchestrator → [A, B, C] → Merge (for independent tasks)"
+  review_loop: "Developer → Code → Reviewer → Feedback → Developer (for quality-critical)"
+  escalation: "Any Persona → handoff_condition → Orchestrator (for scope overflow)"
+
+# ═══ CHECKPOINT ═══
+
+checkpoint:
+  auto_save: "After each task completion during orchestration"
+  manual: "/orchestrate checkpoint"
+  resume: "/orchestrate resume {id}"
+  spec: "workflows/data/checkpoint-resume.yaml"
+
+# ═══ AGENT SPEC FORMAT ═══
+
+spec_template: |
+  ## Agent: {name}
+  **Role**: {description} | **Scope**: {files} | **Tools**: {allowed} | **Output**: {deliverable}
+
+integration:
+  tier: 2
+  related_modules: ["quality", "stop-conditions", "complexity-scoring", "agent-communication"]
+
+# ═══ SUBAGENT-DRIVEN DEVELOPMENT (SDD) & QUALITY GATES ═══
+# Inspired by obra/superpowers: Senior-engineer rigor for agentic delegation
+
+sdd_framework:
+  philosophy: "Bite-sized tasks (2-5 mins) + 2-Tier Review Gate + Workspace Isolation"
+  core_tenets:
+    - "Never delegate an underspecified task — always prepare a formal Task Contract"
+    - "Enforce 1% trigger threshold: if task is non-trivial, force planning & delegation contract"
+    - "Isolate workspaces: use branched workspaces or git worktrees to prevent context collision"
+    - "Zero blind trust: every subagent deliverable MUST pass 2-Tier Review before merge"
+
+# ═══ 2-TIER REVIEW GATE PROTOCOL ═══
+
+two_tier_review_gate:
+  tier_1_spec_compliance:
+    name: "Specification & Scope Containment Review"
+    checks:
+      - "Modified files strictly match focus_files contract (zero out-of-scope edits)"
+      - "No YAGNI violations (no speculative features or unsolicited modifications)"
+      - "Deliverable directly fulfills the task contract acceptance criteria"
+    on_failure: "REJECT immediately. Revert out-of-scope edits or re-dispatch correction."
+
+  tier_2_code_quality:
+    name: "Code Quality & Verification Review"
+    checks:
+      - "TDD verification: run unit/integration tests and verify green status"
+      - "Type safety: compiler/typechecker passes with 0 errors"
+      - "Linting & style: linter passes cleanly without suppressions"
+      - "Surgical changes: no whitespace/formatting churn outside target logic"
+    on_failure: "Request fix from subagent or fix failing assertions before merge."
+
+# ═══ WORKSPACE ISOLATION MODES ═══
+
+workspace_isolation:
+  branch: "Isolated workspace branch (Antigravity 'branch', Git worktree) — recommended for active code modification"
+  share: "Shared underlying workspace (Antigravity 'share') — for read-heavy cross-referencing"
+  inherit: "Same workspace context — for quick read-only inspections"
+
+# ═══ NATIVE IDE DISPATCH MAPPING ═══
+
+native_ide_dispatch:
+  antigravity:
+    mechanism: "invoke_subagent tool"
+    workspace_mode: "branch | share | inherit"
+    messaging: "send_message / manage_subagents"
+  claude_code:
+    mechanism: "Subagent / .claude/agents/ + git worktree"
+    workspace_mode: "git worktree per task"
+  codex:
+    mechanism: "AGENTS.md hierarchy + scoped directory execution"
+  cursor:
+    mechanism: "Background agent + hsa_delegate transcript sync"
+  mcp_fallback:
+    mechanism: "hsa_delegate({action:'prepare' | 'verify'})"
+
+# ═══ TASK-TYPE ROUTING ═══
+
+delegation_routing:
+  description: "Maps an AWF workflow to the task_type its contract declares"
+  reference: "SACRED_RULES MCP_002"
+  engine_constraint: "DelegateSchema.task_type accepts: code|test|review|debug|browser|research"
+  
+  workflow_to_task_type:
+    # Base (1:1 mapping — these are the engine-accepted values)
+    code: "code"
+    test: "test"
+    review: "review"
+    debug: "debug"
+    # Aliases (AWF workflows that reuse parent task_type for routing)
+    fix: "debug"        # quick fix → reuses debug model routing
+    refactor: "code"    # refactor → reuses code model routing
+    security: "review"  # security scan → reuses review model routing
+    tdd: "test"         # TDD → reuses test model routing
+    e2e: "test"         # E2E → reuses test model routing
+    visualize: "browser" # UI design → reuses browser model routing
+    think: "research"   # deep analysis → reuses research model routing
+    plan: "research"    # requirement exploration → research routing
+    onboard: "research" # codebase discovery → research routing
+    perf: "debug"       # profiling → reuses debug model routing
+    monitor: "debug"    # observability → reuses debug model routing
+    ap: "review"        # audit → reuses review model routing
+  
+  lifecycle: |
+    1. Prepare contract: hsa_delegate({action:'prepare', task_type:'...', focus_files:[...]})
+    2. Dispatch subagent via Native IDE tool (invoke_subagent, Claude subagent, Codex AGENTS.md)
+    3. Upon completion: hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})
+    4. Pass 2-Tier Gate -> Merge deliverables & hsa_session({action:'persist'})
