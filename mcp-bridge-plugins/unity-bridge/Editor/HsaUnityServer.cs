@@ -776,6 +776,8 @@ public class HsaUnityServer
 
         string savePath = JVal(body, "savePath");
         if (string.IsNullOrEmpty(savePath)) savePath = "Assets/Materials";
+        string bad = CheckProjectPath(savePath);
+        if (bad != null) return ErrJson(bad);
         if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
 
         string fullPath = savePath + "/" + mName + ".mat";
@@ -794,6 +796,9 @@ public class HsaUnityServer
 
         GameObject go = GameObject.Find(objPath);
         if (go == null) return ErrJson("Not found: " + objPath);
+
+        string bad = CheckProjectPath(savePath);
+        if (bad != null) return ErrJson(bad);
 
         string dir = Path.GetDirectoryName(savePath);
         if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -839,6 +844,11 @@ public class HsaUnityServer
         if (string.IsNullOrEmpty(sourcePath) || string.IsNullOrEmpty(destPath))
             return ErrJson("Missing sourcePath or destPath");
 
+        string bad = CheckProjectPath(destPath);
+        if (bad != null) return ErrJson(bad);
+        bad = CheckProjectPath(sourcePath);
+        if (bad != null) return ErrJson(bad);
+
         string dir = Path.GetDirectoryName(destPath);
         if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
@@ -858,9 +868,13 @@ public class HsaUnityServer
         if (string.IsNullOrEmpty(scriptName)) return ErrJson("Missing name");
 
         if (string.IsNullOrEmpty(savePath)) savePath = "Assets/Scripts";
+        string bad = CheckProjectPath(savePath);
+        if (bad != null) return ErrJson(bad);
         if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
 
         string fullPath = savePath + "/" + scriptName + ".cs";
+        bad = CheckProjectPath(fullPath);
+        if (bad != null) return ErrJson(bad);
 
         // Priority: contentBase64 > content > default template
         // Base64 is preferred for complex code — avoids all JSON escaping issues
@@ -976,6 +990,37 @@ public class HsaUnityServer
     }
 
     private static string ErrJson(string msg) { return "{\"error\":\"" + Esc(msg) + "\"}"; }
+
+    private static readonly string[] ALLOWED_ROOTS = { "Assets/", "Packages/" };
+
+    // Returns null when the path is acceptable, or the reason it is not.
+    // Every endpoint that creates a directory, writes a file, or copies one takes
+    // its path straight from the request body, so without this a caller can
+    // create directories and write arbitrary C# anywhere the user account can
+    // reach, and /import-asset can read any file back through the copy.
+    private static string CheckProjectPath(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return "Missing path";
+
+        // Normalising before the checks matters: "../Assets" and "Assets/../../x"
+        // both pass a naive prefix test on the raw string.
+        string norm = path.Replace('\\', '/');
+        if (norm.Contains("..")) return "Path may not contain '..': " + path;
+        if (Path.IsPathRooted(path) || norm.StartsWith("/") || norm.StartsWith("~"))
+            return "Path must be relative to the project: " + path;
+
+        // A Windows drive-relative or UNC path that is not caught by IsPathRooted
+        // still has to be refused, which the ':' test covers.
+        if (norm.Contains(":")) return "Path may not contain ':': " + path;
+
+        bool ok = false;
+        for (int i = 0; i < ALLOWED_ROOTS.Length; i++)
+            if (norm.StartsWith(ALLOWED_ROOTS[i], StringComparison.OrdinalIgnoreCase)) { ok = true; break; }
+        if (!ok)
+            return "Path must start with Assets/ or Packages/, got: " + path;
+
+        return null;
+    }
 
     private static void KV(StringBuilder sb, string k, string v, bool first = false)
     { if (!first) sb.Append(","); sb.Append("\"").Append(k).Append("\":\"").Append(Esc(v)).Append("\""); }
