@@ -44,9 +44,33 @@ domyh-awf-cli/
 
 # ── HSA runtime cache ────────────────────────────────────────
 .hsa_cache/
-.agent/hsa/observations.json
-.agent/hsa/engine-state.json
-.agent/hsa/session-feedback.json
+.agent/hsa/
+
+# ── Game engine artifacts ────────────────────────────────────
+# Unity: editor-generated. .meta files MUST stay tracked — they carry the GUIDs
+# that scene/prefab references resolve against.
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+*.csproj
+*.sln
+
+# Unreal
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Godot: exclude CONTENTS, not the directory — a bare `.godot/` exclusion with a
+# negation is inert. global_script_class_cache.cfg backs every `class_name`
+# declaration; losing it breaks all cross-referencing scripts on a fresh clone,
+# yet `godot --headless --quit` still exits 0 so CI cannot catch it.
+**/.godot/*
+!**/.godot/global_script_class_cache.cfg
 
 # ── Environment ──────────────────────────────────────────────
 .env
