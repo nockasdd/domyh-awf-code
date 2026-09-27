@@ -311,6 +311,20 @@ async function ensurePythonExecutor(): Promise<{ ready: boolean; message: string
       message: `File deployed to ${targetFile} (config: ${configFile}), but could not auto-execute. Please enable "Python Editor Script Plugin" in UE Editor and restart. The script will auto-load on next startup.`,
     };
   } catch (e: any) {
+    // Remote Control refuses any function that is not on its allowlist, and
+    // GetProjectDirectory is not on the default one. The engine's own message
+    // names the two settings but not the ini or the restart, so the bridge was
+    // reporting a dead end — the fix is a config file the caller has to find.
+    if (/not allowed by remote control settings/i.test(e.message)) {
+      return {
+        ready: false,
+        message:
+          `Remote Control blocked GetProjectDirectory, so the executor cannot be deployed. ${e.message}\n` +
+          `Add a [RemoteControl] section to <project>/Config/DefaultEngine.ini allowing it, then restart the editor:\n` +
+          `  +CustomAllowedRemoteFunctionCalls=((ClassPath="/Script/Engine.KismetSystemLibrary",FunctionName="GetProjectDirectory",bAllowChildClasses=false))\n` +
+          `Do not set bAllowAnyRemoteFunctionCall=true instead — it would let any local process call any function in the editor.`,
+      };
+    }
     return { ready: false, message: `Auto-setup failed: ${e.message}` };
   }
 }

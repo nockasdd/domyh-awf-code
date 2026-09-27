@@ -10,6 +10,21 @@ export class UnrealRestClient {
     });
     if (!res.ok) {
       const text = await res.text().catch(() => res.statusText);
+      // Remote Control rejects any function that is not on its allowlist, and
+      // the default list covers almost none of what an agent asks for. Its
+      // message names the two settings but not the ini or the restart, so this
+      // is the one place that can turn the dead end into a fix — and every tool
+      // that calls a UFunction passes through here.
+      if (/not allowed by remote control settings/i.test(text)) {
+        const fn = text.match(/Executing function '([^']+)'/)?.[1];
+        throw new Error(
+          `UE API ${res.status}: ${text}\n` +
+          `Remote Control refused ${fn ?? 'this function'}. Add it to ` +
+          `+CustomAllowedRemoteFunctionCalls in <project>/Config/DefaultEngine.ini under [RemoteControl], ` +
+          `then restart the editor. Setting bAllowAnyRemoteFunctionCall=true would also work and is not recommended: ` +
+          `it lets any local process call any function in the editor.`,
+        );
+      }
       throw new Error(`UE API ${res.status}: ${text}`);
     }
     return res.json();
