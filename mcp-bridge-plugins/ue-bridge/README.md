@@ -55,6 +55,29 @@ The TypeScript bridge features an **auto-setup mechanism**. When the DOMYH Agent
 | `HSA_UE_EXEC_CONSENT` | *(unset)* | Must be `1`/`true`/`yes`/`on` for `ue_execute_python` to run anything. See below. |
 | `HSA_UE_AUDIT_LOG` | `~/.domyh/audit/ue-exec.jsonl` | Path of the exec audit trail. |
 | `HSA_UE_EXEC_TIMEOUT_S` | `30` | How long a call waits on the Game Thread before the call is abandoned. |
+| `HSA_UE_SAFE_MODE` | off | See below. |
+
+#### Safe mode (opt-in, and not a sandbox)
+
+With `HSA_UE_SAFE_MODE=1` a block is parsed with `ast` and every name it
+touches is checked before `exec`:
+
+- no `import` / `from ... import`
+- no `open`, `eval`, `exec`, `compile`, `getattr`, `__import__`, `globals`
+- no dunder attributes — `__class__`, `__globals__`, `f_globals`, `gi_frame`
+  and the rest, which is the usual route from an object back to the import
+  machinery without ever naming it
+- no `class`, `global`, `nonlocal`, or `with`
+- only `unreal.*` and a short list of value builtins; variables the block
+  assigns are allowed, so ordinary editor scripting runs unchanged
+
+A refusal happens **before** `exec`, so the Game Thread is never occupied and
+the caller gets an answer immediately rather than after a timeout.
+
+**It is a guard against accidents, not a sandbox.** Obfuscation defeats it, and
+`exec_globals` still carries full `__builtins__` when it passes. It is off by
+default for that reason. Treat the token as the boundary and safe mode as
+"catch the obvious"; do not read a green result as "this was safe".
 
 #### Why `HSA_UE_EXEC_CONSENT` is an env var and not a tool
 
@@ -126,4 +149,24 @@ hsa_bridge({target: "ue", action: "ue_execute_python", payload: {code: "unreal.l
 | `ue_set_actor_transform` | Modify | Change Actor Position/Rotation/Scale simultaneously in Editor. |
 | `ue_list_actors` | Read | Uses the EditorActorSubsystem to list everything spawned in the current editing level. |
 | `ue_batch` | Logic | Execute an array of `ue_call_function` RPCs in a single HTTP payload for performance. |
-| `ue_execute_python` | Code Execution | Execute arbitrary Python scripts inside UE5. It has full context access to the `unreal` Python module namespace. |
+| `ue_execute_python` | Code Execution | Execute arbitrary Python scripts inside UE5. It has full context access to the `unreal` Python module namespace. Requires `HSA_UE_EXEC_CONSENT`. |
+
+## 🔒 Executing code in the editor
+
+`ue_execute_python` is the one tool with real blast radius: it runs generated
+Python inside the editor, as the user, with `__builtins__` intact. Three
+controls sit in front of it, and they are independent:
+
+| Control | Where | What it stops |
+|---------|-------|---------------|
+| `HSA_BRIDGE_TOKEN` | both sides | Any local process, since only a caller holding the token reaches `/execute` |
+| `HSA_UE_EXEC_CONSENT` | bridge | Accidental use, until the user opts in |
+| `HSA_UE_SAFE_MODE` | editor | The obvious dangerous calls, if the user wants the extra layer |
+| `MAX_CODE_BYTES` | editor | Oversized payloads (1 MiB default) |
+| `HSA_UE_EXEC_TIMEOUT_S` | editor | A caller waiting forever on a Game Thread that will not come back |
+
+A wedged Game Thread is not recoverable in-process — no thread can preempt a
+thread that is stuck in an editor tick, and the platform offers no interrupt on
+Windows. The timeout therefore abandons the *wait*, and the call after it stays
+queued behind the stuck one. The error text says this rather than reporting a
+timeout that reads like the work was cancelled.
