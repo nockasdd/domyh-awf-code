@@ -95,3 +95,6 @@ scripts/local/
 # ── DOMYH local runtime (audits, session data) ───────────
 .domyh/
 .docs/
+# — HSA bridge bearer tokens (written by the bridge at startup) —
+mcp-bridge-plugins/*/hsa_bridge_token
+mcp-bridge-plugins/unity-bridge/Library/

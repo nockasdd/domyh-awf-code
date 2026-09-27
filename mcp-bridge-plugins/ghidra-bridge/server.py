@@ -37,6 +37,31 @@ GHIDRA_HTTP_SCAN_WORKERS = max(1, int(os.environ.get("HSA_GHIDRA_SCAN_WORKERS", 
 BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
 
 
+def write_bridge_config() -> str:
+    """Drop the token where the plugin can read it.
+
+    Ghidra does not forward the launching shell's environment to the JVM, so the
+    plugin reads HSA_BRIDGE_TOKEN and then this file, which sits next to the
+    plugin script itself.
+    """
+    if not BRIDGE_TOKEN:
+        return ""
+    target = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "hsa_bridge_token")
+    try:
+        with open(target, "w") as fh:
+            fh.write(BRIDGE_TOKEN)
+        # chmod after the write, not as a mode argument: os.open's mode is masked
+        # by the process umask, and on Windows it is not applied at all, so the
+        # bearer token would land world-readable.
+        os.chmod(target, 0o600)
+        return target
+    except Exception:
+        # A bridge that cannot write the file still works for anyone who did
+        # export the token, so this is reported, not fatal.
+        return ""
+
+
 def _port_candidates(scan_ports: Optional[List[int]] = None) -> List[int]:
     if scan_ports:
         ports = []
@@ -239,4 +264,9 @@ def ghidra_create_class_layout(name: str, fields: Optional[List[dict]] = None, v
 
 
 if __name__ == "__main__":
+    if BRIDGE_TOKEN and not write_bridge_config():
+        print(
+            "HSA bridge: could not write hsa_bridge_token next to the plugin. Ghidra may not "
+            "see HSA_BRIDGE_TOKEN unless it is exported in the environment Ghidra launches from."
+        )
     mcp.run()

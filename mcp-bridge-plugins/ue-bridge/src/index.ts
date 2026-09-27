@@ -37,8 +37,12 @@ function writeBridgeConfig(projectDir: string): string {
       port: EXEC_PORT,
       token: BRIDGE_TOKEN,
     }, null, 2),
-    { encoding: "utf-8", mode: 0o600 },
+    "utf-8",
   );
+  // chmod after the write, not as a mode option: the mode is masked by the
+  // process umask, and on Windows it is not applied at all, so the bearer token
+  // would land world-readable.
+  fs.chmodSync(configFile, 0o600);
   return configFile;
 }
 

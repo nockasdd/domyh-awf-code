@@ -259,55 +259,143 @@ concurrency must be checked, not just assumed.
 Deferred only in the sense that 1.1 and Phase 0 land first. This is the
 highest-severity group.
 
-### 3.1 No authentication on any of the five bridges — VERIFIED
+### 3.1 No authentication on any of the five bridges — VERIFIED, FIXED
 
-| Bridge | Listener | Auth |
-|---|---|---|
-| ghidra | `hsa_ghidra_plugin.py:410` `HttpServer.create` | none |
-| ida | `hsa_ida_plugin.py:1400` | none |
-| ue | `init_unreal.py:62` `ThreadingHTTPServer(('127.0.0.1', 30011))` | none |
-| x64dbg | ZMQ via x64dbg-automate | upstream's, loopback |
-| unity | stdio only | n/a |
+| Bridge | Listener | Auth before | Auth after |
+|---|---|---|---|
+| ghidra | `hsa_ghidra_plugin.py` `HttpServer.create` | none | `HSA_BRIDGE_TOKEN` |
+| ida | `hsa_ida_plugin.py` `ThreadingHTTPServer` | none | `HSA_BRIDGE_TOKEN` |
+| ue | `init_unreal.py` `ThreadingHTTPServer` | none | `HSA_BRIDGE_TOKEN` |
+| unity | `HsaUnityServer.cs` `HttpListener` on 30030 | none | `HSA_BRIDGE_TOKEN` |
+| x64dbg | stdio FastMCP over `X64DbgClient` | n/a | n/a — see below |
 
 Four independent upstream implementations converged on the same contract:
 mandatory bearer token on non-loopback bind, and **refuse to start** when bound
-off-loopback without a token. Ours implements it zero times.
+off-loopback without a token. Ours implemented it zero times.
 
-**Fix:** shared `HSA_BRIDGE_TOKEN`, constant-time compare in every handler,
-refuse a non-loopback bind without a token. Fail closed.
+**x64dbg is not a fifth case.** `x64dbg-bridge/server.py:23-24` is a stdio
+FastMCP server that drives the debugger through `x64dbg_automate.X64DbgClient`;
+it opens no HTTP listener of its own, so there is no socket to put a token on.
+Its risk is the command surface instead — that is 3.3.
+
+**Contract delivered on all four HTTP bridges:**
+
+- Shared `HSA_BRIDGE_TOKEN`, read by the host process and by the bridge process.
+- Constant-time compare — `hmac.compare_digest` in the three Python hosts;
+  a hand-rolled XOR accumulator in C#, because
+  `CryptographicOperations.FixedTimeEquals` is .NET 5.0+ and the Unity plugin
+  targets 2019.4.
+- **Refuse to start** without a token, rather than starting open.
+- 401 before the body is read, and a size cap checked before the body is
+  buffered.
+- `GET /health` stays unauthenticated on all four. It discloses nothing
+  actionable, it keeps instance discovery from needing the token, and on UE it
+  keeps a liveness probe from consuming a Game Thread slot or an exec log line.
+- The bridge re-raises its own setup error instead of folding it into a result
+  dict, so a missing token reaches the agent as a failed call rather than as
+  prose describing a failure.
+
+**The token file, per host.** An editor-side script runs *inside* the host
+process, so `os.environ` there is the editor's environment, not the bridge
+server's. A bare env var would read empty and the server would refuse to start.
+Each host therefore also reads a file the bridge writes, and the environment
+still wins when set:
+
+| Host | File | Written by | Path known how |
+|---|---|---|---|
+| UE | `<project>/Saved/HSA/bridge_config.json` | `ue-bridge/src/index.ts` `writeBridgeConfig` | the project UE is told to deploy into |
+| IDA | `%IDADIR%/plugins/hsa_bridge_token` | `ida-bridge/server.py` `write_bridge_config` | `HSA_IDA_PLUGIN_DIR` |
+| Ghidra | `hsa_bridge_token` beside the script | `ghidra-bridge/server.py` `write_bridge_config` | `__file__`, always known |
+| Unity | `<project>/Library/HsaBridgeConfig.json` | `unity-bridge/src/index.ts` `writeBridgeConfig` | `UNITY_PROJECT_DIR` |
+
+UE's is under `Saved/`, which Unreal keeps out of version control. Unity's is
+under `Library/`, which Unity keeps out of version control. Ghidra's lands in
+the source tree, so it is covered by a `.gitignore` rule — without one, the
+writer drops a live credential into a directory git will happily stage.
+
+IDA and Unity need an explicit path from the operator rather than a guess. The
+bridge cannot infer `%IDADIR%` or a Unity project root reliably, and guessing
+would put the token in the wrong place more often than not, which reads as "auth
+is broken" rather than "path is unset". Both writers decline to write when the
+path is missing and say which variable to set, so the failure names its cause.
+
+**Verification.** Each host was exercised against its real handler with the
+host SDK stubbed, and each refusal-to-start was proven by probing the port and
+getting a connection refusal rather than a response.
+
+| Host | Checks |
+|---|---|
+| UE | no token → `NOT listening -> URLError`; health 200; no/wrong token 401; over cap 413 |
+| IDA | `TOKEN='ida-token' CAP=4096`; health 200 `auth_required = True`; no/wrong token 401; over cap 413; 5 concurrent 0.5s calls in **0.69s** vs **2.50s** serial |
+| Ghidra | health 200 `auth_required = True`; no/wrong token 401; over cap 413 |
+| Unity | no token → `StartCalled=1` and connection refused; health 200 `auth_required=true`; no token 401; wrong token 401; **prefix** token 401; right token 200; 4194305 bytes → 413; env token overrides the config file |
+
+The Unity run is a real `HttpListener` under `dotnet build` / `net8.0`, with the
+file's auth slice copied verbatim and only the route table replaced by a
+sentinel, because `HttpListenerContext` is sealed and cannot be faked.
+
+The token writers were checked separately: both write the token to the expected
+path, and IDA declines rather than guessing when `HSA_IDA_PLUGIN_DIR` is unset.
+That test is what surfaced the two defects below.
+
+The IDA concurrency number is a side effect of the same edit: the plugin had no
+way to stop its server, so one slow `cmd_batch` blocked every other call behind
+it. The Unity prefix case is the one a byte-by-byte `==` would also pass only by
+accident — it is included to show the length check is doing real work.
+
+**Two defects the writer test found, after 3.1 was already pushed:**
+
+1. `mode: 0o600` in the writers' file-creation call does nothing. `os.open`'s
+   mode is masked by the process umask, and on Windows it is not applied at
+   all; the same is true of `fs.writeFileSync`'s `mode`. Measured: the Ghidra
+   token landed at mode `666`. All four writers now `chmod` after the write.
+2. The Ghidra token file is written into the source tree and was not ignored by
+   git. `git status` showed it as untracked, one `git add -A` from being
+   committed. Now covered by a `.gitignore` rule, asserted with
+   `git check-ignore`.
+
+Commits: `d5a0881` (UE), `4b9c8ef` (IDA), `320719a` (Ghidra), `0ae303e` (Unity).
 
 ### 3.2 UE Python executor runs arbitrary code with no auth — VERIFIED, and reassessed
 
-`init_unreal.py:92` — `exec(code, exec_globals)` with full `__builtins__`
-(`:88-91`). Body arrives base64-decoded from `:25`. Any local process can reach
-it.
+`init_unreal.py` — `exec(code, exec_globals)` with full `__builtins__`.
+Body arrives base64-decoded. Before 3.1 any local process could reach it.
 
 **Reassessment of the research agent's recommendation.** The agent proposed
 replacing `exec` with a dispatch table. Running that idea against the actual
 code surfaces two things the agent did not account for:
 
-1. **The liveness probe is itself `exec`.** `ue-bridge/src/index.ts:205` sends
+1. **The liveness probe is itself `exec`.** `ue-bridge/src/index.ts` sent
    `print("pong")` through the same `/execute` endpoint to decide whether the
-   server is up. Replacing `exec` with an action enum breaks this probe — it
+   server was up. Replacing `exec` with an action enum breaks this probe — it
    needs a separate `/health` endpoint that does not execute anything. This is a
    design constraint, not an implementation detail.
 
-2. **`ue_python_status` is `ensurePythonExecutor()`** (`index.ts:292-298`), which
-   *deploys the file* as a side effect (`:236-248`). So "check status" is not
-   read-only. Any redesign must separate the probe from the deploy.
+2. **`ue_python_status` is `ensurePythonExecutor()`**, which *deploys the file*
+   as a side effect. So "check status" is not read-only. Any redesign must
+   separate the probe from the deploy.
 
-Recommended shape, in order:
-- **First:** shared token (3.1). Stops the unauthenticated case outright.
-- **Then:** a closed action enum for the common Unreal operations, with no path
-  that accepts source code.
-- **Keep** `execute_python` as an explicit opt-in: token required, 1MB cap,
-  every call logged. ChiR24 took this same route — they had to drop `exec` too
-  to make the bridge tolerable.
+**Owner decision: keep `exec`, make it auditable** — "Token + giữ exec, có log".
+3.1 is the token. Two of the three supporting conditions landed with it:
+
+- 1MB cap on the code body, refused before the body is read.
+- Every call logged with its outcome and duration.
+
+Both the constraints above were also resolved as part of 3.1: `ensurePythonExecutor`
+now probes `/health` rather than sending `print("pong")` through `/execute`, and
+it reports a mismatch between the server's `auth_required` and the token it
+holds, instead of silently deploying.
+
+**What is still open.** The closed action enum — a wrapper for the common
+`unreal.*` operations, with no path that accepts source code — was not taken.
+It remains the one piece of 3.2 that would reduce capability rather than
+localise risk, and it is the reason `ue_execute_python` is still a raw
+`exec`. Not started.
 
 **Trade-off:** the action enum removes arbitrary Python, which agents currently
 use to reach `unreal.*` APIs with no wrapper. Token-only keeps that capability
-and keeps the risk. The hybrid keeps capability but makes it auditable. This is
-a scope call for the owner, not a technical one — hence the split.
+and keeps the risk. The hybrid keeps capability but makes it auditable. The
+owner chose the last of these.
 
 ### 3.3 x64dbg passes a raw model-supplied command to the debugger — VERIFIED
 

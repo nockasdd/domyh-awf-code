@@ -40,6 +40,34 @@ IDA_HTTP_PORT_RANGE = int(os.environ.get("HSA_IDA_HTTP_PORT_RANGE", "32"))
 IDA_HTTP_PROBE_TIMEOUT = max(0.05, int(os.environ.get("HSA_IDA_PROBE_TIMEOUT_MS", "350")) / 1000)
 IDA_HTTP_SCAN_WORKERS = max(1, int(os.environ.get("HSA_IDA_SCAN_WORKERS", "32")))
 IDA_AUTODISCOVER_ON_CALL = os.environ.get("HSA_IDA_AUTODISCOVER_ON_CALL", "1").lower() not in {"0", "false", "no"}
+IDA_PLUGIN_DIR = os.environ.get("HSA_IDA_PLUGIN_DIR", "").strip()
+
+
+def write_bridge_config() -> str:
+    """Drop the token where the plugin can read it.
+
+    IDA's launcher does not reliably forward a shell environment, so the plugin
+    reads HSA_BRIDGE_TOKEN and then this file. Writing it is a no-op when the
+    plugin directory is unknown, which is why HSA_IDA_PLUGIN_DIR is an override
+    rather than a guess: the plugin lives in %IDADIR%/plugins, and guessing at
+    IDA's install layout from here would be wrong more often than it was right.
+    """
+    if not BRIDGE_TOKEN or not IDA_PLUGIN_DIR:
+        return ""
+    target = os.path.join(IDA_PLUGIN_DIR, "hsa_bridge_token")
+    try:
+        os.makedirs(IDA_PLUGIN_DIR, exist_ok=True)
+        with open(target, "w") as fh:
+            fh.write(BRIDGE_TOKEN)
+        # chmod after the write, not as a mode argument: os.open's mode is masked
+        # by the process umask, and on Windows it is not applied at all, so the
+        # bearer token would land world-readable.
+        os.chmod(target, 0o600)
+        return target
+    except Exception:
+        # A bridge that cannot write the file still works for anyone who did
+        # export the token, so this is reported, not fatal.
+        return ""
 
 
 def _port_candidates(params: dict | None = None) -> List[int]:
@@ -1409,6 +1437,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="HSA IDA MCP Bridge Server")
     parser.add_argument("--headless", type=str, help="Path to binary for idalib headless mode (IDA 9.x+ only)")
     args = parser.parse_args()
+
+    _token_file = write_bridge_config()
+    if BRIDGE_TOKEN and not _token_file:
+        print(
+            "HSA bridge: could not write %IDADIR%/plugins/hsa_bridge_token. IDA may not see "
+            "HSA_BRIDGE_TOKEN unless it is exported in the environment IDA launches from."
+        )
 
     if args.headless:
         if not compat.init_idalib_if_headless(args.headless):

@@ -1,5 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { z } from "zod";
 
 const server = new McpServer({
@@ -9,6 +11,30 @@ const server = new McpServer({
 
 const UNITY_HTTP_BASE = process.env.UNITY_HTTP_URL ?? "http://127.0.0.1:30030";
 const BRIDGE_TOKEN = process.env.HSA_BRIDGE_TOKEN ?? "";
+const UNITY_PROJECT_DIR = process.env.UNITY_PROJECT_DIR ?? "";
+
+/**
+ * The editor reads the token from <project>/Library/HsaBridgeConfig.json, which
+ * it needs because the Unity process does not share this bridge's environment.
+ * The project directory has to be given, not guessed: Library/ is one level up
+ * from Assets/, and no fixed layout covers the Windows, macOS and Linux editors.
+ */
+function writeBridgeConfig(): string {
+  if (!BRIDGE_TOKEN || !UNITY_PROJECT_DIR) return "";
+  const configFile = path.join(UNITY_PROJECT_DIR, "Library", "HsaBridgeConfig.json");
+  try {
+    fs.mkdirSync(path.dirname(configFile), { recursive: true });
+    fs.writeFileSync(configFile, JSON.stringify({ token: BRIDGE_TOKEN }, null, 2), "utf-8");
+    // chmod after the write, not as a mode option: the mode is masked by the
+    // process umask, and on Windows it is not applied at all, so the bearer token
+    // would land world-readable.
+    fs.chmodSync(configFile, 0o600);
+    return configFile;
+  } catch (e: any) {
+    console.error(`[unity-bridge] Could not write ${configFile}: ${e.message}`);
+    return "";
+  }
+}
 
 /**
  * The editor plugin refuses to start without a token: /create-script writes
@@ -210,6 +236,15 @@ tool("unity_recompile", "Trigger script recompilation", {}, "/recompile");
 // ── Entry ─────────────────────────────────────────────────
 
 async function main() {
+  if (BRIDGE_TOKEN) {
+    if (!writeBridgeConfig()) {
+      console.error(
+        "[unity-bridge] Unity may not see HSA_BRIDGE_TOKEN. Set UNITY_PROJECT_DIR to the " +
+          "project root so the config lands in <project>/Library/HsaBridgeConfig.json, " +
+          "or export the token in the environment Unity launches from.",
+      );
+    }
+  }
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
