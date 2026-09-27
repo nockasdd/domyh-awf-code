@@ -480,6 +480,198 @@ def x64_search_command(command: str, pid: int = 0, session_id: str = "") -> str:
         raise BridgeError(str(e)) from e
 
 
+# ── Memory & Disassembly Tools ────────────────────────────────
+
+# The dispatcher screens the command string before it reaches the bridge, but
+# the bridge is a separate process and cannot assume that is the only caller.
+# This cap is the backstop for a request that would otherwise read a whole
+# region in one call.
+MAX_READ_SIZE = 4096
+
+
+def _resolve_address(client: X64DbgClient, address: str) -> int:
+    """Turn '0x401000', '401000' or 'kernel32!MessageBoxA' into an integer.
+
+    eval_sync is the only resolver the client exposes, and it is also what makes
+    symbol names work — a plain int() would accept only hex and turn every
+    symbol into a ValueError.
+    """
+    if not address or not str(address).strip():
+        raise BridgeError("address is required")
+    resolved, ok = client.eval_sync(str(address).strip())
+    if not ok or not resolved:
+        raise BridgeError(
+            f"Could not resolve address '{address}'. Use hex ('0x401000'), a bare "
+            "hex value, or a symbol name x64dbg can evaluate."
+        )
+    return int(resolved)
+
+
+@mcp.tool()
+def x64_read_memory(address: str, size: int = 64, pid: int = 0, session_id: str = "") -> str:
+    """Read raw bytes from the debuggee's memory.
+
+    Args:
+        address: Hex address, bare hex value, or a symbol name
+        size: Number of bytes to read (default 64, max 4096)
+    """
+    try:
+        if size <= 0:
+            raise BridgeError(f"size must be positive, got {size}")
+        if size > MAX_READ_SIZE:
+            raise BridgeError(
+                f"size {size} exceeds the {MAX_READ_SIZE}-byte cap. Read a range in "
+                "steps, or use x64_find_pattern to locate the address first."
+            )
+        client = ensure_attached(resolve_pid(pid, session_id))
+        addr = _resolve_address(client, address)
+        data = client.read_memory(addr, size)
+        if not data:
+            raise BridgeError(f"No readable memory at {address} ({hex(addr)})")
+        return (
+            f"### Memory at {address} ({hex(addr)}), {len(data)} bytes\n\n"
+            f"- hex: `{data.hex(' ')}`\n"
+            f"- ascii: `{data.decode('ascii', errors='replace')}`"
+        )
+    except BridgeError:
+        raise
+    except Exception as e:
+        raise BridgeError(str(e)) from e
+
+
+@mcp.tool()
+def x64_write_memory(address: str, hex_bytes: str, pid: int = 0, session_id: str = "") -> str:
+    """Write raw bytes into the debuggee's memory.
+
+    Args:
+        address: Hex address, bare hex value, or a symbol name
+        hex_bytes: Bytes to write as hex, spaces ignored (e.g. '90 C3' or '90C3')
+    """
+    try:
+        if not hex_bytes or not hex_bytes.strip():
+            raise BridgeError("hex_bytes is required")
+        try:
+            payload = bytes.fromhex(hex_bytes.replace(" ", "").replace("0x", ""))
+        except ValueError as e:
+            raise BridgeError(f"hex_bytes is not valid hex: {e}") from e
+        if not payload:
+            raise BridgeError("hex_bytes decoded to zero bytes")
+
+        client = ensure_attached(resolve_pid(pid, session_id))
+        addr = _resolve_address(client, address)
+        ok = client.write_memory(addr, payload)
+        if not ok:
+            raise BridgeError(f"x64dbg rejected the write to {address} ({hex(addr)})")
+        return (
+            f"### Wrote {len(payload)} byte(s) to {address} ({hex(addr)})\n\n"
+            f"- hex: `{payload.hex(' ')}`"
+        )
+    except BridgeError:
+        raise
+    except Exception as e:
+        raise BridgeError(str(e)) from e
+
+
+@mcp.tool()
+def x64_disassemble(address: str, count: int = 1, pid: int = 0, session_id: str = "") -> str:
+    """Disassemble instructions starting at an address.
+
+    Args:
+        address: Hex address, bare hex value, or a symbol name
+        count: Number of instructions to decode (default 1, max 64)
+    """
+    try:
+        if count <= 0:
+            raise BridgeError(f"count must be positive, got {count}")
+        if count > 64:
+            raise BridgeError(f"count {count} exceeds the 64-instruction cap.")
+        client = ensure_attached(resolve_pid(pid, session_id))
+        addr = _resolve_address(client, address)
+
+        lines = []
+        cursor = addr
+        for _ in range(count):
+            instr = client.disassemble_at(cursor)
+            if instr is None:
+                if not lines:
+                    raise BridgeError(
+                        f"x64dbg could not disassemble at {address} ({hex(addr)}). "
+                        "The address may be unmapped or not executable."
+                    )
+                lines.append(f"- {hex(cursor)}: <end of decodable range>")
+                break
+            args = " ".join(arg.mnemonic for arg in instr.arg)
+            lines.append(f"- {hex(cursor)}: {instr.instruction} {args}".rstrip())
+            # A zero-length instruction would make this loop spin forever.
+            if instr.instr_size <= 0:
+                lines.append(f"- {hex(cursor)}: <zero-length instruction, stopped>")
+                break
+            cursor += instr.instr_size
+
+        return f"### Disassembly at {address} ({hex(addr)})\n\n" + "\n".join(lines)
+    except BridgeError:
+        raise
+    except Exception as e:
+        raise BridgeError(str(e)) from e
+
+
+# get_breakpoints takes one BreakpointType per call, and BpNone is 0 — asking
+# for it returns nothing while still looking like a valid request, so "all" is
+# an explicit list of the three types this tool exposes.
+BP_TYPE_FLAGS = {
+    "bp_type_all": ("BpNormal", "BpHardware", "BpMemory"),
+    "bp_type_normal": ("BpNormal",),
+    "bp_type_hardware": ("BpHardware",),
+    "bp_type_memory": ("BpMemory",),
+}
+
+
+@mcp.tool()
+def x64_list_breakpoints(bp_type: str = "bp_type_all", pid: int = 0, session_id: str = "") -> str:
+    """List the breakpoints set in the debugged process.
+
+    Args:
+        bp_type: One of 'bp_type_all', 'bp_type_normal', 'bp_type_hardware', 'bp_type_memory'
+    """
+    try:
+        if bp_type not in BP_TYPE_FLAGS:
+            raise BridgeError(
+                f"Unknown bp_type '{bp_type}'. Use one of: {', '.join(BP_TYPE_FLAGS)}."
+            )
+
+        # Not a top-level export of x64dbg_automate, so it comes from models.
+        from x64dbg_automate.models import BreakpointType
+
+        client = ensure_attached(resolve_pid(pid, session_id))
+
+        entries = []
+        for flag_name in BP_TYPE_FLAGS[bp_type]:
+            for bp in client.get_breakpoints(getattr(BreakpointType, flag_name)):
+                entries.append({
+                    "address": hex(bp.addr),
+                    "type": flag_name.replace("Bp", "").lower(),
+                    "enabled": bp.enabled,
+                    "active": bp.active,
+                    "hit_count": bp.hitCount,
+                    "name": bp.name,
+                    "module": bp.mod,
+                    "condition": bp.breakCondition,
+                    "command": bp.commandText,
+                })
+        entries.sort(key=lambda e: int(e["address"], 16))
+
+        return json.dumps({
+            "ok": True,
+            "bp_type": bp_type,
+            "count": len(entries),
+            "breakpoints": entries,
+        }, indent=2, default=str)
+    except BridgeError:
+        raise
+    except Exception as e:
+        raise BridgeError(str(e)) from e
+
+
 # ── Entry Point ───────────────────────────────────────────────
 
 if __name__ == "__main__":
