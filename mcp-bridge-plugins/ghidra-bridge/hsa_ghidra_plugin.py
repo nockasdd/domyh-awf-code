@@ -10,7 +10,10 @@ import os
 import threading
 import traceback
 
+from ghidra.app.plugin import GhidraPlugin
+from ghidra.framework.plugintool.util import PluginException
 from java.net import InetSocketAddress
+from java.util.concurrent import Executors
 from com.sun.net.httpserver import HttpServer, HttpHandler
 
 PLUGIN_NAME = "HSA MCP Bridge"
@@ -288,7 +291,32 @@ def cmd_create_struct(params):
 
 
 def cmd_apply_data_type(params):
-    return _json_ok({"ok": False, "error": "Address data type application is not yet implemented"})
+    program = _current_program()
+    if program is None:
+        return _json_err("No active program")
+    type_name = params.get("type_name")
+    if not type_name:
+        return _json_err("Missing type_name")
+    dtm = program.getDataTypeManager()
+    dt = dtm.getDataType(type_name)
+    if dt is None:
+        return _json_err("Data type not found: %s" % type_name)
+    ea = _to_addr(params.get("address"))
+    addr = program.getAddressFactory().getAddress("%x" % ea)
+    length = int(params.get("length", 0)) or dt.getLength()
+    try:
+        listing = program.getListing()
+        listing.clearCodeUnits(addr, addr.add(max(1, length) - 1), False)
+        created = listing.createData(addr, dt)
+        if created is None:
+            return _json_err("Ghidra refused the data type at %s" % hex(ea))
+        return _json_ok({
+            "address": hex(ea),
+            "type_name": type_name,
+            "length": created.getLength(),
+        })
+    except Exception as e:
+        return _json_err(str(e))
 
 
 def cmd_create_class_layout(params):
@@ -354,18 +382,37 @@ class _Handler(HttpHandler):
             exchange.getResponseBody().close()
 
 
-class HsaGhidraBridgePlugin(object):
-    _server = None
-    _thread = None
+class HsaGhidraBridgePlugin(GhidraPlugin):
+    """Ghidra loads this through the plugin manager, which instantiates the
+    class named in Module.manifest and drives initialize()/dispose()."""
+
+    def __init__(self):
+        super(HsaGhidraBridgePlugin, self).__init__()
+        self._server = None
+        self._thread = None
+
+    def initialize(self):
+        """Called by Ghidra once the tool is available. Starting the listener
+        here rather than on demand means the agent finds the bridge as soon as
+        Ghidra is up."""
+        self.start()
+
+    def dispose(self):
+        self.stop()
 
     def start(self):
         global ACTIVE_HTTP_PORT
+        if self._server is not None:
+            return
         last_error = None
         for port in range(HTTP_PORT, HTTP_PORT + max(1, HTTP_PORT_RANGE)):
             try:
                 server = HttpServer.create(InetSocketAddress(HTTP_HOST, port), 0)
                 server.createContext("/", _Handler(server))
-                server.setExecutor(None)
+                # A null executor serves requests on the dispatcher thread, so one
+                # 120s decompile blocks every other call. Ghidra decompiles are
+                # slow by nature, so the bridge has to stay concurrent.
+                server.setExecutor(Executors.newFixedThreadPool(4))
                 self._server = server
                 ACTIVE_HTTP_PORT = port
                 break
@@ -373,15 +420,24 @@ class HsaGhidraBridgePlugin(object):
                 last_error = e
                 self._server = None
         if self._server is None:
-            raise last_error
+            # PluginException's two-argument form wants a Python BaseException as
+            # the cause, and the failures here are Java BindExceptions, so the
+            # last error has to be folded into the message instead.
+            raise PluginException(
+                "HSA bridge: no free port in %d-%d (last error: %s)"
+                % (HTTP_PORT, HTTP_PORT + HTTP_PORT_RANGE - 1, last_error)
+            )
         self._thread = threading.Thread(target=self._server.start)
-        self._thread.setDaemon(True)
+        # The daemon flag is a property on both Jython 2.7 and Python 3, whereas
+        # setDaemon() was removed in 3.10, so this form works either way.
+        self._thread.daemon = True
         self._thread.start()
 
     def stop(self):
         if self._server is not None:
             self._server.stop(0)
             self._server = None
+            self._thread = None
 
 
 PLUGIN = HsaGhidraBridgePlugin()
