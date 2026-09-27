@@ -11,7 +11,8 @@
     "test": "python test_bridge_logic.py",
     "test:envelope": "node test/envelope.test.mjs",
     "test:e2e": "node test/e2e.mjs",
-    "test:handover": "node test/handover.mjs"
+    "test:handover": "node test/handover.mjs",
+    "test:late": "node test/late_addon.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.1.2",

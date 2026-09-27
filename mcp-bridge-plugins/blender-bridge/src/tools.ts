@@ -205,6 +205,15 @@ export class BlenderTools {
     const rows = (all.result as { objects: ObjectSummary[]; total_items: number }).objects;
     const total = (all.result as { total_items: number }).total_items;
 
+    // The object list above already proves an add-on is answering, so an empty
+    // context here means this Blender arrived after the startup handshake gave
+    // up — not that there is nothing to report. Filling it on the read is what
+    // keeps the version and the scene from staying "unknown" beside a real
+    // object list, and costs one extra call only on the first read of a session.
+    if (this.version === null) {
+      await this.primeContext();
+    }
+
     const info = {
       blender: this.blenderVersion(),
       scene: this.sceneName(),

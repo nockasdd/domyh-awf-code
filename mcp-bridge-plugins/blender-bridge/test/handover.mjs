@@ -16,6 +16,8 @@ import { join } from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import { freePort } from './harness.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BRIDGE_DIR = join(HERE, '..');
 const PYTHON = process.env.HSA_TEST_PYTHON || 'python';
@@ -51,7 +53,12 @@ async function main() {
   const configPath = join(home, '.nockdev', 'blender-bridge.json');
   const env = { ...process.env, HSA_NOCKDEV_HOME: home, HSA_DASHBOARD: 'false' };
   delete env.HSA_BLENDER_TOKEN;
-  delete env.HSA_BLENDER_PORT;
+  // The point of this suite is that the bridge picks a port of its own and
+  // publishes it, so the port cannot simply be left to the default: 28782 is
+  // where a real Blender is listening, and the bridge would handshake with the
+  // user's open session instead of its own stand-in, which answers
+  // "unauthorized". A free port keeps the published value generated here.
+  env.HSA_BLENDER_PORT = String(await freePort());
 
   // The add-on, with no token of its own — it has to find one.
   const blender = spawn(PYTHON, [join(HERE, 'fake_blender.py'), '0', '', '5'], {

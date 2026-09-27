@@ -9,103 +9,18 @@
  */
 
 import { spawn } from 'child_process';
-import { createServer } from 'net';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+
+import { McpClient, call, counter, freePort, init, parse } from './harness.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BRIDGE_DIR = join(HERE, '..');
 const PYTHON = process.env.HSA_TEST_PYTHON || 'python';
 
-function freePort() {
-  return new Promise((resolve, reject) => {
-    const srv = createServer();
-    srv.listen(0, '127.0.0.1', () => {
-      const { port } = srv.address();
-      srv.close(() => resolve(port));
-    });
-    srv.on('error', reject);
-  });
-}
-
-class McpClient {
-  constructor(child) {
-    this.child = child;
-    this.buffer = '';
-    this.nextId = 1;
-    this.pending = new Map();
-    child.stdout.on('data', (chunk) => this.onData(chunk));
-    child.stderr.on('data', (chunk) => process.stderr.write(`[bridge] ${chunk}`));
-  }
-
-  onData(chunk) {
-    this.buffer += chunk.toString('utf8');
-    for (;;) {
-      const nl = this.buffer.indexOf('\n');
-      if (nl === -1) return;
-      const line = this.buffer.slice(0, nl).trim();
-      this.buffer = this.buffer.slice(nl + 1);
-      if (!line) continue;
-      const msg = JSON.parse(line);
-      const entry = this.pending.get(msg.id);
-      if (entry) {
-        this.pending.delete(msg.id);
-        entry(msg);
-      }
-    }
-  }
-
-  request(method, params) {
-    const id = this.nextId++;
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        this.pending.delete(id);
-        reject(new Error(`${method} timed out`));
-      }, 20000);
-      this.pending.set(id, (msg) => {
-        clearTimeout(timer);
-        if (msg.error) reject(new Error(JSON.stringify(msg.error)));
-        else resolve(msg.result);
-      });
-      this.child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', id, method, params })}\n`);
-    });
-  }
-
-  notify(method, params) {
-    this.child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', method, params })}\n`);
-  }
-}
-
-function init(client) {
-  client.notify('notifications/initialized');
-  return client.request('initialize', {
-    protocolVersion: '2024-11-05',
-    capabilities: {},
-    clientInfo: { name: 'hsa-e2e', version: '1.0.0' },
-  });
-}
-
-function call(client, name, args = {}) {
-  return client.request('tools/call', { name, arguments: args });
-}
-
-function parse(result) {
-  return JSON.parse(result.content[0].text);
-}
-
-let passed = 0;
-let failed = 0;
-function check(name, condition, detail) {
-  if (condition) {
-    passed += 1;
-    console.log(`  ok   ${name}`);
-  } else {
-    failed += 1;
-    console.log(`  FAIL ${name}${detail ? ` — ${JSON.stringify(detail)}` : ''}`);
-  }
-}
-
 async function main() {
+  const t = counter();
+  const check = t.check;
   const port = await freePort();
   const token = 'e2e-token-abc123';
 
@@ -182,6 +97,17 @@ async function main() {
     check('a missing object is an error, not empty success', missing.status === 'error', missing);
     check('the error names the object', String(missing.meta?.note).includes('nope'), missing.meta);
 
+    // A dead add-on must not read as a live scene report. The version, scene
+    // and frame are cached at startup, so a Blender that closed since then used
+    // to leave get_scene_info answering "unknown" and an object list from
+    // nothing — a scene report for a scene that no longer exists.
+    console.log('a closed blender');
+    blender.kill();
+    await new Promise((r) => setTimeout(r, 500));
+    const afterDeath = parse(await call(client, 'blender_get_scene_info'));
+    check('a closed blender is an error, not a scene report', afterDeath.status === 'error', afterDeath);
+    check('the error says the add-on is gone', /add-on|connect|listening|ECONNREFUSED/i.test(String(afterDeath.meta?.note)), afterDeath.meta);
+
     const unknown = await call(client, 'blender_not_a_tool');
     check('an unknown tool returns an error envelope', parse(unknown).status === 'error');
   } finally {
@@ -190,11 +116,11 @@ async function main() {
     blender.kill();
   }
 
-  console.log(`\n${passed} passed, ${failed} failed`);
+  console.log(`\n${t.summary()}`);
   // exitCode rather than process.exit(): the latter cuts the process off while
   // stdout is still draining, so the summary can be lost and the run reported
   // as passing or failing at random depending on how the output was piped.
-  process.exitCode = failed === 0 ? 0 : 1;
+  process.exitCode = t.failed === 0 ? 0 : 1;
 }
 
 main().catch((err) => {

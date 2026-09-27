@@ -23,8 +23,18 @@ import { DEFAULT_BYTE_BUDGET, DEFAULT_PAGE_LIMIT, errorEnvelope } from './envelo
 
 const VERSION = '1.0.0';
 const NAME = 'blender-hsa-bridge';
-// Two poll cycles of the add-on's autostart timer, plus a margin.
+// How long the bridge keeps trying for a first connection before it starts
+// serving. A Blender the IDE launched has no way to click "Start", and the
+// add-on polls for the config file on its own — but that poll is in Blender,
+// and Blender may not be open yet, or may need the user to enable the add-on,
+// which takes as long as it takes. Six seconds is enough to cover a Blender
+// that is already running and nothing else, so the bound is the startup
+// complaint's, not the handshake's.
 const HANDSHAKE_RETRY_MS = 6_000;
+// After that, the port is polled for the life of the process. The context is
+// only ever read once, so a Blender that arrives later would otherwise leave
+// it empty permanently and every scene report would call it "unknown".
+const CONNECTION_POLL_MS = 2_000;
 
 const PAGE_SCHEMA = {
   offset: {
@@ -116,6 +126,35 @@ function content(value: unknown) {
   return { content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] };
 }
 
+/**
+ * Keep trying after the startup wait has run out.
+ *
+ * The context cache is filled once, so a bridge that gave up and served anyway
+ * reported "unknown" for the version, the scene and the frame from then on —
+ * next to a real object list, which makes the header look wrong rather than
+ * the connection. Polling is what turns "no Blender at startup" into "no
+ * Blender yet".
+ *
+ * Deliberately not unref'd: an MCP server that exits while a Blender is still
+ * to be launched is a tool that never appears in the client's list again.
+ */
+function watchForBlender(tools: BlenderTools): void {
+  const timer = setInterval(() => {
+    tools.primeContext().then(
+      () => {
+        clearInterval(timer);
+        process.stderr.write(
+          `[blender-bridge] Blender ${tools.blenderVersion()} on "${tools.sceneName()}" — context loaded\n`,
+        );
+      },
+      // Expected for as long as no Blender is open, so it stays off stderr.
+      // A real failure — the port taken, the token refused — surfaces on the
+      // next call, which is the one that has to report it.
+      () => {},
+    );
+  }, CONNECTION_POLL_MS);
+}
+
 async function main(): Promise<void> {
   const config = resolveConfig();
   const path = publishConfig(config);
@@ -150,6 +189,7 @@ async function main(): Promise<void> {
       `[blender-bridge] no add-on on 127.0.0.1:${config.port}: ${(lastError as Error).message}\n` +
         '[blender-bridge] install src/addon/hsa_blender_addon.py, or set HSA_BLENDER_TOKEN to the add-on\'s token\n',
     );
+    watchForBlender(tools);
   }
 
   const server = new Server(
