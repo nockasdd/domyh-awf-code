@@ -17,6 +17,31 @@ const restClient = new UnrealRestClient();
 let _pythonExecutorReady = false;
 const EXECUTOR_OBJECT_PATH = "/Script/PythonScriptPlugin.Default__HsaPythonExecutor";
 
+// The executor runs inside the editor process, so HSA_BRIDGE_TOKEN on this
+// server is not visible to it — the token has to be written to disk beside the
+// project, in Saved/, which Unreal keeps out of version control. See
+// init_unreal.py:_load_bridge_config.
+const EXEC_HOST = process.env.HSA_UE_BRIDGE_HOST || "127.0.0.1";
+const EXEC_PORT = Number(process.env.HSA_UE_BRIDGE_PORT || 30011);
+const BRIDGE_TOKEN = process.env.HSA_BRIDGE_TOKEN || "";
+const EXEC_URL = `http://${EXEC_HOST}:${EXEC_PORT}`;
+
+function writeBridgeConfig(projectDir: string): string {
+  const configDir = path.join(projectDir, "Saved", "HSA");
+  fs.mkdirSync(configDir, { recursive: true });
+  const configFile = path.join(configDir, "bridge_config.json");
+  fs.writeFileSync(
+    configFile,
+    JSON.stringify({
+      host: EXEC_HOST,
+      port: EXEC_PORT,
+      token: BRIDGE_TOKEN,
+    }, null, 2),
+    { encoding: "utf-8", mode: 0o600 },
+  );
+  return configFile;
+}
+
 function wrapTool(
   name: string,
   description: string,
@@ -192,25 +217,29 @@ wrapTool("ue_batch",
 // ══════════════════════════════════════════════════════════
 
 /**
- * Ensure the Native Python Server is deployed and running on port 30011.
+ * Ensure the Native Python Server is deployed and running.
  * Uses KismetSystemLibrary to find the project and auto-creates init_unreal.py.
  */
 async function ensurePythonExecutor(): Promise<{ ready: boolean; message: string }> {
-  // Step 1: Check if Native HTTP Server is already running on port 30011
-  // Use a generous timeout — UE Game Thread may be busy
+  // Step 1: Liveness. /health is unauthenticated and does not execute, so a
+  // probe no longer occupies a Game Thread slot or shows up in the exec log.
   try {
-    const res = await fetch("http://127.0.0.1:30011/execute", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code_base64: Buffer.from('print("pong")').toString("base64") }),
-      signal: AbortSignal.timeout(5000),
+    const res = await fetch(`${EXEC_URL}/health`, {
+      signal: AbortSignal.timeout(2000),
     });
     if (res.ok) {
+      const health = await res.json();
+      if (health.auth_required && !BRIDGE_TOKEN) {
+        return {
+          ready: false,
+          message: "UE Python server is running with auth enabled, but HSA_BRIDGE_TOKEN is unset on this bridge. Set the same token in both places and restart the editor.",
+        };
+      }
       _pythonExecutorReady = true;
-      return { ready: true, message: "Native Python Server is running on port 30011." };
+      return { ready: true, message: `Native Python Server is running on port ${EXEC_PORT}.` };
     }
   } catch {
-    // Not listening or timeout — fall through to deploy
+    // Not listening — fall through to deploy
   }
 
   // Step 2: Server not running → deploy init_unreal.py into UE project
@@ -224,6 +253,13 @@ async function ensurePythonExecutor(): Promise<{ ready: boolean; message: string
     const projectDir = projResult?.ReturnValue;
     if (!projectDir) {
       return { ready: false, message: "Could not determine UE project directory. Is Remote Control running?" };
+    }
+
+    if (!BRIDGE_TOKEN) {
+      return {
+        ready: false,
+        message: "HSA_BRIDGE_TOKEN is not set. The executor refuses to start without it, because anything local could otherwise run arbitrary Python in the editor.",
+      };
     }
 
     // Create Content/Python directory
@@ -246,10 +282,11 @@ async function ensurePythonExecutor(): Promise<{ ready: boolean; message: string
     }
 
     fs.copyFileSync(sourceFile, targetFile);
+    const configFile = writeBridgeConfig(projectDir);
 
     return {
       ready: false,
-      message: `File deployed to ${targetFile}, but could not auto-execute. Please enable "Python Editor Script Plugin" in UE Editor and restart. The script will auto-load on next startup.`,
+      message: `File deployed to ${targetFile} (config: ${configFile}), but could not auto-execute. Please enable "Python Editor Script Plugin" in UE Editor and restart. The script will auto-load on next startup.`,
     };
   } catch (e: any) {
     return { ready: false, message: `Auto-setup failed: ${e.message}` };
@@ -272,16 +309,23 @@ wrapTool("ue_execute_python",
     const codeBase64 = Buffer.from(code, "utf-8").toString("base64");
 
     try {
-      const response = await fetch("http://127.0.0.1:30011/execute", {
+      const response = await fetch(`${EXEC_URL}/execute`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${BRIDGE_TOKEN}`,
         },
         body: JSON.stringify({ code_base64: codeBase64 }),
         signal: AbortSignal.timeout(60000)
       });
-      
+
       const responseData = await response.json();
+      if (response.status === 401) {
+        return {
+          ok: false,
+          error: "UE Python server rejected the token. HSA_BRIDGE_TOKEN must be identical on the bridge and in the UE project (Saved/HSA/bridge_config.json).",
+        };
+      }
       return responseData;
     } catch (e: any) {
       return { ok: false, error: `Failed to connect to UE Python Server: ${e.message}` };
