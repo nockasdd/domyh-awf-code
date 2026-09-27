@@ -19,44 +19,76 @@ description: Tạo, sửa, debug game tự động qua Unity/UE MCP bridge
 | R4 | Default: New Input System + URP for Unity (GCS_004/005) | Convention |
 | R5 | Max 5 debug loop iterations (GCS_006) | Safety |
 
+> Rules source: `.agent/rules/modules/game-editor-safety.yaml`
+
 ---
 
-## GAME FLOW (6 Steps)
+## STEP 0: PREFLIGHT — pick a branch, do not assume
 
-1. **STEP 0: PREREQUISITES**
-   - `hsa_search(action:"skills", query:"game development")` → Load skill
-   - `hsa_detect(action:"stack")` → Detect Unity/UE project
-   - Verify engine editor is OPEN
-   - `hsa_bridge({target:'unity|ue', action:'health_check'})` → Confirm bridge
+Run this **first**, every time. A hard failure here is cheaper than a wrong assumption.
 
-2. **STEP 1: UNDERSTAND INTENT**
-   - Parse user request → Determine action type:
-     - **CREATE**: New game from description
-     - **MODIFY**: Change existing game
-     - **DEBUG**: Fix bugs in game
-   - For CREATE: Identify genre → Load from `data/genres.yaml`
+```
+1. hsa_detect(action:"stack")                     → engine + project type
+2. Glob: *.unity | *.uproject | project.godot | ProjectSettings/ProjectVersion.txt
+3. hsa_bridge({target:'unity|ue', action:'health_check'})   (GCS_001)
+```
 
-3. **STEP 2: GENERATE GDD** (CREATE only)
-   - Parse user prompt for: genre, mechanics, art style, platform
+| Detected | Editor reachable | Route |
+|:---------|:-----------------|:------|
+| Unity project | yes | **A — Adopting existing project** |
+| Unity project | no | **B — User must open Editor** |
+| Unreal project | yes | **A** |
+| Unreal project | no | **B** |
+| Godot project | n/a | **A** (file-based; use `godot --headless`) |
+| Nothing | — | **C — No project yet** |
+
+**A — Adopt.** Read `data/gdd-schema.md`, then MODIFY path.
+**B — Blocked.** Stop. Tell the user exactly:
+> "Found a `<engine>` project at `<path>`, but the Editor is not running.
+> Open it and load the HSA bridge plugin, then re-run. Bridge listens on
+> `<port>` — I need it to read and write the scene."
+
+Do not scaffold a project by hand. Unity and Unreal projects are editor-generated
+and partly binary; a hand-written one is broken in ways that only surface later.
+
+**C — No project.** The user must create it first — Unity Hub or Epic launcher.
+Then re-run `/game`. Route creative ideation (no project, no engine named) to
+`/game-start`, not here.
+
+> There is no WebSocket transport. Unity is stdio MCP → HTTP 30030;
+> UE is stdio MCP → HTTP 30010 (Remote Control) + 30011 (Python executor).
+
+---
+
+## GAME FLOW (5 Steps, after preflight)
+
+1. **STEP 1: UNDERSTAND INTENT**
+   - Parse request → action type: **CREATE** | **MODIFY** | **DEBUG**
+   - For CREATE: identify genre → load from `data/genres.yaml`
+
+2. **STEP 2: GENERATE GDD** (CREATE only)
+   - Parse prompt for: genre, mechanics, art style, platform
    - Generate `GDD.json` from genre template + user requirements
    - Present GDD to user for approval
-   - ⛔ STOP and wait for GDD approval before proceeding
+   - ⛔ STOP and wait for approval before proceeding
 
-4. **STEP 3: SCAFFOLD**
-   - CREATE: Create scene objects + manager scripts from GDD
-   - MODIFY: Load existing project structure via bridge
-   - DEBUG: Read current logs and scene state
+3. **STEP 3: SCAFFOLD**
+   - CREATE: create scene objects + manager scripts from GDD
+   - MODIFY: load existing project structure via bridge
+   - DEBUG: read current logs and scene state
    - Use patterns from `data/patterns.yaml` for script generation
 
-5. **STEP 4: BUILD & DEBUG LOOP**
+4. **STEP 4: BUILD & DEBUG LOOP**
    ```
    compile_scripts() → check_logs() → fix_errors() → verify()
-   Repeat max 5 times (rule GCS_006)
+   Repeat max 5 times (GCS_006)
    Match errors against data/gotchas.yaml for auto-fixes
    ```
 
-6. **STEP 5: VERIFY & PERSIST**
-   - Visual verification (screenshot if available)
+5. **STEP 5: VERIFY & PERSIST**
+   - **Visual verification is not optional.** Launch play mode, capture the
+     viewport, look at it. A passing compile proves the code loaded; it does
+     not prove the game is playable. See `references/run-and-observe.md`.
    - Summary: files created/modified, errors fixed, remaining issues
    - `hsa_session({action:'persist', task_summary:'Game: [action] [game_name]'})`
 
@@ -117,7 +149,7 @@ ue_search_assets(class,filter) → Find assets
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Game compiles without errors? Visual check passed?
 2. **PERSIST** (if HSA available):

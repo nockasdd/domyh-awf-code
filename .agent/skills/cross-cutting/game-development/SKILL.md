@@ -57,7 +57,10 @@ Task → What game development action?
 
 **NOT for**: Web apps (→ react/nextjs), mobile apps (→ flutter/react-native), 3D art creation (needs artist)
 
-**Prerequisites**: Unity Editor or UE Editor must be OPEN with HSA MCP bridge running.
+**Starting point**: If the user has no project, or only an idea, route to
+`/game-start` — it detects state and tells them exactly what to create. Do not
+assume an Editor is already open; check with `hsa_bridge({action:'health_check'})`.
+Godot needs neither an Editor nor a bridge.
 
 ---
 
@@ -110,18 +113,22 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 ```
 1. SCAFFOLD  → Create GameObjects/Actors from GDD
 2. CODE      → Generate scripts from patterns.yaml
-3. COMPILE   → unity_compile_scripts / ue build
-4. LOG CHECK → Parse compilation errors + runtime logs
-5. FIX       → Auto-fix common errors (see gotchas.yaml)
-6. VERIFY    → Visual check (screenshot if available)
-7. REPEAT    → Max 5 iterations (rule GCS_006)
+3. COMPILE   → unity_recompile() / UE build
+4. LOG CHECK → unity_get_logs() + Output Log
+5. FIX       → Match errors against gotchas.yaml
+6. RUN & LOOK → play mode, capture viewport, actually look at it
+                (see references/run-and-observe.md)
+7. REPEAT    → Max 5 iterations (GCS_006)
 ```
+
+> Step 6 is not optional. Steps 1–5 passing tells you the code loads, not that
+> the game works.
 
 ---
 
 ## 🔧 Core Bridge Actions (Quick Reference)
 
-### Unity (via WebSocket ws://127.0.0.1:15557)
+### Unity (stdio MCP → HTTP 127.0.0.1:30030)
 
 | Action | Command | Use Case |
 |:-------|:--------|:---------|
@@ -131,12 +138,16 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 | Create object | `create_object(type, name)` | Add new GameObjects |
 | Destroy object | `destroy_object(path)` | Remove GameObjects |
 | Search assets | `get_assets(filter, folder)` | Find prefabs/materials |
-| Load scene | `load_scene(scenePath)` | Switch scenes |
+| New scene | `unity_new_scene(name)` | Create a fresh scene |
 | Save scene | `save_scene()` | Persist changes |
 | Compile | `compile_scripts()` | Trigger recompilation |
-| Build | `build_player(scenes, output, target)` | Export final build |
+| Menu item | `unity_execute_menu(menuPath)` | Trigger any Editor menu action |
 
-### Unreal Engine (via REST http://127.0.0.1:30010)
+> The bridge has no `load_scene` and no `build_player`. To build, use
+> `unity_execute_menu({menuPath:'File/Build Profiles/Build'})` or build from the
+> Editor UI. Do not promise a `unity_build_player` tool.
+
+### Unreal Engine (stdio MCP → HTTP 127.0.0.1:30010 Remote Control + 30011 Python executor)
 
 | Action | Endpoint | Use Case |
 |:-------|:---------|:---------|
@@ -146,7 +157,9 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 | Batch ops | `PUT /remote/batch` | Multiple ops at once |
 | Execute Python | `ue_execute_python(script)` | Run Python in editor |
 
-> 📚 Full API details: `hsa_search(action:'docs', doc_libraries:['plugin-unity-editor'])` or `['plugin-unreal-engine']`
+> 📚 Full API details: `hsa_search(action:'docs')` for `plugin-unity-editor` / `plugin-unreal-engine`
+> 📚 Setup from zero: `references/engine-scaffold.md`
+> 📚 Proving it actually runs: `references/run-and-observe.md`
 
 ---
 
