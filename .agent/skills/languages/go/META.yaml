@@ -1,6 +1,7 @@
 name: go
 display: Go
-category: backend
+subdomain: backend
+category: languages
 tier: 3
 priority: 1
 

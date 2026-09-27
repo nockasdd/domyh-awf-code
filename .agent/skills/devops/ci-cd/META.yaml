@@ -1,5 +1,6 @@
 name: ci-cd
-category: infrastructure
+subdomain: infrastructure
+category: devops
 tier: 3
 
 desc: "CI/CD pipeline patterns for GitHub Actions, GitLab CI, and GitOps. Includes SLSA Build Level 3, ARM64 runners, security scanning."

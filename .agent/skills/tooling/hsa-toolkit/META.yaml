@@ -14,7 +14,7 @@ triggers:
     - hybrid search
     - codegraph
     - design analysis
-    - cascade
+    - delegation
     - session governance
   intents:
     - install hsa

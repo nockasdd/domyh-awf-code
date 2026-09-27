@@ -1,5 +1,6 @@
 name: deno
-category: runtime
+subdomain: runtime
+category: cross-cutting
 tier: 3
 
 desc: "Deno 2.6+ development patterns. Covers TypeScript-first, permissions, Fresh framework, npm/jsr compat, OpenTelemetry."

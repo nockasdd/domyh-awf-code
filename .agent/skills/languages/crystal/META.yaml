@@ -1,5 +1,6 @@
 name: crystal
-category: systems
+subdomain: systems
+category: languages
 tier: 3
 
 desc: "Crystal development patterns for Crystal 1.14+. Types, macros, fibers, channels, Kemal web framework."

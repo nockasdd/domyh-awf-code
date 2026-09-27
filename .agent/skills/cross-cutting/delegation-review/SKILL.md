@@ -1,18 +1,18 @@
 ---
-name: cascade-review
-description: "Use when dispatching cascade tasks via hsa_delegate — provides 2-stage review pipeline (spec compliance then code quality) with structured subagent prompt templates"
+name: delegation-review
+description: "Use when dispatching implementation tasks to a subagent — provides 2-stage review pipeline (spec compliance then code quality) with structured subagent prompt templates"
 triggers:
-  keywords: [cascade, delegate, subagent, review, dispatch, implementation, task]
+  keywords: [delegate, subagent, review, dispatch, implementation, task, spec compliance]
 tier: 2
 detect: []
 category: cross-cutting
 ---
 
-# Cascade Review Pipeline
+# Delegation Review Pipeline
 
 ## Overview
 
-When delegating tasks via `hsa_delegate(cascade)`, ensure quality through a **2-stage review pipeline**: spec compliance FIRST, then code quality.
+When delegating an implementation task to a subagent, ensure quality through a **2-stage review pipeline**: spec compliance FIRST, then code quality.
 
 **Core principle:** Don't trust the implementer's report. Verify independently.
 
@@ -62,7 +62,7 @@ Implementers MUST report with one of these statuses:
 
 ## Implementer Prompt Template
 
-Use when dispatching via `hsa_delegate(cascade)`:
+Use when dispatching via `hsa_delegate(action:'prepare')` and the platform's native subagent tool:
 
 ```
 You are implementing Task N: [task name]
@@ -155,28 +155,31 @@ Report: Strengths, Issues (Critical/Important/Minor), Assessment
 ## Integration with hsa_delegate
 
 ```javascript
-// Step 1: Dispatch implementer
+// Step 1: Prepare the implementer contract
 hsa_delegate({
-  action: 'cascade',
-  cascade_text: '[implementer prompt with full task]',
-  task_type: 'code'
+  action: 'prepare',
+  task_type: 'code',
+  task_description: '[implementer prompt with full task]',
+  focus_files: ['...']
+})
+// then dispatch via the platform's native subagent tool
+
+// Step 2: Collect the result when the subagent returns
+
+// Step 3: If DONE → prepare the spec reviewer
+hsa_delegate({
+  action: 'prepare',
+  task_type: 'review',
+  task_description: '[spec reviewer prompt]',
+  focus_files: ['...']
 })
 
-// Step 2: Poll for results
-hsa_delegate({ action: 'cascade_read', cascade_id: '...' })
-
-// Step 3: If DONE → dispatch spec reviewer
+// Step 4: If spec passes → prepare the code quality reviewer
 hsa_delegate({
-  action: 'cascade',
-  cascade_text: '[spec reviewer prompt]',
-  task_type: 'review'
-})
-
-// Step 4: If spec passes → dispatch code quality reviewer
-hsa_delegate({
-  action: 'cascade',
-  cascade_text: '[code quality prompt]',
-  task_type: 'review'
+  action: 'prepare',
+  task_type: 'review',
+  task_description: '[code quality prompt]',
+  focus_files: ['...']
 })
 ```
 

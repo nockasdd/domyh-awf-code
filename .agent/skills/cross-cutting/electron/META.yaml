@@ -1,6 +1,7 @@
 ﻿name: electron
 display: Electron Desktop Framework
-category: desktop
+subdomain: desktop
+category: cross-cutting
 tier: 1
 priority: 2
 

@@ -1,5 +1,6 @@
 name: solidity
-category: blockchain
+subdomain: blockchain
+category: languages
 tier: 3
 
 domains:

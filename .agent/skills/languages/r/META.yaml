@@ -1,5 +1,6 @@
 name: r
-category: data
+subdomain: data
+category: languages
 tier: 3
 
 domains:

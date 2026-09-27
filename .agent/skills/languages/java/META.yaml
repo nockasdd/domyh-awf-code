@@ -1,5 +1,6 @@
 name: java
-category: backend
+subdomain: backend
+category: languages
 tier: 3
 
 desc: "Java/JVM development patterns for Java 21-25 LTS. Virtual Threads, Pattern Matching, Spring Boot 3.3+, Records, Structured Concurrency."

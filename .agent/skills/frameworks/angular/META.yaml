@@ -1,6 +1,7 @@
 name: angular
 display: "Angular Patterns"
-category: frontend
+subdomain: frontend
+category: frameworks
 tier: 1
 priority: 3
 

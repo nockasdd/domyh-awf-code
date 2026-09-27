@@ -1,5 +1,6 @@
 name: docker
-category: infrastructure
+subdomain: infrastructure
+category: devops
 tier: 3
 
 desc: "Docker containerization patterns for builds, security, and deployment. Covers Compose v5, Hardened Images, Build Cloud, Bake."

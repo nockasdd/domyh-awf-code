@@ -1,5 +1,6 @@
 name: scala
-category: functional
+subdomain: functional
+category: languages
 tier: 3
 
 domains:

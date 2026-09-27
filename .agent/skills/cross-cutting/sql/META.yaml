@@ -1,5 +1,6 @@
 name: sql
-category: database
+subdomain: database
+category: cross-cutting
 tier: 3
 
 desc: "SQL development patterns for PostgreSQL 17/18, MySQL 8+. Covers query optimization, migrations, indexes, JSON, performance."

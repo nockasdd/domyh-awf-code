@@ -1,6 +1,7 @@
 name: testing
 display: Testing
-category: support
+subdomain: support
+category: cross-cutting
 tier: 1
 priority: 2
 

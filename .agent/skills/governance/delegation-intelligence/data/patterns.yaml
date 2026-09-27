@@ -13,16 +13,16 @@ patterns:
     required: ["task", "scope", "return_format", "success_metric", "focus_files"]
 
   - id: DI-003
-    name: "Cross-Model Cascade Pattern"
+    name: "Delegation Contract Pattern"
     category: delegation-intelligence
-    description: "Delegate to specialized model via hsa_delegate. Flow: cascade_models (list) → cascade (send prompt + task_type) → wait 5s → cascade_read (poll, max 10) → use response or cascade_cancel."
+    description: "Prepare the task with hsa_delegate(action:'prepare') to build the contract and context packet, then hand it to the platform's native subagent tool. Collect the result and validate it with hsa_delegate(action:'verify') against the acceptance criteria."
     priority: high
     tools: ["hsa_delegate"]
 
   - id: DI-004
     name: "Quick Complexity Score (H1-H10)"
     category: delegation-intelligence
-    description: "Score 1-3: single file <30 LOC → skip cascade. Score 4-5: single file 30-100 LOC → skip. Score 6-7: multi-file 100-200 LOC → SUGGEST cascade. Score 8-9: multi-file >200 LOC → AUTO cascade. Score 10: cross-cutting >5 files → AUTO."
+    description: "Score 1-3: single file <30 LOC → do it yourself. Score 4-5: single file 30-100 LOC → do it yourself. Score 6-7: multi-file 100-200 LOC → SUGGEST delegation. Score 8-9: multi-file >200 LOC → AUTO delegate. Score 10: cross-cutting >5 files → AUTO."
     priority: high
 
   - id: DI-005
@@ -56,15 +56,15 @@ patterns:
     priority: medium
 
   - id: DI-010
-    name: "Cascade Prompt Guidelines"
+    name: "Delegation Prompt Guidelines"
     category: delegation-intelligence
-    description: "Include in cascade_text: Goal (what to produce), Context (code snippets, file paths, errors), Constraints (language, framework, style), Return format (expected structure). Tool filtering saves 93-97% tokens."
+    description: "Include in task_description: Goal (what to produce), Context (code snippets, file paths, errors), Constraints (language, framework, style), Return format (expected structure). Tool filtering saves 93-97% tokens."
     priority: high
 
   - id: DI-011
-    name: "When to Cascade vs Do Yourself"
+    name: "When to Delegate vs Do Yourself"
     category: delegation-intelligence
-    description: "Do yourself: task within current model strength. Cascade review/debug: need stronger reasoning (Opus/Pro). Cascade code: need fast cheap output (Flash). Cascade research: need web access. User-configured: auto-routes via dashboard."
+    description: "Do yourself: task fits the current context window and needs no isolation, or it is the step the next step depends on. Delegate: the subtask is self-contained, benefits from a clean context, or can run in parallel with others. The platform owns model routing — pick the task_type, not the model."
     priority: medium
 
   - id: DI-012

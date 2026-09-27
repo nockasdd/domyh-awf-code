@@ -12,7 +12,7 @@ metadata:
 
 # DOMYH HSA MCP Toolkit
 
-> Hybrid Search + CodeGraph + Impact Analysis + Persistent Memory + Cross-model Cascade
+> Hybrid Search + CodeGraph + Impact Analysis + Persistent Memory + Sub-agent Delegation
 
 ## Quick Install
 
@@ -51,7 +51,7 @@ After install, restart OpenClaw to load MCP tools.
 | `hsa_memory` | `store` `recall` `list` `delete` `stats` | Persistent cross-session memory: decisions, patterns, errors, semantic recall |
 | `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration |
 | `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
-| `hsa_delegate` | `prepare` `filter` `cascade` `cascade_read` `cascade_models` `cascade_cancel` | Sub-agent delegation, cross-model cascade |
+| `hsa_delegate` | `prepare` `verify` `gate` `contract` | Sub-agent task contract and spec-compliance gate |
 | `hsa_research` | `index` `overview` `read` `search` `list` `pkg` `releases` `compare` `file` | External repo research, package metadata |
 | `hsa_guide` | — | HSA optimal workflow guide |
 

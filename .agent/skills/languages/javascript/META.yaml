@@ -1,6 +1,7 @@
 name: javascript
 display: JavaScript Development
-category: web
+subdomain: web
+category: languages
 priority: 1
 tier: 3
 

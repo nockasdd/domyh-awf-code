@@ -14,7 +14,7 @@ triggers:
     - delegation
     - orchestration
     - sub-agent
-    - cascade
+    - delegation
     - fan-out
     - fan-in
     - prompt chaining

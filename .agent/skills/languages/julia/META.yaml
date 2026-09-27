@@ -1,5 +1,6 @@
 name: julia
-category: scientific
+subdomain: scientific
+category: languages
 tier: 3
 
 domains:

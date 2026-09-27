@@ -1,5 +1,6 @@
 name: aws
-category: infrastructure
+subdomain: infrastructure
+category: devops
 tier: 3
 
 desc: "AWS cloud services patterns for serverless, containers, and AI/ML. Covers Lambda, S3, ECS, EKS, Bedrock, and SageMaker."

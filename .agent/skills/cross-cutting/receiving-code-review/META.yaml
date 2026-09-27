@@ -37,6 +37,6 @@ caps:
   - Source-specific handling (user vs external)
 
 links_to:
-  - cascade-review
+  - delegation-review
   - coding-rules
   - audit-pro

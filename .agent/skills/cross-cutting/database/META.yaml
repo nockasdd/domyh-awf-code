@@ -1,6 +1,7 @@
 name: database
 display: Database Patterns
-category: infrastructure
+subdomain: infrastructure
+category: cross-cutting
 tier: 1
 priority: 1
 

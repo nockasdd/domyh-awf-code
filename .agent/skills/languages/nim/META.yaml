@@ -1,5 +1,6 @@
 name: nim
-category: systems
+subdomain: systems
+category: languages
 tier: 3
 
 desc: "Nim development patterns for Nim 2.2+. Types, macros, templates, effects, async, ARC/ORC, C FFI."

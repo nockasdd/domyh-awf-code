@@ -1,5 +1,6 @@
 name: clojure
-category: functional
+subdomain: functional
+category: languages
 tier: 3
 
 domains:

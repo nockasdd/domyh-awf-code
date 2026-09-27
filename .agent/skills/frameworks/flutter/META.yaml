@@ -1,6 +1,7 @@
 name: flutter
 display: "Flutter & Dart Patterns"
-category: mobile
+subdomain: mobile
+category: frameworks
 tier: 1
 priority: 3
 

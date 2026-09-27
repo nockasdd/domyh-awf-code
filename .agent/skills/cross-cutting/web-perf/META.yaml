@@ -1,5 +1,6 @@
 name: web-perf
-category: support
+subdomain: support
+category: cross-cutting
 tier: 3
 
 desc: "Core Web Vitals 2026 audit and web performance optimization. Chrome DevTools MCP integration for systematic profiling."

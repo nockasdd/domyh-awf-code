@@ -1,6 +1,7 @@
 name: cpp
 display: C++
-category: language
+subdomain: language
+category: languages
 tier: 3
 priority: 1
 

@@ -4,7 +4,7 @@ category: governance
 tier: 1
 priority: 2
 
-desc: "Smart sub-agent delegation and cascade routing. Evaluates task complexity, selects optimal model, prepares minimal context packets, and validates sub-agent results."
+desc: "Sub-agent work distribution. Decides when to delegate, prepares minimal context packets and task contracts, and validates sub-agent results against acceptance criteria."
 
 triggers:
   file_patterns: []
@@ -13,22 +13,22 @@ triggers:
     - delegate
     - sub-agent
     - subagent
-    - cascade
     - handoff
     - task routing
-    - model selection
     - context packet
+    - task contract
+    - decompose
   intents:
     - delegate task
-    - evaluate cascade need
     - prepare handoff
-    - select model for task
+    - decompose work
+    - validate subagent result
 
 caps:
-  - Complexity scoring for cascade evaluation
+  - Complexity scoring for delegation need
   - Context packet preparation (800-1500 tokens)
   - Tool filtering for sub-agent types
-  - Cross-model cascade routing
+  - 2-tier review gate (spec compliance + quality)
   - Sub-agent result validation
 
 links_to:

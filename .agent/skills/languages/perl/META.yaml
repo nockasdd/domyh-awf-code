@@ -1,5 +1,6 @@
 name: perl
-category: scripting
+subdomain: scripting
+category: languages
 tier: 3
 
 domains:

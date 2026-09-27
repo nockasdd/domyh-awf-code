@@ -1,5 +1,6 @@
 name: python
-category: backend
+subdomain: backend
+category: languages
 tier: 3
 
 desc: "Python development patterns for Python 3.13/3.14. GIL-free mode, JIT compiler, t-strings, FastAPI, asyncio, type hints."

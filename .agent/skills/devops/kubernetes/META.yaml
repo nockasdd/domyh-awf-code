@@ -1,5 +1,6 @@
 name: kubernetes
-category: infrastructure
+subdomain: infrastructure
+category: devops
 tier: 3
 
 desc: "Kubernetes orchestration patterns for K8s 1.32-1.33+. Covers Gateway API, Sidecar Containers, Kueue, Pod Security."

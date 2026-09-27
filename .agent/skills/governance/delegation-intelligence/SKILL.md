@@ -102,13 +102,18 @@ Use `.claude/agents/` definitions and Git worktree isolation:
 Use `AGENTS.md` persona routing with scoped directory execution:
 - Restrict file access to `focus_files`.
 
-### D. Cursor & MCP Fallback
-If native subagents are unavailable, fallback to `hsa_delegate`:
+### D. Cursor & Other Agents Without Native Dispatch
+If the platform has no subagent tool, do the decomposition yourself and execute
+the subtasks sequentially in the main agent, honouring the same contract and the
+same 2-Tier Gate:
 ```typescript
-// Dispatch cascade
-hsa_delegate({ action: "cascade", cascade_text: "...", task_type: "code" })
-// Poll transcript
-hsa_delegate({ action: "cascade_read", cascade_id: "..." })
+// Contract + scope still come from hsa_delegate; dispatch is the agent's own.
+hsa_delegate({
+  action: "prepare",
+  task_type: "code",
+  task_description: "Implement JWT middleware",
+  focus_files: ["src/auth/middleware.ts"]
+})
 ```
 
 ---

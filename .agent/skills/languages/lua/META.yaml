@@ -1,6 +1,7 @@
 name: lua
 display: Lua
-category: scripting
+subdomain: scripting
+category: languages
 tier: 3
 priority: 1
 

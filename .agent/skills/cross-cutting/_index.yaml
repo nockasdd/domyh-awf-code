@@ -15,7 +15,7 @@ skills:
   - { id: bun, has_advanced: false }
   - { id: audit-pro, has_advanced: false }
   - { id: playwright, has_advanced: true }
-  - { id: cascade-review, has_advanced: false }
+  - { id: delegation-review, has_advanced: false }
   - { id: receiving-code-review, has_advanced: false }
   - { id: accessibility, has_advanced: false }
   - { id: event-driven, has_advanced: false }
