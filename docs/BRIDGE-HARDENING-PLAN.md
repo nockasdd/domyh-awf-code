@@ -102,58 +102,87 @@ exception to `isError: true` natively. Smallest change with the largest effect
 in the whole plan — it is currently corrupting every agent session that touches
 these bridges.
 
-### 1.2 Ghidra plugin cannot be loaded by Ghidra — VERIFIED
+### 1.2 Ghidra plugin cannot be loaded by Ghidra — VERIFIED, fix now known to be larger than a Python edit
 
-`ghidra-bridge/hsa_ghidra_plugin.py:357` — `class HsaGhidraBridgePlugin(object)`.
-No base class, no `initialize()`, no `run()`, no `dispose()`. Ghidra does not
-auto-load `.py` outside Jython, so `:390-391` (`if __name__ == "__main__"`) is
-unreachable under Ghidra's loader.
+`ghidra-bridge/hsa_ghidra_plugin.py:385` is a Python class. Ghidra's plugin
+manager will never discover it, and no amount of Python-side restructuring
+changes that.
 
-The same repo already solves this for IDA at `ida-bridge/hsa_ida_plugin.py:1374-1428`
-(`class HsaMcpBridgePlugin(idaapi.plugin_t)`, `init()`, `run()`, `term()`,
-port-fallback loop, daemon thread).
+`PluginUtils.forName()` resolves plugins through
+`ClassSearcher.getClasses(Plugin.class)`, and `ClassSearcher.findClasses()`
+(`ClassSearcher.java:399`) matches **by file name only, without opening the
+file** — it is a bytecode scan of the classpath. Discovery therefore requires a
+real `.class` file annotated `@PluginInfo`
+(`RetentionPolicy.RUNTIME`, `PluginInfo.java:41`). A PyGhidra or Jython proxy
+has no bytecode on disk, so it is invisible to the scanner.
 
-**Fix:** mirror the IDA structure — `extends GhidraPlugin implements
-ApplicationLevelPlugin`, add `initialize()`/`dispose()`, ship `Module.manifest`
-and `extension.properties` under a proper `Extensions/` directory. The Ghidra
-bridge does not function without this.
+Correction to the Jython removal: Ghidra **11.2** renamed the `Python` module
+to `Jython` (GP-4659, 2024-06-03) and **11.3** added `PyGhidra` alongside it.
+Jython was de-bundled into `Ghidra/Extensions/Jython` only in **12.1**
+(GP-6754, 2026-04-24), and even then as an opt-in extension, not a deletion.
+Both `JythonScriptProvider` and `PyGhidraScriptProvider` are `ScriptProvider`
+implementations — script runners, not plugin providers. Neither auto-starts
+anything at boot.
 
-### 1.3 `ghidra_apply_data_type` is a stub that reports success — VERIFIED
+Every production HTTP-bridge project for Ghidra is therefore a **Java** plugin:
 
-`ghidra-bridge/hsa_ghidra_plugin.py:290-291`:
-```python
-def cmd_apply_data_type(params):
-    return _json_ok({"ok": False, "error": "Address data type application is not yet implemented"})
-```
-It is wrapped in `_json_ok` (`:37`), so `format_result` (`server.py:94-97`) sees
-`ok: true` and returns the error JSON as a **successful result**. It is declared
-`mutates: true` at `t17_bridge.ts:238` and advertised as a working tool.
+| Project | Approach |
+|---|---|
+| `bethington/ghidra-mcp` (4k★) | Java `GhidraMCPPlugin` in an extension ZIP, server starts with the plugin on `127.0.0.1:8089`; the Python half is a separate out-of-process MCP→HTTP translator. The reference implementation for this exact shape. |
+| `mandiant/Ghidrathon` (790★) | Java extension glue + Jep, Python 3 script provider |
+| `evyatar9/GptHidra` (406★) | Java extension |
+| `clearbluejar/pyghidra-mcp` (428★) | No plugin at all — external CLI, out-of-process |
+| `nightwing-us/pyghidra-decaf` (6★) | Generates Java stub classes at setup so Python can reach real discovery. Young, low adoption. |
+
+**Fix:** port `hsa_ghidra_plugin.py` to a Java `GhidraPlugin` packaged as a Ghidra
+extension (`Module.manifest` + `extension.properties` under `Ghidra/Extensions/`),
+keeping the Python file as the reference for the command set to port. This is
+the one item in Phase 1 that cannot land as a small diff — it needs a build for
+the extension and an install step the other bridges do not have.
+
+### 1.3 `ghidra_apply_data_type` is a stub that reports success — VERIFIED, FIXED
+
+Original: `ghidra-bridge/hsa_ghidra_plugin.py:290-291` returned
+`_json_ok({"ok": False, "error": "...not yet implemented"})`, so `format_result`
+(`server.py:94-97`) saw `ok: true` and handed the model a **successful result
+containing a failure**, for a tool declared `mutates: true` at
+`t17_bridge.ts:238`.
+
+Fixed at `hsa_ghidra_plugin.py:293`: resolve the type from the program data type
+manager, clear the covered listing range, and `createData` at the address,
+returning the created length. It is still subject to 1.2 — the file does not
+load under Ghidra until the Java port lands — but the command is no longer a
+lie once it does.
 
 **Fix:** implement it or remove it from both `COMMANDS` (`:298-313`) and
 `GHIDRA_TOOLS`. A stub that reports success is worse than an absent tool.
 
-### 1.4 x64dbg README documents tools that do not exist — VERIFIED
+### 1.4 x64dbg README documents tools that do not exist — VERIFIED, FIXED
 
-`x64dbg-bridge/README.md:49-68` documents `x64_get_registers`, `x64_read_memory`,
-`x64_get_disasm`, `x64_step_over`, `x64_step_into`, `x64_run`, `x64_pause`,
-`x64_set_breakpoint`, `x64_get_callstack`. Eight of the nine do not exist. The
-real ten are at `x64dbg-bridge/server.py:114-465`. Only `x64_get_modules` is real.
+`x64dbg-bridge/README.md:49-68` documented `x64_get_registers`,
+`x64_read_memory`, `x64_get_disasm`, `x64_step_over`, `x64_step_into`,
+`x64_run`, `x64_pause`, `x64_set_breakpoint`, `x64_get_callstack`. Eight of the
+nine do not exist. Only `x64_get_modules` was real.
 
-**Fix:** rewrite the README from `server.py`. Anyone reading it today is being
-told the bridge can step the debugger.
+The README now carries the ten `@mcp.tool()` functions `server.py` actually
+defines, cross-checked 10/10 against `t17_bridge.ts:243-252`, plus a "What this
+bridge does not do" section stating that register/memory/step/callstack work
+belongs to the upstream `x64dbg-automate` MCP server.
 
-### 1.5 x64dbg hardcodes one developer's absolute path — VERIFIED
+### 1.5 x64dbg hardcodes one developer's absolute path — VERIFIED, FIXED
 
-`x64dbg-bridge/server.py:32-35` hardcodes
+`x64dbg-bridge/server.py:32-35` hardcoded
 `E:/Deverloper/snapshot_2025-08-19_19-40/release/x64/x64dbg.exe`, and the same
-literal is duplicated at `t17_bridge.ts:527`.
+literal was duplicated at `t17_bridge.ts:527`, so the server kept supplying the
+value on every launch.
 
-The upstream library already solves it — `_resolve_x64dbg_path_with_env` at
-`x64dbg_automate/mcp_server.py:313` and `_resolve_debugger_path` at `:335` do
-bitness-aware `x96dbg.exe` → `x64dbg.exe`/`x32dbg.exe` resolution.
-
-**Fix:** use the upstream resolver; fail with a clear message instead of
-silently defaulting to one machine's snapshot path.
+The upstream library already solves resolution —
+`_resolve_x64dbg_path_with_env` at `x64dbg_automate/mcp_server.py:105` and
+`_resolve_debugger_path` at `:127` do bitness-aware `x96dbg.exe` →
+`x64dbg.exe`/`x32dbg.exe` lookup across four candidate layouts. Those are
+private to the upstream module, so `server.py:38` reads `X64DBG_PATH` and
+raises `BridgeError` when it is unset, and the literal is gone from
+`buildBridgeEnvironment`.
 
 ---
 
@@ -165,39 +194,63 @@ silently defaulting to one machine's snapshot path.
 decompile blocks every other request. The decompile handler has a 120s timeout
 (`:126-128`).
 
-Fixed upstream at `GhidraMCPPlugin.java:1014-1046` (3-thread pool, named daemon
-threads).
+**FIXED** at `hsa_ghidra_plugin.py:415`:
+`server.setExecutor(Executors.newFixedThreadPool(4))`. The port loop and the
+daemon flag moved with it — `threading.Thread.daemon = True` rather than
+`setDaemon(True)`, which Python 3.10 removed while Jython 2.7 still accepts it.
 
-**Fix:** install a small fixed thread pool. One line plus the executor object.
+Upstream reference remains `GhidraMCPPlugin.java:1014-1046` (3-thread pool, named
+daemon threads).
 
-### 2.2 Ghidra port scan takes 64 seconds — VERIFIED
+### 2.2 Ghidra port scan takes 64 seconds — VERIFIED, FIXED
 
-`ghidra-bridge/server.py:102` uses a 2s timeout; `:113-119` loops serially over
+`ghidra-bridge/server.py:102` used a 2s timeout; `:113-119` looped serially over
 32 ports. Worst case ≈ 64s, serial.
 
-The IDA bridge directly beside it is already correct — `ida-bridge/server.py:461-467`
+The IDA bridge directly beside it was already correct — `ida-bridge/server.py:461-467`
 uses `ThreadPoolExecutor` with `max_workers=min(len(ports), 32)` (`:33`) and a
 350ms timeout (`:32`).
 
-Measured upstream (`bridge_mcp_ghidra/discovery.py:143-152`): a dropped (not
-refused) port costs the full timeout, and a serial scan of a 16-port range
-measured 15.2s of a 16.8s startup — close enough to an MCP client start timeout
-to fail the connection, which presents as "the Ghidra tools are missing".
+**FIXED.** `server.py:105` now probes with the same `ThreadPoolExecutor` shape,
+`GHIDRA_HTTP_PROBE_TIMEOUT` at IDA's 350ms and `GHIDRA_HTTP_SCAN_WORKERS` at 32,
+both env-overridable. Results are re-ordered to the scan order so the output does
+not depend on which probe finished first.
 
-**Fix:** copy the concurrent-scan + ordered-yield pattern; drop the timeout to
-350ms to match IDA. 64s → under 1s. One function.
+Measured over the real 28572-28603 range with nothing listening:
 
-### 2.3 UE Python server is single-threaded — VERIFIED, NEW
+| | elapsed |
+|---|---|
+| serial, 2s timeout (before) | 11.484s |
+| 8 workers | 1.615s |
+| 16 workers | 0.715s |
+| 32 workers (shipped) | 0.375s |
 
-`ue-bridge/resources/init_unreal.py:62` — `HTTPServer(...)`, not
+10.3x over serial at the previous 2s timeout; the worker cap is left where IDA
+has it because the sweep is still improving at 32.
+
+### 2.3 UE Python server is single-threaded — VERIFIED, FIXED
+
+`ue-bridge/resources/init_unreal.py:62` used `HTTPServer(...)`, not
 `ThreadingHTTPServer`. The handler blocks on `event.wait(timeout=30.0)` at `:39`
-while the game thread runs the job. During that window every other request
-blocks, including another agent's `ue_python_status`.
+while the game thread runs the job, so during that window every other request
+blocks — including another agent's `ue_python_status`. Three 30s calls queued
+behind each other rather than running together.
 
 Same class of defect as 2.1, in a different language.
 
-**Fix:** `ThreadingHTTPServer`. Note the interaction with 3.1 — a thread per
-request means `request_queue` concurrency must be checked, not just assumed.
+**FIXED** at `init_unreal.py:9` and `:62`. Measured on this machine, three
+concurrent 0.5s POSTs: 1.59s on `HTTPServer`, 0.50s on `ThreadingHTTPServer`.
+The queue is what orders the work, so switching the serving side does not change
+ordering.
+
+**Also fixed in the same commit** — `ue-bridge/src/ue-ws-client.ts:64` raced a
+30s timer against the response. The timer was never cleared when the response
+won, and a late timeout could delete a request id that a reconnect had already
+reused, so the follow-up call waited for a reply nothing would send. The timer is
+now cleared on both resolve and reject.
+
+Interaction with 3.1 remains: a thread per request means `request_queue`
+concurrency must be checked, not just assumed.
 
 ---
 
@@ -210,9 +263,9 @@ highest-severity group.
 
 | Bridge | Listener | Auth |
 |---|---|---|
-| ghidra | `hsa_ghidra_plugin.py:366` `HttpServer.create` | none |
+| ghidra | `hsa_ghidra_plugin.py:410` `HttpServer.create` | none |
 | ida | `hsa_ida_plugin.py:1400` | none |
-| ue | `init_unreal.py:62` `HTTPServer(('127.0.0.1', 30011))` | none |
+| ue | `init_unreal.py:62` `ThreadingHTTPServer(('127.0.0.1', 30011))` | none |
 | x64dbg | ZMQ via x64dbg-automate | upstream's, loopback |
 | unity | stdio only | n/a |
 
