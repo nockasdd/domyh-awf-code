@@ -3,6 +3,10 @@
 # Token-efficient architecture with Progressive Disclosure
 # Developer: NockDev
 # NOTE: Sync version from core/VERSION.yaml
+#
+# Skill routing lives in skills/INDEX.yaml (generated from per-skill META.yaml).
+# Loading budget and behaviour live in config.yaml. This file only holds the
+# command routing table and the session defaults.
 # =============================================================================
 
 name: "DOMYH Awesome Code"
@@ -29,151 +33,12 @@ core:
   # Rules System (modular files)
   rules_dir: rules/ # 16 active rule modules
   rules_index: rules/README.md # Rules registry
+  skills_index: skills/INDEX.yaml # Generated routing table
   # SSoT Files
   context_snapshot: memory/CONTEXT_SNAPSHOT.md # Cold-start context
   memory_paths: core/MEMORY_PATHS.yaml # Memory file locations
   # Reference data (read-only)
   reference_dir: core/reference/ # PATTERNS, TEMPLATES, HSA, etc.
-
-# =============================================================================
-# PROGRESSIVE DISCLOSURE SKILLS
-# Tier 1: META.yaml (~100-400 tokens) - Always loaded
-# Tier 2: SKILL.md (~1,500 tokens) - On-demand
-# Tier 3: ADVANCED.md (~4,000 tokens) - Referenced only
-# =============================================================================
-
-skills:
-  # Baseline: Only META.yaml loaded = 107 skills × ~100-400 tokens
-  # Activated: +1,500 tokens per skill (data/*.yaml)
-  # Max active: 3 T2 SKILL.md slots loaded concurrently (T1 META detection: unlimited)
-  # Categories: 9 core + 28 languages + 9 frameworks + 7 devops + 30 cross-cutting + 6 tooling + 9 ai-ml + 9 governance = 107
-
-  loading:
-    # SSoT: config.yaml → skills section
-    # Defaults: progressive, max_active=3, cache_ttl=3600
-
-  # Categories with priority (lower = higher priority)
-  categories:
-    core:
-      priority: 0
-      always_metadata: true # Always load META.yaml
-      skills:
-        [
-          security,
-          api-design,
-          authentication,
-          context-engineering,
-          error-handling,
-          logging,
-          observability,
-          graph-patterns,
-        ]
-
-    language:
-      priority: 1
-      skills:
-        [
-          go,
-          python,
-          typescript,
-          javascript,
-          rust,
-          cpp,
-          c,
-          csharp,
-          java,
-          php,
-          kotlin,
-          swift,
-          lua,
-          ruby,
-          asm,
-          elixir,
-          haskell,
-          clojure,
-          crystal,
-          fsharp,
-          julia,
-          nim,
-          ocaml,
-          perl,
-          r,
-          scala,
-          solidity,
-          zig,
-        ]
-
-    framework:
-      priority: 2
-      skills: [react, vue, nextjs, angular, nuxt, svelte, flutter, react-native, streamlit]
-
-    devops:
-      priority: 3
-      skills: [docker, kubernetes, aws, ci-cd, terraform, azure, gcp]
-
-    cross-cutting:
-      priority: 4
-      skills: [
-          database,
-          testing,
-          coding-rules,
-          tailwind,
-          domyh-design,
-          electron,
-          bun,
-          deno,
-          sql,
-          web-perf,
-          audit-pro,
-          tdd-workflow,
-          accessibility,
-          seo,
-          microservices,
-          monorepo,
-          # v6.3 New
-          tauri,
-          real-time,
-          event-driven,
-          wasm,
-          playwright,
-          skill-creator,
-          payment-integration,
-          game-development,
-        ]
-
-    tooling:
-      priority: 5
-      skills: [mcp, ide-extension, cli-dev, api-protocols, browser-agent]
-
-    ai-ml:
-      priority: 6
-      skills:
-        [
-          ai-agents,
-          vector-search,
-          prompt-engineering,
-          rag-patterns,
-          gemini-media-gen,
-          gemini-tts,
-          gemini-live,
-          ml-pipelines,
-          agentic-orchestration,
-        ]
-
-    governance:
-      priority: 7
-      skills:
-        [
-          context-first-gatekeeping,
-          context-integrity,
-          debug-orchestration,
-          delegation-intelligence,
-          evidence-discipline,
-          pre-stop-checklist,
-          session-lifecycle,
-          session-memory,
-          context-compaction,
-        ]
 
 # =============================================================================
 # SEMANTIC TOOL SELECTION
@@ -268,6 +133,16 @@ commands:
     skills:
       { required: [game-development], contextual: [csharp, python, mcp] }
 
+  - id: game-start
+    file: workflows/game-start.md
+    icon: "🚀"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [game start, bắt đầu game, ý tưởng game, game idea, làm game, muốn làm game]
+    skills:
+      { required: [game-development], contextual: [csharp, python] }
+
   - id: loop
     file: workflows/loop.md
     icon: "🔄"
@@ -298,7 +173,7 @@ commands:
     persona: architect
     cache: true
     triggers: [think, brainstorm, idea, ý tưởng]
-    skills: { required: [], contextual: [] }
+    skills: { required: [], contextual: [game-development, game-automation] }
 
   - id: prompt
     file: workflows/prompt.md

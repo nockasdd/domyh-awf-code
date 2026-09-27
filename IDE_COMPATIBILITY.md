@@ -1,7 +1,9 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
 
-> **Version**: 6.7.8 | **Cập nhật**: 2026-03-25 | **Official Docs Verified** | **Extension Storage Forensics**
-> **Tổng**: 22 IDEs/Agents | 4 Tiers | 19 MCP configs | 16 Skills-enabled | 20 MCP Tools | 5 Custom Agents
+> **Version**: 6.7.14 | **Cập nhật**: 2026-09-27 | **Official Docs Verified** | **Extension Storage Forensics**
+> **Tổng**: 22 IDEs/Agents | 4 Tiers | 21 MCP config paths | 16 Skills-enabled | 18 MCP Tools | 11 Personas
+>
+> ⚠️ `IDE_REGISTRY` có 25 entry; bảng này liệt kê 22. Thiếu: `blackbox`, `openclaw` (có `mcp.supported` nhưng chưa có hàng).
 
 ---
 
@@ -191,7 +193,7 @@ root/
 | 3   | **Claude**      | `.mcp.json` / `~/.claude.json`                      |  JSON  |       Both        | CLI: `.mcp.json` (project), Desktop: OS path            |
 | 4   | **Gemini CLI**  | `~/.gemini/settings.json`                           |  JSON  |      Global       | `mcpServers` key                                        |
 | 5   | **VS Code**     | `.vscode/mcp.json`                                  |  JSON  |      Project      | Also used by Amp, Void                                  |
-| 6   | **Windsurf**    | `~/.codeium/windsurf/mcp_config.json`               |  JSON  |      Global       | Cascade integration                                     |
+| 6   | **Windsurf**    | `~/.codeium/windsurf/mcp_config.json`               |  JSON  |      Global       | Cascade-aware MCP integration                           |
 | 7   | **Antigravity** | `~/.gemini/antigravity/mcp_config.json`             |  JSON  |      Global       | Google IDE                                              |
 | 8   | **Cline**       | globalStorage `cline_mcp_settings.json`             |  JSON  |      Per-IDE      | ⚠️ Isolated per IDE fork — see §Extension Storage       |
 | 9   | **Continue**    | `~/.continue/config.yaml` `mcpServers`              |  YAML  |      Shared       | ⚠️ Shared across ALL IDE forks — see §Extension Storage |
@@ -510,4 +512,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code • 27 IDEs • Extension Storage Forensics • Platform Verified • Mar 22, 2026_
+_DOMYH Awesome Code • 22 IDEs • Extension Storage Forensics • Platform Verified • Sep 27, 2026_

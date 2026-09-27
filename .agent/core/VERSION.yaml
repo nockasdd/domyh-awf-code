@@ -4,6 +4,8 @@
 # IMPORTANT: File này CHỈ quản lý VERSION
 # - Project identity → BRANDING.yaml
 # - Language settings → BRANDING.yaml
+# - Per-component versions → docs/component-versions.md (reference only, not read)
+# - Version history → core/CHANGELOG.yaml
 # Khi update version, CHỈ cần sửa file này
 # =============================================================================
 
@@ -12,7 +14,7 @@
 # =============================================================================
 
 system:
-  version: "6.7.13"
+  version: "6.7.14"
   codename: "Tri-Tier Subagent Delegation & Safe Platform Orchestration"
   release_date: "2026-05-20"
 
@@ -20,58 +22,11 @@ system:
   _identity_ref: "core/BRANDING.yaml"
 
 # =============================================================================
-# COMPONENT VERSIONS (sub-versions for individual modules)
+# COMPONENT VERSIONS → See docs/component-versions.md
+# Per-workflow generations were tracked here until they were split out: nothing
+# in the framework parsed them, they only added ~50 lines to a file every cold
+# start reads.
 # =============================================================================
-
-components:
-  # === CORE WORKFLOWS (High usage) ===
-  ap_pro: "5.1" # Audit Pro - Multi-Expert Consensus
-  code_pro: "3.2" # Code Pro - Auto Test Loop + Security-First
-  debug_pro: "3.3" # Debug Pro - Root Cause Tracing + Defense-in-Depth
-  plan_pro: "3.2" # Plan Pro - Deep Interview + Auto Phase Generation
-  test_pro: "3.2" # Test Pro - TDD Iron Law + AI Testing
-  modify_pro: "3.1" # Modify Pro - AI-Driven Modernization
-
-  # === SECONDARY WORKFLOWS ===
-  deploy_pro: "3.1" # Deploy Pro - GitOps + Progressive Delivery
-  refactor_pro: "3.1" # Refactor Pro - AI-Assisted Refactoring
-  review_pro: "3.1" # Review Pro - AI-Assisted Reviews
-  init_pro: "3.1" # Init Pro - AI Scaffolding + 30+ Templates
-
-  # === EXTENDED WORKFLOWS ===
-  migrate_pro: "3.1" # Migrate Pro - Zero-Downtime CDC
-  doc_pro: "3.1" # Doc Pro - AI-Optimized + Auto API
-  generate_pro: "3.1" # Generate Pro - Multi-Modal + Quality Gates
-  perf_pro: "3.1" # Perf Pro - Agent-Aware Profiling
-  upgrade_pro: "3.1" # Upgrade Pro - Security-First Updates
-  clean_pro: "2.2" # Clean Pro - Dead Code Removal
-  monitor_pro: "3.1" # Monitor Pro - AI-Powered Observability
-  env_pro: "3.1" # Env Pro - Vault + Multi-Env Sync
-
-  # === UTILITY WORKFLOWS ===
-  recap_pro: "3.2" # Recap Pro - Session Continuity
-  status_pro: "3.1" # Status Pro - Full Health Dashboard
-  help_pro: "2.1" # Help Pro - Context-Aware + Smart Suggestions
-  suggest_pro: "3.1" # Suggest Pro - Git-Aware Suggestions
-  dev_pro: "3.1" # Dev Pro - HMR 2025 + Error Overlay
-  revert_pro: "3.1" # Revert Pro - Safe Rollback + Feature Flags
-  orchestrate_pro: "3.1" # Orchestrate Pro - Fault-Tolerant Multi-Agent
-  save_pro: "1.0" # Save Pro - Session Persistence
-  lang_pro: "1.0" # Lang Pro - i18n Switching
-  search_pro: "1.1" # Search Pro - Semantic Memory Search
-
-  # === SPECIALIZED WORKFLOWS ===
-  think_pro: "4.0" # Think Pro - 6 Methods + 5 Tiers + Multi-Mode
-  visualize_pro: "4.0" # Visualize Pro - Multi-Platform + Component Mapping
-
-
-  # Default for unlisted
-  default_workflow_version: "3.1"
-
-  # === SKILLS ===
-  ui_ux_pro: "5.0" # UI/UX Pro Max
-  web_perf: "5.0" # Web Performance
-
 
 # =============================================================================
 # VERSION HISTORY → See core/CHANGELOG.yaml

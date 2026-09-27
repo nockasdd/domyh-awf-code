@@ -1,6 +1,7 @@
 # ═══════════════════════════════════════════════════════════════
-# AWF Stop Hook: Auto-Persist Session Context (PowerShell)
-# Fires when agent completes or user stops — saves session data
+# AWF Session Hook: Auto-Persist Session Context (PowerShell)
+# Fires on Stop (agent finished) and SessionEnd (window closed / crash) —
+# SessionEnd is the safety net for sessions that die before Stop fires.
 # Compatible with: Claude Code, Cursor, VS Code Copilot (Windows)
 #
 # v2.0: Rich context — git diff summary, recent files, structured snapshot
@@ -9,7 +10,13 @@
 $ErrorActionPreference = "SilentlyContinue"
 
 # Drain stdin
-try { [Console]::In.ReadToEnd() | Out-Null } catch {}
+$stdinJson = ""
+try { $stdinJson = [Console]::In.ReadToEnd() } catch {}
+
+# The same script serves both Stop and SessionEnd, so echo back whichever event
+# fired rather than a hardcoded name.
+$hookEvent = "Stop"
+if ($stdinJson -match "SessionEnd") { $hookEvent = "SessionEnd" }
 
 # ── Check AWF installation ─────────────────────────────────
 $memoryDir = $null
@@ -59,7 +66,7 @@ try {
 if (Test-Path $sessionFile) {
     $entry = @"
 
-### $timestamp — Session ended (auto-saved by AWF hook)
+### $timestamp — $hookEvent (auto-saved by AWF hook)
 - **Branch**: $branch
 - **Git**: $gitStatus
 "@
@@ -120,7 +127,7 @@ if ($hsaPort) {
 # ── Output JSON ────────────────────────────────────────────
 $output = @{
     hookSpecificOutput = @{
-        hookEventName = "Stop"
+        hookEventName = $hookEvent
         additionalContext = "AWF session auto-saved at $timestamp. Branch: $branch, Git: $gitStatus, Files: $($changedFiles.Count)"
     }
 } | ConvertTo-Json -Depth 3 -Compress

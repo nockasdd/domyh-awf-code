@@ -120,52 +120,6 @@ thresholds:
       2. Execute orchestrate.md workflow (INIT → DECOMPOSE → ASSIGN → PLAN ⛔)
       3. Show DAG to user for approval before execution
 
-# ═══ CASCADE TRIGGERS ═══
-
-cascade_triggers:
-  description: |
-    Cascade evaluation runs ALONGSIDE orchestration thresholds.
-    Orchestration = multi-persona coordination. Cascade = cross-model delegation.
-    Both can be active: orchestrator can cascade sub-tasks to specialized models.
-  
-  conditions:
-    # Gate: User must have cascade enabled in Dashboard
-    user_enabled:
-      check: "Dashboard cascade toggle = ON"
-      weight: "mandatory gate — cascade ONLY when user has enabled it"
-    
-    # Condition 1: Complexity-based (uses existing H1-H5 scores)
-    by_complexity:
-      score_below_4:
-        action: "No cascade — handle directly"
-      score_4_6_5:
-        action: |
-          SUGGEST cascade to user: "Task này có thể benefit từ model chuyên biệt.
-          Dùng cascade để delegate? (task_type: [matched_type])"
-      score_6_5_plus:
-        action: |
-          AUTO-cascade for primary task_type if user has cascade enabled.
-          Use workflow_to_task_type mapping from agent-delegation.yaml.
-    
-    # Condition 2: Workflow-specific (independent of complexity score)
-    by_workflow:
-      security_review: "ALWAYS suggest cascade with task_type:'review' — security needs deep analysis"
-      ap_audit: "SUGGEST cascade for individual expert panels"
-      debug_level_3_5: "Auto-cascade after progressive-escalation Level 3 (REFRAME) fails"
-    
-    # Condition 3: Scope-based (independent of complexity score)
-    by_scope:
-      lines_100_plus: "SUGGEST cascade for implementations >100 LOC"
-      files_5_plus: "SUGGEST cascade for changes spanning >5 files"
-      multi_language: "SUGGEST cascade for cross-language changes"
-  
-  evaluation_flow:
-    1: "Check: Is cascade enabled in user Dashboard?"
-    2: "If NO → skip cascade evaluation entirely"
-    3: "If YES → evaluate conditions 1-3"
-    4: "If any SUGGEST/AUTO condition met → include cascade hint in workflow response"
-    5: "Agent decides: execute cascade or proceed directly"
-
 # ═══ EVALUATION FLOW ═══
 
 evaluation_flow:

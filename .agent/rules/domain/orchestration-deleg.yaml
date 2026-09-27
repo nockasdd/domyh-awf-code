@@ -136,12 +136,12 @@ native_ide_dispatch:
   cursor:
     mechanism: "Background agent + hsa_delegate transcript sync"
   mcp_fallback:
-    mechanism: "hsa_delegate({action:'prepare' | 'cascade' | 'verify'})"
+    mechanism: "hsa_delegate({action:'prepare' | 'verify'})"
 
-# ═══ CASCADE (Cross-Model) & ENGINE ROUTING ═══
+# ═══ TASK-TYPE ROUTING ═══
 
-cascade_delegation:
-  description: "Cross-model and cross-subagent delegation via MCP hsa_delegate"
+delegation_routing:
+  description: "Maps an AWF workflow to the task_type its contract declares"
   reference: "SACRED_RULES MCP_002"
   engine_constraint: "DelegateSchema.task_type accepts: code|test|review|debug|browser|research"
   
@@ -168,6 +168,5 @@ cascade_delegation:
   lifecycle: |
     1. Prepare contract: hsa_delegate({action:'prepare', task_type:'...', focus_files:[...]})
     2. Dispatch subagent via Native IDE tool (invoke_subagent, Claude subagent, Codex AGENTS.md)
-    3. If MCP Cascade: hsa_delegate({action:'cascade', cascade_text:'...'}) -> poll cascade_read
-    4. Upon completion: hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})
-    5. Pass 2-Tier Gate -> Merge deliverables & hsa_session({action:'persist'})
+    3. Upon completion: hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})
+    4. Pass 2-Tier Gate -> Merge deliverables & hsa_session({action:'persist'})

@@ -498,7 +498,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 <p align="center">
   <sub><b>Core (9):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator</sub>
   <br>
-  <sub><b>Cross-cutting (30):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection</sub>
+  <sub><b>Cross-cutting (30):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection</sub>
 </p>
 
 ### 🛠️ Tooling (6)
@@ -527,7 +527,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 | **Frameworks**    | 9      | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 9      | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator                                                                                    |
 | **DevOps**        | 7      | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 30     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Cascade Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection |
+| **Cross-cutting** | 30     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection |
 | **Tooling**       | 6      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit                                                                                                                                              |
 | **AI-ML**         | 9      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 9      | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation, Context Compaction                                  |
@@ -604,7 +604,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (9)     # Security, API Design, Auth, Graph Patterns...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (30)   # Testing, Database, Playwright, Cascade Review...
+│   ├── cross-cutting/ (30)   # Testing, Database, Playwright, Delegation Review...
 │   ├── tooling/      (6)     # MCP, API Protocols, IDE Extension, HSA Toolkit...
 │   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (9)     # Drift Prevention, Session Governance...

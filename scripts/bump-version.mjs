@@ -68,11 +68,6 @@ function readCurrentVersion() {
 
 function calcNewVersion(current, bump) {
   if (/^\d+\.\d+\.\d+$/.test(bump)) {
-    const segs = bump.split(".").map(Number);
-    if (segs.some((s) => s > 999)) {
-      console.error(`${c.red}✗ Version segments must be ≤ 999${c.reset}`);
-      process.exit(1);
-    }
     return bump;
   }
 
@@ -91,9 +86,11 @@ function calcNewVersion(current, bump) {
 
 function collectFiles(rootDir) {
   const results = [];
+  // .agent is walked: VERSION.yaml (the source of the current version) and
+  // memory/state.json live there. Per-file guards below protect the changelog.
   const SKIP = new Set([
-    "node_modules", ".git", "dist", "build", ".next", "__pycache__",
-    ".turbo", ".cache", "coverage", "archive", ".agent",
+    "node_modules", ".git", "dist", "dist-plugins", "build", ".next", "__pycache__",
+    ".turbo", ".cache", "coverage", "archive",
   ]);
 
   function walk(dir) {
@@ -160,14 +157,12 @@ function replaceInFile(filePath, oldVer, newVer) {
   // This catches persona .md frontmatter, YAML comments, IDE JSON, footers
   const vPrefixRegex = new RegExp(`(?<!\\w)v${escaped}(?!\\d)`, "g");
 
-  // Count v-prefixed first (more specific), then bare excluding v-prefixed
-  const vMatches = content.match(vPrefixRegex) || [];
-  const bareOnly = content.replace(vPrefixRegex, "___VPREFIX___").match(regex) || [];
-  const totalMatches = bareOnly.length + vMatches.length;
+  // Replace v-prefixed first and mask the result, so the bare regex below cannot
+  // also match the digits inside an already-replaced v6.7.13 → v6.7.14 token.
+  let newContent = content.replace(vPrefixRegex, `v${newVer}`);
+  newContent = newContent.replace(regex, newVer);
+  const totalMatches = (newContent.match(new RegExp(`(?<!\\d)${newVer.replace(/\./g, "\\.")}(?!\\d)`, "g")) || []).length;
   if (totalMatches === 0) return 0;
-
-  let newContent = content.replace(regex, newVer);
-  newContent = newContent.replace(vPrefixRegex, `v${newVer}`);
   if (!dryRun) {
     fs.writeFileSync(filePath, newContent, "utf-8");
   }

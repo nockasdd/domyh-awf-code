@@ -34,7 +34,7 @@ stuck_detection:
   thresholds:
     level_2_reflect: 0.6
     level_3_reframe: 0.75
-    level_3_5_cascade: 0.80
+    level_3_5_delegate: 0.80
     level_4_widen: 0.85
     level_5_decompose: 0.90
     level_6_escalate: 0.95
@@ -58,18 +58,18 @@ levels:
     trigger: "Level 2 failed OR stuck_score ≥ 0.75"
     prompt_file: "templates/reflection/escalation-L3.md"
 
-  level_3_5_cascade:
-    name: "CASCADE"
+  level_3_5_delegate:
+    name: "DELEGATE"
     trigger: "Level 3 failed OR stuck_score ≥ 0.80"
-    condition: "Only when cascade enabled in user Dashboard"
+    condition: "Only when the platform provides a subagent tool"
     action: |
-      Delegate current bug context to stronger model via cascade:
-      1. Prepare cascade prompt with: error details, failed approaches (L1-L3), relevant code
-      2. hsa_delegate({action:'cascade', cascade_text:'[full debug context]', task_type:'debug'})
-      3. Wait for cascade response (3-5s intervals, max 10 polls)
-      4. If cascade provides actionable fix → apply and verify
-      5. If cascade fails or unavailable → continue to Level 4 (WIDEN)
-    rationale: "Try specialized model before widening scope or escalating to user"
+      Hand the debug context to a fresh subagent so the stuck model is not the
+      one that has to solve it:
+      1. Package context: error output, every approach already rejected (L1-L3), relevant files
+      2. Dispatch via the platform's native subagent tool with that context as the prompt
+      3. If the subagent returns an actionable fix → apply and verify
+      4. If it returns nothing actionable → continue to Level 4 (WIDEN)
+    rationale: "A fresh context breaks the anchoring that produced the stuck state"
 
   level_4_widen:
     name: "WIDEN"

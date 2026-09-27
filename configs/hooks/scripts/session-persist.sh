@@ -1,7 +1,8 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# AWF Stop Hook: Auto-Persist Session Context
-# Fires when agent completes or user stops — saves session data
+# AWF Session Hook: Auto-Persist Session Context
+# Fires on Stop (agent finished) and SessionEnd (window closed / crash) —
+# SessionEnd is the safety net for sessions that die before Stop fires.
 # Compatible with: Claude Code, Cursor, VS Code Copilot
 #
 # v2.0: Rich context — git diff summary, recent files, structured snapshot
@@ -9,8 +10,15 @@
 
 set -uo pipefail
 
-# Drain stdin (Stop event may or may not send input)
-cat > /dev/null 2>&1 || true
+# Drain stdin (Stop/SessionEnd may or may not send input)
+STDIN_JSON=$(cat 2>/dev/null || true)
+
+# The same script serves both Stop and SessionEnd, so echo back whichever event
+# fired rather than a hardcoded name.
+HOOK_EVENT="Stop"
+case "$STDIN_JSON" in
+  *SessionEnd*) HOOK_EVENT="SessionEnd" ;;
+esac
 
 # ── Check AWF installation ─────────────────────────────────
 MEMORY_DIR=""
@@ -48,7 +56,7 @@ RECENT_COMMITS=$(git log --oneline -3 --no-decorate 2>/dev/null) || true
 if [ -f "$SESSION_FILE" ]; then
   {
     echo ""
-    echo "### $TIMESTAMP — Session ended (auto-saved by AWF hook)"
+    echo "### $TIMESTAMP — $HOOK_EVENT (auto-saved by AWF hook)"
     echo "- **Branch**: $BRANCH"
     echo "- **Git**: $GIT_STATUS"
     if [ -n "$CHANGED_FILES" ]; then
@@ -110,4 +118,5 @@ jq -n \
   --arg git "$GIT_STATUS" \
   --arg ts "$TIMESTAMP" \
   --arg files "$FILE_COUNT" \
-  '{hookSpecificOutput:{hookEventName:"Stop",additionalContext:("AWF session auto-saved at " + $ts + ". Branch: " + $branch + ", Git: " + $git + ", Files: " + $files)}}'
+  --arg event "$HOOK_EVENT" \
+  '{hookSpecificOutput:{hookEventName:$event,additionalContext:("AWF session auto-saved at " + $ts + ". Branch: " + $branch + ", Git: " + $git + ", Files: " + $files)}}'

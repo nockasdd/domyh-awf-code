@@ -1,7 +1,8 @@
 # AGENT RULES
 
-Six principles that target the predictable failure modes of LLM coding agents.
-These rules work standalone (no MCP required) and enhance with MCP when available.
+Core principles that target the predictable failure modes of LLM coding agents,
+plus the protocols (batching, delegation, comments, trace flow, MCP fallback) that
+depend on them. These rules work standalone (no MCP required) and enhance with MCP when available.
 
 ## 1. Think Before Coding
 
@@ -145,7 +146,7 @@ GOOD: `// OAuth2 spec 4.1: token refresh needs 5s buffer for clock skew`
 
 ---
 
-## 8. Trace Flow Protocol (DRY enforcement)
+## 10. Trace Flow Protocol (DRY enforcement)
 
 Before MODIFYING a function:
 1. Grep symbol/function name across project
@@ -170,7 +171,7 @@ Self-check: "If a teammate searched for this, would they find existing code firs
 
 ---
 
-## 9. MCP Fallback Schema (when HSA unavailable)
+## 11. MCP Fallback Schema (when HSA unavailable)
 
 When `hsa_session(persist)` not available, manually update `memory/session.md`:
 
@@ -202,19 +203,19 @@ Never silently skip fallback. State explicitly: "MCP unavailable, using manual r
 
 ---
 
-## Terminal Safety (Windows & POSIX)
+## 12. Terminal Safety (Windows & POSIX)
 
 Never use: pipes (|), pagers (less/more/man), interactive prompts without -y, infinite commands (tail -f, watch).
 Never spawn arbitrary external GUI executables or unverified binaries (e.g. `orca`, `orca.exe`, external screen readers). All operations must stay within the active IDE/CLI agent harness.
 Detect shell first: cmd = wrap cmd /c, bash = native &&, powershell = ; or &&.
 
-## Orchestration Trigger
+## 13. Orchestration Trigger
 
 Score <4: single agent. Score 4-6.5: suggest multi-specialist. Score >=6.5: auto-orchestrate.
 Signals: 3+ domains, 5+ files, frontend+backend+test combined, explicit complexity keywords.
 
 ---
 
-## Meta
+## 14. Meta
 
 These rules are working if: fewer unnecessary changes in diffs, fewer rewrites from overcomplication, clarifying questions come before implementation not after mistakes, and token overhead stays under 5% of context budget.

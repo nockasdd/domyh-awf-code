@@ -17,6 +17,6 @@
     "hsa_session - Intent/persist/anchor",
     "hsa_trace_flow - Call chain tracing",
     "hsa_check_changes - File change tracking",
-    "hsa_delegate - Cross-model cascade"
+    "hsa_delegate - Sub-agent task contracts"
   ]
 }

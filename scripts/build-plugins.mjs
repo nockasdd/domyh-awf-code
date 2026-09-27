@@ -9,7 +9,7 @@
  */
 
 import { existsSync, mkdirSync, writeFileSync, readFileSync, rmSync, readdirSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,8 +20,10 @@ const AGENT_DIR = join(ROOT_DIR, '.agent');
 const CONFIGS_DIR = join(ROOT_DIR, 'configs');
 const DIST_PLUGINS_DIR = join(ROOT_DIR, 'dist-plugins');
 
-const VERSION = '7.2.6';
-const HSA_VERSION = '2.0.11';
+const VERSION = readVersionField(join(AGENT_DIR, 'core', 'VERSION.yaml'), /^\s*version:\s*"?([\d.]+)"?/m);
+const HSA_VERSION = JSON.parse(
+  readFileSync(resolve(ROOT_DIR, '..', 'domyh-hsa-mcp', 'package.json'), 'utf-8')
+).version;
 const AUTHOR = 'NockDev (DOMYH Awesome Code)';
 
 console.log('🚀 Starting DOMYH Multi-Target Plugin Builder v' + VERSION + '...');
@@ -32,7 +34,26 @@ if (existsSync(DIST_PLUGINS_DIR)) {
 }
 mkdirSync(DIST_PLUGINS_DIR, { recursive: true });
 
+// ─── HELPER: Read version from SSoT ───────────────────────────────────────
+// VERSION.yaml and package.json are the version sources; hardcoding them here
+// is what let 7.2.6 drift a full major behind 6.7.13.
+function readVersionField(file, regex) {
+  const match = readFileSync(file, 'utf-8').match(regex);
+  if (!match) throw new Error(`Cannot parse version from ${file}`);
+  return match[1];
+}
+
 // ─── HELPER: Copy directory safely ────────────────────────────────────────
+// rules/dist holds compile-rules-bundle.js output, consumed only by doctor.ts
+// self-check. It is build output, not source — never ship it to an IDE.
+// rules/legacy-modules is a local pre-consolidation backup, superseded by
+// AGENT_RULES.md + SACRED_RULES.xml.
+// filterFn receives the entry's own path, so match the parent dir via dirname.
+const RULES_SKIP_DIRS = new Set(['dist', 'legacy-modules']);
+function skipRulesBuildArtifacts(srcPath, entry) {
+  return !(entry.isDirectory() && RULES_SKIP_DIRS.has(entry.name) && basename(dirname(srcPath)) === 'rules');
+}
+
 function copyDir(src, dest, filterFn) {
   if (!existsSync(src)) return 0;
   mkdirSync(dest, { recursive: true });
@@ -207,7 +228,7 @@ writeFileSync(join(agyPluginDir, 'mcp_config.json'), JSON.stringify(agyMcpConfig
 
 // 2.3 Rules (rules/)
 const agyRulesDir = join(agyPluginDir, 'rules');
-copyDir(join(AGENT_DIR, 'rules'), agyRulesDir);
+copyDir(join(AGENT_DIR, 'rules'), agyRulesDir, skipRulesBuildArtifacts);
 
 // 2.4 Skills (skills/)
 const agySkillsDir = join(agyPluginDir, 'skills');
@@ -245,7 +266,7 @@ if (existsSync(codexAgentsMd)) {
 }
 
 // 3.2 Rules and Skills
-copyDir(join(AGENT_DIR, 'rules'), join(codexPluginDir, 'rules'));
+copyDir(join(AGENT_DIR, 'rules'), join(codexPluginDir, 'rules'), skipRulesBuildArtifacts);
 copyDir(join(AGENT_DIR, 'skills'), join(codexPluginDir, 'skills'));
 
 // 3.3 Codex Manifest
@@ -274,7 +295,7 @@ if (existsSync(cursorRulesFile)) {
   const content = readFileSync(cursorRulesFile, 'utf-8').replace('{{LANGUAGE_INSTRUCTION}}', DEFAULT_LANG_INSTRUCTION);
   writeFileSync(join(cursorBundleDir, '.cursorrules'), content, 'utf-8');
 }
-copyDir(join(AGENT_DIR, 'rules'), join(cursorBundleDir, '.cursor', 'rules'));
+copyDir(join(AGENT_DIR, 'rules'), join(cursorBundleDir, '.cursor', 'rules'), skipRulesBuildArtifacts);
 const cursorMcp = {
   mcpServers: {
     'domyh-hsa': {

@@ -2,7 +2,6 @@
   "name": "DOMYH Awesome Code",
   "version": "v6.6.7",
   "windsurf": {
-    "cascade_enabled": true,
     "flows_enabled": true
   },
   "activation": {

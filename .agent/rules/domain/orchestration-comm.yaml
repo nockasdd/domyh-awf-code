@@ -54,26 +54,24 @@ channels:
       - "decision: Agent made architectural/technical decision"
       - "blocker: Agent cannot proceed, needs input"
 
-  # Channel 4: Cascade (cross-model delegation)
-  cascade:
-    description: "Cross-model delegation via hsa_delegate cascade"
-    when: "Complex sub-task needs specialized model (e.g., Opus for review, Flash for quick code)"
+  # Channel 4: Native subagent dispatch
+  native_dispatch:
+    description: "Hand a prepared contract to the platform's own subagent tool"
+    when: "A subtask is independent enough to run without the main context"
     task_types: [code, test, review, debug, browser, research]
     lifecycle:
-      1: "hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'[type]'})"
-      2: "Wait 5 seconds for model to process"
-      3: "hsa_delegate({action:'cascade_read', cascade_id:'[id]'})"
-      4: "Repeat step 3 (3-5s intervals, max 10 polls)"
-      5: "Use response or hsa_delegate({action:'cascade_cancel', cascade_id:'[id]'})"
-    model_selection: "Auto from user dashboard routing | cascade_model param override | cascade_models to list available"
-    # ⚠️ MANDATORY: Agent MUST evaluate cascade before EXECUTE step
+      1: "hsa_delegate({action:'prepare', task_type:'[type]', focus_files:[...]})"
+      2: "Dispatch through the platform's native subagent tool (Agent, invoke_subagent, background agent)"
+      3: "Collect the result when it returns"
+      4: "hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})"
+    # MANDATORY: evaluate delegation before the EXECUTE step
     mandatory_evaluation:
       trigger: "Before EXECUTE step in any workflow"
-      check: "Is hsa_delegate MCP tool available?"
-      scoring: "See delegation-intelligence skill Quick Complexity Score (H1-H10)"
-      auto_cascade: "Complexity ≥ 8 (>200 LOC, multi-file, complex algorithm)"
-      suggest_cascade: "Complexity 5-7 (>100 LOC, moderate changes)"
-      skip: "Complexity < 5 or hsa_delegate unavailable"
+      check: "Does the platform expose a subagent tool?"
+      scoring: "See delegation-intelligence skill 1% Trigger Gate"
+      auto_delegate: "Complexity ≥ 8 (>200 LOC, multi-file, complex algorithm)"
+      suggest_delegate: "Complexity 5-7 (>100 LOC, moderate changes)"
+      skip: "Complexity < 5 or no subagent tool available"
 
 # ═══ COMMUNICATION FLOW ═══
 

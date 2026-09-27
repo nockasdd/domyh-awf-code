@@ -94,12 +94,14 @@ Domain-specific rules in `domain/`:
 
 | Module                          | Purpose                      | Triggered When        |
 | ------------------------------- | ---------------------------- | --------------------- |
-| `cpp-build.yaml`                 | C++ single-binary build      | C++ projects detected |
-| `game-safety.yaml`               | Game creation safety         | Unity/UE projects     |
-| `game-security.yaml`             | Game dev security            | Game automation       |
-| `reverse-engineering.yaml`       | Binary/IDA/Ghidra/x64dbg     | EXE/DLL audit         |
 | `orchestration-comm.yaml`        | Agent-to-agent communication | Orchestration active  |
 | `orchestration-deleg.yaml`       | Task delegation patterns     | Orchestrator persona  |
+
+Stack-gated concerns (C++ build, Unity/UE game safety, game security, binary
+reverse-engineering) live as skills under `.agent/skills/cross-cutting/` —
+`coding-rules`, `game-development`, `game-automation`, `reverse-engineering`.
+They carry `detect:` globs so they activate on matching files, which rules in
+this directory cannot.
 
 Data files in `data/`:
 
@@ -116,7 +118,7 @@ Data files in `data/`:
 .agent/rules/
 ├── README.md                       # This file
 ├── SACRED_RULES.xml                # Core XML rules (always active)
-├── AGENT_RULES.md                  # 6 principles (Markdown fallback for non-MCP)
+├── AGENT_RULES.md                  # Full agent protocol (Markdown fallback for non-MCP)
 ├── prompt-injection-guard.md       # Security: prompt injection patterns
 ├── validation-framework.md         # 6-phase pre-implementation validation
 ├── modules/                        # Composable rules (5 active)
@@ -125,11 +127,7 @@ Data files in `data/`:
 │   ├── terminal-safety.yaml
 │   ├── git-workflow.yaml
 │   └── behavioral-patterns.yaml
-├── domain/                         # Stack-specific rules (6 modules)
-│   ├── cpp-build.yaml
-│   ├── game-safety.yaml
-│   ├── game-security.yaml
-│   ├── reverse-engineering.yaml
+├── domain/                         # Orchestration rules (2 modules)
 │   ├── orchestration-comm.yaml
 │   └── orchestration-deleg.yaml
 └── data/                           # Detection data
@@ -171,7 +169,7 @@ Tier 0 (Core) > Tier 1 (Safety) > Tier 2 (Execution) > Modular Rules
 
 ## Reflection Pattern
 
-All rules support reflection via `modules/reflection.yaml`:
+All rules support reflection via `SACRED_RULES.xml` `<rationale>` elements:
 
 ```yaml
 reflection:
@@ -218,20 +216,33 @@ integration:
 
 ## Migration from Legacy Rules
 
-Legacy `.md` rules are being migrated to modular `.yaml` format:
+Legacy `.md` rules were migrated to modular `.yaml` format, then consolidated
+into `AGENT_RULES.md` + `SACRED_RULES.xml` v3.2 (18 rules → 10). Kept as modules
+because they stay persona- or workflow-gated rather than always-on:
 
-| Legacy File             | Migrated To                      | Status  |
-| ----------------------- | -------------------------------- | ------- |
-| `edit-verification.md`   | `modules/edit-verification.yaml` | Done    |
-| `terminal-safety.md`      | `modules/terminal-safety.yaml`   | Done    |
-| `git-workflow.yaml`      | `modules/git-workflow.yaml`      | Done    |
-| `quality.yaml`           | `modules/quality.yaml`           | Done    |
-| `language.yaml`          | `modules/language.yaml`          | Done    |
-| `yagni-enforcement.md`   | `modules/yagni.yaml`            | Done    |
-| `online-research.yaml`    | `modules/online-research.yaml`    | Done    |
-| `context-management.md`   | Merged into Tier 2               | Done    |
-| `evidence.md`            | Merged into Tier 2               | Done    |
-| `stop-conditions.md`      | Merged into Tier 1               | Done    |
+| Kept as module              | Replaced by                          |
+| --------------------------- | ------------------------------------ |
+| `terminal-safety.yaml`      | Terminal Safety section, `AGENT_RULES.md` |
+| `git-workflow.yaml`         | kept as module (git operations only)  |
+| `behavioral-patterns.yaml`  | §1-§6 "You are violating this if" lists |
+| `complexity-scoring.yaml`   | referenced by `SACRED_RULES.xml` MCP_004 |
+| `progressive-escalation.yaml` | referenced by `SACRED_RULES.xml` EXEC_006 |
+
+Consolidated into `AGENT_RULES.md` (no longer separate modules): `quality`,
+`yagni`, `read-before-write`, `stop-conditions`, `session-governance`,
+`drift-prevention`, `response-precision`, `proportional-response`,
+`edit-verification`, `output-hygiene`, `naming-discipline`,
+`performance-optimization`, `token-efficiency`, `language`,
+`memory-checkpoints`, `online-research`.
+
+Moved to `domain/` (orchestration-only): `orchestration-comm.yaml`,
+`orchestration-deleg.yaml` (renamed from `agent-communication.md`,
+`agent-delegation.md`).
+
+Moved to `skills/cross-cutting/` (stack-gated, carry `detect:` globs):
+`cpp-build.yaml` → `coding-rules`, `game-safety.yaml` → `game-development`,
+`game-security.yaml` → `game-automation`,
+`reverse-engineering.yaml` → `reverse-engineering`.
 
 ---
 

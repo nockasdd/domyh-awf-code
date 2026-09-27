@@ -233,17 +233,19 @@ When any workflow reaches the EXECUTE/WRITE step, follow these micro-steps:
 - **On workflow switch**: Unload previous, unload unused skills, summarize history
 - **At 10,000 tokens**: Aggressive summarization, unload all deferred
 
-## manifest.yaml Section Loading (20KB total)
+## manifest.yaml Section Loading
 
 For standalone mode, load ONLY what's needed:
 
-| Section | Lines | ~Tokens | When to Load |
-|:--------|:------|:--------|:-------------|
-| `commands:` | L200-616 | ~3000 | Always (routing table) |
-| `skills.categories:` | L58-175 | ~800 | On first stack detect |
-| `personas:` | L618-647 | ~200 | After routing |
-| `defaults:` | L17-23 | ~50 | Once per session |
-| Everything else | — | — | SKIP (duplicated in config.yaml, INDEX.yaml) |
+| Section | ~Tokens | When to Load |
+|:--------|:--------|:-------------|
+| `commands:` | ~3000 | Always (routing table) |
+| `personas:` | ~200 | After routing |
+| `defaults:` | ~50 | Once per session |
+| Everything else | — | SKIP (duplicated in config.yaml, INDEX.yaml) |
+
+Skill routing is `skills/INDEX.yaml`, not a section of this file — the two skill
+lists used to be duplicated here and drifted apart.
 
 ## Long Workflow Optimization
 
