@@ -6,7 +6,7 @@ import sys
 import threading
 import queue
 from io import StringIO
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 # Command queue for thread-safe Game Thread execution
 request_queue = queue.Queue()
@@ -59,7 +59,10 @@ class PythonExecutorHTTPHandler(BaseHTTPRequestHandler):
 
 
 def start_http_server():
-    server = HTTPServer(('127.0.0.1', 30011), PythonExecutorHTTPHandler)
+    # Each POST blocks for up to 30s waiting on the Game Thread, so a single
+    # serving thread would serialise every call and the second one would time
+    # out behind the first. The queue is what orders the work, not the server.
+    server = ThreadingHTTPServer(('127.0.0.1', 30011), PythonExecutorHTTPHandler)
     server.serve_forever()
 
 # Start background HTTP server

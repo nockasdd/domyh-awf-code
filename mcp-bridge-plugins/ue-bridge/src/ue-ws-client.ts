@@ -59,18 +59,23 @@ export class UnrealWebSocketClient {
     this.ws.send(JSON.stringify(payload));
 
     const timeoutMs = 30000;
-    
-    // Core Fix F-UE-04: NodeJS Memory Leak Guard with 30s Timeout
-    return Promise.race([
-      new Promise((resolve, reject) => {
-        this.pendingRequests.set(id, { resolve, reject });
-      }),
-      new Promise((_, reject) => setTimeout(() => {
-        if (this.pendingRequests.has(id)) {
-          this.pendingRequests.delete(id);
-          reject(new Error(`Timeout ${timeoutMs}ms waiting for Unreal Engine response to ${messageName}`));
-        }
-      }, timeoutMs))
-    ]);
+
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.pendingRequests.delete(id);
+        reject(new Error(`Timeout ${timeoutMs}ms waiting for Unreal Engine response to ${messageName}`));
+      }, timeoutMs);
+
+      this.pendingRequests.set(id, {
+        resolve: (val) => {
+          clearTimeout(timer);
+          resolve(val);
+        },
+        reject: (err) => {
+          clearTimeout(timer);
+          reject(err);
+        },
+      });
+    });
   }
 }
