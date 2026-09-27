@@ -22,11 +22,19 @@ from typing import List, Optional
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("ghidra-mcp-bridge")
+
+
+class BridgeError(RuntimeError):
+    """Bridge-side failure. Raising this makes FastMCP set isError, so the
+    agent sees a failed call instead of prose describing a failure."""
+
+
 GHIDRA_HTTP_HOST = os.environ.get("HSA_GHIDRA_HTTP_HOST", "127.0.0.1")
 GHIDRA_HTTP_PORT = int(os.environ.get("HSA_GHIDRA_HTTP_PORT", "28572"))
 GHIDRA_HTTP_PORT_RANGE = int(os.environ.get("HSA_GHIDRA_HTTP_PORT_RANGE", "32"))
 GHIDRA_HTTP_PROBE_TIMEOUT = max(0.05, int(os.environ.get("HSA_GHIDRA_PROBE_TIMEOUT_MS", "350")) / 1000)
 GHIDRA_HTTP_SCAN_WORKERS = max(1, int(os.environ.get("HSA_GHIDRA_SCAN_WORKERS", "32")))
+BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
 
 
 def _port_candidates(scan_ports: Optional[List[int]] = None) -> List[int]:
@@ -75,28 +83,43 @@ def _resolve_base_url(params: dict | None = None) -> str:
 
 
 def _request_json(url: str, payload: dict) -> dict:
+    if not BRIDGE_TOKEN:
+        raise BridgeError(
+            "HSA_BRIDGE_TOKEN is not set. The Ghidra plugin refuses to start without it, "
+            "because rename_symbol and create_struct write to the program. Set the same "
+            "token for this bridge and for Ghidra."
+        )
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json",
+                 "Authorization": "Bearer %s" % BRIDGE_TOKEN},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")
+        if e.code == 401:
+            raise BridgeError(
+                "Ghidra plugin rejected the token. HSA_BRIDGE_TOKEN must be identical for "
+                "this bridge and for the plugin (env, or hsa_bridge_token next to the script)."
+            )
+        raise BridgeError("Ghidra plugin returned %d: %s" % (e.code, detail))
 
 
 def ghidra_request(command: str, params: dict) -> dict:
     try:
         return _request_json(_resolve_base_url(params), {"command": command, "params": params})
+    except BridgeError:
+        # A missing or rejected token is a setup problem the agent must see
+        # verbatim, not another dict that format_result turns into prose.
+        raise
     except urllib.error.URLError as e:
         return {"ok": False, "error": "Cannot connect to Ghidra plugin: %s" % e}
     except Exception as e:
         return {"ok": False, "error": str(e)}
-
-
-class BridgeError(RuntimeError):
-    """Bridge-side failure. Raising this makes FastMCP set isError, so the
-    agent sees a failed call instead of prose describing a failure."""
 
 
 def format_result(res: dict) -> str:

@@ -7,6 +7,7 @@ bridge for the external MCP server.
 
 import json
 import os
+import hmac
 import threading
 import traceback
 
@@ -17,11 +18,24 @@ from java.util.concurrent import Executors
 from com.sun.net.httpserver import HttpServer, HttpHandler
 
 PLUGIN_NAME = "HSA MCP Bridge"
-PLUGIN_VERSION = "0.1.0"
+PLUGIN_VERSION = "0.2.0"
 HTTP_HOST = "127.0.0.1"
 HTTP_PORT = int(os.environ.get("HSA_GHIDRA_HTTP_PORT", "28572"))
 HTTP_PORT_RANGE = int(os.environ.get("HSA_GHIDRA_HTTP_PORT_RANGE", "32"))
 ACTIVE_HTTP_PORT = HTTP_PORT
+
+# Ghidra does not forward the launching shell's environment to the JVM, so the
+# token also comes from a file next to the script. The bridge writes it; see
+# server.py.
+BRIDGE_TOKEN = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
+if not BRIDGE_TOKEN:
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "hsa_bridge_token"), "r") as _fh:
+            BRIDGE_TOKEN = _fh.read().strip()
+    except Exception:
+        BRIDGE_TOKEN = ""
+MAX_BODY_BYTES = int(os.environ.get("HSA_GHIDRA_MAX_BODY_BYTES", str(4 * 1024 * 1024)))
 
 
 def _current_program():
@@ -345,41 +359,75 @@ class _Handler(HttpHandler):
     def __init__(self, server):
         self.server = server
 
+    def _send(self, exchange, status, body):
+        exchange.getResponseHeaders().add("Content-Type", "application/json")
+        exchange.sendResponseHeaders(status, len(body))
+        exchange.getResponseBody().write(body)
+        exchange.getResponseBody().close()
+
+    def _authorized(self, exchange):
+        if not BRIDGE_TOKEN:
+            return False, "HSA_BRIDGE_TOKEN is not set, so no call can be authenticated."
+        header = exchange.getRequestHeaders().getFirst("Authorization") or ""
+        prefix = "Bearer "
+        if not header.startswith(prefix):
+            return False, "Missing Authorization: Bearer <HSA_BRIDGE_TOKEN> header"
+        # compare_digest rather than ==, which returns on the first mismatched
+        # byte and so leaks the length of the matching prefix.
+        if not hmac.compare_digest(header[len(prefix):], BRIDGE_TOKEN):
+            return False, "Invalid HSA_BRIDGE_TOKEN"
+        return True, None
+
     def handle(self, exchange):
         try:
             method = exchange.getRequestMethod()
             if method == "GET":
+                # Liveness only. Unauthenticated because it discloses nothing
+                # actionable and keeps discovery from needing the token.
                 body = json.dumps({
                     "status": "ok",
                     "plugin": PLUGIN_NAME,
                     "version": PLUGIN_VERSION,
                     "port": ACTIVE_HTTP_PORT,
+                    "auth_required": bool(BRIDGE_TOKEN),
                     "commands": list(COMMANDS.keys()),
                 }).encode("utf-8")
             else:
-                length = int(exchange.getRequestHeaders().getFirst("Content-Length") or "0")
+                authorized, reason = self._authorized(exchange)
+                if not authorized:
+                    self._send(exchange, 401, json.dumps({"ok": False, "error": reason}).encode("utf-8"))
+                    return
+                raw_length = exchange.getRequestHeaders().getFirst("Content-Length")
+                length = int(raw_length or "0")
+                # Refused before the body is read, so an oversized request is
+                # never buffered.
+                if length > MAX_BODY_BYTES:
+                    self._send(exchange, 413, json.dumps({
+                        "ok": False,
+                        "error": "Request body is %d bytes, limit is %d" % (length, MAX_BODY_BYTES),
+                    }).encode("utf-8"))
+                    return
                 data = exchange.getRequestBody().read(length).decode("utf-8")
                 req = json.loads(data or "{}")
                 name = req.get("command") or req.get("cmd")
                 params = req.get("params", {})
                 handler = COMMANDS.get(name)
                 if handler is None:
-                    body = json.dumps({"ok": False, "error": "Unknown command: %s" % name}).encode("utf-8")
-                    exchange.sendResponseHeaders(404, len(body))
-                    exchange.getResponseBody().write(body)
-                    exchange.getResponseBody().close()
+                    self._send(exchange, 404, json.dumps({"ok": False, "error": "Unknown command: %s" % name}).encode("utf-8"))
                     return
                 body = json.dumps(handler(params), default=str).encode("utf-8")
+                exchange.getResponseHeaders().add("Content-Type", "application/json")
+                exchange.sendResponseHeaders(200, len(body))
+                exchange.getResponseBody().write(body)
+                exchange.getResponseBody().close()
+                return
 
-            exchange.getResponseHeaders().add("Content-Type", "application/json")
-            exchange.sendResponseHeaders(200, len(body))
-            exchange.getResponseBody().write(body)
-            exchange.getResponseBody().close()
+            self._send(exchange, 200, body)
         except Exception as e:
-            body = json.dumps({"ok": False, "error": "%s\n%s" % (e, traceback.format_exc())}).encode("utf-8")
-            exchange.sendResponseHeaders(500, len(body))
-            exchange.getResponseBody().write(body)
-            exchange.getResponseBody().close()
+            self._send(exchange, 500, json.dumps({
+                "ok": False,
+                "error": "%s\n%s" % (e, traceback.format_exc()),
+            }).encode("utf-8"))
 
 
 class HsaGhidraBridgePlugin(GhidraPlugin):
@@ -404,6 +452,14 @@ class HsaGhidraBridgePlugin(GhidraPlugin):
         global ACTIVE_HTTP_PORT
         if self._server is not None:
             return
+        if not BRIDGE_TOKEN:
+            # rename_symbol and create_struct write to the program. On an open
+            # localhost socket any local process could reach them.
+            raise PluginException(
+                "HSA bridge: no HSA_BRIDGE_TOKEN, so the server was not started. Set it in "
+                "the environment Ghidra sees, or write it next to this script as "
+                "hsa_bridge_token."
+            )
         last_error = None
         for port in range(HTTP_PORT, HTTP_PORT + max(1, HTTP_PORT_RANGE)):
             try:
