@@ -8,6 +8,22 @@ const server = new McpServer({
 });
 
 const UNITY_HTTP_BASE = process.env.UNITY_HTTP_URL ?? "http://127.0.0.1:30030";
+const BRIDGE_TOKEN = process.env.HSA_BRIDGE_TOKEN ?? "";
+
+/**
+ * The editor plugin refuses to start without a token: /create-script writes
+ * arbitrary C# into the project and /import-asset copies arbitrary files in.
+ */
+function authHeaders(): Record<string, string> {
+  if (!BRIDGE_TOKEN) {
+    throw new Error(
+      "HSA_BRIDGE_TOKEN is not set. The Unity editor plugin refuses to start without it, " +
+      "because /create-script writes arbitrary C# into the project. Set the same token for " +
+      "this bridge and for Unity.",
+    );
+  }
+  return { "Content-Type": "application/json", Authorization: `Bearer ${BRIDGE_TOKEN}` };
+}
 
 async function unityRequest(
   endpoint: string,
@@ -16,10 +32,16 @@ async function unityRequest(
   const url = `${UNITY_HTTP_BASE}${endpoint}`;
   const res = await fetch(url, {
     method: body ? "POST" : "GET",
-    headers: body ? { "Content-Type": "application/json" } : undefined,
+    headers: authHeaders(),
     body: body ? JSON.stringify(body) : undefined,
     signal: AbortSignal.timeout(30_000),
   });
+  if (res.status === 401) {
+    throw new Error(
+      "Unity editor rejected the token. HSA_BRIDGE_TOKEN must be identical for this bridge " +
+      "and for the editor (env, or <project>/Library/HsaBridgeConfig.json).",
+    );
+  }
   if (!res.ok) {
     throw new Error(`Unity API Error: ${res.status} ${res.statusText}`);
   }

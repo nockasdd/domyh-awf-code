@@ -23,13 +23,49 @@ public class HsaUnityServer
 {
     private const int PORT = 30030;
     private const string PREFIX = "http://127.0.0.1:30030/";
-    private const string VERSION = "2.0.0";
+    private const string VERSION = "2.1.0";
+    private const int MAX_BODY_BYTES = 4 * 1024 * 1024;
 
+    private static string _token = "";
     private static HttpListener _listener;
     private static CancellationTokenSource _cts;
     private static volatile bool _isRunning;
     private static readonly object _lock = new object();
     private static readonly ConcurrentQueue<Action> _queue = new ConcurrentQueue<Action>();
+
+    /// <summary>
+    /// The bridge sends the token as a header, and the Unity Editor process
+    /// does not share the bridge's environment, so it also comes from
+    /// &lt;project&gt;/Library/HsaBridgeConfig.json. Read here rather than in
+    /// the constructor so a token written after the editor opened still applies.
+    /// </summary>
+    private static void LoadToken()
+    {
+        string env = Environment.GetEnvironmentVariable("HSA_BRIDGE_TOKEN");
+        if (!string.IsNullOrEmpty(env)) { _token = env.Trim(); return; }
+        try
+        {
+            string path = Path.Combine(
+                Path.GetDirectoryName(Application.dataPath) ?? ".", "Library", "HsaBridgeConfig.json");
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                int key = json.IndexOf("\"token\"", StringComparison.Ordinal);
+                if (key >= 0)
+                {
+                    int colon = json.IndexOf(':', key);
+                    int open = json.IndexOf('"', colon + 1);
+                    int close = json.IndexOf('"', open + 1);
+                    if (open > 0 && close > open) _token = json.Substring(open + 1, close - open - 1);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("[HSA Bridge] Could not read bridge config: " + ex.Message);
+        }
+        if (string.IsNullOrEmpty(_token)) _token = "";
+    }
 
     // ── Bootstrap ─────────────────────────────────────────────
 
@@ -49,6 +85,18 @@ public class HsaUnityServer
         lock (_lock)
         {
             if (_isRunning) return;
+            LoadToken();
+            if (string.IsNullOrEmpty(_token))
+            {
+                // /create-script writes arbitrary C# into the project and
+                // /import-asset copies arbitrary files in. On an open localhost
+                // socket any local process could reach both.
+                Debug.LogError(
+                    "[HSA Bridge] Server NOT started: no HSA_BRIDGE_TOKEN. Set it in the " +
+                    "environment Unity sees, or write <project>/Library/HsaBridgeConfig.json.");
+                _isRunning = false;
+                return;
+            }
             try
             {
                 CleanupListener();
@@ -123,6 +171,30 @@ public class HsaUnityServer
         }
     }
 
+    /// <summary>
+    /// Constant-time compare: CryptographicOperations.FixedTimeEquals is 5.0+,
+    /// and the loop is kept because a plain == returns on the first mismatched
+    /// byte and so leaks the length of the matching prefix.
+    /// </summary>
+    private static bool TokenMatches(string expected, string given)
+    {
+        if (expected.Length != given.Length) return false;
+        int diff = 0;
+        for (int i = 0; i < expected.Length; i++) diff |= expected[i] ^ given[i];
+        return diff == 0;
+    }
+
+    private static string AuthFailure(HttpListenerRequest req)
+    {
+        string header = req.Headers["Authorization"] ?? "";
+        const string prefix = "Bearer ";
+        if (!header.StartsWith(prefix, StringComparison.Ordinal))
+            return "Missing Authorization: Bearer <HSA_BRIDGE_TOKEN> header";
+        if (!TokenMatches(_token, header.Substring(prefix.Length)))
+            return "Invalid HSA_BRIDGE_TOKEN";
+        return null;
+    }
+
     private static void HandleRequest(HttpListenerContext ctx)
     {
         HttpListenerRequest req = ctx.Request;
@@ -134,68 +206,94 @@ public class HsaUnityServer
             string body = string.Empty;
             if (req.HttpMethod == "POST" && req.HasEntityBody)
             {
+                if (req.ContentLength64 > MAX_BODY_BYTES)
+                {
+                    RespondOk(res, ErrJson("Request body is " + req.ContentLength64 +
+                        " bytes, limit is " + MAX_BODY_BYTES), 413);
+                    return;
+                }
                 using (StreamReader reader = new StreamReader(req.InputStream, req.ContentEncoding))
                 { body = reader.ReadToEnd(); }
             }
 
             // ── Route ─────────────────────────────────────────
-            if (string.IsNullOrEmpty(path) || path == "/")
-                RespondOk(res, InfoJson());
-            // Phase 0 — READ endpoints
-            else if (path == "/hierarchy")
-                RunOnMain(res, () => BuildHierarchy());
-            else if (path == "/properties")
-                RunOnMain(res, () => BuildProperties(body));
-            else if (path == "/scene-info")
-                RunOnMain(res, () => BuildSceneInfo());
-            // Phase 1 — OBJECT MANIPULATION
-            else if (path == "/create-object")
-                RunOnMain(res, () => DoCreateObject(body));
-            else if (path == "/add-component")
-                RunOnMain(res, () => DoAddComponent(body));
-            else if (path == "/set-transform")
-                RunOnMain(res, () => DoSetTransform(body));
-            else if (path == "/set-property")
-                RunOnMain(res, () => DoSetProperty(body));
-            else if (path == "/delete-object")
-                RunOnMain(res, () => DoDeleteObject(body));
-            else if (path == "/duplicate-object")
-                RunOnMain(res, () => DoDuplicateObject(body));
-            else if (path == "/set-parent")
-                RunOnMain(res, () => DoSetParent(body));
-            else if (path == "/rename-object")
-                RunOnMain(res, () => DoRenameObject(body));
-            else if (path == "/play-mode")
-                RunOnMain(res, () => DoPlayMode(body));
-            else if (path == "/get-logs")
-                RunOnMain(res, () => DoGetLogs(body));
-            else if (path == "/save-scene")
-                RunOnMain(res, () => DoSaveScene());
-            else if (path == "/new-scene")
-                RunOnMain(res, () => DoNewScene(body));
-            // Phase 2 — ASSET PIPELINE
-            else if (path == "/create-material")
-                RunOnMain(res, () => DoCreateMaterial(body));
-            else if (path == "/create-prefab")
-                RunOnMain(res, () => DoCreatePrefab(body));
-            else if (path == "/instantiate-prefab")
-                RunOnMain(res, () => DoInstantiatePrefab(body));
-            else if (path == "/import-asset")
-                RunOnMain(res, () => DoImportAsset(body));
-            else if (path == "/create-script")
-                RunOnMain(res, () => DoCreateScript(body));
-            // Existing
-            else if (path == "/execute-menu")
-                RunOnMain(res, () => DoExecuteMenu(body));
-            else if (path == "/recompile")
-                RunOnMain(res, () => DoRecompile());
+            // /health is unauthenticated on purpose: it answers only whether the
+            // listener is up, and discovery needs no token.
+            if (path == "/health")
+                RespondOk(res, "{\"status\":\"ok\",\"plugin\":\"HSA Unity Bridge\",\"version\":\"" +
+                    VERSION + "\",\"auth_required\":" + (string.IsNullOrEmpty(_token) ? "false" : "true") + "}");
             else
-                RespondOk(res, ErrJson("Unknown endpoint: " + path), 404);
+            {
+                string authError = AuthFailure(req);
+                if (authError != null)
+                {
+                    Debug.LogWarning("[HSA Bridge] Rejected: " + authError);
+                    RespondOk(res, ErrJson(authError), 401);
+                    return;
+                }
+                HandleAuthedRequest(res, path, body);
+            }
         }
         catch (Exception ex)
         {
             try { RespondOk(res, ErrJson(ex.Message), 500); } catch { }
         }
+    }
+
+    private static void HandleAuthedRequest(HttpListenerResponse res, string path, string body)
+    {
+        if (string.IsNullOrEmpty(path) || path == "/")
+            RespondOk(res, InfoJson());
+        // Phase 0 — READ endpoints
+        else if (path == "/hierarchy")
+            RunOnMain(res, () => BuildHierarchy());
+        else if (path == "/properties")
+            RunOnMain(res, () => BuildProperties(body));
+        else if (path == "/scene-info")
+            RunOnMain(res, () => BuildSceneInfo());
+        // Phase 1 — OBJECT MANIPULATION
+        else if (path == "/create-object")
+            RunOnMain(res, () => DoCreateObject(body));
+        else if (path == "/add-component")
+            RunOnMain(res, () => DoAddComponent(body));
+        else if (path == "/set-transform")
+            RunOnMain(res, () => DoSetTransform(body));
+        else if (path == "/set-property")
+            RunOnMain(res, () => DoSetProperty(body));
+        else if (path == "/delete-object")
+            RunOnMain(res, () => DoDeleteObject(body));
+        else if (path == "/duplicate-object")
+            RunOnMain(res, () => DoDuplicateObject(body));
+        else if (path == "/set-parent")
+            RunOnMain(res, () => DoSetParent(body));
+        else if (path == "/rename-object")
+            RunOnMain(res, () => DoRenameObject(body));
+        else if (path == "/play-mode")
+            RunOnMain(res, () => DoPlayMode(body));
+        else if (path == "/get-logs")
+            RunOnMain(res, () => DoGetLogs(body));
+        else if (path == "/save-scene")
+            RunOnMain(res, () => DoSaveScene());
+        else if (path == "/new-scene")
+            RunOnMain(res, () => DoNewScene(body));
+        // Phase 2 — ASSET PIPELINE
+        else if (path == "/create-material")
+            RunOnMain(res, () => DoCreateMaterial(body));
+        else if (path == "/create-prefab")
+            RunOnMain(res, () => DoCreatePrefab(body));
+        else if (path == "/instantiate-prefab")
+            RunOnMain(res, () => DoInstantiatePrefab(body));
+        else if (path == "/import-asset")
+            RunOnMain(res, () => DoImportAsset(body));
+        else if (path == "/create-script")
+            RunOnMain(res, () => DoCreateScript(body));
+        // Existing
+        else if (path == "/execute-menu")
+            RunOnMain(res, () => DoExecuteMenu(body));
+        else if (path == "/recompile")
+            RunOnMain(res, () => DoRecompile());
+        else
+            RespondOk(res, ErrJson("Unknown endpoint: " + path), 404);
     }
 
     // ══════════════════════════════════════════════════════════
@@ -209,7 +307,7 @@ public class HsaUnityServer
           .Append(VERSION).Append("\",\"unity\":\"").Append(Esc(Application.unityVersion)).Append("\",")
           .Append("\"endpoints\":[");
         string[] eps = new string[] {
-            "/","/hierarchy","/properties","/scene-info",
+            "/","/health","/hierarchy","/properties","/scene-info",
             "/create-object","/add-component","/set-transform","/set-property",
             "/delete-object","/duplicate-object","/set-parent","/rename-object",
             "/play-mode","/get-logs","/save-scene","/new-scene",
