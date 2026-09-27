@@ -61,12 +61,23 @@ if not BRIDGE_TOKEN:
     except Exception:
         BRIDGE_TOKEN = ""
 MAX_BODY_BYTES = int(os.environ.get("HSA_IDA_MAX_BODY_BYTES", str(4 * 1024 * 1024)))
+SYNC_TIMEOUT_S = float(os.environ.get("HSA_IDA_SYNC_TIMEOUT_S", "30"))
 
 # ── Thread-safe IDA execution ──────────────────────────────────────
 # ALL IDA API calls MUST run on the main thread via execute_sync.
 
-def sync_exec(fn, write=False):
-    """Execute a function on IDA's main thread and return the result."""
+def sync_exec(fn, write=False, timeout=None):
+    """Execute a function on IDA's main thread and return the result.
+
+    execute_sync takes no timeout, and it blocks the calling thread until IDA's
+    main thread drains the queue — so when the main thread is stuck, the call
+    that reports the stall is itself the one that hangs. The call is therefore
+    issued from a throwaway thread, and what gets bounded is our wait for it.
+
+    That bounds only this caller. The wrapper stays queued inside IDA and will
+    still run whenever the main thread frees up, writing into a box nobody reads;
+    nothing in this process can preempt it.
+    """
     box = {}
     def wrapper():
         try:
@@ -75,7 +86,19 @@ def sync_exec(fn, write=False):
             box["err"] = str(e)
             box["tb"] = traceback.format_exc()
     flags = ida_kernwin.MFF_WRITE if write else ida_kernwin.MFF_READ
-    ida_kernwin.execute_sync(wrapper, flags)
+
+    limit = SYNC_TIMEOUT_S if timeout is None else timeout
+    dispatcher = threading.Thread(
+        target=ida_kernwin.execute_sync, args=(wrapper, flags), daemon=True)
+    dispatcher.start()
+    dispatcher.join(limit)
+
+    if "v" not in box and "err" not in box:
+        raise RuntimeError(
+            "IDA main thread did not finish within %ss. The work is still queued inside "
+            "IDA and cannot be cancelled; the UI is likely blocked. Do not retry until it "
+            "responds." % limit
+        )
     if "err" in box:
         raise RuntimeError(box["err"])
     return box.get("v")
