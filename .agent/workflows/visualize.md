@@ -54,17 +54,16 @@ fidelity:
    - `hsa_canvas({action:"open"})` → start dev server (auto-detect)
    - `hsa_canvas({action:"capture"})` → screenshot + CDP diagnostics (health, AX tree, CLS)
    - Show Grade (A-F) + score (/100) to user
-   - Iterate: `hsa_canvas({action:"update", css_edits})` → instant CSS (no reload)
-   - Repeat capture→diff until approved
+   - Iterate: rewrite the HTML, then `hsa_canvas({action:"capture"})` again until approved
    - → ⛔ **STOP: "Preview ready. Approve to build with {framework}?"**
    - `hsa_canvas({action:"close"})` when done
    - **Fallback**: If Canvas unavailable → `browser_subagent` to open preview HTML
 5. **EXECUTE** — Convert approved preview → framework components, apply design system
 6. **RESPONSIVE** — Container query verification + fluid typography + breakpoint validation (375/768/1024/1280/1536px)
-7. **VERIFY** — `hsa_design({action:'health', strict:true})` for WCAG + a11y audit:
-   - `hsa_canvas({action:"capture", baseline:true})` → VRT baseline
-   - `hsa_canvas({action:"inspect", selector:'...'})` → CSS cascade, AX role
-   - `hsa_canvas({action:"diff", before:"baseline", after:"latest"})` → visual regression
+7. **VERIFY** — `hsa_design({action:'health'})` for WCAG + a11y audit:
+   - `hsa_canvas({action:"capture", path:"<snapshot-dir>/after.png"})` → VRT artifact to diff against the baseline
+   - `hsa_canvas({action:"list"})` → enumerate existing snapshots before overwriting a baseline
+   - CSS cascade and AX role: read `domyh-design/data/ux-guidelines.yaml` (canvas exposes no inspect/diff action)
    > Full WCAG 2.2 checklist: `domyh-design/data/ux-guidelines.yaml`
 8. **SYNC** — `hsa_check_changes`, save design decisions to memory
 
@@ -136,16 +135,16 @@ fidelity:
 
 ---
 
-## CASCADE EVALUATION (Recommended — MCP)
+## DELEGATION (Recommended)
 
 ⚠️ **Evaluate before EXECUTE** — see `delegation-intelligence` skill for scoring.
 
 ```
-hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'browser'})
-→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+hsa_delegate({action:'prepare', task_type:'browser', task_description:'[prompt]', focus_files:[...]})
+→ dispatch via the platform's native subagent tool
 ```
-**Auto-cascade** (≥6.5): Multi-platform, design system migration
-**Suggest cascade** (4.0-6.5): VRT >10 components, complex layout
+**Auto-delegate** (≥6.5): Multi-platform, design system migration
+**Suggest delegation** (4.0-6.5): VRT >10 components, complex layout
 
 ---
 
@@ -162,7 +161,7 @@ hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'browser'})
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
    - Design tokens used (no magic values)? Responsive verified? WCAG health ≥ B?

@@ -116,24 +116,23 @@ test.describe("User Login Flow", () => {
 
 ---
 
-## 🔄 CASCADE EVALUATION (Recommended — MCP)
+## 🔄 DELEGATION (Recommended)
 
 ⚠️ **Evaluate before EXECUTE step** — see `delegation-intelligence` skill for scoring.
 
-For E2E test generation, delegate to specialized model via cascade:
+For E2E test generation, delegate to a subagent:
 ```
-hsa_delegate({action:'cascade', cascade_text:'[detailed prompt]', task_type:'test'})
-→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
-→ repeat cascade_read (3-5s intervals, max 10 polls)
+hsa_delegate({action:'prepare', task_type:'test', task_description:'[detailed prompt]', focus_files:[...]})
+→ dispatch via the platform's native subagent tool
 ```
-**Auto-cascade** (weighted score ≥6.5): Multi-page flow (checkout, onboarding), >10 E2E tests
-**Suggest cascade** (weighted score 4.0-6.5): Comprehensive E2E suite, cross-browser testing
+**Auto-delegate** (weighted score ≥6.5): Multi-page flow (checkout, onboarding), >10 E2E tests
+**Suggest delegation** (weighted score 4.0-6.5): Comprehensive E2E suite, cross-browser testing
 
 ---
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):

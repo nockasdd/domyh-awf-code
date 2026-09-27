@@ -90,4 +90,4 @@ Before completing, verify:
 
 > If any check fails → go back to Step 2 and retry.
 > If MCP unavailable → file-only save is acceptable.
-\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n
+\n---\n\n## REFLECTION CHECKPOINT\n\n⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):\n\n1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?\n2. **PERSIST** (if HSA available):\n   - `hsa_session({action:'persist', task_summary:'[workflow] [summary]', files_touched:[...]})`\n3. **PERSIST** (if HSA unavailable):\n   - Append task summary to `memory/session.md`\n

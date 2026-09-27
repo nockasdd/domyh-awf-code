@@ -74,10 +74,10 @@ success_criteria: "Pre-read verified, surgical change applied, post-read confirm
 
 ---
 
-## 🤝 CASCADE & SUBAGENT DELEGATION
+## 🤝 SUBAGENT DELEGATION
 
-*   **Auto Cascade** (Complexity Score $\ge$ 6.5 or scope > 200 lines): Delegate to specialized subagents.
-*   **Suggest Cascade** (Score 4.0 – 6.5 or scope 100 – 200 lines): Propose plan to user before decomposing.
+*   **Auto delegate** (Complexity Score $\ge$ 6.5 or scope > 200 lines): Decompose and dispatch to the platform's native subagent tool.
+*   **Suggest delegation** (Score 4.0 – 6.5 or scope 100 – 200 lines): Propose the decomposition to the user before dispatching.
 
 ---
 

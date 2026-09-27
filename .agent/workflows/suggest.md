@@ -87,7 +87,7 @@ Quick: Enter 1-5 to run suggestion
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available):

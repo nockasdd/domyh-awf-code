@@ -70,7 +70,7 @@ success_criteria: "architecture mapped, getting-started guide generated, report 
   • hsa_search — Code search (BM25 + Vector)
   • hsa_explore — Project map (PageRank)
   • hsa_trace_flow — Dependency tracing
-  • hsa_delegate — Cross-model cascade
+  • hsa_delegate — Sub-agent task contracts
   + 12 more tools
 
 💡 Start with: /help → /code → /suggest
@@ -190,7 +190,7 @@ graph TD
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):

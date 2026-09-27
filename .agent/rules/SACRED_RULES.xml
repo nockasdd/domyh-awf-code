@@ -55,15 +55,15 @@
   </requirement>
 
   <requirement id="CONTEXT_001" tier="2" severity="warn">
-    <text>Read existing code BEFORE writing new code. Before MODIFYING a function: grep symbol, read callers, read tests. Before CREATING new function/file: grep for similar names, check utils/lib/shared, check index exports, check archive/. Before ADDING dependency: search existing utils first. See AGENT_RULES.md §8 for full Trace Flow Protocol.</text>
+    <text>Read existing code BEFORE writing new code. Before MODIFYING a function: grep symbol, read callers, read tests. Before CREATING new function/file: grep for similar names, check utils/lib/shared, check index exports, check archive/. Before ADDING dependency: search existing utils first. See AGENT_RULES.md §10 for full Trace Flow Protocol.</text>
     <rationale>DRY violations come from agents not searching first. Trace flow prevents broken signatures and duplicate logic — the 2 most common cross-file bugs.</rationale>
-    <reference>rules/AGENT_RULES.md#trace-flow-protocol</reference>
+    <reference>rules/AGENT_RULES.md#10-trace-flow-protocol-dry-enforcement</reference>
   </requirement>
 
   <requirement id="COMMENT_001" tier="2" severity="warn">
-    <text>Default: NO comments. Add only when WHY is non-obvious (hidden constraint, workaround for specific bug, surprising behavior, public API contract). Never write WHAT (code shows that), version markers, "added by X for Y", phase markers, TODO without issue ref, trailing summaries. Single line preferred. See AGENT_RULES.md §7 for full Comment Policy.</text>
+    <text>Default: NO comments. Add only when WHY is non-obvious (hidden constraint, workaround for specific bug, surprising behavior, public API contract). Never write WHAT (code shows that), version markers, "added by X for Y", phase markers, TODO without issue ref, trailing summaries. Single line preferred. See AGENT_RULES.md §9 for full Comment Policy.</text>
     <rationale>Comments rot faster than code. WHAT comments are noise. WHY comments are signal. Most LLM-written comments are WHAT — must counteract this default.</rationale>
-    <reference>rules/AGENT_RULES.md#comment-policy</reference>
+    <reference>rules/AGENT_RULES.md#9-comment-policy</reference>
   </requirement>
 
   <requirement id="MCP_TOOLS" tier="2" severity="warn">
@@ -74,12 +74,12 @@
     Trace: hsa_trace_flow for call chains and blast radius (forward/backward/both, action:'impact').
     Session: hsa_session for intent, track, anchor, drift, persist (with auto_notify for Telegram).
     Memory: hsa_memory for cross-session decisions/patterns/errors.
-    Delegation: hsa_delegate(action:'cascade') for cross-model routing — task_type: code|test|review|debug|browser|research.
+    Delegation: hsa_delegate(action:'prepare') builds the task contract and context packet; the platform's own subagent tool dispatches it.
     UI: hsa_design for design system. hsa_canvas for visual feedback (open, capture, diff, extract, inspect).
     External: hsa_research for repo investigation. hsa_feedback after task to improve rankings.
-    When MCP unavailable: see AGENT_RULES.md §9 MCP Fallback Schema.</text>
-    <rationale>HSA tools provide 70-95% token savings vs manual operations. Cascade enables per-workflow model routing from user dashboard. Without these, agents waste context on operations the engine handles natively.</rationale>
-    <reference>rules/AGENT_RULES.md#mcp-fallback-schema</reference>
+    When MCP unavailable: see AGENT_RULES.md §11 MCP Fallback Schema.</text>
+    <rationale>HSA tools provide 70-95% token savings vs manual operations. Delegation contracts let a sub-agent work from a bounded context instead of the full session. Without these, agents waste context on operations the engine handles natively.</rationale>
+    <reference>rules/AGENT_RULES.md#11-mcp-fallback-schema-when-hsa-unavailable</reference>
   </requirement>
 
   <requirement id="ORCHESTRATE_001" tier="2" severity="warn">
@@ -87,12 +87,13 @@
     Score &lt; 4.0: route to single persona normally.
     Score 4.0-6.5: SUGGEST orchestration to user.
     Score ≥ 6.5: AUTO-activate Orchestrator persona, execute orchestrate.md (INIT → DECOMPOSE → ASSIGN → PLAN, then STOP for user approval).
-    Cascade evaluation runs alongside (when user has cascade enabled in dashboard): score 4-6.5 suggest, score 6.5+ auto-cascade primary task_type.</text>
+    At any score, delegation to sub-agents is a distribution decision: the orchestrator decomposes the work and dispatches through the platform's native subagent tool.</text>
     <rationale>Single-persona routing of complex tasks produces fragmented results. Multi-agent coordination improves output quality 90% for complex tasks (Anthropic 2025).</rationale>
     <config>
       <scoring>rules/modules/complexity-scoring.yaml</scoring>
       <delegation>rules/domain/orchestration-deleg.yaml</delegation>
       <communication>rules/domain/orchestration-comm.yaml</communication>
+      <protocol>rules/AGENT_RULES.md#8-tri-tier-subagent-delegation-protocol</protocol>
     </config>
   </requirement>
 
@@ -101,7 +102,7 @@
   <requirement id="SESSION_001" tier="3" severity="warn">
     <text>Session lifecycle:
     START: Read .agent/memory/session_rules.json if exists. With MCP: bootstrap auto-loads. Without MCP: read CONTEXT_SNAPSHOT.md.
-    DURING: With MCP, hsa_session(persist, task_summary, files_touched) after each milestone. Without MCP, append to memory/session.md using schema in AGENT_RULES.md §9.
+    DURING: With MCP, hsa_session(persist, task_summary, files_touched) after each milestone. Without MCP, append to memory/session.md using schema in AGENT_RULES.md §11.
     DETECT preferences from trigger phrases ("from now on", "always", "never", "remember", "từ giờ", "luôn luôn"). FILTER sensitive content (passwords, api_keys, tokens, certificates) — reject before write.
     END: With MCP, hsa_session(persist, snapshot, auto_notify:true). Without MCP, update memory/CONTEXT_SNAPSHOT.md.
     Session rules override Tier 3+ only. Tier 0-2 always enforced.</text>
@@ -124,7 +125,7 @@
     Stack: Detect tech stack at task start (hsa_detect or check package.json/go.mod/Cargo.toml/*.sln). Load matching skills.
     DRY: Search existing utils/helpers/shared before creating new (see CONTEXT_001).
     Incremental: Small batches (1-3 files), verify after each step, commit atomically.
-    Stuck: After 2 retry attempts, activate Progressive Escalation (REFLECT → REFRAME → CASCADE → WIDEN → DECOMPOSE → ESCALATE). See rules/modules/progressive-escalation.yaml.
+    Stuck: After 2 retry attempts, activate Progressive Escalation (REFLECT → REFRAME → WIDEN → DECOMPOSE → ESCALATE). See rules/modules/progressive-escalation.yaml.
     If context exceeds 80% capacity, summarize progress first.</text>
     <rationale>Progressive strategy shifts (Reflexion + Devil's Advocate + Bias Mitigation) resolve 60-80% of stuck states without user intervention. Escalation to user should be last resort.</rationale>
     <reference>rules/modules/progressive-escalation.yaml</reference>

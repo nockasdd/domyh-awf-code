@@ -54,6 +54,12 @@ jobs:
       - name: Validate public agent content
         run: node scripts/validate-agent-public.mjs
 
+      - name: Check skills index is in sync with META.yaml
+        run: node scripts/generate-skills-index.mjs --check
+
+      - name: Check compiled rule bundles are in sync
+        run: node scripts/compile-rules-bundle.js --check
+
       - name: Check broken links in README
         uses: lycheeverse/lychee-action@v2
         with:

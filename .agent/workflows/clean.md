@@ -110,22 +110,22 @@ success_criteria: "Dead code removed, imports organized, build passes"
 
 ---
 
-## CASCADE EVALUATION (Recommended — MCP)
+## DELEGATION (Recommended)
 
 ⚠️ **Evaluate before EXECUTE** — see `delegation-intelligence` skill for scoring.
 
 ```
-hsa_delegate({action:'cascade', cascade_text:'[prompt]', task_type:'code'})
-→ wait 5s → hsa_delegate({action:'cascade_read', cascade_id:'...'})
+hsa_delegate({action:'prepare', task_type:'code', task_description:'[prompt]', focus_files:[...]})
+→ dispatch via the platform's native subagent tool
 ```
-**Auto-cascade** (≥6.5): Multi-language project cleanup, monorepo-wide dead code scan
-**Suggest cascade** (4.0-6.5): Large dependency tree analysis, complex import reorganization
+**Auto-delegate** (≥6.5): Multi-language project cleanup, monorepo-wide dead code scan
+**Suggest delegation** (4.0-6.5): Large dependency tree analysis, complex import reorganization
 
 ---
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing this workflow (SESSION_005):
+⛔ **MANDATORY** — Execute before completing this workflow (SESSION_001):
 
 1. **VERIFY** — Does output meet success_criteria (see YAML frontmatter)?
 2. **PERSIST** (if HSA available — preferred, 1 tool call):

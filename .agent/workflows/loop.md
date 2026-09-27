@@ -21,7 +21,7 @@ success_criteria: "All iterations complete: build+lint+test pass, zero code smel
 2. **IMPLEMENT** — Follow /code canonical write: LOCATE > UNDERSTAND > SIZE > WRITE > VERIFY. Max 1-3 files per iteration.
 3. **VERIFY** — Type check > Lint > Build > Test. If FAIL: auto-fix (max 3). If 3 failures same issue: ESCALATE.
 4. **DE-SLOPPIFY** — Remove: console.log/debug, debugger, `any` types, @ts-ignore, eslint-disable (without reason), unused imports.
-5. **REVIEW** — If complexity >=6.5: cascade review via hsa_delegate. Else: self-review (intent, edge cases, errors, naming, security).
+5. **REVIEW** — If complexity >=6.5: delegate review to a subagent via hsa_delegate. Else: self-review (intent, edge cases, errors, naming, security).
 6. **COMMIT** — git add, conventional commit. DO NOT push.
 7. **LOOP or EXIT** — More tasks: goto 1. All done: persist + report. Budget >80%: STOP.
 

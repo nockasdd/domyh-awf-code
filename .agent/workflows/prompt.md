@@ -195,7 +195,7 @@ conditional:     "Video/audio → only if specific model or niche technique"
 
 ## REFLECTION CHECKPOINT
 
-⛔ **MANDATORY** — Execute before completing (SESSION_005):
+⛔ **MANDATORY** — Execute before completing (SESSION_001):
 
 1. **VERIFY** — Output meets success_criteria?
 2. **PERSIST** (HSA):
