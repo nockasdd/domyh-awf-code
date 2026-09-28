@@ -76,20 +76,32 @@ IDA_PLUGIN_DIR = _discover_plugin_dir()
 def _resolve_token() -> str:
     """The plugin's token, read from wherever it was left.
 
-    Precedence is env, then the file beside the plugin. Env first because an
-    explicit export is a deliberate override of whatever the plugin generated,
-    and reading it before the file keeps a stale file from silently winning.
+    Precedence is the file beside the plugin, then env. The plugin is the side
+    that validates, so whatever it holds is the credential in force — a token
+    that only the bridge knows is useless to it, and a mismatch is a 401 the
+    caller cannot see the cause of.
+
+    Env reading second is deliberate. HSA builds the bridge env always, from
+    resolveBridgeToken(), so an env-first order meant this function returned
+    that value and never reached the file: the collect-token path the
+    discovery above is built around was dead, and every call was rejected for
+    as long as both sides were installed.
+
+    The cost is that a hand export can no longer override a file that already
+    exists. The plugin reads its own env first, so exporting a different token
+    and launching IDA makes the plugin hold that one while the bridge reads the
+    older file. write_bridge_config() does not overwrite, so clearing
+    %IDADIR%/plugins/hsa_bridge_token is the only way to hand over a token.
     """
-    token = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
-    if token:
-        return token
     if IDA_PLUGIN_DIR:
         try:
             with open(os.path.join(IDA_PLUGIN_DIR, "hsa_bridge_token"), "r") as fh:
-                return fh.read().strip()
+                token = fh.read().strip()
+            if token:
+                return token
         except Exception:
-            return ""
-    return ""
+            pass
+    return os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
 
 
 BRIDGE_TOKEN = _resolve_token()
@@ -125,10 +137,11 @@ def write_bridge_config() -> str:
 
     Normally nothing writes here: the plugin generates its own token on startup
     and the bridge collects it. This path is only for the case where IDA is
-    launched after the bridge and someone has explicitly exported
-    HSA_BRIDGE_TOKEN — inverting the normal order. The file is left alone when a
-    plugin is already known to have written one, so exporting a token for a
-    running IDA cannot silently swap the credential it is validating against.
+    launched after the bridge and no plugin has written one yet. The file is
+    left alone when it already exists, so a token exported for a running IDA
+    cannot silently swap the credential it is validating against — and, now that
+    _resolve_token reads the file first, a leftover file also keeps winning over
+    the export. Delete the file to hand over a token by hand.
     """
     token = os.environ.get("HSA_BRIDGE_TOKEN", "").strip()
     if not token or not IDA_PLUGIN_DIR:
