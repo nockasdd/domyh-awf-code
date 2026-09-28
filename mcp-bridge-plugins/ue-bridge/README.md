@@ -51,8 +51,8 @@ The TypeScript bridge features an **auto-setup mechanism**. When the DOMYH Agent
 
 | Variable | Default | Meaning |
 |----------|---------|---------|
-| `HSA_BRIDGE_TOKEN` | *(unset)* | Bearer token the bridge presents to `init_unreal.py`. **Required** — the executor refuses to start without it, and refuses every call that does not present it. Must be identical on the bridge and in the UE project's `Saved/HSA/bridge_config.json`. |
-| `HSA_UE_EXEC_CONSENT` | *(unset)* | Must be `1`/`true`/`yes`/`on` for `ue_execute_python` to run anything. See below. |
+| `HSA_BRIDGE_TOKEN` | *(unset)* | Bearer token the bridge presents to `init_unreal.py`. **Required** — the executor refuses to start without it, and refuses every call that does not present it. Must be identical on the bridge and in the UE project's `Saved/HSA/bridge_config.json`. The HSA server generates and persists one automatically; set it by hand only to override. |
+| `HSA_UE_EXEC_CONSENT` | *(unset)* | Must be `1`/`true`/`yes`/`on` for `ue_execute_python` to run anything. Read from `~/.nockdev/hsa/.env`. See below. |
 | `HSA_UE_AUDIT_LOG` | `~/.domyh/audit/ue-exec.jsonl` | Path of the exec audit trail. |
 | `HSA_UE_EXEC_TIMEOUT_S` | `30` | How long a call waits on the Game Thread before the call is abandoned. |
 | `HSA_UE_SAFE_MODE` | off | See below. |
@@ -91,19 +91,20 @@ called in the same turn as the execution it authorises, and the two calls are
 indistinguishable in the transcript. An environment variable is the only
 channel here the model cannot write to.
 
-Set it in the MCP server config, not in a tool call:
+Put it in `~/.nockdev/hsa/.env` — one line, once:
 
-```json
-{
-  "mcpServers": {
-    "ue-bridge": {
-      "command": "node",
-      "args": [".../ue-bridge/dist/index.js"],
-      "env": { "HSA_UE_EXEC_CONSENT": "1", "HSA_BRIDGE_TOKEN": "..." }
-    }
-  }
-}
 ```
+HSA_UE_EXEC_CONSENT=1
+```
+
+That file is read for this key only. A project's own `.hsa/.env` is deliberately
+not: it travels with a clone, and a repository that can switch on unsandboxed
+Python execution in your editor by being opened defeats the point of a switch.
+An explicit export still wins, if you want a bridge to run without consent.
+
+`HSA_BRIDGE_TOKEN` needs no setup at all. The HSA server generates one the
+first time it spawns a bridge, stores it at `~/.nockdev/hsa/bridge-token` with
+mode 0600, and passes it in the environment from then on.
 
 #### Audit trail
 
