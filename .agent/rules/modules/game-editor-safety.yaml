@@ -18,11 +18,14 @@ rules:
     severity: critical
     desc: |
       BEFORE any bridge operation, agent MUST verify connection:
-      - Unity: hsa_bridge({target:'unity', action:'health_check'}) — stdio node -> HTTP 127.0.0.1:30030
-      - UE:    hsa_bridge({target:'ue',    action:'health_check'}) — stdio node -> HTTP 127.0.0.1:30010 / 30011
+      - Unity: hsa_bridge({target:'unity', action:'status'}) — stdio node -> HTTP 127.0.0.1:30030
+      - UE:    hsa_bridge({target:'ue',    action:'status'}) — stdio node -> HTTP 127.0.0.1:30010 (Remote Control) / 30011 (python executor)
       - There is no WebSocket transport. Do not document or assume one.
-      If unreachable → STOP and tell user: "Open the engine Editor and load the HSA bridge plugin."
-    action: "hsa_bridge({target:'unity|ue', action:'health_check'})"
+      Read `data.connected` (true) vs `data.connecting` (still spawning). If neither
+      → STOP and tell user: "Open the engine Editor and load the HSA bridge plugin."
+      To confirm the editor itself is serving, not just that a subprocess spawned,
+      use action:'tools' and check `data.schema.source == 'plugin tools/list'`.
+    action: "hsa_bridge({target:'unity|ue', action:'status'})"
 
   GCS_002_spawn_limit:
     name: "Object Spawn Limit"

@@ -34,9 +34,13 @@ Project Settings > Player > Active Input Handling = Input System Package (New)
 **Sau đó verify:**
 
 ```
-hsa_bridge({target:'unity', action:'health_check'})
-→ { status:'ok', version:'2.0.0', unity:'2022.3.x', endpoints:[...] }
+hsa_bridge({target:'unity', action:'status'})
+→ { status:'installed', bridgeTarget:'unity', connecting:true, connected:false }
 ```
+
+`connecting: true` là bridge subprocess vừa spawn, chưa tay. Gọi lại `status`
+sau khi dùng một tool là đủ; `connected: false` mà `connecting: false` mới là
+Editor chưa mở.
 
 Nếu fail: kiểm tra `Window > General > HSA Bridge` có bật không.
 
@@ -79,7 +83,7 @@ Project Settings > Plugins > Remote Control > Enable
 **Sau đó verify:**
 
 ```
-hsa_bridge({target:'ue', action:'health_check'})
+hsa_bridge({target:'ue', action:'status'})
 ```
 
 ---

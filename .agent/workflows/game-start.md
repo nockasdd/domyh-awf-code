@@ -16,8 +16,8 @@ Chạy trước, không suy đoán:
 ```
 hsa_detect(action:"stack")
 Glob: *.unity | *.uproject | project.godot | ProjectSettings/ProjectVersion.txt
-hsa_bridge({target:'unity', action:'health_check'})
-hsa_bridge({target:'ue',    action:'health_check'})
+hsa_bridge({target:'unity', action:'status'})
+hsa_bridge({target:'ue',    action:'status'})
 ```
 
 | Tình trạng | Nhánh |
@@ -72,7 +72,7 @@ Trước khi sang, load skill và báo cáo ngắn:
 ```
 hsa_search(action:"skills", query:"game development")
 hsa_bridge({target:'<engine>', action:'discover'})   → instance_id, engine version
-hsa_bridge({target:'<engine>', action:'health_check'})
+hsa_bridge({target:'<engine>', action:'status'})
 ```
 
 ## NHÁNH D — Có project, Editor đóng

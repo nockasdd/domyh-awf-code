@@ -59,7 +59,7 @@ Task → What game development action?
 
 **Starting point**: If the user has no project, or only an idea, route to
 `/game-start` — it detects state and tells them exactly what to create. Do not
-assume an Editor is already open; check with `hsa_bridge({action:'health_check'})`.
+assume an Editor is already open; check with `hsa_bridge({action:'status'})`.
 Godot needs neither an Editor nor a bridge.
 
 ---

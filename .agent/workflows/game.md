@@ -30,7 +30,7 @@ Run this **first**, every time. A hard failure here is cheaper than a wrong assu
 ```
 1. hsa_detect(action:"stack")                     → engine + project type
 2. Glob: *.unity | *.uproject | project.godot | ProjectSettings/ProjectVersion.txt
-3. hsa_bridge({target:'unity|ue', action:'health_check'})   (GCS_001)
+3. hsa_bridge({target:'unity|ue', action:'status'})   (GCS_001)
 ```
 
 | Detected | Editor reachable | Route |
