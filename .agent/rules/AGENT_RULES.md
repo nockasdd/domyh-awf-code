@@ -89,7 +89,26 @@ With MCP: hsa_get_agent_config("bootstrap") then hsa_session(action:"intent"). O
 
 ---
 
-## 7. Parallel Tool Batching Mandate (Anti-Fragmentation)
+## 7. Instinct Reflexes (ECC Fast-Path)
+
+Activate deterministic micro-directives (<50 tokens each) before taking action to prevent cognitive drift:
+- **Terminal Safety (`INST-TRM-001`)**: NEVER pipe (`|`), NEVER pager (`less/more`), NEVER interactive prompt without `-y`. NEVER spawn external GUI/screen-reader binaries (`orca`, `orca.exe`).
+- **Surgical Scope (`INST-SRG-001`)**: Touch ONLY lines requested. No adjacent code cleanups, no unsolicited formatting/quote changes.
+- **DRY Reuse (`INST-DRY-001`)**: Search `utils/`, `lib/`, `shared/` before writing new utility functions.
+- **Zero Comment (`INST-CMT-001`)**: Default ZERO comments. Never explain WHAT code does.
+- **Test Evidence (`INST-EVD-001`)**: Never say "should work". Verify with terminal command exit code 0.
+- Reference: `.agent/instincts/INDEX.yaml`. Load on-demand via `hsa_get_agent_config(section:"instincts", context:"...")`.
+
+## 8. Output Token Discipline & Schema Enforcement
+
+Output tokens are 3-4× more expensive than input tokens and directly determine user latency:
+- **ZERO Conversational Filler**: NEVER output introductory fluff ("Certainly!", "I will now do X...", "After careful review..."). Start immediately with the tool call, code block, or concrete finding.
+- **Structured Predictability**: Use tables, diff blocks, or bullet points. Avoid free-form essays.
+- **Recency Invariant Anchor**: Before ending your turn, verify: (1) Did I run tests? (2) Did I touch only requested scope? (3) Is comment policy respected?
+
+---
+
+## 9. Parallel Tool Batching Mandate (Anti-Fragmentation)
 
 Always batch independent read/search operations in a SINGLE turn to eliminate roundtrip overhead and credit waste.
 
@@ -102,7 +121,7 @@ Rules:
 1. **Parallel by Default**: Call `view_file`, `hsa_search`, and `hsa_trace_flow` for all target files in parallel in 1 turn.
 2. **Cohesive Action Blocks**: Complete full logical units in 1-2 turns (e.g. [Read Target + Trace Callers in Turn 1] ➔ [Edit File + Verify Syntax in Turn 2]).
 
-## 8. Tri-Tier Subagent Delegation Protocol
+## 10. Tri-Tier Subagent Delegation Protocol
 
 Treat Context Window as a scarce budget. Use subagents to isolate exploration, auditing, and multi-module implementation:
 
@@ -119,7 +138,7 @@ Treat Context Window as a scarce budget. Use subagents to isolate exploration, a
 
 ---
 
-## 9. Comment Policy
+## 11. Comment Policy
 
 Default: NO comments. Add only when WHY is non-obvious.
 
@@ -146,7 +165,7 @@ GOOD: `// OAuth2 spec 4.1: token refresh needs 5s buffer for clock skew`
 
 ---
 
-## 10. Trace Flow Protocol (DRY enforcement)
+## 12. Trace Flow Protocol (DRY enforcement)
 
 Before MODIFYING a function:
 1. Grep symbol/function name across project
@@ -171,7 +190,7 @@ Self-check: "If a teammate searched for this, would they find existing code firs
 
 ---
 
-## 11. MCP Fallback Schema (when HSA unavailable)
+## 13. MCP Fallback Schema (when HSA unavailable)
 
 When `hsa_session(persist)` not available, manually update `memory/session.md`:
 
@@ -203,19 +222,19 @@ Never silently skip fallback. State explicitly: "MCP unavailable, using manual r
 
 ---
 
-## 12. Terminal Safety (Windows & POSIX)
+## 14. Terminal Safety (Windows & POSIX)
 
 Never use: pipes (|), pagers (less/more/man), interactive prompts without -y, infinite commands (tail -f, watch).
 Never spawn arbitrary external GUI executables or unverified binaries (e.g. `orca`, `orca.exe`, external screen readers). All operations must stay within the active IDE/CLI agent harness.
 Detect shell first: cmd = wrap cmd /c, bash = native &&, powershell = ; or &&.
 
-## 13. Orchestration Trigger
+## 15. Orchestration Trigger
 
 Score <4: single agent. Score 4-6.5: suggest multi-specialist. Score >=6.5: auto-orchestrate.
 Signals: 3+ domains, 5+ files, frontend+backend+test combined, explicit complexity keywords.
 
 ---
 
-## 14. Meta
+## 16. Meta
 
 These rules are working if: fewer unnecessary changes in diffs, fewer rewrites from overcomplication, clarifying questions come before implementation not after mistakes, and token overhead stays under 5% of context budget.

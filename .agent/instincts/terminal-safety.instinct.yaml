@@ -1,0 +1,10 @@
+id: INST-TRM-001
+name: terminal-safety
+trigger: "run_command|exec|terminal|bash|powershell|cmd|cli"
+directive: |
+  On Windows ConPTY/PowerShell:
+  - NEVER use pipes (|), pagers (less/more/man), or interactive prompts without -y.
+  - Chain commands with ';' or '&&' (PowerShell 7). Wrap cmd with 'cmd /c'.
+  - NEVER spawn external GUI/screen-reader binaries (orca, orca.exe). Stay inside the harness.
+banned_tokens: ["| grep", "| less", "| more", "| head", "| tail", "tail -f", "watch", "git log (without --no-pager)"]
+evidence_check: "Does this command terminate autonomously within 30s without waiting for user input?"

@@ -151,7 +151,7 @@ Subagent Deliverable Returned
 ┌─────────────────────────────────────────────────────────────┐
 │ MERGE & PERSIST INTELLIGENCE                                │
 │ • Merge branched workspace into main                        │
-│ • hsa_session({ action: "persist", task_summary: "..." })   │
+│ • hsa_session(action: "persist", { action: "persist", task_summary: "..." }))   │
 │ • hsa_check_changes to sync Merkle search index             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -210,19 +210,21 @@ Subagent returns result
     │
     ├── 5. Capture intelligence
     │   hsa_session(
+    action: "anchor",
     │     content: "[SUBAGENT] Task: {what}. Result: {outcome}. Files: {changed}. Tests: {pass/fail}",
     │     category: "context"
     │   )
     │   ↓
     │
     └── 6. Update hierarchy
-        hsa_session(level: "action", label: "{task}", status: "completed")
+        hsa_session(action: "track", level: "action", label: "{task}", status: "completed"))
 ```
 
 ### Intelligence Capture Format
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[SUBAGENT] JWT middleware delegation.
     Task: Implement token validation + error handling.
     Result: 2 files created, 12 tests pass.
@@ -242,6 +244,7 @@ Subagent reports failure
     │
     ├── 1. Save failure intelligence
     │   hsa_session(
+    action: "anchor",
     │     content: "[FAIL] Task: {what}. Error: {error}. Attempted: {what subagent tried}",
     │     category: "context"
     │   )
@@ -293,6 +296,7 @@ dispatch(Task C → Subagent 3)
 
 # 4. Save combined intelligence
 hsa_session(
+  action: "anchor",
   content: "[DELEGATION] 3 tasks parallel. A: done. B: done. C: partial. Integration: pass.",
   category: "context"
 )

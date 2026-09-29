@@ -58,10 +58,12 @@ output:
   risk_score: X/10
 ```
 
-### 3. SMART LOAD (Token-Optimized, ~3000 tok)
-*   Load active expert checklists from `data/checklists/{expert}.yaml`.
-*   Load supplementary checklists if detected (desktop, CLI, library, MCP, game).
-*   Auto-select weight profile from `scoring.yaml`.
+### 3. SMART LOAD (Token-Optimized On-Demand Data, ~500 tok)
+*   Tier 2 On-Demand Loading via MCP:
+    *   Security Checklist: `hsa_search(action="skill_data", skill_id="audit-pro", section="security")`
+    *   Architecture / Reliability: `hsa_search(action="skill_data", skill_id="audit-pro", section="architecture")`
+    *   Weight Profile: `hsa_search(action="skill_data", skill_id="audit-pro", section="scoring")`
+*   Load supplementary checklists only if domain detected (e.g. desktop, CLI, MCP, game).
 
 ### 4. SCOPE CONTRACT GATE (⛔ STOP — Confirm with User)
 *   Display active expert panel, risk zones, execution mode (Single vs Subagents), and estimated token budget.

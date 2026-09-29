@@ -26,7 +26,7 @@ REPRODUCE → ISOLATE → ANALYZE → FIX → VERIFY
 # 3. Run reproduction to confirm
 
 # Track in hierarchy
-hsa_session(level: "tactic", label: "Debug: Reproducing {bug}")
+hsa_session(action: "track", level: "tactic", label: "Debug: Reproducing {bug}")
 ```
 
 | Checklist | |
@@ -51,8 +51,8 @@ hsa_session(level: "tactic", label: "Debug: Reproducing {bug}")
 ```
 hsa_trace_flow(
   entry_point: "suspectedFunction",
-  direction: "downstream",
-  depth: 3
+  direction: "forward",
+  max_depth: 3
 )
 ```
 
@@ -84,6 +84,7 @@ For each hypothesis, log evidence:
 ```
 # Save confirmed root cause
 hsa_session(
+  action: "anchor",
   content: "[BUG] Login 401. Root cause: middleware order — auth before body-parser. Fix: reorder in app.ts",
   category: "context"
 )
@@ -103,6 +104,7 @@ hsa_session(
 
 ```
 hsa_session(
+  action: "track",
   level: "action",
   label: "Fix applied: {what was changed}"
 )
@@ -123,6 +125,7 @@ npm test   # or equivalent
 npm run build
 
 hsa_session(
+  action: "track",
   level: "action",
   label: "Verified: bug fixed, tests pass",
   status: "completed"
@@ -135,7 +138,7 @@ When bug spans multiple files/services:
 
 ```
 # 1. Map the data flow
-hsa_trace_flow(entry_point: "apiEndpoint", direction: "downstream", depth: 4)
+hsa_trace_flow(entry_point: "apiEndpoint", direction: "forward", max_depth: 4)
 
 # 2. Insert checkpoints at boundaries
 #    - API → Service boundary
@@ -159,6 +162,7 @@ hsa_trace_flow(entry_point: "apiEndpoint", direction: "downstream", depth: 4)
 ```
 # At 30-min mark: save progress
 hsa_session(
+  action: "anchor",
   content: "[DEBUG-STUCK] Bug: {description}. Tried: {hypotheses tested}. Rejected: {what didn't work}. Current theory: {best guess}.",
   category: "context"
 )

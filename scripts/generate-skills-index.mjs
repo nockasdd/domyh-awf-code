@@ -76,12 +76,107 @@ function collectSkills() {
 }
 
 function readDetect(meta) {
-  const block = meta.match(/^detect:\s*\[([^\]]*)\]/m);
-  if (!block) return [];
-  return block[1]
+  // META.yaml carries two different activation channels: `detect` is a file glob
+  // for non-HSA agents, `triggers` holds the keywords and intents HSA routes on.
+  // Reading only `detect` left every index entry empty, because the skills that
+  // declare triggers are the ones with no `detect` block at all.
+  const globs = matchYamlList(meta, "detect");
+  const triggers = readTriggers(meta);
+  return [...new Set([...globs, ...triggers])];
+}
+
+function matchYamlList(text, key) {
+  const block = text.match(new RegExp(`^${key}:\\s*\\[([^\\]]*)\\]`, "m"));
+  return block ? splitFlowList(block[1]) : [];
+}
+
+function splitFlowList(body) {
+  return body
     .split(",")
-    .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+    .map((s) => unquote(s))
     .filter(Boolean);
+}
+
+function unquote(value) {
+  return value.trim().replace(/^["']|["']$/g, "").trim();
+}
+
+const TRIGGER_KEYS = "file_patterns|keywords|intents|triggers";
+
+// Every META.yaml in the tree is scanned, not just the ones with a `triggers:`
+// parent. Some skills nest the same three keys directly under another root, and
+// 22 of them put `keywords` under a key the generator never looked at, so a
+// parent-scoped scan silently returned nothing for the whole languages category.
+function readTriggers(meta) {
+  // META.yaml is checked out with CRLF on Windows, and an unstripped \r defeats
+  // every $-anchored match below — which is how 21 skills kept reporting no
+  // triggers at all despite declaring them.
+  const lines = meta.split(/\r?\n/);
+  const collected = [];
+  let keyIndent = null;
+  let flowDepth = 0;
+
+  for (const line of lines) {
+    if (/^\S/.test(line)) {
+      // A top-level key closes whatever list was open, except the ones that
+      // carry a multi-line flow list, whose closing bracket is also top-level.
+      if (flowDepth === 0) keyIndent = null;
+    }
+
+    const key = line.match(new RegExp(`^(\\s*)(${TRIGGER_KEYS}):\\s*(.*)$`));
+    if (key) {
+      keyIndent = key[1].length;
+      const inline = key[3].trim();
+      if (inline.startsWith("[")) {
+        const closing = inline.indexOf("]");
+        if (closing !== -1) {
+          collected.push(...splitFlowList(inline.slice(1, closing)));
+          flowDepth = 0;
+        } else {
+          // Multi-line flow list: the items arrive on their own lines until the
+          // lone "]" that closes them.
+          flowDepth = 1;
+        }
+      } else {
+        flowDepth = 0;
+      }
+      continue;
+    }
+
+    if (flowDepth > 0) {
+      const closing = line.match(/^\s*\]\s*,?\s*$/);
+      if (closing) {
+        flowDepth = 0;
+        keyIndent = null;
+        continue;
+      }
+      const inlineItem = line.match(/^\s*([^-\s][^,]*?)\s*,?\s*$/);
+      if (inlineItem) {
+        const value = unquote(inlineItem[1]);
+        if (value) collected.push(value);
+      }
+      continue;
+    }
+
+    // A key with nothing after its colon can still open a flow list on the next
+    // line. One META.yaml writes the bracket on its own line; without this the
+    // whole list was skipped and the skill indexed with zero triggers.
+    if (keyIndent !== null) {
+      const indent = line.length - line.trimStart().length;
+      if (indent > keyIndent && line.trim() === "[") {
+        flowDepth = 1;
+        continue;
+      }
+    }
+
+    const item = line.match(/^(\s*)-\s*(.*)$/);
+    if (item && keyIndent !== null && item[1].length > keyIndent) {
+      const value = unquote(item[2]);
+      if (value) collected.push(value);
+    }
+  }
+
+  return collected;
 }
 
 function preserveExistingDetect(byCategory) {

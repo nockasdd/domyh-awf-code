@@ -15,7 +15,7 @@ tier: 1
 ### Automatic Detection (via HSA)
 
 ```
-hsa_session(current_action: "What I'm about to do")
+hsa_session(action: "drift", current_action: "What I'm about to do"))
 ```
 
 Output contains:
@@ -37,7 +37,7 @@ Output contains:
 | Situation | Action | Priority |
 |-----------|--------|----------|
 | 5+ turns without updating hierarchy | `hsa_session` | 🟠 High |
-| Resuming after a gap (hours/days) | `hsa_session(include_anchors: true)` | 🔴 Critical |
+| Resuming after a gap (hours/days) | `hsa_session(action: "drift", include_anchors: true))` | 🔴 Critical |
 | "What was I doing?" moment | `hsa_session` + read anchors | 🔴 Critical |
 | After subagent delegation | `hsa_session` to verify alignment | 🟡 Medium |
 | Before concluding any task | `hsa_session` | 🟡 Medium |
@@ -51,18 +51,20 @@ Output contains:
 
 ```
 # 1. Check current alignment
-hsa_session(current_action: "Checking alignment after drift warning")
+hsa_session(action: "drift", current_action: "Checking alignment after drift warning"))
 
 # 2. Read the drift report — understand what drifted
 
 # 3. Re-align hierarchy
 hsa_session(
+  action: "track",
   level: "action",
   label: "Re-aligned: {what I'm actually doing now}"
 )
 
 # 4. If scope changed significantly → re-declare
 hsa_session(
+  action: "intent",
   focus: "Updated scope: {new focus}",
   mode: "plan_driven",
   goals: ["Updated goal 1", "Updated goal 2"]
@@ -76,6 +78,7 @@ Signs: earlier conversation details seem fuzzy, code references lost.
 ```
 # 1. Retrieve saved state
 hsa_session(
+  action: "drift",
   current_action: "Recovering from context compaction",
   include_anchors: true
 )
@@ -91,6 +94,7 @@ hsa_session(
 
 # 4. Declare fresh intent
 hsa_session(
+  action: "intent",
   focus: "Continuing after compaction: {summary from anchors}",
   mode: "plan_driven",
   goals: ["Remaining goals from anchors"]
@@ -98,6 +102,7 @@ hsa_session(
 
 # 5. Save recovery note
 hsa_session(
+  action: "anchor",
   content: "[RECOVERY] Recovered from compaction. Prior state restored from anchors.",
   category: "context"
 )
@@ -108,6 +113,7 @@ hsa_session(
 ```
 # 1. Full anchor retrieval
 hsa_session(
+  action: "drift",
   current_action: "Resuming after gap",
   include_anchors: true
 )
@@ -120,6 +126,7 @@ hsa_check_changes()  # Re-index for any file changes
 
 # 4. Declare intent for new session
 hsa_session(
+  action: "intent",
   focus: "Resuming: {focus from anchors}",
   mode: "plan_driven"
 )
@@ -131,22 +138,25 @@ When you realize you've been working on the wrong thing:
 
 ```
 # 1. Check where drift started
-hsa_session(current_action: "Checking: am I on the right track?")
+hsa_session(action: "drift", current_action: "Checking: am I on the right track?"))
 
 # 2. If off-track: save current work state
 hsa_session(
+  action: "intent",
   content: "[DRIFT] Was working on {wrong thing}. Correct focus: {right thing}.",
   category: "context"
 )
 
 # 3. Re-declare with correct focus
 hsa_session(
+  action: "intent",
   focus: "Corrected: {right focus}",
   mode: "plan_driven"
 )
 
 # 4. Re-align hierarchy
 hsa_session(
+  action: "track",
   level: "action",
   label: "Topic correction: returning to {right thing}"
 )
@@ -159,6 +169,7 @@ hsa_session(
 Before any significant decision:
 ```
 hsa_session(
+  action: "anchor",
   content: "[DECISION] Chose X over Y because: {reasons}. Trade-off: {what}",
   category: "decision"
 )
@@ -169,6 +180,7 @@ hsa_session(
 Every 3-5 meaningful actions:
 ```
 hsa_session(
+  action: "track",
   level: "action",
   label: "Done: A, B, C. Next: D."
 )
@@ -179,6 +191,7 @@ hsa_session(
 At session boundaries:
 ```
 hsa_session(
+  action: "anchor",
   content: "[SESSION] Topic: {X}. Done: {list}. Pending: {list}. Files: {key files}",
   category: "context"
 )

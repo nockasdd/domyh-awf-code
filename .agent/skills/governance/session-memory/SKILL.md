@@ -32,6 +32,7 @@ Use `hsa_session` with structured categories to create searchable, persistent me
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[DECISION] Chose {X} over {Y}. Reason: {why}. Trade-off: {what we lose}. Date: {today}",
   category: "decision"
 )
@@ -40,6 +41,7 @@ hsa_session(
 **Example:**
 ```
 hsa_session(
+  action: "anchor",
   content: "[DECISION] Chose Drizzle ORM over Prisma. Reason: lighter, SQL-first, better edge support. Trade-off: less mature ecosystem. 2026-02-20",
   category: "decision"
 )
@@ -49,6 +51,7 @@ hsa_session(
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[CONVENTION] {pattern name}: {description}. Files: {where applied}",
   category: "convention"
 )
@@ -57,6 +60,7 @@ hsa_session(
 **Example:**
 ```
 hsa_session(
+  action: "anchor",
   content: "[CONVENTION] API Response Envelope: All endpoints return { data, error, meta }. Files: src/utils/response.ts",
   category: "convention"
 )
@@ -66,6 +70,7 @@ hsa_session(
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[ERROR] {symptom} → Root cause: {cause} → Fix: {solution}. Files: {affected}",
   category: "context"
 )
@@ -75,6 +80,7 @@ hsa_session(
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[CONSTRAINT] {what}: {limit}. Source: {where documented}",
   category: "constraint"
 )
@@ -106,6 +112,7 @@ hsa_session(
 
 ```
 hsa_session(
+  action: "drift",
   current_action: "Starting new session — retrieving prior anchors",
   include_anchors: true
 )
@@ -123,6 +130,7 @@ Read the drift report output. Look for:
 
 ```
 hsa_session(
+  action: "intent",
   focus: "Continuing: {summary from anchors}",
   mode: "plan_driven",
   goals: ["Goal from prior session anchors"]
@@ -146,18 +154,20 @@ When compaction risk detected:
 ```
 # 1. Save current progress
 hsa_session(
+  action: "anchor",
   content: "[SESSION] Progress: {done list}. Pending: {todo list}. Key files: {files}",
   category: "context"
 )
 
 # 2. Save any unsaved decisions
 hsa_session(
+  action: "anchor",
   content: "[DECISION] {any decision made but not yet saved}",
   category: "decision"
 )
 
 # 3. Update hierarchy
-hsa_session(level: "action", label: "Emergency save before compaction", status: "completed")
+hsa_session(action: "track", level: "action", label: "Emergency save before compaction", status: "completed"))
 ```
 
 ## Memory Hygiene
@@ -195,6 +205,7 @@ Beyond passive recall, the agent can actively manage knowledge:
 ### Write — Create New Knowledge
 ```
 hsa_session(
+  action: "anchor",
   content: "[PATTERN] {name}: {description}. Validated in: {file}",
   category: "convention"
 )
@@ -204,6 +215,7 @@ hsa_session(
 ### Update — Evolve Existing Knowledge
 ```
 hsa_session(
+  action: "anchor",
   content: "[UPDATED] {old anchor ref} → New: {updated info}. Reason: {why changed}",
   category: "decision"
 )
@@ -214,6 +226,7 @@ hsa_session(
 Mark knowledge as superseded — don't delete silently:
 ```
 hsa_session(
+  action: "anchor",
   content: "[SUPERSEDED] {old anchor}. Replaced by: {new approach}. Date: {today}",
   category: "context"
 )

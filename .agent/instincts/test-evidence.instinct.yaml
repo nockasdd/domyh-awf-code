@@ -1,0 +1,10 @@
+id: INST-EVD-001
+name: test-evidence
+trigger: "verify|test|done|complete|passed|fixed"
+directive: |
+  Show concrete execution evidence, never assertions.
+  - NEVER say "this should work", "fixed now", or "it seems correct".
+  - MUST run the project build, typecheck, or unit test command and cite the exit code.
+  - If tests cannot be run, explicitly state which verification checks were NOT performed.
+banned_phrases: ["should work", "probably fixed", "looks good now", "it should be fine"]
+evidence_check: "Did I execute a terminal command and verify its exit code is 0?"

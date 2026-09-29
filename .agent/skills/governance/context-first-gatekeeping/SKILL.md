@@ -18,7 +18,7 @@ Before ANY implementation, pass through this gate:
 Ready to write code?
     │
     ├── 1. ANCHORS — Check prior decisions
-    │   hsa_session(include_anchors: true)
+    │   hsa_session(action: "drift", include_anchors: true))
     │   Found relevant decisions? → Follow them
     │   ↓
     │
@@ -46,6 +46,7 @@ Ready to write code?
 
 ```
 hsa_session(
+  action: "drift",
   current_action: "About to implement {feature}",
   include_anchors: true
 )
@@ -151,6 +152,7 @@ hsa_search(query: "React component patterns")
 # Check if intent is declared
 # If not:
 hsa_session(
+  action: "intent",
   focus: "Implementing {feature}",
   mode: "plan_driven",
   goals: ["Goal 1", "Goal 2"]

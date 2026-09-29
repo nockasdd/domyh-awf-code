@@ -36,11 +36,11 @@ Ready to stop?
     │   PASS ↓
     │
     ├── 3. HIERARCHY — Is progress tracking current?
-    │   STALE → Update: hsa_session(status: "completed")
+    │   STALE → Update: hsa_session(action: "track", status: "completed"))
     │   CURRENT ↓
     │
     ├── 4. ARCHIVE — Is session state saved?
-    │   NO → Save: hsa_session(category: "context")
+    │   NO → Save: hsa_session(action: "anchor", category: "context"))
     │   YES ↓
     │
     └── 5. NOTIFY — Does user know the status?
@@ -62,6 +62,7 @@ Ready to stop?
 
 ```
 hsa_session(
+  action: "anchor",
   content: "[SESSION-END] Topic: {what}. Done: {completed}. Pending: {remaining}. Files: {key files}. Build: pass/fail. Tests: X/Y pass.",
   category: "context"
 )
@@ -74,12 +75,14 @@ When user cancels before work is complete:
 ```
 # 1. IMMEDIATELY save current progress
 hsa_session(
+  action: "anchor",
   content: "[INTERRUPTED] Was working on: {task}. Progress: {what's done}. State: {build pass? tests?}. Resume from: {next step}.",
   category: "context"
 )
 
 # 2. Update hierarchy with partial status
 hsa_session(
+  action: "track",
   level: "action",
   label: "Interrupted: {what was in progress}",
   status: "blocked"

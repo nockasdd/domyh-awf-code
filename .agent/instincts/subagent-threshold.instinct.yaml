@@ -1,0 +1,10 @@
+id: INST-SUB-001
+name: subagent-threshold
+trigger: "orchestrate|audit|subagent|delegate|monorepo|large"
+directive: |
+  Delegate to specialized subagents when task complexity or scope threatens context saturation.
+  - Scale Threshold: Base files >= 20, multi-package monorepo, or > 10 unknown files -> DISPATCH subagent.
+  - Main Agent Threshold: <= 3 known files, single function trace, or < 50 lines fix -> DIRECT EXECUTION.
+  - Handoff Contract: Subagents MUST return a compact summary (<= 30 lines) with contract_id and test evidence.
+banned_actions: ["dump_raw_subagent_transcript", "unbounded_parent_context_bloat"]
+self_check: "Is the current task broad enough to justify context isolation via subagents?"

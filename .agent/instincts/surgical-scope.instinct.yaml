@@ -1,0 +1,10 @@
+id: INST-SRG-001
+name: surgical-scope
+trigger: "bug|fix|error|modify|patch|refactor|update"
+directive: |
+  Modify ONLY the exact lines and files requested.
+  - DO NOT reformat adjacent code or fix unrelated lint errors ("clean only your own mess").
+  - DO NOT change quotation style (' -> ") or add unsolicited type hints.
+  - Every modified character must trace directly to the user's objective.
+banned_actions: ["unsolicited_refactor", "adjacent_formatting_change", "quote_style_churn"]
+self_check: "Does every changed line trace directly to user request?"

@@ -19,8 +19,8 @@ data_files:
   - data/patterns.yaml
   - data/genres.yaml
   - data/gotchas.yaml
-  - references/engine-scaffold.md
-  - references/run-and-observe.md
+  - data/references/engine-scaffold.md
+  - data/references/run-and-observe.md
 
 patterns:
   total: 17

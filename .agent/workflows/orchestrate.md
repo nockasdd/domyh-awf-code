@@ -79,7 +79,14 @@ acceptance_criteria:
 ### 6. DISPATCH & CONCURRENT EXECUTION
 *   Dispatch subagents concurrently according to the active Platform Dispatch Matrix.
 *   Ensure research/audit subagents run in **Read-Only mode** to keep parent context clean.
-*   Collect compact findings/deliverables upon completion (no raw context dumping).
+*   **Compact Handoff Protocol**: Subagents MUST return a structured, compact summary (max 30 lines) instead of full transcript or raw codebase dumps:
+    ```yaml
+    subtask_id: "sdd_task_{id}"
+    status: "PASS | FAIL"
+    files_touched: ["path/to/file.ts"]
+    key_findings: ["1-line summary"]
+    verification_evidence: "Test command + exit code 0"
+    ```
 
 ### 7. 2-TIER QUALITY REVIEW GATE
 *   **Tier 1 (Spec Compliance)**: Verify that subagent touched ONLY files in `focus_files`. Any unapproved modifications $\rightarrow$ **REJECT & REVERT**.

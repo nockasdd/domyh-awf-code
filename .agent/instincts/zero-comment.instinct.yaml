@@ -1,0 +1,10 @@
+id: INST-CMT-001
+name: zero-comment
+trigger: "comment|code|write|edit|syntax"
+directive: |
+  Default is ZERO comments. Code must explain WHAT; comments only explain non-obvious WHY.
+  - NEVER write: WHAT code does, "added by X", version markers, phase labels.
+  - NEVER add trailing summaries (e.g. '// End of function').
+  - Only write 1-line WHY for non-obvious constraints, bugs workarounds, or security invariants.
+banned_patterns: ["// Added by", "// TODO without ticket", "// Function to ...", "// Step 1: ..."]
+self_check: "Would this comment be redundant to a senior engineer reading the code?"

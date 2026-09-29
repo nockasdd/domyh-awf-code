@@ -21,6 +21,7 @@ success_criteria: "Pre-read verified, surgical change applied, post-read confirm
 ### PHASE 1: DISCOVER & ASSUMPTIONS
 *   **Parse Intent**: Classify goal (`feature` | `bugfix` | `refactor` | `test` | `add`).
 *   **Stack & Skill Detection**: Call `hsa_detect(stack)` and `hsa_search(query, action="skills")` to load appropriate patterns and rules.
+*   **Standards On-Demand**: Call `hsa_search(action="skill_data", skill_id="coding-rules", section="naming-conventions")` or `section="error-handling"` for domain-specific formatting and conventions.
 *   **UI Intent**: If UI-related:
     *   New (T1): Load UI design skill.
     *   Modify (T2): Run design analysis.

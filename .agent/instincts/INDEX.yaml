@@ -1,0 +1,47 @@
+# Instincts Index — Micro-Directive Quick-Reflex Engine
+# Benchmark: affaan-m/ECC continuous learning & instinct activation
+version: "1.0.0"
+description: "Ultra-compact behavioral reflexes (<50 tokens each) triggered by task context"
+
+instincts:
+  - id: INST-TRM-001
+    name: terminal-safety
+    file: terminal-safety.instinct.yaml
+    contexts: [terminal, execution, bash, powershell, command, cli]
+    confidence: 1.0
+
+  - id: INST-SRG-001
+    name: surgical-scope
+    file: surgical-scope.instinct.yaml
+    contexts: [coding, bugfix, refactor, edit, modify]
+    confidence: 1.0
+
+  - id: INST-DRY-001
+    name: dry-reuse
+    file: dry-reuse.instinct.yaml
+    contexts: [coding, create, new, add, helper, utils]
+    confidence: 0.95
+
+  - id: INST-CMT-001
+    name: zero-comment
+    file: zero-comment.instinct.yaml
+    contexts: [coding, edit, review, comment]
+    confidence: 1.0
+
+  - id: INST-EVD-001
+    name: test-evidence
+    file: test-evidence.instinct.yaml
+    contexts: [test, verify, done, fix, claim]
+    confidence: 1.0
+
+  - id: INST-SUB-001
+    name: subagent-threshold
+    file: subagent-threshold.instinct.yaml
+    contexts: [orchestrate, audit, large, explore, monorepo]
+    confidence: 0.95
+
+  - id: INST-NEG-001
+    name: negative-constraints
+    file: negative-constraints.instinct.yaml
+    contexts: [always, global, constitution]
+    confidence: 1.0
