@@ -1,0 +1,51 @@
+metadata:
+  skill: reverse-engineering
+  domain: vm_bytecode
+  updated: "2026-10-02"
+  entries_count: 8
+
+vm_analysis:
+  - name: VM Dispatcher Recognition
+    desc: "Central dispatch loop that fetches opcodes and routes to handler functions"
+    indicators: ["Large switch/case or jump table", "Opcode fetch from bytecode stream", "PC increment pattern"]
+    analysis: Identify dispatcher by locating the main loop with indirect jumps or switch
+
+  - name: Handler Table Extraction
+    desc: "Table of function pointers mapping opcodes to handler implementations"
+    indicators: ["Array of function pointers", "Indexed by opcode value", "Consistent handler signature"]
+    analysis: Dump handler table addresses and map each to its opcode number
+
+  - name: ISA Reconstruction
+    desc: "Reverse engineer the instruction set architecture of the virtual machine"
+    indicators: ["Opcode-to-handler mapping", "Operand format per instruction", "Register file layout"]
+    analysis: Trace each handler to determine instruction semantics and operand encoding
+
+  - name: Opcode Mapping
+    desc: "Map numerical opcode values to semantic operations (ADD, MOV, CALL, JMP)"
+    indicators: ["Handler performs arithmetic → ALU op", "Handler modifies PC → control flow", "Handler accesses memory → load/store"]
+    analysis: Classify handlers by side effects to determine instruction type
+
+  - name: Virtual Register Identification
+    desc: "Identify the virtual register file used by the VM"
+    indicators: ["Array/struct accessed by index in most handlers", "Persistent across instructions", "Used as source/destination"]
+    analysis: Locate register file structure and determine register count and width
+
+  - name: VM Entry/Exit Detection
+    desc: "Identify transition points between native code and VM-executed code"
+    indicators: ["Context save (native registers pushed)", "Bytecode pointer initialization", "Context restore on exit"]
+    analysis: Set breakpoints at entry/exit to intercept native-to-VM transitions
+
+  - name: Known VM Protector Signatures
+    desc: "Recognize specific commercial VM protection implementations"
+    signatures:
+      VMProtect: "Handler dispatch via obfuscated jump table; rolling key XOR on bytecode"
+      Tigress: "Academic virtualizer with configurable ISA; handler merging and opcode encoding"
+      Themida: "Code Virtualizer component; multiple VM layers possible"
+
+  - name: Devirtualization Strategies
+    desc: "Approaches to recover original code from VM-protected binary"
+    approaches:
+      - "Symbolic execution of VM handlers to reconstruct original semantics"
+      - "Pattern matching on handler sequences to identify original instructions"
+      - "Trace-based devirtualization: record opcode→handler→effect traces"
+      - "Constraint solving: use Z3 to prove handler equivalence to native instructions"

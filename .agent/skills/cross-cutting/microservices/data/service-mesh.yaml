@@ -9,12 +9,12 @@ overview:
     Provides mTLS, load balancing, observability, and traffic management.
 
   architecture: |
+    Service A    ←→  Sidecar Proxy
+    ↕
+    Control Plane
+    ↕
+    Service B    ←→  Sidecar Proxy
 
-> Service A    ←→  Sidecar Proxy
-> ↕
-> Control Plane
-> ↕
-> Service B    ←→  Sidecar Proxy
 # COMPARISON
 
 comparison:

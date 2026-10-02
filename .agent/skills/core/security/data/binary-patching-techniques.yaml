@@ -1,0 +1,92 @@
+metadata:
+  skill: security
+  domain: binary_patching_detection
+  updated: "2026-10-02"
+  patterns_count: 12
+  columns: [id, name, severity, category, description, detection_indicator, defense_recommendation]
+
+patterns:
+  - id: BP-01
+    name: NOP Sled in Code Section
+    severity: CRITICAL
+    category: Code Integrity
+    description: Sequence of NOP instructions (0x90) replacing functional code indicates patching
+    detection_indicator: "Consecutive 0x90 bytes in .text section where instructions are expected"
+    defense_recommendation: Runtime .text section hash verification at startup and periodically
+  - id: BP-02
+    name: Unconditional JMP Replacing Conditional
+    severity: CRITICAL
+    category: Control Flow
+    description: Conditional branch (JE/JNE) replaced with unconditional JMP to skip validation
+    detection_indicator: "JMP (0xEB) at addresses where conditional JE/JNE (0x74/0x75) expected"
+    defense_recommendation: Control flow integrity checks with distributed validation points
+  - id: BP-03
+    name: CIL OpCode Replacement (.NET)
+    severity: HIGH
+    category: Managed Code
+    description: IL instruction replaced to alter method behavior in .NET assemblies
+    detection_indicator: "Method body hash mismatch in .NET metadata vs runtime"
+    defense_recommendation: Assembly strong naming with runtime verification
+  - id: BP-04
+    name: Method Body Swap
+    severity: HIGH
+    category: Managed Code
+    description: Entire method body replaced with different implementation
+    detection_indicator: "Method RVA in metadata points to unexpected code"
+    defense_recommendation: Code signing with Authenticode and runtime integrity check
+  - id: BP-05
+    name: Strong Name Removal
+    severity: HIGH
+    category: .NET Integrity
+    description: Assembly strong name signature stripped to allow modification
+    detection_indicator: "PublicKeyToken null in referenced assembly that should be signed"
+    defense_recommendation: Deploy with strong name validation enforced via publisher policy
+  - id: BP-06
+    name: Anti-Tamper NOP Out
+    severity: CRITICAL
+    category: Protection Bypass
+    description: Anti-tamper verification code replaced with NOP to disable protection
+    detection_indicator: "Integrity check function returns success without performing checks"
+    defense_recommendation: Multiple layered integrity checks with obfuscated verification logic
+  - id: BP-07
+    name: Conditional Flag Flip
+    severity: HIGH
+    category: Control Flow
+    description: Boolean comparison inverted to reverse validation outcome
+    detection_indicator: "TEST/CMP followed by opposite branch than expected by program logic"
+    defense_recommendation: Avoid single boolean gates for critical decisions
+  - id: BP-08
+    name: CALL Redirect
+    severity: CRITICAL
+    category: Control Flow
+    description: Function call target address modified to redirect execution
+    detection_indicator: "CALL target address differs from expected function address"
+    defense_recommendation: Import address table (IAT) integrity verification
+  - id: BP-09
+    name: Import Table Modification
+    severity: CRITICAL
+    category: PE Structure
+    description: Import table entries modified to redirect API calls
+    detection_indicator: "IAT entries point to unexpected addresses after load"
+    defense_recommendation: Runtime IAT verification against known-good addresses
+  - id: BP-10
+    name: Section Permission Change
+    severity: HIGH
+    category: PE Structure
+    description: Code section permissions changed to writable for runtime modification
+    detection_indicator: ".text section has WRITE flag in PE section header"
+    defense_recommendation: Verify section permissions match original PE at load time
+  - id: BP-11
+    name: Entry Point Redirect
+    severity: CRITICAL
+    category: PE Structure
+    description: PE entry point modified to execute injected code before original code
+    detection_indicator: "AddressOfEntryPoint differs from expected value"
+    defense_recommendation: Entry point verification with signed PE checksum
+  - id: BP-12
+    name: Checksum Invalidation
+    severity: MEDIUM
+    category: PE Structure
+    description: PE checksum field not updated after modification revealing tampering
+    detection_indicator: "PE optional header checksum does not match computed checksum"
+    defense_recommendation: Verify PE checksum at load time as tamper indicator

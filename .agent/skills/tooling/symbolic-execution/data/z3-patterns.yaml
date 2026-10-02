@@ -1,0 +1,78 @@
+metadata:
+  skill: symbolic-execution
+  domain: z3_patterns
+  updated: "2026-10-02"
+  patterns_count: 8
+
+patterns:
+  - id: Z3-01
+    name: Integer Constraints
+    description: Solve integer constraint system
+    code: |
+      from z3 import *
+      x, y = Ints('x y')
+      s = Solver()
+      s.add(x + y == 10, x > 0, y > 0)
+      if s.check() == sat:
+          print(s.model())
+  - id: Z3-02
+    name: BitVector Operations
+    description: Solve bit-level constraints (for binary analysis)
+    code: |
+      from z3 import *
+      x = BitVec('x', 32)
+      s = Solver()
+      s.add(x ^ 0xDEADBEEF == 0x12345678)
+      if s.check() == sat:
+          print(hex(s.model()[x].as_long()))
+  - id: Z3-03
+    name: Array Theory
+    description: Solve constraints involving arrays
+    code: |
+      from z3 import *
+      A = Array('A', IntSort(), IntSort())
+      s = Solver()
+      s.add(Select(A, 0) == 42)
+      s.add(Select(A, 1) == Select(A, 0) + 1)
+  - id: Z3-04
+    name: String Constraints
+    description: Solve string matching constraints
+    code: |
+      from z3 import *
+      s = Solver()
+      x = String('x')
+      s.add(Length(x) == 8)
+      s.add(SubString(x, 0, 4) == StringVal("FLAG"))
+  - id: Z3-05
+    name: Optimization
+    description: Find optimal solution under constraints
+    code: |
+      from z3 import *
+      o = Optimize()
+      x, y = Ints('x y')
+      o.add(x >= 0, y >= 0, x + y <= 100)
+      o.maximize(x + 2*y)
+  - id: Z3-06
+    name: Boolean Logic
+    description: Prove or find counterexample for boolean formula
+    code: |
+      from z3 import *
+      p, q = Bools('p q')
+      prove(Implies(And(p, q), p))
+  - id: Z3-07
+    name: Floating Point
+    description: IEEE 754 floating point constraints
+    code: |
+      from z3 import *
+      x = FP('x', Float64())
+      s = Solver()
+      s.add(x * x == FPVal(2.0, Float64()))
+  - id: Z3-08
+    name: Uninterpreted Functions
+    description: Reason about unknown functions
+    code: |
+      from z3 import *
+      f = Function('f', IntSort(), IntSort())
+      s = Solver()
+      s.add(f(0) == 1, f(1) == 1)
+      s.add(ForAll([x], Implies(x > 1, f(x) == f(x-1) + f(x-2))))

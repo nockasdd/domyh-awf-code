@@ -1,0 +1,41 @@
+name: vuln-intel
+display: Vulnerability Intelligence
+category: core
+tier: 2
+
+desc: "CVE lookup, vulnerability triage, and threat intelligence. Multi-source: NVD, CISA KEV, EPSS, Exploit-DB, Shodan."
+
+triggers:
+  keywords:
+    - CVE
+    - vulnerability lookup
+    - CISA KEV
+    - EPSS
+    - NVD
+    - exploit-db
+    - threat intelligence
+    - CVE triage
+    - shodan
+    - vulnerability assessment
+  intents:
+    - lookup vulnerability
+    - triage CVE
+    - threat assessment
+
+caps:
+  - Multi-source CVE lookup (NVD, KEV, EPSS)
+  - Exploit-DB search and PoC discovery
+  - Vulnerability priority triage matrix
+  - Threat intelligence source aggregation
+
+data_files:
+  - data/cve-triage-matrix.yaml
+  - data/threat-intel-sources.yaml
+  - data/exploitdb-search.yaml
+
+related_skills:
+  - security
+  - web-pentest
+
+links_to:
+  - security

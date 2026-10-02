@@ -1,0 +1,82 @@
+metadata:
+  skill: network-recon
+  domain: service_fingerprints
+  updated: "2026-10-02"
+  patterns_count: 15
+
+services:
+  - id: SF-01
+    port: 22
+    service: SSH
+    fingerprint: "SSH-2.0-OpenSSH"
+    security_check: Check for weak key exchange algorithms and password auth
+  - id: SF-02
+    port: 80
+    service: HTTP
+    fingerprint: "HTTP/1.1 200|Server: Apache|Server: nginx"
+    security_check: Check for HTTPS redirect, security headers, server version disclosure
+  - id: SF-03
+    port: 443
+    service: HTTPS
+    fingerprint: TLS handshake
+    security_check: TLS version, cipher suite strength, certificate validity
+  - id: SF-04
+    port: 3306
+    service: MySQL
+    fingerprint: "mysql_native_password"
+    security_check: Check for external binding, default credentials, SSL requirement
+  - id: SF-05
+    port: 5432
+    service: PostgreSQL
+    fingerprint: "PostgreSQL"
+    security_check: Check pg_hba.conf trust entries, SSL mode, default passwords
+  - id: SF-06
+    port: 6379
+    service: Redis
+    fingerprint: "+PONG|-NOAUTH"
+    security_check: Check for no-auth access, external binding, ACL configuration
+  - id: SF-07
+    port: 27017
+    service: MongoDB
+    fingerprint: "MongoDB|ismaster"
+    security_check: Check for no-auth access, external binding, TLS
+  - id: SF-08
+    port: 8080
+    service: HTTP Proxy/Alt
+    fingerprint: "HTTP/1.1|Tomcat|Jenkins"
+    security_check: Check for admin interfaces, default credentials
+  - id: SF-09
+    port: 3389
+    service: RDP
+    fingerprint: "RDP|MS-WBT-Server"
+    security_check: Check NLA enforcement, TLS version, brute force protection
+  - id: SF-10
+    port: 445
+    service: SMB
+    fingerprint: "SMB|microsoft-ds"
+    security_check: Check for SMBv1 (EternalBlue), guest access, signing
+  - id: SF-11
+    port: 53
+    service: DNS
+    fingerprint: "domain"
+    security_check: Check for zone transfer, recursion, DNSSEC
+  - id: SF-12
+    port: 25
+    service: SMTP
+    fingerprint: "220.*ESMTP|Postfix|Exim"
+    security_check: Check for open relay, STARTTLS, SPF/DKIM/DMARC
+  - id: SF-13
+    port: 161
+    service: SNMP
+    fingerprint: UDP SNMP response
+    security_check: Check for public community string, SNMPv3 enforcement
+  - id: SF-14
+    port: 2379
+    service: etcd
+    fingerprint: "etcd"
+    security_check: Check for unauthenticated access, TLS client cert
+  - id: SF-15
+    port: 9200
+    service: Elasticsearch
+    fingerprint: "elasticsearch|cluster_name"
+    security_check: Check for no-auth access, X-Pack security, external binding

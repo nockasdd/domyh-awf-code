@@ -1,0 +1,36 @@
+metadata:
+  skill: electron
+  domain: asar_repacking
+  updated: "2026-10-02"
+  entries_count: 6
+
+repacking:
+  - name: ASAR Pack Command
+    desc: "Repack modified source directory back into ASAR archive"
+    command: "npx asar pack ./app-extracted app.asar"
+    notes: "Output replaces original app.asar in resources directory"
+
+  - name: Preserving app.asar.unpacked
+    desc: "Native modules in unpacked directory must be preserved alongside new ASAR"
+    process: "Do not modify app.asar.unpacked unless native modules changed"
+    notes: "ASAR references unpacked files by path — mismatches cause crashes"
+
+  - name: Native Module Compatibility
+    desc: "Repacked ASAR must reference correct native module (.node) ABI version"
+    check: "process.versions.modules must match compiled native module ABI"
+    notes: "Rebuild native modules with electron-rebuild if Electron version changed"
+
+  - name: Code Signing Implications
+    desc: "Modified ASAR invalidates existing code signatures"
+    impact: "Application may fail to launch on macOS (Gatekeeper) or show warnings on Windows"
+    mitigation: "Re-sign application with valid certificate after modification"
+
+  - name: Differential Update Impact
+    desc: "Modified ASAR changes blockmap and differential update calculations"
+    impact: "Next auto-update may download full update instead of delta"
+    notes: "Regenerate blockmap if maintaining auto-update compatibility"
+
+  - name: Integrity Hash Recalculation
+    desc: "Some Electron apps verify ASAR integrity hash at startup"
+    check: "Search for integrity check in main.js or package.json asar.integrity"
+    mitigation: "Update integrity hash to match new ASAR or disable check in development"

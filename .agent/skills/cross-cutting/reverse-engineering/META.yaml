@@ -18,6 +18,12 @@ triggers:
     - "*.sig"
     - "*.py"
   keywords:
+    - nuitka
+    - memory dump
+    - vm bytecode
+    - binary identifier
+    - PE section
+    - packer detect
     - reverse engineering
     - IDA Pro
     - Ghidra
@@ -37,6 +43,11 @@ triggers:
     - binary analysis
 
 caps:
+  - Nuitka binary decryption
+  - Memory dump analysis
+  - VM/Bytecode reverse engineering
+  - Binary language fingerprinting
+  - Nuitka memory key extraction
   - "IDA Pro scripting (IDAPython, FLIRT signatures, xref analysis)"
   - "Ghidra scripting (Java/Python, Pcode, data type manager)"
   - "Pattern/Signature generation (AOB from function prologue)"
@@ -48,6 +59,12 @@ data_files:
   - data/ida-patterns.yaml
   - data/ghidra-patterns.yaml
   - data/signature-generation.yaml
+
+  - data/binary-identification.yaml
+  - data/nuitka-decryption.yaml
+  - data/memory-dumping.yaml
+  - data/vm-bytecode-patterns.yaml
+  - data/nuitka-memory-analysis.yaml
 
 related_skills:
   - game-automation

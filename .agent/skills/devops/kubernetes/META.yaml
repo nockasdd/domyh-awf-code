@@ -21,6 +21,8 @@ triggers:
     - "kustomization.yaml"
     - "values.yaml"
   keywords:
+    - k8s security
+    - pod security audit
     # Core
     - kubernetes
     - k8s
@@ -54,6 +56,21 @@ triggers:
     - create deployment
     - configure ingress
     - setup k8s
+
+
+caps:
+  - Gateway API networking
+  - Sidecar Container patterns
+  - Kueue job scheduling
+  - Pod Security Standards
+  - Kustomize and Helm packaging
+
+data_files:
+  - data/networking.yaml
+  - data/scheduling.yaml
+  - data/security.yaml
+  - data/workloads.yaml
+  - data/k8s-security-audit.yaml
 
 related_skills:
   - docker

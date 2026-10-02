@@ -1,0 +1,58 @@
+metadata:
+  skill: csharp
+  domain: dotnet_decompilation
+  updated: "2026-10-02"
+  entries_count: 8
+
+tools:
+  - name: dnSpy
+    desc: ".NET assembly debugger and editor — decompile, debug, and modify IL code"
+    usage: "Open .exe/.dll → navigate namespaces → F5 to debug decompiled code"
+    strengths: "In-place editing, debugging decompiled code, IL-level modifications"
+    notes: "dnSpyEx is the maintained fork (original archived)"
+
+  - name: ILSpy
+    desc: "Open-source .NET decompiler with C#, VB, and IL output"
+    usage: "Open assembly → select language (C#/VB/IL) → export project"
+    strengths: "Clean C# output, project export, NuGet package analysis"
+    notes: "Available as standalone, VS extension, or command-line (ilspycmd)"
+
+  - name: CIL Bytecode Analysis
+    desc: "Common Intermediate Language is .NET's assembly language"
+    key_opcodes:
+      ldarg: "Load method argument"
+      ldloc: "Load local variable"
+      stloc: "Store to local variable"
+      call: "Call method"
+      callvirt: "Call virtual method"
+      ret: "Return from method"
+      br: "Unconditional branch"
+      brtrue/brfalse: "Conditional branch"
+
+  - name: Roslyn Decompilation
+    desc: "Use Roslyn compiler platform for semantic analysis of decompiled code"
+    usage: "ICSharpCode.Decompiler NuGet package for programmatic decompilation"
+    code: |
+      var decompiler = new CSharpDecompiler("target.dll", new DecompilerSettings());
+      string code = decompiler.DecompileWholeModuleAsString();
+
+  - name: de4dot Deobfuscation
+    desc: "Automatic .NET deobfuscator supporting many commercial obfuscators"
+    usage: "de4dot target.dll -o target-cleaned.dll"
+    supported: ["ConfuserEx", "Dotfuscator", "Eazfuscator", "SmartAssembly", "Babel", "Crypto Obfuscator"]
+    notes: "May not fully deobfuscate latest obfuscator versions"
+
+  - name: Assembly Metadata Inspection
+    desc: "Examine .NET assembly metadata tables for structure analysis"
+    tools: ["ildasm (IL Disassembler)", "dnSpy metadata view", "AsmResolver library"]
+    key_tables: ["TypeDef", "MethodDef", "Field", "MemberRef", "AssemblyRef"]
+
+  - name: Resource Extraction
+    desc: "Extract embedded resources from .NET assembly"
+    approach: "Resources stored in .mresources section; access via ResourceManager"
+    tools: ["dnSpy Resources tab", "ILSpy Resources view", "dotnet-dump for runtime resources"]
+
+  - name: Debugging Decompiled Code
+    desc: "Attach debugger to decompiled .NET assembly for runtime analysis"
+    approach: "dnSpy can debug without PDB files using decompiled source as reference"
+    steps: ["Open assembly in dnSpy", "Set breakpoints in decompiled code", "Debug → Start (F5)", "Inspect locals and call stack"]

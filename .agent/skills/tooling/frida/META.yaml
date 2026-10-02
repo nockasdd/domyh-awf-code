@@ -1,0 +1,43 @@
+name: frida
+display: Frida Dynamic Instrumentation
+category: tooling
+tier: 1
+priority: 3
+
+desc: "Dynamic instrumentation with Frida — function hooking, runtime analysis, and security testing."
+
+triggers:
+  file_patterns:
+    - "*.js"
+  keywords:
+    - frida
+    - frida hook
+    - dynamic instrumentation
+    - frida script
+    - frida attach
+    - frida spawn
+    - function trace
+    - interceptor
+  intents:
+    - hook function with frida
+    - trace function calls
+    - runtime analysis
+
+caps:
+  - Frida attach/spawn mode selection
+  - Function hooking and return value analysis
+  - Memory scanning and pattern matching
+  - Native function tracing
+
+data_files:
+  - data/frida-templates.yaml
+  - data/hook-patterns.yaml
+
+related_skills:
+  - reverse-engineering
+  - android-pentest
+  - anti-detection
+
+links_to:
+  - reverse-engineering
+  - android-pentest

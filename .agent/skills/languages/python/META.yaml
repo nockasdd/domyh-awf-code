@@ -13,6 +13,8 @@ triggers:
     - "Pipfile"
     - "setup.py"
   keywords:
+    - pyinstxtractor
+    - pyinstaller unpack
     # Core
     - python
     - python 3.12
@@ -96,6 +98,8 @@ data_files:
   - data/testing.yaml
   - data/ml-data-science.yaml
   - data/packaging.yaml
+
+  - data/pyinstaller-unpacking.yaml
 
 related_skills:
   - database

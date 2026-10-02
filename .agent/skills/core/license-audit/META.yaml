@@ -1,0 +1,40 @@
+name: license-audit
+display: License Robustness Audit
+category: core
+tier: 2
+
+desc: "Defensive license validation audit. Identifies licensing weaknesses and provides hardening guidance for commercial software."
+
+triggers:
+  keywords:
+    - license
+    - activation
+    - entitlement
+    - license check
+    - serial key
+    - license validation
+    - hardening license
+    - audit license mechanism
+    - license bypass defense
+  intents:
+    - audit license implementation
+    - harden license validation
+    - review licensing mechanism
+
+caps:
+  - License mechanism weakness identification
+  - Hardening recommendation generation
+  - Server-side vs client-side validation audit
+  - License algorithm strength assessment
+
+data_files:
+  - data/license-weakness-patterns.yaml
+  - data/license-hardening.yaml
+
+related_skills:
+  - security
+  - reverse-engineering
+
+links_to:
+  - security
+  - reverse-engineering

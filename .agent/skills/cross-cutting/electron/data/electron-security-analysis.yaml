@@ -1,0 +1,66 @@
+metadata:
+  skill: electron
+  domain: electron_security
+  updated: "2026-10-02"
+  entries_count: 10
+
+security_checks:
+  - name: contextIsolation Audit
+    severity: CRITICAL
+    desc: "contextIsolation separates preload script context from renderer page context"
+    check: "webPreferences.contextIsolation must be true (default since Electron 12)"
+    risk: "Without isolation, renderer page can access Node.js APIs via preload"
+
+  - name: nodeIntegration Check
+    severity: CRITICAL
+    desc: "nodeIntegration gives renderer process full Node.js access"
+    check: "webPreferences.nodeIntegration must be false (default since Electron 5)"
+    risk: "XSS in renderer becomes full RCE with Node.js access"
+
+  - name: Sandbox Mode Verification
+    severity: HIGH
+    desc: "Sandbox restricts renderer process capabilities"
+    check: "webPreferences.sandbox should be true (default since Electron 20)"
+    risk: "Unsandboxed renderer can access OS resources directly"
+
+  - name: webSecurity Analysis
+    severity: HIGH
+    desc: "webSecurity enforces same-origin policy in renderer"
+    check: "webPreferences.webSecurity must be true (default)"
+    risk: "Disabled webSecurity allows cross-origin requests from renderer"
+
+  - name: CSP Header Review
+    severity: HIGH
+    desc: "Content Security Policy prevents inline script execution and unauthorized sources"
+    check: "Session.defaultSession.webRequest.onHeadersReceived should set strict CSP"
+    risk: "Missing CSP allows XSS and code injection in renderer"
+
+  - name: Preload Script Audit
+    severity: HIGH
+    desc: "Preload script bridges Node.js and renderer — must expose minimal API"
+    check: "contextBridge.exposeInMainWorld exposes only necessary functions"
+    risk: "Overly permissive preload exposes dangerous Node.js APIs to web content"
+
+  - name: Remote Module Usage
+    severity: CRITICAL
+    desc: "remote module allows renderer to call main process APIs directly (deprecated)"
+    check: "enableRemoteModule must be false; @electron/remote usage reviewed"
+    risk: "Remote module bypasses process isolation security model"
+
+  - name: Protocol Handler Security
+    severity: HIGH
+    desc: "Custom protocol handlers (app://) must validate requested resources"
+    check: "protocol.registerFileProtocol must validate paths against allowlist"
+    risk: "Path traversal via custom protocol can read arbitrary files"
+
+  - name: Custom Scheme Registration
+    severity: MEDIUM
+    desc: "Custom URL schemes (myapp://) must be registered securely"
+    check: "protocol.registerSchemesAsPrivileged with minimal privileges"
+    risk: "Overly privileged schemes can bypass CSP and security restrictions"
+
+  - name: IPC Message Validation
+    severity: HIGH
+    desc: "IPC messages between main and renderer must be validated"
+    check: "ipcMain.handle validates sender origin and message format"
+    risk: "Unvalidated IPC allows renderer to invoke privileged main process operations"

@@ -1,0 +1,63 @@
+metadata:
+  skill: plugin-ida-pro
+  domain: nuitka_reconstruction
+  updated: "2026-10-02"
+  entries_count: 8
+
+ida_patterns:
+  - name: Nuitka PE Section Identification
+    desc: "Locate .nuitka section in PE binary containing encrypted module data"
+    ida_approach: "View → Segments → find .nuitka section; note base address and size"
+    notes: "Section contains encrypted Python module constant blobs"
+
+  - name: Constant Extraction via IDAPython
+    desc: "Script to extract and catalog constant blobs from .nuitka section"
+    ida_approach: "IDAPython script iterating section bytes, identifying blob boundaries by size headers"
+    code: |
+      import idaapi, idc
+      seg = idaapi.get_segm_by_name(".nuitka")
+      if seg:
+          print(f".nuitka: {hex(seg.start_ea)} - {hex(seg.end_ea)}")
+
+  - name: Module Name Recovery from .rdata
+    desc: "Python module names stored as C strings in .rdata section"
+    ida_approach: "Search .rdata for strings matching Python module naming (dotted paths)"
+    code: |
+      import idautils
+      for s in idautils.Strings():
+          if '.' in str(s) and not str(s).startswith('.'):
+              print(f"{hex(s.ea)}: {str(s)}")
+
+  - name: Python Object Type Identification
+    desc: "Nuitka creates CPython-compatible PyObject structures in memory"
+    ida_approach: "Define PyObject struct in IDA (ob_refcnt: qword, ob_type: pointer)"
+    notes: "Apply struct type to heap allocations for better decompilation"
+
+  - name: Call Graph Reconstruction
+    desc: "Reconstruct Python module call hierarchy from Nuitka C function calls"
+    ida_approach: "Xref analysis on module init functions; build call tree via IDA proximity view"
+    notes: "Nuitka module functions follow naming pattern impl_<module>$<function>"
+
+  - name: Decompiled Source Correlation
+    desc: "Map IDA decompiled C code back to original Python constructs"
+    ida_approach: "Nuitka generates C with comments referencing original Python line numbers"
+    notes: "Look for NUITKA_CANNOT_BE_USED, PyObject_Call patterns for original function calls"
+
+  - name: Nuitka-Specific Patterns in IDA
+    desc: "Recognize Nuitka runtime functions for proper analysis"
+    key_functions:
+      - "MAKE_FUNCTION — Python function object creation"
+      - "CALL_FUNCTION — Python function invocation"
+      - "MODULE_INIT — Module initialization entry point"
+      - "IMPORT_MODULE — Module import resolution"
+
+  - name: Automated Annotation via IDAPython
+    desc: "Script to automatically annotate Nuitka runtime functions"
+    ida_approach: "Pattern match on known Nuitka function signatures and add comments/renames"
+    code: |
+      import idautils, idc
+      for func_ea in idautils.Functions():
+          name = idc.get_func_name(func_ea)
+          if "impl_" in name and "$" in name:
+              module, func = name.split("$", 1)
+              idc.set_func_cmt(func_ea, f"Python: {module.replace('impl_','')}.{func}", 1)

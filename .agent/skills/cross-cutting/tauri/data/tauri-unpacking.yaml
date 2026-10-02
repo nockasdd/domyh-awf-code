@@ -1,0 +1,36 @@
+metadata:
+  skill: tauri
+  domain: tauri_extraction
+  updated: "2026-10-02"
+  entries_count: 6
+
+extraction:
+  - name: Tauri App Architecture
+    desc: "Tauri apps use Rust backend + system WebView for frontend — no bundled Chromium"
+    structure: "Single native binary + frontend assets embedded in binary or alongside"
+    difference_from_electron: "Much smaller size; frontend assets compiled into Rust binary"
+
+  - name: Resource Extraction from Binary
+    desc: "Tauri embeds frontend assets (HTML/JS/CSS) in the compiled Rust binary"
+    approach: "Use binwalk or strings to locate embedded web assets in binary"
+    notes: "Assets may be compressed with Brotli; look for HTML/JS signatures in binary"
+
+  - name: Frontend Asset Location
+    desc: "In development mode, assets served from filesystem; in production, embedded in binary"
+    dev_path: "src-tauri/target/debug/ alongside frontend dist/"
+    prod_path: "Assets embedded in Rust binary via include_dir! or tauri bundler"
+
+  - name: Rust Binary Analysis
+    desc: "Tauri backend is compiled Rust — analyze with standard Rust RE tools"
+    tools: ["IDA Pro with Rust demangling", "Ghidra with Rust support", "cargo-bloat for size analysis"]
+    notes: "Rust symbols are mangled; use rustfilt for demangling"
+
+  - name: tauri.conf.json Recovery
+    desc: "Tauri configuration file defines app window, security settings, and permissions"
+    location: "src-tauri/tauri.conf.json in source; may be partially embedded in binary"
+    key_fields: ["allowlist", "security.csp", "windows.url", "bundle.identifier"]
+
+  - name: IPC Command Discovery
+    desc: "Tauri uses invoke() for frontend-to-backend IPC via registered commands"
+    analysis: "Search for #[tauri::command] in decompiled Rust or 'invoke' calls in frontend JS"
+    security: "Each command should validate inputs and check permissions"

@@ -1,0 +1,113 @@
+metadata:
+  skill: security
+  domain: web_logic_vulnerabilities
+  updated: "2026-10-02"
+  patterns_count: 15
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: WL-01
+    name: IDOR via Sequential ID
+    severity: HIGH
+    category: Access Control
+    description: Sequential integer IDs allow enumeration of other users resources
+    detection_pattern: "/api/users/123/profile where 123 is guessable"
+    fix_pattern: Use UUIDs or verify object-level authorization
+  - id: WL-02
+    name: Broken Function-Level Auth
+    severity: CRITICAL
+    category: Authorization
+    description: Admin endpoints accessible to regular users
+    detection_pattern: "/admin/deleteUser accessible with regular JWT"
+    fix_pattern: Role-based middleware on all admin endpoints
+  - id: WL-03
+    name: Mass Assignment
+    severity: HIGH
+    category: Input
+    description: API accepts extra fields not intended to be user-modifiable
+    detection_pattern: "PUT /api/user {role:'admin'} accepted without filtering"
+    fix_pattern: Whitelist allowed fields per endpoint, use DTOs
+  - id: WL-04
+    name: Race Condition
+    severity: HIGH
+    category: Logic
+    description: Concurrent requests bypass validation (double-spend, double-apply)
+    detection_pattern: "Concurrent POST to /apply-coupon succeeds multiple times"
+    fix_pattern: Use database locks, idempotency keys, or optimistic locking
+  - id: WL-05
+    name: Price Manipulation
+    severity: CRITICAL
+    category: Logic
+    description: Price sent from client and trusted by server
+    detection_pattern: "POST /checkout {price: 0.01} accepted"
+    fix_pattern: Always compute price server-side from product catalog
+  - id: WL-06
+    name: Coupon Abuse
+    severity: MEDIUM
+    category: Logic
+    description: Same coupon applied multiple times or to excluded items
+    detection_pattern: "POST /apply-coupon succeeds after order placed"
+    fix_pattern: One-time use enforcement, validate coupon rules server-side
+  - id: WL-07
+    name: Workflow Step Skip
+    severity: HIGH
+    category: Logic
+    description: Multi-step process allows skipping validation steps
+    detection_pattern: "POST /checkout/confirm without prior /checkout/review"
+    fix_pattern: Server-side state machine enforcing step order
+  - id: WL-08
+    name: Privilege Escalation via Parameter
+    severity: CRITICAL
+    category: Authorization
+    description: User role elevated by modifying request parameter
+    detection_pattern: "POST /register {role:'admin'} creates admin account"
+    fix_pattern: Never accept role from client, assign server-side
+  - id: WL-09
+    name: Forced Browsing to Admin
+    severity: HIGH
+    category: Access Control
+    description: Admin pages accessible by direct URL without auth check
+    detection_pattern: "/admin/dashboard returns 200 without session"
+    fix_pattern: Auth middleware on all admin routes
+  - id: WL-10
+    name: Account Takeover via Reset
+    severity: CRITICAL
+    category: Authentication
+    description: Password reset flow allows token guessing or reuse
+    detection_pattern: "Reset token is sequential, short, or never expires"
+    fix_pattern: Cryptographic random tokens, short expiry, single use
+  - id: WL-11
+    name: Session Fixation
+    severity: HIGH
+    category: Session
+    description: Session ID not regenerated after authentication
+    detection_pattern: "Session cookie same before and after login"
+    fix_pattern: Regenerate session ID on login and privilege change
+  - id: WL-12
+    name: TOCTOU Race
+    severity: HIGH
+    category: Logic
+    description: Time-of-check to time-of-use gap allows bypass
+    detection_pattern: "Balance check then debit in separate transactions"
+    fix_pattern: Atomic check-and-update in single transaction
+  - id: WL-13
+    name: Multi-Step Bypass
+    severity: MEDIUM
+    category: Logic
+    description: Multi-step process validated only at final step
+    detection_pattern: "Modify cart after payment calculation"
+    fix_pattern: Re-validate at each step, sign intermediate state
+  - id: WL-14
+    name: Negative Quantity
+    severity: HIGH
+    category: Logic
+    description: Negative quantity in order results in credit instead of charge
+    detection_pattern: "POST /order {quantity: -1} produces negative total"
+    fix_pattern: Validate quantity > 0 server-side
+  - id: WL-15
+    name: API Rate Limit Bypass
+    severity: MEDIUM
+    category: Availability
+    description: Rate limiting bypassed via header manipulation or IP rotation
+    detection_pattern: "X-Forwarded-For header accepted to reset rate limit"
+    fix_pattern: Rate limit by authenticated user, not IP or header

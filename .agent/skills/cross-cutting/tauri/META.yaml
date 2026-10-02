@@ -17,6 +17,8 @@ triggers:
     - "capabilities/*.json"
     - "src-tauri/capabilities/**"
   keywords:
+    - tauri unpack
+    - tauri reverse
     - tauri
     - tauri app
     - tauri 2
@@ -55,6 +57,13 @@ caps:
   - Auto-updater integration
   - Code signing (Windows, macOS)
   - CI/CD build matrix
+
+
+data_files:
+  - data/build.yaml
+  - data/plugins.yaml
+  - data/security.yaml
+  - data/tauri-unpacking.yaml
 
 related_skills:
   - electron

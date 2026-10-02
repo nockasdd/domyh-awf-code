@@ -1,0 +1,40 @@
+name: network-recon
+display: Network Reconnaissance
+category: core
+tier: 2
+
+desc: "Network reconnaissance and attack surface mapping using Nmap. Host discovery, port scanning, service detection."
+
+triggers:
+  keywords:
+    - nmap
+    - port scan
+    - network scan
+    - service detection
+    - host discovery
+    - nse script
+    - network reconnaissance
+    - attack surface
+  intents:
+    - scan network
+    - discover services
+    - map attack surface
+
+caps:
+  - Nmap scan profile selection
+  - Host discovery techniques
+  - Service and version detection
+  - NSE script automation
+  - Defensive findings reporting
+
+data_files:
+  - data/nmap-profiles.yaml
+  - data/service-fingerprints.yaml
+
+related_skills:
+  - security
+  - web-pentest
+
+links_to:
+  - security
+  - web-pentest

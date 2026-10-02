@@ -1,0 +1,58 @@
+metadata:
+  skill: security
+  domain: protection_defense
+  updated: "2026-10-02"
+  patterns_count: 10
+  columns: [id, name, protection_mechanism, threat_description, defense_hardening]
+
+patterns:
+  - id: PD-01
+    name: ASLR Integrity Monitoring
+    protection_mechanism: Address Space Layout Randomization
+    threat_description: Information leaks via format strings can reveal runtime base addresses
+    defense_hardening: "Enable full ASLR (DYNAMICBASE + HIGHENTROPYVA), eliminate format string vulnerabilities, use -fstack-protector-all"
+  - id: PD-02
+    name: Stack Canary Verification
+    protection_mechanism: Stack Buffer Overflow Protection
+    threat_description: Canary value may be leaked through separate vulnerability channels
+    defense_hardening: "Enable -fstack-protector-strong, use per-thread random canaries, terminate on canary mismatch"
+  - id: PD-03
+    name: NX/DEP Enforcement
+    protection_mechanism: Non-Executable Memory
+    threat_description: Return-Oriented Programming can chain existing code gadgets
+    defense_hardening: "Ensure NX bit enabled on all data segments, minimize useful ROP gadgets via -fcf-protection, use CET"
+  - id: PD-04
+    name: PIE Full Randomization
+    protection_mechanism: Position Independent Executable
+    threat_description: Partial ASLR may leave base predictable on 32-bit systems
+    defense_hardening: "Compile with -fPIE -pie, enable ASLR high entropy, use 64-bit architecture"
+  - id: PD-05
+    name: RELRO Hardening
+    protection_mechanism: Relocation Read-Only
+    threat_description: GOT entries writable after program load can be overwritten
+    defense_hardening: "Link with -Wl,-z,relro,-z,now for Full RELRO, making GOT read-only after load"
+  - id: PD-06
+    name: SafeSEH Enforcement
+    protection_mechanism: Safe Structured Exception Handling (Windows)
+    threat_description: Exception handler addresses in stack can be corrupted
+    defense_hardening: "Compile with /SAFESEH, use /GS (buffer security check), enable SEHOP in Windows"
+  - id: PD-07
+    name: CFI Protection
+    protection_mechanism: Control Flow Integrity
+    threat_description: Indirect calls and jumps can be redirected to arbitrary targets
+    defense_hardening: "Enable -fcf-protection=full (CET on x86), use CFI sanitizer, compile with -fsanitize=cfi"
+  - id: PD-08
+    name: Shadow Stack Defense
+    protection_mechanism: Hardware Shadow Stack (Intel CET)
+    threat_description: Return address on stack can be overwritten
+    defense_hardening: "Enable CET Shadow Stack on supported hardware, compile with -fcf-protection=return"
+  - id: PD-09
+    name: Code Signing Verification
+    protection_mechanism: Authenticode / Code Signature
+    threat_description: Modified binaries may bypass signature checks if not enforced
+    defense_hardening: "Require valid signatures for all executables, enable WDAC/AppLocker policies"
+  - id: PD-10
+    name: ASAN Runtime Hardening
+    protection_mechanism: Address Sanitizer
+    threat_description: Memory corruption may not be detected without instrumentation
+    defense_hardening: "Use -fsanitize=address in development, deploy with hardened allocator (scudo, mimalloc-secure)"

@@ -1,0 +1,127 @@
+metadata:
+  skill: windows-forensics
+  domain: eventlog_patterns
+  updated: "2026-10-02"
+  patterns_count: 15
+
+patterns:
+  - id: WF-01
+    name: Successful Logon
+    event_id: 4624
+    log: Security
+    severity: INFO
+    description: Successful account logon — track Logon Type (2=Interactive, 3=Network, 10=RDP)
+    detection: "LogonType 10 from unexpected source IP indicates lateral movement"
+    sigma_tag: attack.lateral_movement
+  - id: WF-02
+    name: Failed Logon
+    event_id: 4625
+    log: Security
+    severity: MEDIUM
+    description: Failed logon attempt — high volume indicates brute force
+    detection: "Count > 10 from same source in 5 minutes"
+    sigma_tag: attack.credential_access
+  - id: WF-03
+    name: Account Created
+    event_id: 4720
+    log: Security
+    severity: HIGH
+    description: New user account created — check for unauthorized accounts
+    detection: "Account creation outside change window or by non-admin"
+    sigma_tag: attack.persistence
+  - id: WF-04
+    name: Service Installed
+    event_id: 4697
+    log: Security
+    severity: HIGH
+    description: A service was installed — common persistence mechanism
+    detection: "New service with suspicious binary path or temp directory"
+    sigma_tag: attack.persistence
+  - id: WF-05
+    name: New Service (System)
+    event_id: 7045
+    log: System
+    severity: HIGH
+    description: New service registered in SCM — correlate with 4697
+    detection: "Service from %TEMP%, %APPDATA%, or encoded commands"
+    sigma_tag: attack.persistence
+  - id: WF-06
+    name: Audit Log Cleared
+    event_id: 1102
+    log: Security
+    severity: CRITICAL
+    description: Security audit log was cleared — strong indicator of cover-up
+    detection: "Any occurrence is suspicious and requires investigation"
+    sigma_tag: attack.defense_evasion
+  - id: WF-07
+    name: Process Created
+    event_id: 4688
+    log: Security
+    severity: INFO
+    description: New process created — requires audit policy enabled
+    detection: "Unusual parent-child process relationships"
+    sigma_tag: attack.execution
+  - id: WF-08
+    name: PowerShell Script Block
+    event_id: 4104
+    log: "Microsoft-Windows-PowerShell/Operational"
+    severity: HIGH
+    description: PowerShell script block logging captures full script content
+    detection: "Encoded commands, download cradles, AMSI bypass attempts"
+    sigma_tag: attack.execution
+  - id: WF-09
+    name: Sysmon Process Create
+    event_id: 1
+    log: "Microsoft-Windows-Sysmon/Operational"
+    severity: INFO
+    description: Process creation with full command line and hash
+    detection: "LOLBin execution, suspicious command lines, unsigned binaries"
+    sigma_tag: attack.execution
+  - id: WF-10
+    name: Sysmon Network Connection
+    event_id: 3
+    log: "Microsoft-Windows-Sysmon/Operational"
+    severity: MEDIUM
+    description: Network connection detected — C2 indicator
+    detection: "Connections to known-bad IPs, unusual ports, beaconing pattern"
+    sigma_tag: attack.command_and_control
+  - id: WF-11
+    name: Sysmon File Create
+    event_id: 11
+    log: "Microsoft-Windows-Sysmon/Operational"
+    severity: INFO
+    description: File created — dropper detection
+    detection: "Executables in temp dirs, DLLs in unusual locations"
+    sigma_tag: attack.defense_evasion
+  - id: WF-12
+    name: Sysmon Registry Modification
+    event_id: 13
+    log: "Microsoft-Windows-Sysmon/Operational"
+    severity: MEDIUM
+    description: Registry value set — persistence via Run keys
+    detection: "HKCU/HKLM Run, RunOnce, Services, scheduled tasks registry"
+    sigma_tag: attack.persistence
+  - id: WF-13
+    name: Scheduled Task Created
+    event_id: 4698
+    log: Security
+    severity: HIGH
+    description: Scheduled task created — common persistence mechanism
+    detection: "Task with encoded commands or pointing to temp directories"
+    sigma_tag: attack.persistence
+  - id: WF-14
+    name: Privilege Escalation
+    event_id: 4672
+    log: Security
+    severity: MEDIUM
+    description: Special privileges assigned to new logon
+    detection: "SeDebugPrivilege, SeImpersonatePrivilege on non-admin accounts"
+    sigma_tag: attack.privilege_escalation
+  - id: WF-15
+    name: RDP Session
+    event_id: 1149
+    log: "Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational"
+    severity: MEDIUM
+    description: RDP session established
+    detection: "Connections from unexpected IPs or during off-hours"
+    sigma_tag: attack.lateral_movement

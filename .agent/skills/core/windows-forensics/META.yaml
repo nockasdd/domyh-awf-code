@@ -1,0 +1,40 @@
+name: windows-forensics
+display: Windows Forensic Analysis
+category: core
+tier: 2
+
+desc: "Defensive threat hunting over Windows Event Logs. Detects suspicious authentication, persistence, and execution activity."
+
+triggers:
+  keywords:
+    - windows event log
+    - forensics
+    - event viewer
+    - ETW
+    - sysmon
+    - security log
+    - logon event
+    - windows forensic analysis
+    - hayabusa
+    - sigma rules
+  intents:
+    - hunt windows logs
+    - forensic analysis
+    - investigate windows event
+
+caps:
+  - Windows Event Log analysis (Security, System, Sysmon)
+  - Hayabusa and Sigma rule integration
+  - Failed logon and lateral movement detection
+  - Persistence mechanism identification
+  - PowerShell execution forensics
+
+data_files:
+  - data/windows-eventlog-patterns.yaml
+  - data/forensic-artifacts.yaml
+
+related_skills:
+  - security
+
+links_to:
+  - security

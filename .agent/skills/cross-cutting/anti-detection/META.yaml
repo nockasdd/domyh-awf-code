@@ -16,6 +16,9 @@ triggers:
     - "*.h"
     - "*.hpp"
   keywords:
+    - anti-debug bypass
+    - ptrace
+    - PEB
     - anti-detection
     - anti-cheat
     - anti-debug
@@ -37,6 +40,7 @@ triggers:
     - direct syscall
 
 caps:
+  - Anti-debug bypass technique catalog
   - "Code obfuscation (compile-time string encrypt, control flow, opaque predicates)"
   - "Anti-debugging (NtQueryInformationProcess, timing checks, TLS callbacks)"
   - "Stealth patterns (header erasure, module unlinking, handle cloaking)"
@@ -48,6 +52,8 @@ data_files:
   - data/obfuscation-patterns.yaml
   - data/anti-debug-patterns.yaml
   - data/stealth-evasion.yaml
+
+  - data/anti-debug-bypass.yaml
 
 related_skills:
   - game-automation

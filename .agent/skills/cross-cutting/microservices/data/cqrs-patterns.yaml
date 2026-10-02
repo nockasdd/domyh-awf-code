@@ -9,16 +9,16 @@ overview:
     models for optimized performance and scalability.
 
   architecture: |
+    Client
+     Commands (Write) → Command Handler
+                           → Domain Model
+                           → Event Store
+                           → Domain Events
+                                    ↓
+                           → Projections
+                                    ↓
+     Queries (Read) ← Read Model (Views)
 
-> Client
->  Commands (Write) → Command Handler
->                        → Domain Model
->                        → Event Store
->                        → Domain Events
->                                 ↓
->                        → Projections
->                                 ↓
->  Queries (Read) ← Read Model (Views)
 # COMMAND SIDE
 
 command_side:

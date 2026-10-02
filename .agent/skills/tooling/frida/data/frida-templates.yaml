@@ -1,0 +1,116 @@
+metadata:
+  skill: frida
+  domain: hook_templates
+  updated: "2026-10-02"
+  templates_count: 10
+
+templates:
+  - id: FT-01
+    name: Function Trace
+    description: Log function calls with arguments and return values
+    target: Any named function
+    code: |
+      Interceptor.attach(Module.findExportByName(null, "targetFunction"), {
+        onEnter(args) { console.log("Called with:", args[0]); },
+        onLeave(retval) { console.log("Returned:", retval); }
+      });
+  - id: FT-02
+    name: Java Method Hook
+    description: Hook Java method on Android
+    target: Java class method
+    code: |
+      Java.perform(function() {
+        var cls = Java.use("com.example.TargetClass");
+        cls.targetMethod.implementation = function(arg) {
+          console.log("arg:", arg);
+          return this.targetMethod(arg);
+        };
+      });
+  - id: FT-03
+    name: Memory Scan
+    description: Scan process memory for byte pattern
+    target: Process memory
+    code: |
+      Process.enumerateRanges('r--').forEach(function(range) {
+        Memory.scan(range.base, range.size, "41 42 43 44", {
+          onMatch(address, size) { console.log("Found at:", address); },
+          onComplete() { console.log("Scan complete"); }
+        });
+      });
+  - id: FT-04
+    name: Module Export Enumeration
+    description: List all exports of a loaded module
+    target: Loaded module
+    code: |
+      Module.enumerateExports("target.dll", {
+        onMatch(exp) { console.log(exp.type, exp.name, exp.address); },
+        onComplete() {}
+      });
+  - id: FT-05
+    name: Native Function Replace
+    description: Replace native function return value
+    target: Native export
+    code: |
+      var addr = Module.findExportByName("target.so", "isValid");
+      Interceptor.replace(addr, new NativeCallback(function() {
+        return 1;
+      }, 'int', []));
+  - id: FT-06
+    name: String Logging
+    description: Log all strings passed to a function
+    target: String-accepting function
+    code: |
+      Interceptor.attach(Module.findExportByName(null, "strcmp"), {
+        onEnter(args) {
+          console.log("strcmp:", Memory.readUtf8String(args[0]),
+                      Memory.readUtf8String(args[1]));
+        }
+      });
+  - id: FT-07
+    name: Crypto Key Capture
+    description: Log encryption keys passed to crypto functions
+    target: Cryptographic API
+    code: |
+      Java.perform(function() {
+        var SecretKeySpec = Java.use("javax.crypto.spec.SecretKeySpec");
+        SecretKeySpec.$init.overload("[B", "java.lang.String").implementation = function(key, alg) {
+          console.log("Key:", Java.array('byte', key), "Algorithm:", alg);
+          return this.$init(key, alg);
+        };
+      });
+  - id: FT-08
+    name: Network URL Logger
+    description: Log all URLs accessed by the application
+    target: Network layer
+    code: |
+      Java.perform(function() {
+        var URL = Java.use("java.net.URL");
+        URL.$init.overload("java.lang.String").implementation = function(url) {
+          console.log("URL:", url);
+          return this.$init(url);
+        };
+      });
+  - id: FT-09
+    name: File Operation Monitor
+    description: Monitor file read/write operations
+    target: File I/O
+    code: |
+      Interceptor.attach(Module.findExportByName(null, "open"), {
+        onEnter(args) {
+          this.path = Memory.readUtf8String(args[0]);
+          console.log("open:", this.path);
+        }
+      });
+  - id: FT-10
+    name: Class Enumeration
+    description: List all loaded Java classes matching a pattern
+    target: Java classloader
+    code: |
+      Java.perform(function() {
+        Java.enumerateLoadedClasses({
+          onMatch(className) {
+            if (className.includes("target")) console.log(className);
+          },
+          onComplete() { console.log("Done"); }
+        });
+      });

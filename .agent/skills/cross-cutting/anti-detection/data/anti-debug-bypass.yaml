@@ -1,0 +1,82 @@
+metadata:
+  skill: anti-detection
+  domain: anti_debug_defense
+  updated: "2026-10-02"
+  entries_count: 12
+
+defense_techniques:
+  - name: IsDebuggerPresent Check
+    platform: Windows
+    api: "kernel32!IsDebuggerPresent"
+    desc: "Checks PEB.BeingDebugged flag for user-mode debugger detection"
+    defense_value: "First line of defense; easy to implement but also easy to bypass"
+    implementation_note: "Call at startup and periodically during execution"
+
+  - name: NtQueryInformationProcess
+    platform: Windows
+    api: "ntdll!NtQueryInformationProcess(ProcessDebugPort)"
+    desc: "Queries kernel for debug port presence — more reliable than PEB check"
+    defense_value: "Kernel-level check harder to bypass than user-mode PEB modification"
+    implementation_note: "Use ProcessDebugPort (0x7) and ProcessDebugObjectHandle (0x1E)"
+
+  - name: CheckRemoteDebuggerPresent
+    platform: Windows
+    api: "kernel32!CheckRemoteDebuggerPresent"
+    desc: "Detects remote debugger attached to the process"
+    defense_value: "Catches remote debugging scenarios that IsDebuggerPresent misses"
+    implementation_note: "Pass current process handle; check returned boolean"
+
+  - name: Timing Check
+    platform: Cross-platform
+    desc: "Measure execution time of code block — debugger stepping causes significant delay"
+    defense_value: "Architectural detection that works against any debugger"
+    implementation_note: "Use RDTSC or QueryPerformanceCounter; threshold > 10x normal is suspicious"
+
+  - name: ptrace Self-Attach (Linux)
+    platform: Linux
+    api: "ptrace(PTRACE_TRACEME, 0, 0, 0)"
+    desc: "Process traces itself — fails if already being traced by debugger"
+    defense_value: "Simple and effective on Linux; prevents single debugger attachment"
+    implementation_note: "Call early in main(); non-zero return indicates existing tracer"
+
+  - name: Hardware Breakpoint Detection
+    platform: Windows
+    desc: "Check debug registers (DR0-DR3) for hardware breakpoint addresses"
+    defense_value: "Detects hardware breakpoints that software scanning cannot find"
+    implementation_note: "Use GetThreadContext to read debug registers; non-zero DR0-3 is suspicious"
+
+  - name: TLS Callback Anti-Debug
+    platform: Windows
+    desc: "TLS callbacks execute before main() entry point — check for debugger before main runs"
+    defense_value: "Pre-main execution catches debuggers that break at entry point"
+    implementation_note: "Register TLS callback via IMAGE_TLS_DIRECTORY in PE header"
+
+  - name: Int 2D Detection
+    platform: Windows
+    desc: "INT 2D (kernel debugger interrupt) behaves differently under debugger"
+    defense_value: "Detects kernel-mode debuggers and some user-mode debuggers"
+    implementation_note: "Execute INT 2D in SEH handler — debugger consumes the exception differently"
+
+  - name: Heap Flags Check
+    platform: Windows
+    desc: "Heap structure flags differ when process is created under debugger"
+    defense_value: "Detects process started with debugger (not attached later)"
+    implementation_note: "Check PEB.NtGlobalFlag for FLG_HEAP_* flags (0x70 indicates debugger)"
+
+  - name: Parent Process Check
+    platform: Windows
+    desc: "Verify parent process is expected (explorer.exe, cmd.exe) not debugger"
+    defense_value: "Detects direct launch from debugger application"
+    implementation_note: "Query parent PID and compare process name against allowlist"
+
+  - name: Trap Flag Detection
+    platform: Windows
+    desc: "Single-step trap flag (TF in EFLAGS) set when debugger steps through code"
+    defense_value: "Detects active single-stepping by debugger"
+    implementation_note: "Push EFLAGS, check TF bit; set in SEH handler to detect step-through"
+
+  - name: VM Detection
+    platform: Cross-platform
+    desc: "Detect virtual machine environment which may indicate analysis sandbox"
+    defense_value: "Identifies automated analysis environments"
+    implementation_note: "Check CPUID hypervisor bit, VM-specific registry keys, MAC address prefixes"

@@ -147,6 +147,9 @@ prevent_confusion_with:
   - nw.js: "Electron has separate main/renderer, NW.js merges them"
 
 caps:
+  - ASAR archive unpacking and extraction
+  - Electron app security analysis
+  - ASAR repacking with modifications
   - Context isolation patterns
   - IPC communication
   - Auto-update mechanisms
@@ -154,6 +157,21 @@ caps:
   - Testing with Playwright
   - Crash reporting
   - Native OS integrations
+
+
+data_files:
+  - data/build.yaml
+  - data/crash.yaml
+  - data/ipc.yaml
+  - data/native.yaml
+  - data/security.yaml
+  - data/storage.yaml
+  - data/testing.yaml
+  - data/updates.yaml
+  - data/window.yaml
+  - data/asar-unpacking.yaml
+  - data/electron-security-analysis.yaml
+  - data/asar-repacking.yaml
 
 # HSA Adapter Integration
 hsa:

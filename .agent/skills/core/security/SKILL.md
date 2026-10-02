@@ -8,7 +8,7 @@ tier: 1
 
 # Security Patterns (Enhanced 2026)
 
-> Comprehensive security skill with 290+ patterns across 14 data files. Covers OWASP Top 10, API Security, Mobile, Cloud, AI/ML, and Supply Chain.
+> Comprehensive security skill with 340+ patterns across 21 data files. Covers OWASP Top 10, API Security, Mobile, Cloud, AI/ML, and Supply Chain.
 
 ## 📦 Data Files Overview
 
@@ -32,6 +32,19 @@ tier: 1
 | `ai-ml-security.yaml`      | LLM, Prompt Injection, Adversarial    | 20      |
 | `reverse-engineering.yaml` | Frida, Xposed, Play Integrity         | 30      |
 
+
+### Defensive Analysis
+
+| File                              | Content                               | Records |
+| --------------------------------- | ------------------------------------- | ------- |
+| `license-keygen-patterns.yaml`    | License keygen weakness detection     | 15      |
+| `binary-patching-techniques.yaml` | Binary patch detection patterns       | 12      |
+| `protection-bypass-techniques.yaml`| ASLR/NX/Canary bypass defense        | 10      |
+| `jailbreak-prompt-patterns.yaml`  | LLM jailbreak prompt detection        | 10      |
+| `web-logic-vulns.yaml`            | Business logic flaw patterns          | 15      |
+| `traffic-interception.yaml`       | Network interception detection        | 10      |
+| `sbom-audit.yaml`                 | SBOM typosquat/lockfile audit         | 8       |
+
 ### Language-Specific
 
 | File                                       | Content              | Records |
@@ -41,7 +54,7 @@ tier: 1
 | `language-specific/php-security.yaml`      | PHP patterns         | 20      |
 | `language-specific/solidity-security.yaml` | Smart contracts      | 20      |
 
-**Total: 290+ patterns across 14 files**
+**Total: 340+ patterns across 21 files**
 
 ---
 

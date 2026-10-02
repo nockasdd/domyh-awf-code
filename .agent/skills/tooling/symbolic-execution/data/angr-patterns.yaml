@@ -1,0 +1,83 @@
+metadata:
+  skill: symbolic-execution
+  domain: angr_patterns
+  updated: "2026-10-02"
+  patterns_count: 8
+
+patterns:
+  - id: AG-01
+    name: Basic CFG Analysis
+    description: Generate control flow graph from binary
+    code: |
+      import angr
+      proj = angr.Project("./binary", auto_load_libs=False)
+      cfg = proj.analyses.CFGFast()
+      print(f"Functions: {len(cfg.kb.functions)}")
+  - id: AG-02
+    name: Path Exploration
+    description: Explore paths to find target address
+    code: |
+      import angr
+      proj = angr.Project("./binary", auto_load_libs=False)
+      state = proj.factory.entry_state()
+      simgr = proj.factory.simgr(state)
+      simgr.explore(find=0x401234, avoid=0x401200)
+      if simgr.found:
+          found_state = simgr.found[0]
+          print(found_state.posix.dumps(0))
+  - id: AG-03
+    name: Symbolic Stdin
+    description: Solve for input that reaches target
+    code: |
+      import angr, claripy
+      proj = angr.Project("./binary", auto_load_libs=False)
+      sym_input = claripy.BVS("input", 8 * 32)
+      state = proj.factory.entry_state(stdin=sym_input)
+      simgr = proj.factory.simgr(state)
+      simgr.explore(find=lambda s: b"correct" in s.posix.dumps(1))
+  - id: AG-04
+    name: Function Analysis
+    description: Analyze specific function behavior
+    code: |
+      import angr
+      proj = angr.Project("./binary", auto_load_libs=False)
+      func_addr = 0x401000
+      state = proj.factory.call_state(func_addr)
+  - id: AG-05
+    name: Hook Function
+    description: Replace function with custom implementation
+    code: |
+      import angr
+      proj = angr.Project("./binary", auto_load_libs=False)
+      @proj.hook(0x401234, length=5)
+      def skip_check(state):
+          state.regs.eax = 1
+  - id: AG-06
+    name: Constraint Addition
+    description: Add custom constraints to symbolic values
+    code: |
+      import claripy
+      x = claripy.BVS("x", 32)
+      solver = claripy.Solver()
+      solver.add(x > 0)
+      solver.add(x < 100)
+      print(solver.eval(x, 10))
+  - id: AG-07
+    name: Binary Diffing
+    description: Compare two binary versions for changes
+    code: |
+      import angr
+      p1 = angr.Project("./v1", auto_load_libs=False)
+      p2 = angr.Project("./v2", auto_load_libs=False)
+      cfg1 = p1.analyses.CFGFast()
+      cfg2 = p2.analyses.CFGFast()
+  - id: AG-08
+    name: VTable Reconstruction
+    description: Recover C++ virtual function tables
+    code: |
+      import angr
+      proj = angr.Project("./binary", auto_load_libs=False)
+      cfg = proj.analyses.CFGFast()
+      for func in cfg.kb.functions.values():
+          if func.name.startswith("_ZTV"):
+              print(f"VTable: {func.name} at {hex(func.addr)}")

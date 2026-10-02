@@ -86,12 +86,20 @@ domains:
     - js bundler
 
 caps:
+  - JavaScript deobfuscation (AST transforms)
   - ES2025/ES2026 modern features
   - Node.js 22 LTS patterns
   - Bun and Deno alternatives
   - Backend frameworks (Express, Fastify, Hono)
   - Frontend frameworks (React, Vue, Svelte)
   - Modern async patterns
+
+
+data_files:
+  - data/async.yaml
+  - data/core.yaml
+  - data/modern.yaml
+  - data/js-deobfuscation.yaml
 
 related_skills:
   - typescript

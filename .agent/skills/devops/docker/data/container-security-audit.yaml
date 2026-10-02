@@ -1,0 +1,113 @@
+metadata:
+  skill: docker
+  domain: container_security
+  updated: "2026-10-02"
+  patterns_count: 15
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: CS-01
+    name: Running as Root
+    severity: HIGH
+    category: Runtime
+    description: Container runs as root user (UID 0)
+    detection_pattern: "USER not specified in Dockerfile"
+    fix_pattern: Add USER nonroot and create non-root user
+  - id: CS-02
+    name: Privileged Mode
+    severity: CRITICAL
+    category: Runtime
+    description: Container runs with --privileged flag
+    detection_pattern: "privileged: true in compose/k8s spec"
+    fix_pattern: Remove privileged flag, use specific capabilities
+  - id: CS-03
+    name: Hardcoded Secrets
+    severity: CRITICAL
+    category: Secrets
+    description: Secrets hardcoded in Dockerfile or image layers
+    detection_pattern: "ENV.*PASSWORD|ENV.*SECRET|ENV.*KEY"
+    fix_pattern: Use Docker secrets or environment injection at runtime
+  - id: CS-04
+    name: Unpatched Base Image
+    severity: HIGH
+    category: Patching
+    description: Base image has known CVEs
+    detection_pattern: "docker scout cves|trivy image <image>"
+    fix_pattern: Use distroless or alpine, update base regularly
+  - id: CS-05
+    name: Writable Root Filesystem
+    severity: MEDIUM
+    category: Runtime
+    description: Container filesystem is writable
+    detection_pattern: "readOnlyRootFilesystem not set"
+    fix_pattern: "Set readOnlyRootFilesystem: true, use tmpfs for writes"
+  - id: CS-06
+    name: Host Network Mode
+    severity: HIGH
+    category: Network
+    description: Container uses host network namespace
+    detection_pattern: "network_mode: host|hostNetwork: true"
+    fix_pattern: Use bridge network with explicit port mapping
+  - id: CS-07
+    name: Docker Socket Mounted
+    severity: CRITICAL
+    category: Escape
+    description: Docker socket mounted inside container
+    detection_pattern: "/var/run/docker.sock mounted as volume"
+    fix_pattern: Never mount Docker socket unless absolutely required
+  - id: CS-08
+    name: No Health Check
+    severity: MEDIUM
+    category: Reliability
+    description: No HEALTHCHECK instruction in Dockerfile
+    detection_pattern: "HEALTHCHECK not found in Dockerfile"
+    fix_pattern: Add HEALTHCHECK with appropriate interval and command
+  - id: CS-09
+    name: Excessive Capabilities
+    severity: HIGH
+    category: Runtime
+    description: Container has unnecessary Linux capabilities
+    detection_pattern: "cap_add without cap_drop ALL"
+    fix_pattern: Drop all capabilities, add only needed ones
+  - id: CS-10
+    name: No Resource Limits
+    severity: MEDIUM
+    category: Runtime
+    description: No CPU or memory limits set
+    detection_pattern: "resources.limits not specified"
+    fix_pattern: Set memory and CPU limits in deployment spec
+  - id: CS-11
+    name: Latest Tag
+    severity: MEDIUM
+    category: Supply Chain
+    description: Image uses :latest tag instead of specific version
+    detection_pattern: "FROM.*:latest|image:.*:latest"
+    fix_pattern: Pin to specific digest or semantic version tag
+  - id: CS-12
+    name: ADD vs COPY
+    severity: LOW
+    category: Build
+    description: ADD used where COPY would suffice (ADD can fetch URLs)
+    detection_pattern: "ADD .* (not .tar|not http)"
+    fix_pattern: Use COPY unless extracting tar or fetching URL
+  - id: CS-13
+    name: No USER Instruction
+    severity: HIGH
+    category: Build
+    description: Dockerfile lacks USER instruction, defaults to root
+    detection_pattern: "USER not found in Dockerfile"
+    fix_pattern: Create non-root user and switch with USER directive
+  - id: CS-14
+    name: Unsigned Image
+    severity: MEDIUM
+    category: Supply Chain
+    description: Image not signed with content trust
+    detection_pattern: "DOCKER_CONTENT_TRUST not enabled"
+    fix_pattern: Enable Docker Content Trust and sign images
+  - id: CS-15
+    name: Exposed Unnecessary Ports
+    severity: MEDIUM
+    category: Network
+    description: More ports exposed than application requires
+    detection_pattern: "EXPOSE count > required services"
+    fix_pattern: Only EXPOSE ports actually needed by the application

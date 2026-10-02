@@ -1,0 +1,38 @@
+metadata:
+  skill: reverse-engineering
+  domain: nuitka_analysis
+  updated: "2026-10-02"
+  entries_count: 8
+
+nuitka_structure:
+  - name: Nuitka Binary Layout
+    desc: "Nuitka compiles Python to C then to native binary. Contains .nuitka PE section with encrypted module data."
+    analysis_approach: Identify .nuitka section, extract encrypted blobs, locate key material in .rdata
+
+  - name: Module Constant Blobs
+    desc: "Python constants (strings, numbers, tuples) stored as encrypted blobs in PE .rdata section"
+    analysis_approach: Search for Nuitka constant initialization functions referencing .rdata offsets
+
+  - name: XOR Key Pattern
+    desc: "Nuitka uses XOR-based encryption with key derived from module name and compilation parameters"
+    analysis_approach: Locate key derivation function by tracing constant decryption calls
+
+  - name: Base64 Layer
+    desc: "Some Nuitka versions apply Base64 encoding on top of XOR encryption"
+    analysis_approach: Check for Base64 alphabet references near decryption routines
+
+  - name: Module Recovery
+    desc: "Individual .pyd modules embedded within the main binary can be extracted after decryption"
+    analysis_approach: Enumerate module table entries and extract each module blob
+
+  - name: Python Version Detection
+    desc: "Nuitka binary contains Python version indicator for runtime compatibility"
+    analysis_approach: Search for Python version strings or magic numbers in .rdata
+
+  - name: Embedded Resource Analysis
+    desc: "Data files included via --include-data-files stored in predictable PE resource locations"
+    analysis_approach: Use PE resource viewer to enumerate and extract embedded data files
+
+  - name: Anti-Analysis Indicators
+    desc: "Some Nuitka builds include anti-analysis flags that affect constant encryption strength"
+    analysis_approach: Check compilation flags in Nuitka metadata for protection level assessment

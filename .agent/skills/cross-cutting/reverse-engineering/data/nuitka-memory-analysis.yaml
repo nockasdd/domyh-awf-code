@@ -1,0 +1,46 @@
+metadata:
+  skill: reverse-engineering
+  domain: nuitka_memory_forensics
+  updated: "2026-10-02"
+  entries_count: 8
+
+forensic_patterns:
+  - name: Decrypted Module Detection
+    desc: "After Nuitka runtime decrypts modules, plaintext Python bytecode exists in process memory"
+    indicator: "Python magic number (e.g., 0x0D0D0A55 for 3.11) in heap allocations"
+    tool: "Memory scanner with Python magic byte pattern"
+
+  - name: XOR Key in Memory
+    desc: "Nuitka encryption key loaded into memory during module initialization"
+    indicator: "Key material near Nuitka module loader function stack frame"
+    tool: "Breakpoint on module init function, inspect local variables"
+
+  - name: Module Name Recovery
+    desc: "Original Python module names stored as strings for module registry"
+    indicator: "Strings matching Python module naming convention in .rdata or heap"
+    tool: "String search for dotted module names (e.g., 'package.module')"
+
+  - name: Encrypted Blob Location
+    desc: "Encrypted constant blobs stored contiguously in PE .rdata section"
+    indicator: "High-entropy data blocks with consistent size alignment in .rdata"
+    tool: "Entropy analysis of PE sections to identify encrypted regions"
+
+  - name: Runtime String Decryption
+    desc: "Strings decrypted on-demand and cached in memory during execution"
+    indicator: "Readable strings appearing in heap after function execution"
+    tool: "Differential memory snapshot before/after function call"
+
+  - name: Python Object Identification
+    desc: "Python objects (PyObject) in memory follow CPython struct layout"
+    indicator: "ob_refcnt + ob_type pointer pattern at consistent offsets"
+    tool: "Search for PyObject header patterns with type pointer validation"
+
+  - name: Module Loader Detection
+    desc: "Nuitka module loader function responsible for decrypting and importing modules"
+    indicator: "Function that reads from .nuitka section and calls decryption routine"
+    tool: "Trace file read operations on .nuitka section; set breakpoint on entry"
+
+  - name: Constant Table Recovery
+    desc: "After decryption, Python constant table (co_consts) available in memory"
+    indicator: "PyTuple object containing mixed types (str, int, None) in heap"
+    tool: "Walk PyCodeObject structures to find co_consts tuples"

@@ -1,0 +1,51 @@
+metadata:
+  skill: java
+  domain: java_decompilation
+  updated: "2026-10-02"
+  entries_count: 8
+
+decompilers:
+  - name: JADX
+    desc: "Android DEX and Java JAR decompiler with GUI and CLI"
+    usage: "jadx-gui app.apk or jadx -d output/ app.jar"
+    strengths: "Best for Android APK analysis; handles DEX directly; resource decoding"
+    output: "Java source code with package structure preserved"
+
+  - name: CFR Decompiler
+    desc: "Modern Java decompiler supporting Java 9+ features (modules, records, sealed)"
+    usage: "java -jar cfr.jar target.jar --outputdir output/"
+    strengths: "Excellent lambda/stream support; Java 14+ pattern matching"
+    output: "Clean Java source with type inference"
+
+  - name: Procyon
+    desc: "Java decompiler with good generics and enum support"
+    usage: "java -jar procyon.jar -o output/ target.jar"
+    strengths: "Accurate generic type reconstruction; good with inner classes"
+    output: "Java source with preserved generic signatures"
+
+  - name: Fernflower / Vineflower
+    desc: "IntelliJ's built-in decompiler (Fernflower) and its improved fork (Vineflower)"
+    usage: "java -jar vineflower.jar target.jar output/"
+    strengths: "Best integration with IDE; Vineflower adds pattern matching and switch expression support"
+    output: "Java source compatible with IntelliJ project import"
+
+  - name: JAR Extraction
+    desc: "JAR files are ZIP archives containing .class files and resources"
+    command: "jar xf target.jar or unzip target.jar -d output/"
+    contents: ["META-INF/MANIFEST.MF", ".class files", "resources", "service loader configs"]
+
+  - name: Obfuscated Name Mapping
+    desc: "ProGuard/R8 renames classes and methods to short identifiers (a, b, c)"
+    recovery: "Use mapping.txt (if available) to restore original names"
+    tool: "retrace.sh mapping.txt stacktrace.txt for crash log deobfuscation"
+
+  - name: ProGuard Reversal
+    desc: "Reverse ProGuard obfuscation using available mapping files"
+    approach: "Apply mapping.txt with proguard-retrace; or use heuristics for name recovery"
+    heuristics: ["Analyze method signatures for semantic naming", "Cross-reference with known library patterns", "String analysis for context clues"]
+
+  - name: Kotlin Metadata in Bytecode
+    desc: "Kotlin compiles to JVM bytecode with @Metadata annotation preserving Kotlin info"
+    approach: "Read @kotlin.Metadata annotation for original Kotlin class structure"
+    tool: "kotlinx-metadata-jvm library for programmatic metadata extraction"
+    notes: "Metadata reveals original Kotlin types, nullability, and extension functions"

@@ -1,0 +1,61 @@
+metadata:
+  skill: reverse-engineering
+  domain: binary_identification
+  updated: "2026-10-02"
+  entries_count: 15
+
+identification:
+  pe_analysis:
+    - name: PE Header Signature
+      desc: "MZ header (4D 5A) at offset 0, PE signature (50 45 00 00) at e_lfanew"
+      use: Confirm Windows PE format before analysis
+    - name: Section Table Review
+      desc: ".text (code), .rdata (read-only data), .data (initialized), .rsrc (resources)"
+      use: Identify key sections for code and data analysis
+
+  elf_analysis:
+    - name: ELF Magic Bytes
+      desc: "7F 45 4C 46 at offset 0 identifies Linux ELF binary"
+      use: Confirm Linux executable format
+    - name: ELF Section Headers
+      desc: ".text, .plt, .got, .dynamic, .symtab, .strtab, .debug_info"
+      use: Locate code, imports, symbols, and debug information
+
+  macho_analysis:
+    - name: Mach-O Magic
+      desc: "FE ED FA CE (32-bit) or FE ED FA CF (64-bit), CE FA ED FE/CF FA ED FE (reversed)"
+      use: Identify macOS/iOS binary format
+
+  packer_signatures:
+    - name: UPX
+      desc: "Sections named UPX0, UPX1; entry point in last section"
+      detection: "UPX! signature at end of file; upx -d to unpack"
+    - name: VMProtect
+      desc: ".vmp0, .vmp1 sections; virtualized code with handler table"
+      detection: "Extremely obfuscated control flow with dispatcher pattern"
+    - name: Themida
+      desc: "Custom sections; anti-debug and anti-VM integrated"
+      detection: "Multiple suspicious sections with high entropy"
+    - name: ASPack
+      desc: ".aspack section; compressed code"
+      detection: "Small .text section with jump to .aspack"
+    - name: PECompact
+      desc: "pec1, pec2 section names"
+      detection: "PECompact2 signature string"
+
+  language_fingerprints:
+    - name: Go Binary
+      desc: "Contains 'runtime.gopanic', 'runtime.goexit'; .gopclntab section"
+      indicators: ["go.buildid", "runtime.main", "gopclntab"]
+    - name: Rust Binary
+      desc: "Panic handler strings, mangled symbols starting with _ZN or _R"
+      indicators: ["rust_begin_unwind", "core::panicking", "_ZN.*17h"]
+    - name: Nuitka Compiled Python
+      desc: ".nuitka section in PE; embedded Python bytecode blobs"
+      indicators: [".nuitka", "Nuitka-Python", "module_constants"]
+    - name: PyInstaller Bundle
+      desc: "MEI marker at end of file; embedded PKG archive"
+      indicators: ["MEI\\014\\013\\012\\013\\016", "PYZ-00.pyz", "_MEIPASS"]
+    - name: .NET Assembly
+      desc: "COM+ runtime header in PE; metadata tables in #~ stream"
+      indicators: ["mscoree.dll", "_CorExeMain", "#Strings", "#GUID"]

@@ -1,0 +1,113 @@
+metadata:
+  skill: kubernetes
+  domain: k8s_security
+  updated: "2026-10-02"
+  patterns_count: 15
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: KS-01
+    name: Privileged Pod
+    severity: CRITICAL
+    category: Pod Security
+    description: Pod runs in privileged mode with full host access
+    detection_pattern: "securityContext.privileged: true"
+    fix_pattern: Remove privileged flag, use specific capabilities
+  - id: KS-02
+    name: Host PID Namespace
+    severity: HIGH
+    category: Isolation
+    description: Pod shares host PID namespace
+    detection_pattern: "hostPID: true"
+    fix_pattern: Remove hostPID unless required for monitoring
+  - id: KS-03
+    name: No Security Context
+    severity: HIGH
+    category: Pod Security
+    description: Pod lacks securityContext configuration
+    detection_pattern: "securityContext not defined"
+    fix_pattern: Set runAsNonRoot, readOnlyRootFilesystem, drop capabilities
+  - id: KS-04
+    name: Default Service Account
+    severity: MEDIUM
+    category: RBAC
+    description: Pod uses default service account with potential excessive permissions
+    detection_pattern: "serviceAccountName not specified"
+    fix_pattern: Create dedicated service account with minimal RBAC
+  - id: KS-05
+    name: Wildcard RBAC
+    severity: CRITICAL
+    category: RBAC
+    description: RBAC role with wildcard (*) on resources or verbs
+    detection_pattern: "resources: ['*']|verbs: ['*']"
+    fix_pattern: Specify exact resources and verbs needed
+  - id: KS-06
+    name: No Network Policy
+    severity: HIGH
+    category: Network
+    description: Namespace has no NetworkPolicy (all traffic allowed)
+    detection_pattern: "No NetworkPolicy objects in namespace"
+    fix_pattern: Create deny-all default policy, then allow specific flows
+  - id: KS-07
+    name: No Pod Security Standards
+    severity: MEDIUM
+    category: Pod Security
+    description: Namespace not labeled with Pod Security Standards
+    detection_pattern: "pod-security.kubernetes.io/enforce not set"
+    fix_pattern: Set baseline or restricted PSS label on namespace
+  - id: KS-08
+    name: HostPath Volume
+    severity: HIGH
+    category: Storage
+    description: Pod mounts host filesystem path
+    detection_pattern: "volumes.hostPath present"
+    fix_pattern: Use PersistentVolumeClaims instead of hostPath
+  - id: KS-09
+    name: No Resource Quotas
+    severity: MEDIUM
+    category: Resources
+    description: Namespace has no ResourceQuota
+    detection_pattern: "No ResourceQuota objects in namespace"
+    fix_pattern: Set CPU, memory, and object count quotas
+  - id: KS-10
+    name: Latest Image Tag
+    severity: MEDIUM
+    category: Supply Chain
+    description: Container image uses :latest or no tag
+    detection_pattern: "image:.*:latest|image:.*[^:]$"
+    fix_pattern: Pin to specific version or SHA256 digest
+  - id: KS-11
+    name: No Readiness Probe
+    severity: MEDIUM
+    category: Reliability
+    description: Container lacks readiness probe
+    detection_pattern: "readinessProbe not defined"
+    fix_pattern: Add readinessProbe with appropriate endpoint
+  - id: KS-12
+    name: Exposed Dashboard
+    severity: CRITICAL
+    category: Access Control
+    description: Kubernetes Dashboard exposed without authentication
+    detection_pattern: "kubernetes-dashboard Service type LoadBalancer"
+    fix_pattern: Use kubectl proxy or OIDC authentication
+  - id: KS-13
+    name: Insecure etcd
+    severity: CRITICAL
+    category: Data Store
+    description: etcd accessible without TLS client certificates
+    detection_pattern: "etcd --client-cert-auth=false"
+    fix_pattern: Enable TLS client certificate authentication for etcd
+  - id: KS-14
+    name: No Pod Disruption Budget
+    severity: LOW
+    category: Reliability
+    description: No PDB for critical workloads
+    detection_pattern: "No PodDisruptionBudget for Deployment"
+    fix_pattern: Create PDB with minAvailable or maxUnavailable
+  - id: KS-15
+    name: Container Running as Root
+    severity: HIGH
+    category: Pod Security
+    description: Container runs as root (UID 0)
+    detection_pattern: "runAsNonRoot not set or runAsUser: 0"
+    fix_pattern: "Set runAsNonRoot: true and runAsUser: 1000+"

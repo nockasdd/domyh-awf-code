@@ -3,11 +3,42 @@ category: languages
 tier: 3
 priority: 2
 
+
+desc: "Modern C# (C# 12/13/14) with .NET 9/10. Covers async/await, LINQ, EF Core, ASP.NET Core, Blazor."
+
+triggers:
+  file_patterns:
+    - "*.cs"
+    - "*.csproj"
+    - "*.sln"
+    - "global.json"
+  keywords:
+    - csharp
+    - "c#"
+    - dotnet
+    - ".NET"
+    - asp.net
+    - blazor
+    - entity framework
+    - ef core
+    - nuget
+    - rider
+  intents:
+    - create dotnet project
+    - csharp api
+    - blazor app
+
+data_files:
+  - data/aspnet.yaml
+  - data/core.yaml
+  - data/libraries.yaml
+  - data/toolchain.yaml
+  - data/dotnet-decompilation.yaml
+
 domains:
   core: 5
   aspnet: 5
 
-desc: "Modern C# (C# 12/13/14) with .NET 9/10. Covers async/await, LINQ, EF Core, ASP.NET Core, Blazor."
 
 related_skills:
   - typescript
@@ -15,6 +46,7 @@ related_skills:
   - docker
 
 caps:
+  - .NET decompilation (dnSpy/ILSpy/CIL)
   - C# 12/13/14 features
   - .NET 9/10 APIs
   - ASP.NET Core

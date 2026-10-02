@@ -1,0 +1,74 @@
+metadata:
+  skill: frida
+  domain: hook_patterns
+  updated: "2026-10-02"
+  patterns_count: 12
+
+patterns:
+  - id: HP-01
+    name: Attach to Running Process
+    mode: attach
+    command: "frida -p <PID> -l script.js"
+    description: Attach to already running process by PID
+  - id: HP-02
+    name: Spawn and Hook
+    mode: spawn
+    command: "frida -f com.target.app -l script.js --no-pause"
+    description: Launch app and hook from the start
+  - id: HP-03
+    name: USB Device (Android)
+    mode: usb
+    command: "frida -U -f com.target.app -l script.js --no-pause"
+    description: Hook app on USB-connected Android device
+  - id: HP-04
+    name: Remote Device
+    mode: remote
+    command: "frida -H <host>:<port> -f app -l script.js"
+    description: Connect to remote frida-server
+  - id: HP-05
+    name: Enumerate Processes
+    mode: discovery
+    command: "frida-ps -U"
+    description: List running processes on USB device
+  - id: HP-06
+    name: REPL Mode
+    mode: interactive
+    command: "frida -U com.target.app"
+    description: Interactive JavaScript REPL attached to app
+  - id: HP-07
+    name: Compile TypeScript
+    mode: build
+    command: "frida-compile agent/index.ts -o _agent.js -w"
+    description: Compile TypeScript agent with watch mode
+  - id: HP-08
+    name: CodeShare Script
+    mode: community
+    command: "frida --codeshare <author>/<script> -U <app>"
+    description: Load community script from Frida CodeShare
+  - id: HP-09
+    name: Stalker Trace
+    mode: trace
+    command: "frida-trace -U -i 'recv*' com.target.app"
+    description: Auto-generate hooks for functions matching pattern
+  - id: HP-10
+    name: Multiple Scripts
+    mode: multi
+    command: "frida -U -l hook1.js -l hook2.js com.target.app"
+    description: Load multiple hook scripts simultaneously
+  - id: HP-11
+    name: Crash Handling
+    mode: debug
+    description: Handle crashes gracefully during hooking
+    code: "Process.setExceptionHandler(function(details) { console.log('Exception:', JSON.stringify(details)); return false; });"
+  - id: HP-12
+    name: Delayed Hook
+    mode: timing
+    description: Hook after module loads (for late-loaded libraries)
+    code: |
+      var observer = new ModuleLoadObserver({
+        onModuleLoaded(module) {
+          if (module.name === "target.so") {
+            // Apply hooks here
+          }
+        }
+      });

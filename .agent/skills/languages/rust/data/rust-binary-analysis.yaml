@@ -1,0 +1,50 @@
+metadata:
+  skill: rust
+  domain: rust_binary_analysis
+  updated: "2026-10-02"
+  entries_count: 8
+
+analysis:
+  - name: Rust Symbol Demangling
+    desc: "Rust uses name mangling for symbols; demangle to recover function names"
+    tool: "rustfilt for pipe demangling; IDA/Ghidra have built-in Rust demangling"
+    patterns:
+      legacy: "_ZN prefix followed by module::function path"
+      v0: "_R prefix with compressed encoding"
+    command: "nm target | rustfilt"
+
+  - name: Cargo Metadata Extraction
+    desc: "Cargo build metadata may be embedded in binary strings"
+    indicators: ["Cargo.toml fragments in .rodata", "crate version strings", "dependency names"]
+    approach: "strings target | grep -i cargo for build metadata discovery"
+
+  - name: Panic Handler Identification
+    desc: "Rust panic handler contains file:line information for crash locations"
+    indicators: ["rust_begin_unwind", "core::panicking::panic", "panic_bounds_check"]
+    analysis: "Panic strings reveal source file paths and line numbers from original code"
+
+  - name: Vtable Reconstruction
+    desc: "Rust trait objects use vtables (virtual method tables) for dynamic dispatch"
+    structure: "Vtable contains: destructor, size, alignment, then method pointers"
+    approach: "Locate vtable references in .rodata; map function pointers to trait methods"
+
+  - name: Async Runtime Identification
+    desc: "Identify Tokio or async-std runtime usage in compiled binary"
+    tokio_indicators: ["tokio::runtime", "tokio::task::spawn", "tokio::sync::mpsc"]
+    async_std_indicators: ["async_std::task", "async_std::net"]
+    analysis: "Runtime choice affects binary structure and debugging approach"
+
+  - name: String Extraction Specifics
+    desc: "Rust strings (&str) are fat pointers (ptr + len), not null-terminated"
+    implication: "Standard 'strings' tool may miss Rust strings or include partial matches"
+    approach: "Use Rust-aware string extraction considering str slice representation"
+
+  - name: Calling Convention
+    desc: "Rust uses C ABI for extern functions but its own convention for internal calls"
+    details: "Internal Rust ABI is unstable and may change between compiler versions"
+    analysis: "Treat internal functions with caution in IDA/Ghidra; extern C functions follow standard ABI"
+
+  - name: RTTI Recovery
+    desc: "Rust does not use C++ RTTI but trait objects contain type information"
+    approach: "TypeId values in binary can be mapped to concrete types"
+    tool: "Custom IDA/Ghidra scripts for Rust type identification from vtable layout"

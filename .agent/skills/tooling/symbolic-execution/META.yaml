@@ -1,0 +1,44 @@
+name: symbolic-execution
+display: Symbolic Execution Tools
+category: tooling
+tier: 1
+priority: 4
+
+desc: "Symbolic execution and constraint solving with angr, Z3, Unicorn for automated analysis and vulnerability discovery."
+
+triggers:
+  keywords:
+    - angr
+    - Z3
+    - symbolic execution
+    - constraint solver
+    - Unicorn
+    - Qiling
+    - concolic
+    - path exploration
+    - input synthesis
+    - SMT solver
+    - crackme
+  intents:
+    - symbolic execution analysis
+    - constraint solving
+    - automated binary analysis
+
+caps:
+  - angr CFG analysis and path exploration
+  - Z3 constraint solving and proof generation
+  - Unicorn CPU emulation for analysis
+  - Automated input synthesis for target constraints
+
+data_files:
+  - data/angr-patterns.yaml
+  - data/z3-patterns.yaml
+  - data/unicorn-patterns.yaml
+
+related_skills:
+  - reverse-engineering
+  - security
+
+links_to:
+  - reverse-engineering
+  - security

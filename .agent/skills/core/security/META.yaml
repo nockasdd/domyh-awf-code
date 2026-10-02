@@ -10,6 +10,14 @@ desc: "Comprehensive security patterns: OWASP Top 10/API/Mobile, CWE Top 25, bin
 triggers:
   file_patterns: []
   keywords:
+    - license keygen
+    - binary patcher
+    - jailbreak prompt
+    - supply chain sbom
+    - web logic flaw
+    - traffic interception
+    - mitmproxy
+    - protection bypass
     - security
     - vulnerability
     - owasp
@@ -43,6 +51,13 @@ triggers:
     - security review
 
 caps:
+  - License weakness pattern detection
+  - Jailbreak prompt recognition
+  - Binary patching detection
+  - Protection bypass auditing
+  - Web business logic flaw analysis
+  - Traffic interception analysis
+  - SBOM typosquat detection
   - Security code review
   - Vulnerability detection
   - OWASP compliance
@@ -91,6 +106,14 @@ data_files:
   - data/language-specific/ruby-security.yaml
   - data/language-specific/kotlin-security.yaml
   - data/language-specific/swift-security.yaml
+  # Defensive Analysis
+  - data/license-keygen-patterns.yaml
+  - data/binary-patching-techniques.yaml
+  - data/protection-bypass-techniques.yaml
+  - data/jailbreak-prompt-patterns.yaml
+  - data/web-logic-vulns.yaml
+  - data/traffic-interception.yaml
+  - data/sbom-audit.yaml
 
 links_to:
   - authentication

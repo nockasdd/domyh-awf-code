@@ -1,0 +1,78 @@
+metadata:
+  skill: security
+  domain: traffic_interception_defense
+  updated: "2026-10-02"
+  patterns_count: 10
+  columns: [id, name, severity, category, description, detection_indicator, defense_recommendation]
+
+patterns:
+  - id: TI-01
+    name: Proxy Certificate Installed
+    severity: HIGH
+    category: Certificate Trust
+    description: Non-standard CA certificate added to system trust store enabling MitM
+    detection_indicator: "CA certificate with non-standard issuer in system trust store"
+    defense_recommendation: Certificate pinning with backup pins; monitor trust store changes
+  - id: TI-02
+    name: SSL Pinning Not Implemented
+    severity: HIGH
+    category: Transport Security
+    description: Application accepts any valid certificate without pinning specific keys
+    detection_indicator: "No pin-sha256 headers or OkHttp CertificatePinner configuration"
+    defense_recommendation: Implement HPKP headers or OkHttp CertificatePinner with backup pins
+  - id: TI-03
+    name: HTTP Downgrade
+    severity: CRITICAL
+    category: Protocol
+    description: Application falls back to HTTP when HTTPS unavailable
+    detection_indicator: "http:// URLs in API calls without strict transport enforcement"
+    defense_recommendation: Enforce HSTS with includeSubDomains and long max-age
+  - id: TI-04
+    name: TLS Version Downgrade
+    severity: HIGH
+    category: Protocol
+    description: Application accepts TLS 1.0/1.1 connections vulnerable to known attacks
+    detection_indicator: "TLS 1.0 or 1.1 negotiated in handshake"
+    defense_recommendation: Enforce TLS 1.2+ minimum; disable SSLv3, TLS 1.0, TLS 1.1
+  - id: TI-05
+    name: Cleartext Credential Transmission
+    severity: CRITICAL
+    category: Data Exposure
+    description: Credentials or tokens sent in URL parameters or HTTP headers over cleartext
+    detection_indicator: "password=|token=|api_key= in URL query string or non-HTTPS request"
+    defense_recommendation: Always use HTTPS; send credentials in POST body or secure headers
+  - id: TI-06
+    name: WebSocket Without TLS
+    severity: HIGH
+    category: Protocol
+    description: WebSocket connection using ws:// instead of wss://
+    detection_indicator: "ws:// protocol in WebSocket connection URL"
+    defense_recommendation: Use wss:// for all WebSocket connections; enforce TLS
+  - id: TI-07
+    name: DNS Query Exposure
+    severity: MEDIUM
+    category: DNS Privacy
+    description: DNS queries sent in cleartext revealing browsing activity
+    detection_indicator: "DNS queries on port 53 without encryption"
+    defense_recommendation: Use DNS-over-HTTPS (DoH) or DNS-over-TLS (DoT)
+  - id: TI-08
+    name: ARP Cache Anomaly
+    severity: HIGH
+    category: Network Layer
+    description: Multiple IP addresses mapping to same MAC address indicates ARP manipulation
+    detection_indicator: "Duplicate MAC entries in ARP table for different IPs"
+    defense_recommendation: Use static ARP entries for critical systems; enable Dynamic ARP Inspection
+  - id: TI-09
+    name: Transparent Proxy Detection
+    severity: MEDIUM
+    category: Network Layer
+    description: Network traffic redirected through undisclosed proxy
+    detection_indicator: "Via: or X-Forwarded-For headers in responses not expected"
+    defense_recommendation: Certificate pinning detects transparent TLS proxies; compare expected vs actual cert
+  - id: TI-10
+    name: API Endpoint Discovery via Traffic
+    severity: MEDIUM
+    category: Information Leak
+    description: Undocumented API endpoints discovered by observing application traffic
+    detection_indicator: "API endpoints in traffic not listed in public documentation"
+    defense_recommendation: Apply authentication and authorization to all endpoints regardless of documentation

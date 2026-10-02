@@ -1,0 +1,55 @@
+metadata:
+  skill: vuln-intel
+  domain: threat_intelligence
+  updated: "2026-10-02"
+  sources_count: 8
+
+sources:
+  - id: TI-01
+    name: NVD (National Vulnerability Database)
+    url: https://nvd.nist.gov
+    data: CVSS scores, CWE mapping, CPE matching
+    api: REST API v2.0 with API key
+    use_case: Base severity assessment and vulnerability details
+  - id: TI-02
+    name: CISA KEV (Known Exploited Vulnerabilities)
+    url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog
+    data: Actively exploited CVEs with remediation deadlines
+    api: JSON feed (no auth required)
+    use_case: Mandatory patch prioritization per BOD 22-01
+  - id: TI-03
+    name: EPSS (Exploit Prediction Scoring System)
+    url: https://www.first.org/epss
+    data: 30-day exploitation probability per CVE
+    api: REST API (no auth required)
+    use_case: Risk-based prioritization beyond CVSS
+  - id: TI-04
+    name: Exploit-DB
+    url: https://www.exploit-db.com
+    data: Public exploits and proof-of-concepts
+    api: SearchSploit CLI tool
+    use_case: Verify exploitability with public PoCs
+  - id: TI-05
+    name: GitHub Advisory Database
+    url: https://github.com/advisories
+    data: Package-level security advisories
+    api: GraphQL API
+    use_case: Dependency vulnerability tracking
+  - id: TI-06
+    name: OSV (Open Source Vulnerabilities)
+    url: https://osv.dev
+    data: Open source package vulnerabilities
+    api: REST API (no auth required)
+    use_case: SBOM-driven vulnerability scanning
+  - id: TI-07
+    name: MITRE ATT&CK
+    url: https://attack.mitre.org
+    data: Adversary TTPs and technique mapping
+    api: STIX/TAXII feed
+    use_case: Map vulnerabilities to attack techniques
+  - id: TI-08
+    name: Shodan
+    url: https://www.shodan.io
+    data: Internet-exposed services and banners
+    api: REST API with API key
+    use_case: Attack surface discovery and exposure assessment

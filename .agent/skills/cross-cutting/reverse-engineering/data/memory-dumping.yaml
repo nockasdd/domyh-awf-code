@@ -1,0 +1,66 @@
+metadata:
+  skill: reverse-engineering
+  domain: memory_analysis
+  updated: "2026-10-02"
+  entries_count: 10
+
+techniques:
+  - name: Windows MiniDump
+    platform: Windows
+    desc: "Create process memory dump using MiniDumpWriteDump API for offline analysis"
+    tool: "ProcDump (Sysinternals) or Task Manager right-click → Create dump file"
+    analysis: Load in WinDbg or volatility for structured analysis
+
+  - name: Linux Proc Mem
+    platform: Linux
+    desc: "Read process memory via /proc/PID/mem with /proc/PID/maps for mapping"
+    tool: "gdb attach PID, gcore, or dd if=/proc/PID/mem"
+    analysis: Parse ELF structures from dump for symbol recovery
+
+  - name: PE Reconstruction
+    platform: Windows
+    desc: "Rebuild valid PE from memory dump by fixing headers, imports, and relocations"
+    tool: "Scylla (x64dbg plugin) or pe_unmapper for header reconstruction"
+    analysis: Fix ImageBase, section alignment, and rebuild IAT
+
+  - name: IAT Rebuilding
+    platform: Windows
+    desc: "Reconstruct Import Address Table from memory dump for static analysis"
+    tool: "Scylla IAT search, ImpREC, or manual IAT walking"
+    analysis: Resolve API addresses to function names using loaded DLL bases
+
+  - name: String Extraction
+    platform: Cross-platform
+    desc: "Extract readable strings from process memory dump for intelligence gathering"
+    tool: "strings command, FLOSS (FireEye Labs Obfuscated String Solver)"
+    analysis: Filter for URLs, file paths, registry keys, API keys, error messages
+
+  - name: Pattern Scanning
+    platform: Cross-platform
+    desc: "Search memory for byte patterns (signatures) to locate specific structures"
+    tool: "yara rules, custom sigscanner, radare2 /x command"
+    analysis: Define YARA rules for known structures and scan memory regions
+
+  - name: Heap Analysis
+    platform: Windows
+    desc: "Analyze heap allocations to find dynamically allocated secrets and data"
+    tool: "WinDbg !heap extension, volatility heaps plugin"
+    analysis: Walk heap segments for strings, keys, and decrypted content
+
+  - name: Crypto Artifact Detection
+    platform: Cross-platform
+    desc: "Identify cryptographic keys and constants in memory (AES S-box, RSA primes)"
+    tool: "aeskeyfind, rsakeyfind, bulk_extractor crypto module"
+    analysis: Search for known crypto constants to locate key material
+
+  - name: Stack Frame Analysis
+    platform: Cross-platform
+    desc: "Analyze stack frames in dump for function call history and local variables"
+    tool: "WinDbg !clrstack (managed), gdb bt (native)"
+    analysis: Reconstruct execution flow from stack return addresses
+
+  - name: Volatility Framework
+    platform: Cross-platform
+    desc: "Full memory forensics framework for OS-level artifact extraction"
+    tool: "volatility3 with OS-specific plugins"
+    analysis: Extract process list, network connections, loaded modules, registry hives

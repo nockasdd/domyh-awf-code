@@ -1,0 +1,49 @@
+metadata:
+  skill: electron
+  domain: asar_extraction
+  updated: "2026-10-02"
+  entries_count: 8
+
+extraction:
+  - name: ASAR Archive Location
+    desc: "Electron app.asar is the main application package containing all source code and resources"
+    locations:
+      windows: "%LOCALAPPDATA%\\Programs\\<app>\\resources\\app.asar"
+      macos: "/Applications/<App>.app/Contents/Resources/app.asar"
+      linux: "/opt/<app>/resources/app.asar or /usr/lib/<app>/resources/app.asar"
+
+  - name: ASAR Extract Command
+    desc: "Extract ASAR archive to directory for inspection"
+    command: "npx asar extract app.asar ./app-extracted"
+    notes: "Requires Node.js and npx available in PATH"
+
+  - name: ASAR List Contents
+    desc: "List files in ASAR without extracting"
+    command: "npx asar list app.asar"
+    notes: "Useful for quick overview before full extraction"
+
+  - name: Unpacked Files Handling
+    desc: "Files in app.asar.unpacked directory are not packed into the archive"
+    location: "resources/app.asar.unpacked/"
+    notes: "Native modules (.node) and large binaries are typically unpacked"
+
+  - name: Source Map Discovery
+    desc: "JavaScript source maps (.js.map) may be included enabling original source recovery"
+    detection: "Search for .map files in extracted ASAR or sourceMappingURL comments in .js files"
+    impact: "Source maps reveal original TypeScript/JavaScript source code"
+
+  - name: app-update.yml Analysis
+    desc: "Auto-update configuration reveals update server URL and signing configuration"
+    location: "resources/app-update.yml"
+    fields: ["provider", "url", "publisherName", "releaseType"]
+
+  - name: Blockmap File Analysis
+    desc: "Blockmap file enables differential updates but reveals file structure"
+    location: "resources/app.asar.blockmap"
+    notes: "JSON format mapping file blocks to hashes for delta updates"
+
+  - name: Installer Artifact Extraction
+    desc: "NSIS or Squirrel installers contain the ASAR inside; can be extracted"
+    tools:
+      nsis: "7-Zip can extract NSIS installer to access resources"
+      squirrel: "Extract .nupkg (ZIP format) to access lib/net*/ contents"

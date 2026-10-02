@@ -21,6 +21,8 @@ triggers:
     - "compose.yml"
     - "docker-bake.hcl"
   keywords:
+    - container security audit
+    - dockerfile lint
     # Docker
     - docker
     - dockerfile
@@ -50,6 +52,19 @@ triggers:
     - optimize docker
     - secure container
     - docker compose
+
+
+caps:
+  - Multi-stage build optimization
+  - Compose v5 orchestration
+  - Hardened image security
+  - BuildKit and Bake patterns
+
+data_files:
+  - data/build.yaml
+  - data/compose.yaml
+  - data/security.yaml
+  - data/container-security-audit.yaml
 
 related_skills:
   - kubernetes

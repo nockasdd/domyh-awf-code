@@ -1,0 +1,78 @@
+metadata:
+  skill: security
+  domain: ai_safety_prompt_defense
+  updated: "2026-10-02"
+  patterns_count: 10
+  columns: [id, name, severity, category, description, detection_signal, defense_strategy]
+
+patterns:
+  - id: JP-01
+    name: Unlimited Access Persona
+    severity: CRITICAL
+    category: Role Injection
+    description: Prompt claims LLM has no restrictions via persona assignment
+    detection_signal: "you are now|you have no restrictions|ignore all previous|override instructions"
+    defense_strategy: System prompt hardening with immutable instruction boundaries
+  - id: JP-02
+    name: DAN-Style Roleplay
+    severity: CRITICAL
+    category: Role Injection
+    description: Prompt assigns alternate identity designed to bypass safety filters
+    detection_signal: "DAN|do anything now|act as.*no rules|pretend you are"
+    defense_strategy: Input classification layer detecting roleplay manipulation patterns
+  - id: JP-03
+    name: System Prompt Extraction
+    severity: HIGH
+    category: Information Leak
+    description: Prompt attempts to extract system prompt or configuration
+    detection_signal: "repeat your instructions|what is your system prompt|print your rules"
+    defense_strategy: Never include secrets in system prompt; add extraction-resistant instructions
+  - id: JP-04
+    name: Instruction Override
+    severity: CRITICAL
+    category: Instruction Manipulation
+    description: Prompt contains directives to replace or ignore existing instructions
+    detection_signal: "ignore above|disregard previous|new instructions|forget everything"
+    defense_strategy: Instruction hierarchy with non-overridable safety layer
+  - id: JP-05
+    name: Encoding Evasion
+    severity: HIGH
+    category: Evasion
+    description: Harmful content encoded in base64, hex, ROT13 to bypass content filters
+    detection_signal: "base64 encoded|decode this|hex representation|ROT13"
+    defense_strategy: Decode all encoded content before safety classification
+  - id: JP-06
+    name: Context Window Manipulation
+    severity: MEDIUM
+    category: Context Attack
+    description: Extremely long prompt designed to push safety instructions out of context window
+    detection_signal: "Excessive token count preceding actual request"
+    defense_strategy: Pin safety instructions at end of context; limit user input length
+  - id: JP-07
+    name: Multi-Turn Escalation
+    severity: HIGH
+    category: Gradual Bypass
+    description: Series of progressively boundary-pushing prompts across conversation turns
+    detection_signal: "Incremental topic shifting toward restricted content over multiple turns"
+    defense_strategy: Per-turn safety classification with conversation-level context tracking
+  - id: JP-08
+    name: Hypothetical Scenario
+    severity: MEDIUM
+    category: Framing
+    description: Harmful request framed as fictional, educational, or hypothetical scenario
+    detection_signal: "hypothetically|in a fictional world|for educational purposes|imagine if"
+    defense_strategy: Classify intent regardless of framing; apply same rules to hypothetical requests
+  - id: JP-09
+    name: Translation Evasion
+    severity: MEDIUM
+    category: Evasion
+    description: Harmful request written in low-resource language to evade content filters
+    detection_signal: "Request in uncommon language following English safety-testing context"
+    defense_strategy: Multi-language safety classification; translate before filtering
+  - id: JP-10
+    name: Tool-Use Hijacking
+    severity: CRITICAL
+    category: Function Abuse
+    description: Prompt manipulates LLM into calling tools with unintended parameters
+    detection_signal: "call function.*with|execute.*command|run.*script"
+    defense_strategy: Tool call parameter validation layer; principle of least privilege for tool access

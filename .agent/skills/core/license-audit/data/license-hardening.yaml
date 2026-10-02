@@ -1,0 +1,57 @@
+metadata:
+  skill: license-audit
+  domain: license_hardening
+  updated: "2026-10-02"
+  patterns_count: 10
+
+recommendations:
+  - id: LH-01
+    name: Server-Side Validation
+    priority: CRITICAL
+    description: All license checks must include server round-trip
+    implementation: Use HTTPS API with certificate pinning for activation and periodic re-validation
+  - id: LH-02
+    name: Cryptographic Key Signing
+    priority: CRITICAL
+    description: Use RSA/ECDSA to sign license keys
+    implementation: Server signs license with private key, client verifies with embedded public key
+  - id: LH-03
+    name: Hardware Binding
+    priority: HIGH
+    description: Bind license to hardware fingerprint
+    implementation: Combine CPU ID, disk serial, MAC address into SHA-256 fingerprint
+  - id: LH-04
+    name: Code Integrity Verification
+    priority: HIGH
+    description: Runtime hash check of critical code sections
+    implementation: SHA-256 hash of .text section stored encrypted, verified at startup
+  - id: LH-05
+    name: Distributed Validation
+    priority: HIGH
+    description: Multiple validation points throughout the application
+    implementation: Check license in main(), feature entry, periodic timer, and save operations
+  - id: LH-06
+    name: Anti-Tamper Checks
+    priority: MEDIUM
+    description: Detect debugger attachment and code modification
+    implementation: IsDebuggerPresent, timing checks, CRC verification of validation code
+  - id: LH-07
+    name: Obfuscated Control Flow
+    priority: MEDIUM
+    description: Obfuscate license check logic to resist static analysis
+    implementation: Use control flow flattening and opaque predicates around validation
+  - id: LH-08
+    name: Secure Time Source
+    priority: MEDIUM
+    description: Use server time for expiry, not local clock
+    implementation: NTP or HTTPS timestamp from trusted server with certificate pinning
+  - id: LH-09
+    name: Key Revocation Support
+    priority: MEDIUM
+    description: Ability to remotely revoke compromised keys
+    implementation: Server-side blacklist checked during periodic re-validation
+  - id: LH-10
+    name: Encrypted License Storage
+    priority: MEDIUM
+    description: Store license state encrypted with machine-bound key
+    implementation: AES-256 encryption using DPAPI (Windows) or Keychain (macOS)

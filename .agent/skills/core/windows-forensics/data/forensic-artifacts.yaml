@@ -1,0 +1,57 @@
+metadata:
+  skill: windows-forensics
+  domain: forensic_artifacts
+  updated: "2026-10-02"
+  patterns_count: 10
+
+artifacts:
+  - id: FA-01
+    name: Prefetch Files
+    location: "C:\\Windows\\Prefetch\\*.pf"
+    significance: Proves application execution with timestamps
+    tool: PECmd.exe (Eric Zimmerman)
+  - id: FA-02
+    name: Amcache
+    location: "C:\\Windows\\AppCompat\\Programs\\Amcache.hve"
+    significance: Application execution evidence with SHA1 hashes
+    tool: AmcacheParser.exe
+  - id: FA-03
+    name: ShimCache
+    location: SYSTEM registry hive AppCompatCache
+    significance: Application compatibility cache proves file existence
+    tool: AppCompatCacheParser.exe
+  - id: FA-04
+    name: NTFS USN Journal
+    location: "$Extend\\$UsnJrnl:$J"
+    significance: File system change journal — file create/delete/rename
+    tool: MFTECmd.exe
+  - id: FA-05
+    name: Windows Timeline
+    location: "%LOCALAPPDATA%\\ConnectedDevicesPlatform\\*\\ActivitiesCache.db"
+    significance: User activity timeline (applications, files, web)
+    tool: WxTCmd.exe
+  - id: FA-06
+    name: SRUM Database
+    location: "C:\\Windows\\System32\\sru\\SRUDB.dat"
+    significance: Application resource usage including network bytes
+    tool: SrumECmd.exe
+  - id: FA-07
+    name: Event Logs (EVTX)
+    location: "C:\\Windows\\System32\\winevt\\Logs\\*.evtx"
+    significance: Primary audit trail for security events
+    tool: EvtxECmd.exe or hayabusa
+  - id: FA-08
+    name: Jump Lists
+    location: "%APPDATA%\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\"
+    significance: Recently accessed files per application
+    tool: JLECmd.exe
+  - id: FA-09
+    name: LNK Files
+    location: "%APPDATA%\\Microsoft\\Windows\\Recent\\"
+    significance: Shortcut files with original file metadata and MAC times
+    tool: LECmd.exe
+  - id: FA-10
+    name: Browser History
+    location: "%LOCALAPPDATA%\\{Browser}\\User Data\\Default\\History"
+    significance: Web browsing activity (SQLite database)
+    tool: BrowsingHistoryView or Hindsight

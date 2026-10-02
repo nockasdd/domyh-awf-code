@@ -1,0 +1,113 @@
+metadata:
+  skill: security
+  domain: license_keygen_detection
+  updated: "2026-10-02"
+  patterns_count: 15
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: LK-01
+    name: Hardcoded Validation Constant
+    severity: CRITICAL
+    category: License Weakness
+    description: License key validated against hardcoded constant in binary
+    detection_pattern: "licenseKey.*==.*\"[A-Z0-9-]+\"|validKey.*=.*\"[A-F0-9]{16}"
+    fix_pattern: Use server-side validation with HMAC signatures
+  - id: LK-02
+    name: Predictable Key Algorithm
+    severity: CRITICAL
+    category: Key Generation
+    description: Serial key generated using predictable math (modulo, checksum)
+    detection_pattern: "serial.*%|key.*mod|checksum.*sum.*digits"
+    fix_pattern: Use RSA/ECDSA signed license keys
+  - id: LK-03
+    name: Static Salt for Key Derivation
+    severity: HIGH
+    category: Key Generation
+    description: Static salt used in key derivation function
+    detection_pattern: "salt.*=.*\"[a-f0-9]+\"|SALT.*=.*bytes"
+    fix_pattern: Use per-installation random salt stored server-side
+  - id: LK-04
+    name: XOR-Only Key Obfuscation
+    severity: HIGH
+    category: Obfuscation
+    description: Key validation uses only XOR which is trivially reversible
+    detection_pattern: "key.*\\^|xor.*license|license.*xor"
+    fix_pattern: Use AES or ChaCha20 for key encryption
+  - id: LK-05
+    name: Username-Based Key Generation
+    severity: HIGH
+    category: Key Generation
+    description: License key derived solely from username allowing offline keygen
+    detection_pattern: "generateKey.*username|keygen.*user.*name"
+    fix_pattern: Include server-generated nonce in key derivation
+  - id: LK-06
+    name: CRC32 Key Validation
+    severity: HIGH
+    category: Key Generation
+    description: CRC32 used for key validation — easily brute forced
+    detection_pattern: "crc32.*key|key.*crc|checkCRC"
+    fix_pattern: Use SHA-256 minimum for integrity checks
+  - id: LK-07
+    name: Exposed Key Generation Logic
+    severity: HIGH
+    category: Architecture
+    description: Key generation algorithm present in client binary
+    detection_pattern: "GenerateKey|CreateSerial|MakeKey|keygen"
+    fix_pattern: Key generation must be server-only
+  - id: LK-08
+    name: Simple Date-Based Trial
+    severity: MEDIUM
+    category: Trial
+    description: Trial expiry based on local date comparison
+    detection_pattern: "trialEnd.*<.*DateTime|installDate.*>.*30"
+    fix_pattern: Server-verified trial period with encrypted timestamp
+  - id: LK-09
+    name: Registry Trial Counter
+    severity: MEDIUM
+    category: Trial
+    description: Trial counter stored in plaintext registry
+    detection_pattern: "Registry.*trialCount|RegRead.*trial"
+    fix_pattern: Encrypted counter with integrity check
+  - id: LK-10
+    name: Missing Online Activation
+    severity: MEDIUM
+    category: Architecture
+    description: No online activation step — keys work entirely offline
+    detection_pattern: "(?!.*activate.*online|server.*activate)"
+    fix_pattern: Require one-time online activation with hardware binding
+  - id: LK-11
+    name: Weak HWID Algorithm
+    severity: MEDIUM
+    category: Hardware Binding
+    description: Hardware ID uses easily spoofable single identifier
+    detection_pattern: "GetVolumeSerial|MacAddress.*only"
+    fix_pattern: Combine multiple hardware identifiers with SHA-256
+  - id: LK-12
+    name: License File Without Signature
+    severity: HIGH
+    category: Storage
+    description: License file can be edited without detection
+    detection_pattern: "ReadLicense.*File(?!.*verify|sign|hash)"
+    fix_pattern: Sign license file with RSA and verify on load
+  - id: LK-13
+    name: Environment Variable License
+    severity: MEDIUM
+    category: Storage
+    description: License stored in environment variable accessible to all processes
+    detection_pattern: "getenv.*LICENSE|os\\.environ.*license"
+    fix_pattern: Use OS-level secure storage (Keychain, DPAPI)
+  - id: LK-14
+    name: Trial Reset via Reinstall
+    severity: MEDIUM
+    category: Trial
+    description: Trial period resets on application reinstall
+    detection_pattern: "firstRun.*Date|install.*Date.*=.*now"
+    fix_pattern: Server-side trial tracking with hardware fingerprint
+  - id: LK-15
+    name: Shared License Secret
+    severity: CRITICAL
+    category: Key Management
+    description: Same secret key used across all installations
+    detection_pattern: "SHARED_SECRET|GLOBAL_KEY|MASTER_SECRET"
+    fix_pattern: Per-installation key pair with server-issued certificate

@@ -1,0 +1,58 @@
+metadata:
+  skill: javascript
+  domain: js_deobfuscation
+  updated: "2026-10-02"
+  entries_count: 8
+
+techniques:
+  - name: AST-Based Transformation
+    desc: "Parse obfuscated JS to AST, apply transforms, regenerate clean code"
+    tools: ["babel with custom plugins", "esprima/escodegen", "acorn/astring"]
+    approach: "Write Babel visitor plugins targeting specific obfuscation patterns"
+    code: |
+      const babel = require('@babel/core');
+      const result = babel.transformSync(obfuscatedCode, {
+        plugins: [deobfuscatePlugin]
+      });
+
+  - name: Control Flow Unflattening
+    desc: "Reverse control flow flattening that converts structured code to switch-in-while-loop"
+    pattern: "while(true) { switch(state) { case 0: ... state=3; break; case 1: ... } }"
+    approach: "Trace state variable assignments to reconstruct original control flow"
+    tool: "webcrack or custom Babel plugin for switch-case reordering"
+
+  - name: String Array Recovery
+    desc: "Obfuscators move all strings to a single array, replacing with index access"
+    pattern: "var _0x1234 = ['log','Hello']; console[_0x1234[0]](_0x1234[1])"
+    approach: "Evaluate string array, then inline string values at each access point"
+    tool: "Static evaluation of array + rotation function if present"
+
+  - name: Dead Code Elimination
+    desc: "Remove injected dead code branches that never execute"
+    pattern: "if (false) { decoyCode(); } actualCode();"
+    approach: "Constant fold conditions, remove unreachable branches"
+    tool: "Babel plugin with path.evaluate() for constant folding"
+
+  - name: Eval/Function Constructor Unrolling
+    desc: "Code hidden inside eval() or new Function() calls"
+    pattern: "eval(atob('Y29uc29sZS5sb2coJ2hlbGxvJyk='))"
+    approach: "Decode string argument and replace eval with decoded content"
+    tool: "Safe static evaluation or manual decoding of string arguments"
+
+  - name: Hex/Unicode Decode
+    desc: "Identifiers and strings encoded as hex or unicode escape sequences"
+    pattern: "_0x12ab['\\x68\\x65\\x6C\\x6C\\x6F'] or '\\u0048\\u0065\\u006C\\u006C\\u006F'"
+    approach: "Decode escape sequences to readable strings"
+    tool: "Simple regex replacement or AST StringLiteral normalization"
+
+  - name: Variable Renaming Recovery
+    desc: "Meaningful variable names replaced with short random identifiers"
+    pattern: "function _0xa1b2(a,b) { return a+b; }"
+    approach: "Cannot recover original names; use semantic analysis to suggest meaningful names"
+    tool: "GPT-based renaming or heuristic naming based on usage patterns"
+
+  - name: Source Map Reconstruction
+    desc: "Reconstruct source map from obfuscated code when partial information available"
+    approach: "Use code structure, library patterns, and string analysis to map back to original"
+    tools: ["source-map npm package", "shuji for source map extraction", "webcrack for bundled code"]
+    notes: "Complete recovery only possible with actual source maps; heuristic recovery is partial"

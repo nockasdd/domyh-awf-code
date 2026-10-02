@@ -1,0 +1,113 @@
+metadata:
+  skill: license-audit
+  domain: license_weakness
+  updated: "2026-10-02"
+  patterns_count: 15
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: LW-01
+    name: Hardcoded License Key
+    severity: CRITICAL
+    category: Key Management
+    description: License validated against hardcoded constant in binary
+    detection_pattern: "licenseKey.*==.*\"[A-Z0-9-]+\"|validKey.*=.*\"[A-F0-9]{16}"
+    fix_pattern: Use server-side validation with HMAC signatures
+  - id: LW-02
+    name: Client-Only Validation
+    severity: CRITICAL
+    category: Architecture
+    description: License check performed entirely client-side with no server verification
+    detection_pattern: "(IsLicensed|CheckLicense|ValidateLicense)(?!.*server|api|http)"
+    fix_pattern: Add server round-trip verification for critical checks
+  - id: LW-03
+    name: Boolean Return License Check
+    severity: HIGH
+    category: Implementation
+    description: License validation returns simple true/false easily patchable
+    detection_pattern: "bool.*IsRegistered|bool.*IsLicensed|return.*true.*license"
+    fix_pattern: Return cryptographic token instead of boolean
+  - id: LW-04
+    name: Predictable Serial Algorithm
+    severity: HIGH
+    category: Key Management
+    description: Serial key algorithm uses predictable math without cryptographic strength
+    detection_pattern: "serial.*%.*==|key.*mod.*==|checksum.*sum"
+    fix_pattern: Use RSA/ECDSA key signing for serial validation
+  - id: LW-05
+    name: No Code Integrity Check
+    severity: HIGH
+    category: Tamper Protection
+    description: No runtime verification of code integrity allows binary patching
+    detection_pattern: "(?!.*hash.*text|checksum.*section|integrity.*verify)"
+    fix_pattern: Hash .text section at startup and verify periodically
+  - id: LW-06
+    name: Static Expiry Date
+    severity: MEDIUM
+    category: Time Validation
+    description: Trial expiry uses local system time which can be manipulated
+    detection_pattern: "DateTime\\.Now|System\\.currentTimeMillis|time\\.time\\(\\)"
+    fix_pattern: Sync expiry with server-provided timestamp
+  - id: LW-07
+    name: Registry/File License Storage
+    severity: MEDIUM
+    category: Storage
+    description: License state stored in plaintext registry key or file
+    detection_pattern: "Registry.*license|File\\.Write.*license|localStorage.*license"
+    fix_pattern: Encrypt license state with machine-bound key
+  - id: LW-08
+    name: Single Validation Point
+    severity: HIGH
+    category: Architecture
+    description: Only one location in code checks license - single point of failure
+    detection_pattern: "count(IsLicensed|CheckLicense) == 1"
+    fix_pattern: Distribute multiple validation checks across critical paths
+  - id: LW-09
+    name: Debug Detection Absent
+    severity: MEDIUM
+    category: Tamper Protection
+    description: No debugger detection near license validation code
+    detection_pattern: "(?!.*IsDebuggerPresent|ptrace|anti.*debug)"
+    fix_pattern: Add anti-debug checks near license validation
+  - id: LW-10
+    name: Plain String Key Comparison
+    severity: HIGH
+    category: Implementation
+    description: License key compared as plain string easily found via string search
+    detection_pattern: "key.*==.*\"[A-Z0-9]{4}-[A-Z0-9]{4}\""
+    fix_pattern: Use hash comparison or encrypted key storage
+  - id: LW-11
+    name: Unprotected License API Endpoint
+    severity: HIGH
+    category: Server-Side
+    description: License activation API has no rate limiting or abuse prevention
+    detection_pattern: "/api/activate(?!.*rateLimit|throttle)"
+    fix_pattern: Add rate limiting, CAPTCHA, and IP-based throttling
+  - id: LW-12
+    name: No Hardware Binding
+    severity: MEDIUM
+    category: Key Management
+    description: License not bound to hardware allowing unlimited sharing
+    detection_pattern: "(?!.*hwid|machine.*id|fingerprint)"
+    fix_pattern: Bind license to hardware fingerprint (CPU ID + disk serial)
+  - id: LW-13
+    name: Cleartext Network License Check
+    severity: HIGH
+    category: Network
+    description: License validation over HTTP instead of HTTPS
+    detection_pattern: "http://.*license|http://.*activate|http://.*validate"
+    fix_pattern: Use HTTPS with certificate pinning
+  - id: LW-14
+    name: Missing Revocation Support
+    severity: MEDIUM
+    category: Lifecycle
+    description: No mechanism to revoke compromised license keys
+    detection_pattern: "(?!.*revoke|blacklist|invalidate.*key)"
+    fix_pattern: Implement server-side key revocation with periodic check
+  - id: LW-15
+    name: Offline Grace Period Too Long
+    severity: MEDIUM
+    category: Architecture
+    description: Offline grace period allows indefinite use without server check
+    detection_pattern: "gracePeriod.*>.*30|offlineDays.*>.*30"
+    fix_pattern: Limit offline grace to 7-14 days maximum

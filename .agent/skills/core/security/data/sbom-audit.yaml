@@ -1,0 +1,64 @@
+metadata:
+  skill: security
+  domain: sbom_supply_chain
+  updated: "2026-10-02"
+  patterns_count: 8
+  columns: [id, name, severity, category, description, detection_pattern, fix_pattern]
+
+patterns:
+  - id: SB-01
+    name: Typosquatting Package Name
+    severity: CRITICAL
+    category: Supply Chain
+    description: Package name is visually similar to popular package (lodash vs l0dash)
+    detection_pattern: "levenshtein_distance(name, popular_name) <= 2"
+    fix_pattern: Verify package name against official registry, use lockfiles
+  - id: SB-02
+    name: Lockfile Manipulation
+    severity: CRITICAL
+    category: Integrity
+    description: Lockfile contains entries not matching declared dependencies
+    detection_pattern: "lockfile_integrity_hash != computed_hash"
+    fix_pattern: Regenerate lockfile and verify with npm ci or yarn --frozen-lockfile
+  - id: SB-03
+    name: Install Script Execution
+    severity: HIGH
+    category: Execution
+    description: Package runs arbitrary code during install via preinstall/postinstall scripts
+    detection_pattern: "scripts.preinstall|scripts.postinstall|scripts.install"
+    fix_pattern: Use --ignore-scripts flag, audit install scripts before running
+  - id: SB-04
+    name: Dependency Confusion
+    severity: CRITICAL
+    category: Supply Chain
+    description: Internal package name published to public registry with higher version
+    detection_pattern: "public_registry_version > private_registry_version"
+    fix_pattern: Scope internal packages (@company/), configure registry priority
+  - id: SB-05
+    name: Phantom Dependency
+    severity: MEDIUM
+    category: Integrity
+    description: Code imports module not declared in package.json dependencies
+    detection_pattern: "import X|require(X) where X not in dependencies"
+    fix_pattern: Add all used packages to explicit dependencies
+  - id: SB-06
+    name: Star-Jacking
+    severity: MEDIUM
+    category: Trust
+    description: Package repository URL points to unrelated popular project
+    detection_pattern: "npm_stars << github_stars for claimed repo"
+    fix_pattern: Verify actual source code matches claimed repository
+  - id: SB-07
+    name: Namespace Squatting
+    severity: HIGH
+    category: Supply Chain
+    description: Squatted package scope/name waiting for typo installations
+    detection_pattern: "recently_created AND low_downloads AND similar_name"
+    fix_pattern: Register defensive package names for critical namespaces
+  - id: SB-08
+    name: Secrets in Published Package
+    severity: CRITICAL
+    category: Secrets
+    description: API keys, tokens, or credentials included in published package
+    detection_pattern: "grep -r 'API_KEY|SECRET|TOKEN|PASSWORD' node_modules/<pkg>"
+    fix_pattern: Use .npmignore, review package contents before publish

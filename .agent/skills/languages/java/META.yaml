@@ -14,6 +14,9 @@ domains:
     - "build.gradle.kts"
     - "*.java"
   keywords:
+    - JADX
+    - CFR
+    - decompile java
     # Core
     - java
     # Versions
@@ -77,6 +80,12 @@ caps:
   - Structured Concurrency
   - Modern build tools (Gradle/Maven)
   - Enterprise patterns
+
+
+data_files:
+  - data/core.yaml
+  - data/spring.yaml
+  - data/java-decompilation.yaml
 
 related_skills:
   - kotlin

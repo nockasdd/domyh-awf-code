@@ -1,0 +1,57 @@
+metadata:
+  skill: network-recon
+  domain: nmap_profiles
+  updated: "2026-10-02"
+  profiles_count: 10
+
+profiles:
+  - id: NP-01
+    name: Quick Discovery
+    command: "nmap -sn -T4 <target>"
+    description: Host discovery only (ping sweep), no port scan
+    use_case: Initial network mapping
+  - id: NP-02
+    name: Top Ports Quick
+    command: "nmap -sV --top-ports 100 -T4 <target>"
+    description: Version detection on top 100 ports
+    use_case: Rapid service identification
+  - id: NP-03
+    name: Standard Scan
+    command: "nmap -sV -sC -T3 <target>"
+    description: Version detection with default NSE scripts
+    use_case: Regular security assessment
+  - id: NP-04
+    name: Full TCP
+    command: "nmap -sV -p- -T3 <target>"
+    description: All 65535 TCP ports with version detection
+    use_case: Comprehensive port audit
+  - id: NP-05
+    name: UDP Top Ports
+    command: "nmap -sU --top-ports 50 -T3 <target>"
+    description: Top 50 UDP ports (DNS, SNMP, NTP, TFTP)
+    use_case: UDP service discovery
+  - id: NP-06
+    name: OS Detection
+    command: "nmap -O -sV -T3 <target>"
+    description: Operating system and version fingerprinting
+    use_case: Asset inventory
+  - id: NP-07
+    name: Stealth SYN
+    command: "nmap -sS -T2 -f <target>"
+    description: SYN scan with fragmentation for IDS testing
+    use_case: IDS evasion assessment
+  - id: NP-08
+    name: Vulnerability Scan
+    command: "nmap -sV --script=vuln -T3 <target>"
+    description: NSE vulnerability detection scripts
+    use_case: Known vulnerability identification
+  - id: NP-09
+    name: Web Specific
+    command: "nmap -sV -p 80,443,8080,8443,8888,3000 --script=http-* <target>"
+    description: Web service focused with HTTP scripts
+    use_case: Web server assessment
+  - id: NP-10
+    name: Aggressive Full
+    command: "nmap -A -p- -T4 <target>"
+    description: OS detection, version, scripts, traceroute on all ports
+    use_case: Maximum information gathering (authorized only)

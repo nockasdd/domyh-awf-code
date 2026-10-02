@@ -75,6 +75,20 @@ triggers:
     - rust error handling
     - rust wasm
 
+
+caps:
+  - Rust 2024 Edition async closures
+  - Axum 0.8 and Tower patterns
+  - Error handling with thiserror/anyhow
+  - Memory safety ownership model
+  - WebAssembly compilation
+
+data_files:
+  - data/async.yaml
+  - data/axum.yaml
+  - data/core.yaml
+  - data/rust-binary-analysis.yaml
+
 related_skills:
   - docker
 

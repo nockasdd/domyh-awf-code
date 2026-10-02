@@ -1,0 +1,56 @@
+metadata:
+  skill: python
+  domain: pyinstaller_unpacking
+  updated: "2026-10-02"
+  entries_count: 8
+
+unpacking:
+  - name: PyInstaller Bundle Detection
+    desc: "PyInstaller bundles Python app into single executable with embedded archive"
+    detection: "MEI marker bytes at end of file; PKG archive signature"
+    indicators: ["_MEIPASS environment variable", "PYZ-00.pyz entry", "sys._MEIPASS attribute"]
+
+  - name: pyinstxtractor.py Usage
+    desc: "Extract all files from PyInstaller executable"
+    command: "python pyinstxtractor.py target.exe"
+    output: "Creates target.exe_extracted/ with .pyc files and metadata"
+    notes: "Works with PyInstaller 2.0-6.x; auto-detects Python version"
+
+  - name: PYZ Archive Extraction
+    desc: "PYZ-00.pyz contains compressed Python modules"
+    approach: "pyinstxtractor automatically extracts PYZ; creates PYZ-00.pyz_extracted/"
+    contents: "Standard library and third-party .pyc modules"
+
+  - name: PYC Header Fixing
+    desc: "Extracted .pyc files may have missing or incorrect magic number header"
+    fix: "Prepend correct Python magic bytes + timestamp + size for target Python version"
+    magic_bytes:
+      "3.8": "55 0D 0D 0A"
+      "3.9": "61 0D 0D 0A"
+      "3.10": "6F 0D 0D 0A"
+      "3.11": "A7 0D 0D 0A"
+      "3.12": "CB 0D 0D 0A"
+
+  - name: Bytecode Decompilation
+    desc: "Convert .pyc bytecode back to Python source code"
+    tools:
+      - "uncompyle6 — Python 2.6-3.8 (most reliable for older versions)"
+      - "decompyle3 — Python 3.7-3.8"
+      - "pycdc — C++ decompiler supporting Python 1.0-3.12"
+    command: "pycdc target.pyc > target.py"
+
+  - name: Spec File Analysis
+    desc: "PyInstaller .spec file defines build configuration and included files"
+    key_fields: ["hiddenimports", "datas", "binaries", "excludes"]
+    recovery: "Spec file not included in build; reconstruct from extracted manifest"
+
+  - name: Hidden Imports Discovery
+    desc: "Some imports not automatically detected by PyInstaller analysis"
+    approach: "Check extracted struct.pyc for __import__ calls and importlib usage"
+    notes: "Dynamic imports, lazy imports, and plugin systems often need manual discovery"
+
+  - name: Onefile vs Onedir Modes
+    desc: "Onefile extracts to temp dir at runtime; onedir is pre-extracted"
+    onefile: "Single .exe; extracts to %TEMP%/_MEIxxxxx at runtime"
+    onedir: "Directory with .exe + all files; easier to analyze directly"
+    analysis: "Onefile requires running or manual extraction; onedir is immediately browsable"

@@ -1,0 +1,61 @@
+metadata:
+  skill: symbolic-execution
+  domain: unicorn_emulation
+  updated: "2026-10-02"
+  patterns_count: 6
+
+patterns:
+  - id: UC-01
+    name: x86 Code Emulation
+    description: Emulate x86 instructions
+    code: |
+      from unicorn import *
+      from unicorn.x86_const import *
+      mu = Uc(UC_ARCH_X86, UC_MODE_32)
+      mu.mem_map(0x1000000, 2 * 1024 * 1024)
+      mu.mem_write(0x1000000, CODE)
+      mu.reg_write(UC_X86_REG_ESP, 0x1200000)
+      mu.emu_start(0x1000000, 0x1000000 + len(CODE))
+      print(f"EAX = {hex(mu.reg_read(UC_X86_REG_EAX))}")
+  - id: UC-02
+    name: ARM Emulation
+    description: Emulate ARM instructions
+    code: |
+      from unicorn import *
+      from unicorn.arm_const import *
+      mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+      mu.mem_map(0x10000, 2 * 1024 * 1024)
+      mu.mem_write(0x10000, CODE)
+      mu.emu_start(0x10000, 0x10000 + len(CODE))
+  - id: UC-03
+    name: Memory Hook
+    description: Monitor memory access during emulation
+    code: |
+      def hook_mem(uc, access, addr, size, value, user_data):
+          if access == UC_MEM_WRITE:
+              print(f"Write {hex(value)} to {hex(addr)}")
+      mu.hook_add(UC_HOOK_MEM_WRITE, hook_mem)
+  - id: UC-04
+    name: Instruction Trace
+    description: Trace every instruction executed
+    code: |
+      def hook_code(uc, address, size, user_data):
+          print(f"Executing {hex(address)}")
+      mu.hook_add(UC_HOOK_CODE, hook_code)
+  - id: UC-05
+    name: Interrupt Hook
+    description: Handle system calls and interrupts
+    code: |
+      def hook_intr(uc, intno, user_data):
+          if intno == 0x80:
+              eax = uc.reg_read(UC_X86_REG_EAX)
+              print(f"Syscall: {eax}")
+      mu.hook_add(UC_HOOK_INTR, hook_intr)
+  - id: UC-06
+    name: Block Trace
+    description: Trace basic blocks for coverage analysis
+    code: |
+      blocks = set()
+      def hook_block(uc, address, size, user_data):
+          blocks.add(address)
+      mu.hook_add(UC_HOOK_BLOCK, hook_block)

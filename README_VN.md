@@ -6,7 +6,7 @@
 <!-- Animated Typing -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=108+Skills+•+26+IDEs+•+45+Commands" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=118+Skills+•+26+IDEs+•+45+Commands" alt="Typing SVG" />
   </a>
 </p>
 
@@ -15,7 +15,7 @@
   <a href="https://www.npmjs.com/package/@nockdev/awf">
     <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-108-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-118-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
   <img src="https://img.shields.io/badge/commands-45-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
@@ -335,11 +335,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-## 🧠 Skills (107 tổng)
+## 🧠 Skills (118 tổng)
 
 <!-- Skills Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;9+Core+•+7+DevOps;30+Cross-cutting+•+6+Tooling+•+9+AI-ML;9+Governance+•+107+Tổng+Skills" alt="Skills" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;15+Core+•+7+DevOps;30+Cross-cutting+•+8+Tooling+•+9+AI-ML;9+Governance+•+118+Tổng+Skills" alt="Skills" />
 </p>
 </p>
 
@@ -374,22 +374,22 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (36) + Governance (9)
+### 🔧 Core & Cross-cutting (45) + Governance (9)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
 </p>
 
 <p align="center">
-  <sub><b>Core (9):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator</sub>
+  <sub><b>Core (15):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest</sub>
   <br>
   <sub><b>Cross-cutting (30):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection</sub>
 </p>
 
-### 🛠️ Tooling (6)
+### 🛠️ Tooling (8)
 
 <p align="center">
-  <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit</sub>
+  <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution</sub>
 </p>
 
 ### 🤖 AI-ML (9)
@@ -410,13 +410,13 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | :---------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Languages**     | 28       | C, C++, Rust, Go, Zig, Nim, ASM, Java, Kotlin, Scala, Clojure, C#, F#, Python, Ruby, PHP, Perl, Lua, JavaScript, TypeScript, Haskell, Elixir, OCaml, R, Julia, Swift, Solidity, Crystal                             |
 | **Frameworks**    | 9        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
-| **Core**          | 9        | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator                                                                                    |
+| **Core**          | 15       | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
 | **Cross-cutting** | 30       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection |
-| **Tooling**       | 6        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit                                                                                                                                              |
+| **Tooling**       | 8        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution                                                                                                                   |
 | **AI-ML**         | 9        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
 | **Governance**    | 9        | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation, Context Compaction                                  |
-| **Tổng**          | **107**  |                                                                                                                                                                                                                     |
+| **Tổng**          | **118**  |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -484,13 +484,13 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 107 skills chuyên biệt
+├── 🧠 skills/                # 118 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
-│   ├── core/         (9)     # Security, API Design, Auth, Graph Patterns...
+│   ├── core/         (15)    # Security, API Design, Auth, License Audit, Web Pentest...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
 │   ├── cross-cutting/ (30)   # Testing, Database, Game Automation, Reverse Engineering...
-│   ├── tooling/      (6)     # MCP, API Protocols, IDE Extension, HSA Toolkit...
+│   ├── tooling/      (8)     # MCP, API Protocols, IDE Extension, Frida...
 │   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
 │   └── governance/   (9)     # Drift Prevention, Session Governance...
 ├── 🔄 workflows/     (45)    # 45 command handlers

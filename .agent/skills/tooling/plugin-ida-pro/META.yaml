@@ -12,6 +12,9 @@ triggers:
     - "*.dll"
     - "*.pdb"
   keywords:
+    - nuitka
+    - IDA MCP
+    - reconstructor
     - IDA
     - IDA Pro
     - binary
@@ -36,12 +39,16 @@ triggers:
     - rebuild structure
 
 caps:
+  - Nuitka source reconstruction via IDA
   - Discover live IDA/Ghidra/x64dbg instances before mutation
   - Pin target identity with port/session/process/module fields
   - Use bounded batch reads for multi-view analysis
   - Use bounded batch writes for rename/comment/type/struct edits
   - Prefer one request that gathers or mutates several related facts
   - Defer to plugin docs for exact command contracts
+
+data_files:
+  - data/nuitka-reconstruction.yaml
 
 related_skills:
   - security
