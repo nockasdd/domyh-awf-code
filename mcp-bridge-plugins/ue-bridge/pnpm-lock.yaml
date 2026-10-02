@@ -389,7 +389,7 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  cac@6.7.17:
+  cac@6.7.18:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
@@ -1147,7 +1147,7 @@ snapshots:
 
   bytes@3.1.2: {}
 
-  cac@6.7.17: {}
+  cac@6.7.18: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:
@@ -1624,7 +1624,7 @@ snapshots:
   tsup@8.5.1(typescript@5.9.3):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.27.4)
-      cac: 6.7.17
+      cac: 6.7.18
       chokidar: 4.0.3
       consola: 3.4.2
       debug: 4.4.3

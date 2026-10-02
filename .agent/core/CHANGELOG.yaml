@@ -2,6 +2,15 @@
 # Extracted from VERSION.yaml (SSoT) for token efficiency
 
 changelog:
+  "6.7.18":
+    date: "2026-10-02"
+    codename: "Dual-Catalog SSoT & AI Safety Standardization"
+    changes:
+      - "Dual-Catalog Sync: Auto-sync skills & rules to both ~/.agent and ~/.agents user home directories"
+      - "CI Automation: Added GitHub Actions validate.yml verifying 625 skill YAMLs, rules bundles and INDEX sync"
+      - "AI Safety: Standardized prompt injection standards to OWASP LLM01, MITRE ATLAS AML.T0051, CWE-78, CWE-94"
+      - "HSA v2.0.20: Pinned safety rules in references mode snippet extractor, resolved TS2345 typecheck error, optimized keyword loader"
+
   "6.5.8":
     date: "2026-03-17"
     codename: "Workflow Enforcement"
