@@ -11,6 +11,7 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync, rmSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { syncUserCatalogs } from './sync-user-catalogs.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -346,5 +347,7 @@ const distSummary = {
   },
 };
 writeFileSync(join(DIST_PLUGINS_DIR, 'manifest.json'), JSON.stringify(distSummary, null, 2), 'utf-8');
+
+syncUserCatalogs();
 
 console.log('\n🎉 ALL TARGETS BUILT SUCCESSFULLY! Output available at: ' + DIST_PLUGINS_DIR);

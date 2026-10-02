@@ -8,7 +8,7 @@ category: security
 # 🛡️ Prompt Injection Guard
 
 > 🌍 **Language / Ngôn ngữ**: English (default) | [Tiếng Việt](#tiếng-việt)
-> 📚 **Based on**: Prompt injection attack patterns (⚠️ CVE-2025-53773, CVE-2025-32711 are unverified placeholders — not found in public CVE databases)
+> 📚 **Based on**: OWASP Top 10 for LLM Applications (LLM01: Prompt Injection), MITRE ATLAS (AML.T0051), CWE-78 (OS Command Injection), CWE-94 (Code Injection).
 
 ## Description
 
@@ -18,7 +18,7 @@ Critical security rules to prevent prompt injection attacks.
 
 ## 🔴 CRITICAL VULNERABILITY
 
-### Prompt Injection → RCE (ref: CVE-2025-53773 — unverified)
+### Prompt Injection → RCE (ref: OWASP LLM01 / CWE-78)
 
 ```
 ⚠️ CRITICAL SECURITY ALERT
@@ -195,7 +195,7 @@ Rules bảo mật quan trọng để ngăn chặn prompt injection attacks.
 
 ## 🔴 LỖ HỔNG NGHIÊM TRỌNG
 
-### CVE-2025-53773
+### Prompt Injection → RCE (ref: OWASP LLM01 / CWE-78)
 
 ```
 ⚠️ CẢNH BÁO BẢO MẬT

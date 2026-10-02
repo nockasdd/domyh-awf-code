@@ -1,0 +1,61 @@
+name: Validate Skills & Rules
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip pyyaml
+
+      - name: Validate Skills Index Sync
+        run: node scripts/generate-skills-index.mjs --check
+
+      - name: Validate Compiled Rules Bundle Sync
+        run: node scripts/compile-rules-bundle.js --check
+
+      - name: Validate Public Agent Content
+        run: node scripts/validate-agent-public.mjs
+
+      - name: Validate Dual Catalog Sync
+        run: node scripts/sync-user-catalogs.mjs
+
+      - name: Validate Skills YAML & Data Integrity
+        run: |
+          python3 -c "
+          import os, yaml
+          skills_dir = '.agent/skills'
+          count = 0
+          for root, dirs, files in os.walk(skills_dir):
+              for f in files:
+                  if f.endswith(('.yaml', '.yml')):
+                      p = os.path.join(root, f)
+                      count += 1
+                      try:
+                          with open(p, 'r', encoding='utf-8') as fp:
+                              yaml.safe_load(fp)
+                      except Exception as e:
+                          print(f'[FAIL] YAML syntax error in {p}: {e}')
+                          exit(1)
+          print(f'[PASS] All {count} skill YAML files passed validation!')
+          "
