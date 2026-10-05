@@ -14,7 +14,7 @@
 # =============================================================================
 
 system:
-  version: "6.7.19"
+  version: "6.7.20"
   codename: "Tri-Tier Subagent Delegation & Safe Platform Orchestration"
   release_date: "2026-05-20"
 

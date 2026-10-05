@@ -2,7 +2,7 @@
 # Extracted from VERSION.yaml (SSoT) for token efficiency
 
 changelog:
-  "6.7.19":
+  "6.7.20":
     date: "2026-10-02"
     codename: "Dual-Catalog SSoT & AI Safety Standardization"
     changes:
