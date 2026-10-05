@@ -1,0 +1,14 @@
+id: INST-OVC-001
+name: anti-overclaim
+trigger: "stealth|bypass|security|protect|complete|done|perfect|audit|claim"
+directive: |
+  Epistemic Humility & Anti-Overclaiming:
+  - NEVER use categorical superlatives ("100% stealth", "0% dấu vết", "an toàn tuyệt đối", "entropy hoàn hảo", "hoàn hảo", "đã giải mã toàn bộ telemetry").
+  - Scope claims strictly to verified evidence (Proof Grades 1-5).
+  - MANDATORY: Always disclose untested edge cases, known limitations, and residual risks.
+banned_patterns:
+  - "100% stealth|100% ẩn danh|0% dấu vết"
+  - "an toàn tuyệt đối|bất khả xâm phạm|zero risk"
+  - "hoàn thành 100% hoàn hảo|hoàn thiện trọn vẹn không tì vết"
+  - "đã giải mã toàn bộ telemetry|hoàn toàn không thể bị phát hiện"
+self_check: "Did I state residual risks, cite verified command outputs, and avoid ungrounded superlatives?"

@@ -5,6 +5,7 @@ directive: |
   Show concrete execution evidence, never assertions.
   - NEVER say "this should work", "fixed now", or "it seems correct".
   - MUST run the project build, typecheck, or unit test command and cite the exit code.
+  - Proof-to-Claim Parity: Scope of claims must strictly match executed tests.
   - If tests cannot be run, explicitly state which verification checks were NOT performed.
-banned_phrases: ["should work", "probably fixed", "looks good now", "it should be fine"]
+banned_phrases: ["should work", "probably fixed", "looks good now", "it should be fine", "hoàn thành 100%"]
 evidence_check: "Did I execute a terminal command and verify its exit code is 0?"

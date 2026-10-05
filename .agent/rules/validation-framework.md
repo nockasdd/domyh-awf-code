@@ -14,11 +14,11 @@ category: quality
 
 ## Description
 
-Before creating ANY new code, agent MUST pass 6-phase validation.
+Before creating ANY new code, agent MUST pass 7-phase validation.
 
 ---
 
-## 🔴 6-Phase Pre-Implementation Validation
+## 🔴 7-Phase Pre & Post Implementation Validation
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -39,6 +39,9 @@ Before creating ANY new code, agent MUST pass 6-phase validation.
 ├──────────────────────────────────────────────────────────────┤
 │ Phase 6: REGISTRATION — What needs update?                   │
 │ → index.json, manifests, exports                             │
+├──────────────────────────────────────────────────────────────┤
+│ Phase 7: EPISTEMIC BOUNDING — What are the limits & risks?   │
+│ → Disclose untested conditions, side-effects, residual risks │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -131,6 +134,27 @@ registration_checklist:
 
 ---
 
+## Phase 7: Epistemic & Residual Risk Bounding
+
+Before claiming completion, answer:
+
+| Question | If NO / UNKNOWN |
+| ---------------------------------------------------- | ---------------------- |
+| Are all assumptions & boundary conditions declared?  | ⚠️ Disclose boundary   |
+| Are side-effects & side-channels analyzed?           | ⚠️ Note residual risk  |
+| Is evidence proof grade strictly tagged?             | ❌ Retag proof grade   |
+| Did I omit superlatives ("100%", "perfect", "zero")? | ❌ Strip superlatives  |
+
+```yaml
+epistemic_checklist:
+  - proof_grade: "[EMPIRICAL] | [STATIC-ANALYSIS] | [DEDUCTIVE-LOGIC] | [THEORETICAL-MODEL] | [RESIDUAL-RISK]"
+  - negative_space: "What does this code NOT solve?"
+  - residual_vectors: "What environmental or external factors remain unaddressed?"
+  - humility_enforcement: "Zero ungrounded claims of absolute perfection or total stealth"
+```
+
+---
+
 ## 📋 Quick Checklist
 
 - [ ] User requested this? (Phase 1)
@@ -139,6 +163,7 @@ registration_checklist:
 - [ ] Know where to place? (Phase 4)
 - [ ] Know who uses it? (Phase 5)
 - [ ] Will update registry? (Phase 6)
+- [ ] Disclosed limits & risks? (Phase 7)
 
 ---
 
@@ -173,6 +198,7 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validati
 4. **Placement** — Đặt ở đâu?
 5. **Connectivity** — Ai sẽ dùng?
 6. **Registration** — Cần update index nào?
+7. **Epistemic Bounding** — Giới hạn & rủi ro tồn đọng là gì?
 
 ## Checklist Nhanh
 
@@ -182,5 +208,6 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validati
 - [ ] Biết đặt ở đâu? (Phase 4)
 - [ ] Biết ai dùng? (Phase 5)
 - [ ] Sẽ update registry? (Phase 6)
+- [ ] Minh bạch rủi ro tồn đọng? (Phase 7)
 
 ---

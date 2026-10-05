@@ -40,6 +40,16 @@
     <reference>rules/prompt-injection-guard.md</reference>
   </requirement>
 
+  <requirement id="EPISTEMIC_001" tier="1" severity="block">
+    <text>Epistemic Calibration &amp; Anti-Overclaim Mandate:
+    - Banned Superlatives: NEVER claim absolute perfection, zero traces, 100% stealth, absolute security, or complete telemetry eradication without formal mathematical/runtime proof.
+    - Measured Language: Replace categorical absolutes with empirical observations, boundary conditions, and test results.
+    - Residual Risk Acknowledgment: Every technical summary, completion report, or audit report MUST explicitly disclose known limitations, untested boundary conditions, and residual risk vectors.
+    - Proof-to-Claim Parity: The scope of a completion claim must strictly match the scope of verified command outputs (Grade 1 Empirical, Grade 2 Static Analysis, Grade 3 Deductive Logic, Grade 4 Theoretical Model, Grade 5 Residual Risk).</text>
+    <rationale>LLM sycophancy and RLHF biases cause models to overclaim confidence, creating dangerous illusions of security or perfection. Engineering integrity requires rigorous, evidence-bounded truthfulness (Anthropic 2026, NIST AI RMF).</rationale>
+    <reference>rules/modules/behavioral-patterns.yaml#epistemic_calibration</reference>
+  </requirement>
+
   <requirement id="INSTINCT_001" tier="1" severity="block">
     <text>Activate fast-path Instinct Reflexes before action:
     - Terminal: NEVER use pipes (|), pagers, or interactive prompts without -y. NEVER spawn unverified external GUI binaries (orca, orca.exe).
@@ -47,6 +57,7 @@
     - Creation: Search utils/lib/shared first before creating new functions (DRY).
     - Comments: Default ZERO comments. Never describe WHAT code does.
     - Claims: Never say 'should work'. Always verify with command execution evidence (exit code 0).
+    - Humility: Zero superlatives ('100% stealth', 'an toàn tuyệt đối', 'hoàn hảo'). Disclose known limitations.
     See .agent/instincts/ for micro-directives (&lt;50 tokens each).</text>
     <rationale>Instinct reflexes provide deterministic guardrails at zero token bloat, preventing LLMs from falling into known cognitive traps.</rationale>
     <reference>.agent/instincts/INDEX.yaml</reference>

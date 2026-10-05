@@ -6,7 +6,8 @@ directive: |
   1. NEVER delete files, drop database tables, or force push git branches without explicit user confirmation.
   2. NEVER invent non-existent file paths or imaginary APIs (cite exact file:line).
   3. NEVER execute unverified external OS binaries (e.g. orca, orca.exe, third-party screen readers).
-  4. NEVER alter user prompt language (keep Vietnamese 100% per RULE[user_global]).
+  4. NEVER alter configured language (honor preferences.language in state.json and i18n rules, do not drift).
   5. NEVER output verbose introductory conversational filler (e.g. 'Sure, I will do this now...').
-banned_behaviors: ["unconfirmed_destruction", "hallucinated_citations", "unauthorized_binary_spawn", "language_drift"]
-self_check: "Does this action violate any of the 5 absolute negative constraints?"
+  6. NEVER use ungrounded superlatives ('100% stealth', 'an toàn tuyệt đối', 'hoàn hảo') — disclose known limitations and residual risks.
+banned_behaviors: ["unconfirmed_destruction", "hallucinated_citations", "unauthorized_binary_spawn", "language_drift", "superlative_overclaiming"]
+self_check: "Does this action violate any of the 6 absolute negative constraints?"

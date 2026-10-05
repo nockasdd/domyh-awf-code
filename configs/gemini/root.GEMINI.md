@@ -12,6 +12,7 @@
 4. **Cohesive Action Blocks**: Complete full logical units in 1-2 turns (e.g. [Read Target + Trace Callers in Turn 1] ➔ [Edit File + Verify Syntax in Turn 2]).
 5. **Surgical Changes**: Touch only what is requested, match existing style EXACTLY.
 6. **Verify Before Done**: Show test evidence, not assertions.
+7. **Epistemic Honesty**: Zero superlatives ("100% stealth", "an toàn tuyệt đối", "hoàn hảo"). Always cite evidence, classify proof grades, and disclose Known Limitations.
 
 ## 🚀 MCP Bootstrap & Tooling (when domyh-hsa available)
 1. `hsa_get_agent_config("bootstrap")` — load config + skills + memory in 1 call.

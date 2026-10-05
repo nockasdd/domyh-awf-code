@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT_DIR = process.cwd();
@@ -18,6 +18,7 @@ const LEAN_TEMPLATE = `# DOMYH Awesome Code — NockDev
 4. **Cohesive Action Blocks**: Complete full logical units in 1-2 turns (e.g. [Read Target + Trace Callers in Turn 1] ➔ [Edit File + Verify Syntax in Turn 2]).
 5. **Surgical Changes**: Touch only what is requested, match existing style EXACTLY.
 6. **Verify Before Done**: Show test evidence, not assertions.
+7. **Epistemic Honesty**: Zero superlatives ("100% stealth", "an toàn tuyệt đối", "hoàn hảo"). Always cite evidence, classify proof grades, and disclose Known Limitations.
 
 ## 🚀 MCP Bootstrap & Tooling (when domyh-hsa available)
 1. \`hsa_get_agent_config("bootstrap")\` — load config + skills + memory in 1 call.
@@ -62,19 +63,40 @@ for (const target of TARGET_FILES) {
   console.log(`✅ Updated: ${target}`);
 }
 
-// Project root AGENTS.md and GEMINI.md
-const ROOT_VN_INSTRUCTION = 'Tiếng Việt — PHẢI trả lời TOÀN BỘ bằng tiếng Việt. Chỉ giữ tiếng Anh cho code, technical terms, commands. KHÔNG tự chuyển ngôn ngữ.';
+function resolveLanguageInstruction(rootDir) {
+  const INSTRUCTIONS = {
+    vi: 'Tiếng Việt — PHẢI trả lời TOÀN BỘ bằng tiếng Việt. Chỉ giữ tiếng Anh cho code, technical terms, commands. KHÔNG tự chuyển ngôn ngữ.',
+    en: 'English — Respond entirely in English. Keep code, technical terms, commands accurate. Do not auto-switch languages.',
+  };
+  const statePath = join(rootDir, '.agent', 'memory', 'state.json');
+  if (existsSync(statePath)) {
+    try {
+      const state = JSON.parse(readFileSync(statePath, 'utf8'));
+      const lang = state?.preferences?.language;
+      if (lang && INSTRUCTIONS[lang]) return INSTRUCTIONS[lang];
+    } catch {}
+  }
+  return INSTRUCTIONS.vi;
+}
+
+// Project root AGENTS.md, GEMINI.md, and CLAUDE.md
 const ROOT_PROJECT_DIR = join(ROOT_DIR, '..');
+const rootLanguageInstruction = resolveLanguageInstruction(ROOT_PROJECT_DIR);
 const rootAgentsMd = join(ROOT_PROJECT_DIR, 'AGENTS.md');
 const rootGeminiMd = join(ROOT_PROJECT_DIR, 'GEMINI.md');
+const rootClaudeMd = join(ROOT_PROJECT_DIR, 'CLAUDE.md');
 
 if (existsSync(rootAgentsMd)) {
-  writeFileSync(rootAgentsMd, LEAN_TEMPLATE.replace('{{LANGUAGE_INSTRUCTION}}', ROOT_VN_INSTRUCTION), 'utf-8');
-  console.log(`✅ Updated: ${rootAgentsMd}`);
+  writeFileSync(rootAgentsMd, LEAN_TEMPLATE.replace('{{LANGUAGE_INSTRUCTION}}', rootLanguageInstruction), 'utf-8');
+  console.log(`✅ Updated: ${rootAgentsMd} (i18n resolved)`);
 }
 if (existsSync(rootGeminiMd)) {
-  writeFileSync(rootGeminiMd, LEAN_TEMPLATE.replace('{{LANGUAGE_INSTRUCTION}}', ROOT_VN_INSTRUCTION), 'utf-8');
-  console.log(`✅ Updated: ${rootGeminiMd}`);
+  writeFileSync(rootGeminiMd, LEAN_TEMPLATE.replace('{{LANGUAGE_INSTRUCTION}}', rootLanguageInstruction), 'utf-8');
+  console.log(`✅ Updated: ${rootGeminiMd} (i18n resolved)`);
+}
+if (existsSync(rootClaudeMd)) {
+  writeFileSync(rootClaudeMd, LEAN_TEMPLATE.replace('{{LANGUAGE_INSTRUCTION}}', rootLanguageInstruction), 'utf-8');
+  console.log(`✅ Updated: ${rootClaudeMd} (i18n resolved)`);
 }
 
-console.log('🎉 All 20 root templates updated with Tri-Tier Subagent Delegation Protocol!');
+console.log('🎉 All root templates updated with Epistemic Honesty & Subagent Delegation Protocol!');

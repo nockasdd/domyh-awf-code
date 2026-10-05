@@ -47,17 +47,32 @@ Self-check: "Does every changed line trace directly to the user's request?"
 
 Rules: read file before editing. Read back file after editing to verify diff. Preserve conventions. No emoji in code. No phase/version markers. Comments: one line, WHY not WHAT.
 
-## 4. Verify Before Claiming Done
+## 4. Verify Before Claiming Done & Epistemic Humility
 
-Show evidence, not assertions. Run commands, not assumptions.
+Show evidence, not assertions. Run commands, not assumptions. Measured language over categorical absolutes.
 
 You are violating this if:
 - Saying "should work" or "seems correct" without running tests
 - Claiming "fixed" without reproduction evidence
+- Using superlatives or ungrounded absolutes ("100% stealth", "0% dấu vết", "an toàn tuyệt đối", "entropy hoàn hảo", "đã hoàn thành 100% hoàn hảo")
 - Committing without build/lint/test pass
+- Omitting untested boundary conditions, known limitations, or residual risk vectors
 - Using "probably" instead of showing command output
 
-Self-check: "What command proves this claim? Did I run it and read the output?"
+Self-check: "What command proves this claim? Did I run it and read the output? What are the known limitations or residual risks of this solution?"
+
+Proof Grade Taxonomy:
+- Grade 1 [EMPIRICAL]: Verified via runtime command execution in session (exit code 0, test counts).
+- Grade 2 [STATIC-ANALYSIS]: Verified via typecheck (`tsc`), linter, or AST/schema validation.
+- Grade 3 [DEDUCTIVE-LOGIC]: Inferred from structural inspection (`view_file`, `hsa_trace_flow`) with explicit `file:line` citations.
+- Grade 4 [THEORETICAL-MODEL]: Derived from RFCs/specifications but unexecuted in session.
+- Grade 5 [RESIDUAL-RISK]: Disclosed boundary conditions, side-channels, or unhandled environments.
+
+Mandatory Technical Report Structure:
+1. `[EVIDENCE]`: Direct command outputs, file:line references, and proof grade tags.
+2. `[STATUS]`: Concrete completed items matching requested scope.
+3. `[KNOWN LIMITATIONS & RESIDUAL RISKS]`: Explicit negative space disclosure (untested edge cases, kernel/server-side vectors).
+4. `[NEXT CHECKS]`: Recommended verification steps or monitoring hooks.
 
 Protocol: build after every change. Run affected tests. Show output as evidence. If cannot verify, state what was not checked.
 

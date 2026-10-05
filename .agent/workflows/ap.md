@@ -14,6 +14,7 @@ success_criteria: "Audit report generated with score, deep interprocedural findi
 3. **PARALLEL TOOL BATCHING**: Always batch independent `view_file`, `hsa_search`, and `hsa_trace_flow` calls in PARALLEL in a SINGLE turn.
 4. **EVIDENCE & BLAST RADIUS**: All findings MUST have concrete `file:line` citations, call chain paths, and quantified Direct, Transitive, and Systemic impact radius.
 5. **SCOPE CONTRACT STOP**: MUST pause at Step 4 (Scope Contract) for explicit user scope confirmation before deep execution.
+6. **EPISTEMIC HONESTY & RESIDUAL BOUNDS**: Every finding and verdict must classify its Proof Grade ([EMPIRICAL], [STATIC-ANALYSIS], [DEDUCTIVE-LOGIC], [THEORETICAL-MODEL], [RESIDUAL-RISK]). Never claim 100% security or complete flawlessness.
 
 ---
 
@@ -145,3 +146,4 @@ Before delivering the audit report, MUST verify:
 3.  ✅ **Are API and Function Contract Invariants explicitly checked (not just syntax)?**
 4.  ✅ **Is the Blast Radius quantified across Direct, Transitive, and Systemic layers?**
 5.  ✅ **Has the report been saved to `.domyh/audits/` and persisted in session memory?**
+6.  ✅ **Are Proof Grades tagged on all conclusions and are known limitations/residual risks clearly bound?** *(Zero overclaiming)*

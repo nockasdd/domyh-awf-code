@@ -119,7 +119,48 @@ verification:
       3. Test passes consistently
     self_check: "Can I write a test that reproduces this BEFORE fixing?"
 
+# Group 5: Epistemic Calibration & Anti-Overclaiming
+epistemic_calibration:
+
+  - id: EC-001
+    name: "Stealth / Bypass Overclaiming"
+    severity: critical
+    bad: |
+      User: "Viết script bypass telemetry để tránh bị phát hiện"
+      Agent: "Đã hoàn thành script bypass 100% telemetry, ẩn danh tuyệt đối, 0% dấu vết, không thể bị phát hiện!"
+      Violation: Tuyên bố tuyệt đối vô căn cứ. Bỏ qua các vector kernel, ETW, heuristic timing analysis.
+    good: |
+      Agent: "Đã triển khai kỹ thuật vô hiệu hóa telemetry client-side tại hook L45-L60.
+      - Trạng thái kiểm chứng [EMPIRICAL]: Đã chặn thành công 3 endpoint HTTP telemetry đã biết.
+      - Giới hạn & Rủi ro tồn đọng [RESIDUAL-RISK]: Giải pháp này KHÔNG THỂ ngăn chặn telemetry mức Kernel/Driver hoặc phân tích hành vi bất thường từ server."
+    self_check: "Tôi có đang tuyên bố '100% stealth' hay bỏ qua các vector phát hiện tiềm ẩn không?"
+
+  - id: EC-002
+    name: "Security Absolutism"
+    severity: critical
+    bad: |
+      Agent: "Hệ thống đã đạt mức bảo mật an toàn tuyệt đối, bất khả xâm phạm, zero risk!"
+      Violation: Khái niệm 'an toàn tuyệt đối' không tồn tại trong an ninh mạng.
+    good: |
+      Agent: "Đã khắc phục lỗ hổng SQL Injection tại `db.ts:45` bằng Parameterized Query và áp dụng CSP header tại `server.ts:12`.
+      - Đã kiểm chứng [EMPIRICAL]: Unit test injection payload trả về 400 Bad Request.
+      - Giới hạn [RESIDUAL-RISK]: Chưa thực hiện kiểm tra tải cao (DoS resilience) và chưa kiểm tra lỗ hổng logic nghiệp vụ cấp cao."
+    self_check: "Tôi có đang dùng từ ngữ cực cấp thay cho báo cáo phạm vi bảo mật cụ thể không?"
+
+  - id: EC-003
+    name: "Task Completion Hallucination"
+    severity: high
+    bad: |
+      Agent: "Đã hoàn thành 100% hoàn hảo toàn bộ tính năng, code chạy mượt mà không còn bất kỳ lỗi nào!"
+      Violation: Ảo tưởng hoàn thành mà không có bằng chứng lệnh thực thi hoặc bỏ qua edge cases.
+    good: |
+      Agent: "Đã hoàn thành 4/4 yêu cầu cụ thể của task theo đúng phạm vi:
+      1. Sửa lỗi `TS2345` tại `workspace-context.ts:386` [EMPIRICAL: typecheck pass].
+      2. Tối ưu nạp registry tại `registry.ts:160` [EMPIRICAL: 7/7 tests pass].
+      - Giới hạn còn lại: Chưa kiểm thử trên môi trường Linux/macOS; chỉ mới verify trên Windows pwsh."
+    self_check: "Mọi tuyên bố hoàn thành của tôi có bằng chứng lệnh thực thi trực tiếp đi kèm không?"
+
 integration:
   tier: 2
-  related_modules: ["edit-verification", "stop-conditions", "drift-prevention"]
-  referenced_by: ["SACRED_RULES.xml SURGICAL_001"]
+  related_modules: ["edit-verification", "stop-conditions", "drift-prevention", "epistemic-calibration"]
+  referenced_by: ["SACRED_RULES.xml SURGICAL_001", "SACRED_RULES.xml EPISTEMIC_001"]

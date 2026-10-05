@@ -13,6 +13,7 @@ success_criteria: "Pre-read verified, surgical change applied, post-read confirm
 3. **SIZE SAFETY**: If changing >50 lines or creating >2 new files ➔ MUST STOP and confirm Implementation Plan with user.
 4. **COMMENT POLICY**: Default NO comments describing WHAT (code explains itself). Only write concise comments for WHY (constraints, workarounds, surprises).
 5. **READ-BACK MANDATE**: After EDITING any file, MUST read back the modified lines (`view_file`) to verify diff and syntax before proceeding.
+6. **EPISTEMIC HUMILITY**: Never claim absolute perfection, zero trace, or total immunity. Disclose assumptions, proof grades, and residual risks.
 
 ---
 
@@ -88,5 +89,7 @@ Before sending final response to user, MUST self-audit these 5 golden questions:
 1.  ✅ **Did I read target file BEFORE modifying?** *(With concrete file:line citations)*
 2.  ✅ **Did I read back file AFTER modifying?** *(Confirmed clean diff and valid syntax)*
 3.  ✅ **Did I execute real test/build commands for evidence?** *(Never say "should work")*
-4.  ✅ **Do all changes trace 100% directly to the user's Plan?** *(No speculative code)*
+4.  ✅ **Do all changes trace directly to the user's Plan?** *(No speculative code)*
 5.  ✅ **Were Surgical Change and Comment Policy strictly respected?**
+6.  ✅ **Did I classify proof grades and avoid ungrounded superlatives?** *(No "100% stealth", "an toàn tuyệt đối", "hoàn hảo")*
+7.  ✅ **Did I explicitly disclose known limitations, untested edge cases, and residual risks?** *(4-pillar report: Evidence, Status, Residual Risks, Next Checks)*

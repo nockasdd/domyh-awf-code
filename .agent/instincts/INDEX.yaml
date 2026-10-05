@@ -40,6 +40,12 @@ instincts:
     contexts: [orchestrate, audit, large, explore, monorepo]
     confidence: 0.95
 
+  - id: INST-OVC-001
+    name: anti-overclaim
+    file: anti-overclaim.instinct.yaml
+    contexts: [verify, done, report, audit, security, bypass, stealth, claim]
+    confidence: 1.0
+
   - id: INST-NEG-001
     name: negative-constraints
     file: negative-constraints.instinct.yaml

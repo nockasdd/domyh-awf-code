@@ -12,7 +12,7 @@ context:
 
 principles:
   - Detect shell before generating commands (hsa_detect or manual check)
-  - Use shell-specific chaining (bash: &&, cmd: &, ps5: ;, ps7: &&)
+  - "Use shell-specific chaining (bash: &&, cmd: &, ps5: ;, ps7: &&)"
   - Confirm with user before destructive commands
   - Prefer non-interactive flags (--yes, -y)
 
